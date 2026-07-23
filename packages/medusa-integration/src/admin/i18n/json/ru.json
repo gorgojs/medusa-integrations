@@ -2,16 +2,35 @@
   "integration": {
     "list": {
       "title": "Интеграции",
+      "subtitle": "Управление настройками интеграций",
+      "addIntegration": "Добавить интеграцию",
+      "learnMore": "Как создавать интеграции",
+      "searchPlaceholder": "Поиск интеграций",
       "empty": "Нет зарегистрированных интеграций. Объявите провайдеров в options.providers плагина интеграций в medusa-config.",
+      "emptyFiltered": "Нет интеграций по заданным фильтрам",
       "tested": "проверено",
-      "testFailed": "ошибка проверки"
+      "testFailed": "ошибка проверки",
+      "tabs": { "all": "Все" }
+    },
+    "columns": {
+      "integration": "Интеграция",
+      "description": "Описание",
+      "module": "Модуль",
+      "status": "Статус"
     },
     "status": {
       "notConfigured": "Не настроено",
       "incomplete": "Не завершено",
       "enabled": "Включено",
       "disabled": "Выключено",
-      "configured": "Настроено"
+      "configured": "Настроено",
+      "connected": "Подключено",
+      "connectionFailed": "Ошибка подключения",
+      "notTested": "Не проверено"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "author": "От {{author}}"
     },
     "labels": {
       "status": "Статус",

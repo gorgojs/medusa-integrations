@@ -36,8 +36,8 @@ export default async function testIntegrationConnectionsJob(container: MedusaCon
   const logger = container.resolve<Logger>("logger")
   const service: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
 
-  const overview = await service.listIntegrationsOverview()
-  const targets = overview.filter(
+  const { integrations } = await service.listIntegrationsOverview()
+  const targets = integrations.filter(
     (i) => i.is_configured && i.is_enabled && i.has_test_connection
   )
 

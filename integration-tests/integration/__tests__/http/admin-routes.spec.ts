@@ -47,6 +47,46 @@ medusaIntegrationTestRunner({
       })
     })
 
+    describe("GET /admin/integrations — filtering + pagination", () => {
+      it("returns count, the categories facet, and docs_url", async () => {
+        const res = await api.get("/admin/integrations", headers)
+        expect(res.status).toBe(200)
+        expect(typeof res.data.count).toBe("number")
+        expect(res.data.categories).toContain("payment")
+        expect(typeof res.data.docs_url).toBe("string")
+      })
+
+      it("filters by category (empty for a category with no providers)", async () => {
+        const res = await api.get("/admin/integrations?category=fulfillment", headers)
+        expect(res.status).toBe(200)
+        expect(res.data.integrations).toHaveLength(0)
+        expect(res.data.count).toBe(0)
+        // facet still lists the real categories, so the tab bar stays stable
+        expect(res.data.categories).toContain("payment")
+      })
+
+      it("filters by q on the identifier", async () => {
+        const res = await api.get("/admin/integrations?q=test", headers)
+        expect(res.status).toBe(200)
+        expect(res.data.integrations.length).toBeGreaterThan(0)
+        expect(res.data.integrations.every((i: any) => i.identifier.includes("test"))).toBe(true)
+      })
+
+      it("paginates via limit/offset while count reflects the full set", async () => {
+        const res = await api.get("/admin/integrations?limit=1&offset=0", headers)
+        expect(res.status).toBe(200)
+        expect(res.data.integrations).toHaveLength(1)
+        expect(res.data.count).toBeGreaterThanOrEqual(2)
+        expect(res.data.limit).toBe(1)
+        expect(res.data.offset).toBe(0)
+      })
+
+      it("400s on an invalid limit", async () => {
+        const res = await api.get("/admin/integrations?limit=0", headers).catch((e: any) => e.response)
+        expect(res.status).toBe(400)
+      })
+    })
+
     describe("GET /admin/integrations/:provider_id", () => {
       it("404s for an unregistered provider", async () => {
         const res = await get("int_nope")

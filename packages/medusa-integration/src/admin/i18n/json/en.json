@@ -2,16 +2,35 @@
   "integration": {
     "list": {
       "title": "Integrations",
+      "subtitle": "Manage integrations settings",
+      "addIntegration": "Add Integration",
+      "learnMore": "Learn how to build integrations",
+      "searchPlaceholder": "Search integrations",
       "empty": "No integrations registered. Declare providers under the integration plugin's options.providers in medusa-config.",
+      "emptyFiltered": "No integrations match your filters.",
       "tested": "tested",
-      "testFailed": "test failed"
+      "testFailed": "test failed",
+      "tabs": { "all": "All" }
+    },
+    "columns": {
+      "integration": "Integration",
+      "description": "Description",
+      "module": "Module",
+      "status": "Status"
     },
     "status": {
       "notConfigured": "Not configured",
       "incomplete": "Incomplete",
       "enabled": "Enabled",
       "disabled": "Disabled",
-      "configured": "Configured"
+      "configured": "Configured",
+      "connected": "Connected",
+      "connectionFailed": "Connection failed",
+      "notTested": "Not tested"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "author": "By {{author}}"
     },
     "labels": {
       "status": "Status",

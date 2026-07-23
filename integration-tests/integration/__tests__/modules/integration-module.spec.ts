@@ -41,13 +41,13 @@ moduleIntegrationTestRunner<any>({
 
     describe("provider registration (real loadProviders loader)", () => {
       it("registers both declared instances of the fake provider", async () => {
-        const ids = (await service.listIntegrationsOverview()).map((o: any) => o.provider_id)
+        const ids = (await service.listIntegrationsOverview()).integrations.map((o: any) => o.provider_id)
         expect(ids).toContain(A)
         expect(ids).toContain(B)
       })
 
       it("reports an unconfigured instance with its descriptor metadata", async () => {
-        const item = (await service.listIntegrationsOverview()).find((o: any) => o.provider_id === A)
+        const item = (await service.listIntegrationsOverview()).integrations.find((o: any) => o.provider_id === A)
         expect(item).toMatchObject({
           identifier: "test",
           category: "payment",
@@ -112,7 +112,7 @@ moduleIntegrationTestRunner<any>({
     describe("listIntegrationsOverview after configuration", () => {
       it("marks a complete, enabled config as configured + complete + enabled", async () => {
         await configure(A)
-        const item = (await service.listIntegrationsOverview()).find((o: any) => o.provider_id === A)
+        const item = (await service.listIntegrationsOverview()).integrations.find((o: any) => o.provider_id === A)
         expect(item).toMatchObject({ is_configured: true, is_complete: true, is_enabled: true })
       })
     })

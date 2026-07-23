@@ -40,11 +40,12 @@ function makeProviderService(regs: any[] = [registration]) {
 
 type Row = Record<string, any>
 
-function makeService(opts?: { options?: Record<string, unknown>; rows?: Row[]; providerService?: any }) {
+function makeService(opts?: { options?: Record<string, unknown>; rows?: Row[]; providerService?: any; packageMeta?: Record<string, any> }) {
   const rows: Row[] = opts?.rows ?? []
   const svc: any = Object.create(IntegrationModuleService.prototype)
   svc.providerService_ = opts?.providerService ?? makeProviderService()
   svc.options_ = opts?.options ?? { encryptionKey: "unit-test-key" }
+  svc.packageMeta_ = opts?.packageMeta ?? {}
   svc.cache_ = new Map()
   svc.listIntegrations = jest.fn(async (filter: any = {}) =>
     rows.filter((r) => (filter?.provider_id ? r.provider_id === filter.provider_id : true))
@@ -237,7 +238,8 @@ describe("IntegrationModuleService — runTestConnection", () => {
 describe("IntegrationModuleService — listIntegrationsOverview", () => {
   it("lists a registered-but-unconfigured provider", async () => {
     const svc = makeService()
-    const [item] = await svc.listIntegrationsOverview()
+    const { integrations } = await svc.listIntegrationsOverview()
+    const [item] = integrations
     expect(item).toMatchObject({
       provider_id: "int_demo",
       identifier: "demo",
@@ -252,12 +254,71 @@ describe("IntegrationModuleService — listIntegrationsOverview", () => {
   it("reflects a configured + complete + enabled row", async () => {
     const svc = makeService()
     svc._rows.push(storedRow(svc, { apiKey: "pub", secretKey: "shh" }, { is_enabled: true, last_test_status: "passed" }))
-    const [item] = await svc.listIntegrationsOverview()
+    const { integrations } = await svc.listIntegrationsOverview()
+    const [item] = integrations
     expect(item).toMatchObject({
       is_configured: true,
       is_enabled: true,
       is_complete: true,
       last_test_status: "passed",
     })
+  })
+
+  it("includes package meta (version/author/author_url) and descriptor description", async () => {
+    const withDesc = defineIntegration({
+      category: "payment",
+      displayName: "d",
+      description: "demo.desc",
+      options: { apiKey: { type: "string", label: "l" } },
+      sections: [{ id: "s", title: "t", options: ["apiKey"] }],
+    })
+    const reg = {
+      key: "int_demo",
+      identifier: "demo",
+      instanceId: null,
+      provider: { descriptor: withDesc, getIdentifier: () => "demo", getInstanceId: () => null },
+    }
+    const svc = makeService({
+      providerService: makeProviderService([reg]),
+      packageMeta: { demo: { name: "@gorgo/demo", version: "1.2.3", author: "Gorgo", authorUrl: "https://gorgo.dev" } },
+    })
+    const { integrations } = await svc.listIntegrationsOverview()
+    expect(integrations[0]).toMatchObject({
+      description: "demo.desc",
+      version: "1.2.3",
+      author: "Gorgo",
+      author_url: "https://gorgo.dev",
+    })
+  })
+
+  it("filters by category and reports the unfiltered categories facet", async () => {
+    const pay = { key: "int_pay", identifier: "pay", instanceId: null, provider: { descriptor: { category: "payment", displayName: "p" }, getIdentifier: () => "pay", getInstanceId: () => null } }
+    const ful = { key: "int_ful", identifier: "ful", instanceId: null, provider: { descriptor: { category: "fulfillment", displayName: "f" }, getIdentifier: () => "ful", getInstanceId: () => null } }
+    const svc = makeService({ providerService: makeProviderService([pay, ful]) })
+    const res = await svc.listIntegrationsOverview({ category: "payment" })
+    expect(res.integrations.map((i: any) => i.provider_id)).toEqual(["int_pay"])
+    expect(res.count).toBe(1)
+    expect(res.categories.sort()).toEqual(["fulfillment", "payment"])
+  })
+
+  it("filters by q on the identifier", async () => {
+    const pay = { key: "int_pay", identifier: "pay", instanceId: null, provider: { descriptor: { category: "payment", displayName: "p" }, getIdentifier: () => "pay", getInstanceId: () => null } }
+    const ful = { key: "int_ful", identifier: "ful", instanceId: null, provider: { descriptor: { category: "fulfillment", displayName: "f" }, getIdentifier: () => "ful", getInstanceId: () => null } }
+    const svc = makeService({ providerService: makeProviderService([pay, ful]) })
+    const res = await svc.listIntegrationsOverview({ q: "FUL" })
+    expect(res.integrations.map((i: any) => i.identifier)).toEqual(["ful"])
+    expect(res.count).toBe(1)
+  })
+
+  it("paginates via limit/offset while count reflects the full filtered set", async () => {
+    const regs = [1, 2, 3].map((n) => ({
+      key: `int_p${n}`, identifier: `p${n}`, instanceId: null,
+      provider: { descriptor: { category: "payment", displayName: "p" }, getIdentifier: () => `p${n}`, getInstanceId: () => null },
+    }))
+    const svc = makeService({ providerService: makeProviderService(regs) })
+    const res = await svc.listIntegrationsOverview({ limit: 2, offset: 2 })
+    expect(res.count).toBe(3)
+    expect(res.integrations).toHaveLength(1)
+    expect(res.integrations[0].provider_id).toBe("int_p3")
   })
 })

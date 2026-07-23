@@ -7,18 +7,33 @@ import IntegrationProviderService from "./integration-provider"
 import type { IntegrationDescriptor, TestConnectionResult } from "../descriptor/define"
 import { introspectDescriptor, secretFieldNames, type UiDescriptor } from "../descriptor/introspect"
 import { isDescriptorComplete } from "../descriptor/validate"
-import { INTEGRATION_OPTIONS_KEY, type IntegrationModuleOptions } from "../types"
+import { INTEGRATION_OPTIONS_KEY, INTEGRATION_PACKAGE_META_KEY, DOCS_URL, type IntegrationModuleOptions, type PackageMetaMap } from "../types"
 import type { IntegrationOverviewItem } from "../../../types"
+import type { CategoryKind } from "../../../types/integration"
 
 type InjectedDependencies = {
   logger?: Logger
   integrationProviderService: IntegrationProviderService
   [INTEGRATION_OPTIONS_KEY]?: IntegrationModuleOptions
+  [INTEGRATION_PACKAGE_META_KEY]?: PackageMetaMap
 }
 
 export type ResolvedOptions = {
   options: Record<string, unknown>
   meta: { provider_id: string; category: string | null; is_enabled: boolean }
+}
+
+export type IntegrationOverviewQuery = {
+  q?: string
+  category?: string
+  limit?: number
+  offset?: number
+}
+
+export type IntegrationOverviewResult = {
+  integrations: IntegrationOverviewItem[]
+  count: number
+  categories: CategoryKind[]
 }
 
 const CACHE_TTL_MS = 60_000
@@ -28,6 +43,7 @@ export default class IntegrationModuleService extends MedusaService({
 }) {
   protected providerService_: IntegrationProviderService
   protected options_: IntegrationModuleOptions
+  protected packageMeta_: PackageMetaMap
   protected cache_ = new Map<string, { value: ResolvedOptions | null; expiresAt: number }>()
   protected key_?: Buffer
 
@@ -35,6 +51,7 @@ export default class IntegrationModuleService extends MedusaService({
     super(...arguments)
     this.providerService_ = deps.integrationProviderService
     this.options_ = deps[INTEGRATION_OPTIONS_KEY] ?? {}
+    this.packageMeta_ = deps[INTEGRATION_PACKAGE_META_KEY] ?? {}
   }
 
   // ── descriptors (sourced from registered integration-providers) ──────────────
@@ -105,22 +122,29 @@ export default class IntegrationModuleService extends MedusaService({
 
   /**
    * Admin overview: every declared instance (registration) merged with its current row
-   * state. Lets the UI list configurable integrations before any row exists. No secrets.
+   * state, then filtered + paginated server-side. `categories` is the UNFILTERED facet so
+   * the UI's tab bar stays stable while a tab is active. No secrets.
    */
-  async listIntegrationsOverview(): Promise<IntegrationOverviewItem[]> {
+  async listIntegrationsOverview(query: IntegrationOverviewQuery = {}): Promise<IntegrationOverviewResult> {
     const regs = this.providerService_.listRegistrations()
     const rows = await this.listIntegrations({}, { take: 1000 })
     const byId = new Map(rows.map((r: any) => [r.provider_id, r]))
-    return regs.map((r) => {
+
+    const all: IntegrationOverviewItem[] = regs.map((r) => {
       const d = r.provider.descriptor
       const row: any = byId.get(r.key)
+      const meta = this.packageMeta_[r.identifier]
       return {
         provider_id: r.key,
         identifier: r.identifier,
         instance_id: r.instanceId,
         category: d.category,
         display_name: d.displayName,
+        description: d.description,
         icon: d.icon,
+        version: meta?.version ?? null,
+        author: meta?.author ?? null,
+        author_url: meta?.authorUrl ?? null,
         supports_multiple_instances: d.supportsMultipleInstances ?? false,
         has_test_connection: typeof d.testConnection === "function",
         is_configured: !!row,
@@ -129,6 +153,28 @@ export default class IntegrationModuleService extends MedusaService({
         last_test_status: row?.last_test_status ?? null,
       }
     })
+
+    // Unfiltered facet — distinct categories across every registration (stable tab bar).
+    const categories = [...new Set(all.map((i) => i.category))] as CategoryKind[]
+
+    let filtered = all
+    if (query.category) filtered = filtered.filter((i) => i.category === query.category)
+
+    const q = query.q?.trim().toLowerCase()
+    if (q) {
+      filtered = filtered.filter((i) =>
+        [i.display_name, i.identifier, i.instance_id, i.description]
+          .filter(Boolean)
+          .some((s) => String(s).toLowerCase().includes(q))
+      )
+    }
+
+    const count = filtered.length
+    const offset = query.offset ?? 0
+    const limit = query.limit ?? filtered.length
+    const integrations = filtered.slice(offset, offset + limit)
+
+    return { integrations, count, categories }
   }
 
   /**
@@ -155,6 +201,11 @@ export default class IntegrationModuleService extends MedusaService({
     } catch (e: any) {
       return { status: "failed", message: e?.message ?? "Test failed" }
     }
+  }
+
+  /** Docs URL for the admin list CTA + footer, from options or the default. */
+  getDocsUrl(): string {
+    return DOCS_URL
   }
 
   // ── encryption ───────────────────────────────────────────────────────────────

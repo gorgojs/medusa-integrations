@@ -7,8 +7,16 @@ export interface IntegrationOverviewItem {
   instance_id: string | null
   category: CategoryKind
   display_name: I18nKey
+  /** Descriptor description (i18n key) — shown in the list's Description column. */
+  description?: I18nKey
   /** Descriptor icon — any `<img src>` string (data URI / URL / `/static` path). */
   icon?: string
+  /** Plugin package version (from package.json), or null if unresolved. */
+  version: string | null
+  /** Plugin author name (package.json author, else npm-scope-derived), or null. */
+  author: string | null
+  /** Author link (package.json author.url / homepage), or null. */
+  author_url: string | null
   supports_multiple_instances: boolean
   has_test_connection: boolean
   is_configured: boolean
