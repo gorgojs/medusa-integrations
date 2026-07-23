@@ -19,6 +19,12 @@ export interface AdminIntegrationResponse {
   integration: MaskedIntegration | null
   /** Whether the stored config passes full validation (all required + cross-section rules). */
   is_complete: boolean
+  /** Plugin package version (from package.json), or null if unresolved. */
+  version: string | null
+  /** Plugin author name (package.json author, else npm-scope-derived), or null. */
+  author: string | null
+  /** Author link (package.json author.url / homepage), or null. */
+  author_url: string | null
 }
 
 export interface AdminIntegrationUpsertResponse {

@@ -33,10 +33,7 @@
       "author": "By {{author}}"
     },
     "labels": {
-      "status": "Status",
-      "category": "Category",
-      "lastTest": "Last test",
-      "neverTested": "Never tested"
+      "category": "Category"
     },
     "categories": {
       "payment": "Payment",
@@ -49,11 +46,6 @@
       "feed": "Feed",
       "tax": "Tax",
       "other": "Other"
-    },
-    "testStatus": {
-      "passed": "Passed",
-      "failed": "Failed",
-      "skipped": "Skipped"
     },
     "actions": {
       "test": "Test connection",

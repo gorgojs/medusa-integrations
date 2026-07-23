@@ -19,7 +19,12 @@ export const GET = async (
   const descriptor = svc.getProviderUiDescriptor(provider_id)
   const record = await svc.findByProviderId(provider_id)
   const is_complete = record ? svc.isComplete(record) : false
-  res.json({ descriptor, integration: record ? maskedView(record, svc.getSecretKeys(provider_id)) : null, is_complete })
+  res.json({
+    descriptor,
+    integration: record ? maskedView(record, svc.getSecretKeys(provider_id)) : null,
+    is_complete,
+    ...svc.getPackageMeta(provider_id),
+  })
 }
 
 export const POST = async (
