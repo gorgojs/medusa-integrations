@@ -33,10 +33,7 @@
       "author": "От {{author}}"
     },
     "labels": {
-      "status": "Статус",
-      "category": "Категория",
-      "lastTest": "Последняя проверка",
-      "neverTested": "Не проверялось"
+      "category": "Категория"
     },
     "categories": {
       "payment": "Платежи",
@@ -49,11 +46,6 @@
       "feed": "Фиды",
       "tax": "Налоги",
       "other": "Прочее"
-    },
-    "testStatus": {
-      "passed": "Пройдено",
-      "failed": "Ошибка",
-      "skipped": "Пропущено"
     },
     "actions": {
       "test": "Проверить соединение",

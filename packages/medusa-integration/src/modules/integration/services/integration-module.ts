@@ -133,7 +133,6 @@ export default class IntegrationModuleService extends MedusaService({
     const all: IntegrationOverviewItem[] = regs.map((r) => {
       const d = r.provider.descriptor
       const row: any = byId.get(r.key)
-      const meta = this.packageMeta_[r.identifier]
       return {
         provider_id: r.key,
         identifier: r.identifier,
@@ -142,9 +141,7 @@ export default class IntegrationModuleService extends MedusaService({
         display_name: d.displayName,
         description: d.description,
         icon: d.icon,
-        version: meta?.version ?? null,
-        author: meta?.author ?? null,
-        author_url: meta?.authorUrl ?? null,
+        ...this.mapPackageMeta(r.identifier),
         supports_multiple_instances: d.supportsMultipleInstances ?? false,
         has_test_connection: typeof d.testConnection === "function",
         is_configured: !!row,
@@ -206,6 +203,21 @@ export default class IntegrationModuleService extends MedusaService({
   /** Docs URL for the admin list CTA + footer, from options or the default. */
   getDocsUrl(): string {
     return DOCS_URL
+  }
+
+  /** Map a provider identifier to its public package-meta fields (snake_case), or nulls. */
+  private mapPackageMeta(identifier: string | undefined): { version: string | null; author: string | null; author_url: string | null } {
+    const meta = identifier ? this.packageMeta_[identifier] : undefined
+    return { version: meta?.version ?? null, author: meta?.author ?? null, author_url: meta?.authorUrl ?? null }
+  }
+
+  /**
+   * Package metadata (version/author) for one `provider_id` — resolved by the registration's
+   * `identifier` from the loader-injected map. Feeds the detail page's identity header.
+   * Returns nulls when the provider is unregistered or its package wasn't resolvable.
+   */
+  getPackageMeta(providerId: string): { version: string | null; author: string | null; author_url: string | null } {
+    return this.mapPackageMeta(this.providerService_.getRegistration(providerId)?.identifier)
   }
 
   // ── encryption ───────────────────────────────────────────────────────────────

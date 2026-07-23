@@ -322,3 +322,26 @@ describe("IntegrationModuleService — listIntegrationsOverview", () => {
     expect(res.integrations[0].provider_id).toBe("int_p3")
   })
 })
+
+describe("IntegrationModuleService — getPackageMeta", () => {
+  it("maps the injected package meta for a provider_id (by identifier)", () => {
+    const svc = makeService({
+      packageMeta: { demo: { name: "@gorgo/demo", version: "1.2.3", author: "Gorgo", authorUrl: "https://gorgo.dev" } },
+    })
+    expect(svc.getPackageMeta("int_demo")).toEqual({
+      version: "1.2.3",
+      author: "Gorgo",
+      author_url: "https://gorgo.dev",
+    })
+  })
+
+  it("returns nulls when there is no package meta for the provider", () => {
+    const svc = makeService()
+    expect(svc.getPackageMeta("int_demo")).toEqual({ version: null, author: null, author_url: null })
+  })
+
+  it("returns nulls for an unregistered provider_id", () => {
+    const svc = makeService({ providerService: makeProviderService([]) })
+    expect(svc.getPackageMeta("int_missing")).toEqual({ version: null, author: null, author_url: null })
+  })
+})

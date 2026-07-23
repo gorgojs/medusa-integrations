@@ -22,9 +22,6 @@ import { EditSectionDrawer } from "../../../../components/integration-form/edit-
 import { isFieldVisible } from "../../../../components/integration-form/visibility"
 import type { AdminIntegrationResponse, IntegrationSectionData, UiSection } from "../../../../../types"
 
-const testColor = (s: string | null) =>
-  s === "passed" ? "green" : s === "failed" ? "red" : "grey"
-
 /** A Medusa-admin section row: label on the left, value on the right. */
 const Row = ({ label, children }: { label: string; children: ReactNode }) => (
   <div className="text-ui-fg-subtle grid grid-cols-2 px-6 py-4">
@@ -133,6 +130,27 @@ const EditPage = () => {
     )
   }
 
+  const version = data?.version ?? null
+  const author = data?.author ?? null
+  const authorUrl = data?.author_url ?? null
+
+  // Same two-badge mapping as the list's StatusCell.
+  const lifecycle = !isConfigured
+    ? { color: "grey" as const, label: t("integration.status.notConfigured") }
+    : !isComplete
+      ? { color: "orange" as const, label: t("integration.status.incomplete") }
+      : record!.is_enabled
+        ? { color: "green" as const, label: t("integration.status.enabled") }
+        : { color: "grey" as const, label: t("integration.status.disabled") }
+
+  const connection = descriptor.hasTestConnection
+    ? record?.last_test_status === "passed"
+      ? { color: "green" as const, label: t("integration.status.connected") }
+      : record?.last_test_status === "failed"
+        ? { color: "red" as const, label: t("integration.status.connectionFailed") }
+        : { color: "grey" as const, label: t("integration.status.notTested") }
+    : null
+
   const editing = descriptor.sections.find((s) => s.id === editingSection) ?? null
   // Secret keys with a stored value — per field, so only the actually-set secrets render as
   // "configured" (••••••) and skip the "required" hint; unset ones still prompt to fill.
@@ -190,86 +208,89 @@ const EditPage = () => {
       {/* Identity / overview card */}
       <LayoutComposer.Entry id="main">
         <Container className="divide-y p-0">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-x-3">
-              <IntegrationIcon src={descriptor.icon} alt={t(descriptor.displayName)} />
-              <div className="flex flex-col gap-y-1">
-                <div className="flex items-center gap-x-2">
-                  <Heading>{t(descriptor.displayName)}</Heading>
-                  {descriptor.instanceId && (
-                    <Badge size="2xsmall" color="grey">
-                      {descriptor.instanceId}
-                    </Badge>
+          <div className="flex flex-col gap-y-3 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-x-3">
+                <IntegrationIcon src={descriptor.icon} alt={t(descriptor.displayName)} />
+                <div className="flex flex-col gap-y-1">
+                  <div className="flex items-center gap-x-2">
+                    <Heading>{t(descriptor.displayName)}</Heading>
+                    {descriptor.instanceId && (
+                      <Badge size="2xsmall" color="grey">
+                        {descriptor.instanceId}
+                      </Badge>
+                    )}
+                  </div>
+                  {version && (
+                    <Text size="xsmall" leading="compact" className="text-ui-fg-subtle">
+                      {t("integration.meta.version", { version })}
+                      {author &&
+                        (authorUrl ? (
+                          <>
+                            {" • "}
+                            <a
+                              href={authorUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-ui-fg-interactive"
+                            >
+                              {t("integration.meta.author", { author })}
+                            </a>
+                          </>
+                        ) : (
+                          <>{" • " + t("integration.meta.author", { author })}</>
+                        ))}
+                    </Text>
                   )}
                 </div>
-                {descriptor.description && (
-                  <Text size="small" className="text-ui-fg-subtle">
-                    {t(descriptor.description)}
-                  </Text>
+              </div>
+              <div className="flex items-center gap-x-2">
+                <StatusBadge color={lifecycle.color}>{lifecycle.label}</StatusBadge>
+                {connection && <StatusBadge color={connection.color}>{connection.label}</StatusBadge>}
+                {isConfigured && (
+                  <DropdownMenu>
+                    <DropdownMenu.Trigger asChild>
+                      <IconButton size="small" variant="transparent">
+                        <EllipsisHorizontal />
+                      </IconButton>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content>
+                      {descriptor.hasTestConnection && record!.is_enabled && isComplete && (
+                        <DropdownMenu.Item disabled={test.isPending} onClick={() => test.mutate()}>
+                          {t("integration.actions.test")}
+                        </DropdownMenu.Item>
+                      )}
+                      {isConfigured && (
+                        <DropdownMenu.Item
+                          disabled={toggleEnabled.isPending}
+                          onClick={() => toggleEnabled.mutate(!record!.is_enabled)}
+                        >
+                          {record!.is_enabled ? t("integration.actions.disable") : t("integration.actions.enable")}
+                        </DropdownMenu.Item>
+                      )}
+                      {isConfigured && <DropdownMenu.Separator />}
+                      {isConfigured && (
+                        <DropdownMenu.Item className="gap-x-2" onClick={onDelete}>
+                          <Trash className="text-ui-fg-subtle" />
+                          {t("integration.actions.delete")}
+                        </DropdownMenu.Item>
+                      )}
+                    </DropdownMenu.Content>
+                  </DropdownMenu>
                 )}
               </div>
             </div>
-            {isConfigured &&
-              (<DropdownMenu>
-                <DropdownMenu.Trigger asChild>
-                  <IconButton size="small" variant="transparent">
-                    <EllipsisHorizontal />
-                  </IconButton>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
-                  {descriptor.hasTestConnection && record!.is_enabled && isComplete && (
-                    <DropdownMenu.Item disabled={test.isPending} onClick={() => test.mutate()}>
-                      {t("integration.actions.test")}
-                    </DropdownMenu.Item>
-                  )}
-                  {isConfigured && (
-                    <DropdownMenu.Item
-                      disabled={toggleEnabled.isPending}
-                      onClick={() => toggleEnabled.mutate(!record!.is_enabled)}
-                    >
-                      {record!.is_enabled ? t("integration.actions.disable") : t("integration.actions.enable")}
-                    </DropdownMenu.Item>
-                  )}
-                  {isConfigured && <DropdownMenu.Separator />}
-                  {isConfigured && (
-                    <DropdownMenu.Item className="gap-x-2" onClick={onDelete}>
-                      <Trash className="text-ui-fg-subtle" />
-                      {t("integration.actions.delete")}
-                    </DropdownMenu.Item>
-                  )}
-                </DropdownMenu.Content>
-              </DropdownMenu>
+            {descriptor.description && (
+              <Text size="small" className="text-ui-fg-subtle">
+                {t(descriptor.description)}
+              </Text>
             )}
           </div>
 
-          <Row label={t("integration.labels.status")}>
-            {!isConfigured ? (
-              <StatusBadge color="grey">{t("integration.status.notConfigured")}</StatusBadge>
-            ) : !isComplete ? (
-              <StatusBadge color="orange">{t("integration.status.incomplete")}</StatusBadge>
-            ) : (
-              <StatusBadge color={record!.is_enabled ? "green" : "grey"}>
-                {record!.is_enabled ? t("integration.status.enabled") : t("integration.status.disabled")}
-              </StatusBadge>
-            )}
-          </Row>
           <Row label={t("integration.labels.category")}>
             <Badge size="2xsmall" color="grey">
               {t(`integration.categories.${descriptor.category}`)}
             </Badge>
-          </Row>
-          <Row label={t("integration.labels.lastTest")}>
-            {record?.last_test_status ? (
-              <>
-                <StatusBadge color={testColor(record.last_test_status)}>
-                  {t(`integration.testStatus.${record.last_test_status}`)}
-                </StatusBadge>
-              </>
-            ) : (
-              <Text size="small" leading="compact" className="text-ui-fg-subtle">
-                {t("integration.labels.neverTested")}
-              </Text>
-            )}
           </Row>
         </Container>
       </LayoutComposer.Entry>

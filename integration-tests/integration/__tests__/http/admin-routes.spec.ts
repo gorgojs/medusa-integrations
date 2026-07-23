@@ -100,6 +100,14 @@ medusaIntegrationTestRunner({
         expect(res.data.integration).toBeNull()
         expect(res.data.is_complete).toBe(false)
       })
+
+      it("includes package meta fields (version/author/author_url)", async () => {
+        const res = await get(A)
+        expect(res.status).toBe(200)
+        expect(res.data).toHaveProperty("version")
+        expect(res.data).toHaveProperty("author")
+        expect(res.data).toHaveProperty("author_url")
+      })
     })
 
     describe("POST /admin/integrations/:provider_id (section save → upsert workflow)", () => {
