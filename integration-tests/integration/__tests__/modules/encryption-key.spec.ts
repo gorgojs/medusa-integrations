@@ -25,7 +25,7 @@ moduleIntegrationTestRunner<any>({
     })
 
     it("still registers the provider and lists it (boot does not require a key)", async () => {
-      const ids = (await service.listIntegrationsOverview()).map((o: any) => o.provider_id)
+      const ids = (await service.listIntegrationsOverview()).integrations.map((o: any) => o.provider_id)
       expect(ids).toContain("int_test_a")
     })
   },
