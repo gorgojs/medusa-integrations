@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.com/medusa-plugins/yookassa">
+  <a href="https://docs.gorgojs.com/integrations/yookassa">
     <img alt="Medusa-YooKassa logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yookassa-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,11 +9,11 @@ YooKassa Payments for Medusa
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/medusa-plugins/yookassa">Documentation</a>
+  <a href="https://docs.gorgojs.com/integrations/yookassa">Documentation</a>
   <br/>
   A Medusa plugin that provides YooKassa payments. Production-ready.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-payment-yookassa/README.ru.md">Читать README на русском ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/payment-yookassa/README.ru.md">Читать README на русском ↗</a>
 </p>
 
 <br/>
@@ -83,7 +83,7 @@ npm install @gorgo/medusa-payment-yookassa
 
 ## Documentation
 
-The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-plugins/yookassa).
+The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/integrations/yookassa).
 
 ## License
 

@@ -1,7 +1,7 @@
 # Integration catalog
 
 Machine-readable registry of Medusa integrations configurable through
-[`@gorgo/medusa-integration`](../packages/medusa-integration) — both Gorgo-authored and community.
+[`@gorgo/medusa-integration`](../packages/modules/integration) — both Gorgo-authored and community.
 
 Two consumers read this catalog:
 

@@ -163,7 +163,7 @@ After structure approval:
 
 #### 1. [Component/File Group]
 
-**File**: `packages/medusa-<plugin>/src/...`
+**File**: `packages/providers/<plugin>/src/...`
 **Changes**: [Summary]
 
 ```ts
@@ -215,7 +215,7 @@ After structure approval:
 ## References
 
 - Related research: `thoughts/shared/research/[relevant].md`
-- Similar implementation: `packages/medusa-<plugin>/src/...:L`
+- Similar implementation: `packages/providers/<plugin>/src/...:L`
 - Medusa docs / external API spec: [link]
 ````
 

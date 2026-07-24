@@ -3,19 +3,19 @@ import path from 'node:path'
 import { regroupChangelog, reformatChangelog, sectionForSha } from './changelog-utils.js'
 import { resolveCommitAuthors } from './github-authors.js'
 
-const REPO = process.env.GITHUB_REPOSITORY || 'gorgojs/medusa-plugins'
+const REPO = process.env.GITHUB_REPOSITORY || 'gorgojs/medusa-integrations'
 const TOKEN = process.env.GITHUB_TOKEN
 const APPLY = process.argv.includes('--apply')
 const DRY_OUT = process.env.DRY_OUT || '.'
 
 const FILES = [
-  'packages/medusa-1c/CHANGELOG.md',
-  'packages/medusa-feed-yandex/CHANGELOG.md',
-  'packages/medusa-fulfillment-apiship/CHANGELOG.md',
-  'packages/medusa-payment-robokassa/CHANGELOG.md',
-  'packages/medusa-payment-tkassa/CHANGELOG.md',
-  'packages/medusa-payment-yookassa/CHANGELOG.md',
-  'packages/utils/gorgo-telemetry/CHANGELOG.md',
+  'packages/providers/erp-1c/CHANGELOG.md',
+  'packages/providers/feed-yandex/CHANGELOG.md',
+  'packages/providers/fulfillment-apiship/CHANGELOG.md',
+  'packages/providers/payment-robokassa/CHANGELOG.md',
+  'packages/providers/payment-tkassa/CHANGELOG.md',
+  'packages/providers/payment-yookassa/CHANGELOG.md',
+  'packages/utils/telemetry/CHANGELOG.md',
 ]
 
 const SHA_AUTHOR_RE = /\/commit\/([0-9a-f]{7,40})(\)[^\n]*?Thanks \[@)([^\]]+)(\]\()([^)]+)(\)!)/g

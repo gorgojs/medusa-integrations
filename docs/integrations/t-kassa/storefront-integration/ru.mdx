@@ -1,0 +1,286 @@
+---
+title: "Интеграция Т-Касса в витрину магазина"
+description: "Узнайте, как интегрировать платёжный провайдер Т-Касса от Т-Банка в storefront (витрину магазина) на Next.js для Medusa."
+---
+
+# {frontmatter.title}
+
+Для интеграции платёжного провайдера Т-Касса от Т-Банка в storefront (витрину магазина) на Next.js начните с добавления необходимых UI-компонентов. Таким образом провайдер будет отображаться на странице оформления заказа наряду с другими доступными методами оплаты.
+
+Когда пользователь выбирает Т-Касса, витрина должна вызвать метод `initiatePayment` с нужными параметрами. Это создаст платёжную сессию через API Т-Касса и подготовит покупателя к перенаправлению. После этого кнопка *Place Order* должна отправить пользователя на страницу оплаты Т-Касса, где он сможет выбрать предпочтительный способ оплаты.
+
+После завершения оплаты Т-Касса одновременно отправит вебхук и перенаправит покупателя обратно в витрину. То событие, которое придёт первым, завершит корзину и создаст новый заказ в Medusa.
+
+Для витрины на Next.js необходимо внести следующие изменения:
+
+## Шаг 1: Настройте платёжный провайдер
+
+Чтобы сделать Т-Касса доступным в качестве способа оплаты на странице оформления заказа витрины магазина, необходимо добавить её конфигурацию в маппинг платёжных провайдеров в файле с константами вашей витрины. Этот маппинг определяет как каждый провайдер отображается в интерфейсе.
+
+Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/lib/constants.tsx#L33-L36) и добавьте следующий код:
+
+![Структура проекта Medusa Storefront после обновления файла с константами](https://github.com/user-attachments/assets/0aee001e-958f-40c6-b329-618e318ff019)
+
+```ts title="src/lib/constants.tsx"
+export const paymentInfoMap: Record<
+  string,
+  { title: string; icon: React.ReactNode }
+> = {
+  // ... другие провайдеры
+  pp_tkassa_tkassa: {
+    title: "T-Kassa",
+    icon: <CreditCard />,
+  },
+}
+
+// Вспомогательная функция для проверки, является ли провайдер Т-Касса
+export const isTkassa = (providerId?: string) => {
+  return providerId?.startsWith("pp_tkassa")
+}
+```
+
+Вы расширяете объект `paymentInfoMap`, добавляя в него запись `pp_tkassa_tkassa`. Эта запись определяет заголовок и иконку, которые будут отображаться для Т-Касса на странице оформления заказа.
+
+Вспомогательная функция `isTkassa` проверяет, принадлежит ли переданный `providerId` к Т-Касса.
+Это используется при рендеринге UI-компонентов, специфичных для конкретного провайдера.
+
+---
+
+## Шаг 2: Обновите настройки cookies
+
+При подключении Т-Касса настройте политику cookie так, чтобы поддерживались междоменные редиректы. Это нужно для сохранения платёжной сессии при возврате пользователя в магазин.
+
+Откройте [`src/lib/data/cookies.ts`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/lib/data/cookies.ts#L79) и обновите конфигурацию файлов cookie следующим образом:
+
+![Структура проекта Medusa Storefront после обновления файлов cookie](https://github.com/user-attachments/assets/4274d249-6994-4d9f-b4b6-98f2016f0e9f)
+
+```ts title="src/lib/data/cookies.ts"
+export const setCartId = async (cartId: string) => {
+  cookies.set("_medusa_cart_id", cartId, {
+    // ... другие настройки cookie
+    sameSite: "lax", // Переключено с режима «Strict» для междоменных редиректов
+  })
+}
+```
+
+Эта вспомогательная функция сохраняет идентификатор корзины в cookie с именем `_medusa_cart_id`.
+
+Опция `sameSite` установлена в значение `lax` вместо `strict`. Это изменение гарантирует, что cookie будет отправляться при кросс-доменных запросах во время процесса редиректа через Т-Касса, предотвращая потерю платёжной сессии.
+
+---
+
+## Шаг 3: Инициализируйте платёжную сессию
+
+Чтобы перенаправить покупателя в Т-Касса, платёжная сессия должна быть корректно инициализирована с обязательными параметрами, включая return URL для обоих случаев: успешной и неуспешной оплаты.
+
+Откройте [`src/modules/checkout/components/payment/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/modules/checkout/components/payment/index.tsx#L90-L91) и обновите логику инициализации платежа, включив в нее данные корзины и URL возврата для Т-Касса:
+
+![Структура проекта Medusa Storefront после обновления файла для компонента оплаты](https://github.com/user-attachments/assets/5c4dfcf9-57e7-48f6-956c-0e0a91ec6c8f)
+
+```ts title="src/modules/checkout/components/payment/index.tsx"
+import { getBaseURL } from "@lib/util/env"
+
+const Payment = ({
+  // ...
+}) => {
+  // ...
+  const handleSubmit = async () => {
+    setIsLoading(true)
+    try {
+      // ...
+      const countryCode = cart?.shipping_address?.country_code
+      if (!checkActiveSession) {
+        await initiatePaymentSession(cart, {
+          provider_id: selectedPaymentMethod,
+          data: {
+            SuccessURL: `${getBaseURL()}/api/capture-payment/${cart?.id}?country_code=${countryCode}`,
+            FailURL: `${getBaseURL()}/api/capture-payment/${cart?.id}?country_code=${countryCode}`,
+            cart: cart,
+          }
+        })
+      }
+    }
+  }
+}
+```
+
+При инициализации платёжной сессии для Т-Касса параметры `SuccessURL` и `FailURL` определяют, куда будет перенаправлен покупатель после попытки оплаты. Оба URL динамически формируются на основе базового URL витрины, идентификатора корзины и выбранного кода страны.
+
+Объект `cart` включается в данные инициализации для формирования чека в соответствии с Федеральным законом № 54.
+
+---
+
+## Шаг 4: Создайте кнопку оплаты
+
+В витрине для каждого платёжного провайдера необходим отдельный компонент кнопки оплаты. Он отвечает за обработку оформления заказа после подтверждения пользователем и, используя данные платёжного сеанса, перенаправляет его на страницу оплаты Т-Касса.
+
+Откройте [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/modules/checkout/components/payment-button/index.tsx#L163-L211) и добавьте следующий код:
+
+![Структура проекта Medusa Storefront после обновления файла для компонента кнопки оплаты](https://github.com/user-attachments/assets/4b76ee52-747f-452e-9160-6365f742e33e)
+
+```ts title="src/modules/checkout/components/payment-button/index.tsx"
+import { 
+  // ...
+  isTkassa
+} from "@lib/constants"
+import { useRouter } from "next/navigation"
+
+const PaymentButton: React.FC<PaymentButtonProps> = ({
+  cart,
+  "data-testid": dataTestId,
+}) => {
+  // ...
+  switch (true) {
+    // ... другие проверки
+    case isTkassa(paymentSession?.provider_id):
+      return (
+        <TkassaPaymentButton
+          notReady={notReady}
+          cart={cart}
+          data-testid={dataTestId}
+        />
+      )
+    // ... другие проверки
+  }
+}
+
+// ... другие компоненты кнопок оплаты
+
+type TkassaPaymentProps = {
+  cart: HttpTypes.StoreCart
+  notReady: boolean
+  "data-testid"?: string
+}
+
+const TkassaPaymentButton: React.FC<TkassaPaymentProps> = ({
+  cart,
+  notReady,
+  "data-testid": dataTestId,
+}) => {
+  const [submitting, setSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const router = useRouter()
+
+  const paymentSession = cart.payment_collection?.payment_sessions?.find(
+    session =>
+      session.provider_id === "pp_tkassa_tkassa"
+  )
+
+  const handlePayment = () => {
+    setSubmitting(true)
+    const paymentUrl = (paymentSession?.data as any).PaymentURL
+    if (paymentUrl) {
+      router.push(paymentUrl)
+    } else {
+      setErrorMessage("Payment URL отсутствует")
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <>
+      <Button
+        disabled={notReady}
+        isLoading={submitting}
+        onClick={handlePayment}
+        data-testid={dataTestId}
+        size="large"
+      >
+        Place order
+      </Button>
+      <ErrorMessage
+        error={errorMessage}
+        data-testid="tkassa-payment-error-message"
+      />
+    </>
+  )
+}
+```
+
+Этот компонент находит `payment_session` для Т-Касса в текущей корзине и извлекает `PaymentURL`, предоставленный бэкендом. При нажатии кнопки *Place order* покупатель перенаправляется на этот URL для завершения транзакции на странице оплаты Т-Касса.
+
+Если `PaymentURL` отсутствует, компонент выводит сообщение об ошибке, не позволяя продолжить. Состояние `isLoading` обеспечивает визуальную обратную связь во время подготовки перенаправления.
+
+Компонент `PaymentButton` определяет, принадлежит ли текущая платёжная сессия к Т-Касса, с помощью вспомогательной функции `isTkassa`. Если да, он рендерит `TkassaPaymentButton` для обработки процесса оплаты.
+
+Интеграция этого компонента гарантирует, что процесс оплаты через Т-Касса будет запускаться при оформлении заказа.
+
+---
+
+## Шаг 5: Создайте API-роут для подтверждения платежа
+
+После того как покупатель завершает оплату на странице Т-Касса, он перенаправляется обратно на витрину магазина. Необходимо создать API-роут, который обработает этот callback, проверит статус платежа и завершит корзину.
+
+Создайте файл [`src/app/api/capture-payment/[cartId]/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/app/api/capture-payment/%5BcartId%5D/route.ts) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для API route](https://github.com/user-attachments/assets/89ac89de-62ad-4b6c-af61-ab6299587dbf)
+
+```ts title="src/app/api/capture-payment/[cartId]/route.ts"
+import { NextRequest, NextResponse } from "next/server"
+import { revalidateTag } from "next/cache"
+import {
+  getCacheTag,
+  getAuthHeaders,
+  removeCartId
+} from "@lib/data/cookies"
+import { sdk } from "@lib/config"
+import { placeOrder } from "@lib/data/cart"
+
+type Params = Promise<{ cartId: string }>
+
+export async function GET(req: NextRequest, { params }: { params: Params }) {
+  const { cartId } = await params
+  const { origin, searchParams } = req.nextUrl
+
+  const countryCode = searchParams.get("country_code") || ""
+  const headers = { ...(await getAuthHeaders()) }
+
+  // Получить актуальные значения корзины
+  const cartCacheTag = await getCacheTag("carts")
+  revalidateTag(cartCacheTag)
+  const { cart } = await sdk.store.cart.retrieve(cartId, {
+    fields: "id, order_link.order_id, items.total"
+  },
+    headers
+  )
+  if (!cart) {
+    return NextResponse.redirect(`${origin}/${countryCode}`)
+  }
+
+  const orderId = (cart as unknown as Record<string, any>).order_link?.order_id
+  if (!orderId) {
+    await placeOrder(cartId)
+    // Ошибка при неавторизованном платеже
+    return NextResponse.redirect(
+      `${origin}/${countryCode}/checkout?step=review&error=payment_failed`
+    )
+  }
+
+  const orderCacheTag = await getCacheTag("orders")
+  revalidateTag(orderCacheTag)
+  removeCartId()
+  return NextResponse.redirect(
+    `${origin}/${countryCode}/order/${orderId}/confirmed`
+  )
+}
+```
+
+Этот API-роут обрабатывает редирект от Т-Касса после попытки оплаты. Он получает актуальное состояние корзины, чтобы убедиться, что все изменения, внесённые во время оплаты, были отражены.
+
+Если в корзине нет связанного идентификатора заказа, обработчик роута пытается оформить заказ. В случае успеха покупатель перенаправляется на страницу подтверждения заказа. Если же при обработке корзины возникла ошибка, покупатель возвращается на страницу оформления заказа с указанием ошибки и может повторить процесс оплаты заказа.
+
+Когда оплата проходит успешно, роут повторно валидирует кэшированные данные корзины и заказа, удаляет cookie корзины и перенаправляет покупателя на страницу подтверждения заказа. Это гарантирует корректное завершение платёжного процесса и сохранение актуальных данных в витрине.
+
+---
+
+## Полный пример кода интеграции в витрину
+
+Вы можете ознакомиться с изменениями, внесенными в стартовый шаблон [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa), в директории [`examples/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-tkassa/medusa-storefront).
+
+Полный код интеграции можно посмотреть в разделе [сomparison page](https://github.com/gorgojs/medusa-integrations/compare/%40gorgo/medusa-payment-tkassa%400.0.1...main), откройте вкладку `Files changed` и изучите различия в каталоге `examples/payment-tkassa/medusa-storefront`. Или запустите `diff` в терминале:
+
+```bash title="Terminal"
+git clone https://github.com/gorgojs/medusa-integrations
+cd medusa-integrations
+git diff @gorgo/medusa-payment-tkassa@0.0.1...main -- examples/payment-tkassa/medusa-storefront
+```

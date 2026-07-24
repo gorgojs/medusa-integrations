@@ -1,9 +1,10 @@
 {
-  "name": "medusa-plugins",
+  "name": "medusa-integrations",
   "private": true,
   "workspaces": [
     "packages/modules/*",
     "packages/providers/*",
+    "packages/plugins/*",
     "packages/utils/*",
     "integration-tests/*"
   ],
@@ -14,7 +15,7 @@
     "commitlint": "commitlint",
     "scopes": "node -e \"console.log(require('./commitlint.config.cjs').rules['scope-enum'][2].join('\\n'))\"",
     "build": "turbo run build --concurrency=100%",
-    "test:unit": "turbo run test:unit --filter='./packages/medusa-*' --no-cache --force",
+    "test:unit": "turbo run test:unit --filter='./packages/providers/*' --filter='./packages/modules/*' --no-cache --force",
     "test:integration": "turbo run test:integration:http test:integration:modules --filter='./integration-tests/*' --concurrency=1 --no-cache --force",
     "test:changed": "turbo run test:unit test:integration:http test:integration:modules --filter='...[origin/main]' --concurrency=1 --no-cache --force",
     "release:version": "changeset version && node scripts/format-changelog.js && yarn install --no-immutable"

@@ -13,7 +13,7 @@ shortDescription:
   ru: "Приём платежей через Robokassa"
 icon: "robokassa.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
-docsUrl: "https://docs.gorgojs.com/medusa-plugins/robokassa"
+docsUrl: "https://docs.gorgojs.com/integrations/robokassa"
 configSnippet: |
   {
     resolve: "@gorgo/medusa-payment-robokassa",

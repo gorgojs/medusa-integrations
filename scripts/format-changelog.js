@@ -13,7 +13,7 @@ function changedChangelogs() {
   return out
     .split('\n')
     .map(line => line.slice(3).trim())
-    .filter(file => /^packages\/(?:utils\/)?[^/]+\/CHANGELOG\.md$/.test(file))
+    .filter(file => /^packages\/(?:utils|providers|modules|plugins)\/[^/]+\/CHANGELOG\.md$/.test(file))
 }
 
 let formatted = 0

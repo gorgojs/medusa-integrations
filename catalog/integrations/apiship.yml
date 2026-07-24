@@ -13,5 +13,5 @@ shortDescription:
   ru: "Агрегатор доставки по нескольким службам через ApiShip"
 icon: "apiship.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
-docsUrl: "https://docs.gorgojs.com/medusa-plugins/apiship"
+docsUrl: "https://docs.gorgojs.com/integrations/apiship"
 active: true

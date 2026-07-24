@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import path from 'node:path'
 import { resolveCommitAuthors } from './github-authors.js'
 
-const PATHS_TO_DIR = ['packages', 'packages/utils']
+const PATHS_TO_DIR = ['packages/modules', 'packages/providers', 'packages/plugins', 'packages/utils']
 
 const BUMP_BY_TYPE = {
   feat:     'minor',
@@ -26,8 +26,6 @@ function loadScopeToPackage() {
     const packagesDir = path.resolve(dirPath)
     if (!existsSync(packagesDir)) continue
 
-    const stripMedusa = dirPath === 'packages'
-
     for (const dir of readdirSync(packagesDir, { withFileTypes: true })) {
       if (!dir.isDirectory()) continue
       const pkgPath = path.join(packagesDir, dir.name, 'package.json')
@@ -36,8 +34,7 @@ function loadScopeToPackage() {
       const { name } = JSON.parse(readFileSync(pkgPath, 'utf8'))
       if (!name) continue
 
-      const scope = stripMedusa ? dir.name.replace(/^medusa-/, '') : dir.name
-      map[scope] = name
+      map[dir.name] = name
     }
   }
   return map
@@ -109,7 +106,7 @@ function getProcessedCount() {
 async function resolveAuthors(commits) {
   const token = process.env.GITHUB_TOKEN
   if (!token) return new Map()
-  const repo = process.env.GITHUB_REPOSITORY || 'gorgojs/medusa-plugins'
+  const repo = process.env.GITHUB_REPOSITORY || 'gorgojs/medusa-integrations'
   try {
     return await resolveCommitAuthors(commits.map(c => c.hash), { repo, token })
   } catch (err) {

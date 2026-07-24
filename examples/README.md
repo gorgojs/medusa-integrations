@@ -15,7 +15,7 @@ To install any example do the following:
 1. Clone the repository and change to examples:
    ```bash
    git clone https://github.com/gorgojs/medusa-integrations
-   cd medusa-plugins
+   cd medusa-integrations
    ```
 
 2. (optional) Install PostgreSQL and pgAdmin using Docker Compose:
