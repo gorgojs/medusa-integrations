@@ -1,0 +1,90 @@
+---
+title: "Начало работы с 1С:Предприятие для Medusa"
+description: "В этой документации вы узнаете, как установить и настроить плагин интеграции 1С:Предприятие для Medusa."
+---
+
+# {frontmatter.title}
+
+В этой документации вы узнаете, как установить и настроить плагин интеграции 1C:Enterprise для Medusa.
+
+## Требования
+
+- Medusa v2.17.2 или новее
+- Node.js v20 или новее
+- Модуль интеграций v0.1.0 или новее
+
+---
+
+## Установка
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration
+    yarn add @gorgo/medusa-1c
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration
+    npm install @gorgo/medusa-1c
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Добавьте конфигурацию плагина в `medusa-config.js` вашего приложения Medusa:
+
+```ts title="medusa-config.js"
+# ...
+module.exports = defineConfig({
+  # ...
+  plugins: [
+    # ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.GORGO_INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-1c/providers/integration-1c",
+            id: "tkassa",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-1c",
+      options: {}
+    },
+  ],
+})
+```
+
+Add environment variables with your secret `Encryption Key`:
+
+```text title=".env"
+GORGO_INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+## Provider Options
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+<Note>🚧 Интеграция в настоящее время находится в разработке, см. [Roadmap](./#roadmap).</Note>

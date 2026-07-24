@@ -1,0 +1,121 @@
+---
+title: "Начало работы с Robokassa для Medusa (v2.0.0-beta)"
+description: "В этом документе вы узнаете, как установить и настроить платежный провайдер Robokassa для Medusa"
+---
+
+# {frontmatter.title}
+
+В этом документе вы узнаете, как установить и настроить платежный провайдер Robokassa для Medusa.
+
+## Требования
+
+- Medusa v2.17.2 или новее
+- Node.js v20 или новее
+- Аккаунт Robokassa – [зарегистрируйтесь или войдите](https://login.robokassa.ru/reg?promoCode=gorgo)
+- Модуль интеграций v0.1.0 или новее
+
+---
+
+## Установка
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration
+    yarn add @gorgo/medusa-payment-robokassa
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration
+    npm install @gorgo/medusa-payment-robokassa
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Добавьте конфигурацию провайдера в `medusa-config.js` вашего приложения Medusa:
+
+```ts title="medusa-config.js"
+// ...
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.GORGO_INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
+            id: "robokassa",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-robokassa",
+      options: {}
+    },
+  ],
+  modules: [
+    // ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      dependencies: ["integration"],
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
+            id: "robokassa",
+            options: { id: "robokassa"}
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Добавьте переменную окружения с секретным ключом шифрования:
+
+```text title=".env"
+GORGO_INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Параметры провайдера
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Суффикс итогового ключа `int_<identifier>_<id>`; при регистрации нескольких экземпляров одного класса делает каждый из них уникальным.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+---
+
+## Настройка вебхуков
+
+Чтобы корректно обрабатывать платежные уведомления от Robokassa, настройте URL вебхука в вашем аккаунте Robokassa следующим образом:
+
+В настройках магазина Robokassa укажите **Метод отправки данных на Result URL** - `GET` или `POST`, и задайте **Result URL** в формате:
+
+``` title="Webhook URL"
+https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/robokassa_robokassa
+```
+
+Robokassa будет отправлять обновления статуса платежей на этот URL, что позволяет Medusa обновлять статус платежа соответствующим образом.

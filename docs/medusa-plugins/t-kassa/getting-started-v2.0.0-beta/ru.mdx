@@ -1,0 +1,127 @@
+---
+title: "Начало работы с Т-Касса для Medusa (v2.0.0-beta)"
+description: "В этом документе вы узнаете, как установить и настроить платежный провайдер Т-Касса от Т-Банка для Medusa"
+---
+
+# {frontmatter.title}
+
+В этом документе вы узнаете, как установить и настроить платежный провайдер Т-Касса от Т-Банка для Medusa.
+
+## Требования
+
+- Medusa v2.17.2 или новее
+- Node.js v20 или новее
+- Аккаунт Т-Бизнес с подключённым интернет-эквайрингом Т-Касса – [зарегистрируйтесь или войдите](https://www.tbank.ru/kassa/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
+- Модуль интеграций v0.1.0 или новее
+
+---
+
+## Установка
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration
+    yarn add @gorgo/medusa-payment-tkassa
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration
+    npm install @gorgo/medusa-payment-tkassa
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Добавьте конфигурацию провайдера в файл `medusa-config.js` в приложении Medusa Admin:
+
+```ts title="medusa-config.js"
+# ...
+module.exports = defineConfig({
+  # ...
+  plugins: [
+    # ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.GORGO_INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+            id: "tkassa",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-tkassa",
+      options: {}
+    },
+  ],
+  modules: [
+    # ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      dependencies: ["integration"],
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
+            id: "tkassa",
+            options: { id: "tkassa"}
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Добавьте переменную окружения с секретным ключом шифрования:
+
+```text title=".env"
+GORGO_INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Параметры провайдера
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Суффикс итогового ключа `int_<identifier>_<id>`; при регистрации нескольких экземпляров одного класса делает каждый из них уникальным.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+---
+
+## Настройка вебхуков
+
+Чтобы корректно обрабатывать платёжные уведомления от Т-Касса, настройте вебхуки в своём аккаунте T-Business следующим образом:
+
+1. Перейдите в раздел `Интернет-эквайринг` → `Магазины` → Выберите свой магазин → `Терминалы` → Выберите `Тестовый` или `Рабочий` терминал → Нажмите `Настройки`, чтобы открыть окно настроек.
+
+2. Установите отправку уведомлений `По протоколу HTTP`.
+
+3. Укажите URL вида:
+
+    ```
+    https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/tkassa_tkassa
+    ```
+
+    Замените `{YOUR_MEDUSA_DOMAIN}` на домен вашей витрины Medusa.
+
+<Note type="warning">Т-Касса ожидает сообщение `OK` в ответе, чтобы подтвердить успешную обработку вебхука и избежать повторных уведомлений. В настоящее время Medusa не поддерживает кастомные ответные сообщения вебхуков «из коробки», но сами вебхуки обрабатываются корректно и без этого. Подробнее см. [связанное обсуждение](https://github.com/medusajs/medusa/discussions/12887).</Note>

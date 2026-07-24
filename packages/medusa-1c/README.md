@@ -20,7 +20,7 @@
 
 <p align="center">
   <a href="https://medusajs.com">
-    <img src="https://img.shields.io/badge/Medusa-^2.14.0-blue?logo=medusa" alt="Medusa" />
+    <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-plugins/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-plugins/main/.badges/medusa-1c.json&logo=checkmarx" alt="Medusa" />
@@ -60,16 +60,21 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 - [ ] Admin UI extension for journaling and audit logs
 - [ ] Detailed documentation
 
+> **Integration Module:** This plugin supports the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
+
 ## Requirements
 
-- Medusa server v2.14.0 or later
+- Medusa server v2.17.2 or later
 - Node.js v20 or later
+- Integration Module v0.1.0 or later
 
 ## Installation
 
 ```bash
+yarn add @gorgo/medusa-integration
 yarn add @gorgo/medusa-1c
 # or
+npm install @gorgo/medusa-integration
 npm install @gorgo/medusa-1c
 ```
 

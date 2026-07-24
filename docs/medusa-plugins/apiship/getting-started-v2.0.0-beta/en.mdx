@@ -1,0 +1,107 @@
+---
+title: "Getting Started with ApiShip for Medusa (v2.0.0-beta)"
+description: "In this document, you’ll learn how to install and configure the ApiShip plugin for Medusa"
+---
+
+# {frontmatter.title}
+
+In this document, you’ll learn how to install and configure the ApiShip plugin for Medusa.
+
+## Requirements
+
+- Medusa v2.17.2 or later
+- Node.js v20 or later
+- An ApiShip account - [sign in or create one](https://a.apiship.ru)
+- Integration Module v0.1.0 or later
+
+---
+
+## Installation
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration
+    yarn add @gorgo/medusa-fulfillment-apiship
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration
+    npm install @gorgo/medusa-fulfillment-apiship
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Configuration
+
+Add the provider configuration in your `medusa-config.ts` file of the Medusa admin application:
+
+```ts title="medusa-config.ts"
+// ...
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.GORGO_INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
+            id: "apiship",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-fulfillment-apiship",
+      options: {},
+    },
+  ],
+  modules: [
+    // ...
+    {
+      resolve: "@medusajs/medusa/fulfillment",
+      dependencies: ["integration"],
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
+            id: "apiship",
+            options: { id: "apiship" },
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Add environment variables with your secret `Encryption Key`:
+
+```text title=".env"
+GORGO_INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Provider Options
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>

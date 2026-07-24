@@ -1,0 +1,90 @@
+---
+title: "Getting Started with 1C:Enterprise ERP for Medusa"
+description: "In this document, you'll learn how to install and configure the 1C:Enterprise integration plugin for Medusa."
+---
+
+# {frontmatter.title}
+
+In this document, you'll learn how to install and configure the 1C:Enterprise integration plugin for Medusa.
+
+## Prerequisites
+
+- Medusa server v2.17.2 or later
+- Node.js v20 or later
+- Integration Module v0.1.0 or later
+
+---
+
+## Installation
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration
+    yarn add @gorgo/medusa-1c
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration
+    npm install @gorgo/medusa-1c
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Configuration
+
+Add the plugin configuration in your `medusa-config.js` file of the Medusa admin application:
+
+```ts title="medusa-config.js"
+# ...
+module.exports = defineConfig({
+  # ...
+  plugins: [
+    # ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.GORGO_INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-1c/providers/integration-1c",
+            id: "tkassa",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-1c",
+      options: {}
+    },
+  ],
+})
+```
+
+Add environment variables with your secret `Encryption Key`:
+
+```text title=".env"
+GORGO_INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+## Provider Options
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+<Note>🚧 Integration is currently under development, see the [Roadmap](./#roadmap).</Note>
