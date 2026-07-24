@@ -23,7 +23,7 @@ date: <ISO timestamp with timezone>
 researcher: Claude
 git_commit: <commit hash>
 branch: <branch>
-repository: medusa-plugins
+repository: medusa-integrations
 topic: "<topic>"
 tags: [research, codebase, <plugin-names>]
 status: complete

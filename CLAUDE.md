@@ -15,17 +15,20 @@ This repository is organized as a Yarn v4 monorepo with shared workspaces for pl
 │   ├── payment-tkassa/
 │   └── payment-yookassa/
 ├── packages/
-│   ├── medusa-1c/
-│   ├── medusa-feed-yandex/
-│   ├── medusa-fulfillment-apiship/
-│   ├── medusa-payment-robokassa/
-│   ├── medusa-payment-tkassa/
-│   ├── medusa-payment-yookassa/
+│   ├── modules/
+│   │   └── integration/
+│   ├── providers/
+│   │   ├── erp-1c/
+│   │   ├── feed-yandex/
+│   │   ├── fulfillment-apiship/
+│   │   ├── payment-robokassa/
+│   │   ├── payment-tkassa/
+│   │   └── payment-yookassa/
 │   └── utils/
-│       └── gorgo-telemetry/
+│       └── telemetry/
 ├── scripts/
 └── docs/                            # documentation content (built by gorgo/packages/docs)
-    ├── medusa-plugins/
+    ├── integrations/
     └── tools/
 ```
 
@@ -86,15 +89,16 @@ Commits must follow [Conventional Commits](https://www.conventionalcommits.org/)
 
 **Scope is required** and must be one of:
 
-- Package scope from `packages/` (strip `medusa-` prefix):
-  - `1c`
+- Package scope from `packages/modules/` and `packages/providers/` (folder name as-is):
+  - `integration`
+  - `erp-1c`
   - `feed-yandex`
   - `fulfillment-apiship`
   - `payment-robokassa`
   - `payment-tkassa`
   - `payment-yookassa`
 - Package scope from `packages/utils/` (folder name as-is):
-  - `gorgo-telemetry`
+  - `telemetry`
 - Repo-level:
   - `deps`
   - `release`

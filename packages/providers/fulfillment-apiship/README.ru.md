@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.ru/medusa-plugins/apiship">
+  <a href="https://docs.gorgojs.ru/integrations/apiship">
     <img alt="Medusa-ApiShip logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/apiship-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,11 +9,11 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/medusa-plugins/apiship">Документация</a>
+  <a href="https://docs.gorgojs.com/integrations/apiship">Документация</a>
   <br/>
   Плагин Medusa для интеграции с агрегатором служб доставки ApiShip, предоставляющий вашему магазину доступ к 40+ перевозчикам при минимальной настройке. Готов к продакшену.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-fulfillment-apiship/README.md">Read README in English ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/fulfillment-apiship/README.md">Read README in English ↗</a>
 </p>
 
 <br/>
@@ -92,7 +92,7 @@ npm install @gorgo/medusa-fulfillment-apiship
 
 ## Документация
 
-Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/medusa-plugins/apiship).
+Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/integrations/apiship).
 
 ## Лицензия
 

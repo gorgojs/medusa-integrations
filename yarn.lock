@@ -14160,9 +14160,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"medusa-plugins@workspace:.":
+"medusa-integrations@workspace:.":
   version: 0.0.0-use.local
-  resolution: "medusa-plugins@workspace:."
+  resolution: "medusa-integrations@workspace:."
   dependencies:
     "@changesets/changelog-github": "npm:^0.6.0"
     "@changesets/cli": "npm:^2.30.0"

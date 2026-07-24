@@ -16,7 +16,7 @@ jobs:
   notify:
     name: Notify Private Repo
     runs-on: ubuntu-latest
-    if: github.repository == 'gorgojs/medusa-plugins'
+    if: github.repository == 'gorgojs/medusa-integrations'
 
     steps:
     - name: Skip if publish owns this push

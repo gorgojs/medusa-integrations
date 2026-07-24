@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const PATHS_TO_DIR = ['packages/modules/', 'packages/providers/', 'packages/utils'];
+const PATHS_TO_DIR = ['packages/modules', 'packages/providers', 'packages/plugins', 'packages/utils'];
 const REPO_SCOPES = ['deps', 'release', 'docs', 'root'];
 
 const packageScopes = PATHS_TO_DIR.flatMap(dirPath => {
@@ -10,6 +10,7 @@ const packageScopes = PATHS_TO_DIR.flatMap(dirPath => {
   return fs.readdirSync(fullPath, { withFileTypes: true })
     .filter(d => d.isDirectory())
     .filter(d => fs.existsSync(path.join(fullPath, d.name, 'package.json')))
+    .map(d => d.name);
     .map(d => d.name);
 });
 

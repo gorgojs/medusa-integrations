@@ -3,11 +3,11 @@ Integration Module for Medusa
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/medusa-plugins/integration">Documentation</a>
+  <a href="https://docs.gorgojs.com/integrations/integration">Documentation</a>
   <br/>
   A Medusa module that lets plugins declare their settings and store admins configure them right in the Admin — no <code>medusa-config</code> edits, no redeploys, secrets encrypted at rest.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-integration/README.ru.md">Читать README на русском ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/modules/integration/README.ru.md">Читать README на русском ↗</a>
 </p>
 
 <br/>
@@ -53,9 +53,9 @@ Plugins need settings — API keys, modes, webhooks. Usually these live in `medu
 
 | Provider | Category | `resolve` |
 |---|---|---|
-| [T-Kassa](https://docs.gorgojs.com/medusa-plugins/t-kassa) | `payment` | `@gorgo/medusa-payment-tkassa-v2/providers/integration-tkassa` |
+| [T-Kassa](https://docs.gorgojs.com/integrations/t-kassa) | `payment` | `@gorgo/medusa-payment-tkassa-v2/providers/integration-tkassa` |
 
-Any plugin can ship an integration provider — see the [documentation](https://docs.gorgojs.com/medusa-plugins/integration).
+Any plugin can ship an integration provider — see the [documentation](https://docs.gorgojs.com/integrations/integration).
 
 ## 💬  Support & Community
 
@@ -78,7 +78,7 @@ npm install @gorgo/medusa-integration
 
 ## Documentation
 
-The complete installation, configuration, and usage guide is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-plugins/integration).
+The complete installation, configuration, and usage guide is available on the [Gorgo documentation website](https://docs.gorgojs.com/integrations/integration).
 
 ## License
 

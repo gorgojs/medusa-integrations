@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.ru/medusa-plugins/t-kassa">
+  <a href="https://docs.gorgojs.ru/integrations/t-kassa">
     <img alt="Medusa-T-Kassa logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/tkassa-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,11 +9,11 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.ru/medusa-plugins/t-kassa">Документация</a>
+  <a href="https://docs.gorgojs.ru/integrations/t-kassa">Документация</a>
   <br/>
   Плагин Medusa для приёма платежей через Т-Касса от Т-Банка. Готов к продакшену.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-payment-tkassa/README.md">Read README in English ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/payment-tkassa/README.md">Read README in English ↗</a>
 </p>
 
 <br>
@@ -95,7 +95,7 @@ npm install @gorgo/medusa-payment-tkassa
 
 ## Документация
 
-Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/medusa-plugins/t-kassa).
+Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/integrations/t-kassa).
 
 ## Лицензия
 

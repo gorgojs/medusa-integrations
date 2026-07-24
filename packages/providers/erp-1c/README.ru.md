@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.ru/medusa-plugins/1c-enterprise">
+  <a href="https://docs.gorgojs.ru/integrations/1c-enterprise">
     <img alt="Medusa-1C logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,11 +9,11 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/medusa-plugins/1c-enterprise">Документация</a>
+  <a href="https://docs.gorgojs.com/integrations/1c-enterprise">Документация</a>
   <br/>
   Синхронизация товаров и заказов между Medusa и 1С:Предприятие.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-1c/README.md">Read README in English ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/erp-1c/README.md">Read README in English ↗</a>
 </p>
 
 <br/>
@@ -80,7 +80,7 @@ npm install @gorgo/medusa-1c
 
 ## Документация
 
-Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.com/medusa-plugins/1c-enterprise).
+Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.com/integrations/1c-enterprise).
 
 ## Лицензия
 

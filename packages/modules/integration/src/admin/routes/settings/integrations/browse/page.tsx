@@ -18,7 +18,7 @@ import { sdk } from "../../../../lib/sdk"
 import { IntegrationIcon } from "../../../../components/integration-icon"
 import type { AdminIntegrationCatalogResponse, CatalogItem } from "../../../../../types"
 
-const PUBLISH_URL = "https://docs.gorgojs.com/medusa-plugins"
+const PUBLISH_URL = "https://docs.gorgojs.com/integrations"
 
 const InstallModal = ({ item, onOpenChange }: { item: CatalogItem | null; onOpenChange: (open: boolean) => void }) => {
   const { t } = useTranslation()

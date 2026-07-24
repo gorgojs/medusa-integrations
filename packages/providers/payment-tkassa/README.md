@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.com/medusa-plugins/t-kassa">
+  <a href="https://docs.gorgojs.com/integrations/t-kassa">
     <img alt="Medusa-T-Kassa logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/tkassa-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,11 +9,11 @@ T-Kassa Payments by T-Bank for Medusa
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/medusa-plugins/t-kassa">Documentation</a>
+  <a href="https://docs.gorgojs.com/integrations/t-kassa">Documentation</a>
   <br/>
   A Medusa plugin that provides T-Kassa payments by T-Bank. Production-ready.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-payment-tkassa/README.ru.md">Читать README на русском ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/payment-tkassa/README.ru.md">Читать README на русском ↗</a>
 </p>
 
 <br/>
@@ -96,7 +96,7 @@ npm install @gorgo/medusa-payment-tkassa
 
 ## Documentation
 
-The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-plugins/t-kassa).
+The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/integrations/t-kassa).
 
 ## License
 

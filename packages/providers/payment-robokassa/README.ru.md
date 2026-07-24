@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.ru/medusa-plugins/robokassa">
+  <a href="https://docs.gorgojs.ru/integrations/robokassa">
     <img alt="Medusa-Robokassa logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/robokassa-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,11 +9,11 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.ru/medusa-plugins/robokassa">Документация</a>
+  <a href="https://docs.gorgojs.ru/integrations/robokassa">Документация</a>
   <br/>
   Плагин Medusa для приёма платежей через Robokassa. Готов к продакшену.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-payment-robokassa/README.md">Read README in English →</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/payment-robokassa/README.md">Read README in English →</a>
 </p>
 
 <br/>
@@ -84,7 +84,7 @@ npm install @gorgo/medusa-payment-robokassa
 
 ## Документация
 
-Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/medusa-plugins/robokassa).
+Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/integrations/robokassa).
 
 ## Лицензия
 

@@ -9,7 +9,7 @@ const descriptor = defineIntegration({
   displayName: "onec.name",
   description: "onec.description",
   icon: ONEC_ICON,
-  docsUrl: "https://docs.gorgojs.com/medusa-plugins/1c-enterprise",
+  docsUrl: "https://docs.gorgojs.com/integrations/1c-enterprise",
 
   options: {
     interval: {

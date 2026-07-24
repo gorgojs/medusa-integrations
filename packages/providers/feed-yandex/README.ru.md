@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.ru/medusa-plugins/yandex-yml-feed">
+  <a href="https://docs.gorgojs.ru/integrations/yandex-yml-feed">
     <img alt="Medusa-Yandex Market logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yandex-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,11 +9,11 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/medusa-plugins/yandex-yml-feed">Документация</a>
+  <a href="https://docs.gorgojs.com/integrations/yandex-yml-feed">Документация</a>
   <br/>
   Плагин Medusa, который генерирует фид товаров в формате <a href="https://yandex.com/support/direct/feeds/requirements-yml.html">YML (Yandex Market Language)</a>.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-feed-yandex/README.md">Read README in English ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/feed-yandex/README.md">Read README in English ↗</a>
 </p>
 
 <br/>
@@ -74,7 +74,7 @@ npm install @gorgo/medusa-feed-yandex
 
 ## Документация
 
-Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.com/medusa-plugins/yandex-yml-feed).
+Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.com/integrations/yandex-yml-feed).
 
 ## Лицензия
 

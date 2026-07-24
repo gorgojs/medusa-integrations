@@ -44,11 +44,11 @@ jobs:
 
       - name: Run unit tests for changed plugins
         if: github.event_name != 'workflow_dispatch' && github.event_name != 'schedule'
-        run: yarn turbo run test:unit --filter='./packages/medusa-*[origin/main]' --no-cache --force
+        run: yarn turbo run test:unit --filter='./packages/providers/*[origin/main]' --filter='./packages/modules/*[origin/main]' --no-cache --force
 
       - name: Run unit tests for all plugins
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
-        run: yarn turbo run test:unit --filter='./packages/medusa-*' --no-cache --force
+        run: yarn turbo run test:unit --filter='./packages/providers/*' --filter='./packages/modules/*' --no-cache --force
 
   integration:
     name: Integration tests

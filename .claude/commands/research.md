@@ -37,7 +37,7 @@ Then wait for the user's research query.
 2. **Analyze and decompose the research question**
    - Break the query into composable research areas
    - Take time to ultrathink about patterns, connections, and architectural implications
-   - Identify specific plugins (`packages/medusa-*`), modules, providers, or workflows to investigate
+   - Identify specific plugins (`packages/providers/*`), modules, providers, or workflows to investigate
    - Create a research plan using TodoWrite to track all subtasks
 
 3. **Spawn parallel sub-agent tasks for comprehensive research**
@@ -71,7 +71,7 @@ Then wait for the user's research query.
    researcher: Claude
    git_commit: [current commit hash]
    branch: [current branch name]
-   repository: medusa-plugins
+   repository: medusa-integrations
    topic: "[User's Question/Topic]"
    tags: [research, codebase, relevant-plugin-names]
    status: complete
@@ -84,7 +84,7 @@ Then wait for the user's research query.
    **Researcher**: Claude
    **Git Commit**: [hash]
    **Branch**: [branch]
-   **Repository**: medusa-plugins
+   **Repository**: medusa-integrations
 
    ## Research Question
 
@@ -108,8 +108,8 @@ Then wait for the user's research query.
 
    ## Code References
 
-   - `packages/medusa-<plugin>/src/...:L` — description
-   - `packages/medusa-<plugin>/src/...:L-L` — description
+   - `packages/providers/<plugin>/src/...:L` — description
+   - `packages/providers/<plugin>/src/...:L-L` — description
 
    ## Architecture Documentation
 

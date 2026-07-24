@@ -40,13 +40,13 @@
 ## Medusa Plugins
 
 <p>
-  <a href="./packages/medusa-payment-yookassa">
+  <a href="./packages/providers/payment-yookassa">
     <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yookassa-logo.svg" width="80" align="left" alt="Yookassa logo">
   </a>
-  <strong><a href="./packages/medusa-payment-yookassa">Yookassa</a></strong><br/>
+  <strong><a href="./packages/providers/payment-yookassa">Yookassa</a></strong><br/>
   Payment provider with hosted checkout, webhook handling, refunds, fiscal receipts, and a storefront example.
   <br/>
-  <a href="https://docs.gorgojs.com/medusa-plugins/yookassa">docs</a> |
+  <a href="https://docs.gorgojs.com/integrations/yookassa">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-yookassa">npm</a> |
   <a href="./examples/payment-yookassa">example</a>
 </p>
@@ -56,12 +56,12 @@
 <br clear="left"/>
 
 <p>
-  <a href="./packages/medusa-payment-tkassa">
+  <a href="./packages/providers/payment-tkassa">
     <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/tkassa-logo.svg" width="80" align="left" alt="T-Kassa logo">
   </a>
-  <strong><a href="./packages/medusa-payment-tkassa">T-Kassa by T-Bank</a></strong><br/>
+  <strong><a href="./packages/providers/payment-tkassa">T-Kassa by T-Bank</a></strong><br/>
   Payment provider with payment initialization, webhook handling, refunds, receipt support, and a storefront example.<br/>
-  <a href="https://docs.gorgojs.com/medusa-plugins/t-kassa">docs</a> |
+  <a href="https://docs.gorgojs.com/integrations/t-kassa">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-tkassa">npm</a> |
   <a href="./examples/payment-tkassa">example</a>
 </p>
@@ -71,12 +71,12 @@
 <br clear="left"/>
 
 <p>
-  <a href="./packages/medusa-payment-robokassa">
+  <a href="./packages/providers/payment-robokassa">
     <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/robokassa-logo.svg" width="80" align="left" alt="Robokassa logo">
   </a>
-  <strong><a href="./packages/medusa-payment-robokassa">Robokassa</a></strong><br/>
+  <strong><a href="./packages/providers/payment-robokassa">Robokassa</a></strong><br/>
   Payment provider with hosted checkout flows, notifications, refunds, receipt generation, and example storefront integration.<br/>
-  <a href="https://docs.gorgojs.com/medusa-plugins/robokassa">docs</a> |
+  <a href="https://docs.gorgojs.com/integrations/robokassa">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-robokassa">npm</a> |
   <a href="./examples/payment-robokassa">example</a>
 </p>
@@ -86,12 +86,12 @@
 <br clear="left"/>
 
 <p>
-  <a href="./packages/medusa-fulfillment-apiship">
+  <a href="./packages/providers/fulfillment-apiship">
     <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/apiship-logo.svg" width="80" align="left" alt="ApiShip logo">
   </a>
-  <strong><a href="./packages/medusa-fulfillment-apiship">ApiShip</a></strong><br/>
+  <strong><a href="./packages/providers/fulfillment-apiship">ApiShip</a></strong><br/>
   Fulfillment provider with delivery rate calculation, shipment creation, pickup-point delivery, document retrieval, and Admin tooling.<br/>
-  <a href="https://docs.gorgojs.com/medusa-plugins/apiship">docs</a> |
+  <a href="https://docs.gorgojs.com/integrations/apiship">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-fulfillment-apiship">npm</a> |
   <a href="./examples/fulfillment-apiship">example</a>
 </p>
@@ -101,12 +101,12 @@
 <br clear="left"/>
 
 <p>
-  <a href="./packages/medusa-1c">
+  <a href="./packages/providers/erp-1c">
     <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-logo.svg" width="80" align="left" alt="1C:Enterprise logo">
   </a>
-  <strong><a href="./packages/medusa-1c">1C:Enterprise</a></strong><br/>
+  <strong><a href="./packages/providers/erp-1c">1C:Enterprise</a></strong><br/>
   Integration for synchronizing catalog and order data between Medusa and 1C:Enterprise, with an example backend.<br/>
-  <a href="https://docs.gorgojs.com/medusa-plugins/1c-enterprise">docs</a> |
+  <a href="https://docs.gorgojs.com/integrations/1c-enterprise">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">npm</a> |
   <a href="./examples/1c">example</a>
 </p>
@@ -116,12 +116,12 @@
 <br clear="left"/>
 
 <p>
-  <a href="./packages/medusa-feed-yandex">
+  <a href="./packages/providers/feed-yandex">
     <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yandex-logo.svg" width="80" align="left" alt="Yandex Market logo">
   </a>
-  <strong><a href="./packages/medusa-feed-yandex">Yandex Market YML Feed</a></strong><br/>
+  <strong><a href="./packages/providers/feed-yandex">Yandex Market YML Feed</a></strong><br/>
   Feed generator that exports catalog data in YML format and exposes feed management through Medusa Admin.<br/>
-  <a href="https://docs.gorgojs.com/medusa-plugins/yandex-yml-feed">docs</a> |
+  <a href="https://docs.gorgojs.com/integrations/yandex-yml-feed">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-feed-yandex">npm</a> |
   <a href="./examples/feed-yandex">example</a>
 </p>
@@ -154,7 +154,7 @@ This repository is organized as a Yarn monorepo with shared workspaces for plugi
 │   └── utils/
 ├── scripts/
 └── docs/
-    ├── medusa-plugins/
+    ├── integrations/
     └── tools/
 ```
 
@@ -173,13 +173,13 @@ See the plugin example README for details:
 
 The repository runs two kinds of tests, orchestrated by [Turborepo](https://turborepo.com):
 
-- **Unit tests** live next to source in each plugin (`packages/medusa-<plugin>/src/**/__tests__/*.unit.spec.ts`).
+- **Unit tests** live next to source in each plugin (`packages/providers/<plugin>/src/**/__tests__/*.unit.spec.ts`).
 - **Integration tests** live in dedicated workspace packages (`integration-tests/<plugin>/`) that boot a real Medusa app with the plugin loaded via `workspace:*`. See [integration-tests/README.md](integration-tests/README.md) for prerequisites and running.
 
 From the monorepo root:
 
 ```bash
-yarn test:unit                # all unit tests across packages/medusa-*
+yarn test:unit                # all unit tests across packages/providers/* and packages/modules/*
 yarn test:integration         # all integration tests across integration-tests/*
 yarn test:changed             # unit + integration only for packages changed vs origin/main
 ```
@@ -187,7 +187,7 @@ yarn test:changed             # unit + integration only for packages changed vs 
 From a single plugin package (for active development):
 
 ```bash
-cd packages/medusa-<plugin>
+cd packages/providers/<plugin>
 yarn test:unit
 ```
 
@@ -208,13 +208,14 @@ Before opening a Pull Request:
     feat(scope): commit message
     ```  
     Package scopes:
-   - `1c`
+   - `integration`
+   - `erp-1c`
    - `feed-yandex`
    - `fulfillment-apiship`
    - `payment-robokassa`
    - `payment-tkassa`
    - `payment-yookassa`
-   - `gorgo-telemetry`
+   - `telemetry`
 
     Plus repo-level scopes: `deps`, `release`, `docs`, `root`. Run `yarn scopes` to print the current list.  
 

@@ -13,7 +13,7 @@ shortDescription:
   ru: "Приём платежей через Т-Кассу от Т-Банка"
 icon: "tkassa.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
-docsUrl: "https://docs.gorgojs.com/medusa-plugins/t-kassa"
+docsUrl: "https://docs.gorgojs.com/integrations/t-kassa"
 configSnippet: |
   {
     resolve: "@gorgo/medusa-payment-tkassa",

@@ -12,6 +12,15 @@ const cwd = process.cwd()
 const examplesDir = path.join(cwd, 'examples')
 const badgesDir = path.join(cwd, '.badges')
 
+const EXAMPLE_TO_DIR = {
+  '1c': 'providers/erp-1c',
+  'feed-yandex': 'providers/feed-yandex',
+  'fulfillment-apiship': 'providers/fulfillment-apiship',
+  'payment-robokassa': 'providers/payment-robokassa',
+  'payment-tkassa': 'providers/payment-tkassa',
+  'payment-yookassa': 'providers/payment-yookassa',
+}
+
 const examples = fs.existsSync(examplesDir)
   ? fs.readdirSync(examplesDir, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name)
   : []
@@ -20,7 +29,8 @@ const versions = new Set()
 const outdated = []
 
 for (const example of examples) {
-  if (!fs.existsSync(path.join(cwd, 'packages', `medusa-${example}`))) continue
+  const packageDir = EXAMPLE_TO_DIR[example]
+  if (!packageDir || !fs.existsSync(path.join(cwd, 'packages', packageDir))) continue
 
   let tested = null
   const badgeFile = path.join(badgesDir, `medusa-${example}.json`)
