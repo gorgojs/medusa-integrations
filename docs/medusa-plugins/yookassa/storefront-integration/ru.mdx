@@ -17,7 +17,7 @@ description: "Узнайте, как интегрировать платежны
 
 Чтобы сделать ЮKassa доступным в качестве способа оплаты на странице оформления заказа витрины магазина, необходимо добавить её конфигурацию в маппинг платёжных провайдеров в файле с константами вашей витрины. Этот маппинг определяет как каждый провайдер отображается в интерфейсе.
 
-Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-plugins/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/lib/constants.tsx#L37-L40) и добавьте следующий код:
+Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/lib/constants.tsx#L37-L40) и добавьте следующий код:
 
 ![Структура проекта Medusa Storefront после обновления файла с константами](https://github.com/user-attachments/assets/0aee001e-958f-40c6-b329-618e318ff019)
 
@@ -50,7 +50,7 @@ export const isYookassa = (providerId?: string) => {
 
 При подключении ЮKassa настройте политику cookie так, чтобы поддерживались междоменные редиректы. Это нужно для сохранения платёжной сессии при возврате пользователя в магазин.
 
-Откройте [`src/lib/data/cookies.ts`](https://github.com/gorgojs/medusa-plugins/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/lib/data/cookies.ts#L79) и обновите конфигурацию файлов cookie следующим образом:
+Откройте [`src/lib/data/cookies.ts`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/lib/data/cookies.ts#L79) и обновите конфигурацию файлов cookie следующим образом:
 
 ![Структура проекта Medusa Storefront после обновления файлов cookie](https://github.com/user-attachments/assets/4274d249-6994-4d9f-b4b6-98f2016f0e9f)
 
@@ -73,7 +73,7 @@ export const setCartId = async (cartId: string) => {
 
 Чтобы перенаправить покупателя в ЮKassa, платёжная сессия должна быть корректно инициализирована с необходимыми параметрами, включая return URL после оплаты и корзину для формирования онлайн-чеков.
 
-Откройте [`src/modules/checkout/components/payment/index.tsx`](https://github.com/gorgojs/medusa-plugins/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/modules/checkout/components/payment/index.tsx#L83-L95) и обновите логику инициализации платежа, включив в нее данные корзины и URL возврата для ЮKassa:
+Откройте [`src/modules/checkout/components/payment/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/modules/checkout/components/payment/index.tsx#L83-L95) и обновите логику инициализации платежа, включив в нее данные корзины и URL возврата для ЮKassa:
 
 ![Структура проекта Medusa Storefront после обновления файла для компонента оплаты](https://github.com/user-attachments/assets/5c4dfcf9-57e7-48f6-956c-0e0a91ec6c8f)
 
@@ -118,7 +118,7 @@ const Payment = ({
 
 В витрине для каждого платёжного провайдера необходим отдельный компонент кнопки оплаты. Он отвечает за обработку оформления заказа после подтверждения пользователем и, используя данные платёжного сеанса, перенаправляет его на страницу оплаты ЮKassa.
 
-Откройте [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-plugins/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/modules/checkout/components/payment-button/index.tsx#L163-L205) и добавьте следующий код:
+Откройте [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/modules/checkout/components/payment-button/index.tsx#L163-L205) и добавьте следующий код:
 
 ![Структура проекта Medusa Storefront после обновления файла для компонента кнопки оплаты](https://github.com/user-attachments/assets/4b76ee52-747f-452e-9160-6365f742e33e)
 
@@ -208,7 +208,7 @@ const YookassaPaymentButton = ({
 
 После того как покупатель завершает оплату на странице ЮKassa, он перенаправляется обратно на витрину магазина. Необходимо создать API-роут, который обработает этот callback, проверит статус платежа и завершит корзину.
 
-Создайте файл [`src/app/api/capture-payment/[cartId]/route.ts`](https://github.com/gorgojs/medusa-plugins/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/app/api/capture-payment/%5BcartId%5D/route.ts)  со следующим содержимым:
+Создайте файл [`src/app/api/capture-payment/[cartId]/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/app/api/capture-payment/%5BcartId%5D/route.ts)  со следующим содержимым:
 
 ![Структура проекта Medusa Storefront после создания файла для API route](https://github.com/user-attachments/assets/89ac89de-62ad-4b6c-af61-ab6299587dbf)
 
@@ -272,12 +272,12 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
 
 ## Полный пример кода интеграции в витрину
 
-Вы можете ознакомиться с изменениями, внесенными в стартовый шаблон [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa) в директории [`examples/payment-yookassa/medusa-storefront`](https://github.com/gorgojs/medusa-plugins/tree/main/examples/payment-yookassa/medusa-storefront).
+Вы можете ознакомиться с изменениями, внесенными в стартовый шаблон [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa) в директории [`examples/payment-yookassa/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/medusa-storefront).
 
-Полный код интеграции можно посмотреть в разделе [comparison page](https://github.com/gorgojs/medusa-plugins/compare/%40gorgo/medusa-payment-yookassa%400.0.1...main), откройте вкладку `Files changed` и изучите различия в каталоге `examples/medusa-storefront`. Или запустите `diff` в терминале:
+Полный код интеграции можно посмотреть в разделе [comparison page](https://github.com/gorgojs/medusa-integrations/compare/%40gorgo/medusa-payment-yookassa%400.0.1...main), откройте вкладку `Files changed` и изучите различия в каталоге `examples/medusa-storefront`. Или запустите `diff` в терминале:
 
 ```bash title="Terminal"
-git clone https://github.com/gorgojs/medusa-plugins
+git clone https://github.com/gorgojs/medusa-integrations
 cd medusa-plugins
 git diff @gorgo/medusa-payment-yookassa@0.0.1...main -- examples/payment-yookassa/medusa-storefront
 ```

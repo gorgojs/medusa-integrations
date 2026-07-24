@@ -28,7 +28,7 @@ NEXT_PUBLIC_YANDEX_MAPS_API_KEY=supersecret
 
 ApiShip requires the recipient’s phone number for shipping calculations and for creating an order in the ApiShip. For this reason, the storefront must enforce a phone number in the shipping address form.
 
-Open [`src/modules/checkout/components/shipping-address/index.tsx`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and mark the phone input as required:
+Open [`src/modules/checkout/components/shipping-address/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and mark the phone input as required:
 
 ![Directory structure in the Medusa Storefront after updating the file for shipping address component](https://github.com/user-attachments/assets/08552cbd-f3f3-4526-a334-b86b66f48e37)
 
@@ -52,7 +52,7 @@ By marking the phone input as `required`, the checkout always collects the recip
 
 To integrate ApiShip into checkout, the storefront needs a way to save the customer’s delivery choice in the cart and retrieve it later. This makes the flow stable across refreshes and navigation. If a customer has already selected a tariff and a pickup point, the storefront can restore that selection instead of asking them to choose again. It also needs a proper removal action that clears the selection not only visually, but in the cart itself.
 
-Open [`src/lib/data/cart.ts`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/lib/data/cart.ts#L217-L242) and add the following:
+Open [`src/lib/data/cart.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/lib/data/cart.ts#L217-L242) and add the following:
 
 ![Directory structure in the Medusa Storefront after updating the file for cart](https://github.com/user-attachments/assets/f2563a45-53bd-4e28-8d25-8b612d0bb8ba)
 
@@ -128,7 +128,7 @@ These changes enable three core behaviors:
 
 To properly render ApiShip delivery options in the shipping step, the storefront needs access to dynamic calculation data, pickup point details, and the list of available providers. In addition to tariffs and pickup points, the storefront also retrieves provider metadata to display human-readable carrier names in the checkout interface instead of internal identifiers.
 
-Open [`src/lib/data/fulfillment.ts`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/lib/data/fulfillment.ts#L70-L134) and add the following helpers:
+Open [`src/lib/data/fulfillment.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/lib/data/fulfillment.ts#L70-L134) and add the following helpers:
 
 ![Directory structure in the Medusa Storefront after updating the file for fulfillment](https://github.com/user-attachments/assets/c37d99e7-403a-4fef-84dc-ed351087a4dc)
 
@@ -332,7 +332,7 @@ In addition, the storefront fetches the list of ApiShip providers to display hum
 
 The storefront integration relies on a small set of shared types that describe the data returned by the ApiShip calculation endpoint and the data persisted in the cart as the user’s delivery selection. These types are used across the map UI, courier and pickup points modal windows, and the chosen component to keep the flow consistent and type-safe.
 
-Open [`src/modules/checkout/components/shipping/apiship/types/index.ts`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following types:
+Open [`src/modules/checkout/components/shipping/apiship/types/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following types:
 
 ![Directory structure in the Medusa Storefront after creating the file for ApiShip types](https://github.com/user-attachments/assets/759f8e54-1f6b-4371-a518-78bddcdcf0f1)
 
@@ -383,7 +383,7 @@ export type Chosen = {
 
 The storefront integration uses a set of shared utilities to keep the UI consistent and to avoid duplicating logic across the components. These helpers handle delivery time formatting, stable callback references for async effects, deterministic tariff keys for selection, scroll locking for modal windows, and mapping pickup point tariffs into a structure that is easy to render.
 
-Open [`src/modules/checkout/components/shipping/apiship/utils/index.ts`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following helpers:
+Open [`src/modules/checkout/components/shipping/apiship/utils/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following helpers:
 
 ![Directory structure in the Medusa Storefront after creating the file for ApiShip utilities](https://github.com/user-attachments/assets/a59ef69b-72e1-4dba-b094-793e39d978ef)
 
@@ -483,7 +483,7 @@ These utilities are referenced by the modal windows and the map for formatting d
 
 This component is responsible for rendering the Yandex Map, placing pickup point markers on it, and showing a details panel with available tariffs when a point is selected.
 
-Open [`src/modules/checkout/components/shipping/apiship/apiship-map.tsx`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
+Open [`src/modules/checkout/components/shipping/apiship/apiship-map.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
 ![Directory structure in the Medusa Storefront after creating the file for pickup point map](https://github.com/user-attachments/assets/bffa1d01-eaf7-4c54-93bb-927b34a139a7)
 
@@ -924,7 +924,7 @@ This component initializes Yandex Maps once, re-centers the map when the pickup 
 
 This component renders a compact summary of the shipping option the customer has already selected. It is shown after the user selects a pickup point or courier tariff, so the checkout can clearly display what is currently saved in the cart.
 
-Open [`src/modules/checkout/components/shipping/apiship/apiship-chosen.tsx`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
+Open [`src/modules/checkout/components/shipping/apiship/apiship-chosen.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
 ![Directory structure in the Medusa Storefront after creating the file for ApiShip chosen](https://github.com/user-attachments/assets/898bba01-7197-461c-89fe-ce97682b834c)
 
@@ -1030,7 +1030,7 @@ With this in place, the storefront can show the previously saved selection direc
 
 This component implements a dedicated modal window that allows the customer to select an ApiShip pickup point and an associated tariff directly on the map. The modal is responsible for loading pickup points for the selected shipping option, restoring the previously saved selection (if any), and persisting the new selection back to the cart once the customer confirms it.
 
-Open [`src/modules/checkout/components/shipping/apiship/apiship-pickup-point-modal.tsx`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
+Open [`src/modules/checkout/components/shipping/apiship/apiship-pickup-point-modal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
 ![Directory structure in the Medusa Storefront after creating the file for ApiShip pickup point modal window](https://github.com/user-attachments/assets/ffb59344-83e4-4b02-a437-58d4660e2e63)
 
@@ -1257,7 +1257,7 @@ This component implements a dedicated modal window for selecting courier deliver
 
 When the modal window is open, it restores the previously selected tariff (if one was already saved in the cart), so the user sees their earlier choice immediately. All available courier tariffs are displayed in a grouped layout, and the customer can select one using radio buttons.
 
-Open [`src/modules/checkout/components/shipping/apiship/apiship-courier-modal.tsx`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
+Open [`src/modules/checkout/components/shipping/apiship/apiship-courier-modal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
 ![Directory structure in the Medusa Storefront after creating the file for ApiShip courier modal window](https://github.com/user-attachments/assets/cbe90ee1-11af-46ce-bdb3-5eee32617c34)
 
@@ -1543,7 +1543,7 @@ Once the customer confirms their choice by clicking `Choose`, the selected tarif
 
 All ApiShip storefront components and helpers are exported through a barrel file that acts as a single entry point for the integration. It re-exports the main UI building blocks, along with shared types and utility helpers, so other parts of the storefront can import everything from one place instead of referencing internal file paths.
 
-Open [`src/modules/checkout/components/shipping/apiship/index.ts`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
+Open [`src/modules/checkout/components/shipping/apiship/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
 ![Directory structure in the Medusa Storefront after creating the file for single entry point for the integration](https://github.com/user-attachments/assets/39d446d4-2708-49ce-9f51-d40b6eeed470)
 
@@ -1564,7 +1564,7 @@ This keeps imports clean and consistent, and makes the integration easier to mai
 
 To support ApiShip calculated delivery methods, the delivery step needs an extra UI flow where the customer chooses a specific tariff, and optionally a pickup point. This update adds ApiShip-specific state and modal windows, loads provider names for displaying, and saves the final selection in the cart so the checkout can proceed only after the customer has made a valid choice.
 
-Open [`src/modules/checkout/components/shipping/index.ts`](https://github.com/gorgojs/medusa-plugins/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
+Open [`src/modules/checkout/components/shipping/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
 ![Directory structure in the Medusa Storefront after updating the file for shipping component](https://github.com/user-attachments/assets/b526af99-7356-4bb6-ba42-12f2442aac99)
 
@@ -1887,12 +1887,12 @@ This change adds two dedicated modal windows for ApiShip (pickup point selection
 
 ## Full Storefront Integration Code Example
 
-You can refer to the modifications made in the [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa), which are located in the [`examples/medusa-storefront`](https://github.com/gorgojs/medusa-plugins/tree/main/examples/fulfillment-apiship/medusa-storefront) directory.
+You can refer to the modifications made in the [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa), which are located in the [`examples/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/fulfillment-apiship/medusa-storefront) directory.
 
-The complete integration diff can be viewed in the [comparison page](https://github.com/gorgojs/medusa-plugins/compare/%40gorgo/medusa-fulfillment-apiship%400.0.1...main), and explore the differences under the `examples/fulfillment-apiship/medusa-storefront` directory. Or run diff in the terminal:
+The complete integration diff can be viewed in the [comparison page](https://github.com/gorgojs/medusa-integrations/compare/%40gorgo/medusa-fulfillment-apiship%400.0.1...main), and explore the differences under the `examples/fulfillment-apiship/medusa-storefront` directory. Or run diff in the terminal:
 
 ```bash title="Terminal"
-git clone https://github.com/gorgojs/medusa-plugins
+git clone https://github.com/gorgojs/medusa-integrations
 cd medusa-plugins
 git diff @gorgo/medusa-fulfillment-apiship@0.0.1...main -- examples/fulfillment-apiship/medusa-storefront
 ```

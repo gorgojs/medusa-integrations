@@ -1,9 +1,9 @@
 <p align="center">
   <a href="https://www.medusajs.com">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/gorgo-logo-dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/gorgo-logo-light.svg">
-      <img alt="Gorgo logo" src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/gorgo-logo-light.svg" height="58">
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/gorgo-logo-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/gorgo-logo-light.svg">
+      <img alt="Gorgo logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/gorgo-logo-light.svg" height="58">
     </picture>
   </a>
 </p>
@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/gorgojs/medusa-plugins/blob/HEAD/README.md">Read README in English ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/README.md">Read README in English ↗</a>
 </p>
 
 <p align="center">
@@ -41,7 +41,7 @@
 
 <p>
   <a href="./packages/medusa-payment-yookassa">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/yookassa-logo.svg" width="100" align="left" alt="ЮKassa logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yookassa-logo.svg" width="100" align="left" alt="ЮKassa logo">
   </a>
   <strong><a href="./packages/medusa-payment-yookassa">ЮKassa</a></strong><br/>
   Провайдер платежей: создание платеже, обработка вебхуков, возвраты и фискальные чеки по 54-ФЗ. В комплекте пример витрины.<br/>
@@ -54,7 +54,7 @@
 
 <p>
   <a href="./packages/medusa-payment-tkassa">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/tkassa-logo.svg" width="100" align="left" alt="T-Kassa logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/tkassa-logo.svg" width="100" align="left" alt="T-Kassa logo">
   </a>
   <strong><a href="./packages/medusa-payment-tkassa">Т-Касса от Т-Банка</a></strong><br/>
   Провайдер платежей: создание платежей, обработка вебхуков, возвраты и фискальные чеки по 54-ФЗ. В комплекте пример витрины.<br/>
@@ -69,7 +69,7 @@
 
 <p>
   <a href="./packages/medusa-payment-robokassa">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/robokassa-logo.svg" width="100" align="left" alt="Robokassa logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/robokassa-logo.svg" width="100" align="left" alt="Robokassa logo">
   </a>
   <strong><a href="./packages/medusa-payment-robokassa">Robokassa</a></strong><br/>
   Провайдер платежей: создание платежей, обработка уведомлений, возвраты и фискальные чеки по 54-ФЗ. В комплекте пример интеграции с витриной.<br/>
@@ -84,7 +84,7 @@
 
 <p>
   <a href="./packages/medusa-fulfillment-apiship">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/apiship-logo.svg" width="100" align="left" alt="ApiShip logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/apiship-logo.svg" width="100" align="left" alt="ApiShip logo">
   </a>
   <strong><a href="./packages/medusa-fulfillment-apiship">ApiShip</a></strong><br/>
   Провайдер доставки: расчёт тарифов, создание отправлений, доставка в пункты выдачи, получение сопроводительных документов и управление из Medusa Admin.<br/>
@@ -99,7 +99,7 @@
 
 <p>
   <a href="./packages/medusa-1c">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/1c-logo.svg" width="100" align="left" alt="1C:Enterprise logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-logo.svg" width="100" align="left" alt="1C:Enterprise logo">
   </a>
   <strong><a href="./packages/medusa-1c">1С:Предприятие</a></strong><br/>
   Синхронизация каталога и заказов между Medusa и 1С:Предприятием. В комплекте пример backend-приложения.<br/>
@@ -114,7 +114,7 @@
 
 <p>
   <a href="./packages/medusa-feed-yandex">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/yandex-logo.svg" width="100" align="left" alt="Yandex Market logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yandex-logo.svg" width="100" align="left" alt="Yandex Market logo">
   </a>
   <strong><a href="./packages/medusa-feed-yandex">YML-фид для Яндекс Маркета</a></strong><br/>
   Экспорт каталога в формате YML (Yandex Market Language) с управлением фидами из Medusa Admin.<br/>

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/gorgojs/medusa-plugins/catalog/schema.json",
+  "$id": "https://github.com/gorgojs/medusa-integrations/catalog/schema.json",
   "title": "Gorgo integration catalog entry",
   "description": "One integration configurable through @gorgo/medusa-integration. One file per integration at catalog/integrations/<identifier>.yml.",
   "type": "object",

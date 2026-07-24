@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://docs.gorgojs.ru/medusa-plugins/yookassa">
-    <img alt="Medusa-YooKassa logo" src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/yookassa-medusa-logo.svg" width="270">
+    <img alt="Medusa-YooKassa logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yookassa-medusa-logo.svg" width="270">
   </a>
 </p>
 
@@ -13,7 +13,7 @@
   <br/>
   Плагин Medusa для приёма платежей через ЮKassa. Готов к продакшену.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-plugins/blob/HEAD/packages/medusa-payment-yookassa/README.md">Read README in English ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-payment-yookassa/README.md">Read README in English ↗</a>
 </p>
 
 <br>
@@ -22,8 +22,8 @@
   <a href="https://medusajs.com">
     <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
-  <a href="https://github.com/gorgojs/medusa-plugins/actions/workflows/update-medusa-version.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-plugins/main/.badges/medusa-payment-yookassa.json&label=%D0%9F%D1%80%D0%BE%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BE%20%D1%81%20Medusa&logo=checkmarx" alt="Протестировано с последней версией Medusa" />
+  <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-payment-yookassa.json&label=%D0%9F%D1%80%D0%BE%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BE%20%D1%81%20Medusa&logo=checkmarx" alt="Протестировано с последней версией Medusa" />
   </a>
 </p>
 
@@ -50,7 +50,7 @@
 - **Вебхук-уведомления:** Статусы платежей в реальном времени с проверкой подписи.
 - **Подробное логирование:** Логи запросов и ответов для отладки и поддержки в режиме разработки.
 - **Полное тестовое покрытие:** Юнит- и интеграционные тесты, покрывающие основные сценарии и граничные случаи.
-- **Пример витрины магазина:** Готовый [пример витрины на Next.js](https://github.com/gorgojs/medusa-plugins/tree/main/examples/payment-yookassa/medusa-storefront) для использования как референс.
+- **Пример витрины магазина:** Готовый [пример витрины на Next.js](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/medusa-storefront) для использования как референс.
 - **`Модуль интеграций`:** Настройте плагин прямо в приложении Medusa Admin — без редактирования конфигурационных файлов и повторного развёртывания магазина.
 
 > **Модуль интеграций:** Этот плагин поддерживает модуль интеграций — он позволяет администратору магазина настраивать плагин прямо в приложении Medusa Admin, не редактируя конфигурационные файлы и не выполняя повторное развёртывание магазина. Конфиденциальные значения шифруются, а настройки проверяются перед применением.

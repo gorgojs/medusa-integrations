@@ -12,6 +12,6 @@ shortDescription:
   en: "Multi-carrier shipping aggregation via ApiShip"
   ru: "Агрегатор доставки по нескольким службам через ApiShip"
 icon: "apiship.svg"
-repository: "https://github.com/gorgojs/medusa-plugins"
+repository: "https://github.com/gorgojs/medusa-integrations"
 docsUrl: "https://docs.gorgojs.com/medusa-plugins/apiship"
 active: true

@@ -14,7 +14,7 @@ To install any example do the following:
 
 1. Clone the repository and change to examples:
    ```bash
-   git clone https://github.com/gorgojs/medusa-plugins
+   git clone https://github.com/gorgojs/medusa-integrations
    cd medusa-plugins
    ```
 
