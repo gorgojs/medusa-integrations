@@ -345,3 +345,23 @@ describe("IntegrationModuleService — getPackageMeta", () => {
     expect(svc.getPackageMeta("int_missing")).toEqual({ version: null, author: null, author_url: null })
   })
 })
+
+describe("IntegrationModuleService — getCatalog", () => {
+  it("marks a catalog entry installed when a provider with that identifier is registered", async () => {
+    const reg = {
+      key: "int_tkassa", identifier: "tkassa", instanceId: null,
+      provider: { descriptor: { category: "payment", displayName: "T" }, getIdentifier: () => "tkassa", getInstanceId: () => null },
+    }
+    const svc = makeService({ providerService: makeProviderService([reg]) })
+    const catalog = await svc.getCatalog()
+    expect(catalog.find((c: any) => c.integrationId === "tkassa")).toMatchObject({ installed: true, provider_id: "int_tkassa" })
+    expect(catalog.find((c: any) => c.integrationId === "1c")).toMatchObject({ installed: false, provider_id: null })
+  })
+
+  it("returns the whole catalog with installed=false when nothing matches", async () => {
+    const svc = makeService() // default registration identifier "demo" — no catalog match
+    const catalog = await svc.getCatalog()
+    expect(catalog.length).toBeGreaterThanOrEqual(5)
+    expect(catalog.every((c: any) => c.installed === false && c.provider_id === null)).toBe(true)
+  })
+})

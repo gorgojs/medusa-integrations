@@ -38,3 +38,31 @@ export interface MaskedIntegration {
   last_test_status: TestStatus | null
   values: Record<string, unknown>
 }
+
+/** One integration in the Gorgo catalog (hardcoded now; a Gorgo API later). */
+export interface CatalogIntegration {
+  integrationId: string
+  slug: string
+  npm: string
+  category: string
+  author: string
+  authorLocalized: string
+  label: string
+  shortDescription: string
+  repository: string
+  docsUrl: string
+  /** Config to paste into medusa-config (absent for some providers). */
+  configSnippet?: string
+  /** Icon URL (relative to the Gorgo host). */
+  icon: string
+  stars: number | null
+  downloads: number | null
+}
+
+/** A catalog entry merged with local install state. */
+export interface CatalogItem extends CatalogIntegration {
+  /** True when a provider with this `integrationId` is registered in this project. */
+  installed: boolean
+  /** The registered `provider_id` when installed, else null. */
+  provider_id: string | null
+}

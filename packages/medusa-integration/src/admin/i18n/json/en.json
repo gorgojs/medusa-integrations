@@ -12,6 +12,20 @@
       "testFailed": "test failed",
       "tabs": { "all": "All" }
     },
+    "browse": {
+      "title": "Browse Integrations",
+      "subtitle": "Manage integrations settings",
+      "publish": "Publish Integration",
+      "learnMore": "Learn how to build and publish your own integration",
+      "searchPlaceholder": "Search integrations",
+      "by": "by {{author}}",
+      "installed": "Installed",
+      "notInstalled": "Not installed",
+      "install": "Install",
+      "settings": "Settings",
+      "install_addToConfig": "Add this to your medusa-config.ts and restart the server.",
+      "install_docs": "Documentation"
+    },
     "columns": {
       "integration": "Integration",
       "description": "Description",
@@ -37,14 +51,18 @@
     },
     "categories": {
       "payment": "Payment",
-      "fulfillment": "Fulfillment",
-      "marketplace": "Marketplace",
-      "crm": "CRM",
-      "erp": "ERP",
-      "pim": "PIM",
       "notification": "Notification",
+      "fulfillment": "Fulfillment",
+      "search": "Search",
+      "content": "Content",
+      "analytics": "Analytics",
+      "authentication": "Authentication",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Marketplace",
       "feed": "Feed",
-      "tax": "Tax",
+      "file_providers": "File providers",
       "other": "Other"
     },
     "actions": {

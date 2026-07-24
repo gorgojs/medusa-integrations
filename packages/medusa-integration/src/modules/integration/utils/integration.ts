@@ -1,14 +1,18 @@
 /** Integration category — which Medusa module a provider configures. */
 export const IntegrationCategory = {
   PAYMENT: "payment",
-  FULFILLMENT: "fulfillment",
-  MARKETPLACE: "marketplace",
-  CRM: "crm",
-  ERP: "erp",
-  PIM: "pim",
   NOTIFICATION: "notification",
+  FULFILLMENT: "fulfillment",
+  SEARCH: "search",
+  CONTENT: "content",
+  ANALYTICS: "analytics",
+  AUTHENTICATION: "authentication",
+  ERP: "erp",
+  CRM: "crm",
+  PIM: "pim",
+  MARKETPLACE: "marketplace",
   FEED: "feed",
-  TAX: "tax",
+  FILE_PROVIDERS: "file_providers",
   OTHER: "other",
 } as const
 export type CategoryKind = (typeof IntegrationCategory)[keyof typeof IntegrationCategory]

@@ -8,7 +8,8 @@ import type { IntegrationDescriptor, TestConnectionResult } from "../descriptor/
 import { introspectDescriptor, secretFieldNames, type UiDescriptor } from "../descriptor/introspect"
 import { isDescriptorComplete } from "../descriptor/validate"
 import { INTEGRATION_OPTIONS_KEY, INTEGRATION_PACKAGE_META_KEY, DOCS_URL, type IntegrationModuleOptions, type PackageMetaMap } from "../types"
-import type { IntegrationOverviewItem } from "../../../types"
+import { CATALOG } from "../catalog/data"
+import type { IntegrationOverviewItem, CatalogItem } from "../../../types"
 import type { CategoryKind } from "../../../types/integration"
 
 type InjectedDependencies = {
@@ -218,6 +219,22 @@ export default class IntegrationModuleService extends MedusaService({
    */
   getPackageMeta(providerId: string): { version: string | null; author: string | null; author_url: string | null } {
     return this.mapPackageMeta(this.providerService_.getRegistration(providerId)?.identifier)
+  }
+
+  /**
+   * The integration catalog (hardcoded now) merged with local install state: each entry gets
+   * `installed`/`provider_id` by matching its `integrationId` to a registered provider's
+   * `identifier`. 1c is a plain module (not an integration provider) → always not installed.
+   */
+  async getCatalog(): Promise<CatalogItem[]> {
+    const { integrations } = await this.listIntegrationsOverview()
+    // Keyed by identifier; if one identifier has multiple registered instances, the last wins
+    // (catalog "installed" is per-integration, so Settings links to that single provider_id).
+    const byId = new Map(integrations.map((i) => [i.identifier, i]))
+    return CATALOG.map((c) => {
+      const reg = byId.get(c.integrationId)
+      return { ...c, installed: !!reg, provider_id: reg?.provider_id ?? null }
+    })
   }
 
   // ── encryption ───────────────────────────────────────────────────────────────

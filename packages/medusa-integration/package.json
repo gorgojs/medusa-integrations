@@ -2,6 +2,10 @@
   "name": "@gorgo/medusa-integration",
   "version": "0.0.4",
   "description": "Integration module for Medusa",
+  "author": {
+    "name": "Gorgo",
+    "url": "https://gorgojs.com"
+  },
   "license": "MIT",
   "files": [
     ".medusa/server"
