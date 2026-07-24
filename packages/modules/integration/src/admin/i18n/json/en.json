@@ -3,7 +3,7 @@
     "list": {
       "title": "Integrations",
       "subtitle": "Manage integrations settings",
-      "addIntegration": "Add Integration",
+      "browseIntegrations": "Browse Integrations",
       "learnMore": "Learn how to build integrations",
       "searchPlaceholder": "Search integrations",
       "empty": "No integrations registered. Declare providers under the integration plugin's options.providers in medusa-config.",
@@ -13,15 +13,15 @@
       "tabs": { "all": "All" }
     },
     "browse": {
-      "title": "Browse Integrations",
-      "subtitle": "Manage integrations settings",
-      "publish": "Publish Integration",
+      "title": "Browse",
+      "subtitle": "Find available integrations",
+      "publish": "Add Integration",
       "learnMore": "Learn how to build and publish your own integration",
       "searchPlaceholder": "Search integrations",
       "by": "by {{author}}",
       "installed": "Installed",
       "notInstalled": "Not installed",
-      "install": "Install",
+      "add": "Add",
       "settings": "Settings",
       "install_addToConfig": "Add this to your medusa-config.ts and restart the server.",
       "install_docs": "Documentation"
@@ -29,7 +29,7 @@
     "columns": {
       "integration": "Integration",
       "description": "Description",
-      "module": "Module",
+      "category": "Category",
       "status": "Status"
     },
     "status": {
@@ -39,12 +39,11 @@
       "disabled": "Disabled",
       "configured": "Configured",
       "connected": "Connected",
-      "connectionFailed": "Connection failed",
-      "notTested": "Not tested"
+      "connectionFailed": "Connection failed"
     },
     "meta": {
       "version": "v{{version}}",
-      "author": "By {{author}}"
+      "authorPrefix": "by"
     },
     "labels": {
       "category": "Category"

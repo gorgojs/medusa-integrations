@@ -39,7 +39,7 @@ export interface MaskedIntegration {
   values: Record<string, unknown>
 }
 
-/** One integration in the Gorgo catalog (hardcoded now; a Gorgo API later). */
+/** One integration in the Gorgo catalog (from the live Gorgo API, with an offline yml fallback). */
 export interface CatalogIntegration {
   integrationId: string
   slug: string

@@ -7,7 +7,7 @@ import {
   StatusBadge,
   Tabs,
   Input,
-  FocusModal,
+  Drawer,
   Copy,
 } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
@@ -19,20 +19,24 @@ import { IntegrationIcon } from "../../../../components/integration-icon"
 import type { AdminIntegrationCatalogResponse, CatalogItem } from "../../../../../types"
 
 const PUBLISH_URL = "https://docs.gorgojs.com/integrations"
+const API_URL = "https://gorgojs.com"
 
 const InstallModal = ({ item, onOpenChange }: { item: CatalogItem | null; onOpenChange: (open: boolean) => void }) => {
   const { t } = useTranslation()
   return (
-    <FocusModal open={!!item} onOpenChange={onOpenChange}>
-      <FocusModal.Content>
-        <FocusModal.Header />
-        <FocusModal.Body className="flex flex-col items-center overflow-y-auto py-8">
+    <Drawer open={!!item} onOpenChange={onOpenChange}>
+      <Drawer.Content>
+        <Drawer.Header>
+          <Drawer.Title asChild>
+            <div className="flex items-center gap-x-2">
+              {item && <IntegrationIcon src={API_URL + item.icon} alt={item.label} size="small" />}
+              <span>{item?.label}</span>
+            </div>
+          </Drawer.Title>
+        </Drawer.Header>
+        <Drawer.Body className="flex flex-1 flex-col gap-y-4 overflow-auto">
           {item && (
-            <div className="flex w-full max-w-lg flex-col gap-y-4">
-              <div className="flex items-center gap-x-3">
-                <IntegrationIcon src={item.icon} alt={item.label} />
-                <Heading>{item.label}</Heading>
-              </div>
+            <>
               <Text size="small" className="text-ui-fg-subtle">
                 {t("integration.browse.install_addToConfig")}
               </Text>
@@ -53,14 +57,21 @@ const InstallModal = ({ item, onOpenChange }: { item: CatalogItem | null; onOpen
                   </pre>
                 </div>
               )}
-              <a href={item.docsUrl} target="_blank" rel="noreferrer" className="text-ui-fg-interactive txt-small">
+              <a href={item.docsUrl} target="_blank" rel="noreferrer" className="text-ui-fg-base txt-small">
                 {t("integration.browse.install_docs")} →
               </a>
-            </div>
+            </>
           )}
-        </FocusModal.Body>
-      </FocusModal.Content>
-    </FocusModal>
+        </Drawer.Body>
+        <Drawer.Footer>
+          <Drawer.Close asChild>
+            <Button size="small" variant="secondary">
+              {t("integration.actions.cancel")}
+            </Button>
+          </Drawer.Close>
+        </Drawer.Footer>
+      </Drawer.Content>
+    </Drawer>
   )
 }
 
@@ -87,108 +98,113 @@ const BrowsePage = () => {
   })
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-start justify-between px-6 py-4">
-        <div className="flex flex-col gap-1">
-          <Heading level="h2">{t("integration.browse.title")}</Heading>
-          <Text size="small" className="text-ui-fg-subtle">
-            {t("integration.browse.subtitle")}
-          </Text>
-        </div>
-        <Button size="small" variant="primary" asChild>
-          <a href={PUBLISH_URL} target="_blank" rel="noreferrer">
-            <Plus />
-            {t("integration.browse.publish")}
-          </a>
-        </Button>
-      </div>
-
-      <div className="flex items-center justify-between gap-3 px-6 py-4">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <Tabs.List>
-            <Tabs.Trigger value="all">{t("integration.list.tabs.all")}</Tabs.Trigger>
-            {categories.map((c) => (
-              <Tabs.Trigger key={c} value={c}>
-                {t(`integration.categories.${c}`)}
-              </Tabs.Trigger>
-            ))}
-          </Tabs.List>
-        </Tabs>
-        <div className="w-64">
-          <Input
-            placeholder={t("integration.browse.searchPlaceholder")}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-      </div>
-
-      <div className="px-6 py-4">
-        {isLoading ? (
-          <div className="flex items-center justify-center py-8">
-            <Spinner className="text-ui-fg-subtle animate-spin" />
+    <div className="flex flex-col gap-y-3">
+      <Container className="divide-y p-0">
+        <div className="flex items-start justify-between px-6 py-4">
+          <div className="flex flex-col gap-1">
+            <Heading level="h2">{t("integration.browse.title")}</Heading>
+            <Text size="small" className="text-ui-fg-subtle">
+              {t("integration.browse.subtitle")}
+            </Text>
           </div>
-        ) : filtered.length === 0 ? (
+          {false && (
+            <Button size="small" variant="primary" asChild>
+              <a href={PUBLISH_URL} target="_blank" rel="noreferrer">
+                <Plus />
+                {t("integration.browse.publish")}
+              </a>
+            </Button>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between gap-3 px-6 py-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <Tabs.List>
+              <Tabs.Trigger value="all">{t("integration.list.tabs.all")}</Tabs.Trigger>
+              {categories.map((c) => (
+                <Tabs.Trigger key={c} value={c}>
+                  {t(`integration.categories.${c}`)}
+                </Tabs.Trigger>
+              ))}
+            </Tabs.List>
+          </Tabs>
+          <div className="w-64">
+            <Input
+              placeholder={t("integration.browse.searchPlaceholder")}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
+      </Container>
+
+      {isLoading ? (
+        <div className="flex items-center justify-center py-8">
+          <Spinner className="text-ui-fg-subtle animate-spin" />
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="flex items-center justify-center py-8">
           <Text size="small" className="text-ui-fg-subtle">
             {t("integration.list.emptyFiltered")}
           </Text>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {filtered.map((item) => (
-              <div key={item.integrationId} className="shadow-borders-base flex flex-col rounded-lg">
-                <div className="flex flex-1 flex-col gap-y-3 p-4">
-                  <div className="flex items-start justify-between gap-x-2">
-                    <div className="flex items-center gap-x-3">
-                      <IntegrationIcon src={item.icon} alt={item.label} />
-                      <div className="flex flex-col">
-                        <Text size="small" weight="plus" leading="compact">
-                          {item.label}
-                        </Text>
-                        <Text size="xsmall" leading="compact" className="text-ui-fg-subtle">
-                          {t("integration.browse.by", { author: item.authorLocalized })}
-                        </Text>
-                      </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {filtered.map((item) => (
+            <div key={item.integrationId} className="shadow-borders-base bg-ui-bg-base flex flex-col rounded-lg">
+              <div className="flex flex-1 flex-col gap-y-3 p-4">
+                <div className="flex items-start justify-between gap-x-2">
+                  <div className="flex items-center gap-x-3">
+                    <IntegrationIcon src={API_URL + item.icon} alt={item.label} />
+                    <div className="flex flex-col">
+                      <Text size="small" weight="plus" leading="compact">
+                        {item.label}
+                      </Text>
+                      <Text size="xsmall" leading="compact" className="text-ui-fg-subtle">
+                        {t("integration.browse.by", { author: item.authorLocalized })}
+                      </Text>
                     </div>
-                    <StatusBadge color={item.installed ? "green" : "grey"}>
-                      {item.installed ? t("integration.browse.installed") : t("integration.browse.notInstalled")}
-                    </StatusBadge>
                   </div>
-                  <Text size="small" className="text-ui-fg-subtle line-clamp-2">
-                    {item.shortDescription}
-                  </Text>
+                  <StatusBadge color={item.installed ? "green" : "grey"}>
+                    {item.installed ? t("integration.browse.installed") : t("integration.browse.notInstalled")}
+                  </StatusBadge>
                 </div>
-                <div className="flex items-center justify-between border-t px-4 py-3">
-                  {item.installed && item.provider_id ? (
-                    <Button
-                      size="small"
-                      variant="secondary"
-                      onClick={() => navigate(`/settings/integrations/${item.provider_id}`)}
-                    >
-                      {t("integration.browse.settings")}
-                    </Button>
-                  ) : (
-                    <Button size="small" variant="primary" onClick={() => setInstallItem(item)}>
-                      {t("integration.browse.install")}
-                    </Button>
-                  )}
-                  <Text size="small" className="text-ui-fg-subtle">
-                    {t(`integration.categories.${item.category}`)}
-                  </Text>
-                </div>
+                <Text size="small" className="text-ui-fg-subtle line-clamp-2">
+                  {item.shortDescription}
+                </Text>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+              <div className="flex items-center justify-between border-t px-4 py-3">
+                {item.installed && item.provider_id ? (
+                  <Button
+                    size="small"
+                    variant="primary"
+                    onClick={() => navigate(`/settings/integrations/${item.provider_id}`)}
+                  >
+                    {t("integration.browse.settings")}
+                  </Button>
+                ) : (
+                  <Button size="small" variant="secondary" onClick={() => setInstallItem(item)}>
+                    <Plus/>
+                    {t("integration.browse.add")}
+                  </Button>
+                )}
+                <Text size="small" className="text-ui-fg-subtle">
+                  {t(`integration.categories.${item.category}`)}
+                </Text>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
-      <div className="flex items-center justify-center px-6 py-4">
-        <a href={PUBLISH_URL} target="_blank" rel="noreferrer" className="text-ui-fg-interactive txt-small">
+      <Container className="flex items-center justify-center p-4">
+        <a href={PUBLISH_URL} target="_blank" rel="noreferrer" className="text-ui-fg-base txt-small">
           {t("integration.browse.learnMore")} →
         </a>
-      </div>
+      </Container>
 
       <InstallModal item={installItem} onOpenChange={(open) => !open && setInstallItem(null)} />
-    </Container>
+    </div>
   )
 }
 

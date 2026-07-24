@@ -10,8 +10,6 @@ export interface AdminIntegrationListResponse {
   offset: number
   /** Distinct categories across ALL registrations (unfiltered) — drives the tab bar. */
   categories: CategoryKind[]
-  /** Docs URL for the "Add Integration" button + footer link. */
-  docs_url: string
 }
 
 export interface AdminIntegrationResponse {
