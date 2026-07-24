@@ -1,6 +1,7 @@
-import { describe, expect, it, jest } from "@jest/globals"
+import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals"
 import IntegrationModuleService from "../integration-module"
 import { defineIntegration } from "../../descriptor/define"
+import { resetCatalogCacheForTests } from "../../../../lib/catalog"
 
 // A representative descriptor: one plain required option, one required secret, one defaulted enum.
 const descriptor = defineIntegration({
@@ -347,6 +348,15 @@ describe("IntegrationModuleService — getPackageMeta", () => {
 })
 
 describe("IntegrationModuleService — getCatalog", () => {
+  const realFetch = global.fetch
+  beforeEach(() => {
+    resetCatalogCacheForTests()
+    global.fetch = jest.fn<typeof fetch>().mockRejectedValue(new Error("offline")) as any
+  })
+  afterEach(() => {
+    global.fetch = realFetch
+  })
+
   it("marks a catalog entry installed when a provider with that identifier is registered", async () => {
     const reg = {
       key: "int_tkassa", identifier: "tkassa", instanceId: null,

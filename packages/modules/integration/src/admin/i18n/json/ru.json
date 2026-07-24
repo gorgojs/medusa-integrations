@@ -3,7 +3,7 @@
     "list": {
       "title": "Интеграции",
       "subtitle": "Управление настройками интеграций",
-      "addIntegration": "Добавить интеграцию",
+      "browseIntegrations": "Найти интеграции",
       "learnMore": "Как создавать интеграции",
       "searchPlaceholder": "Поиск интеграций",
       "empty": "Нет зарегистрированных интеграций. Объявите провайдеров в options.providers плагина интеграций в medusa-config.",
@@ -13,15 +13,15 @@
       "tabs": { "all": "Все" }
     },
     "browse": {
-      "title": "Каталог интеграций",
-      "subtitle": "Управление настройками интеграций",
-      "publish": "Опубликовать интеграцию",
+      "title": "Каталог",
+      "subtitle": "Поиск доступных интеграций",
+      "publish": "Добавить интеграцию",
       "learnMore": "Как создать и опубликовать свою интеграцию",
       "searchPlaceholder": "Поиск интеграций",
       "by": "от {{author}}",
       "installed": "Установлено",
       "notInstalled": "Не установлено",
-      "install": "Установить",
+      "add": "Добавить",
       "settings": "Настройки",
       "install_addToConfig": "Добавьте это в medusa-config.ts и перезапустите сервер.",
       "install_docs": "Документация"
@@ -29,7 +29,7 @@
     "columns": {
       "integration": "Интеграция",
       "description": "Описание",
-      "module": "Модуль",
+      "category": "Категория",
       "status": "Статус"
     },
     "status": {
@@ -39,12 +39,11 @@
       "disabled": "Выключено",
       "configured": "Настроено",
       "connected": "Подключено",
-      "connectionFailed": "Ошибка подключения",
-      "notTested": "Не проверено"
+      "connectionFailed": "Ошибка подключения"
     },
     "meta": {
       "version": "v{{version}}",
-      "author": "От {{author}}"
+      "authorPrefix": "от"
     },
     "labels": {
       "category": "Категория"

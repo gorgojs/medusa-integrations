@@ -3,22 +3,36 @@ import { clx } from "@medusajs/ui"
 import { useState } from "react"
 
 /**
- * Renders an integration's descriptor `icon`. The value is any browser-loadable `<img src>`
- * string — a data URI (the default contract, baked into the descriptor), an absolute URL, or
- * a backend-served `/static/…` path. When unset, falls back to a generic mark. Modeled on
- * Medusa's `Thumbnail`: a fixed, rounded, bordered box with a cover-fit image or icon fallback.
+ * Renders an integration's `icon`. The value is any browser-loadable `<img src>` string —
+ * a data URI (the descriptor default), an absolute URL, or a backend-served path. When unset
+ * (or the image fails to load) it falls back to a generic mark inside a framed box.
  */
 export const IntegrationIcon = ({
   src,
   alt,
   size = "base",
+  framed = true,
 }: {
   src?: string | null
   alt?: string
   size?: "small" | "base"
+  framed?: boolean
 }) => {
   const dim = size === "small" ? "h-6 w-6" : "h-10 w-10"
   const [errored, setErrored] = useState(false)
+  const showImage = !!src && !errored
+
+  if (showImage && !framed) {
+    return (
+      <img
+        src={src!}
+        alt={alt}
+        className={clx("shrink-0 object-contain", dim)}
+        onError={() => setErrored(true)}
+      />
+    )
+  }
+
   return (
     <div
       className={clx(
@@ -26,9 +40,9 @@ export const IntegrationIcon = ({
         dim
       )}
     >
-      {src && !errored ? (
+      {showImage ? (
         <img
-          src={src}
+          src={src!}
           alt={alt}
           className="h-full w-full object-cover"
           onError={() => setErrored(true)}

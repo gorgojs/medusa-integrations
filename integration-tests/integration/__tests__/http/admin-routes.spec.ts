@@ -48,12 +48,11 @@ medusaIntegrationTestRunner({
     })
 
     describe("GET /admin/integrations — filtering + pagination", () => {
-      it("returns count, the categories facet, and docs_url", async () => {
+      it("returns count and the categories facet", async () => {
         const res = await api.get("/admin/integrations", headers)
         expect(res.status).toBe(200)
         expect(typeof res.data.count).toBe("number")
         expect(res.data.categories).toContain("payment")
-        expect(typeof res.data.docs_url).toBe("string")
       })
 
       it("filters by category (empty for a category with no providers)", async () => {

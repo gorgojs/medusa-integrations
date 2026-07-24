@@ -123,7 +123,7 @@ const EditPage = () => {
         <Text size="small" className="text-ui-fg-subtle">
           {t("integration.unknown", { id: provider_id })}
         </Text>
-        <Link to="/settings/integrations" className="text-ui-fg-interactive">
+        <Link to="/settings/integrations" className="text-ui-fg-base">
           {t("integration.back")}
         </Link>
       </Container>
@@ -148,7 +148,7 @@ const EditPage = () => {
       ? { color: "green" as const, label: t("integration.status.connected") }
       : record?.last_test_status === "failed"
         ? { color: "red" as const, label: t("integration.status.connectionFailed") }
-        : { color: "grey" as const, label: t("integration.status.notTested") }
+        : null
     : null
 
   const editing = descriptor.sections.find((s) => s.id === editingSection) ?? null
@@ -187,14 +187,14 @@ const EditPage = () => {
         {section.fields
           .filter((f) => isFieldVisible(f, (record?.values as Record<string, unknown>) ?? {}))
           .map((f) => (
-          <Row key={f.name} label={t(f.label)}>
-            <IntegrationFieldValue
-              field={f}
-              value={record?.values?.[f.name]}
-              secretConfigured={configuredSecrets.has(f.name)}
-            />
-          </Row>
-        ))}
+            <Row key={f.name} label={t(f.label)}>
+              <IntegrationFieldValue
+                field={f}
+                value={record?.values?.[f.name]}
+                secretConfigured={configuredSecrets.has(f.name)}
+              />
+            </Row>
+          ))}
       </Container>
     </LayoutComposer.Entry>
   )
@@ -215,31 +215,32 @@ const EditPage = () => {
                 <div className="flex flex-col gap-y-1">
                   <div className="flex items-center gap-x-2">
                     <Heading>{t(descriptor.displayName)}</Heading>
-                    {descriptor.instanceId && (
+                    {provider_id && (
                       <Badge size="2xsmall" color="grey">
-                        {descriptor.instanceId}
+                        {provider_id}
                       </Badge>
                     )}
                   </div>
                   {version && (
                     <Text size="xsmall" leading="compact" className="text-ui-fg-subtle">
                       {t("integration.meta.version", { version })}
-                      {author &&
-                        (authorUrl ? (
-                          <>
-                            {" • "}
+                      {author && (
+                        <>
+                          {" • "}{t("integration.meta.authorPrefix")}{" "}
+                          {authorUrl ? (
                             <a
                               href={authorUrl}
                               target="_blank"
                               rel="noreferrer"
                               className="text-ui-fg-interactive"
                             >
-                              {t("integration.meta.author", { author })}
+                              {author}
                             </a>
-                          </>
-                        ) : (
-                          <>{" • " + t("integration.meta.author", { author })}</>
-                        ))}
+                          ) : (
+                            author
+                          )}
+                        </>
+                      )}
                     </Text>
                   )}
                 </div>
@@ -342,9 +343,12 @@ const IntegrationBreadcrumb = ({ params }: { params: { provider_id?: string } })
     enabled: !!providerId,
   })
   const descriptor = data?.descriptor
-  if (!descriptor) return <>{providerId}</>
+  if (!descriptor) return <></>
   const name = t(descriptor.displayName)
-  return <>{descriptor.instanceId ? `${name} · ${descriptor.instanceId}` : name}</>
+  return (<>
+    {name + " "}
+    <Badge size="2xsmall" color="grey">{providerId}</Badge>
+  </>)
 }
 
 export const handle = {

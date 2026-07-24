@@ -25,6 +25,5 @@ export const GET = async (
     limit: resolvedLimit,
     offset: resolvedOffset,
     categories,
-    docs_url: svc.getDocsUrl(),
   })
 }
