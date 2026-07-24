@@ -149,65 +149,13 @@ This repository is organized as a Yarn monorepo with shared workspaces for plugi
 │   ├── payment-robokassa/
 │   └── payment-tkassa/
 ├── packages/
-│   ├── medusa-1c/
-│   ├── medusa-feed-yandex/
-│   ├── medusa-fulfillment-apiship/
-│   ├── medusa-payment-robokassa/
-│   ├── medusa-payment-tkassa/
-│   ├── medusa-payment-yookassa/
+│   ├── modules/
+│   ├── providers/
 │   └── utils/
-│       └── gorgo-telemetry/
 ├── scripts/
 └── docs/
     ├── medusa-plugins/
     └── tools/
-```
-
-### `packages/`
-
-Published Medusa plugins live here. Each package contains its own source code, package manifest, changelog, and package-level README. Shared internal utilities live under `packages/utils/` (e.g. `@gorgo/telemetry`).
-
-### `examples/`
-
-Examples are grouped by plugin and usually include:
-
-- `medusa/` for a backend project configured with the plugin.
-- `medusa-storefront/` for a storefront integration example when the plugin needs frontend work.
-
-A root [examples/docker-compose.yml](examples/docker-compose.yml) spins up PostgreSQL and pgAdmin for the example apps. See [examples/README.md](examples/README.md).
-
-### `integration-tests/`
-
-Per-plugin workspace packages that boot a real Medusa app with the plugin loaded via `workspace:*`. See [Tests](#tests) below.
-
-### `scripts/`
-
-Repository automation scripts (Medusa version updates, changeset generation, release helpers).
-
-### `docs/`
-
-Documentation content (MDX + announcements), published at:
-
-- [docs.gorgojs.com](https://docs.gorgojs.com)
-- [docs.gorgojs.ru](https://docs.gorgojs.ru)
-
-`medusa-plugins/` holds per-plugin docs; `tools/` holds docs for related CLIs such as [`create-medusa-plugin`](https://docs.gorgojs.com/tools/create-medusa-plugin).
-
-## Installation & Development
-
-### Working on a plugin package
-
-Install root dependencies:
-
-```bash
-yarn install
-```
-
-Then move into the package you want to work on and run its development command, for example for T-Kassa:
-
-```bash
-cd packages/medusa-payment-tkassa
-yarn dev
 ```
 
 ### Working on an example app
