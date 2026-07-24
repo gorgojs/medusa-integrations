@@ -1851,9 +1851,9 @@ __metadata:
   resolution: "@gorgo/it-feed-yandex@workspace:integration-tests/feed-yandex"
   dependencies:
     "@gorgo/medusa-feed-yandex": "workspace:*"
-    "@medusajs/framework": "npm:2.17.2"
-    "@medusajs/medusa": "npm:2.17.2"
-    "@medusajs/test-utils": "npm:2.17.2"
+    "@medusajs/framework": "npm:2.18.0"
+    "@medusajs/medusa": "npm:2.18.0"
+    "@medusajs/test-utils": "npm:2.18.0"
     "@swc/core": "npm:^1.7.28"
     "@swc/jest": "npm:^0.2.36"
     "@types/jest": "npm:^29.5.13"
@@ -1871,9 +1871,9 @@ __metadata:
   resolution: "@gorgo/it-fulfillment-apiship@workspace:integration-tests/fulfillment-apiship"
   dependencies:
     "@gorgo/medusa-fulfillment-apiship": "workspace:*"
-    "@medusajs/framework": "npm:2.17.2"
-    "@medusajs/medusa": "npm:2.17.2"
-    "@medusajs/test-utils": "npm:2.17.2"
+    "@medusajs/framework": "npm:2.18.0"
+    "@medusajs/medusa": "npm:2.18.0"
+    "@medusajs/test-utils": "npm:2.18.0"
     "@swc/core": "npm:^1.7.28"
     "@swc/jest": "npm:^0.2.36"
     "@types/jest": "npm:^29.5.13"
@@ -1907,9 +1907,9 @@ __metadata:
   resolution: "@gorgo/it-payment-robokassa@workspace:integration-tests/payment-robokassa"
   dependencies:
     "@gorgo/medusa-payment-robokassa": "workspace:*"
-    "@medusajs/framework": "npm:2.17.2"
-    "@medusajs/medusa": "npm:2.17.2"
-    "@medusajs/test-utils": "npm:2.17.2"
+    "@medusajs/framework": "npm:2.18.0"
+    "@medusajs/medusa": "npm:2.18.0"
+    "@medusajs/test-utils": "npm:2.18.0"
     "@swc/core": "npm:^1.7.28"
     "@swc/jest": "npm:^0.2.36"
     "@types/jest": "npm:^29.5.13"
@@ -1927,9 +1927,9 @@ __metadata:
   resolution: "@gorgo/it-payment-tkassa@workspace:integration-tests/payment-tkassa"
   dependencies:
     "@gorgo/medusa-payment-tkassa": "workspace:*"
-    "@medusajs/framework": "npm:2.17.2"
-    "@medusajs/medusa": "npm:2.17.2"
-    "@medusajs/test-utils": "npm:2.17.2"
+    "@medusajs/framework": "npm:2.18.0"
+    "@medusajs/medusa": "npm:2.18.0"
+    "@medusajs/test-utils": "npm:2.18.0"
     "@types/jest": "npm:^29.5.13"
     "@types/node": "npm:^22.13.11"
     jest: "npm:^29.7.0"
@@ -1945,9 +1945,9 @@ __metadata:
   dependencies:
     "@a2seven/yoo-checkout": "npm:^1.1.4"
     "@gorgo/medusa-payment-yookassa": "workspace:*"
-    "@medusajs/framework": "npm:2.17.2"
-    "@medusajs/medusa": "npm:2.17.2"
-    "@medusajs/test-utils": "npm:2.17.2"
+    "@medusajs/framework": "npm:2.18.0"
+    "@medusajs/medusa": "npm:2.18.0"
+    "@medusajs/test-utils": "npm:2.18.0"
     "@types/jest": "npm:^29.5.13"
     "@types/node": "npm:^22.13.11"
     jest: "npm:^29.7.0"
@@ -3965,7 +3965,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/framework@npm:^2.14.0, @medusajs/framework@npm:^2.17.2":
+"@medusajs/framework@npm:2.18.0, @medusajs/framework@npm:^2.14.0, @medusajs/framework@npm:^2.17.2":
   version: 2.18.0
   resolution: "@medusajs/framework@npm:2.18.0"
   dependencies:
@@ -4286,7 +4286,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/medusa@npm:^2.14.0, @medusajs/medusa@npm:^2.17.2":
+"@medusajs/medusa@npm:2.18.0, @medusajs/medusa@npm:^2.14.0, @medusajs/medusa@npm:^2.17.2":
   version: 2.18.0
   resolution: "@medusajs/medusa@npm:2.18.0"
   dependencies:
@@ -4786,7 +4786,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/test-utils@npm:^2.14.0, @medusajs/test-utils@npm:^2.17.2":
+"@medusajs/test-utils@npm:2.18.0, @medusajs/test-utils@npm:^2.14.0, @medusajs/test-utils@npm:^2.17.2":
   version: 2.18.0
   resolution: "@medusajs/test-utils@npm:2.18.0"
   dependencies:
@@ -17652,9 +17652,9 @@ __metadata:
   linkType: hard
 
 "undici@npm:^8.4.1":
-  version: 8.8.0
-  resolution: "undici@npm:8.8.0"
-  checksum: 10c0/6ee51e6b814b67e212b19349c38657be988d878ca669ccf2ad33f0ebbb0d83e851aa57554b6ce3c6668a9a4df3010fb6a6af7bd28692ade911083ef376a3a75d
+  version: 8.9.0
+  resolution: "undici@npm:8.9.0"
+  checksum: 10c0/e3d9fa35a9aa8360d9f56e66bd372f451ee053e25066a97fd9fab3816267035660f67870c6d709a58a5411551657af78c4475be5b31c113b04f70251309900d0
   languageName: node
   linkType: hard
 
