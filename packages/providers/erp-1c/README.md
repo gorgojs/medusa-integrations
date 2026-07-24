@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://docs.gorgojs.com/medusa-plugins/1c-enterprise">
-    <img alt="Medusa-1C logo" src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/1c-medusa-logo.svg" width="270">
+    <img alt="Medusa-1C logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-medusa-logo.svg" width="270">
   </a>
 </p>
 
@@ -13,7 +13,7 @@
   <br/>
   Sync products and orders between Medusa and 1C:Enterprise.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-plugins/blob/HEAD/packages/medusa-1c/README.ru.md">Читать README на русском ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-1c/README.ru.md">Читать README на русском ↗</a>
 </p>
 
 <br/>
@@ -22,8 +22,8 @@
   <a href="https://medusajs.com">
     <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
-  <a href="https://github.com/gorgojs/medusa-plugins/actions/workflows/update-medusa-version.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-plugins/main/.badges/medusa-1c.json&logo=checkmarx" alt="Medusa" />
+  <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-1c.json&logo=checkmarx" alt="Medusa" />
   </a>
 </p>
 

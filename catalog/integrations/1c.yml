@@ -18,7 +18,7 @@ shortDescription:
   en: "Data exchange between Medusa and 1C:Enterprise ERP"
   ru: "Обмен данными между Medusa и ERP 1С:Предприятие"
 icon: "1c.svg"
-repository: "https://github.com/gorgojs/medusa-plugins"
+repository: "https://github.com/gorgojs/medusa-integrations"
 docsUrl: "https://docs.gorgojs.com/medusa-plugins/1c-enterprise"
 configSnippet: |
   // Registered as a module, not an integration provider:

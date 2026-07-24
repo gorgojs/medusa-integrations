@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/gorgojs/medusa-plugins/catalog/authors.schema.json",
+  "$id": "https://github.com/gorgojs/medusa-integrations/catalog/authors.schema.json",
   "title": "Gorgo integration catalog authors",
   "description": "Authors referenced by integration entries. The whole authors.yml is one array of these.",
   "type": "array",

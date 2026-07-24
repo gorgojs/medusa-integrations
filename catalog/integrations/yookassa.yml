@@ -12,7 +12,7 @@ shortDescription:
   en: "Accept payments via YooKassa"
   ru: "Приём платежей через ЮKassa"
 icon: "yookassa.svg"
-repository: "https://github.com/gorgojs/medusa-plugins"
+repository: "https://github.com/gorgojs/medusa-integrations"
 docsUrl: "https://docs.gorgojs.com/medusa-plugins/yookassa"
 configSnippet: |
   {

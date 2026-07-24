@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://docs.gorgojs.com/medusa-plugins/robokassa">
-    <img alt="Medusa-Robokassa logo" src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/robokassa-medusa-logo.svg" width="270">
+    <img alt="Medusa-Robokassa logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/robokassa-medusa-logo.svg" width="270">
   </a>
 </p>
 
@@ -13,7 +13,7 @@ Robokassa Payments for Medusa
   <br/>
   A Medusa plugin that provides Robokassa payments. Production-ready.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-plugins/blob/HEAD/packages/medusa-payment-robokassa/README.ru.md">Читать README на русском ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/medusa-payment-robokassa/README.ru.md">Читать README на русском ↗</a>
 </p>
 
 <br/>
@@ -22,8 +22,8 @@ Robokassa Payments for Medusa
   <a href="https://medusajs.com">
     <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
-  <a href="https://github.com/gorgojs/medusa-plugins/actions/workflows/update-medusa-version.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-plugins/main/.badges/medusa-payment-robokassa.json&logo=checkmarx" alt="Medusa" />
+  <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-payment-robokassa.json&logo=checkmarx" alt="Medusa" />
   </a>
 </p>
 
@@ -50,7 +50,7 @@ Robokassa Payments for Medusa
 - **Test Mode:** Simulate payments without real charges.
 - **Detailed Logging:** Request and response logs for debugging and support in development mode.
 - **Full Test Coverage:** Comprehensive unit and integration tests covering core flows and edge cases.
-- **Storefront Example:** A complete <a href="https://github.com/gorgojs/medusa-plugins/tree/main/examples/payment-robokassa/medusa-storefront" target="_blank">Next.js storefront</a> ready to use as a reference.
+- **Storefront Example:** A complete <a href="https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-robokassa/medusa-storefront" target="_blank">Next.js storefront</a> ready to use as a reference.
 - **`Integration Module`:** Configure this plugin directly in the Medusa Admin application — no editing configuration files or redeploying the store.
 
 > **Integration Module:** This plugin supports the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
