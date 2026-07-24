@@ -1,0 +1,33 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_595_237)">
+<rect width="256" height="256" rx="62" fill="url(#paint0_linear_595_237)"/>
+<line x1="81" y1="256" x2="81" stroke="white" stroke-opacity="0.33" stroke-width="2"/>
+<line y1="80" x2="256" y2="80" stroke="white" stroke-opacity="0.33" stroke-width="2"/>
+<line y1="128" x2="256" y2="128" stroke="white" stroke-opacity="0.33" stroke-width="2"/>
+<line y1="176" x2="256" y2="176" stroke="white" stroke-opacity="0.33" stroke-width="2"/>
+<line x1="129" y1="256.004" x2="128" y2="0.00390624" stroke="white" stroke-opacity="0.33" stroke-width="2"/>
+<line x1="179" y1="256.002" x2="177" y2="0.00781244" stroke="white" stroke-opacity="0.33" stroke-width="2"/>
+<line x1="2.86003" y1="253.092" x2="123.726" y2="132.226" stroke="white" stroke-opacity="0.33" stroke-width="2" stroke-dasharray="4 4"/>
+<line y1="-1" x2="170.93" y2="-1" transform="matrix(-0.707107 -0.707107 -0.707107 0.707107 253.366 253.866)" stroke="white" stroke-opacity="0.33" stroke-width="2" stroke-dasharray="4 4"/>
+<line x1="254.073" y1="2.70711" x2="133.207" y2="123.573" stroke="white" stroke-opacity="0.33" stroke-width="2" stroke-dasharray="4 4"/>
+<line y1="-1" x2="170.93" y2="-1" transform="matrix(-0.707107 -0.707107 -0.707107 0.707107 123.366 123.866)" stroke="white" stroke-opacity="0.33" stroke-width="2" stroke-dasharray="4 4"/>
+<circle cx="128.5" cy="127.5" r="48.5" stroke="white" stroke-opacity="0.33" stroke-width="2"/>
+<circle cx="130" cy="128" r="104" stroke="white" stroke-opacity="0.33" stroke-width="2"/>
+<rect x="26" y="24" width="208" height="208" rx="40" stroke="white" stroke-width="2"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M201.5 128C201.5 168.317 168.817 201 128.5 201C88.1832 201 55.5 168.317 55.5 128C55.5 87.6832 88.1832 55 128.5 55C168.817 55 201.5 87.6832 201.5 128ZM121.499 158.5C121.5 151 121.5 135 121.5 135C121.5 135 105.625 135.002 98.125 135.001C90.625 135 90.625 120.999 98.125 121C105.625 121.001 121.5 121 121.5 121C121.5 121 121.499 105.125 121.5 97.625C121.501 90.125 135.502 90.125 135.501 97.625C135.5 105.125 135.5 121.001 135.5 121.001C135.5 121.001 151.5 120.999 159 121C166.5 121.001 166.5 135.002 159 135.001C151.5 135 135.5 135.001 135.5 135.001C135.5 135.001 135.501 151 135.5 158.5C135.499 166 121.498 166 121.499 158.5Z" fill="url(#paint1_linear_595_237)" stroke="white" stroke-width="2"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_595_237" x1="137" y1="19.5" x2="248.899" y2="250.064" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DEBA92"/>
+<stop offset="0.495192" stop-color="#9F724E"/>
+<stop offset="1" stop-color="#7A482E"/>
+</linearGradient>
+<linearGradient id="paint1_linear_595_237" x1="78.5" y1="75.5" x2="179" y2="176.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.95"/>
+<stop offset="1" stop-color="white" stop-opacity="0.25"/>
+</linearGradient>
+<clipPath id="clip0_595_237">
+<rect width="256" height="256" rx="62" fill="white"/>
+</clipPath>
+</defs>
+</svg>
