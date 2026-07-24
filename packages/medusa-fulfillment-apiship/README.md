@@ -20,7 +20,7 @@ ApiShip Integration for Medusa
 
 <p align="center">
   <a href="https://medusajs.com">
-    <img src="https://img.shields.io/badge/Medusa-^2.14.0-blue?logo=medusa" alt="Medusa" />
+    <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-plugins/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-plugins/main/.badges/medusa-fulfillment-apiship.json&logo=checkmarx" alt="Medusa" />
@@ -57,6 +57,9 @@ ApiShip Integration for Medusa
 - **Storefront Example:** A ready-to-use [Next.js storefront example](https://github.com/gorgojs/medusa-plugins/tree/main/examples/fulfillment-apiship/medusa-storefront) you can use as a reference.
 - **Test Mode:** Simulate calculations and orders without affecting real data.
 - **Detailed Logging:** Request and response logs for debugging and support in development mode.
+- **`Integration Module`:** Configure this plugin directly in the Medusa Admin application — no editing configuration files or redeploying the store.
+
+> **Integration Module:** This plugin supports the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
 
 ## What is ApiShip
 
@@ -72,16 +75,19 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 
 ## Requirements
 
-- Medusa v2.14.0 or later
+- Medusa v2.17.2 or later
 - Node.js v20 or later
 - An ApiShip account - [sign in or create one](https://a.apiship.ru)
+- Integration Module v0.1.0 or later
 
 ## Installation
 
 ```bash
-yarn add @gorgo/medusa-payment-apiship
+yarn add @gorgo/medusa-integration
+yarn add @gorgo/medusa-fulfillment-apiship
 # or
-npm install @gorgo/medusa-payment-apiship
+npm install @gorgo/medusa-integration
+npm install @gorgo/medusa-fulfillment-apiship
 ```
 
 ## Documentation

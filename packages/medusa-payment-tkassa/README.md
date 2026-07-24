@@ -20,7 +20,7 @@ T-Kassa Payments by T-Bank for Medusa
 
 <p align="center">
   <a href="https://medusajs.com">
-    <img src="https://img.shields.io/badge/Medusa-^2.14.0-blue?logo=medusa" alt="Medusa" />
+    <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-plugins/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-plugins/main/.badges/medusa-payment-tkassa.json&logo=checkmarx" alt="Medusa" />
@@ -51,6 +51,9 @@ T-Kassa Payments by T-Bank for Medusa
 - **Detailed Logging:** Request and response logs for debugging and support in development mode.
 - **Full Test Coverage:** Comprehensive unit and integration tests covering core flows and edge cases.
 - **Storefront Example:** A complete <a href="https://github.com/gorgojs/medusa-plugins/tree/main/examples/payment-tkassa/medusa-storefront" target="_blank">Next.js storefront</a> ready to use as a reference.
+- **`Integration Module`:** Configure this plugin directly in the Medusa Admin application — no editing configuration files or redeploying the store.
+
+> **Integration Module:** the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
 
 ## What is T-Kassa
 
@@ -76,15 +79,18 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 
 ## Requirements
 
-- Medusa v2.14.0 or later
+- Medusa v2.17.2 or later
 - Node.js v20 or later
 - A T-Business account with T-Kassa internet acquiring – [sign in or create one](https://www.tbank.ru/kassa/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
+- Integration Module v0.1.0 or later
 
 ## Installation
 
 ```bash
+yarn add @gorgo/medusa-integration
 yarn add @gorgo/medusa-payment-tkassa
 # or
+npm install @gorgo/medusa-integration
 npm install @gorgo/medusa-payment-tkassa
 ```
 

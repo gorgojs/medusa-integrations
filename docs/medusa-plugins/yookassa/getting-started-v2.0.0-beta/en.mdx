@@ -1,0 +1,124 @@
+---
+title: "Getting Started with YooKassa Payment for Medusa (v2.0.0-beta)"
+description: "Learn how to install and configure the YooKassa payment provider for Medusa."
+---
+
+# {frontmatter.title}
+
+In this document, you'll learn how to install and configure the YooKassa payment provider for Medusa.
+
+## Requirements
+
+- Medusa v2.17.2 or later
+- Node.js v20 or later
+- A YooKassa account – [sign in or create one](https://yookassa.ru/joinups/?source=ks)
+- Integration Module v0.1.0 or later
+
+---
+
+## Installation
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration
+    yarn add @gorgo/medusa-payment-yookassa
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration
+    npm install @gorgo/medusa-payment-yookassa
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Configuration
+
+Add the provider configuration in your `medusa-config.js` file of the Medusa Admin application:
+
+```ts title="medusa-config.js"
+// ...
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.GORGO_INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
+            id: "yookassa",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-yookassa",
+      options: {}
+    },
+  ],
+  modules: [
+    // ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      dependencies: ["integration"],
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
+            id: "yookassa",
+            options: { id: "yookassa"}
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Add environment variables with your secret `Encryption Key`:
+
+```text title=".env"
+GORGO_INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Provider Options
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+---
+
+## Webhook Setup
+
+To properly handle payment notifications from YooKassa, configure the webhook URL in your YooKassa account as following:
+
+1. Navigate to your YooKassa merchant account at [yookassa.ru/my/merchant/integration/http-notifications](https://yookassa.ru/my/merchant/integration/http-notifications)
+2. Add a new webhook URL in the following format:
+    ```text title="Webhook URL"
+    https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/yookassa_yookassa
+    ```
+    Change `{YOUR_MEDUSA_DOMAIN}` with your medusa store domain.
+
+YooKassa will send payment status updates to this URL, allowing Medusa to update the payment status accordingly.
+
+<Note type="warning">YooKassa expects an `OK` response message to confirm successful webhook processing. Currently, Medusa does not natively support custom webhook response messages, but webhooks are still processed correctly without this.</Note>

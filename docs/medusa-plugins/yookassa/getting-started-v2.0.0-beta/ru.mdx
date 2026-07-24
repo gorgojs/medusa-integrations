@@ -1,0 +1,124 @@
+---
+title: "Начало работы с ЮKassa для Medusa (v2.0.0-beta)"
+description: "Узнайте, как установить и настроить платежный провайдер ЮKassa для Medusa."
+---
+
+# {frontmatter.title}
+
+В этом документе вы узнаете, как установить и настроить платежный провайдер ЮKassa для Medusa.
+
+## Требования
+
+- Medusa v2.17.2 или новее
+- Node.js v20 или новее
+- Аккаунт ЮKassa – [зарегистрируйтесь или войдите](https://yookassa.ru/joinups/?source=ks)
+- Модуль интеграций v0.1.0 или новее
+
+---
+
+## Установка
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration
+    yarn add @gorgo/medusa-payment-yookassa
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration
+    npm install @gorgo/medusa-payment-yookassa
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Добавьте конфигурацию провайдера в файл `medusa-config.js` в приложении Medusa Admin:
+
+```ts title="medusa-config.js"
+// ...
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.GORGO_INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
+            id: "yookassa",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-yookassa",
+      options: {}
+    },
+  ],
+  modules: [
+    // ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      dependencies: ["integration"],
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
+            id: "yookassa",
+            options: { id: "yookassa"}
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Добавьте переменную окружения с секретным ключом шифрования:
+
+```text title=".env"
+GORGO_INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Параметры провайдера
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Суффикс итогового ключа `int_<identifier>_<id>`; при регистрации нескольких экземпляров одного класса делает каждый из них уникальным.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+---
+
+## Настройка вебхуков
+
+Чтобы корректно обрабатывать платёжные уведомления от ЮKassa, настройте URL вебхука в своём аккаунте ЮKassa следующим образом:
+
+1. Перейдите в личный кабинет ЮKassa по адресу [yookassa.ru/my/merchant/integration/http-notifications](https://yookassa.ru/my/merchant/integration/http-notifications)
+2. Добавьте новый URL вебхука в следующем формате:
+    ``` title="Webhook URL"
+    https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/yookassa_yookassa
+    ```
+    Замените `{YOUR_MEDUSA_DOMAIN}` на домен вашей витрины Medusa.
+
+ЮKassa будет отправлять обновления статуса платежей на этот URL, что позволяет Medusa обновлять статус платежа соответствующим образом.
+
+<Note type="warning">ЮKassa ожидает сообщение `OK` в ответе, чтобы подтвердить успешную обработку вебхука. В настоящее время Medusa не поддерживает кастомные ответные сообщения вебхуков «из коробки», но сами вебхуки обрабатываются корректно и без этого.</Note>

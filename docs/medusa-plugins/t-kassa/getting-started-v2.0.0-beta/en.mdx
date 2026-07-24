@@ -1,0 +1,125 @@
+---
+title: "Getting Started with T-Kassa Payment for Medusa (v2.0.0-beta)"
+description: "In this document, you’ll learn how to install and configure the T-Kassa payment provider by T-Bank for Medusa"
+---
+
+# {frontmatter.title}
+
+In this document, you’ll learn how to install and configure the T-Kassa payment provider by T-Bank for Medusa.
+
+## Requirements
+
+- Medusa v2.17.2 or later
+- Node.js v20 or later
+- A T-Business account with T-Kassa internet acquiring – [sign in or create one](https://www.tbank.ru/kassa/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
+- Integration Module v0.1.0 or later
+
+---
+
+## Installation
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration
+    yarn add @gorgo/medusa-payment-tkassa
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration
+    npm install @gorgo/medusa-payment-tkassa
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Configuration
+
+Add the provider configuration in your `medusa-config.js` file of the Medusa admin application:
+
+```ts title="medusa-config.js"
+# ...
+module.exports = defineConfig({
+  # ...
+  plugins: [
+    # ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.GORGO_INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+            id: "tkassa",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-tkassa",
+      options: {}
+    },
+  ],
+  modules: [
+    # ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      dependencies: ["integration"],
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
+            id: "tkassa",
+            options: { id: "tkassa"}
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Add environment variables with your secret `Encryption Key`:
+
+```text title=".env"
+GORGO_INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Provider Options
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+---
+
+## Webhook Setup
+
+To properly handle payment notifications from T-Kassa, configure webhooks in your T-Business account as following:
+
+1. Navigate to `Internet acquiring` → `Shops` → Choose your shop → `Terminals` → Choose `Testing` or `Working` Terminal → Click `Settings` to open the setting window
+
+2. Choose to send Notifications `Via HTTP protocol`
+
+3. Add a URL like:
+    ```
+    https://$YOUR_MEDUSA_DOMAIN/hooks/payment/tkassa_tkassa
+    ```
+    Change `{YOUR_MEDUSA_DOMAIN}` with your medusa store domain.
+
+<Note type="warning">T-Kassa expects an `OK` response message to confirm successful webhook processing and to prevent duplicate notifications. Currently, Medusa does not natively support custom webhook response messages, but webhooks are still processed correctly without this. For more details, check out the [related discussion](https://github.com/medusajs/medusa/discussions/12887).</Note>

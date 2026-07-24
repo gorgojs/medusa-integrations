@@ -20,7 +20,7 @@ Robokassa Payments for Medusa
 
 <p align="center">
   <a href="https://medusajs.com">
-    <img src="https://img.shields.io/badge/Medusa-^2.14.0-blue?logo=medusa" alt="Medusa" />
+    <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-plugins/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-plugins/main/.badges/medusa-payment-robokassa.json&logo=checkmarx" alt="Medusa" />
@@ -51,6 +51,9 @@ Robokassa Payments for Medusa
 - **Detailed Logging:** Request and response logs for debugging and support in development mode.
 - **Full Test Coverage:** Comprehensive unit and integration tests covering core flows and edge cases.
 - **Storefront Example:** A complete <a href="https://github.com/gorgojs/medusa-plugins/tree/main/examples/payment-robokassa/medusa-storefront" target="_blank">Next.js storefront</a> ready to use as a reference.
+- **`Integration Module`:** Configure this plugin directly in the Medusa Admin application — no editing configuration files or redeploying the store.
+
+> **Integration Module:** This plugin supports the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
 
 ## What is Robokassa
 
@@ -64,15 +67,18 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 
 ## Requirements
 
-- Medusa v2.14.0 or later
+- Medusa v2.17.2 or later
 - Node.js v20 or later
-- A Robokassa account – [sign in or create one](https://login.robokassa.ru/reg?promoCode=gorgo) 
+- A Robokassa account – [sign in or create one](https://login.robokassa.ru/reg?promoCode=gorgo)
+- Integration Module v0.1.0 or later
 
 ## Installation
 
 ```bash
+yarn add @gorgo/medusa-integration
 yarn add @gorgo/medusa-payment-robokassa
 # or
+npm install @gorgo/medusa-integration
 npm install @gorgo/medusa-payment-robokassa
 ```
 

@@ -20,7 +20,7 @@
 
 <p align="center">
   <a href="https://medusajs.com">
-    <img src="https://img.shields.io/badge/Medusa-^2.14.0-blue?logo=medusa" alt="Medusa" />
+    <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-plugins/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-plugins/main/.badges/medusa-fulfillment-apiship.json&label=%D0%9F%D1%80%D0%BE%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BE%20%D1%81%20Medusa&logo=checkmarx" alt="Medusa" />
@@ -57,6 +57,9 @@
 - **Пример витрины магазина:** Готовый [пример витрины на Next.js](https://github.com/gorgojs/medusa-plugins/tree/main/examples/fulfillment-apiship/medusa-storefront) - можно использовать как референс.
 - **Тестовый режим:** Симуляция калькуляций и заказов без влияния на реальные данные.
 - **Подробное логирование:** Логи запросов и ответов для отладки и поддержки в режиме разработки.
+- **`Модуль интеграций`:** Настройте плагин прямо в приложении Medusa Admin — без редактирования конфигурационных файлов и повторного развёртывания магазина.
+
+> **Модуль интеграций:** Этот плагин поддерживает модуль интеграций — он позволяет администратору магазина настраивать плагин прямо в приложении Medusa Admin, не редактируя конфигурационные файлы и не выполняя повторное развёртывание магазина. Конфиденциальные значения шифруются, а настройки проверяются перед применением.
 
 ## Что такое ApiShip
 
@@ -72,15 +75,18 @@
 
 ## Требования
 
-- Medusa v2.14.0 или новее
+- Medusa v2.17.2 или новее
 - Node.js v20 или новее
 - Аккаунт ApiShip — [зарегистрируйтесь или войдите](https://a.apiship.ru)
+- Модуль интеграций v0.1.0 или новее
 
 ## Установка
 
 ```bash
+yarn add @gorgo/medusa-integration
 yarn add @gorgo/medusa-fulfillment-apiship
 # или
+npm install @gorgo/medusa-integration
 npm install @gorgo/medusa-fulfillment-apiship
 ```
 
