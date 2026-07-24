@@ -7,8 +7,8 @@ import IntegrationProviderService from "./integration-provider"
 import type { IntegrationDescriptor, TestConnectionResult } from "../descriptor/define"
 import { introspectDescriptor, secretFieldNames, type UiDescriptor } from "../descriptor/introspect"
 import { isDescriptorComplete } from "../descriptor/validate"
-import { INTEGRATION_OPTIONS_KEY, INTEGRATION_PACKAGE_META_KEY, DOCS_URL, type IntegrationModuleOptions, type PackageMetaMap } from "../types"
-import { CATALOG } from "../catalog/data"
+import { INTEGRATION_OPTIONS_KEY, INTEGRATION_PACKAGE_META_KEY, type IntegrationModuleOptions, type PackageMetaMap } from "../types"
+import { loadCatalog } from "../../../lib/catalog"
 import type { IntegrationOverviewItem, CatalogItem } from "../../../types"
 import type { CategoryKind } from "../../../types/integration"
 
@@ -201,11 +201,6 @@ export default class IntegrationModuleService extends MedusaService({
     }
   }
 
-  /** Docs URL for the admin list CTA + footer, from options or the default. */
-  getDocsUrl(): string {
-    return DOCS_URL
-  }
-
   /** Map a provider identifier to its public package-meta fields (snake_case), or nulls. */
   private mapPackageMeta(identifier: string | undefined): { version: string | null; author: string | null; author_url: string | null } {
     const meta = identifier ? this.packageMeta_[identifier] : undefined
@@ -222,16 +217,17 @@ export default class IntegrationModuleService extends MedusaService({
   }
 
   /**
-   * The integration catalog (hardcoded now) merged with local install state: each entry gets
+   * The integration catalog (from the live Gorgo catalog API via loadCatalog(), with an offline fallback) merged with local install state: each entry gets
    * `installed`/`provider_id` by matching its `integrationId` to a registered provider's
    * `identifier`. 1c is a plain module (not an integration provider) → always not installed.
    */
   async getCatalog(): Promise<CatalogItem[]> {
+    const catalog = await loadCatalog()
     const { integrations } = await this.listIntegrationsOverview()
     // Keyed by identifier; if one identifier has multiple registered instances, the last wins
     // (catalog "installed" is per-integration, so Settings links to that single provider_id).
     const byId = new Map(integrations.map((i) => [i.identifier, i]))
-    return CATALOG.map((c) => {
+    return catalog.map((c) => {
       const reg = byId.get(c.integrationId)
       return { ...c, installed: !!reg, provider_id: reg?.provider_id ?? null }
     })
