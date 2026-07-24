@@ -2,7 +2,8 @@
   "name": "medusa-plugins",
   "private": true,
   "workspaces": [
-    "packages/*",
+    "packages/modules/*",
+    "packages/providers/*",
     "packages/utils/*",
     "integration-tests/*"
   ],

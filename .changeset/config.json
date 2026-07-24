@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "gorgojs/medusa-plugins" }],
+  "changelog": ["@changesets/changelog-github", { "repo": "gorgojs/medusa-integrations" }],
   "commit": false,
   "fixed": [],
   "linked": [],
