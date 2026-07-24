@@ -11,7 +11,6 @@ const packageScopes = PATHS_TO_DIR.flatMap(dirPath => {
     .filter(d => d.isDirectory())
     .filter(d => fs.existsSync(path.join(fullPath, d.name, 'package.json')))
     .map(d => d.name);
-    .map(d => d.name);
 });
 
 module.exports = {
