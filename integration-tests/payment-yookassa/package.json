@@ -10,9 +10,9 @@
   "dependencies": {
     "@a2seven/yoo-checkout": "^1.1.4",
     "@gorgo/medusa-payment-yookassa": "workspace:*",
-    "@medusajs/framework": "2.17.2",
-    "@medusajs/medusa": "2.17.2",
-    "@medusajs/test-utils": "2.17.2",
+    "@medusajs/framework": "2.18.0",
+    "@medusajs/medusa": "2.18.0",
+    "@medusajs/test-utils": "2.18.0",
     "pg-god": "^1.0.12"
   },
   "devDependencies": {
