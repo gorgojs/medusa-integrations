@@ -1,0 +1,30 @@
+{
+  "onec": {
+    "name": "1C:Enterprise",
+    "description": "Data exchange between Medusa and 1C:Enterprise ERP",
+    "sections": {
+      "sync": "Sync settings",
+      "attributes": "Attribute IDs"
+    },
+    "fields": {
+      "interval": "Interval",
+      "chunkSize": "Chunk size",
+      "useZip": "Use zip",
+      "height": "Height",
+      "width": "Width",
+      "length": "Length",
+      "weight": "Weight",
+      "midCode": "MID code",
+      "hsCode": "HS code",
+      "originCountry": "Country of origin"
+    },
+    "hints": {
+      "interval": "Step interval in seconds (0 - load in a single step).",
+      "chunkSize": "Size of each file chunk to load at once (in bytes).",
+      "useZip": "Zip files are more efficient for large files."
+    },
+    "placeholders": {
+      "attributeId": "Attribute id"
+    }
+  }
+}

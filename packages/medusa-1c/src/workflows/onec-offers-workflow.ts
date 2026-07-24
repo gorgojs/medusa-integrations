@@ -14,6 +14,14 @@ import {
 } from "@medusajs/types";
 import { OnecExchangeWorkflowInput, OffersOutput } from "../types";
 import { parseOffersFilesStep } from "./steps/parse-offers-files";
+import {
+  syncProductOptionsStep,
+  SyncProductOptionsStepInput,
+} from "./steps/sync-product-options";
+import {
+  removeStaleProductOptionsStep,
+  RemoveStaleProductOptionsStepInput,
+} from "./steps/remove-stale-product-options";
 
 export const onecOffersWorkflow = createWorkflow(
   "onec-offers-workflow",
@@ -35,11 +43,19 @@ export const onecOffersWorkflow = createWorkflow(
 
     const { data: existingProducts } = useQueryGraphStep({
       entity: "product",
-      fields: ["id", "external_id", "variants.*"],
+      fields: [
+        "id",
+        "external_id",
+        "variants.*",
+        "options.id",
+        "options.title",
+        "options.values.id",
+        "options.values.value",
+      ],
       filters: { external_id: externalIdsFilters },
     }).config({ name: "existing-products" });
 
-    const { productsToUpdate } = transform(
+    const { productsToUpdate, optionsToSync, staleOptionsToRemove } = transform(
       {
         existingProducts,
         stores,
@@ -53,6 +69,8 @@ export const onecOffersWorkflow = createWorkflow(
         offersData: OffersOutput;
       }) => {
         const productsToUpdate: UpdateProductWorkflowInputDTO[] = [];
+        const optionsToSync: SyncProductOptionsStepInput = [];
+        const staleOptionsToRemove: RemoveStaleProductOptionsStepInput = [];
 
         const defaultCurrencyCode = (
           data.stores[0]?.default_currency_code || "rub"
@@ -76,6 +94,20 @@ export const onecOffersWorkflow = createWorkflow(
           const offersForProduct = groupedOffers.get(product.external_id!);
           if (!offersForProduct) return;
 
+          const existingOptions = (product.options ?? []).map((option: any) => ({
+            id: option.id,
+            title: option.title,
+            values: (option.values ?? []).map((value: any) => ({
+              id: value.id,
+              value: value.value,
+            })),
+          }));
+
+          const skuToVariantId = new Map<string, string>();
+          (product.variants ?? []).forEach((variant) => {
+            if (variant.sku) skuToVariantId.set(variant.sku, variant.id);
+          });
+
           const usedOptionTitles = new Set<string>();
           let draftVariants: CreateProductVariantWorkflowInputDTO[] =
             offersForProduct.map((offer) => {
@@ -89,9 +121,12 @@ export const onecOffersWorkflow = createWorkflow(
                   variantOptions[optionTitle] = char.value;
                 });
               }
+              const sku = offer.article || offer.id;
+              const existingVariantId = skuToVariantId.get(sku!);
               return {
+                ...(existingVariantId ? { id: existingVariantId } : {}),
                 title: offer.name,
-                sku: offer.article || offer.id,
+                sku,
                 prices: offer.prices?.map((p) => ({
                   amount: Number(p.pricePerUnit),
                   currency_code: (
@@ -120,30 +155,41 @@ export const onecOffersWorkflow = createWorkflow(
             finalVariants.forEach((variant) => {
               delete variant.metadata;
             });
-          } else {
-            finalOptions.push({
-              title: "Default Option",
-              values: ["Default Option Value"],
+
+            optionsToSync.push({
+              productId: product.id,
+              existingOptions,
+              optionsNeeded: finalOptions,
             });
-            if (finalVariants.length > 0) {
-              finalVariants[0].options = {
-                "Default Option": "Default Option Value",
-              };
-              delete finalVariants[0].metadata;
+
+            const staleDefaultOption = existingOptions.find(
+              (option) => option.title === "Default Option"
+            );
+            if (staleDefaultOption) {
+              staleOptionsToRemove.push({
+                productId: product.id,
+                optionId: staleDefaultOption.id,
+              });
             }
+          } else if (finalVariants.length > 0) {
+            finalVariants[0].options = {
+              "Default Option": "Default Option Value",
+            };
+            delete finalVariants[0].metadata;
           }
 
           productsToUpdate.push({
             id: product.id,
-            // @ts-ignore - options may not be in UpdateProductWorkflowInputDTO yet
-            options: finalOptions,
             variants: finalVariants as any[],
           });
         });
 
-        return { productsToUpdate };
+        return { productsToUpdate, optionsToSync, staleOptionsToRemove };
       }
     );
+
+    syncProductOptionsStep(optionsToSync);
+    removeStaleProductOptionsStep(staleOptionsToRemove);
 
     updateProductsWorkflow.runAsStep({ input: { products: productsToUpdate } });
 
