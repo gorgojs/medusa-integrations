@@ -189,5 +189,17 @@ medusaIntegrationTestRunner({
         expect(detail.data.integration).toBeNull()
       })
     })
+
+    describe("GET /admin/integrations/catalog", () => {
+      it("returns the catalog with install flags (and is not shadowed by :provider_id)", async () => {
+        const res = await api.get("/admin/integrations/catalog", headers)
+        expect(res.status).toBe(200) // 404 here would mean [provider_id] shadowed the static route
+        expect(res.data.integrations.length).toBeGreaterThanOrEqual(5)
+        const tkassa = res.data.integrations.find((c: any) => c.integrationId === "tkassa")
+        expect(tkassa).toBeDefined()
+        expect(typeof tkassa.installed).toBe("boolean")
+        expect(tkassa).toHaveProperty("provider_id")
+      })
+    })
   },
 })

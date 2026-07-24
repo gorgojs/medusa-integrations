@@ -280,11 +280,9 @@ const IntegrationsPage = () => {
             {t("integration.list.subtitle")}
           </Text>
         </div>
-        <Button size="small" variant="primary" asChild>
-          <a href={docsUrl} target="_blank" rel="noreferrer">
-            <Plus />
-            {t("integration.list.addIntegration")}
-          </a>
+        <Button size="small" variant="primary" onClick={() => navigate("/settings/integrations/browse")}>
+          <Plus />
+          {t("integration.list.addIntegration")}
         </Button>
       </div>
 

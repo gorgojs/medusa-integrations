@@ -1,5 +1,6 @@
 import { PuzzleSolid } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
+import { useState } from "react"
 
 /**
  * Renders an integration's descriptor `icon`. The value is any browser-loadable `<img src>`
@@ -17,6 +18,7 @@ export const IntegrationIcon = ({
   size?: "small" | "base"
 }) => {
   const dim = size === "small" ? "h-6 w-6" : "h-10 w-10"
+  const [errored, setErrored] = useState(false)
   return (
     <div
       className={clx(
@@ -24,8 +26,13 @@ export const IntegrationIcon = ({
         dim
       )}
     >
-      {src ? (
-        <img src={src} alt={alt} className="h-full w-full object-cover" />
+      {src && !errored ? (
+        <img
+          src={src}
+          alt={alt}
+          className="h-full w-full object-cover"
+          onError={() => setErrored(true)}
+        />
       ) : (
         <PuzzleSolid className="text-ui-fg-subtle" />
       )}

@@ -1,5 +1,5 @@
 import type { DeleteResponse } from "@medusajs/framework/types"
-import type { IntegrationOverviewItem, MaskedIntegration } from "./entities"
+import type { CatalogItem, IntegrationOverviewItem, MaskedIntegration } from "./entities"
 import type { CategoryKind, TestConnectionResult, UiDescriptor } from "../../../integration"
 
 export interface AdminIntegrationListResponse {
@@ -34,3 +34,7 @@ export interface AdminIntegrationUpsertResponse {
 export interface AdminIntegrationDeleteResponse extends DeleteResponse<"integration"> {}
 
 export interface AdminIntegrationTestResponse extends TestConnectionResult {}
+
+export interface AdminIntegrationCatalogResponse {
+  integrations: CatalogItem[]
+}

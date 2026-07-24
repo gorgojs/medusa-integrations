@@ -12,6 +12,20 @@
       "testFailed": "ошибка проверки",
       "tabs": { "all": "Все" }
     },
+    "browse": {
+      "title": "Каталог интеграций",
+      "subtitle": "Управление настройками интеграций",
+      "publish": "Опубликовать интеграцию",
+      "learnMore": "Как создать и опубликовать свою интеграцию",
+      "searchPlaceholder": "Поиск интеграций",
+      "by": "от {{author}}",
+      "installed": "Установлено",
+      "notInstalled": "Не установлено",
+      "install": "Установить",
+      "settings": "Настройки",
+      "install_addToConfig": "Добавьте это в medusa-config.ts и перезапустите сервер.",
+      "install_docs": "Документация"
+    },
     "columns": {
       "integration": "Интеграция",
       "description": "Описание",
@@ -37,14 +51,18 @@
     },
     "categories": {
       "payment": "Платежи",
-      "fulfillment": "Доставка",
-      "marketplace": "Маркетплейс",
-      "crm": "CRM",
-      "erp": "ERP",
-      "pim": "PIM",
       "notification": "Уведомления",
+      "fulfillment": "Доставка",
+      "search": "Поиск",
+      "content": "Контент",
+      "analytics": "Аналитика",
+      "authentication": "Аутентификация",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Маркетплейс",
       "feed": "Фиды",
-      "tax": "Налоги",
+      "file_providers": "Файловые провайдеры",
       "other": "Прочее"
     },
     "actions": {
