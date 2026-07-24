@@ -13,6 +13,7 @@ import {
   ProductDTO,
 } from "@medusajs/types";
 import { OnecExchangeWorkflowInput, OffersOutput } from "../types";
+import { normalizeCurrencyCode } from "../utils/exchange-utils";
 import { parseOffersFilesStep } from "./steps/parse-offers-files";
 import {
   syncProductOptionsStep,
@@ -129,9 +130,9 @@ export const onecOffersWorkflow = createWorkflow(
                 sku,
                 prices: offer.prices?.map((p) => ({
                   amount: Number(p.pricePerUnit),
-                  currency_code: (
+                  currency_code: normalizeCurrencyCode(
                     p.currency || defaultCurrencyCode
-                  ).toLowerCase(),
+                  ),
                 })),
                 options: variantOptions,
                 metadata: { isSpecific: offer.id!.includes("#") },

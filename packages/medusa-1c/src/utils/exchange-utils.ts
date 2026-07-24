@@ -5,6 +5,16 @@ import path from "path";
 import { MedusaError } from "@medusajs/framework/utils";
 import { UPLOAD_DIR } from "../data/constants";
 
+const CURRENCY_MAP: Record<string, string> = {
+  руб: "rub",
+};
+
+/** 1C often sends currencies as non-ISO Russian words (e.g. "руб") instead of ISO 4217 codes. */
+export function normalizeCurrencyCode(raw: string): string {
+  const lower = raw.toLowerCase().trim();
+  return CURRENCY_MAP[lower] ?? lower;
+}
+
 export async function ensureUploadDir() {
   try {
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
