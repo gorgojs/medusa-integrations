@@ -2,8 +2,8 @@ import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
 import * as fs from "fs/promises";
 import * as path from "path";
 import { MedusaError, Modules } from "@medusajs/utils";
-import OnecService from "../../../modules/1c/service";
-import { ONE_C_MODULE } from "../../../modules/1c";
+import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration";
+import { ONEC_INTEGRATION_IDENTIFIER } from "../../../providers/integration-1c/services";
 import {
   decompressAndExtract,
   ensureUploadDir,
@@ -38,10 +38,12 @@ function isAuthValid(req: MedusaRequest) {
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const logger = req.scope.resolve("logger");
-  const oneCSettingsService: OnecService =
-    req.scope.resolve(ONE_C_MODULE);
+  const integrationService: IntegrationModuleService =
+    req.scope.resolve(INTEGRATION_MODULE);
 
-  const settings = await oneCSettingsService.getSettings();
+  const resolved = await integrationService.getResolvedOptions(
+    ONEC_INTEGRATION_IDENTIFIER
+  );
 
   const { type, mode } = req.query as {
     type?: string;
@@ -61,6 +63,17 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
           res,
           401,
           `failure\nAuthentication failed for ${mode}`
+        );
+      }
+
+      if (!resolved) {
+        logger.warn(
+          `[1C Integration] ${mode}: integration is not configured or disabled.`
+        );
+        return sendPlainTextResponse(
+          res,
+          503,
+          "failure\n1C integration is not configured or disabled. Configure it in Settings -> Integrations."
         );
       }
     }
@@ -104,7 +117,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
                 checkAuthValid = false;
               }
             }
-          } catch (error) {
+          } catch (error: any) {
             logger.debug(
               `[1C Integration] Authentication attempt failed for user: ${error.message}`
             );
@@ -155,8 +168,8 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
           );
         }
 
-        const zipSupported = settings?.useZip ? "yes" : "no";
-        const fileLimit = settings?.chunkSize ?? 1024 * 1024 * 100; // 100MB
+        const zipSupported = resolved!.options.useZip ? "yes" : "no";
+        const fileLimit = resolved!.options.chunkSize;
         return sendPlainTextResponse(
           res,
           200,
@@ -218,11 +231,11 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
             `[1C Integration] Import step completed for session ${sessionId}`
           );
           return sendPlainTextResponse(res, 200, "success");
-        } catch (error) {
+        } catch (error: any) {
           logger.error(
-            `[1C Integration] Import: Failed for session ${sessionId}: ${error}`
+            `[1C Integration] Import: Failed for session ${sessionId}: ${error?.message ?? error}`
           );
-          return sendPlainTextResponse(res, 500, `failure\n${error.message}`);
+          return sendPlainTextResponse(res, 500, `failure\n${error?.message}`);
         }
 
       case "query":

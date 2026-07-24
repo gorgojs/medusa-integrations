@@ -102,16 +102,13 @@ export const onecImportWorkflow = createWorkflow(
 
           const productPayload: Omit<
             CreateProductWorkflowInputDTO,
-            "variants"
+            "variants" | "options"
           > = {
             title: onecProduct.name,
             category_ids,
             description: onecProduct.description,
             handle: slugify(onecProduct.name),
             external_id: onecProduct.id,
-            options: [
-              { title: "Default Option", values: ["Default option value"] },
-            ],
             sales_channels: [{ id: defaultSalesChannelId }],
           };
 
@@ -125,9 +122,12 @@ export const onecImportWorkflow = createWorkflow(
               id: existingProduct.id,
             } as UpdateProductWorkflowInputDTO);
           } else {
-            productsToCreate.push(
-              productPayload as CreateProductWorkflowInputDTO
-            );
+            productsToCreate.push({
+              ...productPayload,
+              options: [
+                { title: "Default Option", values: ["Default Option Value"] },
+              ],
+            } as CreateProductWorkflowInputDTO);
           }
         });
 

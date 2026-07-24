@@ -18,11 +18,12 @@
     "start": "medusa start",
     "dev": "yarn predev && yarn && medusa develop",
     "dev:tunnel": "concurrently \"yarn dev\" \"yarn tunnel\"",
-    "predev": "medusa plugin:add @gorgo/medusa-1c",
+    "predev": "medusa plugin:add @gorgo/medusa-integration && medusa plugin:add @gorgo/medusa-1c",
     "tunnel": "lt --port 9000 --subdomain medusa-1c"
   },
   "dependencies": {
-    "@gorgo/medusa-1c": "latest",
+    "@gorgo/medusa-1c": "file:.yalc/@gorgo/medusa-1c",
+    "@gorgo/medusa-integration": "file:.yalc/@gorgo/medusa-integration",
     "@medusajs/admin-sdk": "2.17.2",
     "@medusajs/cli": "2.17.2",
     "@medusajs/framework": "2.17.2",

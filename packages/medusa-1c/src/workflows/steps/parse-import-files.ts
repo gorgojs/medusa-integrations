@@ -8,8 +8,9 @@ import {
   Product,
 } from "../../types/commerceml";
 import { createReadStream } from "fs";
-import OneCSettingsService from "../../modules/1c/service";
-import { ONE_C_MODULE } from "../../modules/1c";
+import { MedusaError } from "@medusajs/utils";
+import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration";
+import { ONEC_INTEGRATION_IDENTIFIER } from "../../providers/integration-1c/services";
 import { ParseFileStepInput } from "../../types";
 import { Logger } from "@medusajs/framework/types";
 
@@ -58,16 +59,24 @@ export const parseImportFilesStep = createStep(
       throw e;
     }
 
-    const oneCSettingsService: OneCSettingsService =
-      container.resolve(ONE_C_MODULE);
-    const settings = await oneCSettingsService.getSettings();
+    const integrationService: IntegrationModuleService =
+      container.resolve(INTEGRATION_MODULE);
+    const resolved = await integrationService.getResolvedOptions(
+      ONEC_INTEGRATION_IDENTIFIER
+    );
+    if (!resolved) {
+      throw new MedusaError(
+        MedusaError.Types.NOT_ALLOWED,
+        "1C integration is not configured or disabled."
+      );
+    }
 
     return new StepResponse({
       classifier,
       properties,
       classifierGroups,
       products,
-      settings,
+      settings: resolved.options,
     });
   }
 );
