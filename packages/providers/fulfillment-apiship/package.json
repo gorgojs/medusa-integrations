@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/gorgojs/medusa-plugins",
-    "directory": "packages/medusa-fulfillment-apiship"
+    "url": "https://github.com/gorgojs/medusa-integrations",
+    "directory": "packages/providers/fulfillment-apiship"
   },
   "exports": {
     "./package.json": "./package.json",

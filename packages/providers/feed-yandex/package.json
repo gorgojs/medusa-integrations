@@ -1,48 +1,58 @@
 {
-  "name": "@gorgo/medusa-payment-robokassa",
-  "version": "1.0.0",
-  "description": "Robokassa payment provider for Medusa",
-  "files": [
-    ".medusa/server"
-  ],
+  "name": "@gorgo/medusa-feed-yandex",
+  "version": "0.2.33",
+  "description": "A Medusa plugin that generates a product feed in YML (Yandex Market Language) format",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gorgojs/medusa-plugins",
-    "directory": "packages/medusa-payment-robokassa"
+    "url": "https://github.com/gorgojs/medusa-integrations",
+    "directory": "packages/providers/feed-yandex"
   },
+  "files": [
+    ".medusa/server",
+    "src"
+  ],
   "exports": {
     "./package.json": "./package.json",
+    "./workflows": "./.medusa/server/src/workflows/index.js",
+    "./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
+    "./modules/*": "./.medusa/server/src/modules/*/index.js",
     "./providers/*": "./.medusa/server/src/providers/*/index.js",
+    "./*": "./.medusa/server/src/*.js",
     "./admin": {
       "import": "./.medusa/server/src/admin/index.mjs",
       "require": "./.medusa/server/src/admin/index.js",
       "default": "./.medusa/server/src/admin/index.js"
-    },
-    "./*": "./.medusa/server/src/*.js"
+    }
   },
   "keywords": [
     "medusa",
     "medusa-v2",
     "medusa-plugin",
     "medusa-plugin-integration",
-    "medusa-plugin-payment",
-    "medusa-payment",
-    "medusa-payment-robokassa",
-    "robokassa-payment",
-    "robokassa",
-    "Робокасса"
+    "medusa-plugin-other",
+    "ecommerce",
+    "yandex",
+    "yandex market",
+    "yml",
+    "yml feed",
+    "product feed",
+    "export",
+    "catalog export",
+    "yandex yml",
+    "marketplace",
+    "Яндекс"
   ],
   "scripts": {
     "build": "medusa plugin:build",
     "dev": "yarn predev && medusa plugin:develop",
     "predev": "medusa plugin:publish",
     "prepublishOnly": "medusa plugin:build",
-    "test:unit": "jest --config jest.config.js"
+    "test:unit": "jest --config jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@gorgo/telemetry": "^1.0.1",
-    "axios": "^1.9.0",
-    "fast-xml-parser": "^5.2.5"
+    "yandex-market-language": "^0.5.0"
   },
   "devDependencies": {
     "@medusajs/admin-sdk": "^2.14.0",
@@ -55,11 +65,10 @@
     "@swc/core": "^1.7.28",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.13",
-    "@types/node": "^22.13.11",
-    "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4",
+    "@types/node": "^22.13.17",
+    "@types/react": "^18.3.20",
+    "@types/react-dom": "^18.2.25",
     "jest": "^29.7.0",
-    "msw": "^2.7.0",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -75,7 +84,13 @@
     "@medusajs/icons": "^2.14.0",
     "@medusajs/medusa": "^2.14.0",
     "@medusajs/test-utils": "^2.14.0",
-    "@medusajs/ui": "^4.0.25"
+    "@medusajs/ui": "^4.0.25",
+    "date-fns": "^3.6.0",
+    "i18next": "^23.7.11",
+    "i18next-browser-languagedetector": "^7.2.0",
+    "i18next-http-backend": "^2.4.2",
+    "react-i18next": "^13.5.0",
+    "zod": "^4.0.2"
   },
   "engines": {
     "node": ">=20"

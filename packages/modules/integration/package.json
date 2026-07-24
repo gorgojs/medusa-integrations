@@ -1,17 +1,25 @@
 {
-  "name": "@gorgo/medusa-1c",
-  "version": "2.0.0-beta.1",
-  "description": "Medusa plugin for integration with 1C:Enterprise",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gorgojs/medusa-plugins",
-    "directory": "packages/medusa-1c"
+  "name": "@gorgo/medusa-integration",
+  "version": "0.0.4",
+  "description": "Integration module for Medusa",
+  "author": {
+    "name": "Gorgo",
+    "url": "https://gorgojs.com"
   },
   "license": "MIT",
   "files": [
     ".medusa/server"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gorgojs/medusa-integrations",
+    "directory": "packages/modules/integration"
+  },
   "exports": {
+    ".": {
+      "types": "./.medusa/server/src/index.d.ts",
+      "default": "./.medusa/server/src/index.js"
+    },
     "./package.json": "./package.json",
     "./workflows": "./.medusa/server/src/workflows/index.js",
     "./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
@@ -29,44 +37,33 @@
     "medusa-v2",
     "medusa-plugin",
     "medusa-plugin-integration",
-    "medusa-plugin-other",
-    "medusa-plugin-erp",
-    "1c",
-    "1С",
-    "1c:enterprise",
-    "1С:Предприятие",
-    "1С Предприятие"
+    "medusa-plugin-other"
   ],
   "scripts": {
     "build": "medusa plugin:build",
     "dev": "yarn predev && medusa plugin:develop",
     "predev": "medusa plugin:publish",
     "prepublishOnly": "medusa plugin:build",
-    "test:unit": "TEST_TYPE=unit NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js --silent --runInBand --forceExit"
+    "test:unit": "TEST_TYPE=unit NODE_OPTIONS=--experimental-vm-modules jest --silent --runInBand --forceExit"
   },
   "dependencies": {
-    "@gorgo/telemetry": "^1.0.1",
-    "body-parser": "^1.20.5",
-    "commerceml-parser": "^3.0.3",
-    "commerceml-parser-core": "^2.1.3",
-    "sluga": "^0.2.1",
-    "unzipper": "^0.12.3"
+    "@gorgo/telemetry": "^1.0.0"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "workspace:*",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
+    "@medusajs/dashboard": "^2.17.2",
     "@medusajs/framework": "^2.17.2",
     "@medusajs/icons": "^2.17.2",
+    "@medusajs/medusa": "^2.17.2",
     "@medusajs/test-utils": "^2.17.2",
-    "@medusajs/ui": "^4.0.25",
+    "@medusajs/ui": "^4.1.15",
     "@swc/core": "^1.7.28",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.13",
     "@types/node": "^20.0.0",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.2.25",
-    "@types/unzipper": "^0",
     "jest": "^29.7.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -77,13 +74,15 @@
     "yalc": "^1.0.0-pre.53"
   },
   "peerDependencies": {
-    "@gorgo/medusa-integration": "*",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
+    "@medusajs/dashboard": "^2.17.2",
+    "@medusajs/deps": "^2.17.2",
     "@medusajs/framework": "^2.17.2",
     "@medusajs/icons": "^2.17.2",
+    "@medusajs/medusa": "^2.17.2",
     "@medusajs/test-utils": "^2.17.2",
-    "@medusajs/ui": "^4.0.25"
+    "@medusajs/ui": "^4.1.16"
   },
   "engines": {
     "node": ">=20"
