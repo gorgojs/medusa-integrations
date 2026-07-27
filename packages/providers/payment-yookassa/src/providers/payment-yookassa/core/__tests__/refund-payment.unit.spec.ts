@@ -1,6 +1,5 @@
 import { http, HttpResponse } from "msw"
-import YookassaService from "../../services/yookassa"
-import { YOOKASSA_BASE_URL, captureRequest, makeLogger, server } from "./test-utils"
+import { YOOKASSA_BASE_URL, captureRequest, makeProvider, server } from "./test-utils"
 
 const baseOptions = {
   shopId: "test_shop_id",
@@ -57,9 +56,7 @@ describe("YookassaBase.refundPayment", () => {
       )
     )
 
-    const yookassa = new (YookassaService as any)(
-      { logger: makeLogger() },
-      { ...baseOptions, useReceipt: true }
+    const yookassa = makeProvider({ ...baseOptions, useReceipt: true }
     )
     await yookassa.refundPayment({ amount: 1500, data: basePaymentData } as any)
 
@@ -84,9 +81,7 @@ describe("YookassaBase.refundPayment", () => {
       )
     )
 
-    const yookassa = new (YookassaService as any)(
-      { logger: makeLogger() },
-      { ...baseOptions, useReceipt: true }
+    const yookassa = makeProvider({ ...baseOptions, useReceipt: true }
     )
     await yookassa.refundPayment({ amount: 500, data: basePaymentData } as any)
 
@@ -110,14 +105,14 @@ describe("YookassaBase.refundPayment", () => {
       )
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions) // no useReceipt
+    const yookassa = makeProvider(baseOptions) // no useReceipt
     await yookassa.refundPayment({ amount: 500, data: basePaymentData } as any)
 
     expect(captured.body.receipt).toBeUndefined()
   })
 
   it("throws when data.id is missing", async () => {
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
 
     await expect(
       yookassa.refundPayment({
@@ -133,7 +128,7 @@ describe("YookassaBase.refundPayment", () => {
       { ...basePaymentData, status: "succeeded" }
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     const result = await yookassa.refundPayment({
       amount: 1500,
       data: basePaymentData,
@@ -155,7 +150,7 @@ describe("YookassaBase.refundPayment", () => {
       )
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     await yookassa.refundPayment({
       amount: { value: "500" },
       data: basePaymentData,
@@ -176,7 +171,7 @@ describe("YookassaBase.refundPayment", () => {
       )
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     await yookassa.refundPayment({
       amount: 1500,
       data: basePaymentData,
@@ -187,9 +182,7 @@ describe("YookassaBase.refundPayment", () => {
   })
 
   it("wraps error from buildRefundReceiptSimple when metadata.receip_tmp is invalid JSON", async () => {
-    const yookassa = new (YookassaService as any)(
-      { logger: makeLogger() },
-      { ...baseOptions, useReceipt: true }
+    const yookassa = makeProvider({ ...baseOptions, useReceipt: true }
     )
 
     // Partial refund with corrupted receip_tmp triggers buildRefundReceiptSimple which throws
@@ -215,7 +208,7 @@ describe("YookassaBase.refundPayment", () => {
       )
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
 
     await expect(
       yookassa.refundPayment({ amount: 1500, data: basePaymentData } as any)

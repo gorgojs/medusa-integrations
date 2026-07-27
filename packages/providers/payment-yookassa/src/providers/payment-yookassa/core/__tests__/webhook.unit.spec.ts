@@ -1,7 +1,6 @@
 import { http, HttpResponse } from "msw"
 import { PaymentActions } from "@medusajs/framework/utils"
-import YookassaService from "../../services/yookassa"
-import { YOOKASSA_BASE_URL, makeLogger, server } from "./test-utils"
+import { YOOKASSA_BASE_URL, makeProvider, server } from "./test-utils"
 
 const baseOptions = {
   shopId: "test_shop_id",
@@ -55,7 +54,7 @@ describe("YookassaBase.getWebhookActionAndData", () => {
     it("returns SUCCESSFUL action with session_id and amount when payment status matches", async () => {
       mockValidPayment("succeeded")
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       const result = await yookassa.getWebhookActionAndData(
         makePaymentEvent("payment.succeeded", "succeeded")
       )
@@ -68,7 +67,7 @@ describe("YookassaBase.getWebhookActionAndData", () => {
       // Event says succeeded but the payment is still pending (tampered / replayed event)
       mockValidPayment("pending")
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       const result = await yookassa.getWebhookActionAndData(
         makePaymentEvent("payment.succeeded", "succeeded")
       )
@@ -81,7 +80,7 @@ describe("YookassaBase.getWebhookActionAndData", () => {
     it("returns AUTHORIZED action when payment status matches", async () => {
       mockValidPayment("waiting_for_capture")
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       const result = await yookassa.getWebhookActionAndData(
         makePaymentEvent("payment.waiting_for_capture", "waiting_for_capture")
       )
@@ -95,7 +94,7 @@ describe("YookassaBase.getWebhookActionAndData", () => {
     it("returns CANCELED action when payment status matches", async () => {
       mockValidPayment("canceled")
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       const result = await yookassa.getWebhookActionAndData(
         makePaymentEvent("payment.canceled", "canceled")
       )
@@ -109,7 +108,7 @@ describe("YookassaBase.getWebhookActionAndData", () => {
     it("returns NOT_SUPPORTED for refund.succeeded (no case in switch)", async () => {
       mockValidRefund("succeeded")
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       const result = await yookassa.getWebhookActionAndData(
         wrapPayload({
           type: "notification",
@@ -131,7 +130,7 @@ describe("YookassaBase.getWebhookActionAndData", () => {
       // "payment.pending" is not in the switch cases
       mockValidPayment("pending")
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       const result = await yookassa.getWebhookActionAndData(
         makePaymentEvent("payment.pending", "pending")
       )
@@ -144,7 +143,7 @@ describe("YookassaBase.getWebhookActionAndData", () => {
     it("returns NOT_SUPPORTED (not throws) when the event object type is neither payment nor refund", async () => {
       // isWebhookEventValid returns false for unknown object type → default branch
       // No HTTP call is made, so no MSW handler needed
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       const result = await yookassa.getWebhookActionAndData(
         wrapPayload({
           type: "notification",
@@ -166,7 +165,7 @@ describe("YookassaBase.getWebhookActionAndData", () => {
         )
       )
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
 
       await expect(
         yookassa.getWebhookActionAndData(makePaymentEvent("payment.succeeded", "succeeded"))

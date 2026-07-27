@@ -1,6 +1,5 @@
 import { http, HttpResponse } from "msw"
-import YookassaService from "../../services/yookassa"
-import { YOOKASSA_BASE_URL, captureRequest, makeLogger, server } from "./test-utils"
+import { YOOKASSA_BASE_URL, captureRequest, makeProvider, server } from "./test-utils"
 
 const okCreatePaymentResponse = {
   id: "payment_01HX",
@@ -38,7 +37,7 @@ describe("YookassaBase.initiatePayment", () => {
       })
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     const result = await yookassa.initiatePayment(baseInput)
 
     expect(captured.url).toBe(`${YOOKASSA_BASE_URL}/payments`)
@@ -61,7 +60,7 @@ describe("YookassaBase.initiatePayment", () => {
       })
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     await yookassa.initiatePayment({ ...baseInput, currency_code: "usd" })
 
     expect(captured.body.amount.currency).toBe("USD")
@@ -76,9 +75,7 @@ describe("YookassaBase.initiatePayment", () => {
       })
     )
 
-    const yookassa = new (YookassaService as any)(
-      { logger: makeLogger() },
-      { ...baseOptions, paymentDescription: "Order payment" }
+    const yookassa = makeProvider({ ...baseOptions, paymentDescription: "Order payment" }
     )
     await yookassa.initiatePayment(baseInput)
 
@@ -94,9 +91,7 @@ describe("YookassaBase.initiatePayment", () => {
       })
     )
 
-    const yookassa = new (YookassaService as any)(
-      { logger: makeLogger() },
-      { ...baseOptions, paymentDescription: "Options description" }
+    const yookassa = makeProvider({ ...baseOptions, paymentDescription: "Options description" }
     )
     await yookassa.initiatePayment({
       ...baseInput,
@@ -120,7 +115,7 @@ describe("YookassaBase.initiatePayment", () => {
         })
       )
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, options)
+      const yookassa = makeProvider(options)
       await yookassa.initiatePayment(baseInput)
 
       expect(captured.body.capture).toBe(expectedCapture)
@@ -149,9 +144,7 @@ describe("YookassaBase.initiatePayment", () => {
         })
       )
 
-      const yookassa = new (YookassaService as any)(
-        { logger: makeLogger() },
-        {
+      const yookassa = makeProvider({
           ...baseOptions,
           useReceipt: true,
           taxItemDefault: 1,
@@ -175,7 +168,7 @@ describe("YookassaBase.initiatePayment", () => {
         })
       )
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       await yookassa.initiatePayment({ ...baseInput, data: { ...baseInput.data, cart } })
 
       expect(captured.body.receipt).toBeUndefined()
@@ -190,9 +183,7 @@ describe("YookassaBase.initiatePayment", () => {
         })
       )
 
-      const yookassa = new (YookassaService as any)(
-        { logger: makeLogger() },
-        {
+      const yookassa = makeProvider({
           ...baseOptions,
           useReceipt: true,
           taxItemDefault: 1,
@@ -216,7 +207,7 @@ describe("YookassaBase.initiatePayment", () => {
       })
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     await yookassa.initiatePayment({
       ...baseInput,
       data: {
@@ -241,7 +232,7 @@ describe("YookassaBase.initiatePayment", () => {
       })
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     await yookassa.initiatePayment(baseInput)
 
     expect(captured.body.metadata).toBeDefined()
@@ -262,7 +253,7 @@ describe("YookassaBase.initiatePayment", () => {
         )
       )
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
 
       await expect(yookassa.initiatePayment(baseInput)).rejects.toThrow(
         /An error occurred in initiatePayment/
@@ -274,7 +265,7 @@ describe("YookassaBase.initiatePayment", () => {
         http.post(`${YOOKASSA_BASE_URL}/payments`, () => HttpResponse.error())
       )
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
 
       await expect(yookassa.initiatePayment(baseInput)).rejects.toThrow(
         /An error occurred in initiatePayment/
