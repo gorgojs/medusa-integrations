@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/it-integration",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "test:integration:http": "TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js --silent=false --runInBand --forceExit --passWithNoTests",
