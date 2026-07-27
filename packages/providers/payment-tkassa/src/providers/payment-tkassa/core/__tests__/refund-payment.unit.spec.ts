@@ -1,6 +1,5 @@
 import { http, HttpResponse } from "msw"
-import TkassaService from "../../services/tkassa"
-import { TKASSA_BASE_URL, captureRequest, makeLogger, server } from "./test-utils"
+import { TKASSA_BASE_URL, captureRequest, makeProvider, server } from "./test-utils"
 
 const okCancelResponse = {
   Success: true,
@@ -47,7 +46,7 @@ describe("TkassaBase.refundPayment", () => {
       })
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const data = {
       PaymentId: "987654",
       OrderId: "cart_01HX",
@@ -75,7 +74,7 @@ describe("TkassaBase.refundPayment", () => {
       })
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const data = {
       PaymentId: "987654",
       OrderId: "cart_01HX",
@@ -103,7 +102,7 @@ describe("TkassaBase.refundPayment", () => {
       })
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const data = {
       PaymentId: "987654",
       OrderId: "cart_01HX",
@@ -123,7 +122,7 @@ describe("TkassaBase.refundPayment", () => {
       )
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const data = {
       PaymentId: "987654",
       OrderId: "cart_01HX",
@@ -141,7 +140,7 @@ describe("TkassaBase.refundPayment", () => {
   // crashes with an unwrapped TypeError instead of a friendly provider error.
   // If/when the source is hardened, this assertion will need updating.
   it("throws (unwrapped) when data.receipt is missing — no guard around generateRefundReceipt", async () => {
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
 
     await expect(
       tkassa.refundPayment({

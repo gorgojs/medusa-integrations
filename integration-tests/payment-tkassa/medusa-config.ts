@@ -11,27 +11,34 @@ module.exports = defineConfig({
       authCors: process.env.AUTH_CORS || "http://localhost:9000",
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
-    },
-    cookieOptions: { sameSite: "lax", secure: false },
+    }
   },
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY || "supersecret",
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+            options: {
+              id: "tkassa", // must match the provider id used in the payment module below
+            },
+          },
+        ],
+      },
+    },
+  ],
   modules: [
     {
       resolve: "@medusajs/medusa/payment",
+      dependencies: ["integration"],
       options: {
         providers: [
           {
             resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
             id: "tkassa",
-            options: {
-              terminalKey: process.env.TKASSA_TERMINAL_KEY,
-              password: process.env.TKASSA_PASSWORD,
-              capture: true,
-              useReceipt: true,
-              ffdVersion: "1.05",
-              taxation: "osn",
-              taxItemDefault: "none",
-              taxShippingDefault: "none",
-            },
+            options: {},
           },
         ],
       },
