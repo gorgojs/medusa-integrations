@@ -1,6 +1,5 @@
 import { http, HttpResponse } from "msw"
-import TkassaService from "../../services/tkassa"
-import { TKASSA_BASE_URL, captureRequest, makeLogger, server } from "./test-utils"
+import { TKASSA_BASE_URL, captureRequest, makeProvider, server } from "./test-utils"
 
 const okInitResponse = {
   Success: true,
@@ -41,7 +40,7 @@ describe("TkassaBase.initiatePayment", () => {
       })
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const result = await tkassa.initiatePayment(baseInput)
 
     expect(captured.url).toBe(`${TKASSA_BASE_URL}/v2/Init`)
@@ -66,7 +65,7 @@ describe("TkassaBase.initiatePayment", () => {
       })
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     await tkassa.initiatePayment({
       ...baseInput,
       data: {
@@ -95,7 +94,7 @@ describe("TkassaBase.initiatePayment", () => {
         })
       )
 
-      const tkassa = new (TkassaService as any)({ logger: makeLogger() }, options)
+      const tkassa = makeProvider(options)
       await tkassa.initiatePayment(baseInput)
 
       expect(captured.body.PayType).toBe(expectedPayType)
@@ -110,10 +109,7 @@ describe("TkassaBase.initiatePayment", () => {
         })
       )
 
-      const tkassa = new (TkassaService as any)(
-        { logger: makeLogger() },
-        { ...baseOptions, capture: true }
-      )
+      const tkassa = makeProvider({ ...baseOptions, capture: true })
       await tkassa.initiatePayment({
         ...baseInput,
         data: { ...baseInput.data, PayType: "T" },
@@ -145,17 +141,14 @@ describe("TkassaBase.initiatePayment", () => {
         })
       )
 
-      const tkassa = new (TkassaService as any)(
-        { logger: makeLogger() },
-        {
-          ...baseOptions,
-          useReceipt: true,
-          ffdVersion: "1.05",
-          taxation: "osn",
-          taxItemDefault: "none",
-          taxShippingDefault: "none",
-        }
-      )
+      const tkassa = makeProvider({
+        ...baseOptions,
+        useReceipt: true,
+        ffdVersion: "1.05",
+        taxation: "osn",
+        taxItemDefault: "none",
+        taxShippingDefault: "none",
+      })
       await tkassa.initiatePayment({ ...baseInput, data: { ...baseInput.data, cart } })
 
       expect(captured.body.Receipt).toBeDefined()
@@ -175,7 +168,7 @@ describe("TkassaBase.initiatePayment", () => {
         })
       )
 
-      const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+      const tkassa = makeProvider(baseOptions)
       await tkassa.initiatePayment({ ...baseInput, data: { ...baseInput.data, cart } })
 
       expect(captured.body.Receipt).toBeUndefined()
@@ -190,17 +183,14 @@ describe("TkassaBase.initiatePayment", () => {
         })
       )
 
-      const tkassa = new (TkassaService as any)(
-        { logger: makeLogger() },
-        {
-          ...baseOptions,
-          useReceipt: true,
-          ffdVersion: "1.05",
-          taxation: "osn",
-          taxItemDefault: "none",
-          taxShippingDefault: "none",
-        }
-      )
+      const tkassa = makeProvider({
+        ...baseOptions,
+        useReceipt: true,
+        ffdVersion: "1.05",
+        taxation: "osn",
+        taxItemDefault: "none",
+        taxShippingDefault: "none",
+      })
 
       const result = await tkassa.initiatePayment(baseInput) // no cart
       // The generator was not called; current implementation passes the empty `receipt = {}` object,
@@ -222,7 +212,7 @@ describe("TkassaBase.initiatePayment", () => {
         )
       )
 
-      const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+      const tkassa = makeProvider(baseOptions)
 
       await expect(tkassa.initiatePayment(baseInput)).rejects.toThrow(
         /An error occurred in initiatePayment/
@@ -234,7 +224,7 @@ describe("TkassaBase.initiatePayment", () => {
         http.post(`${TKASSA_BASE_URL}/v2/Init`, () => HttpResponse.error())
       )
 
-      const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+      const tkassa = makeProvider(baseOptions)
 
       await expect(tkassa.initiatePayment(baseInput)).rejects.toThrow(
         /An error occurred in initiatePayment/

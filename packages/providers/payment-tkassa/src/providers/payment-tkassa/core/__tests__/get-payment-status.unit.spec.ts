@@ -1,7 +1,6 @@
 import { http, HttpResponse } from "msw"
 import { PaymentSessionStatus } from "@medusajs/framework/utils"
-import TkassaService from "../../services/tkassa"
-import { TKASSA_BASE_URL, makeLogger, server } from "./test-utils"
+import { TKASSA_BASE_URL, makeProvider, server } from "./test-utils"
 
 const baseOptions = {
   terminalKey: "TestTerminalKey",
@@ -15,7 +14,7 @@ afterAll(() => server.close())
 describe("TkassaBase.getPaymentStatus", () => {
   // missing PaymentId
   it("throws when data.PaymentId is missing", async () => {
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
 
     await expect(
       tkassa.getPaymentStatus({ data: {} } as any)
@@ -24,7 +23,7 @@ describe("TkassaBase.getPaymentStatus", () => {
 
   // PaymentId of wrong type
   it("throws when data.PaymentId is not a string", async () => {
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
 
     await expect(
       tkassa.getPaymentStatus({ data: { PaymentId: 12345 } } as any)
@@ -46,7 +45,7 @@ describe("TkassaBase.getPaymentStatus", () => {
       )
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const result = await tkassa.getPaymentStatus({
       data: { PaymentId: "987654" },
     } as any)
@@ -69,7 +68,7 @@ describe("TkassaBase.getPaymentStatus", () => {
       )
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const result = await tkassa.getPaymentStatus({
       data: { PaymentId: "987654" },
     } as any)
@@ -92,7 +91,7 @@ describe("TkassaBase.getPaymentStatus", () => {
       )
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const receipt = { FfdVersion: "1.05", Items: [] }
     const result = await tkassa.getPaymentStatus({
       data: { PaymentId: "987654", receipt },

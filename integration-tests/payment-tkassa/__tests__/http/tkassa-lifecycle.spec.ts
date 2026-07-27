@@ -27,6 +27,7 @@ jest.mock("t-kassa-api", () => {
 
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import { Modules } from "@medusajs/framework/utils"
+import { seedTkassaIntegration } from "../utils/seed-tkassa"
 
 jest.setTimeout(120 * 1000)
 
@@ -42,6 +43,9 @@ medusaIntegrationTestRunner({
   },
   testSuite: ({ getContainer }) => {
     describe("T-Kassa payment lifecycle (e2e via PaymentModule)", () => {
+      beforeAll(async () => {
+        await seedTkassaIntegration(getContainer())
+      })
       beforeEach(() => initSpy.mockClear())
 
       it("createPaymentSession routes to TkassaProvider.initiatePayment and persists PaymentURL on the session", async () => {

@@ -1,6 +1,5 @@
 import { http, HttpResponse } from "msw"
-import TkassaService from "../../services/tkassa"
-import { TKASSA_BASE_URL, captureRequest, makeLogger, server } from "./test-utils"
+import { TKASSA_BASE_URL, captureRequest, makeProvider, server } from "./test-utils"
 
 const okGetStateResponse = {
   Success: true,
@@ -31,7 +30,7 @@ describe("TkassaBase.retrievePayment", () => {
       })
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const result = await tkassa.retrievePayment({
       data: { PaymentId: "987654" },
     } as any)
@@ -53,7 +52,7 @@ describe("TkassaBase.retrievePayment", () => {
       )
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const receipt = { FfdVersion: "1.05", Items: [] }
     const result = await tkassa.retrievePayment({
       data: { PaymentId: "987654", receipt },
@@ -69,7 +68,7 @@ describe("TkassaBase.retrievePayment", () => {
       )
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
 
     await expect(
       tkassa.retrievePayment({ data: { PaymentId: "987654" } } as any)
