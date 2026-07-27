@@ -1,7 +1,6 @@
 import { http, HttpResponse } from "msw"
 import { PaymentSessionStatus } from "@medusajs/framework/utils"
-import RobokassaService from "../../services/robokassa"
-import { ROBOKASSA_BASE_URL, makeLogger, server } from "./test-utils"
+import { ROBOKASSA_BASE_URL, makeProvider, server } from "./test-utils"
 
 const RETRIEVE_URL = `${ROBOKASSA_BASE_URL}/Merchant/WebService/Service.asmx/OpStateExt`
 
@@ -19,7 +18,7 @@ afterAll(() => server.close())
 describe("RobokassaBase no-op / pass-through methods", () => {
   describe("cancelPayment (not supported by Robokassa)", () => {
     it("returns the input unchanged without making any HTTP call", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
       const input = { data: { InvoiceID: "12345", OutSum: "15.00" } }
 
       const result = await robokassa.cancelPayment(input as any)
@@ -31,7 +30,7 @@ describe("RobokassaBase no-op / pass-through methods", () => {
 
   describe("refundPayment (not supported by Robokassa)", () => {
     it("returns the input unchanged without making any HTTP call", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
       const input = {
         amount: 15,
         currency_code: "rub",
@@ -46,7 +45,7 @@ describe("RobokassaBase no-op / pass-through methods", () => {
 
   describe("deletePayment (not supported by Robokassa)", () => {
     it("returns the input unchanged without making any HTTP call", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
       const input = { data: { InvoiceID: "12345" } }
 
       const result = await robokassa.deletePayment(input as any)
@@ -57,7 +56,7 @@ describe("RobokassaBase no-op / pass-through methods", () => {
 
   describe("updatePayment (not supported by Robokassa)", () => {
     it("returns the input unchanged without making any HTTP call", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
       const input = {
         amount: 20,
         currency_code: "rub",
@@ -85,7 +84,7 @@ describe("RobokassaBase no-op / pass-through methods", () => {
         )
       )
 
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
       const result = await robokassa.authorizePayment({ data: { InvoiceID: "12345" } } as any)
 
       expect(result.status).toBe(PaymentSessionStatus.CAPTURED)

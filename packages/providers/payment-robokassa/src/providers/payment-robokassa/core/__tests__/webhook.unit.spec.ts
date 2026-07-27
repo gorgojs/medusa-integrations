@@ -1,7 +1,6 @@
 import { createHash } from "node:crypto"
 import { PaymentActions } from "@medusajs/framework/utils"
-import RobokassaService from "../../services/robokassa"
-import { makeLogger } from "./test-utils"
+import { makeProvider } from "./test-utils"
 
 const MERCHANT_LOGIN = "test_login"
 const PASSWORD1 = "test_password1"
@@ -64,7 +63,7 @@ function wrap(data: Record<string, any>) {
 describe("RobokassaBase.getWebhookActionAndData", () => {
   describe("with a correctly signed payload", () => {
     it("returns SUCCESSFUL action and passes OutSum as-is (no unit conversion)", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
 
       const result = await robokassa.getWebhookActionAndData(wrap(makeSignedEvent()))
 
@@ -73,7 +72,7 @@ describe("RobokassaBase.getWebhookActionAndData", () => {
     })
 
     it("passes the Shp_SessionID as session_id", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
 
       const event = makeSignedEvent({ OutSum: "99.50", InvId: "99", Shp_SessionID: "sess_abc" })
       const result = await robokassa.getWebhookActionAndData(wrap(event))
@@ -85,7 +84,7 @@ describe("RobokassaBase.getWebhookActionAndData", () => {
 
   describe("rejection cases", () => {
     it("returns NOT_SUPPORTED for a payload signed with the wrong password", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
 
       const event = makeSignedEvent({
         SignatureValue: signWebhookPayload(
@@ -100,7 +99,7 @@ describe("RobokassaBase.getWebhookActionAndData", () => {
     })
 
     it("returns NOT_SUPPORTED when OutSum is tampered with after signing", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
 
       const event = makeSignedEvent()
       event.OutSum = "9999.00" // tampered after signature computed
@@ -110,7 +109,7 @@ describe("RobokassaBase.getWebhookActionAndData", () => {
     })
 
     it("returns NOT_SUPPORTED when InvId is tampered with after signing", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
 
       const event = makeSignedEvent()
       event.InvId = "99999" // tampered
@@ -120,7 +119,7 @@ describe("RobokassaBase.getWebhookActionAndData", () => {
     })
 
     it("returns NOT_SUPPORTED when Shp_SessionID is tampered with after signing", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
 
       const event = makeSignedEvent()
       event.Shp_SessionID = "other_session" // tampered

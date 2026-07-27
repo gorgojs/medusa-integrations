@@ -1,7 +1,6 @@
 import { createHash } from "node:crypto"
-import RobokassaService from "../../services/robokassa"
 import { stringToNumberHash } from "../../utils/string-to-number-hash"
-import { makeLogger } from "./test-utils"
+import { makeProvider } from "./test-utils"
 
 const baseOptions = {
   merchantLogin: "test_login",
@@ -22,7 +21,7 @@ describe("RobokassaBase.initiatePayment", () => {
   // No HTTP call is made — initiatePayment builds a payment URL locally.
 
   it("returns an id derived from a hash of the idempotency_key", async () => {
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     const result = await robokassa.initiatePayment(baseInput)
 
     const expected = stringToNumberHash("idem-1").toString()
@@ -30,7 +29,7 @@ describe("RobokassaBase.initiatePayment", () => {
   })
 
   it("formats amount as a decimal string (no kopecks conversion)", async () => {
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     const result = await robokassa.initiatePayment(baseInput)
 
     const url = new URL((result.data as any).paymentUrl)
@@ -38,7 +37,7 @@ describe("RobokassaBase.initiatePayment", () => {
   })
 
   it("includes MerchantLogin and Shp_SessionID in the payment URL", async () => {
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     const result = await robokassa.initiatePayment(baseInput)
 
     const url = new URL((result.data as any).paymentUrl)
@@ -47,7 +46,7 @@ describe("RobokassaBase.initiatePayment", () => {
   })
 
   it("includes a correct SignatureValue in the payment URL", async () => {
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     const result = await robokassa.initiatePayment(baseInput)
 
     const invoiceId = stringToNumberHash("idem-1").toString()
@@ -60,7 +59,7 @@ describe("RobokassaBase.initiatePayment", () => {
   })
 
   it("points to the Robokassa payment page", async () => {
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     const result = await robokassa.initiatePayment(baseInput)
 
     const paymentUrl = (result.data as any).paymentUrl as string
@@ -68,7 +67,7 @@ describe("RobokassaBase.initiatePayment", () => {
   })
 
   it("passes SuccessUrl2 and FailUrl2 from input.data into the payment URL", async () => {
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     const result = await robokassa.initiatePayment({
       ...baseInput,
       data: {
@@ -85,9 +84,7 @@ describe("RobokassaBase.initiatePayment", () => {
 
   describe("StepByStep (two-step capture)", () => {
     it("sets StepByStep=true when options.capture is false", async () => {
-      const robokassa = new (RobokassaService as any)(
-        { logger: makeLogger() },
-        { ...baseOptions, capture: false }
+      const robokassa = makeProvider({ ...baseOptions, capture: false }
       )
       const result = await robokassa.initiatePayment(baseInput)
       const url = new URL((result.data as any).paymentUrl)
@@ -95,9 +92,7 @@ describe("RobokassaBase.initiatePayment", () => {
     })
 
     it("omits StepByStep when options.capture is true", async () => {
-      const robokassa = new (RobokassaService as any)(
-        { logger: makeLogger() },
-        { ...baseOptions, capture: true }
+      const robokassa = makeProvider({ ...baseOptions, capture: true }
       )
       const result = await robokassa.initiatePayment(baseInput)
       const url = new URL((result.data as any).paymentUrl)
@@ -105,9 +100,7 @@ describe("RobokassaBase.initiatePayment", () => {
     })
 
     it("StepByStep is included in the signature when options.capture is false", async () => {
-      const robokassa = new (RobokassaService as any)(
-        { logger: makeLogger() },
-        { ...baseOptions, capture: false }
+      const robokassa = makeProvider({ ...baseOptions, capture: false }
       )
       const result = await robokassa.initiatePayment(baseInput)
 
@@ -134,9 +127,7 @@ describe("RobokassaBase.initiatePayment", () => {
     }
 
     it("useReceipt=true with cart → Receipt is URL-encoded JSON in the payment URL", async () => {
-      const robokassa = new (RobokassaService as any)(
-        { logger: makeLogger() },
-        {
+      const robokassa = makeProvider({
           ...baseOptions,
           useReceipt: true,
           taxation: "osn",
@@ -159,7 +150,7 @@ describe("RobokassaBase.initiatePayment", () => {
     })
 
     it("useReceipt=false → Receipt is absent from the payment URL", async () => {
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
       const result = await robokassa.initiatePayment({
         ...baseInput,
         data: { ...baseInput.data, cart },
@@ -170,9 +161,7 @@ describe("RobokassaBase.initiatePayment", () => {
     })
 
     it("useReceipt=true but no cart → Receipt is an encoded empty object, no crash", async () => {
-      const robokassa = new (RobokassaService as any)(
-        { logger: makeLogger() },
-        {
+      const robokassa = makeProvider({
           ...baseOptions,
           useReceipt: true,
           taxation: "osn",

@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto"
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import { Modules, PaymentActions, PaymentSessionStatus } from "@medusajs/framework/utils"
+import { seedRobokassaIntegration } from "../utils/seed-robokassa"
 
 jest.setTimeout(120 * 1000)
 
@@ -52,6 +53,10 @@ medusaIntegrationTestRunner({
   },
   testSuite: ({ api, getContainer }) => {
     describe("Robokassa payment provider", () => {
+      beforeAll(async () => {
+        await seedRobokassaIntegration(getContainer())
+      })
+
       it("is registered in the Payment module", async () => {
         const paymentModule = getContainer().resolve(Modules.PAYMENT)
         const providers = await paymentModule.listPaymentProviders()
