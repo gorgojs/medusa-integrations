@@ -1,0 +1,28 @@
+{
+  "yookassa": {
+    "name": "YooKassa",
+    "description": "YooKassa/YooMoney payment gateway",
+    "sections": {
+      "credentials": "Credentials",
+      "behavior": "Behavior",
+      "receipt": "Receipt"
+    },
+    "fields": {
+      "shopId": "Shop ID",
+      "secretKey": "Secret key",
+      "capture": "Auto-capture",
+      "paymentDescription": "Default payment description",
+      "useReceipt": "Send receipts",
+      "useAtolOnlineFFD120": "Atol Online FFD 1.2",
+      "taxSystemCode": "Tax system code",
+      "taxItemDefault": "Default item VAT code",
+      "taxShippingDefault": "Default shipping VAT code"
+    },
+    "hints": {
+      "paymentDescription": "Used when the checkout context doesn't provide one.",
+      "taxSystemCode": "1=General, 2=Simplified (income), 3=Simplified (income-expenses), 4=Imputed income, 5=Agricultural, 6=Patent.",
+      "taxItemDefault": "1=No VAT, 2=0%, 3=10%, 4=20%, 5=10/110, 6=20/120, 7=5%, 8=7%, 9=5/105, 10=7/107.",
+      "taxShippingDefault": "1=No VAT, 2=0%, 3=10%, 4=20%, 5=10/110, 6=20/120, 7=5%, 8=7%, 9=5/105, 10=7/107."
+    }
+  }
+}

@@ -1,5 +1,3 @@
-// Mock @a2seven/yoo-checkout so isWebhookEventValid's getPayment/getRefund
-// calls are intercepted without making live HTTP requests.
 const getPaymentSpy = jest.fn()
 const getRefundSpy = jest.fn()
 
@@ -26,6 +24,7 @@ jest.mock("@a2seven/yoo-checkout", () => {
 
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import { Modules, PaymentActions } from "@medusajs/framework/utils"
+import { seedYookassaIntegration } from "../utils/seed-yookassa"
 
 jest.setTimeout(120 * 1000)
 
@@ -53,6 +52,10 @@ medusaIntegrationTestRunner({
   },
   testSuite: ({ api, getContainer }) => {
     describe("YooKassa payment provider", () => {
+      beforeAll(async () => {
+        await seedYookassaIntegration(getContainer())
+      })
+
       beforeEach(() => {
         getPaymentSpy.mockReset()
         getRefundSpy.mockReset()
@@ -67,8 +70,6 @@ medusaIntegrationTestRunner({
 
       describe(`POST /hooks/payment/${PROVIDER_ROUTE_KEY} (route wiring)`, () => {
         it("returns 200 for any well-formed POST (route is registered)", async () => {
-          // Webhook validation calls getPayment — return a matching status so
-          // it doesn't throw, but the action itself doesn't matter here.
           getPaymentSpy.mockResolvedValue({ status: "succeeded" })
 
           const response = await api.post(
@@ -157,7 +158,6 @@ medusaIntegrationTestRunner({
         it("tampered event (API returns different status) → NOT_SUPPORTED", async () => {
           const paymentModule: any = getContainer().resolve(Modules.PAYMENT)
 
-          // Event claims "succeeded" but the live payment is still "pending"
           getPaymentSpy.mockResolvedValue({ status: "pending" })
 
           const result = await paymentModule.getWebhookActionAndData({
@@ -184,7 +184,7 @@ medusaIntegrationTestRunner({
             payload: {
               data: {
                 type: "notification",
-                event: "deal.succeeded", // not "payment." or "refund."
+                event: "deal.succeeded",
                 object: { id: "deal_01HX" },
               },
               rawData: Buffer.from(""),
@@ -213,8 +213,6 @@ medusaIntegrationTestRunner({
             },
           })
 
-          // The plugin validates the refund via getRefund but maps it to NOT_SUPPORTED
-          // since refund.succeeded has no explicit case in the switch.
           expect(result.action).toBe(PaymentActions.NOT_SUPPORTED)
         })
       })

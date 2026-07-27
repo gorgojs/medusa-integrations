@@ -11,25 +11,34 @@ module.exports = defineConfig({
       authCors: process.env.AUTH_CORS || "http://localhost:9000",
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
-    },
-    cookieOptions: { sameSite: "lax", secure: false },
+    }
   },
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY || "supersecret",
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
+            options: {
+              id: "yookassa", // must match the provider id used in the payment module below
+            },
+          },
+        ],
+      },
+    },
+  ],
   modules: [
     {
       resolve: "@medusajs/medusa/payment",
+      dependencies: ["integration"],
       options: {
         providers: [
           {
             resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
             id: "yookassa",
-            options: {
-              shopId: process.env.YOOKASSA_SHOP_ID,
-              secretKey: process.env.YOOKASSA_SECRET_KEY,
-              capture: false,
-              useReceipt: false,
-              taxItemDefault: 1,
-              taxShippingDefault: 1,
-            },
+            options: {},
           },
         ],
       },
