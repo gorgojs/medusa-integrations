@@ -5,46 +5,6 @@ import {
   ICreatePayment
 } from "@a2seven/yoo-checkout"
 
-export interface YookassaOptions {
-  /**
-   * The SHOP_ID of YooKassa
-   */
-  shopId: string,
-  /**
-   * The secret key of YooKassa
-   */
-  secretKey: string,
-  /**
-   * Use this flag to capture payment immediately (default is false)
-   */
-  capture?: boolean,
-  /**
-   * Set a default description on the payment if the context does not provide one
-   */
-  paymentDescription?: string,
-  /* Receipt options */
-  /**
-   * Enable receipt generation according to Russian fiscal data format
-   */
-  useReceipt?: boolean,
-  /**
-   * Enable when Atol Online FFD 1.2 sales register is used
-   */
-  useAtolOnlineFFD120?: boolean,
-  /**
-   * Store tax system
-   */
-  taxSystemCode?: TaxSystemCode,
-  /**
-   * Default VAT rate for products
-   */
-  taxItemDefault?: VatCode,
-  /**
-   * Default VAT rate for shipping
-   */
-  taxShippingDefault?: VatCode,
-}
-
 export interface PaymentOptions extends Partial<ICreatePayment> { }
 
 export interface YookassaEvent {

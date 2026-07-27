@@ -1,7 +1,6 @@
 import { http, HttpResponse } from "msw"
 import { PaymentSessionStatus } from "@medusajs/framework/utils"
-import YookassaService from "../../services/yookassa"
-import { YOOKASSA_BASE_URL, makeLogger, server } from "./test-utils"
+import { YOOKASSA_BASE_URL, makeProvider, server } from "./test-utils"
 
 const baseOptions = {
   shopId: "test_shop_id",
@@ -27,7 +26,7 @@ afterAll(() => server.close())
 
 describe("YookassaBase.getPaymentStatus", () => {
   it("throws when data.id is missing (undefined)", async () => {
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
 
     await expect(
       yookassa.getPaymentStatus({ data: {} } as any)
@@ -35,7 +34,7 @@ describe("YookassaBase.getPaymentStatus", () => {
   })
 
   it("throws when data.id is falsy (empty string)", async () => {
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
 
     await expect(
       yookassa.getPaymentStatus({ data: { id: "" } } as any)
@@ -51,7 +50,7 @@ describe("YookassaBase.getPaymentStatus", () => {
   ])("maps YooKassa status '%s' → Medusa %s", async (yookassaStatus, expectedMedusaStatus) => {
     server.use(makeGetPaymentHandler(yookassaStatus))
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     const result = await yookassa.getPaymentStatus({
       data: { id: paymentId },
     } as any)
@@ -63,7 +62,7 @@ describe("YookassaBase.getPaymentStatus", () => {
   it("falls back to PENDING for an unknown status not in the map", async () => {
     server.use(makeGetPaymentHandler("some_brand_new_status"))
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     const result = await yookassa.getPaymentStatus({
       data: { id: paymentId },
     } as any)
@@ -81,7 +80,7 @@ describe("YookassaBase.getPaymentStatus", () => {
       )
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
 
     await expect(
       yookassa.getPaymentStatus({ data: { id: paymentId } } as any)

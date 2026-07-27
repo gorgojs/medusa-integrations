@@ -1,6 +1,5 @@
 import { http, HttpResponse } from "msw"
-import YookassaService from "../../services/yookassa"
-import { YOOKASSA_BASE_URL, captureRequest, makeLogger, server } from "./test-utils"
+import { YOOKASSA_BASE_URL, captureRequest, makeProvider, server } from "./test-utils"
 
 const baseOptions = {
   shopId: "test_shop_id",
@@ -35,7 +34,7 @@ describe("YookassaBase.capturePayment", () => {
       })
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     const result = await yookassa.capturePayment({
       data: basePaymentData,
       context: { idempotency_key: "idem-capture-1" },
@@ -50,7 +49,7 @@ describe("YookassaBase.capturePayment", () => {
   it("skips the API call and returns input when payment is already succeeded (auto-capture guard)", async () => {
     // No MSW handler registered — any accidental HTTP call would fail with
     // "onUnhandledRequest: error".
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     const input = { data: { ...capturedPaymentData } }
 
     const result = await yookassa.capturePayment(input as any)
@@ -68,7 +67,7 @@ describe("YookassaBase.capturePayment", () => {
       )
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
 
     await expect(
       yookassa.capturePayment({ data: basePaymentData } as any)

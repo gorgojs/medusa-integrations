@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-yookassa",
-  "version": "1.0.5",
+  "version": "2.0.0-beta.1",
   "description": "YooKassa payment provider for Medusa",
   "files": [
     ".medusa/server"
@@ -46,12 +46,13 @@
     "axios": "^1.9.0"
   },
   "devDependencies": {
-    "@medusajs/admin-sdk": "^2.14.0",
-    "@medusajs/cli": "^2.14.0",
-    "@medusajs/framework": "^2.14.0",
-    "@medusajs/icons": "^2.14.0",
-    "@medusajs/medusa": "^2.14.0",
-    "@medusajs/test-utils": "^2.14.0",
+    "@gorgo/medusa-integration": "^0.0.5",
+    "@medusajs/admin-sdk": "^2.17.2",
+    "@medusajs/cli": "^2.17.2",
+    "@medusajs/framework": "^2.17.2",
+    "@medusajs/icons": "^2.17.2",
+    "@medusajs/medusa": "^2.17.2",
+    "@medusajs/test-utils": "^2.17.2",
     "@medusajs/ui": "^4.0.25",
     "@swc/core": "^1.7.28",
     "@swc/jest": "^0.2.36",
@@ -70,11 +71,12 @@
     "yalc": "^1.0.0-pre.53"
   },
   "peerDependencies": {
-    "@medusajs/admin-sdk": "^2.14.0",
-    "@medusajs/cli": "^2.14.0",
-    "@medusajs/framework": "^2.14.0",
-    "@medusajs/medusa": "^2.14.0",
-    "@medusajs/test-utils": "^2.14.0"
+    "@gorgo/medusa-integration": "^0.0.5",
+    "@medusajs/admin-sdk": "^2.17.2",
+    "@medusajs/cli": "^2.17.2",
+    "@medusajs/framework": "^2.17.2",
+    "@medusajs/medusa": "^2.17.2",
+    "@medusajs/test-utils": "^2.17.2"
   },
   "engines": {
     "node": ">=20"

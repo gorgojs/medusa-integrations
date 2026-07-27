@@ -1,7 +1,6 @@
 import { http, HttpResponse } from "msw"
 import { PaymentSessionStatus } from "@medusajs/framework/utils"
-import YookassaService from "../../services/yookassa"
-import { YOOKASSA_BASE_URL, makeLogger, server } from "./test-utils"
+import { YOOKASSA_BASE_URL, makeProvider, server } from "./test-utils"
 
 const baseOptions = {
   shopId: "test_shop_id",
@@ -28,7 +27,7 @@ describe("YookassaBase no-op / pass-through methods", () => {
         )
       )
 
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       const result = await yookassa.authorizePayment({
         data: { id: paymentId },
       } as any)
@@ -39,7 +38,7 @@ describe("YookassaBase no-op / pass-through methods", () => {
 
   describe("deletePayment (YooKassa does not support delete)", () => {
     it("returns the input unchanged without making any HTTP call", async () => {
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       const input = { data: { id: paymentId, status: "succeeded" } }
 
       const result = await yookassa.deletePayment(input as any)
@@ -51,7 +50,7 @@ describe("YookassaBase no-op / pass-through methods", () => {
 
   describe("updatePayment (YooKassa does not support update)", () => {
     it("returns the input unchanged without making any HTTP call", async () => {
-      const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+      const yookassa = makeProvider(baseOptions)
       const input = {
         amount: 1500,
         currency_code: "rub",

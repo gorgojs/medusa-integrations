@@ -1,6 +1,5 @@
 import axios from "axios"
-import YookassaService from "../../services/yookassa"
-import { makeLogger } from "./test-utils"
+import { makeProvider } from "./test-utils"
 
 const baseOptions = {
   shopId: "test_shop_id",
@@ -9,7 +8,7 @@ const baseOptions = {
 
 describe("YookassaBase.buildError (protected helper)", () => {
   it("wraps a plain Error with the context message and error.message", () => {
-    const yookassa: any = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa: any = makeProvider(baseOptions)
     const original = new Error("something went wrong")
     const wrapped = yookassa.buildError("An error occurred in capturePayment", original)
 
@@ -19,7 +18,7 @@ describe("YookassaBase.buildError (protected helper)", () => {
   })
 
   it("formats an AxiosError using status, code and description from the response body", () => {
-    const yookassa: any = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa: any = makeProvider(baseOptions)
 
     const axiosError = Object.assign(new Error("Request failed with status code 400"), {
       isAxiosError: true,
@@ -41,7 +40,7 @@ describe("YookassaBase.buildError (protected helper)", () => {
   })
 
   it("trims trailing whitespace when axios response data fields are absent", () => {
-    const yookassa: any = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa: any = makeProvider(baseOptions)
 
     const axiosError = Object.assign(new Error("Network Error"), {
       isAxiosError: true,

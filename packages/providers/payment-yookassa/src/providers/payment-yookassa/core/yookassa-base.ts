@@ -16,7 +16,7 @@ import {
   PaymentSessionStatus,
   PaymentActions,
   BigNumber,
-  isDefined
+  MedusaError,
 } from "@medusajs/framework/utils"
 import {
   AuthorizePaymentInput,
@@ -48,84 +48,80 @@ import {
   generateReceipt,
   formatCurrency
 } from "../utils"
-import {
-  PaymentOptions,
-  taxSystemCodes,
-  vatCodes,
-  YookassaOptions,
-  YookassaEvent,
-} from "../types"
+import { PaymentOptions, PaymentProviderKeys, YookassaEvent, TaxSystemCode, VatCode } from "../types"
+import { getIntegrationOptionsWorkflow } from "../../../workflows/integration/workflows"
+import { YookassaOptions } from "../../integration-yookassa/services/yookassa-integration"
 
-type InjectedDependencies = {
-  logger: Logger
-}
-
-abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
-  protected readonly options_: YookassaOptions
-  protected yooCheckout_: YooCheckout
+abstract class YookassaBase extends AbstractPaymentProvider {
   protected logger_: Logger
+  protected container_: Record<string, any>
+  protected instanceId_: string | null
   private static telemetry_ = createTelemetryClient({ packageDir: __dirname })
 
-  static validateOptions(options: YookassaOptions): void {
+  /** 
+   * Validate options passed to the provider.
+   */
+  static validateOptions(_options: Record<string, unknown>): void {
     YookassaBase.telemetry_.track("plugin.started")
-    if (!isDefined(options.shopId)) {
-      throw new Error("Required option `shopId` is missing in YooKassa plugin")
-    }
-    if (!isDefined(options.secretKey)) {
-      throw new Error("Required option `secretKey` is missing in YooKassa plugin")
-    }
-    if (isDefined(options.useReceipt)) {
-      if (options.useAtolOnlineFFD120) {
-        if (!isDefined(options.taxSystemCode)) {
-          throw new Error("Required option `taxSystemCode` is missing in YooKassa provider")
-        } else if (!taxSystemCodes.includes(options.taxSystemCode)) {
-          throw new Error(`Invalid option \`taxSystemCode\` provided in YooKassa provider. Valid values are: ${taxSystemCodes.join(", ")}`)
-        }
-      }
-      if (!isDefined(options.taxItemDefault)) {
-        throw new Error("Required option `taxItemDefault` is missing in YooKassa provider")
-      } else if (!vatCodes.includes(options.taxItemDefault)) {
-        throw new Error(`Invalid option \`taxItemDefault\` provided in YooKassa provider. Valid values are: ${vatCodes.join(", ")}`)
-      }
-      if (!isDefined(options.taxShippingDefault)) {
-        throw new Error("Required option `taxShippingDefault` is missing in YooKassa provider")
-      } else if (!vatCodes.includes(options.taxShippingDefault)) {
-        throw new Error(`Invalid option \`taxShippingDefault\` provided in YooKassa provider. Valid values are: ${vatCodes.join(", ")}`)
-      }
-    }
   }
 
-  protected constructor(container: InjectedDependencies, options: YookassaOptions) {
+  /** 
+   * Construct a new instance of the YookassaBase provider.
+   */
+  protected constructor(container: { logger: Logger } & Record<string, any>, options?: Record<string, unknown>) {
     // @ts-ignore
     super(...arguments)
 
     this.logger_ = container.logger
-    this.options_ = options
-    this.yooCheckout_ = new YooCheckout({
-      shopId: options.shopId,
-      secretKey: options.secretKey,
-    })
+    this.container_ = container
+    this.instanceId_ = (options?.id as string | undefined) ?? null
   }
 
   abstract get paymentOptions(): PaymentOptions
 
-  get options(): YookassaOptions {
-    return this.options_
+  /** 
+   * Resolve YooKassa integration options from the Medusa integration provider.
+   */
+  protected async resolveOptions(): Promise<YookassaOptions> {
+    const { result } = await getIntegrationOptionsWorkflow().run({
+      input: {
+        identifier: PaymentProviderKeys.YOOKASSA,
+        instance_id: this.instanceId_,
+      },
+    })
+    if (!result) {
+      throw new MedusaError(
+        MedusaError.Types.NOT_ALLOWED,
+        "YooKassa is not configured yet. Configure it in Admin → Integrations before using it."
+      )
+    }
+    return result.options as YookassaOptions
   }
 
+  /** 
+   * Build a YooKassa client from resolved options. 
+   */
+  protected getClient(options: YookassaOptions): YooCheckout {
+    return new YooCheckout({ shopId: options.shopId, secretKey: options.secretKey })
+  }
+
+  /** 
+   * Normalize payment parameters for YooKassa API request.
+   */
   private normalizePaymentParameters(
+    options: YookassaOptions,
     extra?: Record<string, unknown>
   ): Partial<ICreatePayment> {
     const res = {} as Partial<ICreatePayment>
 
     res.description =
       extra?.description as string ??
-      this.options_?.paymentDescription
+      options.paymentDescription
 
     res.capture =
       extra?.capture as boolean ??
       this.paymentOptions.capture ??
-      this.options_.capture
+      options.capture
 
     res.payment_method_data = this.paymentOptions?.payment_method_data
 
@@ -145,16 +141,18 @@ abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
   }: InitiatePaymentInput): Promise<InitiatePaymentOutput> {
     this.logger_.debug(`YookassaBase.initiatePayment input:\n${JSON.stringify({ currency_code, amount, data, context }, null, 2)}`)
 
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
     const cart = data?.cart as Record<string, any>
-    const additionalParameters = this.normalizePaymentParameters(data)
+    const additionalParameters = this.normalizePaymentParameters(options, data)
 
     let receipt = {} as IReceipt
-    if (this.options_.useReceipt && cart) {
+    if (options.useReceipt && cart) {
       try {
         receipt = generateReceipt(
-          this.options_.taxSystemCode,
-          this.options_.taxItemDefault!,
-          this.options_.taxShippingDefault!,
+          options.taxSystemCode as TaxSystemCode | undefined,
+          options.taxItemDefault as VatCode,
+          options.taxShippingDefault as VatCode,
           cart
         )
       } catch (e: Error | unknown) {
@@ -165,18 +163,18 @@ abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
     const createPayload: ICreatePayment = {
       amount: {
         value: String(Number(amount).toFixed(2)),
-        currency: currency_code.toUpperCase(), // Medusa stores currency codes in lower case of ISO-4217
+        currency: currency_code.toUpperCase(),
       },
       metadata: {
         session_id: data?.session_id as string,
         receip_tmp: receiptTemplate
       },
       ...additionalParameters,
-      ...(this.options_.useReceipt && receipt?.items?.length ? { receipt } : {}),
+      ...(options.useReceipt && receipt?.items?.length ? { receipt } : {}),
     }
 
     try {
-      const response = await this.yooCheckout_.createPayment(createPayload, context?.idempotency_key)
+      const response = await client.createPayment(createPayload, context?.idempotency_key)
       const paymentId = "id" in response ? response.id : (data?.session_id as string)
 
       const output = {
@@ -192,7 +190,7 @@ abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
   }
 
   /**
-   * Retrieve payment status and map it to Medusa status.
+   * Get payment status.
    */
   async getPaymentStatus(
     input: GetPaymentStatusInput
@@ -207,8 +205,11 @@ abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
       )
     }
 
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
+
     try {
-      const payment = await this.yooCheckout_.getPayment(id)
+      const payment = await client.getPayment(id)
       const paymentData = payment as unknown as Record<string, unknown>
 
       let output: GetPaymentStatusOutput
@@ -244,16 +245,18 @@ abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
 
     const payment = input.data as unknown as Payment
 
-    // Avoid autoCapture in https://github.com/medusajs/medusa/blob/ceb504db2ce44dec43dff652fb306eb4e4f6059e/packages/modules/payment/src/services/payment-module.ts#L590
     if (payment.status === PaymentStatuses.succeeded)
       return { data: input }
+
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
 
     const payload: ICapturePayment = {
       amount: payment.amount
     }
     const idempotencyKey = input.context?.idempotency_key
     try {
-      const response = await this.yooCheckout_.capturePayment(payment.id, payload, idempotencyKey)
+      const response = await client.capturePayment(payment.id, payload, idempotencyKey)
 
       const output = { data: response as unknown as Record<string, unknown> }
       this.logger_.debug(`YookassaBase.capturePayment output:\n${JSON.stringify(output, null, 2)}`)
@@ -285,8 +288,11 @@ abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
     const paymentId = input.data?.id as string
     const idempotencyKey = input.context?.idempotency_key
 
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
+
     try {
-      const response = await this.yooCheckout_.cancelPayment(paymentId, idempotencyKey)
+      const response = await client.cancelPayment(paymentId, idempotencyKey)
 
       const output = { data: response as unknown as Record<string, unknown> }
       this.logger_.debug(`YookassaBase.cancelPayment output:\n${JSON.stringify(output, null, 2)}`)
@@ -303,8 +309,11 @@ abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
   async retrievePayment(input: RetrievePaymentInput): Promise<RetrievePaymentOutput> {
     this.logger_.debug(`YookassaBase.retrievePayment input:\n${JSON.stringify(input, null, 2)}`)
 
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
+
     try {
-      const payment = await this.yooCheckout_.getPayment(input.data?.id as string)
+      const payment = await client.getPayment(input.data?.id as string)
 
       const output = { data: payment as unknown as Record<string, unknown> }
       this.logger_.debug(`YookassaBase.retrievePayment output:\n${JSON.stringify(output, null, 2)}`)
@@ -334,6 +343,9 @@ abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
       )
     }
 
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
+
     const refundAmount = formatCurrency(
       new BigNumber(amount).numeric.toString(),
       payment?.amount?.currency
@@ -346,11 +358,11 @@ abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
         value: new BigNumber(amount).numeric.toString(),
         currency: payment?.amount?.currency,
       },
-      ...(this.options_.useReceipt && refundAmount !== payment?.amount?.value ? { receipt: receipt } : {}),
+      ...(options.useReceipt && refundAmount !== payment?.amount?.value ? { receipt: receipt } : {}),
     }
 
     try {
-      await this.yooCheckout_.createRefund(payload, context?.idempotency_key)
+      await client.createRefund(payload, context?.idempotency_key)
 
       const output = await this.retrievePayment({ data })
       this.logger_.debug(`YookassaBase.refundPayment output:\n${JSON.stringify(output, null, 2)}`)
@@ -447,13 +459,17 @@ abstract class YookassaBase extends AbstractPaymentProvider<YookassaOptions> {
    */
   protected async isWebhookEventValid(webhookData: ProviderWebhookPayload["payload"]): Promise<boolean> {
     const [object, status] = (webhookData.data.event as YookassaEvent["event"]).split('.');
+
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
+
     try {
       switch (object) {
         case "payment":
-          const payment = await this.yooCheckout_.getPayment((webhookData.data.object as Payment).id)
+          const payment = await client.getPayment((webhookData.data.object as Payment).id)
           return payment.status === status
         case "refund":
-          const refund = await this.yooCheckout_.getRefund((webhookData.data.object as Refund).id)
+          const refund = await client.getRefund((webhookData.data.object as Refund).id)
           return refund.status === status
         default:
           return false

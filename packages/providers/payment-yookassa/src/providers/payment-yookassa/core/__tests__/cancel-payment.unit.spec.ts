@@ -1,6 +1,5 @@
 import { http, HttpResponse } from "msw"
-import YookassaService from "../../services/yookassa"
-import { YOOKASSA_BASE_URL, captureRequest, makeLogger, server } from "./test-utils"
+import { YOOKASSA_BASE_URL, captureRequest, makeProvider, server } from "./test-utils"
 
 const baseOptions = {
   shopId: "test_shop_id",
@@ -30,7 +29,7 @@ describe("YookassaBase.cancelPayment", () => {
       })
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     const result = await yookassa.cancelPayment({
       data: { id: paymentId },
     } as any)
@@ -49,7 +48,7 @@ describe("YookassaBase.cancelPayment", () => {
       })
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
     await yookassa.cancelPayment({
       data: { id: paymentId },
       context: { idempotency_key: "idem-cancel-1" },
@@ -69,7 +68,7 @@ describe("YookassaBase.cancelPayment", () => {
       )
     )
 
-    const yookassa = new (YookassaService as any)({ logger: makeLogger() }, baseOptions)
+    const yookassa = makeProvider(baseOptions)
 
     await expect(
       yookassa.cancelPayment({ data: { id: paymentId } } as any)

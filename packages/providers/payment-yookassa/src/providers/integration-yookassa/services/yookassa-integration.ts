@@ -1,0 +1,116 @@
+import { AbstractIntegrationProvider, defineIntegration, z } from "@gorgo/medusa-integration"
+import type { IntegrationDescriptorInput } from "@gorgo/medusa-integration"
+import { YooCheckout } from "@a2seven/yoo-checkout"
+import { YOOKASSA_ICON } from "../icon"
+import { validateVatCode, validateTaxSystemCode } from "../utils"
+
+const descriptor = defineIntegration({
+  category: "payment",
+  displayName: "yookassa.name",
+  description: "yookassa.description",
+  icon: YOOKASSA_ICON,
+  supportsMultipleInstances: true,
+  preferredLayoutId: "core:two-column",
+
+  options: {
+    shopId: {
+      type: "string",
+      required: true,
+      minLength: 1,
+      control: "text",
+      label: "yookassa.fields.shopId",
+    },
+    secretKey: {
+      type: "string",
+      required: true,
+      minLength: 1,
+      secret: true,
+      control: "secret",
+      label: "yookassa.fields.secretKey",
+    },
+    capture: {
+      type: "boolean",
+      default: false,
+      control: "switch",
+      label: "yookassa.fields.capture",
+    },
+    paymentDescription: {
+      type: "string",
+      control: "text",
+      label: "yookassa.fields.paymentDescription",
+      hint: "yookassa.hints.paymentDescription",
+    },
+    useReceipt: {
+      type: "boolean",
+      default: false,
+      control: "switch",
+      label: "yookassa.fields.useReceipt",
+    },
+    useAtolOnlineFFD120: {
+      type: "boolean",
+      default: false,
+      control: "switch",
+      label: "yookassa.fields.useAtolOnlineFFD120",
+      visibleWhen: { field: "useReceipt", equals: true },
+    },
+    taxSystemCode: {
+      type: "number",
+      int: true,
+      control: "number",
+      label: "yookassa.fields.taxSystemCode",
+      hint: "yookassa.hints.taxSystemCode",
+      visibleWhen: { field: "useAtolOnlineFFD120", equals: true },
+      validate: validateTaxSystemCode,
+    },
+    taxItemDefault: {
+      type: "number",
+      int: true,
+      control: "number",
+      label: "yookassa.fields.taxItemDefault",
+      hint: "yookassa.hints.taxItemDefault",
+      visibleWhen: { field: "useReceipt", equals: true },
+      validate: validateVatCode,
+    },
+    taxShippingDefault: {
+      type: "number",
+      int: true,
+      control: "number",
+      label: "yookassa.fields.taxShippingDefault",
+      hint: "yookassa.hints.taxShippingDefault",
+      visibleWhen: { field: "useReceipt", equals: true },
+      validate: validateVatCode,
+    },
+  },
+
+  sections: [
+    { id: "credentials", title: "yookassa.sections.credentials", options: ["shopId", "secretKey"] },
+    { id: "behavior", title: "yookassa.sections.behavior", column: "side", options: ["capture", "paymentDescription"] },
+    { id: "receipt", title: "yookassa.sections.receipt", options: ["useReceipt", "useAtolOnlineFFD120", "taxSystemCode", "taxItemDefault", "taxShippingDefault"] },
+  ],
+
+  testConnection: async ({ options }) => {
+    if (!options.shopId || !options.secretKey) {
+      return { status: "failed", message: "Shop ID or secret key is missing" }
+    }
+    try {
+      const client = new YooCheckout({ shopId: options.shopId, secretKey: options.secretKey })
+      await client.getPaymentList({ limit: 1 })
+      return { status: "passed" }
+    } catch (e: any) {
+      const message = e?.response?.data?.description ?? e?.message ?? "Connection failed"
+      return { status: "failed", message }
+    }
+  },
+})
+
+export type YookassaOptions = z.infer<typeof descriptor.optionsSchema>
+
+export class YookassaIntegrationProvider extends AbstractIntegrationProvider {
+  static identifier = "yookassa"
+
+  get descriptor(): IntegrationDescriptorInput {
+    return descriptor
+  }
+}
+
+export default YookassaIntegrationProvider
