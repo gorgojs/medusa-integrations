@@ -1,0 +1,28 @@
+{
+  "tkassa": {
+    "name": "T-Kassa",
+    "description": "Tinkoff/T-Bank payment gateway",
+    "sections": {
+      "credentials": "Credentials",
+      "behavior": "Behavior",
+      "receipt": "Receipt"
+    },
+    "fields": {
+      "terminalKey": "Terminal key",
+      "password": "Password",
+      "capture": "Auto-capture",
+      "useReceipt": "Send receipts",
+      "ffdVersion": "FFD version",
+      "taxation": "Taxation",
+      "taxItemDefault": "Default item tax",
+      "taxShippingDefault": "Default shipping tax"
+    },
+    "taxation": {
+      "osn": "General (OSN)",
+      "usn_income": "Simplified — income",
+      "usn_income_outcome": "Simplified — income minus expenses",
+      "esn": "Unified agricultural (ESN)",
+      "patent": "Patent"
+    }
+  }
+}

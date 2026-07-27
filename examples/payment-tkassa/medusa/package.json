@@ -17,13 +17,14 @@
     "db:migrate": "medusa db:migrate",
     "dev": "yarn predev && yarn && medusa develop",
     "dev:tunnel": "concurrently \"yarn dev\" \"yarn tunnel\"",
-    "predev": "medusa plugin:add @gorgo/medusa-payment-tkassa",
+    "predev": "medusa plugin:add @gorgo/medusa-integration && medusa plugin:add @gorgo/medusa-payment-tkassa",
     "seed": "medusa exec ./src/scripts/seed.ts",
     "start": "medusa start",
     "start:tunnel": "concurrently \"yarn start\" \"yarn tunnel\"",
     "tunnel": "lt --port 9000 --subdomain medusa-tkassa"
   },
   "dependencies": {
+    "@gorgo/medusa-integration": "latest",
     "@gorgo/medusa-payment-tkassa": "latest",
     "@medusajs/admin-sdk": "2.18.0",
     "@medusajs/cli": "2.18.0",

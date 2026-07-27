@@ -1,6 +1,7 @@
 import crypto from "node:crypto"
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import { Modules, PaymentActions, PaymentSessionStatus } from "@medusajs/framework/utils"
+import { seedTkassaIntegration } from "../utils/seed-tkassa"
 
 jest.setTimeout(120 * 1000)
 
@@ -55,6 +56,13 @@ medusaIntegrationTestRunner({
   },
   testSuite: ({ api, getContainer }) => {
     describe("T-Kassa payment provider", () => {
+      // Credentials/behaviour are no longer read from medusa-config — every payment
+      // method now resolves them from the `integration` module at call time, so a
+      // configured, enabled row has to exist before any of these tests can pass.
+      beforeAll(async () => {
+        await seedTkassaIntegration(getContainer())
+      })
+
       it("is registered in the Payment module", async () => {
         const paymentModule: any = getContainer().resolve(Modules.PAYMENT)
         const providers = await paymentModule.listPaymentProviders()

@@ -2,7 +2,7 @@ import {
   AbstractPaymentProvider,
   PaymentSessionStatus,
   PaymentActions,
-  isDefined
+  MedusaError,
 } from "@medusajs/framework/utils"
 import {
   InitiatePaymentInput, InitiatePaymentOutput,
@@ -20,14 +20,10 @@ import crypto from "crypto"
 import { TKassa } from "t-kassa-api"
 import { components } from "t-kassa-api/openapi"
 import {
-  FfdVersions,
   Payment,
+  PaymentProviderKeys,
   PaymentStatuses,
   PaymentStatusesMap,
-  Taxations,
-  TaxItem,
-  TaxShipping,
-  TKassaOptions,
   TkassaEvent,
 } from "../types"
 import {
@@ -37,57 +33,65 @@ import {
   getSmallestUnit,
 } from "../utils"
 import { createTelemetryClient } from "@gorgo/telemetry"
+import { getIntegrationOptionsWorkflow } from "../../../workflows/integration/workflows"
+import { TKassaOptions } from "../../integration-tkassa/services/tkassa-integration"
 
-abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
+abstract class TkassaBase extends AbstractPaymentProvider {
+  protected serverUrl_ = "https://securepay.tinkoff.ru"
+  protected logger_: Logger
+  protected container_: Record<string, any>
+  protected instanceId_: string | null
   private static telemetry_ = createTelemetryClient({ packageDir: __dirname })
 
-  protected serverUrl_ = "https://securepay.tinkoff.ru"
-  protected options_: TKassaOptions
-  protected client_: TKassa
-  protected logger_: Logger
-
-  static validateOptions(options: TKassaOptions): void {
+  /** 
+   * Validate options passed to the provider.
+   */
+  static validateOptions(_options: Record<string, unknown>): void {
     TkassaBase.telemetry_.track("plugin.started")
-    
-    if (!isDefined(options.terminalKey)) {
-      throw new Error("Required option `terminalKey` is missing in T-Kassa provider")
-    }
-    if (!isDefined(options.password)) {
-      throw new Error("Required option `password` is missing in T-Kassa provider")  
-    }
-    if (isDefined(options.useReceipt)) {
-      if (!isDefined(options.taxation)) {
-        throw new Error("Required option `taxation` is missing in T-Kassa provider")
-      } else if (!Taxations.includes(options.taxation)) {
-        throw new Error(`Invalid option \`taxation\` provided in T-Kassa provider. Valid values are: ${Taxations.join(", ")}`)
-      }
-      if (!isDefined(options.taxItemDefault)) {
-        throw new Error("Required option `taxItemDefault` is missing in T-Kassa provider")
-      } else if (!TaxItem.includes(options.taxItemDefault)) {
-        throw new Error(`Invalid option \`taxItemDefault\` provided in T-Kassa provider. Valid values are: ${TaxItem.join(", ")}`)
-      }
-      if (!isDefined(options.taxShippingDefault)) {
-        throw new Error("Required option `taxShippingDefault` is missing in T-Kassa provider")
-      } else if (!TaxShipping.includes(options.taxShippingDefault)) {
-        throw new Error(`Invalid option \`taxShippingDefault\` provided in T-Kassa provider. Valid values are: ${TaxShipping.join(", ")}`)
-      }
-      if (!isDefined(options.ffdVersion)) {
-        throw new Error("Required option `ffdVersion` is missing in T-Kassa provider")
-      } else if (!FfdVersions.includes(options.ffdVersion)) {
-        throw new Error(`Invalid option \`ffdVersion\` provided in T-Kassa provider. Valid values are: ${FfdVersions.join(", ")}`)
-      }
-    }
   }
 
-  constructor(container: { logger: Logger }, options: TKassaOptions) {
+  /** 
+   * Construct a new instance of the TkassaBase provider.
+   */
+  constructor(container: { logger: Logger } & Record<string, any>, options?: Record<string, unknown>) {
     super(container, options)
-    this.options_ = options
     this.logger_ = container.logger
-    this.client_ = new TKassa(options.terminalKey, options.password, { server: this.serverUrl_ })
+    this.container_ = container
+    this.instanceId_ = (options?.id as string | undefined) ?? null
   }
 
+  /** 
+   * Resolve T-Kassa integration options from the Medusa integration provider.
+   */
+  protected async resolveOptions(): Promise<TKassaOptions> {
+    const { result } = await getIntegrationOptionsWorkflow().run({
+      input: {
+        identifier: PaymentProviderKeys.TKASSA,
+        instance_id: this.instanceId_,
+      },
+    })
+    if (!result) {
+      throw new MedusaError(
+        MedusaError.Types.NOT_ALLOWED,
+        "T-Kassa is not configured yet. Configure it in Admin → Integrations before using it."
+      )
+    }
+    return result.options as TKassaOptions
+  }
+
+  /** 
+   * Build a TKassa client from resolved options. 
+   */
+  protected getClient(options: TKassaOptions): TKassa {
+    return new TKassa(options.terminalKey, options.password, { server: this.serverUrl_ })
+  }
+
+  /** 
+   * Normalize payment parameters for T-Kassa API request.
+   */
   private normalizePaymentParameters(
-    extra?: Record<string, unknown>
+    extra?: Record<string, unknown>,
+    capture?: boolean
   ): Partial<Payment> {
     const res = {} as Partial<Payment>
 
@@ -100,8 +104,8 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
     if (extra?.PayType) {
       res.PayType = extra.PayType as Payment["PayType"]
     } else {
-      if (this.options_.capture !== undefined) {
-        res.PayType = this.options_.capture ? "O" : "T"
+      if (capture !== undefined) {
+        res.PayType = capture ? "O" : "T"
       } else {
         res.PayType = "O"
       }
@@ -121,35 +125,37 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
   }: InitiatePaymentInput): Promise<InitiatePaymentOutput> {
     this.logger_.debug("TkassaBase.initiatePayment input:\n" + JSON.stringify({ currency_code, amount, data, context }, null, 2))
 
-    const additionalParameters = this.normalizePaymentParameters(data)
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
+    const additionalParameters = this.normalizePaymentParameters(data, options.capture) // TODO: pass all options to normalizePaymentParameters
     const cart = data?.cart as Record<string, any>
 
     let receipt = {} as components["schemas"]["Receipt_FFD_105"] | components["schemas"]["Receipt_FFD_12"]
 
     try {
       // Get receipt data
-      if (this.options_.useReceipt && cart) {
+      if (options.useReceipt && cart) {
         receipt = generateReceipt(
-          this.options_.ffdVersion!,
-          this.options_.taxation!,
-          this.options_.taxItemDefault!,
-          this.options_.taxShippingDefault!,
+          options.ffdVersion!,
+          options.taxation!,
+          options.taxItemDefault!,
+          options.taxShippingDefault!,
           cart
         )
       }
 
       // Init Payment
       const initPaymentParams = {
-        TerminalKey: this.options_.terminalKey,
-        Password: this.options_.password,
+        TerminalKey: options.terminalKey,
+        Password: options.password,
         Amount: getSmallestUnit(amount, currency_code),
         OrderId: data?.session_id as string,
         ...additionalParameters,
-        ...(this.options_.useReceipt ? { Receipt: receipt } : {}),
+        ...(options.useReceipt ? { Receipt: receipt } : {}),
       }
       this.logger_.debug("TkassaBase.initiatePayment initParams:\n" + JSON.stringify(initPaymentParams, null, 2))
 
-      const response = await this.client_.init(initPaymentParams)
+      const response = await client.init(initPaymentParams)
       const paymentId = String(response.PaymentId)
 
       const output = { id: paymentId, data: { ...response, receipt } }
@@ -166,12 +172,14 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
   async capturePayment(input: CapturePaymentInput): Promise<CapturePaymentOutput> {
     this.logger_.debug(`TkassaBase.capturePayment input:\n${JSON.stringify(input, null, 2)}`)
 
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
     const paymentId = input.data?.PaymentId as string
 
     try {
-      const response = await this.client_.confirm({
-        TerminalKey: this.options_.terminalKey,
-        Password: this.options_.password,
+      const response = await client.confirm({
+        TerminalKey: options.terminalKey,
+        Password: options.password,
         PaymentId: paymentId
       })
 
@@ -228,6 +236,8 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
   }: RefundPaymentInput): Promise<RefundPaymentOutput> {
     this.logger_.debug(`TkassaBase.refundPayment input:\n${JSON.stringify({ amount, data }, null, 2)}`)
 
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
     const paymentId = data?.PaymentId as string
     const amountValue = typeof amount === 'object' && 'value' in amount
       ? amount.value
@@ -240,11 +250,11 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
       data?.receipt as components["schemas"]["Receipt_FFD_105"] | components["schemas"]["Receipt_FFD_12"]
     )
     try {
-      const response = await this.client_.cancel({
-        TerminalKey: this.options_.terminalKey,
-        Password: this.options_.password,
+      const response = await client.cancel({
+        TerminalKey: options.terminalKey,
+        Password: options.password,
         PaymentId: paymentId,
-        ...(getSmallestUnit(amount, 'RUB') !== data?.amount ? {Receipt: receipt} : {}), // TODO: to remove hardcoded currency?
+        ...(getSmallestUnit(amount, 'RUB') !== data?.amount ? { Receipt: receipt } : {}), // TODO: to remove hardcoded currency?
         ...(amountValue
           ? { Amount: getSmallestUnit(Number(amountValue), 'RUB') } // TODO: to remove hardcoded currency?
           : {})
@@ -264,12 +274,14 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
   async cancelPayment(input: CancelPaymentInput): Promise<CancelPaymentOutput> {
     this.logger_.debug(`TkassaBase.cancelPayment input:\n${JSON.stringify(input, null, 2)}`)
 
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
     const paymentId = input.data?.PaymentId as string
 
     try {
-      const response = await this.client_.cancel({
-        TerminalKey: this.options_.terminalKey,
-        Password: this.options_.password,
+      const response = await client.cancel({
+        TerminalKey: options.terminalKey,
+        Password: options.password,
         PaymentId: paymentId
       })
 
@@ -287,12 +299,14 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
   async retrievePayment(input: RetrievePaymentInput): Promise<RetrievePaymentOutput> {
     this.logger_.debug(`TkassaBase.retrievePayment input:\n${JSON.stringify(input, null, 2)}`)
 
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
     const paymentId = input.data?.PaymentId as string
 
     try {
-      const response = await this.client_.getState({
-        TerminalKey: this.options_.terminalKey,
-        Password: this.options_.password,
+      const response = await client.getState({
+        TerminalKey: options.terminalKey,
+        Password: options.password,
         PaymentId: paymentId
       })
 
@@ -322,10 +336,13 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
       )
     }
 
+    const options = await this.resolveOptions()
+    const client = this.getClient(options)
+
     try {
-      const response = await this.client_.getState({
-        TerminalKey: this.options_.terminalKey,
-        Password: this.options_.password,
+      const response = await client.getState({
+        TerminalKey: options.terminalKey,
+        Password: options.password,
         PaymentId: paymentId,
       })
 
@@ -342,7 +359,9 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
     }
   }
 
-
+  /** 
+   * Handle a webhook event from T-Kassa and map it to a Medusa action. 
+   */
   async getWebhookActionAndData(webhookData: ProviderWebhookPayload["payload"]): Promise<WebhookActionResult> {
     this.logger_.debug(
       `TkassaProvider.getWebhookActionAndData payload:\n${JSON.stringify(webhookData, null, 2)}`
@@ -367,6 +386,9 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
     return result
   }
 
+  /** 
+   * Validate a webhook event from T-Kassa by checking its token.
+   */
   protected async isWebhookEventValid(payload: ProviderWebhookPayload["payload"]): Promise<boolean> {
     const data = payload.data as unknown as TkassaEvent
 
@@ -374,6 +396,7 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
       return false
     }
 
+    const options = await this.resolveOptions()
     const incomingToken = data.Token
     const requiredKeys = [
       "TerminalKey", "OrderId", "Success", "Status", "PaymentId",
@@ -386,7 +409,7 @@ abstract class TkassaBase extends AbstractPaymentProvider<TKassaOptions> {
       const value = data[key]
       params[key] = String(value)
     }
-    params["Password"] = this.options_.password
+    params["Password"] = options.password
     const sortedKeys = Object.keys(params).sort()
     let concat = ""
     for (const key of sortedKeys) {

@@ -1,0 +1,28 @@
+{
+  "tkassa": {
+    "name": "Т-Касса",
+    "description": "Платёжный шлюз Т-Банк",
+    "sections": {
+      "credentials": "Доступы",
+      "behavior": "Поведение",
+      "receipt": "Чеки"
+    },
+    "fields": {
+      "terminalKey": "Терминал",
+      "password": "Пароль",
+      "capture": "Автосписание",
+      "useReceipt": "Отправлять чеки",
+      "ffdVersion": "Версия ФФД",
+      "taxation": "Налогообложение",
+      "taxItemDefault": "Налог товара",
+      "taxShippingDefault": "Налог доставки"
+    },
+    "taxation": {
+      "osn": "ОСН",
+      "usn_income": "УСН доход",
+      "usn_income_outcome": "УСН доход минус расход",
+      "esn": "ЕСХН",
+      "patent": "Патент"
+    }
+  }
+}

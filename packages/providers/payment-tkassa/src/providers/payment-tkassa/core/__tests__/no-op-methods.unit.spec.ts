@@ -1,7 +1,6 @@
 import { http, HttpResponse } from "msw"
 import { PaymentSessionStatus } from "@medusajs/framework/utils"
-import TkassaService from "../../services/tkassa"
-import { TKASSA_BASE_URL, makeLogger, server } from "./test-utils"
+import { TKASSA_BASE_URL, makeProvider, server } from "./test-utils"
 
 const baseOptions = {
   terminalKey: "TestTerminalKey",
@@ -28,7 +27,7 @@ describe("TkassaBase no-op / pass-through methods", () => {
         )
       )
 
-      const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+      const tkassa = makeProvider(baseOptions)
       const result = await tkassa.authorizePayment({
         data: { PaymentId: "987654" },
       } as any)
@@ -39,7 +38,7 @@ describe("TkassaBase no-op / pass-through methods", () => {
 
   describe("deletePayment (T-Kassa does not support delete)", () => {
     it("returns the input unchanged without making any HTTP call", async () => {
-      const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+      const tkassa = makeProvider(baseOptions)
       const input = { data: { PaymentId: "987654", receipt: { foo: "bar" } } }
 
       const result = await tkassa.deletePayment(input as any)
@@ -52,7 +51,7 @@ describe("TkassaBase no-op / pass-through methods", () => {
 
   describe("updatePayment (T-Kassa does not support update)", () => {
     it("returns the input unchanged without making any HTTP call", async () => {
-      const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+      const tkassa = makeProvider(baseOptions)
       const input = {
         amount: 1500,
         currency_code: "rub",

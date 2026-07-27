@@ -1,6 +1,5 @@
 import { http, HttpResponse } from "msw"
-import TkassaService from "../../services/tkassa"
-import { TKASSA_BASE_URL, captureRequest, makeLogger, server } from "./test-utils"
+import { TKASSA_BASE_URL, captureRequest, makeProvider, server } from "./test-utils"
 
 const okConfirmResponse = {
   Success: true,
@@ -30,7 +29,7 @@ describe("TkassaBase.capturePayment", () => {
       })
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     await tkassa.capturePayment({
       data: { PaymentId: "987654" },
     } as any)
@@ -50,7 +49,7 @@ describe("TkassaBase.capturePayment", () => {
       )
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
     const receipt = { FfdVersion: "1.05", Items: [{ Name: "Item 1" }] }
     const result = await tkassa.capturePayment({
       data: { PaymentId: "987654", receipt },
@@ -66,7 +65,7 @@ describe("TkassaBase.capturePayment", () => {
       )
     )
 
-    const tkassa = new (TkassaService as any)({ logger: makeLogger() }, baseOptions)
+    const tkassa = makeProvider(baseOptions)
 
     // NOTE: the source has a typo "capturePaymentt" — assert the actual current
     // behaviour so a fix would be a conscious choice, not a silent regression.

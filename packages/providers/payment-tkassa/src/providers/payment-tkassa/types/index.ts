@@ -1,19 +1,6 @@
 import { components } from "t-kassa-api/openapi"
 import { PaymentSessionStatus } from "@medusajs/framework/utils"
 
-export interface TKassaOptions {
-  terminalKey: string
-  password: string
-  webhookSecret?: string
-  capture?: boolean
-  // Receipt options
-  useReceipt?: boolean
-  ffdVersion?: "1.2" | "1.05"
-  taxation?: components["schemas"]["Receipt_FFD_105"]["Taxation"] | components["schemas"]["Receipt_FFD_12"]["Taxation"]
-  taxItemDefault?: components["schemas"]["Items_FFD_105"]["Tax"] | components["schemas"]["Items_FFD_12"]["Tax"]
-  taxShippingDefault?: components["schemas"]["Items_FFD_105"]["Tax"] | components["schemas"]["Items_FFD_12"]["Tax"]
-}
-
 export interface PaymentOptions {
 }
 
@@ -82,42 +69,3 @@ export const PaymentStatusesMap = {
   REJECTED: PaymentSessionStatus.ERROR,
   AUTH_FAIL: PaymentSessionStatus.ERROR,
 }
-
-export const Taxations: TKassaOptions["taxation"][] = [
-  "osn",
-  "usn_income",
-  "usn_income_outcome",
-  "esn",
-  "patent"
-]
-
-export const TaxItem: TKassaOptions["taxItemDefault"][] = [
-  "none",
-  "vat0",
-  "vat5",
-  "vat7",
-  "vat10",
-  "vat20",
-  "vat105",
-  "vat107",
-  "vat110",
-  "vat120"
-]
-
-export const TaxShipping: TKassaOptions["taxShippingDefault"][] = [
-  "none",
-  "vat0",
-  "vat5",
-  "vat7",
-  "vat10",
-  "vat20",
-  "vat105",
-  "vat107",
-  "vat110",
-  "vat120"
-]
-
-export const FfdVersions: TKassaOptions["ffdVersion"][] = [
-  "1.2",
-  "1.05"
-]
