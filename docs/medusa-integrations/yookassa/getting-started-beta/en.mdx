@@ -21,14 +21,12 @@ In this document, you'll learn how to install and configure the YooKassa payment
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-integration
-    yarn add @gorgo/medusa-payment-yookassa
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-yookassa
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-integration
-    npm install @gorgo/medusa-payment-yookassa
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-yookassa
     ```
   </CodeTab>
 </CodeTabs>
@@ -48,7 +46,7 @@ module.exports = defineConfig({
     {
       resolve: "@gorgo/medusa-integration",
       options: {
-        encryptionKey: process.env.GORGO_INTEGRATION_ENCRYPTION_KEY,
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
         providers: [
           {
             resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
@@ -85,7 +83,7 @@ module.exports = defineConfig({
 Add environment variables with your secret `Encryption Key`:
 
 ```text title=".env"
-GORGO_INTEGRATION_ENCRYPTION_KEY=supersecret
+INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
 ---
