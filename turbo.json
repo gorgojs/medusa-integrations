@@ -8,6 +8,7 @@
       "inputs": ["src/**", "package.json", "tsconfig.json"]
     },
     "test:unit": {
+      "dependsOn": ["^build"],
       "outputs": [],
       "inputs": ["src/**", "jest.config.*", "package.json"]
     },
