@@ -27,8 +27,14 @@ module.exports = defineConfig({
     {
       resolve: "@gorgo/medusa-integration",
       options: {
+        // Any non-empty secret (SHA-256-derived to a 32-byte key). Required in dev and prod;
+        // high-entropy recommended, e.g. `openssl rand -hex 32`.
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY || "supersecret",
         providers: [
-          { resolve: "@gorgo/medusa-1c/providers/integration-1c", options: {} },
+          {
+            resolve: "@gorgo/medusa-1c/providers/integration-1c",
+            options: {}
+          },
         ],
       },
     },

@@ -18,7 +18,10 @@ module.exports = defineConfig({
       resolve: "@gorgo/medusa-integration",
       options: {
         providers: [
-          { resolve: "@gorgo/medusa-1c/providers/integration-1c", options: {} },
+          {
+            resolve: "@gorgo/medusa-1c/providers/integration-1c",
+            options: {}
+          },
         ],
       },
     },
