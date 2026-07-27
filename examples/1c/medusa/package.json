@@ -22,15 +22,15 @@
     "tunnel": "lt --port 9000 --subdomain medusa-1c"
   },
   "dependencies": {
-    "@gorgo/medusa-1c": "file:.yalc/@gorgo/medusa-1c",
-    "@gorgo/medusa-integration": "file:.yalc/@gorgo/medusa-integration",
-    "@medusajs/admin-sdk": "2.17.2",
-    "@medusajs/cli": "2.17.2",
-    "@medusajs/framework": "2.17.2",
-    "@medusajs/medusa": "2.17.2"
+    "@gorgo/medusa-1c": "latest",
+    "@gorgo/medusa-integration": "latest",
+    "@medusajs/admin-sdk": "2.18.0",
+    "@medusajs/cli": "2.18.0",
+    "@medusajs/framework": "2.18.0",
+    "@medusajs/medusa": "2.18.0"
   },
   "devDependencies": {
-    "@medusajs/test-utils": "2.17.2",
+    "@medusajs/test-utils": "2.18.0",
     "@swc/core": "^1.7.28",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.13",
