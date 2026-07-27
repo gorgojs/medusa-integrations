@@ -1,7 +1,6 @@
 import { http, HttpResponse } from "msw"
 import { createHash } from "node:crypto"
-import RobokassaService from "../../services/robokassa"
-import { ROBOKASSA_BASE_URL, captureRequest, makeLogger, server } from "./test-utils"
+import { ROBOKASSA_BASE_URL, captureRequest, makeProvider, server } from "./test-utils"
 
 const CAPTURE_URL = `${ROBOKASSA_BASE_URL}/Merchant/Payment/Confirm`
 
@@ -33,7 +32,7 @@ describe("RobokassaBase.capturePayment", () => {
       })
     )
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     await robokassa.capturePayment(baseInput)
 
     expect(captured.queryParams.MerchantLogin).toBe("test_login")
@@ -55,7 +54,7 @@ describe("RobokassaBase.capturePayment", () => {
       })
     )
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     await robokassa.capturePayment(baseInput)
 
     const expected = createHash("md5")
@@ -70,7 +69,7 @@ describe("RobokassaBase.capturePayment", () => {
       http.post(CAPTURE_URL, () => HttpResponse.json(responseBody))
     )
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     const result = await robokassa.capturePayment(baseInput)
 
     expect((result.data as any).result).toBe("ok")
@@ -87,7 +86,7 @@ describe("RobokassaBase.capturePayment", () => {
       )
     )
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
 
     await expect(robokassa.capturePayment(baseInput)).rejects.toThrow(
       /An error occurred in capturePayment/
@@ -103,9 +102,7 @@ describe("RobokassaBase.capturePayment", () => {
       })
     )
 
-    const robokassa = new (RobokassaService as any)(
-      { logger: makeLogger() },
-      { ...baseOptions, isTest: true, testPassword1: "test_password1_test" }
+    const robokassa = makeProvider({ ...baseOptions, isTest: true, testPassword1: "test_password1_test" }
     )
     await robokassa.capturePayment(baseInput)
 

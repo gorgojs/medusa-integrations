@@ -1,7 +1,6 @@
 import { http, HttpResponse } from "msw"
 import { createHash } from "node:crypto"
-import RobokassaService from "../../services/robokassa"
-import { ROBOKASSA_BASE_URL, captureRequest, makeLogger, server } from "./test-utils"
+import { ROBOKASSA_BASE_URL, captureRequest, makeProvider, server } from "./test-utils"
 
 const RETRIEVE_URL = `${ROBOKASSA_BASE_URL}/Merchant/WebService/Service.asmx/OpStateExt`
 
@@ -35,7 +34,7 @@ describe("RobokassaBase.retrievePayment", () => {
       })
     )
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     await robokassa.retrievePayment({ data: { InvoiceID: "12345" } } as any)
 
     expect(captured.queryParams.MerchantLogin).toBe("test_login")
@@ -54,7 +53,7 @@ describe("RobokassaBase.retrievePayment", () => {
       })
     )
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     await robokassa.retrievePayment({ data: { InvoiceID: "12345" } } as any)
 
     const expected = createHash("md5")
@@ -72,7 +71,7 @@ describe("RobokassaBase.retrievePayment", () => {
       )
     )
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     const result = await robokassa.retrievePayment({ data: { InvoiceID: "12345" } } as any)
 
     const response = (result.data as any).response
@@ -90,7 +89,7 @@ describe("RobokassaBase.retrievePayment", () => {
       )
     )
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     const result = await robokassa.retrievePayment({
       data: { InvoiceID: "12345", OutSum: "15.00", Shp_SessionID: "cart_01HX" },
     } as any)
@@ -107,7 +106,7 @@ describe("RobokassaBase.retrievePayment", () => {
       )
     )
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
 
     await expect(
       robokassa.retrievePayment({ data: { InvoiceID: "12345" } } as any)

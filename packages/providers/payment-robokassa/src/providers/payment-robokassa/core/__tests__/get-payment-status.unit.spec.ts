@@ -1,7 +1,6 @@
 import { http, HttpResponse } from "msw"
 import { PaymentSessionStatus } from "@medusajs/framework/utils"
-import RobokassaService from "../../services/robokassa"
-import { ROBOKASSA_BASE_URL, makeLogger, server } from "./test-utils"
+import { ROBOKASSA_BASE_URL, makeProvider, server } from "./test-utils"
 
 const RETRIEVE_URL = `${ROBOKASSA_BASE_URL}/Merchant/WebService/Service.asmx/OpStateExt`
 
@@ -46,7 +45,7 @@ describe("RobokassaBase.getPaymentStatus", () => {
     ])("state code %i -> %s", async (stateCode, expectedStatus) => {
       server.use(xmlHandler(0, stateCode))
 
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
       const result = await robokassa.getPaymentStatus({ data: { InvoiceID: "12345" } } as any)
 
       expect(result.status).toBe(expectedStatus)
@@ -55,7 +54,7 @@ describe("RobokassaBase.getPaymentStatus", () => {
     it("falls back to ERROR for an unknown state code", async () => {
       server.use(xmlHandler(0, 999))
 
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
       const result = await robokassa.getPaymentStatus({ data: { InvoiceID: "12345" } } as any)
 
       expect(result.status).toBe(PaymentSessionStatus.ERROR)
@@ -77,7 +76,7 @@ describe("RobokassaBase.getPaymentStatus", () => {
         )
       )
 
-      const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+      const robokassa = makeProvider(baseOptions)
 
       await expect(
         robokassa.getPaymentStatus({ data: { InvoiceID: "12345" } } as any)
@@ -88,7 +87,7 @@ describe("RobokassaBase.getPaymentStatus", () => {
   it("propagates input.data into output.data", async () => {
     server.use(xmlHandler(0, 100))
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
     const result = await robokassa.getPaymentStatus({
       data: { InvoiceID: "12345", OutSum: "15.00", Shp_SessionID: "cart_01HX" },
     } as any)
@@ -105,7 +104,7 @@ describe("RobokassaBase.getPaymentStatus", () => {
       )
     )
 
-    const robokassa = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa = makeProvider(baseOptions)
 
     await expect(
       robokassa.getPaymentStatus({ data: { InvoiceID: "12345" } } as any)

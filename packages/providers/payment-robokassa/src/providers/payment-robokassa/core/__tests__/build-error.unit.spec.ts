@@ -1,5 +1,4 @@
-import RobokassaService from "../../services/robokassa"
-import { makeLogger } from "./test-utils"
+import { makeProvider } from "./test-utils"
 
 const baseOptions = {
   merchantLogin: "test_login",
@@ -10,7 +9,7 @@ const baseOptions = {
 
 describe("RobokassaBase.buildError (protected helper)", () => {
   it("wraps a plain Error with the provided context message + error.message", () => {
-    const robokassa: any = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa: any = makeProvider(baseOptions)
     const original = new Error("network failure")
     const wrapped = robokassa.buildError("An error occurred in capturePayment", original)
 
@@ -20,7 +19,7 @@ describe("RobokassaBase.buildError (protected helper)", () => {
   })
 
   it("formats an AxiosError using response status, code and description", () => {
-    const robokassa: any = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa: any = makeProvider(baseOptions)
     const axiosLike = Object.assign(new Error("Request failed"), {
       isAxiosError: true,
       response: {
@@ -37,7 +36,7 @@ describe("RobokassaBase.buildError (protected helper)", () => {
   })
 
   it("trims trailing whitespace when response fields are absent", () => {
-    const robokassa: any = new (RobokassaService as any)({ logger: makeLogger() }, baseOptions)
+    const robokassa: any = makeProvider(baseOptions)
     const original = new Error("plain")
     const wrapped = robokassa.buildError("ctx", original)
     expect(wrapped.message).not.toMatch(/\s+$/)

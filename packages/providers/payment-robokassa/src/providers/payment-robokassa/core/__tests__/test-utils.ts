@@ -1,4 +1,8 @@
 import { setupServer } from "msw/node"
+import RobokassaService from "../../services/robokassa"
+import * as integrationWorkflows from "../../../../workflows/integration/workflows"
+
+jest.mock("../../../../workflows/integration/workflows")
 
 export const ROBOKASSA_BASE_URL = "https://auth.robokassa.ru"
 export const server = setupServer()
@@ -6,6 +10,28 @@ export const server = setupServer()
 export function makeLogger() {
   const noop = () => {}
   return new Proxy({} as any, { get: () => noop })
+}
+
+export function makeIntegration(options: Record<string, any>) {
+  return {
+    getResolvedOptions: async () => ({
+      options,
+      meta: {
+        provider_id: "int_robokassa",
+        category: "payment",
+        is_enabled: true,
+      },
+    }),
+  }
+}
+
+export function makeProvider(options: Record<string, any> = {}): any {
+  const integration = makeIntegration(options)
+  const mockedWorkflow = integrationWorkflows.getIntegrationOptionsWorkflow as unknown as jest.Mock
+  mockedWorkflow.mockReturnValue({
+    run: async () => ({ result: await integration.getResolvedOptions() }),
+  })
+  return new (RobokassaService as any)({ logger: makeLogger() }, options)
 }
 
 export type CapturedRequest = {

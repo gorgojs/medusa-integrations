@@ -1,5 +1,6 @@
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import { Modules } from "@medusajs/framework/utils"
+import { seedRobokassaIntegration } from "../utils/seed-robokassa"
 
 jest.setTimeout(120 * 1000)
 
@@ -31,11 +32,10 @@ medusaIntegrationTestRunner({
   },
   testSuite: ({ getContainer }) => {
     describe("Robokassa payment lifecycle (e2e via PaymentModule)", () => {
-      /**
-       * initiatePayment makes NO HTTP call — it builds a redirect URL locally.
-       * This test verifies end-to-end flow from createPaymentSession all the way
-       * to the Robokassa payment URL without any network mocking.
-       */
+      beforeAll(async () => {
+        await seedRobokassaIntegration(getContainer())
+      })
+
       it("createPaymentSession routes to RobokassaProvider.initiatePayment and persists paymentUrl", async () => {
         const paymentModule = getContainer().resolve(Modules.PAYMENT)
 
