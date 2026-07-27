@@ -2,7 +2,7 @@ import {
   AbstractPaymentProvider,
   PaymentSessionStatus,
   PaymentActions,
-  isDefined
+  MedusaError,
 } from "@medusajs/framework/utils"
 import {
   InitiatePaymentInput, InitiatePaymentOutput,
@@ -17,17 +17,22 @@ import {
   UpdatePaymentInput, UpdatePaymentOutput,
 } from "@medusajs/framework/types"
 import {
-  HashAlgorithms,
   Payment,
+  PaymentProviderKeys,
   Receipt,
   RobokassaEvent,
-  RobokassaOptions,
-  taxations,
-  taxes
 } from "../types"
+import axios, { AxiosError } from "axios"
+import { XMLParser } from 'fast-xml-parser'
+import {
+  createSignature,
+  generateReceipt,
+  stringToNumberHash
+} from "../utils"
+import { createTelemetryClient } from "@gorgo/telemetry"
+import { getIntegrationOptionsWorkflow } from "../../../workflows/integration/workflows"
+import { RobokassaOptions } from "../../integration-robokassa/services/robokassa-integration"
 
-// Maps Robokassa numeric state codes to Medusa PaymentSessionStatus.
-// Documented at: https://docs.robokassa.ru/en/pay-interface/checking-operation-state/
 const PaymentStateCodesMap: Record<number, PaymentSessionStatus> = {
   3: PaymentSessionStatus.PENDING,
   5: PaymentSessionStatus.PENDING,
@@ -38,76 +43,58 @@ const PaymentStateCodesMap: Record<number, PaymentSessionStatus> = {
   80: PaymentSessionStatus.REQUIRES_MORE,
   100: PaymentSessionStatus.CAPTURED,
 }
-import axios, { AxiosError } from "axios"
-import { XMLParser } from 'fast-xml-parser'
-import {
-  createSignature,
-  generateReceipt,
-  stringToNumberHash
-} from "../utils"
-import { createHash } from "crypto"
-import { createTelemetryClient } from "@gorgo/telemetry"
 
-abstract class RobokassaBase extends AbstractPaymentProvider<RobokassaOptions> {
-  private static telemetry_ = createTelemetryClient({ packageDir: __dirname })
-
-  protected options_: RobokassaOptions
+abstract class RobokassaBase extends AbstractPaymentProvider {
   protected logger_: Logger
+  protected container_: Record<string, any>
+  protected instanceId_: string | null
   protected baseUrl_ = "https://auth.robokassa.ru"
   protected paymentUrl_ = `${this.baseUrl_}/Merchant/Index.aspx`
   protected getPaymentUrl_ = `${this.baseUrl_}/Merchant/WebService/Service.asmx/OpStateExt`
   protected capturePaymentUrl_ = `${this.baseUrl_}/Merchant/Payment/Confirm`
+  private static telemetry_ = createTelemetryClient({ packageDir: __dirname })
 
-  static validateOptions(options: RobokassaOptions): void {
+  /** 
+   * Validate options passed to the provider.
+   */
+  static validateOptions(_options: Record<string, unknown>): void {
     RobokassaBase.telemetry_.track("plugin.started")
-
-    if (!isDefined(options.merchantLogin)) {
-      throw new Error("Required option `merchantLogin` is missing in Robokassa provider")
-    }
-    if (!isDefined(options.password1)) {
-      throw new Error("Required option `password1` is missing in Robokassa provider")
-    }
-    if (!isDefined(options.password2)) {
-      throw new Error("Required option `password2` is missing in Robokassa provider")
-    }
-    if (!isDefined(options.hashAlgorithm) || !HashAlgorithms.includes(options.hashAlgorithm as (typeof HashAlgorithms)[number])) {
-      throw new Error("Required option `hashAlgorithm` is missing in Robokassa provider")
-    }
-    if (options.useReceipt == true) {
-      if (!isDefined(options.taxation)) {
-        throw new Error("Required option `taxation` is missing in Robokassa provider")
-      } else if (!taxations.includes(options.taxation)) {
-        throw new Error(`Invalid option \`taxation\` provided in Robokassa provider. Valid values are: ${taxations.join(", ")}`)
-      }
-      if (!isDefined(options.taxItemDefault)) {
-        throw new Error("Required option `taxItemDefault` is missing in Robokassa provider")
-      } else if (!taxes.includes(options.taxItemDefault)) {
-        throw new Error(`Invalid option \`taxItemDefault\` provided in Robokassa provider. Valid values are: ${taxes.join(", ")}`)
-      }
-      if (!isDefined(options.taxShippingDefault)) {
-        throw new Error("Required option `taxShippingDefault` is missing in Robokassa provider")
-      } else if (!taxes.includes(options.taxShippingDefault)) {
-        throw new Error(`Invalid option \`taxShippingDefault\` provided in Robokassa provider. Valid values are: ${taxes.join(", ")}`)
-      }
-    }
   }
 
-  constructor(container: { logger: Logger }, options: RobokassaOptions) {
+  /** 
+   * Construct a new instance of the RobokassaBase provider.
+   */
+  constructor(container: { logger: Logger } & Record<string, any>, options?: Record<string, unknown>) {
     super(container, options)
-    this.options_ = options
     this.logger_ = container.logger
+    this.container_ = container
+    this.instanceId_ = (options?.id as string | undefined) ?? null
   }
 
-  protected createSignature(
-    signatureParams: string[],
-  ) {
-    const concatenatedParams = signatureParams.filter(v => v).join(":")
-    const res = createHash(this.options_.hashAlgorithm).update(concatenatedParams).digest('hex')
-
-    return res
+  /** 
+   * Resolve Robokassa integration options from the Medusa integration provider.
+   */
+  protected async resolveOptions(): Promise<RobokassaOptions> {
+    const { result } = await getIntegrationOptionsWorkflow().run({
+      input: {
+        identifier: PaymentProviderKeys.ROBOKASSA,
+        instance_id: this.instanceId_,
+      },
+    })
+    if (!result) {
+      throw new MedusaError(
+        MedusaError.Types.NOT_ALLOWED,
+        "Robokassa is not configured yet. Configure it in Admin → Integrations before using it."
+      )
+    }
+    return result.options as RobokassaOptions
   }
 
+  /** 
+   * Normalize payment parameters for Robokassa API request.
+   */
   private normalizePaymentParameters(
+    options: RobokassaOptions,
     extra?: InitiatePaymentInput
   ): Partial<Payment> {
     const res = {} as Partial<Payment>
@@ -132,12 +119,12 @@ abstract class RobokassaBase extends AbstractPaymentProvider<RobokassaOptions> {
 
     const isTest =
       extra?.data?.isTest as Payment["isTest"] ??
-      (this.options_.isTest ? "1" : undefined)
+      (options.isTest ? "1" : undefined)
     if (isTest !== undefined) res.isTest = isTest
 
     const stepByStep =
       extra?.data?.StepByStep as Payment["StepByStep"] ??
-      (this.options_.capture === false ? "true" : undefined)
+      (options.capture === false ? "true" : undefined)
     if (stepByStep !== undefined) res.StepByStep = stepByStep
 
     return res
@@ -151,22 +138,22 @@ abstract class RobokassaBase extends AbstractPaymentProvider<RobokassaOptions> {
       `RobokassaBase.initiatePayment input:\n${JSON.stringify(input, null, 2)}`
     )
 
+    const options = await this.resolveOptions()
     const { amount, context = {} } = input
 
     const outSum = Number(amount).toFixed(2)
-    // TODO: can we avoide generating invoice id?
     const invoiceId = stringToNumberHash(context.idempotency_key as string).toString()
     const sessionId = input.data?.session_id as string
     const cart = input.data?.cart as Record<string, any>
 
-    const additionalParameters = this.normalizePaymentParameters(input)
+    const additionalParameters = this.normalizePaymentParameters(options, input)
 
     let receipt = {} as Receipt
-    if (this.options_.useReceipt && cart) {
+    if (options.useReceipt && cart) {
       receipt = generateReceipt(
-        this.options_.taxation!,
-        this.options_.taxItemDefault!,
-        this.options_.taxShippingDefault!,
+        options.taxation!,
+        options.taxItemDefault!,
+        options.taxShippingDefault!,
         input.data?.cart as Record<string, any>
       )
     }
@@ -175,24 +162,24 @@ abstract class RobokassaBase extends AbstractPaymentProvider<RobokassaOptions> {
     const receiptEncoded = encodeURIComponent(receiptJson)
 
     const raw = [
-      this.options_.merchantLogin,
+      options.merchantLogin,
       outSum,
       invoiceId,
-      ...(this.options_.useReceipt ? [receiptJson] : []),
+      ...(options.useReceipt ? [receiptJson] : []),
       ...(additionalParameters.StepByStep ? [additionalParameters.StepByStep] : []),
       additionalParameters.SuccessUrl2,
       additionalParameters.SuccessUrl2Method,
       additionalParameters.FailUrl2,
       additionalParameters.FailUrl2Method,
-      this.options_.isTest ? this.options_.testPassword1 : this.options_.password1,
+      options.isTest ? options.testPassword1 : options.password1,
       `Shp_SessionID=${sessionId}`
     ]
-    const signature = createSignature(raw, this.options_.hashAlgorithm)
+    const signature = createSignature(raw, options.hashAlgorithm)
 
     const payment: Payment = {
-      MerchantLogin: this.options_.merchantLogin,
+      MerchantLogin: options.merchantLogin,
       OutSum: outSum,
-      ...(this.options_.useReceipt ? { Receipt: receiptEncoded } : {}),
+      ...(options.useReceipt ? { Receipt: receiptEncoded } : {}),
       InvoiceID: invoiceId,
       SignatureValue: signature,
       Shp_SessionID: sessionId,
@@ -219,19 +206,20 @@ abstract class RobokassaBase extends AbstractPaymentProvider<RobokassaOptions> {
   async capturePayment(input: CapturePaymentInput): Promise<CapturePaymentOutput> {
     this.logger_.debug(`RobokassaBase.capturePayment input:\n${JSON.stringify(input, null, 2)}`)
 
+    const options = await this.resolveOptions()
     const invoiceId = input.data?.InvoiceID as string
     const outSum = input.data?.OutSum as string
 
     const raw = [
-      this.options_.merchantLogin,
+      options.merchantLogin,
       outSum,
       invoiceId,
-      this.options_.isTest ? this.options_.testPassword1 : this.options_.password1
+      options.isTest ? options.testPassword1 : options.password1
     ]
-    const signature = createSignature(raw, this.options_.hashAlgorithm)
+    const signature = createSignature(raw, options.hashAlgorithm)
 
     const capturePayment: Partial<Payment> = {
-      MerchantLogin: this.options_.merchantLogin,
+      MerchantLogin: options.merchantLogin,
       InvoiceID: invoiceId,
       SignatureValue: signature,
       OutSum: outSum
@@ -314,16 +302,17 @@ abstract class RobokassaBase extends AbstractPaymentProvider<RobokassaOptions> {
   async retrievePayment(input: RetrievePaymentInput): Promise<RetrievePaymentOutput> {
     this.logger_.debug(`RobokassaBase.retrievePayment input:\n${JSON.stringify(input, null, 2)}`)
 
+    const options = await this.resolveOptions()
     const invoiceId = input.data?.InvoiceID as string
     const raw = [
-      this.options_.merchantLogin,
+      options.merchantLogin,
       invoiceId,
-      this.options_.isTest ? this.options_.testPassword2 : this.options_.password2
+      options.isTest ? options.testPassword2 : options.password2
     ]
-    const signature = createSignature(raw, this.options_.hashAlgorithm)
+    const signature = createSignature(raw, options.hashAlgorithm)
 
     const params = new URLSearchParams({
-      MerchantLogin: this.options_.merchantLogin,
+      MerchantLogin: options.merchantLogin,
       InvoiceID: invoiceId,
       Signature: signature,
     }).toString()
@@ -388,6 +377,9 @@ abstract class RobokassaBase extends AbstractPaymentProvider<RobokassaOptions> {
     }
   }
 
+  /** 
+   * Handle a webhook event from Robokassa and map it to a Medusa action. 
+   */
   async getWebhookActionAndData(payload: ProviderWebhookPayload["payload"]): Promise<WebhookActionResult> {
     this.logger_.debug(
       `RobokassaBase.getWebhookActionAndData payload:\n${JSON.stringify(payload, null, 2)}`
@@ -411,15 +403,19 @@ abstract class RobokassaBase extends AbstractPaymentProvider<RobokassaOptions> {
     return result
   }
 
+  /** 
+   * Validate a webhook event from Robokassa.
+   */
   protected async isWebhookEventValid(data: RobokassaEvent): Promise<boolean> {
+    const options = await this.resolveOptions()
     const incomingSignature = data.SignatureValue
     const raw = [
       data.OutSum,
       data.InvId,
-      this.options_.password2,
+      options.password2,
       `Shp_SessionID=${data.Shp_SessionID}`
     ]
-    const signature = createSignature(raw, this.options_.hashAlgorithm)
+    const signature = createSignature(raw, options.hashAlgorithm)
 
     return signature === incomingSignature
   }

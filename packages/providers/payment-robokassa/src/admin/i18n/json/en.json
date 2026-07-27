@@ -1,0 +1,32 @@
+{
+  "robokassa": {
+    "name": "Robokassa",
+    "description": "Robokassa payment gateway",
+    "sections": {
+      "credentials": "Credentials",
+      "behavior": "Behavior",
+      "receipt": "Receipt"
+    },
+    "fields": {
+      "merchantLogin": "Merchant login",
+      "hashAlgorithm": "Hash algorithm",
+      "password1": "Password #1",
+      "password2": "Password #2",
+      "capture": "Auto-capture",
+      "isTest": "Test mode",
+      "testPassword1": "Test password #1",
+      "testPassword2": "Test password #2",
+      "useReceipt": "Send receipts",
+      "taxation": "Taxation",
+      "taxItemDefault": "Default item tax",
+      "taxShippingDefault": "Default shipping tax"
+    },
+    "taxation": {
+      "osn": "General (OSN)",
+      "usn_income": "Simplified — income",
+      "usn_income_outcome": "Simplified — income minus expenses",
+      "esn": "Unified agricultural (ESN)",
+      "patent": "Patent"
+    }
+  }
+}

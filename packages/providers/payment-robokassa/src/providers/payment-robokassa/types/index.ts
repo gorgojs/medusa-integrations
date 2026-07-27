@@ -1,19 +1,3 @@
-export interface RobokassaOptions {
-  merchantLogin: string
-  hashAlgorithm: string
-  password1: string
-  password2: string
-  testPassword1?: string
-  testPassword2?: string
-  capture?: boolean,
-  isTest?: boolean,
-  // Receipt options
-  useReceipt?: boolean,
-  taxation?: Taxation,
-  taxItemDefault?: Tax,
-  taxShippingDefault?: Tax,
-}
-
 export interface PaymentOptions {
 }
 

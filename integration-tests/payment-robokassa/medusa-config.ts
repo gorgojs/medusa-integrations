@@ -11,30 +11,34 @@ module.exports = defineConfig({
       authCors: process.env.AUTH_CORS || "http://localhost:9000",
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
-    },
-    cookieOptions: { sameSite: "lax", secure: false },
+    }
   },
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY || "supersecret",
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
+            options: {
+              id: "robokassa", // must match the provider id used in the payment module below
+            },
+          },
+        ],
+      },
+    },
+  ],
   modules: [
     {
       resolve: "@medusajs/medusa/payment",
+      dependencies: ["integration"],
       options: {
         providers: [
           {
             resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
             id: "robokassa",
-            options: {
-              merchantLogin: process.env.ROBOKASSA_MERCHANT_LOGIN,
-              hashAlgorithm: process.env.ROBOKASSA_HASH_ALGORITHM,
-              password1: process.env.ROBOKASSA_PASSWORD_1,
-              password2: process.env.ROBOKASSA_PASSWORD_2,
-              testPassword1: process.env.ROBOKASSA_TEST_PASSWORD_1,
-              testPassword2: process.env.ROBOKASSA_TEST_PASSWORD_2,
-              capture: true,
-              useReceipt: true,
-              taxation: "osn",
-              taxItemDefault: "vat20",
-              taxShippingDefault: "vat20",
-            },
+            options: {},
           },
         ],
       },
