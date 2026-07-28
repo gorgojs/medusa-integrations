@@ -30,7 +30,7 @@ import {
   stringToNumberHash
 } from "../utils"
 import { createTelemetryClient } from "@gorgo/telemetry"
-import { getIntegrationOptionsWorkflow } from "../../../workflows/integration/workflows"
+import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
 import { RobokassaOptions } from "../../integration-robokassa/services/robokassa-integration"
 
 const PaymentStateCodesMap: Record<number, PaymentSessionStatus> = {
@@ -75,19 +75,10 @@ abstract class RobokassaBase extends AbstractPaymentProvider {
    * Resolve Robokassa integration options from the Medusa integration provider.
    */
   protected async resolveOptions(): Promise<RobokassaOptions> {
-    const { result } = await getIntegrationOptionsWorkflow().run({
-      input: {
-        identifier: PaymentProviderKeys.ROBOKASSA,
-        instance_id: this.instanceId_,
-      },
+    return resolveIntegrationOptions({
+      identifier: RobokassaBase.identifier,
+      instance_id: this.instanceId_
     })
-    if (!result) {
-      throw new MedusaError(
-        MedusaError.Types.NOT_ALLOWED,
-        "Robokassa is not configured yet. Configure it in Admin → Integrations before using it."
-      )
-    }
-    return result.options as RobokassaOptions
   }
 
   /** 
