@@ -4,3 +4,8 @@ export { emitIntegrationEventStep } from "./emit-integration-event"
 export { runTestConnectionStep } from "./run-test-connection"
 export { setIntegrationEnabledStep } from "./set-integration-enabled"
 export { upsertIntegrationRecordStep } from "./upsert-integration-record"
+export {
+  getResolvedIntegrationOptionsStep,
+  getResolvedIntegrationOptionsStepId,
+} from "./get-resolved-integration-options"
+export type { GetResolvedIntegrationOptionsStepInput } from "./get-resolved-integration-options"
