@@ -17,7 +17,7 @@ SKIP_MIGRATIONS_DIRS=(
 
 # Mapping of example directories to integration-tests directories
 declare -A EXAMPLE_IT_MAP
-EXAMPLE_IT_MAP["./examples/1c"]=./integration-tests/1c
+EXAMPLE_IT_MAP["./examples/erp-1c"]=./integration-tests/erp-1c
 EXAMPLE_IT_MAP["./examples/feed-yandex"]=./integration-tests/feed-yandex
 EXAMPLE_IT_MAP["./examples/fulfillment-apiship"]=./integration-tests/fulfillment-apiship
 EXAMPLE_IT_MAP["./examples/payment-robokassa"]=./integration-tests/payment-robokassa

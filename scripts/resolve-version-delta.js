@@ -13,7 +13,7 @@ const examplesDir = path.join(cwd, 'examples')
 const badgesDir = path.join(cwd, '.badges')
 
 const EXAMPLE_TO_DIR = {
-  '1c': 'providers/erp-1c',
+  'erp-1c': 'providers/erp-1c',
   'feed-yandex': 'providers/feed-yandex',
   'fulfillment-apiship': 'providers/fulfillment-apiship',
   'payment-robokassa': 'providers/payment-robokassa',

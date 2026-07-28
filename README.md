@@ -136,25 +136,15 @@ This repository is organized as a Yarn monorepo with shared workspaces for plugi
 
 ```text
 ├── examples/
-│   ├── 1c/
-│   ├── feed-yandex/
-│   ├── fulfillment-apiship/
-│   ├── payment-robokassa/
-│   ├── payment-tkassa/
-│   └── payment-yookassa/
 ├── integration-tests/
-│   ├── 1c/
-│   ├── feed-yandex/
-│   ├── fulfillment-apiship/
-│   ├── payment-robokassa/
-│   └── payment-tkassa/
 ├── packages/
 │   ├── modules/
 │   ├── providers/
 │   └── utils/
 ├── scripts/
 └── docs/
-    ├── integrations/
+    ├── medusa-integrations/
+    ├── medusa-modules/
     └── tools/
 ```
 
@@ -162,7 +152,7 @@ This repository is organized as a Yarn monorepo with shared workspaces for plugi
 
 See the plugin example README for details:
 
-- [examples/1c/README.md](examples/1c/README.md)
+- [examples/erp-1c/README.md](examples//erp-1c/README.md)
 - [examples/feed-yandex/README.md](examples/feed-yandex/README.md)
 - [examples/fulfillment-apiship/README.md](examples/fulfillment-apiship/README.md)
 - [examples/payment-robokassa/README.md](examples/payment-robokassa/README.md)

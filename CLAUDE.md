@@ -8,12 +8,18 @@ This repository is organized as a Yarn v4 monorepo with shared workspaces for pl
 
 ```text
 ├── examples/
-│   ├── 1c/
+│   ├── erp-1c/
 │   ├── feed-yandex/
 │   ├── fulfillment-apiship/
 │   ├── payment-robokassa/
 │   ├── payment-tkassa/
 │   └── payment-yookassa/
+├── integration-tests/
+│   ├── erp-1c/
+│   ├── feed-yandex/
+│   ├── fulfillment-apiship/
+│   ├── payment-robokassa/
+│   └── payment-tkassa/
 ├── packages/
 │   ├── modules/
 │   │   └── integration/
@@ -28,7 +34,8 @@ This repository is organized as a Yarn v4 monorepo with shared workspaces for pl
 │       └── telemetry/
 ├── scripts/
 └── docs/                            # documentation content (built by gorgo/packages/docs)
-    ├── integrations/
+    ├── medusa-integrations/
+    ├── medusa-modules/
     └── tools/
 ```
 
@@ -136,8 +143,7 @@ Not every package uses every directory — include only what the plugin needs.
 src/
 ├── admin/          # React admin UI
 │   ├── routes/         # UI-routes extending Medusa Admin
-│   ├── components/     # shared UI
-│       └── /gorgo-widgets      # Components for Gorgo UI-widgets
+│   └── components/     # shared UI
 │   ├── hooks/          # React hooks
 │   ├── lib/            # admin-only helpers (e.g. sdk.ts)
 │   ├── widgets/        # UI-widgets extending Medusa Admin
@@ -161,7 +167,6 @@ src/
 │   │   ├── index.ts            # createWorkflow(...)
 │   │   └── steps/              # createStep(...)
 │   └── index.ts                # barrel re-export
-├── gorgo-widgets/  # Gorgo UI-widgets extending Gorgo plugins
 ├── jobs/           # scheduled background jobs
 ├── lib/            # cross-cutting libraries used by the package
 ├── utils/          # small utility helpers
