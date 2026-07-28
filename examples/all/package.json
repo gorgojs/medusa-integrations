@@ -1,0 +1,34 @@
+{
+  "name": "dtc-starter-monorepo",
+  "packageManager": "yarn@4.9.2",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "start": "turbo start",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "backend:seed": "turbo seed --filter=@dtc/backend",
+    "backend:dev": "turbo dev --filter=@dtc/backend",
+    "storefront:dev": "turbo dev --filter=@dtc/storefront"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.0.5",
+      "@types/react-dom": "19.0.5"
+    }
+  },
+  "devDependencies": {
+    "@medusajs/eslint-plugin": "2.18.0",
+    "eslint": "^9.39.4",
+    "jiti": "^2.7.0",
+    "prettier": "^3.2.5",
+    "turbo": "^2.0.14"
+  },
+  "workspaces": [
+    "apps/**",
+    "!apps/backend/.medusa/**"
+  ]
+}
