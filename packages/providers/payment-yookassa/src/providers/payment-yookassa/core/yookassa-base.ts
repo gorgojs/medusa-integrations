@@ -49,7 +49,7 @@ import {
   formatCurrency
 } from "../utils"
 import { PaymentOptions, PaymentProviderKeys, YookassaEvent, TaxSystemCode, VatCode } from "../types"
-import { getIntegrationOptionsWorkflow } from "../../../workflows/integration/workflows"
+import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
 import { YookassaOptions } from "../../integration-yookassa/services/yookassa-integration"
 
 abstract class YookassaBase extends AbstractPaymentProvider {
@@ -83,19 +83,10 @@ abstract class YookassaBase extends AbstractPaymentProvider {
    * Resolve YooKassa integration options from the Medusa integration provider.
    */
   protected async resolveOptions(): Promise<YookassaOptions> {
-    const { result } = await getIntegrationOptionsWorkflow().run({
-      input: {
-        identifier: PaymentProviderKeys.YOOKASSA,
-        instance_id: this.instanceId_,
-      },
+    return resolveIntegrationOptions<YookassaOptions>({
+      identifier: YookassaBase.identifier,
+      instance_id: this.instanceId_
     })
-    if (!result) {
-      throw new MedusaError(
-        MedusaError.Types.NOT_ALLOWED,
-        "YooKassa is not configured yet. Configure it in Admin → Integrations before using it."
-      )
-    }
-    return result.options as YookassaOptions
   }
 
   /** 
