@@ -1,8 +1,5 @@
 import { setupServer } from "msw/node"
 import YookassaService from "../../services/yookassa"
-import * as integrationWorkflows from "../../../../workflows/integration/workflows"
-
-jest.mock("../../../../workflows/integration/workflows")
 
 export const YOOKASSA_BASE_URL = "https://api.yookassa.ru/v3"
 
@@ -15,26 +12,10 @@ export function makeLogger() {
   })
 }
 
-export function makeIntegration(options: Record<string, any>) {
-  return {
-    getResolvedOptions: async () => ({
-      options,
-      meta: {
-        provider_id: "int_yookassa",
-        category: "payment",
-        is_enabled: true,
-      },
-    }),
-  }
-}
-
 export function makeProvider(options: Record<string, any> = {}): any {
-  const integration = makeIntegration(options)
-  const mockedWorkflow = integrationWorkflows.getIntegrationOptionsWorkflow as unknown as jest.Mock
-  mockedWorkflow.mockReturnValue({
-    run: async () => ({ result: await integration.getResolvedOptions() }),
-  })
-  return new (YookassaService as any)({ logger: makeLogger() }, options)
+  const provider = new (YookassaService as any)({ logger: makeLogger() }, options)
+  provider.resolveOptions = async () => options
+  return provider
 }
 
 export type CapturedRequest = {
