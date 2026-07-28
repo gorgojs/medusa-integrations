@@ -2,7 +2,6 @@ import {
   AbstractPaymentProvider,
   PaymentSessionStatus,
   PaymentActions,
-  MedusaError,
 } from "@medusajs/framework/utils"
 import {
   InitiatePaymentInput, InitiatePaymentOutput,
@@ -33,7 +32,7 @@ import {
   getSmallestUnit,
 } from "../utils"
 import { createTelemetryClient } from "@gorgo/telemetry"
-import { getIntegrationOptionsWorkflow } from "../../../workflows/integration/workflows"
+import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
 import { TKassaOptions } from "../../integration-tkassa/services/tkassa-integration"
 
 abstract class TkassaBase extends AbstractPaymentProvider {
@@ -64,19 +63,10 @@ abstract class TkassaBase extends AbstractPaymentProvider {
    * Resolve T-Kassa integration options from the Medusa integration provider.
    */
   protected async resolveOptions(): Promise<TKassaOptions> {
-    const { result } = await getIntegrationOptionsWorkflow().run({
-      input: {
-        identifier: PaymentProviderKeys.TKASSA,
-        instance_id: this.instanceId_,
-      },
+    return resolveIntegrationOptions<TKassaOptions>({
+      identifier: TkassaBase.identifier,
+      instance_id: this.instanceId_
     })
-    if (!result) {
-      throw new MedusaError(
-        MedusaError.Types.NOT_ALLOWED,
-        "T-Kassa is not configured yet. Configure it in Admin → Integrations before using it."
-      )
-    }
-    return result.options as TKassaOptions
   }
 
   /** 
