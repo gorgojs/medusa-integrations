@@ -17,6 +17,18 @@ export { collectValidationIssues, isDescriptorComplete } from "./modules/integra
 // Props a provider's custom-section admin widget receives via the settings page's LayoutComposer.
 export type { IntegrationSectionData } from "./types"
 
+// Runtime options resolver — for providers reading their config from this module.
+export { resolveIntegrationOptions } from "./lib/resolve-integration-options"
+export type { ResolveIntegrationOptionsInput } from "./lib/resolve-integration-options"
+export {
+  getResolvedIntegrationOptionsWorkflow,
+  getResolvedIntegrationOptionsStep,
+} from "./workflows/integration"
+export type {
+  GetResolvedIntegrationOptionsWorkflowInput,
+  GetResolvedIntegrationOptionsStepInput,
+} from "./workflows/integration"
+
 // ── For consumers of the integration module ──────────────────────────────────
 export { INTEGRATION_MODULE } from "./modules/integration"
 export { default as IntegrationModuleService } from "./modules/integration/services/integration-module"
