@@ -16,7 +16,6 @@ import {
   PaymentSessionStatus,
   PaymentActions,
   BigNumber,
-  MedusaError,
 } from "@medusajs/framework/utils"
 import {
   AuthorizePaymentInput,
@@ -48,7 +47,8 @@ import {
   generateReceipt,
   formatCurrency
 } from "../utils"
-import { PaymentOptions, PaymentProviderKeys, YookassaEvent, TaxSystemCode, VatCode } from "../types"
+import { PaymentOptions, YookassaEvent, TaxSystemCode, VatCode } from "../types"
+import { ProviderKeys } from "../../../types"
 import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
 import { YookassaOptions } from "../../integration-yookassa/services/yookassa-integration"
 
@@ -84,7 +84,7 @@ abstract class YookassaBase extends AbstractPaymentProvider {
    */
   protected async resolveOptions(): Promise<YookassaOptions> {
     return resolveIntegrationOptions<YookassaOptions>({
-      identifier: YookassaBase.identifier,
+      identifier: ProviderKeys.YOOKASSA,
       instance_id: this.instanceId_
     })
   }

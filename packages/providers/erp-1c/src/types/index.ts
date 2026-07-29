@@ -30,3 +30,7 @@ export type OffersOutput = {
   offers: Offer[];
   warehouses?: Warehouse[];
 };
+
+export const ProviderKeys = {
+  ONEC: "1c",
+}

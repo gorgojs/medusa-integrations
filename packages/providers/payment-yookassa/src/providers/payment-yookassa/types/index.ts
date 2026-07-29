@@ -13,10 +13,6 @@ export interface YookassaEvent {
   object: Payment | Refund | object
 }
 
-export const PaymentProviderKeys = {
-  YOOKASSA: "yookassa",
-}
-
 export const vatCodes = [
   1, // No VAT
   2, // 0%
