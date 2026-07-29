@@ -148,7 +148,7 @@ const Shipping: React.FC<ShippingProps> = ({
     let cancelled = false
 
       ; (async () => {
-        const response = await retrieveProviders()
+        const response = await retrieveProviders(shippingMethodId ?? undefined)
         const providers = response?.providers
         if (cancelled) return
 

@@ -1,10 +1,11 @@
 {
   "name": "@gorgo/medusa-fulfillment-apiship",
-  "version": "1.0.1",
+  "version": "2.0.0-beta.1",
   "description": "Medusa plugin for ApiShip — delivery service aggregator",
   "files": [
     ".medusa/server",
-    "src/types"
+    "src/types",
+    "index.d.ts"
   ],
   "repository": {
     "type": "git",
@@ -12,6 +13,9 @@
     "directory": "packages/providers/fulfillment-apiship"
   },
   "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    },
     "./package.json": "./package.json",
     "./workflows": "./.medusa/server/src/workflows/index.js",
     "./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
@@ -58,12 +62,13 @@
     "axios": "^1.13.2"
   },
   "devDependencies": {
-    "@medusajs/admin-sdk": "^2.14.0",
-    "@medusajs/cli": "^2.14.0",
-    "@medusajs/framework": "^2.14.0",
-    "@medusajs/icons": "^2.14.0",
-    "@medusajs/medusa": "^2.14.0",
-    "@medusajs/test-utils": "^2.14.0",
+    "@gorgo/medusa-integration": "workspace:*",
+    "@medusajs/admin-sdk": "^2.17.2",
+    "@medusajs/cli": "^2.17.2",
+    "@medusajs/framework": "^2.17.2",
+    "@medusajs/icons": "^2.17.2",
+    "@medusajs/medusa": "^2.17.2",
+    "@medusajs/test-utils": "^2.17.2",
     "@medusajs/ui": "^4.0.25",
     "@openapitools/openapi-generator-cli": "^2.25.0",
     "@swc/core": "^1.7.28",
@@ -82,12 +87,13 @@
     "yalc": "^1.0.0-pre.53"
   },
   "peerDependencies": {
-    "@medusajs/admin-sdk": "^2.14.0",
-    "@medusajs/cli": "^2.14.0",
-    "@medusajs/framework": "^2.14.0",
-    "@medusajs/icons": "^2.14.0",
-    "@medusajs/medusa": "^2.14.0",
-    "@medusajs/test-utils": "^2.14.0",
+    "@gorgo/medusa-integration": "^0.0.4",
+    "@medusajs/admin-sdk": "^2.17.2",
+    "@medusajs/cli": "^2.17.2",
+    "@medusajs/framework": "^2.17.2",
+    "@medusajs/icons": "^2.17.2",
+    "@medusajs/medusa": "^2.17.2",
+    "@medusajs/test-utils": "^2.17.2",
     "@medusajs/ui": "^4.0.25"
   },
   "engines": {

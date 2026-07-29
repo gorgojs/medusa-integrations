@@ -9,7 +9,8 @@ const columnHelper =
   createDataTableColumnHelper<ApishipHttpTypes.AdminApishipConnection>()
 
 export const useApishipConnectionsTableColumns = (
-  providers: ApishipHttpTypes.AdminApishipProvider[]
+  providers: ApishipHttpTypes.AdminApishipProvider[],
+  providerId?: string
 ) => {
   const { t } = useTranslation()
 
@@ -88,13 +89,16 @@ export const useApishipConnectionsTableColumns = (
         cell: ({ row }) => {
           return (
             <div className="flex w-full min-w-[40px] justify-end">
-              <ApishipConnectionActions apishipConnection={row.original} />
+              <ApishipConnectionActions
+                apishipConnection={row.original}
+                providerId={providerId}
+              />
             </div>
           )
         },
         size: 48,
       }),
     ],
-    [providers, t]
+    [providers, providerId, t]
   )
 }

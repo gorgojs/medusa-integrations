@@ -3,27 +3,17 @@ jest.mock("@gorgo/telemetry", () => ({
 }))
 
 jest.mock("../../../../workflows", () => ({
-  getApishipClientConfigWorkflow: jest.fn(),
-  getApishipOptionsWorkflow: jest.fn(),
   getCalculationWorkflow: jest.fn(),
   saveCalculationWorkflow: jest.fn(),
   getStockLocationWorkflow: jest.fn(),
   getShippingOptionWorkflow: jest.fn(),
 }))
 
-jest.mock("../../../../lib/client", () => ({
-  createApishipClient: jest.fn(),
-}))
-
 import {
-  getApishipClientConfigWorkflow,
-  getApishipOptionsWorkflow,
   getStockLocationWorkflow,
   getShippingOptionWorkflow,
 } from "../../../../workflows"
-import { createApishipClient } from "../../../../lib/client"
-import ApishipService from "../../services/apiship"
-import { makeLogger, makeApishipOptions, makeApishipClient, makeOrder, baseStockLocation } from "./test-utils"
+import { makeApishipOptions, makeApishipClient, makeOrder, baseStockLocation, makeProvider } from "./test-utils"
 
 const baseData = {
   apishipData: {
@@ -42,23 +32,13 @@ const baseShippingOption = {
   data: { deliveryType: 1, pickupType: 1 },
 }
 
-function setupWorkflowMocks(
-  client: ReturnType<typeof makeApishipClient>,
-  apishipOptionsOverride?: any
-) {
-  ;(getApishipClientConfigWorkflow as unknown as jest.Mock).mockReturnValue({
-    run: jest.fn().mockResolvedValue({ result: { token: "test-token", isTest: true } }),
-  })
-  ;(getApishipOptionsWorkflow as unknown as jest.Mock).mockReturnValue({
-    run: jest.fn().mockResolvedValue({ result: apishipOptionsOverride ?? makeApishipOptions() }),
-  })
+function setupWorkflowMocks() {
   ;(getStockLocationWorkflow as unknown as jest.Mock).mockReturnValue({
     run: jest.fn().mockResolvedValue({ result: baseStockLocation }),
   })
   ;(getShippingOptionWorkflow as unknown as jest.Mock).mockReturnValue({
     run: jest.fn().mockResolvedValue({ result: baseShippingOption }),
   })
-  ;(createApishipClient as unknown as jest.Mock).mockReturnValue(client)
 }
 
 describe("ApishipBase.createFulfillment", () => {
@@ -67,12 +47,12 @@ describe("ApishipBase.createFulfillment", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    service = new (ApishipService as any)({ logger: makeLogger() }, {})
     apishipClient = makeApishipClient()
+    service = makeProvider(makeApishipOptions(), apishipClient)
   })
 
   it("calls addOrder and returns orderId in result.data", async () => {
-    setupWorkflowMocks(apishipClient)
+    setupWorkflowMocks()
     apishipClient.ordersApi.addOrder.mockResolvedValue({ data: { orderId: 9999 } })
     apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
       data: { order: { providerNumber: "CDEK-123", trackingUrl: "https://track.cdek.ru/123" } },
@@ -93,7 +73,7 @@ describe("ApishipBase.createFulfillment", () => {
   })
 
   it("result.labels contains tracking_number, tracking_url, label_url", async () => {
-    setupWorkflowMocks(apishipClient)
+    setupWorkflowMocks()
     apishipClient.ordersApi.addOrder.mockResolvedValue({ data: { orderId: 9999 } })
     apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
       data: { order: { providerNumber: "CDEK-123", trackingUrl: "https://track.cdek.ru/123" } },
@@ -131,7 +111,7 @@ describe("ApishipBase.createFulfillment", () => {
         point: { id: "42" },
       },
     }
-    setupWorkflowMocks(apishipClient)
+    setupWorkflowMocks()
     ;(getShippingOptionWorkflow as unknown as jest.Mock).mockReturnValue({
       run: jest.fn().mockResolvedValue({ result: shippingOptionPoint }),
     })
@@ -150,7 +130,7 @@ describe("ApishipBase.createFulfillment", () => {
   })
 
   it("wraps addOrder errors with context message", async () => {
-    setupWorkflowMocks(apishipClient)
+    setupWorkflowMocks()
     apishipClient.ordersApi.addOrder.mockRejectedValue(new Error("Connection refused"))
 
     await expect(
@@ -161,7 +141,8 @@ describe("ApishipBase.createFulfillment", () => {
   it("throws when sender country_code is missing (assertOrderOptions_)", async () => {
     const invalidOptions = makeApishipOptions()
     invalidOptions.settings.default_sender_settings.country_code = ""
-    setupWorkflowMocks(apishipClient, invalidOptions)
+    service = makeProvider(invalidOptions, apishipClient)
+    setupWorkflowMocks()
 
     await expect(
       service.createFulfillment(baseData, [], makeOrder(), baseFulfillment)
@@ -180,7 +161,8 @@ describe("ApishipBase.createFulfillment", () => {
       }),
     })
     invalidOptions.settings.default_sender_settings.address_string = ""
-    setupWorkflowMocks(apishipClient, invalidOptions)
+    service = makeProvider(invalidOptions, apishipClient)
+    setupWorkflowMocks()
     ;(getStockLocationWorkflow as unknown as jest.Mock).mockReturnValue({
       run: jest.fn().mockResolvedValue({
         result: {

@@ -8,12 +8,14 @@ type ApishipDefaultProductSizesEditProps = {
   open: boolean
   onClose: () => void
   apishipOptions?: ApishipHttpTypes.AdminUpdateApishipOptions
+  providerId?: string
 }
 
 export const ApishipDefaultProductSizesEdit = ({
   open,
   onClose,
   apishipOptions,
+  providerId,
 }: ApishipDefaultProductSizesEditProps) => {
   const { t } = useTranslation()
 
@@ -36,6 +38,7 @@ export const ApishipDefaultProductSizesEdit = ({
         <EditApishipDefaultProductSizesForm
           apishipOptions={apishipOptions}
           onClose={onClose}
+          providerId={providerId}
         />
       </Drawer.Content>
     </Drawer>

@@ -2,14 +2,16 @@ import {
   createWorkflow,
   WorkflowResponse,
 } from "@medusajs/framework/workflows-sdk"
-import { getStoreStep } from "./steps/get-store"
 import { getApishipOptionsStep } from "./steps/get-apiship-options"
+
+export type GetApishipOptionsWorkflowInput = {
+  provider_id?: string
+}
 
 export const getApishipOptionsWorkflow = createWorkflow(
   "get-apiship-options",
-  () => {
-    const store = getStoreStep()
-    const apishipOptions = getApishipOptionsStep({store})
+  (input: GetApishipOptionsWorkflowInput = {}) => {
+    const apishipOptions = getApishipOptionsStep(input)
     return new WorkflowResponse(apishipOptions)
   }
 )

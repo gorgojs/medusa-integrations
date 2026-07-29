@@ -7,12 +7,14 @@ type ApishipPaymentAndTaxEditProps = {
   open: boolean
   onClose: () => void
   apishipOptions?: ApishipHttpTypes.AdminUpdateApishipOptions
+  providerId?: string
 }
 
 export const ApishipPaymentAndTaxEdit = ({
   open,
   onClose,
   apishipOptions,
+  providerId,
 }: ApishipPaymentAndTaxEditProps) => {
   const { t } = useTranslation()
 
@@ -35,6 +37,7 @@ export const ApishipPaymentAndTaxEdit = ({
         <EditApishipPaymentAndTaxForm
           apishipOptions={apishipOptions}
           onClose={onClose}
+          providerId={providerId}
         />
       </Drawer.Content>
     </Drawer>

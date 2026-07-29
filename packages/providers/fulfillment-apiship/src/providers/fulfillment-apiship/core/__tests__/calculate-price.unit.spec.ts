@@ -3,27 +3,17 @@ jest.mock("@gorgo/telemetry", () => ({
 }))
 
 jest.mock("../../../../workflows", () => ({
-  getApishipClientConfigWorkflow: jest.fn(),
-  getApishipOptionsWorkflow: jest.fn(),
   getCalculationWorkflow: jest.fn(),
   saveCalculationWorkflow: jest.fn(),
   getStockLocationWorkflow: jest.fn(),
   getShippingOptionWorkflow: jest.fn(),
 }))
 
-jest.mock("../../../../lib/client", () => ({
-  createApishipClient: jest.fn(),
-}))
-
 import {
-  getApishipClientConfigWorkflow,
-  getApishipOptionsWorkflow,
   getCalculationWorkflow,
   saveCalculationWorkflow,
 } from "../../../../workflows"
-import { createApishipClient } from "../../../../lib/client"
-import ApishipService from "../../services/apiship"
-import { makeLogger, makeApishipOptions, makeApishipClient } from "./test-utils"
+import { makeApishipOptions, makeApishipClient, makeProvider } from "./test-utils"
 
 const mockCalculatorResponse = {
   deliveryToDoor: [
@@ -79,20 +69,13 @@ const baseContext = {
   ],
 } as any
 
-function setupWorkflowMocks(client: ReturnType<typeof makeApishipClient>, cacheResult: any = null) {
-  ;(getApishipClientConfigWorkflow as unknown as jest.Mock).mockReturnValue({
-    run: jest.fn().mockResolvedValue({ result: { token: "test-token", isTest: true } }),
-  })
-  ;(getApishipOptionsWorkflow as unknown as jest.Mock).mockReturnValue({
-    run: jest.fn().mockResolvedValue({ result: makeApishipOptions() }),
-  })
+function setupWorkflowMocks(cacheResult: any = null) {
   ;(getCalculationWorkflow as unknown as jest.Mock).mockReturnValue({
     run: jest.fn().mockResolvedValue({ result: cacheResult }),
   })
   ;(saveCalculationWorkflow as unknown as jest.Mock).mockReturnValue({
     run: jest.fn().mockResolvedValue({}),
   })
-  ;(createApishipClient as unknown as jest.Mock).mockReturnValue(client)
 }
 
 describe("ApishipBase.calculatePrice", () => {
@@ -101,12 +84,12 @@ describe("ApishipBase.calculatePrice", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    service = new (ApishipService as any)({ logger: makeLogger() }, {})
     apishipClient = makeApishipClient()
+    service = makeProvider(makeApishipOptions(), apishipClient)
   })
   
   it("returns cached result without calling calculator API", async () => {
-    setupWorkflowMocks(apishipClient, mockCalculatorResponse)
+    setupWorkflowMocks(mockCalculatorResponse)
 
     const result = await service.calculatePrice(baseOptionData, {}, baseContext)
 
@@ -115,7 +98,7 @@ describe("ApishipBase.calculatePrice", () => {
   })
   
   it("calls calculator API on cache miss and returns cheapest tariff price", async () => {
-    setupWorkflowMocks(apishipClient)
+    setupWorkflowMocks()
     apishipClient.calculatorApi.getCalculator.mockResolvedValue({
       data: mockCalculatorResponse,
     })
@@ -132,7 +115,7 @@ describe("ApishipBase.calculatePrice", () => {
 
   it("saves result to cache after a successful API call", async () => {
     const saveFn = jest.fn().mockResolvedValue({})
-    setupWorkflowMocks(apishipClient)
+    setupWorkflowMocks()
     ;(saveCalculationWorkflow as unknown as jest.Mock).mockReturnValue({ run: saveFn })
     apishipClient.calculatorApi.getCalculator.mockResolvedValue({
       data: mockCalculatorResponse,
@@ -148,7 +131,7 @@ describe("ApishipBase.calculatePrice", () => {
   })
 
   it("uses chosen tariff deliveryCost from data.apishipData.tariff when available", async () => {
-    setupWorkflowMocks(apishipClient, mockCalculatorResponse)
+    setupWorkflowMocks(mockCalculatorResponse)
 
     const dataWithTariff = {
       apishipData: {
@@ -162,7 +145,7 @@ describe("ApishipBase.calculatePrice", () => {
   })
 
   it("uses deliveryToPoint tariffs when deliveryType is 2", async () => {
-    setupWorkflowMocks(apishipClient)
+    setupWorkflowMocks()
     apishipClient.calculatorApi.getCalculator.mockResolvedValue({
       data: mockCalculatorResponse,
     })
@@ -180,7 +163,7 @@ describe("ApishipBase.calculatePrice", () => {
       capturedKey = input.key
       return Promise.resolve({})
     })
-    setupWorkflowMocks(apishipClient)
+    setupWorkflowMocks()
     ;(saveCalculationWorkflow as unknown as jest.Mock).mockReturnValue({ run: saveFn })
     apishipClient.calculatorApi.getCalculator.mockResolvedValue({
       data: mockCalculatorResponse,
@@ -192,7 +175,7 @@ describe("ApishipBase.calculatePrice", () => {
   })
 
   it("wraps calculator API errors with context message", async () => {
-    setupWorkflowMocks(apishipClient)
+    setupWorkflowMocks()
     apishipClient.calculatorApi.getCalculator.mockRejectedValue(
       new Error("Network timeout")
     )

@@ -20,6 +20,7 @@ import {
   createApishipClient,
   type ApishipClient,
 } from "../../../lib/client"
+import { ProviderKeys } from "../../../types"
 import type {
   ApishipOptionsDTO,
   DeepPartial,
@@ -31,38 +32,53 @@ import {
   hashObject
 } from "../utils"
 import {
-  getApishipClientConfigWorkflow,
-  getApishipOptionsWorkflow,
   getShippingOptionWorkflow,
   getStockLocationWorkflow,
   getCalculationWorkflow,
   saveCalculationWorkflow
 } from "../../../workflows"
+import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
 type InjectedDependencies = {
   logger: Logger
 }
 import axios, { AxiosError } from "axios"
 
 class ApishipBase extends AbstractFulfillmentProviderService {
-  private static telemetry_ = createTelemetryClient({ packageDir: __dirname })
   protected logger_: Logger
+  protected instanceId_: string | null
+  private static telemetry_ = createTelemetryClient({ packageDir: __dirname })
 
+  /**
+   * Validate options passed to the provider.
+   */
   static validateOptions(): void {
     ApishipBase.telemetry_.track("plugin.started")
   }
 
-  constructor({ logger }: InjectedDependencies, _options: unknown) {
+  /**
+   * Construct a new instance of the ApishipBase provider.
+   */
+  constructor({ logger }: InjectedDependencies, options?: Record<string, unknown>) {
     super()
     this.logger_ = logger
+    this.instanceId_ = (options?.id as string | undefined) ?? null
   }
 
+  /**
+   * Get Apiship client.
+   */
   private async getApishipClient_(): Promise<ApishipClient> {
-    const { result: apishipClientConfig } =
-      await getApishipClientConfigWorkflow().run()
+    const { token, is_test } = await resolveIntegrationOptions<DeepPartial<ApishipOptionsDTO>>({
+      identifier: ProviderKeys.APISHIP,
+      instance_id: this.instanceId_,
+    })
 
-    return createApishipClient(apishipClientConfig)
+    return createApishipClient({ token: token!, isTest: !!is_test })
   }
 
+  /** 
+   * Normalize Apiship options.
+   */
   private normalizeApishipOptions_(
     apishipOptions: DeepPartial<ApishipOptionsDTO>
   ): ApishipOptionsDTO {
@@ -130,6 +146,9 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     }
   }
 
+  /** 
+   * Assert Order options.
+   */
   private assertOrderOptions_(apishipOptions: ApishipOptionsDTO) {
     const defaultSenderSettings =
       apishipOptions.settings.default_sender_settings
@@ -159,11 +178,20 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     }
   }
 
+  /** 
+   * Get Apiship integration options from the Medusa integration provider.
+   */
   private async getApishipOptions_(): Promise<ApishipOptionsDTO> {
-    const { result: apishipOptions } = await getApishipOptionsWorkflow().run()
+    const apishipOptions = await resolveIntegrationOptions<DeepPartial<ApishipOptionsDTO>>({
+      identifier: ProviderKeys.APISHIP,
+      instance_id: this.instanceId_,
+    })
     return this.normalizeApishipOptions_(apishipOptions)
   }
 
+  /**
+   * Calculate price.
+   */
   async calculatePrice(
     optionData: CalculateShippingOptionPriceDTO["optionData"],
     data: CalculateShippingOptionPriceDTO["data"],
@@ -186,7 +214,7 @@ class ApishipBase extends AbstractFulfillmentProviderService {
       cartId,
       ...calculatorRequest
     })
-    const key = `apiship:calc:${hash}:${shippingOptionId}`
+    const key = `apiship:calc:${this.instanceId_ ?? "default"}:${hash}:${shippingOptionId}`
 
     const { result: cache } = await getCalculationWorkflow().run({
       input: { key },
@@ -305,6 +333,9 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     }
   }
 
+  /**
+   * Pick tariff id.
+   */
   async pickTariffId(providerKey: string): Promise<number> {
     this.logger_.debug(`Apiship.pickTariffId input: ${JSON.stringify(providerKey)}`)
     const fields = "id,tariffId,providerKey,name"
@@ -507,12 +538,18 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     }
   }
 
+  /**
+   * Get return documents.
+   */
   async getReturnDocuments(data: any): Promise<never[]> {
     this.logger_.debug(`Apiship.getReturnDocuments input: ${JSON.stringify(data, null, 2)}`)
 
     return [] as never[]
   }
 
+  /**
+   * Retrieve documents.
+   */
   async retrieveDocuments(
     fulfillmentData: any,
     documentType: any
@@ -522,6 +559,9 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     return
   }
 
+  /**
+   * Validate fulfillment data.
+   */
   async validateFulfillmentData(
     optionData: any,
     data: any,

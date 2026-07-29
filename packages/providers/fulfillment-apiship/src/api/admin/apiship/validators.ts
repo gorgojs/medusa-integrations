@@ -11,6 +11,14 @@ const DeliveryCostVatSchema = z.union([
   z.literal(22),
 ])
 
+// Registration key (`int_apiship[_<instance_id>]`) of the integration instance a request
+// targets — every admin route below accepts it as an optional query param, defaulting to the
+// base instance when omitted (see DEFAULT_APISHIP_PROVIDER_ID).
+export type AdminApishipProviderIdQueryType = z.infer<typeof AdminApishipProviderIdQuery>
+export const AdminApishipProviderIdQuery = z.object({
+  provider_id: z.string().optional(),
+})
+
 export const AdminGetApishipPointsParams = createFindParams({
   limit: 50,
   offset: 0,
@@ -18,6 +26,7 @@ export const AdminGetApishipPointsParams = createFindParams({
   z.object({
     key: z.string().optional(),
     filter: z.string().optional(),
+    provider_id: z.string().optional(),
   })
 )
 

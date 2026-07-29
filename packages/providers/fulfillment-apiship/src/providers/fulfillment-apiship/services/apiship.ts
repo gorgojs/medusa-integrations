@@ -1,9 +1,9 @@
 import ApishipBase from "../core/apiship-base"
 import { FulfillmentOption } from "@medusajs/framework/types"
-import { FulfillmentProviderKeys } from "../../../types/apiship"
+import { ProviderKeys } from "../../../types"
 
 class ApishipService extends ApishipBase {
-  static identifier = FulfillmentProviderKeys.APISHIP
+  static identifier = ProviderKeys.APISHIP
 
   constructor(_, options) {
     super(_, options)

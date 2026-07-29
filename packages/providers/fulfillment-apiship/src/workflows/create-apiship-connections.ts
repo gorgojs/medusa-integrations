@@ -1,46 +1,38 @@
 import { createStep, createWorkflow, StepResponse, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
-import { updateStoresStep } from "@medusajs/medusa/core-flows"
+import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
 import { ulid } from "ulid"
 import type { DeepPartial, ApishipOptionsDTO } from "../types/apiship"
+import { DEFAULT_APISHIP_PROVIDER_ID } from "../types/apiship"
 import type { AdminCreateApishipConnection } from "../types/http"
-import { getStoreStep } from "./steps/get-store"
+import { upsertApishipConfigStep } from "./steps/upsert-apiship-config"
 
-export type ComposeCreatedApishipConnectionsStepInput = {
-  store: {
-    id: string
-    metadata?: Record<string, any> | null
-  }
-  input: CreateApishipConnectionsWorkflowInput
-}
+export type ComposeCreatedApishipConnectionsStepInput = CreateApishipConnectionsWorkflowInput
 
 const composeCreatedApishipConnectionsStep = createStep(
   "compose-created-apiship-connections-step",
-  async ({ store, input }: ComposeCreatedApishipConnectionsStepInput) => {
-    const existingMetadata = (store.metadata ?? {}) as Record<string, any>
-    const existingApiship =
-      (existingMetadata?.apiship ?? {}) as DeepPartial<ApishipOptionsDTO>
+  async ({ connections, provider_id }: ComposeCreatedApishipConnectionsStepInput, { container }) => {
+    const service: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
+    const existing = (await service.getStoredValues(
+      provider_id ?? DEFAULT_APISHIP_PROVIDER_ID
+    )) as DeepPartial<ApishipOptionsDTO>
 
-    const existingConnections = existingApiship.settings?.connections ?? []
+    const existingConnections = existing.settings?.connections ?? []
 
-    const createdConnections = input.connections.map((connection) => ({
+    const createdConnections = connections.map((connection) => ({
       id: `ascon_${ulid()}`,
       ...connection
     }))
 
-    const nextMetadata = {
-      ...existingMetadata,
-      apiship: {
-        ...existingApiship,
-        settings: {
-          ...(existingApiship.settings ?? {}),
-          connections: [...existingConnections, ...createdConnections],
-        },
+    const merged = {
+      ...existing,
+      settings: {
+        ...(existing.settings ?? {}),
+        connections: [...existingConnections, ...createdConnections],
       },
     }
 
     return new StepResponse({
-      storeId: store.id,
-      metadata: nextMetadata,
+      values: merged,
       connections: createdConnections,
     })
   }
@@ -48,20 +40,14 @@ const composeCreatedApishipConnectionsStep = createStep(
 
 export type CreateApishipConnectionsWorkflowInput = {
   connections: AdminCreateApishipConnection[]
+  provider_id?: string
 }
 
 export const createApishipConnectionsWorkflow = createWorkflow(
   "create-apiship-connections",
   (input: CreateApishipConnectionsWorkflowInput) => {
-    const store = getStoreStep()
-    const { storeId, metadata, connections } = composeCreatedApishipConnectionsStep({
-      store,
-      input,
-    })
-    updateStoresStep({
-      selector: { id: storeId },
-      update: { metadata },
-    })
+    const { values, connections } = composeCreatedApishipConnectionsStep(input)
+    upsertApishipConfigStep({ values, provider_id: input.provider_id })
     return new WorkflowResponse(connections)
   }
 )

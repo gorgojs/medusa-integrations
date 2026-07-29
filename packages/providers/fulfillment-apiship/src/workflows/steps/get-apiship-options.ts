@@ -1,17 +1,21 @@
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
-import type { StoreDTO } from "@medusajs/framework/types"
+import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
 import type { DeepPartial, ApishipOptionsDTO } from "../../types/apiship"
+import { DEFAULT_APISHIP_PROVIDER_ID } from "../../types/apiship"
 
 export type GetApishipOptionsStepInput = {
-  store: StoreDTO
+  provider_id?: string
 }
 
 export const getApishipOptionsStep = createStep(
   "get-apiship-options-step",
-  async ({ store }: GetApishipOptionsStepInput) => {
-    const metadata = store.metadata
-    const apishipOptions = (metadata?.apiship ?? {}) as DeepPartial<ApishipOptionsDTO>
-    const connections = (apishipOptions.settings?.connections ?? []).flatMap(
+  async ({ provider_id }: GetApishipOptionsStepInput = {}, { container }) => {
+    const service: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
+    const stored = (await service.getStoredValues(
+      provider_id ?? DEFAULT_APISHIP_PROVIDER_ID
+    )) as DeepPartial<ApishipOptionsDTO>
+
+    const connections = (stored.settings?.connections ?? []).flatMap(
       (connection) => {
         if (
           !connection?.id ||
@@ -37,33 +41,33 @@ export const getApishipOptionsStep = createStep(
     )
 
     return new StepResponse({
-      token: apishipOptions.token ?? "",
-      is_test: apishipOptions.is_test ?? false,
+      token: stored.token ?? "",
+      is_test: stored.is_test ?? false,
       settings: {
         connections,
         default_sender_settings: {
           country_code:
-            apishipOptions.settings?.default_sender_settings?.country_code ?? "",
+            stored.settings?.default_sender_settings?.country_code ?? "",
           address_string:
-            apishipOptions.settings?.default_sender_settings?.address_string ??
+            stored.settings?.default_sender_settings?.address_string ??
             "",
           contact_name:
-            apishipOptions.settings?.default_sender_settings?.contact_name ?? "",
-          phone: apishipOptions.settings?.default_sender_settings?.phone ?? "",
+            stored.settings?.default_sender_settings?.contact_name ?? "",
+          phone: stored.settings?.default_sender_settings?.phone ?? "",
         },
         default_product_sizes: {
           length:
-            apishipOptions.settings?.default_product_sizes?.length ?? 10,
-          width: apishipOptions.settings?.default_product_sizes?.width ?? 10,
+            stored.settings?.default_product_sizes?.length ?? 10,
+          width: stored.settings?.default_product_sizes?.width ?? 10,
           height:
-            apishipOptions.settings?.default_product_sizes?.height ?? 10,
+            stored.settings?.default_product_sizes?.height ?? 10,
           weight:
-            apishipOptions.settings?.default_product_sizes?.weight ?? 20,
+            stored.settings?.default_product_sizes?.weight ?? 20,
         },
         delivery_cost_vat:
-          apishipOptions.settings?.delivery_cost_vat ??
+          stored.settings?.delivery_cost_vat ??
           (-1 as ApishipOptionsDTO["settings"]["delivery_cost_vat"]),
-        is_cod: apishipOptions.settings?.is_cod ?? false,
+        is_cod: stored.settings?.is_cod ?? false,
       },
     })
   }

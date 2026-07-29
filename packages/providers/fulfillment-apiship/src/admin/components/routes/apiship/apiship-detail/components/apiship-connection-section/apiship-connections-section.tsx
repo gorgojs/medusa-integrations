@@ -17,6 +17,7 @@ type ApishipConnectionsSectionProps = {
   apishipOptions?: ApishipHttpTypes.AdminApishipOptions
   onCreate: () => void
   providers: ApishipHttpTypes.AdminApishipProvider[]
+  providerId?: string
 }
 
 const commandHelper = createDataTableCommandHelper()
@@ -26,6 +27,7 @@ export const ApishipConnectionsSection = ({
   apishipOptions,
   onCreate,
   providers,
+  providerId,
 }: ApishipConnectionsSectionProps) => {
   const { t } = useTranslation()
 
@@ -55,7 +57,7 @@ export const ApishipConnectionsSection = ({
     )
   }, [apishipConnections, pagination])
 
-  const columns = useApishipConnectionsTableColumns(providers)
+  const columns = useApishipConnectionsTableColumns(providers, providerId)
 
   const commands = useMemo(() => {
     return [

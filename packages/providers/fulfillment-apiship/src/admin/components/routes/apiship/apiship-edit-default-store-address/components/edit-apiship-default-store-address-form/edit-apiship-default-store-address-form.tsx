@@ -14,6 +14,7 @@ import { countries } from "../../../../../../lib/data/countries"
 type EditApishipDefaultStoreAddressFormProps = {
   apishipOptions?: ApishipHttpTypes.AdminApishipOptions
   onClose: () => void
+  providerId?: string
 }
 
 const EditApishipDefaultStoreAddressSchema = z.object({
@@ -26,6 +27,7 @@ const EditApishipDefaultStoreAddressSchema = z.object({
 export const EditApishipDefaultStoreAddressForm = ({
   apishipOptions,
   onClose,
+  providerId,
 }: EditApishipDefaultStoreAddressFormProps) => {
   const { t } = useTranslation()
 
@@ -43,7 +45,7 @@ export const EditApishipDefaultStoreAddressForm = ({
     resolver: zodResolver(EditApishipDefaultStoreAddressSchema),
   })
 
-  const { mutateAsync, isPending } = useUpdateApishipOptions()
+  const { mutateAsync, isPending } = useUpdateApishipOptions(providerId)
 
   useEffect(() => {
     form.reset({
