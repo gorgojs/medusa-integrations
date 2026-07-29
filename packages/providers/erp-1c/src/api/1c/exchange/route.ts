@@ -3,7 +3,7 @@ import * as fs from "fs/promises";
 import * as path from "path";
 import { MedusaError, Modules } from "@medusajs/utils";
 import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration";
-import { ONEC_INTEGRATION_IDENTIFIER } from "../../../providers/integration-1c/services";
+import { ProviderKeys } from "../../../types";
 import {
   decompressAndExtract,
   ensureUploadDir,
@@ -42,7 +42,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     req.scope.resolve(INTEGRATION_MODULE);
 
   const resolved = await integrationService.getResolvedOptions(
-    ONEC_INTEGRATION_IDENTIFIER
+    ProviderKeys.ONEC
   );
 
   const { type, mode } = req.query as {

@@ -1,8 +1,9 @@
 import YookassaBase from "../core/yookassa-base"
-import { PaymentOptions, PaymentProviderKeys } from "../types"
+import { PaymentOptions } from "../types"
+import { ProviderKeys } from "../../../types"
 
 class YookassaService extends YookassaBase {
-  static identifier = PaymentProviderKeys.YOOKASSA
+  static identifier = ProviderKeys.YOOKASSA
 
   constructor(_, options) {
     super(_, options)

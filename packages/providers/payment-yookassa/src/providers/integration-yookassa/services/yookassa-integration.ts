@@ -3,6 +3,7 @@ import type { IntegrationDescriptorInput } from "@gorgo/medusa-integration"
 import { YooCheckout } from "@a2seven/yoo-checkout"
 import { YOOKASSA_ICON } from "../icon"
 import { validateVatCode, validateTaxSystemCode } from "../utils"
+import { ProviderKeys } from "../../../types"
 
 const descriptor = defineIntegration({
   category: "payment",
@@ -106,7 +107,7 @@ const descriptor = defineIntegration({
 export type YookassaOptions = z.infer<typeof descriptor.optionsSchema>
 
 export class YookassaIntegrationProvider extends AbstractIntegrationProvider {
-  static identifier = "yookassa"
+  static identifier = ProviderKeys.YOOKASSA
 
   get descriptor(): IntegrationDescriptorInput {
     return descriptor

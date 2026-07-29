@@ -10,8 +10,7 @@ import {
 import { createReadStream } from "fs";
 import { MedusaError } from "@medusajs/utils";
 import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration";
-import { ONEC_INTEGRATION_IDENTIFIER } from "../../providers/integration-1c/services";
-import { ParseFileStepInput } from "../../types";
+import { ParseFileStepInput, ProviderKeys } from "../../types";
 import { Logger } from "@medusajs/framework/types";
 
 export const parseImportFilesStep = createStep(
@@ -62,7 +61,7 @@ export const parseImportFilesStep = createStep(
     const integrationService: IntegrationModuleService =
       container.resolve(INTEGRATION_MODULE);
     const resolved = await integrationService.getResolvedOptions(
-      ONEC_INTEGRATION_IDENTIFIER
+      ProviderKeys.ONEC
     );
     if (!resolved) {
       throw new MedusaError(

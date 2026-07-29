@@ -5,6 +5,7 @@ import { XMLParser } from "fast-xml-parser"
 import { ROBOKASSA_ICON } from "../icon"
 import { requiredWhenReceipt } from "../utils"
 import { createSignature } from "../../payment-robokassa/utils"
+import { ProviderKeys } from "../../../types"
 
 const descriptor = defineIntegration({
   category: "payment",
@@ -150,7 +151,7 @@ const descriptor = defineIntegration({
 export type RobokassaOptions = z.infer<typeof descriptor.optionsSchema>
 
 export class RobokassaIntegrationProvider extends AbstractIntegrationProvider {
-  static identifier = "robokassa"
+  static identifier = ProviderKeys.ROBOKASSA
 
   get descriptor(): IntegrationDescriptorInput {
     return descriptor

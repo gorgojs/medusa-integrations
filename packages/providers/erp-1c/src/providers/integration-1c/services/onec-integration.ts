@@ -1,8 +1,7 @@
 import { AbstractIntegrationProvider, defineIntegration } from "@gorgo/medusa-integration"
 import type { IntegrationDescriptorInput, z } from "@gorgo/medusa-integration"
 import { ONEC_ICON } from "../icon"
-
-export const ONEC_INTEGRATION_IDENTIFIER = "1c"
+import { ProviderKeys } from "../../../types"
 
 const descriptor = defineIntegration({
   category: "erp",
@@ -114,7 +113,7 @@ const descriptor = defineIntegration({
 export type OnecOptions = z.infer<typeof descriptor.optionsSchema>
 
 export class OnecIntegrationProvider extends AbstractIntegrationProvider {
-  static identifier = ONEC_INTEGRATION_IDENTIFIER
+  static identifier = ProviderKeys.ONEC
 
   get descriptor(): IntegrationDescriptorInput {
     return descriptor

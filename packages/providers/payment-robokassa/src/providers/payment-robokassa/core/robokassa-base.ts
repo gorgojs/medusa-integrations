@@ -18,7 +18,6 @@ import {
 } from "@medusajs/framework/types"
 import {
   Payment,
-  PaymentProviderKeys,
   Receipt,
   RobokassaEvent,
 } from "../types"
@@ -32,6 +31,7 @@ import {
 import { createTelemetryClient } from "@gorgo/telemetry"
 import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
 import { RobokassaOptions } from "../../integration-robokassa/services/robokassa-integration"
+import { ProviderKeys } from "../../../types"
 
 const PaymentStateCodesMap: Record<number, PaymentSessionStatus> = {
   3: PaymentSessionStatus.PENDING,
@@ -76,7 +76,7 @@ abstract class RobokassaBase extends AbstractPaymentProvider {
    */
   protected async resolveOptions(): Promise<RobokassaOptions> {
     return resolveIntegrationOptions({
-      identifier: RobokassaBase.identifier,
+      identifier: ProviderKeys.ROBOKASSA,
       instance_id: this.instanceId_
     })
   }
