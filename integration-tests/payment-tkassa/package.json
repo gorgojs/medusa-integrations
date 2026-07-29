@@ -8,6 +8,7 @@
     "test": "yarn run -T turbo run test:integration:http test:integration:modules"
   },
   "dependencies": {
+    "@gorgo/medusa-integration": "workspace:*",
     "@gorgo/medusa-payment-tkassa": "workspace:*",
     "@medusajs/framework": "2.18.0",
     "@medusajs/medusa": "2.18.0",
