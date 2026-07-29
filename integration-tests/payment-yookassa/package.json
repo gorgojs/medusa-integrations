@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@a2seven/yoo-checkout": "^1.1.4",
+    "@gorgo/medusa-integration": "workspace:*",
     "@gorgo/medusa-payment-yookassa": "workspace:*",
     "@medusajs/framework": "2.18.0",
     "@medusajs/medusa": "2.18.0",
