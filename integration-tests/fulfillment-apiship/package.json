@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@gorgo/medusa-fulfillment-apiship": "workspace:*",
+    "@gorgo/medusa-integration": "workspace:*",
     "@medusajs/framework": "2.18.0",
     "@medusajs/medusa": "2.18.0",
     "@medusajs/test-utils": "2.18.0",

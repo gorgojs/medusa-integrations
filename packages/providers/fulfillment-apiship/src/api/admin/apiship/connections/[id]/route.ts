@@ -8,12 +8,14 @@ import {
   AdminUpdateApishipConnection,
   AdminApishipConnectionDeleteResponse
 } from "../../../../../types/http/apiship"
+import { AdminApishipProviderIdQueryType } from "../../validators"
 
 export const GET = async (
-  req: MedusaRequest,
+  req: MedusaRequest<unknown, AdminApishipProviderIdQueryType>,
   res: MedusaResponse<AdminApishipConnectionResponse>
 ) => {
-  const connection = await refetchConnection(req.params.id)
+  const { provider_id } = req.validatedQuery
+  const connection = await refetchConnection(req.params.id, provider_id)
 
   if (!connection) {
     throw new MedusaError(
@@ -26,10 +28,11 @@ export const GET = async (
 }
 
 export const POST = async (
-  req: MedusaRequest<AdminUpdateApishipConnection>,
+  req: MedusaRequest<AdminUpdateApishipConnection, AdminApishipProviderIdQueryType>,
   res: MedusaResponse<AdminApishipConnectionResponse>
 ) => {
-  const existingConnection = await refetchConnection(req.params.id)
+  const { provider_id } = req.validatedQuery
+  const existingConnection = await refetchConnection(req.params.id, provider_id)
   if (!existingConnection) {
     throw new MedusaError(
       MedusaError.Types.NOT_FOUND,
@@ -40,23 +43,25 @@ export const POST = async (
   const { result } = await updateApishipConnectionWorkflow(req.scope).run({
     input: {
       id: req.params.id,
+      provider_id,
       update: req.validatedBody
     },
   })
 
-  const connection = await refetchConnection(result.id)
+  const connection = await refetchConnection(result.id, provider_id)
 
   res.status(200).json({ connection })
 }
 
 export const DELETE = async (
-  req: MedusaRequest,
+  req: MedusaRequest<unknown, AdminApishipProviderIdQueryType>,
   res: MedusaResponse<AdminApishipConnectionDeleteResponse>
 ) => {
   const id = req.params.id
+  const { provider_id } = req.validatedQuery
 
   await deleteApishipConnectionsWorkflow(req.scope).run({
-    input: { ids: [id] }
+    input: { ids: [id], provider_id }
   })
 
   res.status(200).json({

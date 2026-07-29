@@ -3,29 +3,13 @@ jest.mock("@gorgo/telemetry", () => ({
 }))
 
 jest.mock("../../../../workflows", () => ({
-  getApishipClientConfigWorkflow: jest.fn(),
-  getApishipOptionsWorkflow: jest.fn(),
   getCalculationWorkflow: jest.fn(),
   saveCalculationWorkflow: jest.fn(),
   getStockLocationWorkflow: jest.fn(),
   getShippingOptionWorkflow: jest.fn(),
 }))
 
-jest.mock("../../../../lib/client", () => ({
-  createApishipClient: jest.fn(),
-}))
-
-import { getApishipClientConfigWorkflow } from "../../../../workflows"
-import { createApishipClient } from "../../../../lib/client"
-import ApishipService from "../../services/apiship"
-import { makeLogger, makeApishipClient } from "./test-utils"
-
-function setupClientMock(client: ReturnType<typeof makeApishipClient>) {
-  ;(getApishipClientConfigWorkflow as unknown as jest.Mock).mockReturnValue({
-    run: jest.fn().mockResolvedValue({ result: { token: "test-token", isTest: true } }),
-  })
-  ;(createApishipClient as unknown as jest.Mock).mockReturnValue(client)
-}
+import { makeApishipClient, makeProvider } from "./test-utils"
 
 describe("ApishipBase.getFulfillmentDocuments", () => {
   let service: any
@@ -33,12 +17,11 @@ describe("ApishipBase.getFulfillmentDocuments", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    service = new (ApishipService as any)({ logger: makeLogger() }, {})
     apishipClient = makeApishipClient()
+    service = makeProvider(undefined, apishipClient)
   })
 
   it("calls getWaybills with correct orderId and format, returns waybill file", async () => {
-    setupClientMock(apishipClient)
     const fakeFile = "base64-encoded-pdf-content"
     apishipClient.orderDocsApi.getWaybills.mockResolvedValue({
       data: { waybillItems: [{ file: fakeFile }] },
@@ -54,7 +37,6 @@ describe("ApishipBase.getFulfillmentDocuments", () => {
   })
 
   it("wraps errors with context message", async () => {
-    setupClientMock(apishipClient)
     apishipClient.orderDocsApi.getWaybills.mockRejectedValue(new Error("API error"))
 
     await expect(service.getFulfillmentDocuments({ orderId: 9999 })).rejects.toThrow(
@@ -63,7 +45,6 @@ describe("ApishipBase.getFulfillmentDocuments", () => {
   })
 
   it("throws when waybillItems is an empty array", async () => {
-    setupClientMock(apishipClient)
     apishipClient.orderDocsApi.getWaybills.mockResolvedValue({
       data: { waybillItems: [] },
     })
@@ -74,7 +55,6 @@ describe("ApishipBase.getFulfillmentDocuments", () => {
   })
 
   it("returns undefined when waybillItems is null (optional chaining short-circuits)", async () => {
-    setupClientMock(apishipClient)
     apishipClient.orderDocsApi.getWaybills.mockResolvedValue({
       data: { waybillItems: null },
     })
@@ -84,7 +64,6 @@ describe("ApishipBase.getFulfillmentDocuments", () => {
   })
 
   it("returns undefined when waybillItems is missing from response", async () => {
-    setupClientMock(apishipClient)
     apishipClient.orderDocsApi.getWaybills.mockResolvedValue({
       data: {},
     })

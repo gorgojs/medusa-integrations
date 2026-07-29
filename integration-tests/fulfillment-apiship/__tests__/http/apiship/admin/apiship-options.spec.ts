@@ -3,7 +3,7 @@
  *
  * Tests GET and POST endpoints for ApiShip options management.
  * No live ApiShip API token needed — these endpoints only read/write
- * store metadata (Medusa's built-in store module).
+ * the encrypted config row via @gorgo/medusa-integration's IntegrationModuleService.
  *
  * State management:
  *   medusaIntegrationTestRunner wipes the DB after every it() block.
@@ -14,6 +14,9 @@ import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import jwt from "jsonwebtoken"
 
 jest.setTimeout(120 * 1000)
+
+// Matches the named instance declared in medusa-config.ts (APISHIP_INTEGRATION_ID).
+const OPTIONS_URL = "/admin/apiship/options?provider_id=int_apiship_apiship-1"
 
 medusaIntegrationTestRunner({
   inApp: true,
@@ -57,8 +60,8 @@ medusaIntegrationTestRunner({
     // GET /admin/apiship/options
     // -------------------------------------------------------------------------
     describe("GET /admin/apiship/options", () => {
-      it("returns default options when store has no apiship metadata", async () => {
-        const res = await api.get("/admin/apiship/options", { headers })
+      it("returns default options when apiship is not configured yet", async () => {
+        const res = await api.get(OPTIONS_URL, { headers })
 
         expect(res.status).toBe(200)
         expect(res.data.apiship_options).toBeDefined()
@@ -75,7 +78,7 @@ medusaIntegrationTestRunner({
       })
 
       it("requires authentication — 401 without token", async () => {
-        const res = await api.get("/admin/apiship/options").catch((e: any) => e.response)
+        const res = await api.get(OPTIONS_URL).catch((e: any) => e.response)
 
         expect(res.status).toBe(401)
       })
@@ -87,7 +90,7 @@ medusaIntegrationTestRunner({
     describe("POST /admin/apiship/options", () => {
       it("updates token and is_test, returns merged options", async () => {
         const res = await api.post(
-          "/admin/apiship/options",
+          OPTIONS_URL,
           { token: "live-token-abc", is_test: true },
           { headers }
         )
@@ -102,12 +105,12 @@ medusaIntegrationTestRunner({
 
       it("persists to store — subsequent GET returns updated values", async () => {
         await api.post(
-          "/admin/apiship/options",
+          OPTIONS_URL,
           { token: "my-token", is_test: true },
           { headers }
         )
 
-        const res = await api.get("/admin/apiship/options", { headers })
+        const res = await api.get(OPTIONS_URL, { headers })
 
         expect(res.status).toBe(200)
         expect(res.data.apiship_options.token).toBe("my-token")
@@ -117,7 +120,7 @@ medusaIntegrationTestRunner({
       it("merges partial settings — unrelated fields are preserved", async () => {
         // Establish full state
         await api.post(
-          "/admin/apiship/options",
+          OPTIONS_URL,
           {
             token: "tok",
             is_test: true,
@@ -131,7 +134,7 @@ medusaIntegrationTestRunner({
 
         // Partial update: only sender settings
         await api.post(
-          "/admin/apiship/options",
+          OPTIONS_URL,
           {
             settings: {
               default_sender_settings: {
@@ -145,7 +148,7 @@ medusaIntegrationTestRunner({
           { headers }
         )
 
-        const res = await api.get("/admin/apiship/options", { headers })
+        const res = await api.get(OPTIONS_URL, { headers })
         const opts = res.data.apiship_options
 
         // Original fields must be preserved
@@ -158,7 +161,7 @@ medusaIntegrationTestRunner({
 
       it("updates default_product_sizes without touching sender settings", async () => {
         await api.post(
-          "/admin/apiship/options",
+          OPTIONS_URL,
           {
             token: "tok",
             is_test: false,
@@ -172,12 +175,12 @@ medusaIntegrationTestRunner({
         )
 
         await api.post(
-          "/admin/apiship/options",
+          OPTIONS_URL,
           { settings: { default_product_sizes: { length: 50, width: 30, height: 25, weight: 1000 } } },
           { headers }
         )
 
-        const res = await api.get("/admin/apiship/options", { headers })
+        const res = await api.get(OPTIONS_URL, { headers })
         const opts = res.data.apiship_options
 
         expect(opts.settings.default_product_sizes.length).toBe(50)
@@ -188,7 +191,7 @@ medusaIntegrationTestRunner({
 
       it("returns 400 when is_test is not a boolean", async () => {
         const res = await api
-          .post("/admin/apiship/options", { is_test: "yes" }, { headers })
+          .post(OPTIONS_URL, { is_test: "yes" }, { headers })
           .catch((e: any) => e.response)
 
         expect(res.status).toBe(400)
@@ -196,7 +199,7 @@ medusaIntegrationTestRunner({
 
       it("requires authentication — 401 without token", async () => {
         const res = await api
-          .post("/admin/apiship/options", { token: "tok" })
+          .post(OPTIONS_URL, { token: "tok" })
           .catch((e: any) => e.response)
 
         expect(res.status).toBe(401)

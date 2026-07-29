@@ -3,8 +3,6 @@ jest.mock("@gorgo/telemetry", () => ({
 }))
 
 jest.mock("../../../../workflows", () => ({
-  getApishipClientConfigWorkflow: jest.fn(),
-  getApishipOptionsWorkflow: jest.fn(),
   getCalculationWorkflow: jest.fn(),
   saveCalculationWorkflow: jest.fn(),
   getStockLocationWorkflow: jest.fn(),

@@ -4,12 +4,13 @@ import {
   createWorkflow,
   WorkflowResponse,
   when,
+  transform,
 } from "@medusajs/framework/workflows-sdk"
 import { MedusaError, Modules } from "@medusajs/framework/utils"
 import { AdminApishipProvider } from "../types/http"
-import { getStoreStep } from "./steps/get-store"
 import { validateApishipOptionsStep } from "./steps/validate-apiship-options"
 import { getApishipOptionsStep } from "./steps/get-apiship-options"
+import { resolveApishipProviderIdStep } from "./steps/resolve-apiship-provider-id"
 import { createApishipClient } from "../lib/client"
 
 export type GetApishipProvidersFromCacheStepInput = {
@@ -83,13 +84,30 @@ export const selectProvidersResultStep = createStep(
   }
 )
 
+export type GetApishipProvidersWorkflowInput = {
+  provider_id?: string
+  shipping_option_id?: string
+}
+
 export const getApishipProvidersWorkflow = createWorkflow(
   "get-apiship-providers",
-  () => {
-    const key = "apiship:providers"
+  (input: GetApishipProvidersWorkflowInput = {}) => {
+    const resolvedFromShippingOption = when(
+      input,
+      (input) => !input.provider_id && !!input.shipping_option_id
+    ).then(() => resolveApishipProviderIdStep({ shipping_option_id: input.shipping_option_id! }))
+
+    const provider_id = transform(
+      { input, resolvedFromShippingOption },
+      (data) => data.input.provider_id ?? data.resolvedFromShippingOption
+    )
+
+    const key = transform(
+      { provider_id },
+      (data) => `apiship:providers:${data.provider_id ?? "default"}`
+    )
     const cachedProviders = getApishipProvidersFromCacheStep({ key })
-    const store = getStoreStep()
-    const apishipOptions = getApishipOptionsStep({ store })
+    const apishipOptions = getApishipOptionsStep({ provider_id })
     const apishipClientConfig = validateApishipOptionsStep({
       apishipOptions
     })

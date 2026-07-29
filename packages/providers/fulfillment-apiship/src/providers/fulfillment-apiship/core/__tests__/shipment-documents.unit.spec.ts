@@ -3,30 +3,14 @@ jest.mock("@gorgo/telemetry", () => ({
 }))
 
 jest.mock("../../../../workflows", () => ({
-  getApishipClientConfigWorkflow: jest.fn(),
-  getApishipOptionsWorkflow: jest.fn(),
   getCalculationWorkflow: jest.fn(),
   saveCalculationWorkflow: jest.fn(),
   getStockLocationWorkflow: jest.fn(),
   getShippingOptionWorkflow: jest.fn(),
 }))
 
-jest.mock("../../../../lib/client", () => ({
-  createApishipClient: jest.fn(),
-}))
-
-import { getApishipClientConfigWorkflow } from "../../../../workflows"
-import { createApishipClient } from "../../../../lib/client"
 import ApishipBase from "../apiship-base"
-import ApishipService from "../../services/apiship"
-import { makeLogger, makeApishipClient } from "./test-utils"
-
-function setupClientMock(client: ReturnType<typeof makeApishipClient>) {
-  ;(getApishipClientConfigWorkflow as unknown as jest.Mock).mockReturnValue({
-    run: jest.fn().mockResolvedValue({ result: { token: "test-token", isTest: true } }),
-  })
-  ;(createApishipClient as unknown as jest.Mock).mockReturnValue(client)
-}
+import { makeApishipClient, makeProvider } from "./test-utils"
 
 describe("ApishipBase.getShipmentDocuments", () => {
   let service: any
@@ -35,8 +19,8 @@ describe("ApishipBase.getShipmentDocuments", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    service = new (ApishipService as any)({ logger: makeLogger() }, {})
     apishipClient = makeApishipClient()
+    service = makeProvider(undefined, apishipClient)
     // Make sleep instant so retry tests don't slow down the test suite
     sleepSpy = jest
       .spyOn(ApishipBase.prototype as any, "sleep")
@@ -48,7 +32,6 @@ describe("ApishipBase.getShipmentDocuments", () => {
   })
 
   it("returns label array with tracking_number, tracking_url and label_url when ready on first attempt", async () => {
-    setupClientMock(apishipClient)
     apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
       data: { order: { providerNumber: "CDEK-123", trackingUrl: "https://track.cdek.ru/123" } },
     })
@@ -67,7 +50,6 @@ describe("ApishipBase.getShipmentDocuments", () => {
   })
 
   it("retries getOrderInfo until providerNumber is available", async () => {
-    setupClientMock(apishipClient)
     // First 2 calls: no providerNumber; 3rd call: ready
     apishipClient.ordersApi.getOrderInfo
       .mockResolvedValueOnce({ data: { order: {} } })
@@ -86,7 +68,6 @@ describe("ApishipBase.getShipmentDocuments", () => {
   })
 
   it("retries getLabels until url is available", async () => {
-    setupClientMock(apishipClient)
     apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
       data: { order: { providerNumber: "X1", trackingUrl: "" } },
     })
@@ -102,7 +83,6 @@ describe("ApishipBase.getShipmentDocuments", () => {
   })
 
   it("throws after max attempts when getOrderInfo never returns providerNumber", async () => {
-    setupClientMock(apishipClient)
     // Always returns empty order
     apishipClient.ordersApi.getOrderInfo.mockResolvedValue({ data: { order: {} } })
     apishipClient.orderDocsApi.getLabels.mockResolvedValue({
@@ -117,7 +97,6 @@ describe("ApishipBase.getShipmentDocuments", () => {
   })
 
   it("throws after max attempts when getLabels never returns url", async () => {
-    setupClientMock(apishipClient)
     apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
       data: { order: { providerNumber: "X1", trackingUrl: "" } },
     })
@@ -131,7 +110,6 @@ describe("ApishipBase.getShipmentDocuments", () => {
   })
 
   it("handles empty trackingUrl gracefully (returns empty string)", async () => {
-    setupClientMock(apishipClient)
     apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
       data: { order: { providerNumber: "X2" } }, // no trackingUrl
     })

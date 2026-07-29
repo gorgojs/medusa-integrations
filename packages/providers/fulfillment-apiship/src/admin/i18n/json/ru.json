@@ -11,6 +11,17 @@
     "disabled": "Выключено"
   },
   "apiship": {
+    "name": "ApiShip",
+    "description": "Агрегатор служб доставки ApiShip",
+    "sections": {
+      "credentials": "Доступы",
+      "settings": "Настройки"
+    },
+    "fields": {
+      "token": "API токен",
+      "isTest": "Тестовый режим",
+      "settings": "Настройки"
+    },
     "general": {
       "title": "ApiShip",
       "subtitle": "Настраивайте подключение к сервису ApiShip для расчёта стоимости доставки и оформления заказов.",

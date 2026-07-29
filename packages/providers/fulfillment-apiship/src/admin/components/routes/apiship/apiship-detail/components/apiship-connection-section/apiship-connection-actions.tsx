@@ -8,17 +8,19 @@ import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
 
 type ApishipConnectionActionsProps = {
   apishipConnection: ApishipHttpTypes.AdminApishipConnection
+  providerId?: string
 }
 
 export const ApishipConnectionActions = ({
   apishipConnection,
+  providerId,
 }: ApishipConnectionActionsProps) => {
   const { t } = useTranslation()
 
   const navigate = useNavigate()
   const prompt = usePrompt()
 
-  const { mutateAsync } = useDeleteApishipConnection(apishipConnection.id)
+  const { mutateAsync } = useDeleteApishipConnection(apishipConnection.id, providerId)
 
   const handleDelete = async () => {
     const confirmed = await prompt({

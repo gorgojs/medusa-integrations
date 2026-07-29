@@ -7,14 +7,16 @@ type ApishipConnectionCreateProps = {
   open: boolean
   onClose: () => void
   providers: ApishipHttpTypes.AdminApishipProvider[]
+  providerId?: string
 }
 
 export const ApishipConnectionCreate = ({
   open,
   onClose,
   providers,
+  providerId,
 }: ApishipConnectionCreateProps) => {
-  const { account_connections = [] } = useApishipAccountConnections()
+  const { account_connections = [] } = useApishipAccountConnections(providerId)
 
   return (
     <FocusModal
@@ -31,6 +33,7 @@ export const ApishipConnectionCreate = ({
           onClose={onClose}
           accountConnections={account_connections}
           providers={providers}
+          providerId={providerId}
         />
       </FocusModal.Content>
     </FocusModal>

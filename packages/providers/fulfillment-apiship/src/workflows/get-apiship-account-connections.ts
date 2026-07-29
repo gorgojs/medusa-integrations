@@ -5,7 +5,6 @@ import {
   WorkflowResponse
 } from "@medusajs/framework/workflows-sdk"
 import { MedusaError } from "@medusajs/framework/utils"
-import { getStoreStep } from "./steps/get-store"
 import { getApishipOptionsStep } from "./steps/get-apiship-options"
 import { validateApishipOptionsStep } from "./steps/validate-apiship-options"
 import { createApishipClient } from "../lib/client"
@@ -41,11 +40,14 @@ export const fetchApishipAccountConnectionsStep = createStep(
   }
 )
 
+export type GetApishipAccountConnectionsWorkflowInput = {
+  provider_id?: string
+}
+
 export const getApishipAccountConnectionsWorkflow = createWorkflow(
   "get-apiship-account-connections",
-  () => {
-    const store = getStoreStep()
-    const apishipOptions = getApishipOptionsStep({ store })
+  ({ provider_id }: GetApishipAccountConnectionsWorkflowInput = {}) => {
+    const apishipOptions = getApishipOptionsStep({ provider_id })
     const apishipClientConfig = validateApishipOptionsStep({ apishipOptions })
     const connections = fetchApishipAccountConnectionsStep({ apishipClientConfig })
     return new WorkflowResponse(connections)

@@ -1,8 +1,7 @@
 import { createStep, createWorkflow, StepResponse } from "@medusajs/framework/workflows-sdk"
-import { Modules } from "@medusajs/framework/utils"
-import { updateStoresStep } from "@medusajs/medusa/core-flows"
-import { ApishipOptionsDTO, FulfillmentProviderKeys } from "../types/apiship"
-import { getStoreStep } from "./steps/get-store"
+import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
+import { ApishipOptionsDTO, DEFAULT_APISHIP_PROVIDER_ID } from "../types/apiship"
+import { upsertApishipConfigStep } from "./steps/upsert-apiship-config"
 
 type Primitive = string | number | boolean | bigint | symbol | null | undefined
 
@@ -35,43 +34,30 @@ function deepMerge<T>(base: T, patch: DeepPartial<T>): T {
 }
 
 export type ComposeApishipDataStepInput = {
-  store: {
-    id: string
-    metadata?: Record<string, any> | null
-  }
-  data: DeepPartial<ApishipOptionsDTO>
+  provider_id?: string
+  patch: DeepPartial<ApishipOptionsDTO>
 }
 
 const composeApishipDataStep = createStep(
   "compose-apiship-data-step",
-  async ({ store, data }: ComposeApishipDataStepInput) => {
-    const existingMetadata = (store.metadata ?? {})
-    const existingApiship = (existingMetadata?.apiship ?? {}) as DeepPartial<ApishipOptionsDTO>
-    const mergedApiship = deepMerge(existingApiship, data)
-    const nextMetadata = {
-      ...existingMetadata,
-      [FulfillmentProviderKeys.APISHIP]: mergedApiship,
-    }
-    return new StepResponse({
-      storeId: store.id,
-      metadata: nextMetadata,
-    })
+  async ({ provider_id, patch }: ComposeApishipDataStepInput, { container }) => {
+    const service: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
+    const existing = (await service.getStoredValues(
+      provider_id ?? DEFAULT_APISHIP_PROVIDER_ID
+    )) as DeepPartial<ApishipOptionsDTO>
+    const merged = deepMerge(existing, patch)
+    return new StepResponse(merged)
   }
 )
 
-export type UpdateApishipOptionsWorkflowInput = DeepPartial<ApishipOptionsDTO>
+export type UpdateApishipOptionsWorkflowInput = {
+  provider_id?: string
+} & DeepPartial<ApishipOptionsDTO>
 
 export const updateApishipOptionsWorkflow = createWorkflow(
   "update-apiship-options",
-  (input: UpdateApishipOptionsWorkflowInput) => {
-    const store = getStoreStep()
-    const patchPayload = composeApishipDataStep({
-      store,
-      data: input,
-    })
-    updateStoresStep({
-      selector: { id: patchPayload.storeId },
-      update: { metadata: patchPayload.metadata },
-    })
+  ({ provider_id, ...patch }: UpdateApishipOptionsWorkflowInput) => {
+    const merged = composeApishipDataStep({ provider_id, patch })
+    upsertApishipConfigStep({ values: merged, provider_id })
   }
 )

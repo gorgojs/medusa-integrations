@@ -3,29 +3,13 @@ jest.mock("@gorgo/telemetry", () => ({
 }))
 
 jest.mock("../../../../workflows", () => ({
-  getApishipClientConfigWorkflow: jest.fn(),
-  getApishipOptionsWorkflow: jest.fn(),
   getCalculationWorkflow: jest.fn(),
   saveCalculationWorkflow: jest.fn(),
   getStockLocationWorkflow: jest.fn(),
   getShippingOptionWorkflow: jest.fn(),
 }))
 
-jest.mock("../../../../lib/client", () => ({
-  createApishipClient: jest.fn(),
-}))
-
-import { getApishipClientConfigWorkflow } from "../../../../workflows"
-import { createApishipClient } from "../../../../lib/client"
-import ApishipService from "../../services/apiship"
-import { makeLogger, makeApishipClient } from "./test-utils"
-
-function setupClientMock(client: ReturnType<typeof makeApishipClient>) {
-  ;(getApishipClientConfigWorkflow as unknown as jest.Mock).mockReturnValue({
-    run: jest.fn().mockResolvedValue({ result: { token: "test-token", isTest: true } }),
-  })
-  ;(createApishipClient as unknown as jest.Mock).mockReturnValue(client)
-}
+import { makeApishipClient, makeProvider } from "./test-utils"
 
 describe("ApishipBase.pickTariffId", () => {
   let service: any
@@ -33,12 +17,11 @@ describe("ApishipBase.pickTariffId", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    service = new (ApishipService as any)({ logger: makeLogger() }, {})
     apishipClient = makeApishipClient()
+    service = makeProvider(undefined, apishipClient)
   })
 
   it("returns the numeric id from the first matching tariff", async () => {
-    setupClientMock(apishipClient)
     apishipClient.listsApi.getListTariffs.mockResolvedValue({
       data: {
         rows: [
@@ -54,7 +37,6 @@ describe("ApishipBase.pickTariffId", () => {
   })
 
   it("calls getListTariffs with providerKey filter and required fields", async () => {
-    setupClientMock(apishipClient)
     apishipClient.listsApi.getListTariffs.mockResolvedValue({
       data: { rows: [{ id: 1, tariffId: 1, providerKey: "cdek", name: "Test" }] },
     })
@@ -67,7 +49,6 @@ describe("ApishipBase.pickTariffId", () => {
   })
 
   it("throws when no tariffs are returned", async () => {
-    setupClientMock(apishipClient)
     apishipClient.listsApi.getListTariffs.mockResolvedValue({
       data: { rows: [] },
     })
@@ -78,7 +59,6 @@ describe("ApishipBase.pickTariffId", () => {
   })
 
   it("throws when rows is undefined (API returns no rows key)", async () => {
-    setupClientMock(apishipClient)
     apishipClient.listsApi.getListTariffs.mockResolvedValue({
       data: {},
     })
@@ -87,7 +67,6 @@ describe("ApishipBase.pickTariffId", () => {
   })
 
   it("throws when first tariff has no id", async () => {
-    setupClientMock(apishipClient)
     apishipClient.listsApi.getListTariffs.mockResolvedValue({
       data: { rows: [{ tariffId: 99, providerKey: "cdek", name: "Test" }] }, // no id
     })
@@ -98,7 +77,6 @@ describe("ApishipBase.pickTariffId", () => {
   })
 
   it("converts id to number via Number()", async () => {
-    setupClientMock(apishipClient)
     apishipClient.listsApi.getListTariffs.mockResolvedValue({
       data: { rows: [{ id: "77", tariffId: 1, providerKey: "cdek", name: "Test" }] },
     })
@@ -110,7 +88,6 @@ describe("ApishipBase.pickTariffId", () => {
   })
 
   it("still resolves when getListTariffs throws (catches internally), then throws no-tariffs error", async () => {
-    setupClientMock(apishipClient)
     apishipClient.listsApi.getListTariffs.mockRejectedValue(new Error("API down"))
 
     await expect(service.pickTariffId("cdek")).rejects.toThrow(/No current tariffs found/)
