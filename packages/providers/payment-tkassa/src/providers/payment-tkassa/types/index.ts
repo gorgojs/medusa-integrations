@@ -22,10 +22,6 @@ export interface TkassaEvent extends Partial<Payment> {
   [k: string]: any
 }
 
-export const PaymentProviderKeys = {
-  TKASSA: "tkassa",
-}
-
 export const PaymentStatuses = {
   NEW: "NEW",
   FORM_SHOWED: "FORM_SHOWED",

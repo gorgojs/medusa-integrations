@@ -1,8 +1,10 @@
 import TkassaBase from "../core/tkassa-base"
-import { PaymentOptions, PaymentProviderKeys } from "../types"
+import { PaymentOptions } from "../types"
+import { ProviderKeys } from "../../../types"
+
 
 class TkassaService extends TkassaBase {
-  static identifier = PaymentProviderKeys.TKASSA
+  static identifier = ProviderKeys.TKASSA
 
   constructor(_, options) {
     super(_, options)

@@ -20,11 +20,11 @@ import { TKassa } from "t-kassa-api"
 import { components } from "t-kassa-api/openapi"
 import {
   Payment,
-  PaymentProviderKeys,
   PaymentStatuses,
   PaymentStatusesMap,
   TkassaEvent,
 } from "../types"
+import { ProviderKeys } from "../../../types"
 import {
   generateReceipt,
   generateRefundReceipt,
@@ -64,7 +64,7 @@ abstract class TkassaBase extends AbstractPaymentProvider {
    */
   protected async resolveOptions(): Promise<TKassaOptions> {
     return resolveIntegrationOptions<TKassaOptions>({
-      identifier: TkassaBase.identifier,
+      identifier: ProviderKeys.TKASSA,
       instance_id: this.instanceId_
     })
   }
