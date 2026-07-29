@@ -33,10 +33,6 @@ export interface RobokassaEvent {
   Shp_SessionID: string
 }
 
-export const PaymentProviderKeys = {
-  ROBOKASSA: "robokassa",
-}
-
 export const HashAlgorithms = [
   'md5',
   'ripemd160',

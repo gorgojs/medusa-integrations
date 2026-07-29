@@ -1,8 +1,9 @@
 import RobokassaBase from "../core/robokassa-base"
-import { PaymentOptions, PaymentProviderKeys } from "../types"
+import { PaymentOptions } from "../types"
+import { ProviderKeys } from "../../../types"
 
 class RobokassaService extends RobokassaBase {
-  static identifier = PaymentProviderKeys.ROBOKASSA
+  static identifier = ProviderKeys.ROBOKASSA
 
   constructor(_, options) {
     super(_, options)
