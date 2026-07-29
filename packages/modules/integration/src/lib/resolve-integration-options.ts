@@ -20,8 +20,7 @@ export function unwrapResolvedOptions<T = Record<string, unknown>>(
     if (optional) return null
     throw new MedusaError(
       MedusaError.Types.NOT_ALLOWED,
-      `Integration "${identifier}" is not configured yet. ` +
-        `Configure it in Admin → Integrations before using it.`
+      `Integration provider "${identifier}" is not available: it is either not configured, disabled, or missing required options. Configure and enable it before use.`
     )
   }
   return resolved.options as T

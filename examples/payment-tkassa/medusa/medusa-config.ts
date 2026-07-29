@@ -2,6 +2,8 @@ import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
+const TKASSA_INTEGRATION_ID = "tkassa-1";
+
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
@@ -12,7 +14,7 @@ module.exports = defineConfig({
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     },
-     cookieOptions: {
+    cookieOptions: {
       sameSite: "lax",
       secure: false,
     }
@@ -37,9 +39,8 @@ module.exports = defineConfig({
         providers: [
           {
             resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
-            options: {
-               id: "tkassa", // must match the provider id used in the payment module below
-            },
+            id: TKASSA_INTEGRATION_ID,
+            options: {},
           },
         ],
       },
@@ -56,13 +57,14 @@ module.exports = defineConfig({
   modules: [
     {
       resolve: "@medusajs/medusa/payment",
-      dependencies: ["integration"],
       options: {
         providers: [
           {
             resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
             id: "tkassa",
-            options: {},
+            options: {
+              id: TKASSA_INTEGRATION_ID, // must match the provider id used in the integration module above
+            },
           },
         ],
       },
