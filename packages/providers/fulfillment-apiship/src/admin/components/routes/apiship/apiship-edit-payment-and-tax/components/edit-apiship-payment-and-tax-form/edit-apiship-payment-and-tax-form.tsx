@@ -13,6 +13,7 @@ import { useUpdateApishipOptions } from "../../../../../../hooks/api/apiship"
 type EditApishipPaymentAndTaxFormProps = {
   apishipOptions?: ApishipHttpTypes.AdminApishipOptions
   onClose: () => void
+  providerId?: string
 }
 
 const VAT_OPTIONS = [
@@ -57,6 +58,7 @@ function toVatEnum(
 export const EditApishipPaymentAndTaxForm = ({
   apishipOptions,
   onClose,
+  providerId,
 }: EditApishipPaymentAndTaxFormProps) => {
   const { t } = useTranslation()
 
@@ -70,7 +72,7 @@ export const EditApishipPaymentAndTaxForm = ({
     resolver: zodResolver(EditApishipPaymentAndTaxSchema),
   })
 
-  const { mutateAsync, isPending } = useUpdateApishipOptions()
+  const { mutateAsync, isPending } = useUpdateApishipOptions(providerId)
 
   useEffect(() => {
     form.reset({

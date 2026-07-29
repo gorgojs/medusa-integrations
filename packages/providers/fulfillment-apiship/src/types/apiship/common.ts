@@ -2,9 +2,8 @@ import {
   type CostDeliveryCostVatEnum,
 } from "../../lib/apiship-client"
 
-export const FulfillmentProviderKeys = {
-  APISHIP: "apiship",
-}
+/** Registration key of the default (no `instance_id`) ApiShip integration. */
+export const DEFAULT_APISHIP_PROVIDER_ID = "int_apiship"
 
 type Primitive = string | number | boolean | bigint | symbol | null | undefined
 

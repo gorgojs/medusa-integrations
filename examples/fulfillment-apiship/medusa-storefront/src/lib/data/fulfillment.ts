@@ -193,7 +193,7 @@ export const getPointAddresses = async (
           key,
           filter,
           fields,
-          limit: 0,
+          shipping_option_id: shippingOptionId,
         },
         next,
       }
@@ -228,7 +228,9 @@ export const getPointAddresses = async (
     })
 }
 
-export const retrieveProviders = async (): Promise<ApishipHttpTypes.StoreApishipProviderListResponse | null> => {
+export const retrieveProviders = async (
+  shippingOptionId?: string
+): Promise<ApishipHttpTypes.StoreApishipProviderListResponse | null> => {
   const headers = {
     ...(await getAuthHeaders()),
   }
@@ -243,6 +245,9 @@ export const retrieveProviders = async (): Promise<ApishipHttpTypes.StoreApiship
       {
         method: "GET",
         headers,
+        query: {
+          shipping_option_id: shippingOptionId,
+        },
         next,
       }
     )

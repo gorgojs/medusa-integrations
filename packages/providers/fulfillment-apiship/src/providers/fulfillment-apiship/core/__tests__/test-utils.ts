@@ -1,8 +1,26 @@
+import ApishipService from "../../services/apiship"
+
 export function makeLogger() {
   const noop = () => {}
   return new Proxy({} as any, {
     get: () => noop,
   })
+}
+
+/**
+ * Build an ApishipService whose options/client resolve directly to the given values —
+ * `getApishipOptions_()`/`getApishipClient_()` now call `resolveIntegrationOptions()`
+ * internally, so tests stub the two private methods on the instance instead of mocking
+ * the resolver.
+ */
+export function makeProvider(
+  apishipOptions: Record<string, any> = makeApishipOptions(),
+  apishipClient: ReturnType<typeof makeApishipClient> = makeApishipClient()
+): any {
+  const provider = new (ApishipService as any)({ logger: makeLogger() }, {})
+  provider.getApishipOptions_ = async () => apishipOptions
+  provider.getApishipClient_ = async () => apishipClient
+  return provider
 }
 
 /** Valid fully-populated ApishipOptionsDTO (after normalization) */

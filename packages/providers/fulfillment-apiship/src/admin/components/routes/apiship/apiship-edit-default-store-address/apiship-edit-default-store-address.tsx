@@ -7,12 +7,14 @@ type ApishipDefaultStoreAddressEditProps = {
   open: boolean
   onClose: () => void
   apishipOptions?: ApishipHttpTypes.AdminUpdateApishipOptions
+  providerId?: string
 }
 
 export const ApishipDefaultStoreAddressEdit = ({
   open,
   onClose,
   apishipOptions,
+  providerId,
 }: ApishipDefaultStoreAddressEditProps) => {
   const { t } = useTranslation()
 
@@ -35,6 +37,7 @@ export const ApishipDefaultStoreAddressEdit = ({
         <EditApishipDefaultStoreAddressForm
           apishipOptions={apishipOptions}
           onClose={onClose}
+          providerId={providerId}
         />
       </Drawer.Content>
     </Drawer>

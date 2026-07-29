@@ -24,6 +24,7 @@ export interface AdminGetApishipPointList {
   fields?: string
   limit?: number
   offset?: number
+  provider_id?: string
 }
 
 export interface AdminUpdateApishipOptions extends AdminApishipOptions { }

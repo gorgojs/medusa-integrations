@@ -12,10 +12,19 @@
  */
 
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
+import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
+import {
+  createShippingProfilesWorkflow,
+  createShippingOptionsWorkflow,
+  createShippingOptionTypesWorkflow,
+} from "@medusajs/medusa/core-flows"
 import nock from "nock"
 import jwt from "jsonwebtoken"
 
 jest.setTimeout(120 * 1000)
+
+// Matches the named instance declared in medusa-config.ts (APISHIP_INTEGRATION_ID).
+const PROVIDER_ID = "int_apiship_apiship-1"
 
 // ---------------------------------------------------------------------------
 // Mock data
@@ -121,7 +130,7 @@ medusaIntegrationTestRunner({
       )
       storeHeaders["x-publishable-api-key"] = keyRes.data.api_key.token
 
-      await api.post("/admin/apiship/options", BASE_OPTIONS, { headers: adminHeaders })
+      await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers: adminHeaders })
     })
 
     // -------------------------------------------------------------------------
@@ -164,7 +173,7 @@ medusaIntegrationTestRunner({
     // -------------------------------------------------------------------------
     describe("GET /store/apiship/providers", () => {
       it("returns a non-empty providers array", async () => {
-        const res = await api.get("/store/apiship/providers", { headers: storeHeaders })
+        const res = await api.get(`/store/apiship/providers?provider_id=${PROVIDER_ID}`, { headers: storeHeaders })
 
         expect(res.status).toBe(200)
         expect(Array.isArray(res.data.providers)).toBe(true)
@@ -172,7 +181,7 @@ medusaIntegrationTestRunner({
       })
 
       it("each provider has key and name fields", async () => {
-        const res = await api.get("/store/apiship/providers", { headers: storeHeaders })
+        const res = await api.get(`/store/apiship/providers?provider_id=${PROVIDER_ID}`, { headers: storeHeaders })
 
         for (const provider of res.data.providers) {
           expect(typeof provider.key).toBe("string")
@@ -181,7 +190,7 @@ medusaIntegrationTestRunner({
       })
 
       it("well-known providers are present (cdek, boxberry)", async () => {
-        const res = await api.get("/store/apiship/providers", { headers: storeHeaders })
+        const res = await api.get(`/store/apiship/providers?provider_id=${PROVIDER_ID}`, { headers: storeHeaders })
         const keys = res.data.providers.map((p: any) => p.key)
 
         expect(keys).toContain("cdek")
@@ -194,7 +203,7 @@ medusaIntegrationTestRunner({
     // -------------------------------------------------------------------------
     describe("GET /store/apiship/points", () => {
       it("returns a non-empty points array with default limit", async () => {
-        const res = await api.get("/store/apiship/points?limit=5", { headers: storeHeaders })
+        const res = await api.get(`/store/apiship/points?limit=5&provider_id=${PROVIDER_ID}`, { headers: storeHeaders })
 
         expect(res.status).toBe(200)
         expect(Array.isArray(res.data.points)).toBe(true)
@@ -203,7 +212,7 @@ medusaIntegrationTestRunner({
       })
 
       it("each point has id and providerKey fields", async () => {
-        const res = await api.get("/store/apiship/points?limit=3", { headers: storeHeaders })
+        const res = await api.get(`/store/apiship/points?limit=3&provider_id=${PROVIDER_ID}`, { headers: storeHeaders })
 
         for (const point of res.data.points) {
           expect(point.id).toBeDefined()
@@ -213,7 +222,7 @@ medusaIntegrationTestRunner({
 
       it("filter by providerKey returns only that provider's points", async () => {
         const res = await api.get(
-          "/store/apiship/points?filter=providerKey%3Dcdek&limit=10",
+          `/store/apiship/points?filter=providerKey%3Dcdek&limit=10&provider_id=${PROVIDER_ID}`,
           { headers: storeHeaders }
         )
 
@@ -222,6 +231,108 @@ medusaIntegrationTestRunner({
         for (const point of res.data.points) {
           expect(point.providerKey).toBe("cdek")
         }
+      })
+    })
+
+    // -------------------------------------------------------------------------
+    // Resolving the ApiShip instance from shipping_option_id (no provider_id)
+    // -------------------------------------------------------------------------
+    describe("resolving the ApiShip instance from shipping_option_id", () => {
+      const createApishipShippingOption = async () => {
+        const container = getContainer()
+        const link = container.resolve(ContainerRegistrationKeys.LINK)
+        const fulfillmentModuleService = container.resolve(Modules.FULFILLMENT) as any
+        const stockLocationModuleService = container.resolve(Modules.STOCK_LOCATION) as any
+
+        const fulfillmentSet = await fulfillmentModuleService.createFulfillmentSets({
+          name: "Test set",
+          type: "shipping",
+          service_zones: [
+            { name: "RU", geo_zones: [{ country_code: "ru", type: "country" }] },
+          ],
+        })
+
+        const stockLocation = await stockLocationModuleService.createStockLocations({
+          name: "Test warehouse",
+        })
+
+        await link.create({
+          [Modules.STOCK_LOCATION]: { stock_location_id: stockLocation.id },
+          [Modules.FULFILLMENT]: { fulfillment_set_id: fulfillmentSet.id },
+        })
+        await link.create({
+          [Modules.STOCK_LOCATION]: { stock_location_id: stockLocation.id },
+          [Modules.FULFILLMENT]: { fulfillment_provider_id: "apiship_apiship" },
+        })
+
+        const { result: shippingProfiles } = await createShippingProfilesWorkflow(
+          container
+        ).run({ input: { data: [{ name: "Default", type: "default" }] } })
+
+        const { result: shippingOptionTypes } = await createShippingOptionTypesWorkflow(
+          container
+        ).run({
+          input: {
+            shipping_option_types: [
+              { label: "ApiShip", code: "apiship", description: "ApiShip delivery" },
+            ],
+          },
+        })
+
+        const { result: shippingOptions } = await createShippingOptionsWorkflow(
+          container
+        ).run({
+          input: [
+            {
+              name: "By courier",
+              price_type: "calculated",
+              provider_id: "apiship_apiship",
+              type_id: shippingOptionTypes[0].id,
+              service_zone_id: fulfillmentSet.service_zones[0].id,
+              shipping_profile_id: shippingProfiles[0].id,
+              data: { id: "apiship_doortodoor", deliveryType: 1, pickupType: 1 },
+              rules: [],
+            },
+          ],
+        })
+
+        return shippingOptions[0].id
+      }
+
+      it("GET /store/apiship/providers resolves the instance without an explicit provider_id", async () => {
+        const shippingOptionId = await createApishipShippingOption()
+
+        const res = await api.get(
+          `/store/apiship/providers?shipping_option_id=${shippingOptionId}`,
+          { headers: storeHeaders }
+        )
+
+        expect(res.status).toBe(200)
+        const keys = res.data.providers.map((p: any) => p.key)
+        expect(keys).toContain("cdek")
+      })
+
+      it("GET /store/apiship/points resolves the instance without an explicit provider_id", async () => {
+        const shippingOptionId = await createApishipShippingOption()
+
+        const res = await api.get(
+          `/store/apiship/points?limit=5&shipping_option_id=${shippingOptionId}`,
+          { headers: storeHeaders }
+        )
+
+        expect(res.status).toBe(200)
+        expect(res.data.points.length).toBeGreaterThan(0)
+      })
+
+      it("returns 404 when the shipping option doesn't exist", async () => {
+        const res = await api
+          .get(
+            "/store/apiship/providers?shipping_option_id=so_does_not_exist",
+            { headers: storeHeaders }
+          )
+          .catch((err: any) => err.response)
+
+        expect(res.status).toBe(404)
       })
     })
   },

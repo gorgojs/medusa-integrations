@@ -13,6 +13,7 @@ import { useUpdateApishipOptions } from "../../../../../../hooks/api/apiship"
 type EditApishipDefaultProductSizesFormProps = {
   apishipOptions?: ApishipHttpTypes.AdminApishipOptions
   onClose: () => void
+  providerId?: string
 }
 
 const numberField = z.preprocess(
@@ -36,6 +37,7 @@ const EditApishipDefaultProductSizesSchema = z.object({
 export const EditApishipDefaultProductSizesForm = ({
   apishipOptions,
   onClose,
+  providerId,
 }: EditApishipDefaultProductSizesFormProps) => {
   const { t } = useTranslation()
 
@@ -49,7 +51,7 @@ export const EditApishipDefaultProductSizesForm = ({
     resolver: zodResolver(EditApishipDefaultProductSizesSchema),
   })
 
-  const { mutateAsync, isPending } = useUpdateApishipOptions()
+  const { mutateAsync, isPending } = useUpdateApishipOptions(providerId)
 
   useEffect(() => {
     form.reset({

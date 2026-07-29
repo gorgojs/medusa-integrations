@@ -27,6 +27,7 @@ type ApishipConnectionCreateFormProps = {
   onClose: () => void
   accountConnections: ApishipHttpTypes.AdminApishipAccountConnection[]
   providers: ApishipHttpTypes.AdminApishipProvider[]
+  providerId?: string
 }
 
 const ApishipConnectionCreateSchema = z.object({
@@ -40,6 +41,7 @@ export const ApishipConnectionCreateForm = ({
   onClose,
   accountConnections,
   providers,
+  providerId,
 }: ApishipConnectionCreateFormProps) => {
   const { t } = useTranslation()
 
@@ -53,7 +55,7 @@ export const ApishipConnectionCreateForm = ({
     resolver: zodResolver(ApishipConnectionCreateSchema),
   })
 
-  const { mutateAsync, isPending } = useCreateApishipConnection()
+  const { mutateAsync, isPending } = useCreateApishipConnection(providerId)
 
   const [hasRequestedPoints, setHasRequestedPoints] = useState(false)
 
@@ -71,9 +73,9 @@ export const ApishipConnectionCreateForm = ({
   const selectedProviderKey = selectedAccountConnection?.provider_key ?? ""
 
   const { points, isLoading: isPointsLoading } = useApishipPoints(
-    selectedProviderKey
+    selectedProviderKey,
+    providerId
   )
-
   useEffect(() => {
     form.setValue("point_in_id", "")
     form.setValue("point_in_address", "")

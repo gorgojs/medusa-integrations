@@ -8,15 +8,14 @@
  *   afterEach → dbUtils.teardown. Each test therefore MUST be fully self-contained:
  *   bootstrap BASE_OPTIONS and any required connections at the start of that test.
  *   Sharing mutable state via `let` variables across it() blocks does not work.
- * - BASE_OPTIONS contains all fields required to keep getStoreStep.needsUpdate = false,
- *   preventing the step from overwriting store metadata with defaults mid-test.
+ * - BASE_OPTIONS establishes a fully-configured apiship integration row (via
+ *   updateApishipOptionsWorkflow) before exercising the other workflows.
  */
 
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import nock from "nock"
 import {
   getApishipOptionsWorkflow,
-  getApishipClientConfigWorkflow,
   saveCalculationWorkflow,
   getCalculationWorkflow,
 } from "@gorgo/medusa-fulfillment-apiship/workflows"
@@ -108,11 +107,13 @@ afterAll(() => {
 jest.setTimeout(120 * 1000)
 
 /**
- * Complete options object that satisfies every field in getStoreStep's
- * needsUpdate check so that the step never triggers an unwanted default-value
- * rewrite on subsequent workflow calls.
+ * Complete options object used to establish a fully-configured apiship
+ * integration row at the start of each test.
  */
+const PROVIDER_ID = "int_apiship_apiship-1"
+
 const BASE_OPTIONS = {
+  provider_id: PROVIDER_ID,
   token: "test-token-123",
   is_test: true as const,
   settings: {
@@ -129,7 +130,7 @@ medusaIntegrationTestRunner({
     // getApishipOptionsWorkflow
     // -------------------------------------------------------------------------
     describe("getApishipOptionsWorkflow", () => {
-      it("returns default options when store has no apiship metadata", async () => {
+      it("returns default options when apiship is not configured yet", async () => {
         const container = getContainer()
         const { result } = await getApishipOptionsWorkflow(container).run()
 
@@ -145,18 +146,17 @@ medusaIntegrationTestRunner({
 
     // -------------------------------------------------------------------------
     // updateApishipOptionsWorkflow
-    // Each test seeds its own complete initial state (BASE_OPTIONS) so that
-    // getStoreStep.needsUpdate = false when reading back the result.
+    // Each test seeds its own complete initial state (BASE_OPTIONS).
     // -------------------------------------------------------------------------
     describe("updateApishipOptionsWorkflow", () => {
-      it("persists token and is_test to store metadata", async () => {
+      it("persists token and is_test", async () => {
         const container = getContainer()
 
         await updateApishipOptionsWorkflow(container).run({
           input: BASE_OPTIONS,
         })
 
-        const { result } = await getApishipOptionsWorkflow(container).run()
+        const { result } = await getApishipOptionsWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
         expect(result.token).toBe("test-token-123")
         expect(result.is_test).toBe(true)
       })
@@ -172,6 +172,7 @@ medusaIntegrationTestRunner({
         // Partial update — only sender settings
         await updateApishipOptionsWorkflow(container).run({
           input: {
+            provider_id: PROVIDER_ID,
             settings: {
               default_sender_settings: {
                 country_code: "RU",
@@ -183,7 +184,7 @@ medusaIntegrationTestRunner({
           },
         })
 
-        const { result } = await getApishipOptionsWorkflow(container).run()
+        const { result } = await getApishipOptionsWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
         expect(result.token).toBe("test-token-123")
         expect(result.is_test).toBe(true)
         expect(result.settings.default_sender_settings.country_code).toBe("RU")
@@ -211,13 +212,14 @@ medusaIntegrationTestRunner({
 
         await updateApishipOptionsWorkflow(container).run({
           input: {
+            provider_id: PROVIDER_ID,
             settings: {
               default_product_sizes: { length: 30, width: 20, height: 15, weight: 500 },
             },
           },
         })
 
-        const { result } = await getApishipOptionsWorkflow(container).run()
+        const { result } = await getApishipOptionsWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
         expect(result.settings.default_product_sizes.length).toBe(30)
         expect(result.settings.default_product_sizes.weight).toBe(500)
         expect(result.settings.default_sender_settings.country_code).toBe("RU")
@@ -240,6 +242,7 @@ medusaIntegrationTestRunner({
 
         const { result } = await createApishipConnectionsWorkflow(container).run({
           input: {
+            provider_id: PROVIDER_ID,
             connections: [
               {
                 provider_key: "cdek",
@@ -264,18 +267,18 @@ medusaIntegrationTestRunner({
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { result: [connA] } = await createApishipConnectionsWorkflow(container).run({
-          input: { connections: [{ provider_key: "cdek", provider_connect_id: "12345", is_enabled: true, name: "СДЭК тест" }] },
+          input: { provider_id: PROVIDER_ID, connections: [{ provider_key: "cdek", provider_connect_id: "12345", is_enabled: true, name: "СДЭК тест" }] },
         })
 
         const { result: [connB] } = await createApishipConnectionsWorkflow(container).run({
-          input: { connections: [{ provider_key: "boxberry", provider_connect_id: "67890", is_enabled: false }] },
+          input: { provider_id: PROVIDER_ID, connections: [{ provider_key: "boxberry", provider_connect_id: "67890", is_enabled: false }] },
         })
 
         expect(connB.provider_key).toBe("boxberry")
         expect(connB.id).toMatch(/^ascon_/)
         expect(connB.id).not.toBe(connA.id)
 
-        const { result: all } = await getApishipConnectionsWorkflow(container).run({ input: {} })
+        const { result: all } = await getApishipConnectionsWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
         expect(all.length).toBe(2)
         expect(all.some((c: any) => c.provider_key === "cdek")).toBe(true)
         expect(all.some((c: any) => c.provider_key === "boxberry")).toBe(true)
@@ -286,13 +289,13 @@ medusaIntegrationTestRunner({
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { result: [connA] } = await createApishipConnectionsWorkflow(container).run({
-          input: { connections: [{ provider_key: "cdek", provider_connect_id: "12345", is_enabled: true, name: "СДЭК тест" }] },
+          input: { provider_id: PROVIDER_ID, connections: [{ provider_key: "cdek", provider_connect_id: "12345", is_enabled: true, name: "СДЭК тест" }] },
         })
         const { result: [connB] } = await createApishipConnectionsWorkflow(container).run({
-          input: { connections: [{ provider_key: "boxberry", provider_connect_id: "67890", is_enabled: false }] },
+          input: { provider_id: PROVIDER_ID, connections: [{ provider_key: "boxberry", provider_connect_id: "67890", is_enabled: false }] },
         })
 
-        const { result } = await getApishipConnectionsWorkflow(container).run({ input: {} })
+        const { result } = await getApishipConnectionsWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
 
         const ids = result.map((c: any) => c.id)
         expect(ids).toContain(connA.id)
@@ -305,11 +308,11 @@ medusaIntegrationTestRunner({
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { result: [connA] } = await createApishipConnectionsWorkflow(container).run({
-          input: { connections: [{ provider_key: "cdek", provider_connect_id: "12345", is_enabled: true }] },
+          input: { provider_id: PROVIDER_ID, connections: [{ provider_key: "cdek", provider_connect_id: "12345", is_enabled: true }] },
         })
 
         const { result } = await getApishipConnectionsWorkflow(container).run({
-          input: { id: connA.id },
+          input: { provider_id: PROVIDER_ID, id: connA.id },
         })
 
         expect(result).toHaveLength(1)
@@ -319,11 +322,11 @@ medusaIntegrationTestRunner({
 
       it("getApishipConnectionsWorkflow returns errors for an unknown id", async () => {
         const container = getContainer()
-        // Bootstrap options so needsUpdate stays false throughout — no connections added.
+        // Bootstrap options — no connections added.
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { errors } = await getApishipConnectionsWorkflow(container).run({
-          input: { id: "ascon_does_not_exist" },
+          input: { provider_id: PROVIDER_ID, id: "ascon_does_not_exist" },
           throwOnError: false,
         })
 
@@ -335,20 +338,20 @@ medusaIntegrationTestRunner({
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { result: [connA] } = await createApishipConnectionsWorkflow(container).run({
-          input: { connections: [{ provider_key: "cdek", provider_connect_id: "12345", is_enabled: true }] },
+          input: { provider_id: PROVIDER_ID, connections: [{ provider_key: "cdek", provider_connect_id: "12345", is_enabled: true }] },
         })
         const { result: [connB] } = await createApishipConnectionsWorkflow(container).run({
-          input: { connections: [{ provider_key: "boxberry", provider_connect_id: "67890", is_enabled: false }] },
+          input: { provider_id: PROVIDER_ID, connections: [{ provider_key: "boxberry", provider_connect_id: "67890", is_enabled: false }] },
         })
 
         const { result: deleted } = await deleteApishipConnectionsWorkflow(container).run({
-          input: { ids: [connA.id] },
+          input: { provider_id: PROVIDER_ID, ids: [connA.id] },
         })
 
         expect(deleted).toHaveLength(1)
         expect(deleted[0].id).toBe(connA.id)
 
-        const { result: remaining } = await getApishipConnectionsWorkflow(container).run({ input: {} })
+        const { result: remaining } = await getApishipConnectionsWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
         const remainingIds = remaining.map((c: any) => c.id)
         expect(remainingIds).not.toContain(connA.id)
         expect(remainingIds).toContain(connB.id)
@@ -359,7 +362,7 @@ medusaIntegrationTestRunner({
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { errors } = await deleteApishipConnectionsWorkflow(container).run({
-          input: { ids: ["ascon_does_not_exist"] },
+          input: { provider_id: PROVIDER_ID, ids: ["ascon_does_not_exist"] },
           throwOnError: false,
         })
 
@@ -377,6 +380,7 @@ medusaIntegrationTestRunner({
 
         const { result: [conn] } = await createApishipConnectionsWorkflow(container).run({
           input: {
+            provider_id: PROVIDER_ID,
             connections: [{
               provider_key: "cdek",
               provider_connect_id: "12345",
@@ -388,6 +392,7 @@ medusaIntegrationTestRunner({
 
         const { result: updated } = await updateApishipConnectionWorkflow(container).run({
           input: {
+            provider_id: PROVIDER_ID,
             id: conn.id,
             update: { name: "СДЭК обновлённый", is_enabled: false, provider_connect_id: "99999" },
           },
@@ -406,17 +411,17 @@ medusaIntegrationTestRunner({
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { result: [connA] } = await createApishipConnectionsWorkflow(container).run({
-          input: { connections: [{ provider_key: "cdek", provider_connect_id: "111", is_enabled: true }] },
+          input: { provider_id: PROVIDER_ID, connections: [{ provider_key: "cdek", provider_connect_id: "111", is_enabled: true }] },
         })
         const { result: [connB] } = await createApishipConnectionsWorkflow(container).run({
-          input: { connections: [{ provider_key: "boxberry", provider_connect_id: "222", is_enabled: true }] },
+          input: { provider_id: PROVIDER_ID, connections: [{ provider_key: "boxberry", provider_connect_id: "222", is_enabled: true }] },
         })
 
         await updateApishipConnectionWorkflow(container).run({
-          input: { id: connA.id, update: { name: "СДЭК renamed" } },
+          input: { provider_id: PROVIDER_ID, id: connA.id, update: { name: "СДЭК renamed" } },
         })
 
-        const { result: all } = await getApishipConnectionsWorkflow(container).run({ input: {} })
+        const { result: all } = await getApishipConnectionsWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
         expect(all).toHaveLength(2)
         const bConn = all.find((c: any) => c.id === connB.id)
         expect(bConn.provider_key).toBe("boxberry")
@@ -428,7 +433,7 @@ medusaIntegrationTestRunner({
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { errors } = await updateApishipConnectionWorkflow(container).run({
-          input: { id: "ascon_does_not_exist", update: { name: "ghost" } },
+          input: { provider_id: PROVIDER_ID, id: "ascon_does_not_exist", update: { name: "ghost" } },
           throwOnError: false,
         })
 
@@ -469,25 +474,6 @@ medusaIntegrationTestRunner({
     })
 
     // -------------------------------------------------------------------------
-    // getApishipClientConfigWorkflow
-    // Self-contained: seeds state and verifies in the same test body.
-    // -------------------------------------------------------------------------
-    describe("getApishipClientConfigWorkflow", () => {
-      it("returns { token, isTest } from store metadata when token is set", async () => {
-        const container = getContainer()
-
-        await updateApishipOptionsWorkflow(container).run({
-          input: BASE_OPTIONS,
-        })
-
-        const { result } = await getApishipClientConfigWorkflow(container).run()
-
-        expect(result.token).toBe("test-token-123")
-        expect(result.isTest).toBe(true)
-      })
-    })
-
-    // -------------------------------------------------------------------------
     // getApishipProvidersWorkflow
     //
     // Cache behaviour: the workflow stores results under "apiship:providers" in
@@ -500,7 +486,7 @@ medusaIntegrationTestRunner({
         const container = getContainer()
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
-        const { result } = await getApishipProvidersWorkflow(container).run()
+        const { result } = await getApishipProvidersWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
 
         expect(Array.isArray(result)).toBe(true)
         expect(result.length).toBeGreaterThan(0)
@@ -514,7 +500,7 @@ medusaIntegrationTestRunner({
         const container = getContainer()
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
-        const { result } = await getApishipProvidersWorkflow(container).run()
+        const { result } = await getApishipProvidersWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
         const keys = result.map((p: any) => p.key)
 
         expect(keys).toContain("cdek")
@@ -525,8 +511,8 @@ medusaIntegrationTestRunner({
         const container = getContainer()
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
-        const { result: first } = await getApishipProvidersWorkflow(container).run()
-        const { result: second } = await getApishipProvidersWorkflow(container).run()
+        const { result: first } = await getApishipProvidersWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
+        const { result: second } = await getApishipProvidersWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
 
         expect(second).toEqual(first)
         expect(second.length).toBeGreaterThan(0)
@@ -542,7 +528,7 @@ medusaIntegrationTestRunner({
         const container = getContainer()
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
-        const { result } = await getApishipAccountConnectionsWorkflow(container).run()
+        const { result } = await getApishipAccountConnectionsWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
 
         expect(Array.isArray(result)).toBe(true)
       })
@@ -551,7 +537,7 @@ medusaIntegrationTestRunner({
         const container = getContainer()
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
-        const { result } = await getApishipAccountConnectionsWorkflow(container).run()
+        const { result } = await getApishipAccountConnectionsWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
 
         for (const connection of result) {
           expect(connection.id).toBeDefined()
@@ -573,7 +559,7 @@ medusaIntegrationTestRunner({
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { result } = await getApishipPointsWorkflow(container).run({
-          input: { limit: 5 },
+          input: { provider_id: PROVIDER_ID, limit: 5 },
         })
 
         expect(Array.isArray(result)).toBe(true)
@@ -585,7 +571,7 @@ medusaIntegrationTestRunner({
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { result } = await getApishipPointsWorkflow(container).run({
-          input: { limit: 3 },
+          input: { provider_id: PROVIDER_ID, limit: 3 },
         })
 
         for (const point of result) {
@@ -599,7 +585,7 @@ medusaIntegrationTestRunner({
         await updateApishipOptionsWorkflow(container).run({ input: BASE_OPTIONS })
 
         const { result } = await getApishipPointsWorkflow(container).run({
-          input: { filter: "providerKey=cdek", limit: 10 },
+          input: { provider_id: PROVIDER_ID, filter: "providerKey=cdek", limit: 10 },
         })
 
         expect(result.length).toBeGreaterThan(0)
@@ -616,13 +602,13 @@ medusaIntegrationTestRunner({
         const cacheKey = `it_points_${Date.now()}`
 
         const { result: first } = await getApishipPointsWorkflow(container).run({
-          input: { key: cacheKey, limit: 5 },
+          input: { provider_id: PROVIDER_ID, key: cacheKey, limit: 5 },
         })
 
         expect(first.length).toBeGreaterThan(0)
 
         const { result: second } = await getApishipPointsWorkflow(container).run({
-          input: { key: cacheKey, limit: 5 },
+          input: { provider_id: PROVIDER_ID, key: cacheKey, limit: 5 },
         })
 
         expect(second).toEqual(first)

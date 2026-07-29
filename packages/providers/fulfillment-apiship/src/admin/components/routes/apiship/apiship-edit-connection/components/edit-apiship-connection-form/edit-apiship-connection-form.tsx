@@ -13,6 +13,7 @@ import { useUpdateApishipConnection } from "../../../../../../hooks/api/apiship"
 type EditApishipConnectionFormProps = {
   apishipConnection?: ApishipHttpTypes.AdminApishipConnection
   onClose: () => void
+  providerId?: string
 }
 
 const EditApishipConnectionSchema = z.object({
@@ -22,6 +23,7 @@ const EditApishipConnectionSchema = z.object({
 export const EditApishipConnectionForm = ({
   apishipConnection,
   onClose,
+  providerId,
 }: EditApishipConnectionFormProps) => {
   const { t } = useTranslation()
 
@@ -33,7 +35,8 @@ export const EditApishipConnectionForm = ({
   })
 
   const { mutateAsync, isPending } = useUpdateApishipConnection(
-    apishipConnection?.id ?? ""
+    apishipConnection?.id ?? "",
+    providerId
   )
 
   useEffect(() => {

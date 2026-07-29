@@ -18,6 +18,9 @@ import jwt from "jsonwebtoken"
 
 jest.setTimeout(120 * 1000)
 
+// Matches the named instance declared in medusa-config.ts (APISHIP_INTEGRATION_ID).
+const PROVIDER_ID = "int_apiship_apiship-1"
+
 // ---------------------------------------------------------------------------
 // Mock data
 // ---------------------------------------------------------------------------
@@ -125,7 +128,7 @@ medusaIntegrationTestRunner({
       )
       adminHeaders["authorization"] = `Bearer ${jwtToken}`
 
-      await api.post("/admin/apiship/options", BASE_OPTIONS, { headers: adminHeaders })
+      await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers: adminHeaders })
     })
 
     // -------------------------------------------------------------------------
@@ -133,7 +136,7 @@ medusaIntegrationTestRunner({
     // -------------------------------------------------------------------------
     describe("GET /admin/apiship/providers", () => {
       it("returns 200 with a non-empty providers array", async () => {
-        const res = await api.get("/admin/apiship/providers", { headers: adminHeaders })
+        const res = await api.get(`/admin/apiship/providers?provider_id=${PROVIDER_ID}`, { headers: adminHeaders })
 
         expect(res.status).toBe(200)
         expect(Array.isArray(res.data.providers)).toBe(true)
@@ -141,7 +144,7 @@ medusaIntegrationTestRunner({
       })
 
       it("each provider has key and name fields", async () => {
-        const res = await api.get("/admin/apiship/providers", { headers: adminHeaders })
+        const res = await api.get(`/admin/apiship/providers?provider_id=${PROVIDER_ID}`, { headers: adminHeaders })
 
         for (const provider of res.data.providers) {
           expect(typeof provider.key).toBe("string")
@@ -150,7 +153,7 @@ medusaIntegrationTestRunner({
       })
 
       it("well-known providers are present (cdek, boxberry)", async () => {
-        const res = await api.get("/admin/apiship/providers", { headers: adminHeaders })
+        const res = await api.get(`/admin/apiship/providers?provider_id=${PROVIDER_ID}`, { headers: adminHeaders })
         const keys = res.data.providers.map((p: any) => p.key)
 
         expect(keys).toContain("cdek")
@@ -159,7 +162,7 @@ medusaIntegrationTestRunner({
 
       it("returns 401 without authorization header", async () => {
         const res = await api
-          .get("/admin/apiship/providers")
+          .get(`/admin/apiship/providers?provider_id=${PROVIDER_ID}`)
           .catch((err: any) => err.response)
 
         expect(res.status).toBe(401)
@@ -171,7 +174,7 @@ medusaIntegrationTestRunner({
     // -------------------------------------------------------------------------
     describe("GET /admin/apiship/points", () => {
       it("returns 200 with a points array", async () => {
-        const res = await api.get("/admin/apiship/points?limit=5", { headers: adminHeaders })
+        const res = await api.get(`/admin/apiship/points?limit=5&provider_id=${PROVIDER_ID}`, { headers: adminHeaders })
 
         expect(res.status).toBe(200)
         expect(Array.isArray(res.data.points)).toBe(true)
@@ -180,7 +183,7 @@ medusaIntegrationTestRunner({
       })
 
       it("each point has id and providerKey fields", async () => {
-        const res = await api.get("/admin/apiship/points?limit=3", { headers: adminHeaders })
+        const res = await api.get(`/admin/apiship/points?limit=3&provider_id=${PROVIDER_ID}`, { headers: adminHeaders })
 
         for (const point of res.data.points) {
           expect(point.id).toBeDefined()
@@ -190,7 +193,7 @@ medusaIntegrationTestRunner({
 
       it("filter by providerKey returns only that provider's points", async () => {
         const res = await api.get(
-          "/admin/apiship/points?filter=providerKey%3Dcdek&limit=10",
+          `/admin/apiship/points?filter=providerKey%3Dcdek&limit=10&provider_id=${PROVIDER_ID}`,
           { headers: adminHeaders }
         )
 
@@ -203,7 +206,7 @@ medusaIntegrationTestRunner({
 
       it("returns 401 without authorization header", async () => {
         const res = await api
-          .get("/admin/apiship/points")
+          .get(`/admin/apiship/points?provider_id=${PROVIDER_ID}`)
           .catch((err: any) => err.response)
 
         expect(res.status).toBe(401)
@@ -215,14 +218,14 @@ medusaIntegrationTestRunner({
     // -------------------------------------------------------------------------
     describe("GET /admin/apiship/account-connections", () => {
       it("returns 200 with an account_connections array", async () => {
-        const res = await api.get("/admin/apiship/account-connections", { headers: adminHeaders })
+        const res = await api.get(`/admin/apiship/account-connections?provider_id=${PROVIDER_ID}`, { headers: adminHeaders })
 
         expect(res.status).toBe(200)
         expect(Array.isArray(res.data.account_connections)).toBe(true)
       })
 
       it("each connection has id and provider_key fields (DTO mapping check)", async () => {
-        const res = await api.get("/admin/apiship/account-connections", { headers: adminHeaders })
+        const res = await api.get(`/admin/apiship/account-connections?provider_id=${PROVIDER_ID}`, { headers: adminHeaders })
 
         for (const connection of res.data.account_connections) {
           expect(connection.id).toBeDefined()
@@ -232,7 +235,7 @@ medusaIntegrationTestRunner({
 
       it("returns 401 without authorization header", async () => {
         const res = await api
-          .get("/admin/apiship/account-connections")
+          .get(`/admin/apiship/account-connections?provider_id=${PROVIDER_ID}`)
           .catch((err: any) => err.response)
 
         expect(res.status).toBe(401)

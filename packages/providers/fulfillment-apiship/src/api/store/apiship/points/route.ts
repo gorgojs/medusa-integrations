@@ -7,7 +7,7 @@ export const GET = async (
   req: MedusaRequest<unknown, StoreGetApishipPointsType>,
   res: MedusaResponse<StoreApishipPointListResponse>
 ) => {
-  const { key, filter, fields, limit, offset } = req.validatedQuery
+  const { key, filter, fields, limit, offset, provider_id, shipping_option_id } = req.validatedQuery
 
   const { result } = await getApishipPointsWorkflow(
     req.scope
@@ -18,6 +18,8 @@ export const GET = async (
       fields,
       limit,
       offset,
+      provider_id,
+      shipping_option_id,
     },
   })
 

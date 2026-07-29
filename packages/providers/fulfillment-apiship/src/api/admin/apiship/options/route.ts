@@ -5,15 +5,20 @@ import {
   AdminUpdateApishipOptions,
   AdminApishipOptionsResponse
 } from "../../../../types/http"
+import { AdminApishipProviderIdQueryType } from "../validators"
 
 export const POST = async (
-  req: MedusaRequest<AdminUpdateApishipOptions>,
+  req: MedusaRequest<AdminUpdateApishipOptions, AdminApishipProviderIdQueryType>,
   res: MedusaResponse
 ) => {
+  const { provider_id } = req.validatedQuery
+
   await updateApishipOptionsWorkflow(req.scope).run({
-    input: req.validatedBody,
+    input: { ...req.validatedBody, provider_id },
   })
-  const { result } = await getApishipOptionsWorkflow(req.scope).run()
+  const { result } = await getApishipOptionsWorkflow(req.scope).run({
+    input: { provider_id },
+  })
 
   res.status(200).json({
     apiship_options: result
@@ -21,10 +26,14 @@ export const POST = async (
 }
 
 export const GET = async (
-  req: MedusaRequest,
+  req: MedusaRequest<unknown, AdminApishipProviderIdQueryType>,
   res: MedusaResponse<AdminApishipOptionsResponse>
 ) => {
-  const { result } = await getApishipOptionsWorkflow(req.scope).run()
+  const { provider_id } = req.validatedQuery
+
+  const { result } = await getApishipOptionsWorkflow(req.scope).run({
+    input: { provider_id },
+  })
 
   res.status(200).json({
     apiship_options: result

@@ -4,9 +4,12 @@ import {
   AdminGetApishipPointsParams,
   AdminCreateApishipConnection,
   AdminUpdateApishipConnection,
-  AdminUpdateApishipOptions
+  AdminUpdateApishipOptions,
+  AdminApishipProviderIdQuery
 } from "./validators"
 import * as queryConfig from "./query-config"
+
+const providerIdQueryConfig = { defaults: [], isList: false }
 
 export const adminApishipRoutesMiddlewares: MiddlewareRoute[] = [
   {
@@ -20,10 +23,39 @@ export const adminApishipRoutesMiddlewares: MiddlewareRoute[] = [
     ],
   },
   {
+    matcher: "/admin/apiship/providers",
+    method: "GET",
+    middlewares: [
+      validateAndTransformQuery(AdminApishipProviderIdQuery, providerIdQueryConfig)
+    ],
+  },
+  {
+    matcher: "/admin/apiship/account-connections",
+    method: "GET",
+    middlewares: [
+      validateAndTransformQuery(AdminApishipProviderIdQuery, providerIdQueryConfig)
+    ],
+  },
+  {
+    matcher: "/admin/apiship/connections",
+    method: "GET",
+    middlewares: [
+      validateAndTransformQuery(AdminApishipProviderIdQuery, providerIdQueryConfig)
+    ],
+  },
+  {
     matcher: "/admin/apiship/connections",
     method: "POST",
     middlewares: [
-      validateAndTransformBody(AdminCreateApishipConnection)
+      validateAndTransformBody(AdminCreateApishipConnection),
+      validateAndTransformQuery(AdminApishipProviderIdQuery, providerIdQueryConfig)
+    ],
+  },
+  {
+    matcher: "/admin/apiship/connections/:id",
+    method: ["GET", "POST", "DELETE"],
+    middlewares: [
+      validateAndTransformQuery(AdminApishipProviderIdQuery, providerIdQueryConfig)
     ],
   },
   {
@@ -31,6 +63,13 @@ export const adminApishipRoutesMiddlewares: MiddlewareRoute[] = [
     method: "POST",
     middlewares: [
       validateAndTransformBody(AdminUpdateApishipConnection)
+    ],
+  },
+  {
+    matcher: "/admin/apiship/options",
+    method: ["GET", "POST"],
+    middlewares: [
+      validateAndTransformQuery(AdminApishipProviderIdQuery, providerIdQueryConfig)
     ],
   },
   {

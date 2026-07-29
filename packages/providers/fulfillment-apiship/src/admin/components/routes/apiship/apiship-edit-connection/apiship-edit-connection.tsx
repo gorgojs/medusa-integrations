@@ -7,12 +7,14 @@ type ApishipConnectionEditProps = {
   open: boolean
   onClose: () => void
   apishipConnection?: ApishipHttpTypes.AdminApishipConnection
+  providerId?: string
 }
 
 export const ApishipConnectionEdit = ({
   open,
   onClose,
   apishipConnection,
+  providerId,
 }: ApishipConnectionEditProps) => {
   const { t } = useTranslation()
 
@@ -35,6 +37,7 @@ export const ApishipConnectionEdit = ({
         <EditApishipConnectionForm
           apishipConnection={apishipConnection}
           onClose={onClose}
+          providerId={providerId}
         />
       </Drawer.Content>
     </Drawer>

@@ -1,6 +1,6 @@
-# `@gorgo/medusa-payment-tkassa` example
+# `@gorgo/medusa-fulfillment-apiship` example
 
-Examples for the [@gorgo/medusa-payment-tkassa](https://www.npmjs.com/package/@gorgo/medusa-payment-tkassa) plugin.
+Examples for the [@gorgo/medusa-fulfillment-apiship](https://www.npmjs.com/package/@gorgo/medusa-fulfillment-apiship) plugin.
 
 ## Prerequisites
 

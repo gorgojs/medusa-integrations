@@ -11,6 +11,17 @@
     "disabled": "Disabled"
   },
   "apiship": {
+    "name": "ApiShip",
+    "description": "ApiShip delivery service aggregator",
+    "sections": {
+      "credentials": "Credentials",
+      "settings": "Settings"
+    },
+    "fields": {
+      "token": "API token",
+      "isTest": "Test mode",
+      "settings": "Settings"
+    },
     "general": {
       "title": "ApiShip",
       "subtitle": "Manage your ApiShip connection settings to calculate shipping rates and create orders.",
