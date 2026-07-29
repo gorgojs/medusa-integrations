@@ -1827,9 +1827,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gorgo/it-1c@workspace:integration-tests/1c":
+"@gorgo/it-erp-1c@workspace:integration-tests/erp-1c":
   version: 0.0.0-use.local
-  resolution: "@gorgo/it-1c@workspace:integration-tests/1c"
+  resolution: "@gorgo/it-erp-1c@workspace:integration-tests/erp-1c"
   dependencies:
     "@gorgo/medusa-1c": "workspace:*"
     "@gorgo/medusa-integration": "workspace:*"
