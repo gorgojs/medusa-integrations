@@ -3,6 +3,7 @@ import type { IntegrationDescriptorInput } from "@gorgo/medusa-integration"
 import { TKassa } from "t-kassa-api"
 import { TKASSA_ICON } from "../icon"
 import { TAX, requiredWhenReceipt } from "../utils"
+import { ProviderKeys } from "../../../types"
 
 const descriptor = defineIntegration({
   category: "payment",
@@ -128,7 +129,7 @@ export type TKassaOptions = z.infer<typeof descriptor.optionsSchema>
  * "int_tkassa"). Payment behaviour lives in the separate `payment-tkassa` provider.
  */
 export class TkassaIntegrationProvider extends AbstractIntegrationProvider {
-  static identifier = "tkassa"
+  static identifier = ProviderKeys.TKASSA
 
   get descriptor(): IntegrationDescriptorInput {
     return descriptor
