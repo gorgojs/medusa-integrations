@@ -21,12 +21,12 @@ description: "В этом документе вы узнаете, как уст�
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship
+    yarn add @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship@beta
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship
+    npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship@beta
     ```
   </CodeTab>
 </CodeTabs>
@@ -39,6 +39,8 @@ description: "В этом документе вы узнаете, как уст�
 
 ```ts title="medusa-config.ts"
 // ...
+const APISHIP_INTEGRATION_ID = "apiship-1"
+
 module.exports = defineConfig({
   // ...
   plugins: [
@@ -50,7 +52,7 @@ module.exports = defineConfig({
         providers: [
           {
             resolve: "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
-            id: "apiship",
+            id: APISHIP_INTEGRATION_ID,
             options: {},
           },
         ],
@@ -65,13 +67,14 @@ module.exports = defineConfig({
     // ...
     {
       resolve: "@medusajs/medusa/fulfillment",
-      dependencies: ["integration"],
       options: {
         providers: [
           {
             resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
             id: "apiship",
-            options: { id: "apiship" },
+            options: {
+              id: APISHIP_INTEGRATION_ID
+            },
           },
         ],
       },

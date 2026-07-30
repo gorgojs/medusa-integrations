@@ -1,0 +1,155 @@
+---
+title: "Manage ApiShip Settings in Medusa Admin"
+description: "Learn how to view and manage the ApiShip integration's details and connections in Medusa Admin"
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to manage the ApiShip integration's details and connections.
+
+## View ApiShip Details
+
+To view the ApiShip details:
+
+1. Open Medusa Admin.
+2. Go to **Settings → Integrations → ApiShip**.
+
+This opens the ApiShip settings page where you can review main details, sender information, default product parameters, payment settings, and connections.
+
+![ApiShip settings overview](/static/apiship/en/settings-overview.png)
+
+---
+
+## Edit ApiShip Credential Parameters
+
+You can update the provider's API token and mode from the **Credentials** section.
+
+To edit the credential details:
+
+1. Go to **Settings → Integrations → ApiShip**.
+2. In the **ApiShip** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the API token or switch between test and production mode.
+5. Click **Save**.
+
+![Edit ApiShip provider details](/static/apiship/en/edit-provider-details.png)
+
+---
+
+## Edit Default Store Address
+
+The **Sender** section stores the default sender details used when an order is created in ApiShip.
+
+If the selected stock location has enough address details, the plugin uses that stock location's address in the order. If some sender details are missing there, the default sender details from this section are used as fallback values.
+
+To edit the default sender details:
+
+1. Go to **Settings → Integrations → ApiShip**.
+2. In the **Sender** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the sender's country, address, contact name, or phone number.
+5. Click **Save**.
+
+![Edit default store address](/static/apiship/en/edit-default-store-address.png)
+
+---
+
+## Edit Payment & Tax
+
+The **Payment & VAT** section controls how the plugin fills payment-related fields in created ApiShip orders.
+
+If cash on delivery is enabled, the plugin sends the order's COD amount to ApiShip. The delivery VAT rate is also included in the created order when COD is enabled.
+
+To edit the payment and VAT settings:
+
+1. Go to **Settings → Integrations → ApiShip**.
+2. In the **Payment & VAT** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the cash on delivery setting or the delivery VAT rate.
+5. Click **Save**.
+
+![Edit payment and VAT settings](/static/apiship/en/edit-payment-and-tax.png)
+
+---
+
+## Edit Default Product Sizes
+
+The **Default Product Sizes** section stores fallback dimensions and weight for products.
+
+These values are used when creating an ApiShip order for items that don't have their own dimensions or weight defined on the product variant.
+
+To edit the default product sizes:
+
+1. Go to **Settings → Integrations → ApiShip**.
+2. In the **Default Product Sizes** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the default length, width, height, and weight.
+5. Click **Save**.
+
+![Edit default product sizes](/static/apiship/en/edit-default-product-sizes.png)
+
+---
+
+## Manage Connections
+
+Connections link a delivery service in ApiShip to a specific ApiShip account connection. When an order is created, the plugin uses the enabled connection that matches the selected delivery service.
+
+You can also optionally assign an intake point to a connection.
+
+### Add Connection
+
+To add a connection:
+
+1. Go to **Settings → Integrations → ApiShip**.
+2. In the **Connections** section, click **Add**.
+3. In the modal that opens:
+   - Choose an account connection.
+   - Optionally select an intake point.
+   - Choose whether the connection should be enabled immediately.
+4. Click **Save**.
+
+![Add ApiShip connection](/static/apiship/en/add-connection.png)
+
+### Edit Connection
+
+To edit a connection:
+
+1. Go to **Settings → Integrations → ApiShip**.
+2. In the **Connections** section, find the connection you want to update.
+3. Open the row's action menu.
+4. Choose **Edit**.
+5. In the side panel that opens, update the connection's enabled status.
+6. Click **Save**.
+
+![Edit ApiShip connection](/static/apiship/en/edit-connection.png)
+
+### Remove Connection
+
+To remove a connection:
+
+1. Go to **Settings → Integrations → ApiShip**.
+2. In the **Connections** section, find the connection you want to remove.
+3. Open the row's action menu.
+4. Choose **Delete**.
+5. Confirm the deletion.
+
+## Add Shipping Options
+
+To add a shipping option displayed in the Storefront for ApiShip:
+
+1. Go to **Settings → Locations & Shipping**.
+2. Choose your stock location.
+3. In the **Shipping → Shipping options** section, click **Create option**.
+4. In the modal that opens:
+![Add Shipping Option](/static/apiship/en/add-shipping-option.png)
+   - Set the price type to **Calculated**.
+   - Specify the name of the shipping option.
+   - Select the profile and type of shipping option.
+   - Set the fulfillment provider to **ApiShip**.
+   - Choose one of the suggested fulfillment options:
+      - **From door to door**
+      - **From door to pickup point**
+      - **From pickup point to door**
+      - **From pickup point to pickup point**
+   - Leave the option **Enable in store** checked.
+5. Click **Save**.

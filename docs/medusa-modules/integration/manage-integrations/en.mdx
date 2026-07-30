@@ -1,0 +1,112 @@
+---
+title: "Manage Integrations in Medusa Admin"
+description: "Learn how to view, add, configure, test the connection, edit, enable, disable, and delete integrations in Medusa Admin"
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to manage integrations in Medusa Admin.
+
+## View Integrations List
+
+To view the integrations list:
+
+1. Open Medusa Admin.
+2. Go to **Settings → Integrations**.
+
+This opens the list of every integration registered in the project: the provider's name and icon, the package author, its description, and category. Each integration shows a status — **Not configured**, **Incomplete**, **Enabled**, or **Disabled** — and, if the provider supports connection testing, also either **Connected** or **Connection failed**. You can filter the list by category and search by name.
+
+![Integrations list](/static/integration/en/integrations-overview.png)
+
+---
+
+## Browse and Add an Integration
+
+The catalog lists integrations that aren't registered in the project yet, alongside the ones that already are.
+
+To add a new integration:
+
+1. Go to **Settings → Integrations**.
+2. Click **Browse Integrations**.
+3. Find the integration you want to add.
+4. Click **Add**.
+5. Install the npm package and copy the config snippet into `providers` in `medusa-config.ts` from the modal that opens.
+6. Restart the server.
+
+The integration then appears in the list as **Not configured**, ready to configure.
+
+![Browse integrations](/static/integration/en/browse-integrations.png)
+
+---
+
+## Configure an Integration
+
+Until an integration is configured, its page shows sections with empty required fields. There's no separate action for the initial setup — saving any section with its fields filled in creates the configuration.
+
+To configure an integration:
+
+1. Go to **Settings → Integrations**.
+2. Open the integration you want to configure.
+3. Click the action menu in the header of the section you want to fill in.
+4. Choose **Edit**.
+5. Fill in the required fields in the side panel that opens.
+6. Click **Save**.
+
+![Configuring an integration](/static/integration/en/configure-integration.png)
+
+---
+
+## Test the Connection
+
+Some providers support connection testing — it confirms the values you entered are actually accepted by the provider, before the integration is used for real. If a provider doesn't support this, the action won't appear in the menu.
+
+To test the connection:
+
+1. Go to **Settings → Integrations**.
+2. Open the integration you want to test.
+3. Open the action menu next to the integration's name.
+4. Choose **Test connection**.
+
+The result appears in a notification.
+
+---
+
+## Edit a Section
+
+Sections of an already configured integration are edited the same way as during initial setup.
+
+To edit a section:
+
+1. Go to **Settings → Integrations**.
+2. Open the integration you want to edit.
+3. Click the action menu in the header of the section you want to change.
+4. Choose **Edit**.
+5. Update the field values in the side panel that opens.
+6. Click **Save**.
+
+---
+
+## Enable and Disable an Integration
+
+A disabled integration keeps its stored settings, but the provider stops receiving them — as if the integration weren't configured.
+
+To enable or disable an integration:
+
+1. Go to **Settings → Integrations**.
+2. Open the integration you want to update.
+3. Open the action menu next to the integration's name.
+4. Choose **Enable** or **Disable**.
+
+---
+
+## Delete an Integration
+
+Deleting an integration only erases its stored data — the token and the rest of its section values. The provider itself isn't removed as a source of the integration: it stays registered in `medusa-config.ts` and reappears in the list as not configured. To remove the provider entirely, delete its entry from `providers` in `medusa-config.ts`.
+
+To delete an integration:
+
+1. Go to **Settings → Integrations**.
+2. Open the integration you want to delete.
+3. Open the action menu next to the integration's name.
+4. Choose **Delete**.
+5. Confirm the deletion.

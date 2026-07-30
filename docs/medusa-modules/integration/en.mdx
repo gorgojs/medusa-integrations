@@ -1,33 +1,30 @@
 ---
 title: "Integration Module for Medusa"
-description: "A Medusa module that lets plugins declare settings configured from the Admin."
+description: "A Medusa module that lets any plugin or provider declare its options and store admins configure them in the Admin – no medusa-config edits, no redeploys."
 ---
 
 <div>
-  <img alt="Integration Module logo" src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/integration-module-logo.svg" width="100"/>
+  <img alt="Integration Module logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-module-logo.svg" width="100"/>
 </div>
 
 # {frontmatter.title}
 
-A Medusa module that lets plugins declare their settings and store admins configure them right in the Admin — no `medusa-config` edits, no redeploys, secrets encrypted at rest.
+The Integration Module lets any plugin declare its options, and store admins configure them as **integrations** right in the Admin – no `medusa-config` edits, no redeploys. It generates the admin CRUD API and validation, so there are no data models, routes, or forms to write.
 
-## Plugin Features
+The Integration Module is useful for any Medusa developer building plugins, providers, or custom modules that need configurable settings – API keys, credentials, modes, webhooks — but who'd rather not hand-build settings UI pages, a data layer, and validation for each one.
 
-- **No-code configuration in the Admin.** Plugin credentials and settings are managed under Settings → Integrations — no `medusa-config`/env edits and no redeploys.
-- **Encrypted secrets at rest.** Fields marked `secret` are encrypted (AES-256-GCM) and never reach the browser.
-- **Declarative descriptor** (`defineIntegration`) for plugin authors: options, sections, validation, and a connection test in one place.
-- **Rich option types & validation:** `string` / `url` / `email` / `uuid` / `number` / `boolean` / `enum` / `json`, per-option and cross-section rules, conditional visibility, read-only fields, i18n labels, and an icon.
-- **Multiple instances** of the same provider (e.g. several accounts).
-- **Connection test** from the Admin.
-- **Typed runtime resolve:** consumers read a validated, decrypted config; incomplete or disabled configs never resolve, so drafts don't leak into runtime.
-- **Custom admin widgets** per provider.
-- **Anonymous telemetry.**
+## Features
 
----
-
-## What is the Integration Module?
-
-Plugins need settings — API keys, modes, webhooks. Usually these live in `medusa-config`/env, which requires code access and a redeploy for every change, with secrets kept in plain text. This module moves settings into the **Admin and the database**: a store admin fills in a form, secrets are encrypted, and the consuming plugin reads the ready config at runtime. Plugin authors only **describe** the settings form — the module handles the UI, storage, encryption, and validation.
+- **No-code configuration in Medusa Admin:** Credentials and options are managed under Settings – no `medusa-config`/env edits and no redeploys.
+- **Provider-agnostic:** Works for any provider type – payment, fulfillment, content, notification, ERP, and beyond – as well as any plugin or custom Medusa module.
+- **Declarative descriptor (`defineIntegration`)**: Options, settings sections, validation, and a connection test in a single declaration.
+- **Rich option types & validation:** Typed fields (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) with per-option and cross-section rules, conditional visibility, and read-only fields.
+- **Encrypted secrets at rest:** Fields marked `secret` are encrypted (AES-256-GCM) and never reach the browser.
+- **Multiple instances:** Configure the same provider more than once, each with its own settings (e.g. several accounts).
+- **Connection test:** Verify credentials against the third-party service right from the Admin.
+- **Typed runtime resolve:** Consumers read validated, decrypted options; incomplete or disabled options never resolve, so drafts don't leak into runtime.
+- **Customizable admin UI:** Reorderable sections ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)); if the rendered sections aren't enough, build any UI for your options with custom widgets.
+- **Browse integrations:** Discover available integrations right in the Admin.
 
 ---
 
@@ -35,15 +32,43 @@ Plugins need settings — API keys, modes, webhooks. Usually these live in `medu
 
 <UsedByList items={[
   {
-    image: "https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/tkassa-logo.svg",
+    image: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/apiship.svg",
+    alt: "ApiShip logo",
+    name: "ApiShip",
+    href: "https://www.npmjs.com/package/@gorgo/medusa-fulfillment-apiship",
+    description: "Fulfillment · by Gorgo"
+  },
+  {
+    image: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/tkassa.png",
     alt: "T-Kassa logo",
     name: "T-Kassa by T-Bank",
     href: "https://www.npmjs.com/package/@gorgo/medusa-payment-tkassa",
-    displayUrl: "@gorgo/medusa-payment-tkassa",
+    description: "Payment · by Gorgo"
+  },
+  {
+    image: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/yookassa.svg",
+    alt: "YooKassa logo",
+    name: "YooKassa",
+    href: "https://www.npmjs.com/package/@gorgo/medusa-payment-yookassa",
+    description: "Payment · by Gorgo"
+  },
+  {
+    image: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/robokassa.svg",
+    alt: "Robokassa logo",
+    name: "Robokassa",
+    href: "https://www.npmjs.com/package/@gorgo/medusa-payment-robokassa",
+    description: "Payment · by Gorgo"
+  },
+  {
+    image: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/1c.svg",
+    alt: "1C logo",
+    name: "1C:Enterprise",
+    href: "https://www.npmjs.com/package/@gorgo/medusa-1c",
+    description: "ERP · by Gorgo"
   }
 ]}/>
 
-<Note type="success" title="">**Want to add your project to this list?** Make a [Pull Request](https://github.com/gorgojs/medusa-integrations#contribution) or write to [support chat](https://t.me/gorgojs_bot) on Telegram.</Note>
+<Note type="success" title="">**Want to add your integrations to this list?** Make a [Pull Request](https://github.com/gorgojs/medusa-integrations#contribution) or write to [support chat](https://t.me/gorgojs_bot) on Telegram.</Note>
 
 ---
 
@@ -53,3 +78,9 @@ Got questions or ideas about the plugin? Join the Telegram support chat — [@go
 
 Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
 
+## Next steps
+
+- [General Concepts](/medusa-modules/integration/concepts)
+- [Reading Options](/medusa-modules/integration/reading-options)
+- [Migrate a Provider to the Integration Module](/medusa-modules/integration/migrate-provider-to-integration-module)
+- [Admin User guide](/medusa-modules/integration/manage-integrations)

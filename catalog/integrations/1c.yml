@@ -21,8 +21,30 @@ icon: "1c.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
 docsUrl: "https://docs.gorgojs.com/integrations/1c-enterprise"
 configSnippet: |
-  // Registered as a module, not an integration provider:
-  {
-    resolve: "@gorgo/medusa-1c",
-  }
+  # ...
+  const ONEC_INTEGRATION_ID = "1c-1"
+
+  module.exports = defineConfig({
+    # ...
+    plugins: [
+      # ...
+      {
+        resolve: "@gorgo/medusa-integration",
+        options: {
+          encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+          providers: [
+            {
+              resolve: "@gorgo/medusa-1c/providers/integration-1c",
+              id: ONEC_INTEGRATION_ID,
+              options: {},
+            },
+          ],
+        },
+      },
+      {
+        resolve: "@gorgo/medusa-1c",
+        options: {}
+      },
+    ],
+  })
 active: true

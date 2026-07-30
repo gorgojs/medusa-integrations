@@ -79,7 +79,3 @@ npm install @gorgo/medusa-integration
 ## Документация
 
 Полное руководство по установке, настройке и использованию доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/integrations/integration).
-
-## Лицензия
-
-Распространяется на условиях [лицензии MIT](LICENSE).

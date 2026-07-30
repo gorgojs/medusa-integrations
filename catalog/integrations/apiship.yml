@@ -14,4 +14,48 @@ shortDescription:
 icon: "apiship.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
 docsUrl: "https://docs.gorgojs.com/integrations/apiship"
+configSnippet: |
+  // ...
+  const APISHIP_INTEGRATION_ID = "apiship-1"
+
+  module.exports = defineConfig({
+    // ...
+    plugins: [
+      // ...
+      {
+        resolve: "@gorgo/medusa-integration",
+        options: {
+          encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+          providers: [
+            {
+              resolve: "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
+              id: APISHIP_INTEGRATION_ID,
+              options: {},
+            },
+          ],
+        },
+      },
+      {
+        resolve: "@gorgo/medusa-fulfillment-apiship",
+        options: {},
+      },
+    ],
+    modules: [
+      // ...
+      {
+        resolve: "@medusajs/medusa/fulfillment",
+        options: {
+          providers: [
+            {
+              resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
+              id: "apiship",
+              options: {
+                id: APISHIP_INTEGRATION_ID
+              },
+            },
+          ],
+        },
+      },
+    ],
+  })
 active: true
