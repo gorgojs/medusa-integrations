@@ -1,0 +1,1 @@
+export { default as TkassaService } from "./tkassa"

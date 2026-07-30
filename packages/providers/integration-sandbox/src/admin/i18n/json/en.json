@@ -1,0 +1,52 @@
+{
+  "tkassa": {
+    "name": "T-Kassa",
+    "description": "Tinkoff/T-Bank payment gateway",
+    "sections": {
+      "credentials": "Credentials",
+      "behavior": "Behavior",
+      "receipt": "Receipt",
+      "advanced": "Advanced"
+    },
+    "fields": {
+      "terminalKey": "Terminal key",
+      "password": "Password",
+      "capture": "Auto-capture",
+      "useReceipt": "Send receipts",
+      "ffdVersion": "FFD version",
+      "taxation": "Taxation",
+      "taxItemDefault": "Default item tax",
+      "taxShippingDefault": "Default shipping tax",
+      "notifications": "Extra notifications",
+      "webhookUrl": "Webhook URL"
+    },
+    "hints": {
+      "notifications": "Array of { \"event\", \"url\" } objects, edited as JSON.",
+      "webhookUrl": "Where T-Kassa POSTs payment notifications. Must start with https://."
+    },
+    "taxation": {
+      "osn": "General (OSN)",
+      "usn_income": "Simplified — income",
+      "usn_income_outcome": "Simplified — income minus expenses",
+      "esn": "Unified agricultural (ESN)",
+      "patent": "Patent"
+    },
+    "webhookTester": {
+      "title": "Webhook tester",
+      "description": "Example custom section from the T-Kassa plugin — injected into the integration page through a widget zone. It reads this integration's options and calls a provider endpoint.",
+      "terminal": "Terminal",
+      "send": "Send test request",
+      "needsConfig": "Finish configuring the integration to enable this.",
+      "reachable": "Endpoint reachable",
+      "failed": "Request failed"
+    },
+    "webhookUrlEditor": {
+      "title": "Webhook URL",
+      "description": "Example widget-owned option: this field is declared in the descriptor catalog but placed in no section, so the plugin's widget renders and saves it (POST without a section_id).",
+      "placeholder": "https://example.com/webhooks/tkassa",
+      "save": "Save",
+      "saved": "Webhook URL saved",
+      "saveFailed": "Could not save"
+    }
+  }
+}
