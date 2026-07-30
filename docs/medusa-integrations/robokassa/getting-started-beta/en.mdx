@@ -21,12 +21,12 @@ In this document, you'll learn how to install and configure the Robokassa paymen
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-robokassa
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-robokassa@beta
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-integration @gorgo/medusa-payment-robokassa
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-robokassa@beta
     ```
   </CodeTab>
 </CodeTabs>
@@ -39,6 +39,8 @@ Add the provider configuration in your `medusa-config.js` file of the Medusa adm
 
 ```ts title="medusa-config.js"
 // ...
+const ROBOKASSA_INTEGRATION_ID = "robokassa-1"
+
 module.exports = defineConfig({
   // ...
   plugins: [
@@ -50,7 +52,7 @@ module.exports = defineConfig({
         providers: [
           {
             resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
-            id: "robokassa",
+            id: ROBOKASSA_INTEGRATION_ID,
             options: {},
           },
         ],
@@ -58,20 +60,21 @@ module.exports = defineConfig({
     },
     {
       resolve: "@gorgo/medusa-payment-robokassa",
-      options: {}
+      options: {},
     },
   ],
   modules: [
     // ...
     {
       resolve: "@medusajs/medusa/payment",
-      dependencies: ["integration"],
       options: {
         providers: [
           {
             resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
             id: "robokassa",
-            options: { id: "robokassa"}
+            options: {
+              id: ROBOKASSA_INTEGRATION_ID
+            }
           },
         ],
       },

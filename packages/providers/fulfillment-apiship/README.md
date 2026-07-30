@@ -57,7 +57,7 @@ ApiShip Integration for Medusa
 - **Storefront Example:** A ready-to-use [Next.js storefront example](https://github.com/gorgojs/medusa-integrations/tree/main/examples/fulfillment-apiship/medusa-storefront) you can use as a reference.
 - **Test Mode:** Simulate calculations and orders without affecting real data.
 - **Detailed Logging:** Request and response logs for debugging and support in development mode.
-- **`Integration Module`:** Configure this plugin directly in the Medusa Admin application — no editing configuration files or redeploying the store.
+- **[Integration module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> :** Configure this plugin directly in the Medusa Admin application — no editing configuration files or redeploying the store.
 
 > **Integration Module:** This plugin supports the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
 
@@ -83,11 +83,9 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 ## Installation
 
 ```bash
-yarn add @gorgo/medusa-integration
-yarn add @gorgo/medusa-fulfillment-apiship
+yarn add @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship@beta
 # or
-npm install @gorgo/medusa-integration
-npm install @gorgo/medusa-fulfillment-apiship
+npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship@beta
 ```
 
 ## Documentation

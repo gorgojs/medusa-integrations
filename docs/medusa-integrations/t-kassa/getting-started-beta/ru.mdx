@@ -21,12 +21,12 @@ description: "В этом документе вы узнаете, как уст�
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-tkassa@beta
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-tkassa@beta
     ```
   </CodeTab>
 </CodeTabs>
@@ -39,6 +39,8 @@ description: "В этом документе вы узнаете, как уст�
 
 ```ts title="medusa-config.js"
 # ...
+const TKASSA_INTEGRATION_ID = "tkassa-1"
+
 module.exports = defineConfig({
   # ...
   plugins: [
@@ -50,7 +52,7 @@ module.exports = defineConfig({
         providers: [
           {
             resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
-            id: "tkassa",
+            id: TKASSA_INTEGRATION_ID,
             options: {},
           },
         ],
@@ -58,20 +60,21 @@ module.exports = defineConfig({
     },
     {
       resolve: "@gorgo/medusa-payment-tkassa",
-      options: {}
+      options: {},
     },
   ],
   modules: [
     # ...
     {
       resolve: "@medusajs/medusa/payment",
-      dependencies: ["integration"],
       options: {
         providers: [
           {
             resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
             id: "tkassa",
-            options: { id: "tkassa"}
+            options: {
+              id: TKASSA_INTEGRATION_ID
+            }
           },
         ],
       },

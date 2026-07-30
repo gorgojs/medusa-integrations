@@ -1,33 +1,30 @@
 ---
 title: "Модуль интеграций для Medusa"
-description: "Модуль Medusa, позволяющий плагинам описывать настройки, задаваемые в Medusa Admin."
+description: "Модуль Medusa, который позволяет любому плагину или провайдеру описывать свои опции, а администраторам магазина – настраивать их прямо в админке: без правок medusa-config и передеплоя."
 ---
 
 <div>
-  <img alt="Логотип Integration Module" src="https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/integration-module-logo.svg" width="100"/>
+  <img alt="Логотип Integration Module" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-module-logo.svg" width="100"/>
 </div>
 
 # {frontmatter.title}
 
-Модуль Medusa, который позволяет плагинам описывать свои настройки, а администраторам магазина — конфигурировать их прямо в админке: без правок `medusa-config` и передеплоя, с шифрованием секретов.
+Модуль интеграций позволяет любому плагину описывать свои опции, а администраторам магазина — настраивать их как **интеграции** прямо в админке: без правок `medusa-config` и передеплоя. Он генерирует admin CRUD API и валидацию, поэтому вам не нужно писать модели данных, роуты или формы.
+
+Модуль интеграций пригодится любому разработчику Medusa, который создаёт плагины, провайдеры или кастомные модули с настраиваемыми параметрами — ключи API, учётные данные, режимы, вебхуки, — но предпочёл бы не собирать вручную страницы UI, слой данных и валидацию для каждого из них.
 
 ## Возможности
 
-- **No-code конфигурация в админке.** Учётные данные и параметры плагинов задаются в разделе Настройки → Интеграции — без правок `medusa-config`/env и передеплоя.
-- **Шифрование секретов на месте (at-rest).** Поля с пометкой `secret` шифруются (AES-256-GCM) и никогда не уходят в браузер.
-- **Декларативный дескриптор** (`defineIntegration`) для авторов плагинов: опции, секции, валидация и проверка соединения — в одном месте.
-- **Богатые типы опций и валидация:** `string` / `url` / `email` / `uuid` / `number` / `boolean` / `enum` / `json`, правила на уровне опции и меж-секционные, условная видимость, read-only-поля, i18n-подписи и иконка.
-- **Несколько экземпляров** одного провайдера (например, несколько аккаунтов).
-- **Проверка соединения** прямо из админки.
-- **Типизированный резолв в рантайме:** потребитель получает провалидированный расшифрованный конфиг; неполные или выключенные конфигурации не резолвятся — черновик не «протекает» в рантайм.
-- **Кастомные виджеты** провайдера в админке.
-- **Анонимная телеметрия.**
-
----
-
-## Что такое модуль интеграций?
-
-Плагинам нужны настройки — ключи API, режимы, вебхуки. Обычно их держат в `medusa-config`/env: это требует доступа к коду и передеплоя при каждом изменении, а секреты лежат в открытом виде. Модуль переносит настройки в **админку и БД**: администратор магазина заполняет форму, секреты шифруются, а плагин-потребитель читает готовый конфиг в рантайме. Автор плагина при этом лишь **описывает** форму настроек — UI, хранение, шифрование и валидацию берёт на себя модуль.
+- **No-code конфигурация в Medusa Admin:** Учётные данные и опции управляются в разделе Настройки — без правок `medusa-config`/env и без передеплоя.
+- **Не зависит от типа провайдера:** Работает для любого типа провайдера — оплата, доставка, контент, уведомления, ERP и не только, — а также для любого плагина или кастомного модуля Medusa.
+- **Декларативный дескриптор (`defineIntegration`):** Опции, секции настроек, валидация и проверка соединения в одном объявлении.
+- **Богатые типы опций и валидация:** Типизированные поля (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) с правилами на уровне опции и меж-секционными, условной видимостью и read-only-полями.
+- **Шифрование секретов на месте (at-rest):** Поля с пометкой `secret` шифруются (AES-256-GCM) и никогда не уходят в браузер.
+- **Несколько экземпляров:** Настраивайте один и тот же провайдер несколько раз, каждый со своими параметрами (например, несколько аккаунтов).
+- **Проверка соединения:** Проверьте учётные данные в стороннем сервисе прямо из админки.
+- **Типизированный резолв в рантайме:** Потребители читают провалидированные расшифрованные опции; неполные или выключенные опции не резолвятся — черновики не «протекают» в рантайм.
+- **Настраиваемый UI админки:** Секции можно менять местами ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)); если готовых секций недостаточно, соберите любой UI для своих опций с помощью кастомных виджетов.
+- **Обзор интеграций:** Находите доступные интеграции прямо в админке.
 
 ---
 
@@ -35,15 +32,43 @@ description: "Модуль Medusa, позволяющий плагинам оп�
 
 <UsedByList items={[
   {
-    image: "https://raw.githubusercontent.com/gorgojs/medusa-plugins/refs/heads/main/assets/tkassa-logo.svg",
-    alt: "T-Kassa логотип",
-    name: "T-Kassa от T-Bank",
+    image: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/apiship.svg",
+    alt: "Логотип ApiShip",
+    name: "ApiShip",
+    href: "https://www.npmjs.com/package/@gorgo/medusa-fulfillment-apiship",
+    description: "Доставка · от Gorgo"
+  },
+  {
+    image: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/tkassa.png",
+    alt: "Логотип T-Kassa",
+    name: "T-Kassa от Т-Банк",
     href: "https://www.npmjs.com/package/@gorgo/medusa-payment-tkassa",
-    displayUrl: "@gorgo/medusa-payment-tkassa",
+    description: "Оплата · от Gorgo"
+  },
+  {
+    image: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/yookassa.svg",
+    alt: "Логотип ЮKassa",
+    name: "ЮKassa",
+    href: "https://www.npmjs.com/package/@gorgo/medusa-payment-yookassa",
+    description: "Оплата · от Gorgo"
+  },
+  {
+    image: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/robokassa.svg",
+    alt: "Логотип Robokassa",
+    name: "Robokassa",
+    href: "https://www.npmjs.com/package/@gorgo/medusa-payment-robokassa",
+    description: "Оплата · от Gorgo"
+  },
+  {
+    image: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/1c.svg",
+    alt: "Логотип 1С",
+    name: "1С:Предприятие",
+    href: "https://www.npmjs.com/package/@gorgo/medusa-1c",
+    description: "ERP · от Gorgo"
   }
 ]}/>
 
-<Note type="success" title="">**Хотите добавить ваш проект в этот список?** Сделайте [Pull Request](https://github.com/gorgojs/medusa-integrations#contribution) или напишите в [чат поддержки](https://t.me/gorgojs_bot) в Telegram.</Note>
+<Note type="success" title="">**Хотите добавить ваши интеграции в этот список?** Сделайте [Pull Request](https://github.com/gorgojs/medusa-integrations#contribution) или напишите в [чат поддержки](https://t.me/gorgojs_bot) в Telegram.</Note>
 
 ---
 
@@ -53,4 +78,9 @@ description: "Модуль Medusa, позволяющий плагинам оп�
 
 Общайтесь с другими разработчиками Medusa в Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
 
+## Дальнейшие шаги
 
+- [Основные концепции](/medusa-modules/integration/concepts)
+- [Чтение опций](/medusa-modules/integration/reading-options)
+- [Перенос провайдера на модуль интеграций](/medusa-modules/integration/migrate-provider-to-integration-module)
+- [Руководство администратора](/medusa-modules/integration/manage-integrations)

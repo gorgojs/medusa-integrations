@@ -1,0 +1,84 @@
+---
+title: "Manage Robokassa Settings in Medusa Admin"
+description: "Learn how to view and edit the Robokassa integration's In this guide, you'll learn how to view and edit Robokassa integration settings in Medusa Admin via the Integration Module"
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to view and edit Robokassa integration settings in Medusa Admin via the [Integration Module](/medusa-modules/integration).
+
+## View Robokassa Details
+
+To view the Robokassa details:
+
+1. Open Medusa Admin.
+2. Go to **Settings → Integrations → Robokassa**.
+
+This opens the Robokassa settings page where you can review the credential details, receipt generation and behavior payment parameters.
+
+![Robokassa settings overview](/static/robokassa/en/settings-overview.png)
+
+---
+
+## Edit Robokassa Credential Parameters
+
+You can update the shop login, hashing algorithm, and two passwords from the first section on the Robokassa settings page.
+
+To edit the credential parameters:
+
+1. Go to **Settings → Integrations → Robokassa**.
+2. In the **Credentials** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the shop login, hashing algorithm, and passwords.
+5. Click **Save**.
+
+![Edit Robokassa credential details](/static/robokassa/en/edit-credential.png)
+
+---
+
+## Edit Receipt Generation Details
+
+The **Receipt** section stores the receipt generation according to Russian fiscal data format (FFD).
+
+To edit the receipt details:
+
+1. Go to **Settings → Integrations → Robokassa**.
+2. In the **Receipt** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the tax system type and default VAT rates for products and shipping.
+5. Click **Save**.
+
+![Edit receipt details](/static/robokassa/en/edit-receipt.png)
+
+---
+
+## Edit Behavior Type
+
+The **Behavior** section determines the payments processing type.
+
+If auto-capture is enabled, one-step payment is used. If it's disabled, two-step payment is used.
+
+To edit the payment and VAT settings:
+
+1. Go to **Settings → Integrations → Robokassa**.
+2. In the **Behavior** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the auto-capture setting and payment processing mode.
+5. Click **Save**.
+
+![Edit behavior tsype](/static/robokassa/en/edit-behavior.png)
+
+---
+
+## Add Payment Provider
+
+To add a payment providers displayed in the Storefront for Robokassa:
+
+1. Go to **Settings → Regions**.
+2. Choose your region.
+3. In the first section, click the action menu in the section's header.
+4. Choose **Edit**.
+5. In the modal that opens:
+![Add payment provider](/static/robokassa/en/add-payment-provider.png)
+   - Add **Robokassa** to Payment Providers.
+6. Click **Save**.

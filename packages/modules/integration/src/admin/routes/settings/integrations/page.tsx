@@ -21,10 +21,11 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { sdk } from "../../../lib/sdk"
 import { IntegrationIcon } from "../../../components/integration-icon"
+import { toModuleProviderId } from "../../../lib/provider-id"
 import type { AdminIntegrationListResponse, IntegrationOverviewItem } from "../../../../types"
 
 const PAGE_SIZE = 20
-const DOCS_URL = "https://docs.gorgojs.com/ru/medusa-plugins/integration-module"
+const DOCS_URL = "https://docs.gorgojs.com/medusa-modules/integration"
 
 /** Integration column: icon + name + instance badge, with a "v{version} • by {author}" meta line. */
 const IntegrationCell = ({ item }: { item: IntegrationOverviewItem }) => {
@@ -39,7 +40,7 @@ const IntegrationCell = ({ item }: { item: IntegrationOverviewItem }) => {
           </Text>
           {item.provider_id && (
             <Badge size="2xsmall" color="grey">
-              {item.provider_id}
+              {toModuleProviderId(item.provider_id, item.category)}
             </Badge>
           )}
         </div>

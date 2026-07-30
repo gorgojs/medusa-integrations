@@ -15,10 +15,47 @@ icon: "robokassa.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
 docsUrl: "https://docs.gorgojs.com/integrations/robokassa"
 configSnippet: |
-  {
-    resolve: "@gorgo/medusa-payment-robokassa",
-    options: {
-      // credentials & settings are managed in Admin, not here
-    },
-  }
+  // ...
+  const ROBOKASSA_INTEGRATION_ID = "robokassa-1"
+
+  module.exports = defineConfig({
+    // ...
+    plugins: [
+      // ...
+      {
+        resolve: "@gorgo/medusa-integration",
+        options: {
+          encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+          providers: [
+            {
+              resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
+              id: ROBOKASSA_INTEGRATION_ID,
+              options: {},
+            },
+          ],
+        },
+      },
+      {
+        resolve: "@gorgo/medusa-payment-robokassa",
+        options: {},
+      },
+    ],
+    modules: [
+      // ...
+      {
+        resolve: "@medusajs/medusa/payment",
+        options: {
+          providers: [
+            {
+              resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
+              id: "robokassa",
+              options: {
+                id: ROBOKASSA_INTEGRATION_ID
+              }
+            },
+          ],
+        },
+      },
+    ],
+  })
 active: true

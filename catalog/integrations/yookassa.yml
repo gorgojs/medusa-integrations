@@ -15,10 +15,47 @@ icon: "yookassa.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
 docsUrl: "https://docs.gorgojs.com/integrations/yookassa"
 configSnippet: |
-  {
-    resolve: "@gorgo/medusa-payment-yookassa",
-    options: {
-      // credentials & settings are managed in Admin, not here
-    },
-  }
+  // ...
+  const YOOKASSA_INTEGRATION_ID = "yookassa-1"
+
+  module.exports = defineConfig({
+    // ...
+    plugins: [
+      // ...
+      {
+        resolve: "@gorgo/medusa-integration",
+        options: {
+          encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+          providers: [
+            {
+              resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
+              id: YOOKASSA_INTEGRATION_ID,
+              options: {},
+            },
+          ],
+        },
+      },
+      {
+        resolve: "@gorgo/medusa-payment-yookassa",
+        options: {}
+      },
+    ],
+    modules: [
+      // ...
+      {
+        resolve: "@medusajs/medusa/payment",
+        options: {
+          providers: [
+            {
+              resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
+              id: "yookassa",
+              options: {
+                id: YOOKASSA_INTEGRATION_ID
+              }
+            },
+          ],
+        },
+      },
+    ],
+  })
 active: true

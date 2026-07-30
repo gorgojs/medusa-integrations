@@ -16,6 +16,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { useState, type ReactNode } from "react"
 import { LayoutComposer } from "@medusajs/dashboard/components"
 import { sdk } from "../../../../lib/sdk"
+import { toModuleProviderId } from "../../../../lib/provider-id"
 import { IntegrationIcon } from "../../../../components/integration-icon"
 import { IntegrationFieldValue } from "../../../../components/integration-form/field-value"
 import { EditSectionDrawer } from "../../../../components/integration-form/edit-section-drawer"
@@ -217,7 +218,7 @@ const EditPage = () => {
                     <Heading>{t(descriptor.displayName)}</Heading>
                     {provider_id && (
                       <Badge size="2xsmall" color="grey">
-                        {provider_id}
+                        {toModuleProviderId(provider_id, descriptor.category)}
                       </Badge>
                     )}
                   </div>

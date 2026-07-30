@@ -11,14 +11,51 @@ displayName:
 shortDescription:
   en: "Accept payments via T-Kassa by T-Bank"
   ru: "Приём платежей через Т-Кассу от Т-Банка"
-icon: "tkassa.svg"
+icon: "tkassa.png"
 repository: "https://github.com/gorgojs/medusa-integrations"
 docsUrl: "https://docs.gorgojs.com/integrations/t-kassa"
 configSnippet: |
-  {
-    resolve: "@gorgo/medusa-payment-tkassa",
-    options: {
-      // credentials & settings are managed in Admin, not here
-    },
-  }
+  # ...
+  const TKASSA_INTEGRATION_ID = "tkassa-1"
+
+  module.exports = defineConfig({
+    # ...
+    plugins: [
+      # ...
+      {
+        resolve: "@gorgo/medusa-integration",
+        options: {
+          encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+          providers: [
+            {
+              resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+              id: TKASSA_INTEGRATION_ID,
+              options: {},
+            },
+          ],
+        },
+      },
+      {
+        resolve: "@gorgo/medusa-payment-tkassa",
+        options: {},
+      },
+    ],
+    modules: [
+      # ...
+      {
+        resolve: "@medusajs/medusa/payment",
+        options: {
+          providers: [
+            {
+              resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
+              id: "tkassa",
+              options: {
+                id: TKASSA_INTEGRATION_ID
+              }
+            },
+          ],
+        },
+      },
+    ],
+  })
 active: true
