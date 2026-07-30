@@ -18,7 +18,7 @@ import { sdk } from "../../../../lib/sdk"
 import { IntegrationIcon } from "../../../../components/integration-icon"
 import type { AdminIntegrationCatalogResponse, CatalogItem } from "../../../../../types"
 
-const PUBLISH_URL = "https://docs.gorgojs.com/integrations"
+const PUBLISH_URL = "https://docs.gorgojs.com/medusa-modules/integration"
 const API_URL = "https://gorgojs.com"
 
 const InstallModal = ({ item, onOpenChange }: { item: CatalogItem | null; onOpenChange: (open: boolean) => void }) => {
@@ -41,8 +41,12 @@ const InstallModal = ({ item, onOpenChange }: { item: CatalogItem | null; onOpen
                 {t("integration.browse.install_addToConfig")}
               </Text>
               <div className="bg-ui-bg-subtle flex items-center justify-between gap-x-2 rounded-md px-3 py-2">
-                <code className="txt-compact-small text-ui-fg-subtle">{`npm i ${item.npm}`}</code>
-                <Copy content={`npm i ${item.npm}`} />
+                <code className="txt-compact-small text-ui-fg-subtle">{`yarn add @gorgo/medusa-integration ${item.npm}@beta`}</code>
+                <Copy content={`yarn add @gorgo/medusa-integration ${item.npm}@beta`} />
+              </div>
+              <div className="bg-ui-bg-subtle flex items-center justify-between gap-x-2 rounded-md px-3 py-2">
+                <code className="txt-compact-small text-ui-fg-subtle">{`npm install @gorgo/medusa-integration ${item.npm}@beta`}</code>
+                <Copy content={`npm install @gorgo/medusa-integration ${item.npm}@beta`} />
               </div>
               {item.configSnippet && (
                 <div className="bg-ui-bg-subtle flex flex-col gap-y-2 rounded-md px-3 py-2">

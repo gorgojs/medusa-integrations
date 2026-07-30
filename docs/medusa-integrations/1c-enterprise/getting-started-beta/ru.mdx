@@ -20,12 +20,12 @@ description: "В этой документации вы узнаете, как �
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-integration @gorgo/medusa-1c
+    yarn add @gorgo/medusa-integration @gorgo/medusa-1c@beta
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-integration @gorgo/medusa-1c
+    npm install @gorgo/medusa-integration @gorgo/medusa-1c@beta
     ```
   </CodeTab>
 </CodeTabs>
@@ -38,6 +38,8 @@ description: "В этой документации вы узнаете, как �
 
 ```ts title="medusa-config.js"
 # ...
+const ONEC_INTEGRATION_ID = "1c-1"
+
 module.exports = defineConfig({
   # ...
   plugins: [
@@ -49,7 +51,7 @@ module.exports = defineConfig({
         providers: [
           {
             resolve: "@gorgo/medusa-1c/providers/integration-1c",
-            id: "tkassa",
+            id: ONEC_INTEGRATION_ID,
             options: {},
           },
         ],

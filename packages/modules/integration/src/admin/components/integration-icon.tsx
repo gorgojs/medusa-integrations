@@ -34,22 +34,17 @@ export const IntegrationIcon = ({
   }
 
   return (
-    <div
-      className={clx(
-        "bg-ui-bg-component shadow-borders-base flex shrink-0 items-center justify-center overflow-hidden rounded-md",
-        dim
-      )}
-    >
+    <>
       {showImage ? (
         <img
           src={src!}
           alt={alt}
-          className="h-full w-full object-cover"
+          className="rounded-lg object-cover border shadow-xs w-12 h-12"
           onError={() => setErrored(true)}
         />
       ) : (
-        <PuzzleSolid className="text-ui-fg-subtle" />
+        <PuzzleSolid className="rounded-lg object-cover border shadow-xs w-12 h-12 p-3 text-ui-fg-subtle" />
       )}
-    </div>
+    </>
   )
 }

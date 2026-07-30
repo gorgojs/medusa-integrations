@@ -60,7 +60,7 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 - [ ] Admin UI extension for journaling and audit logs
 - [ ] Detailed documentation
 
-> **Integration Module:** This plugin supports the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
+> **Integration Module:** This plugin supports the [Integration module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" />, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
 
 ## Requirements
 
@@ -71,11 +71,9 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 ## Installation
 
 ```bash
-yarn add @gorgo/medusa-integration
-yarn add @gorgo/medusa-1c
+yarn add @gorgo/medusa-integration @gorgo/medusa-1c@beta
 # or
-npm install @gorgo/medusa-integration
-npm install @gorgo/medusa-1c
+npm install @gorgo/medusa-integration @gorgo/medusa-1c@beta
 ```
 
 ## Documentation

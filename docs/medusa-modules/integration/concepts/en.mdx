@@ -1,12 +1,136 @@
 ---
-title: "Concepts"
-description: "Core concepts of the Integration Module."
+title: "General Concepts"
+description: "Core concepts of the Integration Module: the descriptor, roles, and how options flow from config to runtime."
 ---
-
-<div>
-  <img alt="Integration Module logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-module-logo.svg" width="100"/>
-</div>
 
 # {frontmatter.title}
 
-Draft placeholder — replace with the Concepts documentation.
+This page introduces the core concepts behind the Integration Module: the roles involved, the descriptor at its center, and how an integration's options flow from configuration to runtime and into the admin UI. Later pages turn each idea into a step-by-step guide.
+
+## Providers and consumers
+
+An integration involves two developer roles, with the store admin between them.
+
+- **Integration provider:** Declares an integration. It defines the options, how they are grouped and validated, and an optional connection test. Any plugin, provider, or custom module can be an integration provider, and it declares all of this in a single [descriptor](#the-descriptor).
+- **Store admin:** Configures those options in the Admin as *integration*, such as credentials, modes, or webhooks. There are no `medusa-config` edits and no redeploys.
+- **Consumer:** Reads the resolved options at runtime.
+
+The provider and the consumer are usually the same package. A payment plugin declares its credentials as an integration, then reads them back in its payment logic. A consumer can also be unrelated code, such as an API route, a subscriber, or a scheduled job, that needs a configured integration's options.
+
+## The descriptor
+
+A descriptor is a single declaration of an integration's metadata, options, settings sections, validation, and an optional connection test. You create it with `defineIntegration`.
+
+For example:
+
+```ts title="providers/integration-acme/services/acme-integration.ts"
+import { defineIntegration, AbstractIntegrationProvider } from "@gorgo/medusa-integration"
+
+const descriptor = defineIntegration({
+  category: "payment",
+  displayName: "acme.name",
+  options: {
+    apiKey:  {
+      type: "string",
+      control: "secret",
+      secret: true,
+      required: true,
+      label: "acme.apiKey"
+    },
+    sandbox: {
+      type: "boolean",
+      control: "switch",
+      default: false,
+      label: "acme.sandbox"
+    },
+  },
+  sections: [
+    {
+      id: "credentials",
+      title: "acme.credentials",
+      options: ["apiKey", "sandbox"]
+    },
+  ],
+})
+
+export class AcmeIntegration extends AbstractIntegrationProvider {
+  static identifier = "acme"
+
+  get descriptor() {
+    return descriptor
+  }
+}
+```
+
+The descriptor is the source of truth for the integration. The module uses it to generate the admin CRUD API, validate writes, render the settings UI, and define what consumers resolve at runtime. You never write data models, routes, or forms.
+
+## Where it can be used
+
+The Integration Module is provider-agnostic. It does not care what the options are for.
+
+- **Any provider type:** payment, fulfillment, ERP, notification, content, and more.
+- **Plugins:** add configurable settings to a plugin without building a settings page and a data layer.
+- **Custom modules and admin customizations:** any Medusa module that needs admin-configurable options, such as API keys, modes, or feature flags.
+
+If a store admin should be able to manage a setting, it can be an integration.
+
+## Identifiers and instances
+
+Every integration has a stable identifier, such as `acme`, set as the provider's `static identifier`. Each registration is keyed by a `provider_id` of the form:
+
+```
+int_<identifier>[_<instanceId>]
+```
+
+- **Single instance:** the default. It has no instance id, so its key is `int_acme`.
+- **Multiple instances:** Register the same provider more than once, each with its own `id`, for example `int_acme_eu` and `int_acme_us`. Each instance is configured independently, which is how you support several accounts.
+
+A consumer resolves options by identifier and instance, so the same code can target the right one.
+
+## Integration options
+
+An integration's options move through a predictable path. An author declares them in the descriptor, an admin configures them, the module validates them, they become live once the integration is enabled and complete, and a consumer resolves them at runtime. A connection test can check them against the third-party service along the way.
+
+### Generated CRUD and validation
+
+The module generates the admin CRUD API from the descriptor and validates every write. Validation covers per-option rules, such as types, ranges, and patterns, along with cross-section rules that span the whole configuration. There is nothing to build for each integration.
+
+### Enabled and complete
+
+Options become live only when the integration is both enabled and complete, meaning it passes full validation. An incomplete draft or a disabled integration never resolves, so half-finished configuration cannot leak into runtime.
+
+### Secrets and encryption
+
+Options marked `secret` are encrypted at rest with AES-256-GCM and never reach the browser. The admin API masks them and reports only whether each one is set. Saving a secret as blank keeps its stored value instead of clearing it.
+
+### Connection test
+
+A descriptor can declare an optional connection test that checks credentials against the third-party service. Admins run it on demand, and a scheduled job re-checks configured integrations periodically.
+
+### Runtime options resolution
+
+Consumers read typed, validated, and decrypted options, with descriptor defaults applied. An incomplete or disabled integration resolves to nothing rather than partial data. Resolved options are cached briefly and refreshed whenever the configuration changes.
+
+## Admin UI generation
+
+The module generates the admin UI for an integration from its descriptor, so there are no pages to build.
+
+### Sections
+
+Options are grouped into settings sections and rendered with Medusa's [LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer) as reorderable cards, in a single- or two-column layout.
+
+### Custom sections
+
+When the generated Admin UI is not enough, you can build any UI for your options with custom admin widgets. These are standard Medusa admin widgets built on the same `defineWidgetConfig` and injection-zone mechanism you already use elsewhere, so there's nothing new to learn. The module exposes injection zones on each integration's page (for example `gorgo.integration.<identifier>.main.after`), and a widget targeting one of them receives the resolved `providerId` and reads and writes the integration's options directly.
+
+### Localization
+
+Descriptor labels, hints, and titles are i18n keys. Ship translations with your integration and the settings UI is localized automatically.
+
+This builds on Medusa's standard admin i18n, so there's nothing new to learn. Register your translations the usual way and the keys resolve against the admin's active language, falling back to English when a key is missing. Custom widgets localize the same way, using the same message catalog as the generated form.
+
+## Next steps
+
+- [Reading Options](/medusa-modules/integration/reading-options)
+- [Migrate a Provider to the Integration Module](/medusa-modules/integration/migrate-provider-to-integration-module)
+- [Admin User guide](/medusa-modules/integration/manage-integrations)

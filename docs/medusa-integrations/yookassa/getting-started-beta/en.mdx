@@ -21,12 +21,12 @@ In this document, you'll learn how to install and configure the YooKassa payment
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-yookassa
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-yookassa@beta
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-integration @gorgo/medusa-payment-yookassa
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-yookassa@beta
     ```
   </CodeTab>
 </CodeTabs>
@@ -39,6 +39,8 @@ Add the provider configuration in your `medusa-config.js` file of the Medusa Adm
 
 ```ts title="medusa-config.js"
 // ...
+const YOOKASSA_INTEGRATION_ID = "yookassa-1"
+
 module.exports = defineConfig({
   // ...
   plugins: [
@@ -50,7 +52,7 @@ module.exports = defineConfig({
         providers: [
           {
             resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
-            id: "yookassa",
+            id: YOOKASSA_INTEGRATION_ID,
             options: {},
           },
         ],
@@ -65,13 +67,14 @@ module.exports = defineConfig({
     // ...
     {
       resolve: "@medusajs/medusa/payment",
-      dependencies: ["integration"],
       options: {
         providers: [
           {
             resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
             id: "yookassa",
-            options: { id: "yookassa"}
+            options: {
+              id: YOOKASSA_INTEGRATION_ID
+            }
           },
         ],
       },

@@ -1,0 +1,231 @@
+---
+title: "Миграция провайдера на модуль интеграций"
+description: "Пошаговый перенос настроек существующего Medusa-провайдера в модуль интеграций: готовый UI в админке, шифрование секретов и валидация полей."
+---
+
+# {frontmatter.title}
+
+Сменить токен или пароль у провайдера - значит изменять код и деплоить заново, если передавать эти опции через `medusa-config.ts`. Модуль интеграций убирает этот воркфлоу: настройки переезжают в Medusa Admin, секреты шифруются, а провайдер получает готовый конфиг без единой строки кода.
+
+В этом гайде вы узнаете, как перенести существующий провайдер на `@gorgo/medusa-integration` на примере реальной миграции плагина интеграции с ApiShip.
+
+---
+
+## Что такое модуль интеграций
+
+Модуль интеграций позволяет любому плагину описывать свои опции, а администраторам магазина — настраивать их как **интеграции** прямо в админке: без правок `medusa-config` и передеплоя. Он генерирует admin CRUD API и валидацию, поэтому вам не нужно писать модели данных, роуты или формы.
+
+<Note type="default" title="">Дескриптор и опции модуля подробно разобраны в разделах [Концепции](/medusa-modules/integration/concepts) и [Параметры модуля](/medusa-modules/integration/module-options). Здесь — только то, что нужно для переноса существующего провайдера.</Note>
+
+---
+
+## Миграция
+
+До миграции настройки ApiShip хранились в `store.metadata.apiship`: токен, подключения к курьерским службам, адрес отправителя по умолчанию. За ними стоял собственный Admin UI и отдельный API-роут на каждую CRUD-операцию. Модуль интеграций сводит всё это в один раздел **Настройки** → **Интеграции**.
+
+### Шаг 1: Опишите дескриптор
+
+Рядом с существующим провайдером доставки создайте новый провайдер интеграции: `providers/integration-apiship/services/apiship-integration.ts`. Опишите в нём дескриптор, это тот же список настроек, что был раньше, но каждое поле теперь объявлено явно: тип, обязательность, секретность и способ отображения в форме.
+
+```text title="Structure"
+src/providers/
+├── integration-apiship/          # новый: дескриптор настроек для модуля интеграций
+└── fulfillment-apiship/          # существующий: провайдер доставки
+```
+
+```ts title="providers/integration-apiship/services/apiship-integration.ts"
+import { AbstractIntegrationProvider, defineIntegration, z } from "@gorgo/medusa-integration"
+import { ProviderKeys } from "../../../types"
+import { APISHIP_ICON } from "../../icon.ts"
+
+const descriptor = defineIntegration({
+  category: "fulfillment",
+  displayName: "apiship.name",
+  icon: APISHIP_ICON,
+  preferredLayoutId: "core:two-column",
+  supportsMultipleInstances: true,
+
+  options: {
+    token: {
+      type: "string",
+      required: true,
+      secret: true,
+      control: "secret",
+      label: "apiship.fields.token"
+    },
+    is_test: {
+      type: "boolean",
+      default: false,
+      control: "switch",
+      label: "apiship.fields.isTest"
+    },
+    // Подключения к курьерским службам, адрес отправителя, параметры товара — за них отвечает свой Admin UI (см. шаг 4),
+    // но они всё равно часть схемы: шифруются и валидируются наравне с остальными полями.
+    settings: {
+      type: "json",
+      default: {
+        connections: []
+        // ...
+        },
+      control: "json",
+      label: "apiship.fields.settings"
+    },
+  },
+
+  sections: [
+    {
+      id: "credentials",
+      title: "apiship.sections.credentials",
+      options: ["token", "is_test"] 
+    },
+  ],
+
+  testConnection: async ({ options }) => {
+    // Лёгкий read-only вызов к API ApiShip, подтверждающий валидность токена.
+    // Возвращает { status, message }, исключений не бросает.
+  },
+})
+
+export type ApishipIntegrationOptions = z.infer<typeof descriptor.optionsSchema>
+
+export class ApishipIntegrationProvider extends AbstractIntegrationProvider {
+  static identifier = ProviderKeys.APISHIP
+
+  get descriptor() {
+    return descriptor
+  }
+}
+
+export default ApishipIntegrationProvider
+```
+
+<Note type="default" title="">`secret: true` у опции `token` зашифрует это поле перед сохранением. Для вложенных структур вроде списка подключений к курьерским службам есть `type: "json"` со своим `validate`.</Note>
+
+### Шаг 2: Подключите провайдер в `medusa-config.ts`
+
+```ts title="medusa-config.ts"
+// ...
+
+const APISHIP_INTEGRATION_ID = "apiship-1"
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
+            id: APISHIP_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    // ...
+  ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/fulfillment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
+            id: "apiship",
+            options: { id: APISHIP_INTEGRATION_ID },
+          },
+        ],
+      },
+    },
+    // ...
+  ],
+})
+```
+
+<Note type="warning">Поле `id` у интеграционного провайдера задаётся на **верхнем уровне** записи: именно из него собирается итоговый ключ инстанса `int_<identifier>_<id>`. Если случайно положить его внутрь `options`, провайдер молча зарегистрируется под дефолтным (безымянным) инстансом. Ошибки не будет, но конфиг из админки в провайдер не попадёт, и обнаружите вы это уже по факту. Учтите также, что `id` здесь и `options.id` на стороне фулфилмент-провайдера задаются в двух независимых местах конфигурации, поэтому синхронизировать их нужно вручную.</Note>
+
+Добавьте секретный ключ шифрования в `.env` для шифрования опций:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+### Шаг 3: Переключите провайдер на чтение через `resolveIntegrationOptions`
+
+Раньше провайдер доставки читал настройки напрямую из `store.metadata.apiship`. Теперь он получает их из модуля интеграций через `resolveIntegrationOptions()`, передавая свой `identifier` и `instance_id` (тот самый `id` из `medusa-config.ts`). Модуль возвращает уже расшифрованный и провалидированный конфиг:
+
+```ts title="providers/fulfillment-apiship/core/apiship-base.ts"
+// ...
+import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
+import { ProviderKeys } from "../../../types"
+
+class ApishipBase extends AbstractFulfillmentProviderService {
+  protected instanceId_: string | null
+
+  constructor({ logger }, options?: Record<string, unknown>) {
+    super()
+    this.logger_ = logger
+    this.instanceId_ = (options?.id as string | undefined) ?? null
+  }
+
+  private async getApishipOptions_(): Promise<ApishipOptionsDTO> {
+    const options = await resolveIntegrationOptions<DeepPartial<ApishipOptionsDTO>>({
+      identifier: ProviderKeys.APISHIP,
+      instance_id: this.instanceId_,
+    })
+    return this.normalizeApishipOptions_(options)
+  }
+
+  // ... 
+}
+```
+
+### Шаг 4: Перенесите кастомный Admin UI
+
+Раньше у ApiShip была отдельная страница в админке. Теперь страницу интеграции с формой из дескриптора рендерит сам модуль, а ваш кастомный UI (подключения к курьерским службам, адрес отправителя) встраивается в неё **виджетом** через зону расширения:
+
+```ts title="admin/widgets/apiship-integration-main.tsx"
+// ...
+import { defineWidgetConfig } from "@medusajs/admin-sdk"
+import type { IntegrationSectionData } from "@gorgo/medusa-integration"
+import { ProviderKeys } from "../../../types"
+
+const ApishipIntegrationWidget = ({ data }: { data: IntegrationSectionData }) => {
+  const providerId = data.providerId // ключ инстанса от модуля: "int_apiship" или "int_apiship_<instance>"
+
+  const options = await resolveIntegrationOptions<DeepPartial<ApishipOptionsDTO>>({
+    identifier: ProviderKeys.APISHIP,
+    instance_id: providerId,
+  })
+
+  return (
+    <>
+      // ...существующие компоненты, providerId прокидывается дальше во все хуки и запросы
+    </>
+  )
+}
+
+export const config = defineWidgetConfig({
+  // зона расширения модуля: виджет встанет под формой на странице интеграции ApiShip
+  zone: "gorgo.integration.apiship.main.after",
+})
+
+export default ApishipIntegrationWidget
+```
+
+Модуль передаёт в виджет готовый ключ инстанса через `data.providerId`, так что прокидывать его в свои хуки и запросы к собственным API-роутам можно напрямую. В итоге одна страница совмещает и общую форму от модуля (токен, `is_test`), и специфичный для провайдера UI (подключения к курьерским службам, адрес отправителя) вместо двух разрозненных экранов.
+
+---
+
+## Итог
+
+Миграция завершена. Теперь провайдер получает настройки из Medusa Admin без правок кода и редеплоя, хранит секреты зашифрованными, из коробки поддерживает несколько инстансов и проверяет соединение прямо из админки. Кастомный UI при этом остаётся вашим, но живёт на одной странице с формой модуля.
+
+Полный код миграции доступен в открытом репозитории: [`fulfillment-apiship`](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/fulfillment-apiship).
+
+## Материалы
+
+- [Основные концепции](/medusa-modules/integration/concepts)
+- [Чтение опций](/medusa-modules/integration/reading-options)

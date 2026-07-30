@@ -16,13 +16,13 @@ export const syncProductOptionsStep = createStep(
     for (const { productId, existingOptions, optionsNeeded } of input) {
       const existingByTitle = new Map(existingOptions.map((o) => [o.title, o]));
 
-      const add: Array<string | { title: string; values: string[] }> = [];
+      const add: Array<string | { title: string; values: string[]; is_exclusive: boolean }> = [];
       const update: Array<{ product_option_id: string; add: { value: string }[] }> = [];
 
       for (const { title, values } of optionsNeeded) {
         const existing = existingByTitle.get(title);
         if (!existing) {
-          add.push({ title, values });
+          add.push({ title, values, is_exclusive: true });
           continue;
         }
         const existingValueStrings = new Set(existing.values.map((v) => v.value));
