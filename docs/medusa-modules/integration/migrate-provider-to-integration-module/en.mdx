@@ -15,7 +15,7 @@ In this guide you'll learn how to migrate an existing provider to `@gorgo/medusa
 
 The Integration Module lets any plugin describe its options and store admins configure them as **integrations** right in the admin panel: no `medusa-config` edits, no redeploy. It generates the admin CRUD API and validation for you, so you don't have to write data models, routes, or forms.
 
-<Note type="default" title="">The descriptor and module options are covered in detail in [Concepts](/medusa-modules/integration/concepts) and [Module options](/medusa-modules/integration/module-options). Here we only cover what's needed to migrate an existing provider.</Note>
+<Note type="default" title="">The descriptor is covered in detail in [Concepts](/medusa-modules/integration/concepts). Here we only cover what's needed to migrate an existing provider.</Note>
 
 ---
 
@@ -147,7 +147,7 @@ module.exports = defineConfig({
 
 <Note type="warning">The integration provider's `id` field is set at the **top level** of the entry: it's exactly what the final instance key `int_<identifier>_<id>` is assembled from. If you accidentally place it inside `options`, the provider silently registers under the default (unnamed) instance. There's no error, but the config from the admin panel never reaches the provider, and you'll only discover it after the fact. Note also that the `id` here and `options.id` on the fulfillment-provider side are set in two independent places, so you have to keep them in sync manually.</Note>
 
-Add the secret encryption key to `.env` to encrypt the options:
+Add the secret encryption key to `.env`:
 
 ```text title=".env"
 INTEGRATION_ENCRYPTION_KEY=supersecret
