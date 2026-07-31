@@ -85,13 +85,13 @@ afterAll(() => {
 // ---------------------------------------------------------------------------
 // Test suite
 // ---------------------------------------------------------------------------
-const BASE_OPTIONS = {
-  token: "nock-fake-token",
-  is_test: true as const,
-  settings: {
-    is_cod: false as const,
-    default_product_sizes: { length: 10, width: 10, height: 10, weight: 20 },
-  },
+// Credentials are descriptor-owned (integration module); settings are plugin-owned.
+const BASE_CREDENTIALS = { token: "nock-fake-token", is_test: true as const }
+const BASE_SENDER = {
+  sender_country_code: "RU",
+  sender_address_string: "Москва, Тверская, 1",
+  sender_contact_name: "Test User",
+  sender_phone: "+70000000000",
 }
 
 medusaIntegrationTestRunner({
@@ -128,7 +128,16 @@ medusaIntegrationTestRunner({
       )
       adminHeaders["authorization"] = `Bearer ${jwtToken}`
 
-      await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers: adminHeaders })
+      await api.post(
+        `/admin/integrations/${PROVIDER_ID}`,
+        { section_id: "credentials", values: BASE_CREDENTIALS },
+        { headers: adminHeaders }
+      )
+      await api.post(
+        `/admin/integrations/${PROVIDER_ID}`,
+        { section_id: "sender", values: BASE_SENDER },
+        { headers: adminHeaders }
+      )
     })
 
     // -------------------------------------------------------------------------

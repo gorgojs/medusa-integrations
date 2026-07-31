@@ -6,7 +6,7 @@ import {
 import {
   StoreCalculateApishipShippingOption,
   StoreGetApishipPoints,
-  StoreApishipProviderIdQuery,
+  StoreApishipInstanceQuery,
 } from "./validators"
 import * as queryConfig from "./query-config"
 
@@ -25,7 +25,7 @@ export const storeApishipRoutesMiddlewares: MiddlewareRoute[] = [
     matcher: "/store/apiship/providers",
     method: "GET",
     middlewares: [
-      validateAndTransformQuery(StoreApishipProviderIdQuery, { defaults: [], isList: false }),
+      validateAndTransformQuery(StoreApishipInstanceQuery, { defaults: [], isList: false }),
     ],
   },
   {

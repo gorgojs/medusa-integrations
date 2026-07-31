@@ -12,7 +12,7 @@ export type GetApishipConnectionStepInput = {
 const getApishipConnectionStep = createStep(
   "get-apiship-connection-step",
   async ({ apishipOptions, id }: GetApishipConnectionStepInput) => {
-    const connections = apishipOptions.settings?.connections ?? []
+    const connections = apishipOptions.connections
     if (id) {
       const connection = connections.find((item) => item.id === id)
       if (!connection) {

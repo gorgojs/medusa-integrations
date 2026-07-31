@@ -13,12 +13,17 @@ export const StoreGetApishipPoints = createFindParams({
   })
 )
 
-// Registration key (`int_apiship[_<instance_id>]`) of the integration instance a request
-// targets — defaults to the base instance when omitted (see DEFAULT_APISHIP_PROVIDER_ID).
-// `shipping_option_id` is the preferred way to target an instance: the store never has to
-// know the raw provider_id, it's derived from which ApiShip instance fulfills that option.
-export type StoreApishipProviderIdQueryType = z.infer<typeof StoreApishipProviderIdQuery>
-export const StoreApishipProviderIdQuery = z.object({
+/**
+ * Which ApiShip instance a store request targets, in order of precedence:
+ *
+ * 1. `provider_id` — an explicit registration key.
+ * 2. `shipping_option_id` — preferred during checkout: the storefront doesn't have to know
+ *    the key, `resolveApishipProviderIdStep` derives it from what fulfills that option.
+ * 3. Neither — the default instance (`int_apiship`), which only exists when the provider is
+ *    declared WITHOUT an `id` in medusa-config.
+ */
+export type StoreApishipInstanceQueryType = z.infer<typeof StoreApishipInstanceQuery>
+export const StoreApishipInstanceQuery = z.object({
   provider_id: z.string().optional(),
   shipping_option_id: z.string().optional(),
 })

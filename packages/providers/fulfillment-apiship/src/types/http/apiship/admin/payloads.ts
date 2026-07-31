@@ -1,4 +1,4 @@
-import { AdminApishipOptions } from "./entities"
+import { BaseApishipConnection } from "../common"
 
 export interface AdminCreateApishipConnection {
   name?: string
@@ -27,4 +27,10 @@ export interface AdminGetApishipPointList {
   provider_id?: string
 }
 
-export interface AdminUpdateApishipOptions extends AdminApishipOptions { }
+/**
+ * Only the connection list — everything else in the config is a descriptor option written
+ * through `POST /admin/integrations/:provider_id`.
+ */
+export interface AdminUpdateApishipOptions {
+  connections?: BaseApishipConnection[]
+}

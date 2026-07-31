@@ -1,74 +1,51 @@
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
-import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
-import type { DeepPartial, ApishipOptionsDTO } from "../../types/apiship"
-import { DEFAULT_APISHIP_PROVIDER_ID } from "../../types/apiship"
+import { MedusaError } from "@medusajs/framework/utils"
+import { assembleApishipOptions } from "../../lib/apiship-options"
+import { requireApishipIntegration } from "../../lib/integration"
+import { apishipInstanceId } from "../../lib/provider-id"
+import { ProviderKeys } from "../../types"
+import type { StoredApishipOptions } from "../../types/apiship"
+
+/**
+ * - `"stored"` — the raw decrypted row, ungated. For ADMIN reads and read-modify-write:
+ *   an integration is configured before it is complete/enabled, and the admin UI must be
+ *   able to see (and edit) that draft.
+ * - `"resolved"` — the integration module's resolver: gated on `is_enabled` + full
+ *   descriptor validation, with defaults applied and a 60s cache. For STORE and runtime
+ *   reads, so a disabled or half-configured integration is invisible to shoppers.
+ */
+export type GetApishipOptionsMode = "stored" | "resolved"
 
 export type GetApishipOptionsStepInput = {
   provider_id?: string
+  mode?: GetApishipOptionsMode
 }
 
 export const getApishipOptionsStep = createStep(
   "get-apiship-options-step",
-  async ({ provider_id }: GetApishipOptionsStepInput = {}, { container }) => {
-    const service: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
-    const stored = (await service.getStoredValues(
-      provider_id ?? DEFAULT_APISHIP_PROVIDER_ID
-    )) as DeepPartial<ApishipOptionsDTO>
+  async (
+    { provider_id, mode = "stored" }: GetApishipOptionsStepInput = {},
+    { container }
+  ) => {
+    const { service, providerId } = requireApishipIntegration(container, provider_id)
 
-    const connections = (stored.settings?.connections ?? []).flatMap(
-      (connection) => {
-        if (
-          !connection?.id ||
-          !connection.provider_key ||
-          !connection.provider_connect_id ||
-          connection.is_enabled === undefined
-        ) {
-          return []
-        }
-
-        return [
-          {
-            id: connection.id,
-            name: connection.name,
-            provider_key: connection.provider_key,
-            provider_connect_id: connection.provider_connect_id,
-            point_in_id: connection.point_in_id,
-            point_in_address: connection.point_in_address,
-            is_enabled: connection.is_enabled,
-          },
-        ]
+    if (mode === "resolved") {
+      const resolved = await service.getResolvedOptions(
+        ProviderKeys.APISHIP,
+        apishipInstanceId(providerId)
+      )
+      if (!resolved) {
+        throw new MedusaError(
+          MedusaError.Types.NOT_ALLOWED,
+          `ApiShip integration "${providerId}" is not available: it is either not configured, disabled, or missing required options.`
+        )
       }
-    )
+      return new StepResponse(
+        assembleApishipOptions(resolved.options as StoredApishipOptions)
+      )
+    }
 
-    return new StepResponse({
-      token: stored.token ?? "",
-      is_test: stored.is_test ?? false,
-      settings: {
-        connections,
-        default_sender_settings: {
-          country_code:
-            stored.settings?.default_sender_settings?.country_code ?? "",
-          address_string:
-            stored.settings?.default_sender_settings?.address_string ??
-            "",
-          contact_name:
-            stored.settings?.default_sender_settings?.contact_name ?? "",
-          phone: stored.settings?.default_sender_settings?.phone ?? "",
-        },
-        default_product_sizes: {
-          length:
-            stored.settings?.default_product_sizes?.length ?? 10,
-          width: stored.settings?.default_product_sizes?.width ?? 10,
-          height:
-            stored.settings?.default_product_sizes?.height ?? 10,
-          weight:
-            stored.settings?.default_product_sizes?.weight ?? 20,
-        },
-        delivery_cost_vat:
-          stored.settings?.delivery_cost_vat ??
-          (-1 as ApishipOptionsDTO["settings"]["delivery_cost_vat"]),
-        is_cod: stored.settings?.is_cod ?? false,
-      },
-    })
+    const stored = (await service.getStoredValues(providerId)) as StoredApishipOptions
+    return new StepResponse(assembleApishipOptions(stored))
   }
 )

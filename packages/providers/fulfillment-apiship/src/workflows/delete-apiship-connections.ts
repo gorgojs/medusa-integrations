@@ -1,13 +1,12 @@
-import { createStep, createWorkflow, StepResponse, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+import { createStep, createWorkflow, StepResponse, WorkflowResponse, transform } from "@medusajs/framework/workflows-sdk"
 import { MedusaError } from "@medusajs/framework/utils"
-import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
+import { upsertIntegrationWorkflow } from "@gorgo/medusa-integration"
 import type {
   ApishipConnectionDTO,
-  ApishipOptionsDTO,
-  DeepPartial,
+  StoredApishipOptions
 } from "../types/apiship"
-import { DEFAULT_APISHIP_PROVIDER_ID } from "../types/apiship"
-import { upsertApishipConfigStep } from "./steps/upsert-apiship-config"
+import { requireApishipIntegration } from "../lib/integration"
+import { DEFAULT_APISHIP_PROVIDER_ID } from "../lib/provider-id"
 
 export type DeleteApishipConnectionsWorkflowInput = {
   ids: string[]
@@ -19,10 +18,8 @@ type ComposeDeletedApishipConnectionsStepInput = DeleteApishipConnectionsWorkflo
 const composeDeletedApishipConnectionsStep = createStep(
   "compose-deleted-apiship-connections-step",
   async ({ ids, provider_id }: ComposeDeletedApishipConnectionsStepInput, { container }) => {
-    const service: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
-    const existing = (await service.getStoredValues(
-      provider_id ?? DEFAULT_APISHIP_PROVIDER_ID
-    )) as DeepPartial<ApishipOptionsDTO>
+    const { service, providerId } = requireApishipIntegration(container, provider_id)
+    const existing = (await service.getStoredValues(providerId)) as StoredApishipOptions
 
     const existingConnections =
       (existing.settings?.connections ?? []) as ApishipConnectionDTO[]
@@ -43,16 +40,11 @@ const composeDeletedApishipConnectionsStep = createStep(
       (item) => !idsSet.has(item.id)
     )
 
-    const merged = {
-      ...existing,
+    return new StepResponse({
       settings: {
         ...(existing.settings ?? {}),
         connections: nextConnections,
       },
-    }
-
-    return new StepResponse({
-      values: merged,
       connections: deletedConnections,
     })
   }
@@ -60,9 +52,16 @@ const composeDeletedApishipConnectionsStep = createStep(
 
 export const deleteApishipConnectionsWorkflow = createWorkflow(
   "delete-apiship-connections",
-  ({ ids, provider_id }: DeleteApishipConnectionsWorkflowInput) => {
-    const result = composeDeletedApishipConnectionsStep({ ids, provider_id })
-    upsertApishipConfigStep({ values: result.values, provider_id })
+  (input: DeleteApishipConnectionsWorkflowInput) => {
+    const result = composeDeletedApishipConnectionsStep(input)
+
+    upsertIntegrationWorkflow.runAsStep({
+      input: transform({ input, result }, (d) => ({
+        provider_id: d.input.provider_id ?? DEFAULT_APISHIP_PROVIDER_ID,
+        values: { settings: d.result.settings },
+      })),
+    })
+
     return new WorkflowResponse(result.connections)
   }
 )

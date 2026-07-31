@@ -20,10 +20,14 @@ import {
   createApishipClient,
   type ApishipClient,
 } from "../../../lib/client"
+import {
+  assertApishipToken,
+  assembleApishipOptions,
+} from "../../../lib/apiship-options"
 import { ProviderKeys } from "../../../types"
 import type {
   ApishipOptionsDTO,
-  DeepPartial,
+  StoredApishipOptions,
 } from "../../../types/apiship"
 import {
   getCheapestTariff,
@@ -65,116 +69,31 @@ class ApishipBase extends AbstractFulfillmentProviderService {
   }
 
   /**
-   * Get Apiship client.
+   * Get Apiship client. Pass already-resolved options to avoid a second resolver round-trip.
    */
-  private async getApishipClient_(): Promise<ApishipClient> {
-    const { token, is_test } = await resolveIntegrationOptions<DeepPartial<ApishipOptionsDTO>>({
-      identifier: ProviderKeys.APISHIP,
-      instance_id: this.instanceId_,
-    })
-
-    return createApishipClient({ token: token!, isTest: !!is_test })
+  private async getApishipClient_(
+    apishipOptions?: ApishipOptionsDTO
+  ): Promise<ApishipClient> {
+    const { token, is_test } = apishipOptions ?? (await this.getApishipOptions_())
+    return createApishipClient({ token, isTest: is_test })
   }
 
-  /** 
-   * Normalize Apiship options.
-   */
-  private normalizeApishipOptions_(
-    apishipOptions: DeepPartial<ApishipOptionsDTO>
-  ): ApishipOptionsDTO {
-    if (!apishipOptions.token?.trim()) {
-      throw new Error("Apiship token is required")
-    }
-
-    if (apishipOptions.is_test === undefined) {
-      throw new Error("Apiship is_test flag is required")
-    }
-
-    return {
-      token: apishipOptions.token,
-      is_test: apishipOptions.is_test,
-      settings: {
-        connections: (apishipOptions.settings?.connections ?? []).flatMap(
-          (connection) => {
-            if (
-              !connection?.id ||
-              !connection.name ||
-              !connection.provider_key ||
-              !connection.provider_connect_id ||
-              connection.is_enabled === undefined
-            ) {
-              return []
-            }
-
-            return [
-              {
-                id: connection.id,
-                name: connection.name,
-                provider_key: connection.provider_key,
-                provider_connect_id: connection.provider_connect_id,
-                point_in_id: connection.point_in_id,
-                point_in_address: connection.point_in_address,
-                is_enabled: connection.is_enabled,
-              },
-            ]
-          }
-        ),
-        default_sender_settings: {
-          country_code:
-            apishipOptions.settings?.default_sender_settings?.country_code ?? "",
-          address_string:
-            apishipOptions.settings?.default_sender_settings?.address_string ??
-            "",
-          contact_name:
-            apishipOptions.settings?.default_sender_settings?.contact_name ?? "",
-          phone: apishipOptions.settings?.default_sender_settings?.phone ?? "",
-        },
-        default_product_sizes: {
-          length:
-            apishipOptions.settings?.default_product_sizes?.length ?? 10,
-          width: apishipOptions.settings?.default_product_sizes?.width ?? 10,
-          height:
-            apishipOptions.settings?.default_product_sizes?.height ?? 10,
-          weight:
-            apishipOptions.settings?.default_product_sizes?.weight ?? 20,
-        },
-        delivery_cost_vat:
-          apishipOptions.settings?.delivery_cost_vat ??
-          (-1 as ApishipOptionsDTO["settings"]["delivery_cost_vat"]),
-        is_cod: apishipOptions.settings?.is_cod ?? false,
-      },
-    }
-  }
-
-  /** 
-   * Assert Order options.
+  /**
+   * The sender fields are optional in the descriptor (a price quote doesn't need them), but
+   * ApiShip rejects an order without them — so this is where they're enforced.
    */
   private assertOrderOptions_(apishipOptions: ApishipOptionsDTO) {
-    const defaultSenderSettings =
-      apishipOptions.settings.default_sender_settings
+    const required = [
+      "sender_country_code",
+      "sender_address_string",
+      "sender_contact_name",
+      "sender_phone",
+    ] as const
 
-    if (!defaultSenderSettings.country_code) {
-      throw new Error(
-        "Apiship settings.default_sender_settings.country_code is required"
-      )
-    }
-
-    if (!defaultSenderSettings.address_string) {
-      throw new Error(
-        "Apiship settings.default_sender_settings.address_string is required"
-      )
-    }
-
-    if (!defaultSenderSettings.contact_name) {
-      throw new Error(
-        "Apiship settings.default_sender_settings.contact_name is required"
-      )
-    }
-
-    if (!defaultSenderSettings.phone) {
-      throw new Error(
-        "Apiship settings.default_sender_settings.phone is required"
-      )
+    for (const field of required) {
+      if (!apishipOptions[field]?.trim()) {
+        throw new Error(`Apiship ${field} is required`)
+      }
     }
   }
 
@@ -182,11 +101,15 @@ class ApishipBase extends AbstractFulfillmentProviderService {
    * Get Apiship integration options from the Medusa integration provider.
    */
   private async getApishipOptions_(): Promise<ApishipOptionsDTO> {
-    const apishipOptions = await resolveIntegrationOptions<DeepPartial<ApishipOptionsDTO>>({
+    const apishipOptions = await resolveIntegrationOptions<StoredApishipOptions>({
       identifier: ProviderKeys.APISHIP,
       instance_id: this.instanceId_,
     })
-    return this.normalizeApishipOptions_(apishipOptions)
+    // The resolver already guarantees the integration is enabled, complete and defaulted;
+    // assembling lifts the connection list out of the opaque `settings` blob.
+    const assembled = assembleApishipOptions(apishipOptions)
+    assertApishipToken(assembled)
+    return assembled
   }
 
   /**
@@ -198,10 +121,8 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     context: CalculateShippingOptionPriceDTO["context"]
   ): Promise<CalculatedShippingOptionPrice> {
     this.logger_.debug(`Apiship.calculatePrice input: ${JSON.stringify({ optionData, data, context }, null, 2)}`)
-    const [apishipClient, apishipOptions] = await Promise.all([
-      this.getApishipClient_(),
-      this.getApishipOptions_(),
-    ])
+    const apishipOptions = await this.getApishipOptions_()
+    const apishipClient = await this.getApishipClient_(apishipOptions)
     const calculatorRequest = mapToApishipCalculatorRequest(
       optionData,
       context,
@@ -274,10 +195,8 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     fulfillment: Partial<Omit<FulfillmentDTO, "provider_id" | "data" | "items">>
   ): Promise<CreateFulfillmentResult> {
     this.logger_.debug(`Apiship.createFulfillment input: ${JSON.stringify({ data, items, order, fulfillment }, null, 2)}`)
-    const [apishipClient, apishipOptions] = await Promise.all([
-      this.getApishipClient_(),
-      this.getApishipOptions_(),
-    ])
+    const apishipOptions = await this.getApishipOptions_()
+    const apishipClient = await this.getApishipClient_(apishipOptions)
     this.assertOrderOptions_(apishipOptions)
 
     const locationId = fulfillment.location_id as string

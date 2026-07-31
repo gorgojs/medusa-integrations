@@ -16,8 +16,9 @@
  *   medusaIntegrationTestRunner wipes the DB after every it() block.
  *   Each test is fully self-contained.
  *
- * BASE_OPTIONS is posted at the start of tests to establish a configured
- * apiship integration row before creating/reading connections against it.
+ * seedApishipConfig() establishes a configured apiship integration row before
+ * creating/reading connections against it. Credentials go to the integration module's
+ * `credentials` section; only the plugin-owned `settings` blob goes to /admin/apiship/options.
  */
 
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
@@ -28,13 +29,12 @@ jest.setTimeout(120 * 1000)
 // Matches the named instance declared in medusa-config.ts (APISHIP_INTEGRATION_ID).
 const PROVIDER_ID = "int_apiship_apiship-1"
 
-const BASE_OPTIONS = {
-  token: "test-token-123",
-  is_test: true,
-  settings: {
-    is_cod: false,
-    default_product_sizes: { length: 10, width: 10, height: 10, weight: 20 },
-  },
+const BASE_CREDENTIALS = { token: "test-token-123", is_test: true }
+const BASE_SENDER = {
+  sender_country_code: "RU",
+  sender_address_string: "Москва, Тверская, 1",
+  sender_contact_name: "Test User",
+  sender_phone: "+70000000000",
 }
 
 const CONN_CDEK = {
@@ -85,6 +85,20 @@ medusaIntegrationTestRunner({
       headers["authorization"] = `Bearer ${token}`
     })
 
+    /** Configured ApiShip row: credentials via the integration module, settings via the plugin. */
+    const seedApishipConfig = async () => {
+      await api.post(
+        `/admin/integrations/${PROVIDER_ID}`,
+        { section_id: "credentials", values: BASE_CREDENTIALS },
+        { headers }
+      )
+      await api.post(
+        `/admin/integrations/${PROVIDER_ID}`,
+        { section_id: "sender", values: BASE_SENDER },
+        { headers }
+      )
+    }
+
     // -------------------------------------------------------------------------
     // GET /admin/apiship/connections
     // -------------------------------------------------------------------------
@@ -98,7 +112,7 @@ medusaIntegrationTestRunner({
       })
 
       it("returns all created connections", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
         await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_CDEK, { headers })
         await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_BOXBERRY, { headers })
 
@@ -125,7 +139,7 @@ medusaIntegrationTestRunner({
     // -------------------------------------------------------------------------
     describe("POST /admin/apiship/connections", () => {
       it("creates a connection and returns it with a generated id", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
 
         const res = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_CDEK, { headers })
 
@@ -139,7 +153,7 @@ medusaIntegrationTestRunner({
       })
 
       it("creates a connection without optional name field", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
 
         const res = await api.post(
           `/admin/apiship/connections?provider_id=${PROVIDER_ID}`,
@@ -152,7 +166,7 @@ medusaIntegrationTestRunner({
       })
 
       it("each new connection gets a unique id", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
 
         const res1 = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_CDEK, { headers })
         const res2 = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_BOXBERRY, { headers })
@@ -212,7 +226,7 @@ medusaIntegrationTestRunner({
     // -------------------------------------------------------------------------
     describe("GET /admin/apiship/connections/:id", () => {
       it("returns the connection by id", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
         const createRes = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_CDEK, { headers })
         const id = createRes.data.connection.id
 
@@ -227,7 +241,7 @@ medusaIntegrationTestRunner({
       })
 
       it("returns 404 for an unknown id", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
 
         const res = await api
           .get(`/admin/apiship/connections/ascon_does_not_exist?provider_id=${PROVIDER_ID}`, { headers })
@@ -250,7 +264,7 @@ medusaIntegrationTestRunner({
     // -------------------------------------------------------------------------
     describe("POST /admin/apiship/connections/:id", () => {
       it("updates specified fields and returns the merged connection", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
         const createRes = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_CDEK, { headers })
         const id = createRes.data.connection.id
 
@@ -271,7 +285,7 @@ medusaIntegrationTestRunner({
       })
 
       it("persists update — GET /:id returns updated values", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
         const createRes = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_CDEK, { headers })
         const id = createRes.data.connection.id
 
@@ -286,7 +300,7 @@ medusaIntegrationTestRunner({
       })
 
       it("does not affect other connections", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
         const res1 = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_CDEK, { headers })
         const res2 = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_BOXBERRY, { headers })
         const idA = res1.data.connection.id
@@ -305,7 +319,7 @@ medusaIntegrationTestRunner({
       })
 
       it("returns 404 for an unknown id", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
 
         const res = await api
           .post(
@@ -332,7 +346,7 @@ medusaIntegrationTestRunner({
     // -------------------------------------------------------------------------
     describe("DELETE /admin/apiship/connections/:id", () => {
       it("deletes the connection and returns the delete response", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
         const createRes = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_CDEK, { headers })
         const id = createRes.data.connection.id
 
@@ -345,7 +359,7 @@ medusaIntegrationTestRunner({
       })
 
       it("removed connection no longer appears in GET list", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
         const res1 = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_CDEK, { headers })
         const res2 = await api.post(`/admin/apiship/connections?provider_id=${PROVIDER_ID}`, CONN_BOXBERRY, { headers })
         const idA = res1.data.connection.id
@@ -360,7 +374,7 @@ medusaIntegrationTestRunner({
       })
 
       it("returns 404 for an unknown id", async () => {
-        await api.post(`/admin/apiship/options?provider_id=${PROVIDER_ID}`, BASE_OPTIONS, { headers })
+        await seedApishipConfig()
 
         const res = await api
           .delete(`/admin/apiship/connections/ascon_does_not_exist?provider_id=${PROVIDER_ID}`, { headers })

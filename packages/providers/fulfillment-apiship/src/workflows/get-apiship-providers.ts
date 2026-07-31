@@ -10,6 +10,7 @@ import { MedusaError, Modules } from "@medusajs/framework/utils"
 import { AdminApishipProvider } from "../types/http"
 import { validateApishipOptionsStep } from "./steps/validate-apiship-options"
 import { getApishipOptionsStep } from "./steps/get-apiship-options"
+import type { GetApishipOptionsMode } from "./steps/get-apiship-options"
 import { resolveApishipProviderIdStep } from "./steps/resolve-apiship-provider-id"
 import { createApishipClient } from "../lib/client"
 
@@ -87,6 +88,8 @@ export const selectProvidersResultStep = createStep(
 export type GetApishipProvidersWorkflowInput = {
   provider_id?: string
   shipping_option_id?: string
+  /** `"resolved"` for storefront callers — see `getApishipOptionsStep`. */
+  mode?: GetApishipOptionsMode
 }
 
 export const getApishipProvidersWorkflow = createWorkflow(
@@ -107,7 +110,7 @@ export const getApishipProvidersWorkflow = createWorkflow(
       (data) => `apiship:providers:${data.provider_id ?? "default"}`
     )
     const cachedProviders = getApishipProvidersFromCacheStep({ key })
-    const apishipOptions = getApishipOptionsStep({ provider_id })
+    const apishipOptions = getApishipOptionsStep({ provider_id, mode: input.mode })
     const apishipClientConfig = validateApishipOptionsStep({
       apishipOptions
     })
