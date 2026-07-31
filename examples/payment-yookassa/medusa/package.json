@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@gorgo/medusa-integration": "latest",
-    "@gorgo/medusa-payment-yookassa": "latest",
+    "@gorgo/medusa-payment-yookassa": "beta",
     "@medusajs/admin-sdk": "2.18.0",
     "@medusajs/cli": "2.18.0",
     "@medusajs/framework": "2.18.0",
