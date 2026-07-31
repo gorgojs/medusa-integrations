@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://docs.gorgojs.ru/integrations/integration">Документация</a>
   <br/>
-  Модуль Medusa, который позволяет плагинам описывать свои настройки, а администраторам магазина — конфигурировать их прямо в админке: без правок <code>medusa-config</code> и передеплоя, с шифрованием секретов.
+  Модуль Medusa, который позволяет плагинам описывать свои настройки, а администраторам магазина — конфигурировать их прямо в Admin – без правок <code>medusa-config</code> и передеплоя.
   <br/>
   <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/modules/integration/README.md">Read README in English ↗</a>
 </p>

@@ -1,29 +1,19 @@
 # @gorgo/medusa-integration
 
-## 0.0.4
+## 0.1.0
 
-### Bug Fixes
+### Highlights
 
-- improve overall by [@KaneFlak](https://github.com/KaneFlak) in [`f675c26`](https://github.com/gorgojs/medusa-integrations/commit/f675c262e8256e1ae6d6446c4d0c731b0ab6822e)
+- First release of the Integration Module for Medusa. Plugins declare their settings with a single `defineIntegration` descriptor, and store admins configure them right in the Admin under **Settings → Integrations** – no `medusa-config` edits, no redeploys.
 
-### Refactoring
+### Features
 
-- add catalog by [@gorgohead](https://github.com/gorgohead) in [`caf2242`](https://github.com/gorgojs/medusa-integrations/commit/caf2242f8960f4410103149c7812aa0518714f10)
-
-- rename integration field module to category and update README by [@KaneFlak](https://github.com/KaneFlak) in [`28c57cb`](https://github.com/gorgojs/medusa-integrations/commit/28c57cbf39e3ffdb97b1c29d4f1edd4da1498afb)
-
-### Tests
-
-- cover with integration tests by [@KaneFlak](https://github.com/KaneFlak) in [`6dbe6fd`](https://github.com/gorgojs/medusa-integrations/commit/6dbe6fd88cfb5a0a9c787dbae922b04a0ed176cd)
-
-## 0.0.3
-
-### Refactoring
-
-- move testConnection to descriptor by [@KaneFlak](https://github.com/KaneFlak) in [`0f2a4e7`](https://github.com/gorgojs/medusa-integrations/commit/0f2a4e7dd71c6bf4a2edf911fa91f9896c176ca3)
-
-## 0.0.2
-
-### Refactoring
-
-- add some changes by [@gorgohead](https://github.com/gorgohead) in [#393](https://github.com/gorgojs/medusa-integrations/pull/393) ([`b02f858`](https://github.com/gorgojs/medusa-integrations/commit/b02f8589de1180e254758c7e225582167d0ab8b8))
+- **No-code configuration in the Admin.** Manage plugin credentials and settings under Settings → Integrations.
+- **Encrypted secrets at rest.** Fields marked `secret` are encrypted (AES-256-GCM) and never reach the browser.
+- **Declarative descriptor** (`defineIntegration`) for plugin authors: options, sections, validation, and a connection test in one place.
+- **Rich option types & validation:** `string` / `url` / `email` / `uuid` / `number` / `boolean` / `enum` / `json`, per-option and cross-section rules, conditional visibility, read-only fields, i18n labels, and an icon.
+- **Multiple instances** of the same provider (e.g. several accounts).
+- **Connection test** from the Admin.
+- **Typed runtime resolve:** consumers read a validated, decrypted config; incomplete or disabled configs never resolve, so drafts don't leak into runtime.
+- **Custom admin widgets** per provider.
+- **Anonymous telemetry.**

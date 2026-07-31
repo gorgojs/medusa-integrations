@@ -5,7 +5,7 @@ Integration Module for Medusa
 <p align="center">
   <a href="https://docs.gorgojs.com/integrations/integration">Documentation</a>
   <br/>
-  A Medusa module that lets plugins declare their settings and store admins configure them right in the Admin — no <code>medusa-config</code> edits, no redeploys, secrets encrypted at rest.
+  A Medusa module that lets plugins declare their settings and store admins configure them right in the Admin – no <code>medusa-config</code> edits, no redeploys.
   <br/>
   <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/modules/integration/README-ru.md">Читать README на русском ↗</a>
 </p>
