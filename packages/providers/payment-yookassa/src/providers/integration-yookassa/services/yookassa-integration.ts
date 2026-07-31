@@ -84,9 +84,22 @@ const descriptor = defineIntegration({
   },
 
   sections: [
-    { id: "credentials", title: "yookassa.sections.credentials", options: ["shopId", "secretKey"] },
-    { id: "behavior", title: "yookassa.sections.behavior", column: "side", options: ["capture", "paymentDescription"] },
-    { id: "receipt", title: "yookassa.sections.receipt", options: ["useReceipt", "useAtolOnlineFFD120", "taxSystemCode", "taxItemDefault", "taxShippingDefault"] },
+    {
+      id: "credentials",
+      title: "yookassa.sections.credentials",
+      options: ["shopId", "secretKey"]
+    },
+    {
+      id: "behavior",
+      title: "yookassa.sections.behavior",
+      column: "side",
+      options: ["capture", "paymentDescription"]
+    },
+    {
+      id: "receipt",
+      title: "yookassa.sections.receipt",
+      options: ["useReceipt", "useAtolOnlineFFD120", "taxSystemCode", "taxItemDefault", "taxShippingDefault"]
+    },
   ],
 
   testConnection: async ({ options }) => {

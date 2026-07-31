@@ -56,7 +56,10 @@ const descriptor = defineIntegration({
       values: ["osn", "usn_income", "usn_income_outcome", "esn", "patent"],
       control: "select",
       label: "tkassa.fields.taxation",
-      visibleWhen: { field: "useReceipt", equals: true },
+      visibleWhen: {
+        field: "useReceipt",
+        equals: true
+      },
       valueLabels: {
         osn: "tkassa.taxation.osn",
         usn_income: "tkassa.taxation.usn_income",
@@ -85,9 +88,22 @@ const descriptor = defineIntegration({
   },
 
   sections: [
-    { id: "credentials", title: "tkassa.sections.credentials", options: ["terminalKey", "password"] },
-    { id: "behavior", title: "tkassa.sections.behavior", column: "side", options: ["capture"] },
-    { id: "receipt", title: "tkassa.sections.receipt", options: ["useReceipt", "ffdVersion", "taxation", "taxItemDefault", "taxShippingDefault"] },
+    {
+      id: "credentials",
+      title: "tkassa.sections.credentials",
+      options: ["terminalKey", "password"]
+    },
+    {
+      id: "behavior",
+      title: "tkassa.sections.behavior",
+      column: "side",
+      options: ["capture"]
+    },
+    {
+      id: "receipt",
+      title: "tkassa.sections.receipt",
+      options: ["useReceipt", "ffdVersion", "taxation", "taxItemDefault", "taxShippingDefault"]
+    },
   ],
 
   // Cross-section rule: receipts require auto-capture. Runs only at full/activation validation.
