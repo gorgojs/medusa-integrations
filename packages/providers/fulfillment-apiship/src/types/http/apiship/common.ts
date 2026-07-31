@@ -13,44 +13,6 @@ export type DeepPartial<T> =
   ? Array<DeepPartial<U>>
   : { [K in keyof T]?: DeepPartial<T[K]> }
 
-interface BaseDefaultSenderSettings {
-  /**
-   * Код страны в соответствии с ISO 3166-1 alpha-2
-   */
-  country_code?: string
-  /**
-   * Полный адрес одной строкой. При заполнении этого поля остальные можно не заполнять, кроме countryCode
-   */
-  address_string?: string
-  /**
-   * ФИО контактного лица
-   */
-  contact_name?: string
-  /**
-   * Контактный телефон
-   */
-  phone?: string
-}
-
-export interface BaseDefaultProductSizes {
-  /**
-   * Длина товара по умолчанию
-   */
-  length?: number
-  /**
-   * Ширина товара по умолчанию
-   */
-  width?: number
-  /**
-   * Высота товара по умолчанию
-   */
-  height?: number
-  /**
-   * Вес товара по умолчанию
-   */
-  weight?: number
-}
-
 export interface BaseApishipConnection {
   id: string
   name?: string
@@ -61,49 +23,16 @@ export interface BaseApishipConnection {
   is_enabled: boolean
 }
 
-export interface BaseSettings {
-  /**
-   * Подключения
-   */
-  connections?: BaseApishipConnection[]
-  /**
-   * Параменты магазина по умолчанию
-   */
-  default_sender_settings?: BaseDefaultSenderSettings
-  /**
-   * Размеры товара по умолчанию
-   */
-  default_product_sizes?: BaseDefaultProductSizes
-  /**
-   * Процентная ставка НДС:
-   * -1 - Без НДС
-   * 0 - НДС 0%
-   * 5 - НДС 5%
-   * 7 - НДС 7%
-   * 10 - НДС 10%
-   * 20 - НДС 20%
-   * 22 - НДС 22%
-   */
-  delivery_cost_vat?: BaseCostDeliveryCostVatEnum
-  /**
-   * Использовать ли наложенный платеж при создании заказа
-   */
-  is_cod?: boolean
-}
-
+/**
+ * Плагинная часть конфигурации ApiShip на проводе. Секреты сюда не попадают, а всё, что
+ * описано секциями дескриптора, читается через `GET /admin/integrations/:provider_id` —
+ * здесь остаётся список подключений, который рисует виджет плагина.
+ */
 export interface BaseApishipOptions {
   /**
-   * Токен ApiShip
+   * Подключённые службы доставки
    */
-  token?: string
-  /**
-   * Использовать тестовый режим
-   */
-  is_test?: boolean
-  /**
-   * Параменты провайдера
-   */
-  settings?: BaseSettings
+  connections?: BaseApishipConnection[]
 }
 
 export interface BaseApishipAccountConnection {

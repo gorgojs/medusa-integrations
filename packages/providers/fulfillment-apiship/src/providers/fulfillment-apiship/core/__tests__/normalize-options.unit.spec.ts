@@ -16,139 +16,8 @@ jest.mock("../../../../lib/client", () => ({
 import ApishipService from "../../services/apiship"
 import { makeLogger } from "./test-utils"
 
-describe("ApishipBase.normalizeApishipOptions_ (private helper, accessed via (instance as any))", () => {
-  let service: any
-
-  beforeEach(() => {
-    service = new (ApishipService as any)({ logger: makeLogger() }, {})
-  })
-
-  describe("required field validation", () => {
-    it("throws when token is missing", () => {
-      expect(() =>
-        service.normalizeApishipOptions_({ is_test: false })
-      ).toThrow(/token/)
-    })
-
-    it("throws when token is an empty string", () => {
-      expect(() =>
-        service.normalizeApishipOptions_({ token: "", is_test: false })
-      ).toThrow(/token/)
-    })
-
-    it("throws when token is whitespace only", () => {
-      expect(() =>
-        service.normalizeApishipOptions_({ token: "   ", is_test: false })
-      ).toThrow(/token/)
-    })
-
-    it("throws when is_test is undefined", () => {
-      expect(() =>
-        service.normalizeApishipOptions_({ token: "tok" })
-      ).toThrow(/is_test/)
-    })
-
-    it("accepts is_test=true", () => {
-      expect(() =>
-        service.normalizeApishipOptions_({ token: "tok", is_test: true })
-      ).not.toThrow()
-    })
-
-    it("accepts is_test=false", () => {
-      expect(() =>
-        service.normalizeApishipOptions_({ token: "tok", is_test: false })
-      ).not.toThrow()
-    })
-  })
-
-  describe("connections normalization", () => {
-    it("strips connections with missing required fields", () => {
-      const result = service.normalizeApishipOptions_({
-        token: "tok",
-        is_test: true,
-        settings: {
-          connections: [
-            // valid connection
-            { id: "c1", name: "n1", provider_key: "cdek", provider_connect_id: "p1", is_enabled: true },
-            // missing id
-            { name: "n2", provider_key: "cdek", provider_connect_id: "p2", is_enabled: true },
-            // missing name
-            { id: "c3", provider_key: "cdek", provider_connect_id: "p3", is_enabled: true },
-            // missing provider_connect_id
-            { id: "c4", name: "n4", provider_key: "cdek", is_enabled: true },
-            // missing is_enabled
-            { id: "c5", name: "n5", provider_key: "cdek", provider_connect_id: "p5" },
-          ],
-        },
-      })
-
-      expect(result.settings.connections).toHaveLength(1)
-      expect(result.settings.connections[0].id).toBe("c1")
-    })
-
-    it("keeps empty connections array when none provided", () => {
-      const result = service.normalizeApishipOptions_({ token: "tok", is_test: true })
-      expect(result.settings.connections).toEqual([])
-    })
-  })
-
-  describe("defaults", () => {
-    it("fills default_product_sizes with 10/10/10/20 when not provided", () => {
-      const result = service.normalizeApishipOptions_({ token: "tok", is_test: true })
-      expect(result.settings.default_product_sizes).toEqual({
-        length: 10,
-        width: 10,
-        height: 10,
-        weight: 20,
-      })
-    })
-
-    it("preserves provided default_product_sizes", () => {
-      const result = service.normalizeApishipOptions_({
-        token: "tok",
-        is_test: true,
-        settings: {
-          default_product_sizes: { length: 30, width: 20, height: 15, weight: 50 },
-        },
-      })
-      expect(result.settings.default_product_sizes).toEqual({
-        length: 30,
-        width: 20,
-        height: 15,
-        weight: 50,
-      })
-    })
-
-    it("fills delivery_cost_vat with -1 when not provided", () => {
-      const result = service.normalizeApishipOptions_({ token: "tok", is_test: true })
-      expect(result.settings.delivery_cost_vat).toBe(-1)
-    })
-
-    it("fills is_cod with false when not provided", () => {
-      const result = service.normalizeApishipOptions_({ token: "tok", is_test: true })
-      expect(result.settings.is_cod).toBe(false)
-    })
-
-    it("preserves is_cod=true when provided", () => {
-      const result = service.normalizeApishipOptions_({
-        token: "tok",
-        is_test: true,
-        settings: { is_cod: true },
-      })
-      expect(result.settings.is_cod).toBe(true)
-    })
-
-    it("fills default_sender_settings with empty strings when not provided", () => {
-      const result = service.normalizeApishipOptions_({ token: "tok", is_test: true })
-      expect(result.settings.default_sender_settings).toEqual({
-        country_code: "",
-        address_string: "",
-        contact_name: "",
-        phone: "",
-      })
-    })
-  })
-})
+// Option normalization itself moved to `src/lib/apiship-options.ts` (shared with the admin
+// workflows) and is covered by `src/lib/__tests__/apiship-options.unit.spec.ts`.
 
 describe("ApishipBase.assertOrderOptions_ (private helper)", () => {
   let service: any
@@ -160,30 +29,32 @@ describe("ApishipBase.assertOrderOptions_ (private helper)", () => {
   const validOptions = {
     token: "tok",
     is_test: true,
-    settings: {
-      connections: [],
-      default_sender_settings: {
-        country_code: "RU",
-        address_string: "Moscow",
-        contact_name: "Ivan",
-        phone: "+79001234567",
-      },
-      default_product_sizes: { length: 10, width: 10, height: 10, weight: 20 },
-      delivery_cost_vat: -1,
-      is_cod: false,
-    },
+    sender_country_code: "RU",
+    sender_address_string: "Moscow",
+    sender_contact_name: "Ivan",
+    sender_phone: "+79001234567",
   }
 
-  it("does not throw when all sender settings are present", () => {
+  it("does not throw when every sender field is filled", () => {
     expect(() => service.assertOrderOptions_(validOptions)).not.toThrow()
   })
 
   it.each([
-    ["country_code", { ...validOptions, settings: { ...validOptions.settings, default_sender_settings: { ...validOptions.settings.default_sender_settings, country_code: "" } } }],
-    ["address_string", { ...validOptions, settings: { ...validOptions.settings, default_sender_settings: { ...validOptions.settings.default_sender_settings, address_string: "" } } }],
-    ["contact_name", { ...validOptions, settings: { ...validOptions.settings, default_sender_settings: { ...validOptions.settings.default_sender_settings, contact_name: "" } } }],
-    ["phone", { ...validOptions, settings: { ...validOptions.settings, default_sender_settings: { ...validOptions.settings.default_sender_settings, phone: "" } } }],
-  ])("throws when %s is empty", (field, options) => {
-    expect(() => service.assertOrderOptions_(options)).toThrow(new RegExp(field))
+    "sender_country_code",
+    "sender_address_string",
+    "sender_contact_name",
+    "sender_phone",
+  ])("throws when %s is blank", (field) => {
+    expect(() => service.assertOrderOptions_({ ...validOptions, [field]: "   " })).toThrow(
+      new RegExp(field)
+    )
+  })
+
+  it.each([
+    "sender_country_code",
+    "sender_address_string",
+  ])("throws when %s is missing", (field) => {
+    const { [field as keyof typeof validOptions]: _, ...rest } = validOptions
+    expect(() => service.assertOrderOptions_(rest)).toThrow(new RegExp(field))
   })
 })

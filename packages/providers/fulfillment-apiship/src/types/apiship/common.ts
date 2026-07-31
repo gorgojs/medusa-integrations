@@ -2,9 +2,6 @@ import {
   type CostDeliveryCostVatEnum,
 } from "../../lib/apiship-client"
 
-/** Registration key of the default (no `instance_id`) ApiShip integration. */
-export const DEFAULT_APISHIP_PROVIDER_ID = "int_apiship"
-
 type Primitive = string | number | boolean | bigint | symbol | null | undefined
 
 export type DeepPartial<T> =
@@ -13,44 +10,6 @@ export type DeepPartial<T> =
     : T extends Array<infer U>
       ? Array<DeepPartial<U>>
       : { [K in keyof T]?: DeepPartial<T[K]> }
-
-interface DefaultSenderSettingsDTO {
-  /**
-   * Код страны в соответствии с ISO 3166-1 alpha-2
-   */
-  country_code: string
-  /**
-   * Полный адрес одной строкой. При заполнении этого поля остальные можно не заполнять, кроме countryCode
-   */
-  address_string: string
-  /**
-   * ФИО контактного лица
-   */
-  contact_name: string
-  /**
-   * Контактный телефон
-   */
-  phone: string
-}
-
-interface DefaultProductSizesDTO {
-  /**
-   * Длина товара по умолчанию
-   */
-  length: number
-  /**
-   * Ширина товара по умолчанию
-   */
-  width: number
-  /**
-   * Высота товара по умолчанию
-   */
-  height: number
-  /**
-   * Вес товара по умолчанию
-   */
-  weight: number
-}
 
 export interface ApishipConnectionDTO {
   id: string
@@ -62,19 +21,23 @@ export interface ApishipConnectionDTO {
   is_enabled: boolean
 }
 
-export interface SettingsDTO {
+/**
+ * Конфигурация ApiShip в собранном виде — плоская, один в один с каталогом опций дескриптора.
+ * Собирается из строки интеграции через `assembleApishipOptions`.
+ */
+export interface ApishipOptionsDTO {
   /**
-   * Подключения
+   * Токен ApiShip
    */
-  connections?: ApishipConnectionDTO[]
+  token: string
   /**
-   * Параменты магазина по умолчанию
+   * Использовать тестовый режим
    */
-  default_sender_settings: DefaultSenderSettingsDTO
+  is_test: boolean
   /**
-   * Размеры товара по умолчанию
+   * Использовать ли наложенный платеж при создании заказа
    */
-  default_product_sizes: DefaultProductSizesDTO
+  is_cod: boolean
   /**
    * Процентная ставка НДС:
    * -1 - Без НДС
@@ -87,24 +50,67 @@ export interface SettingsDTO {
    */
   delivery_cost_vat: CostDeliveryCostVatEnum
   /**
-   * Использовать ли наложенный платеж при создании заказа
+   * Длина товара по умолчанию
    */
-  is_cod: boolean
+  default_product_length: number
+  /**
+   * Ширина товара по умолчанию
+   */
+  default_product_width: number
+  /**
+   * Высота товара по умолчанию
+   */
+  default_product_height: number
+  /**
+   * Вес товара по умолчанию
+   */
+  default_product_weight: number
+  /**
+   * Код страны отправителя в соответствии с ISO 3166-1 alpha-2
+   */
+  sender_country_code: string
+  /**
+   * Полный адрес отправителя одной строкой
+   */
+  sender_address_string: string
+  /**
+   * ФИО контактного лица отправителя
+   */
+  sender_contact_name: string
+  /**
+   * Контактный телефон отправителя
+   */
+  sender_phone: string
+  /**
+   * Подключённые службы доставки
+   */
+  connections: ApishipConnectionDTO[]
 }
 
-export interface ApishipOptionsDTO {
-  /**
-   * Токен ApiShip
-   */
-  token: string
-  /**
-   * Использовать тестовый режим
-   */
-  is_test: boolean
-  /**
-   * Параменты провайдера
-   */
-  settings: SettingsDTO
+/**
+ * Как конфигурация лежит в строке интеграции: плоские опции дескриптора плюс json-блоб
+ * `settings`, в котором остался только список подключений (для списка записей в каталоге
+ * контролов дескриптора нет варианта, поэтому его редактирует виджет плагина).
+ *
+ * `delivery_cost_vat` — строка: enum-опции модуля строковые, к числу приводит
+ * `assembleApishipOptions`.
+ */
+export interface StoredApishipOptions {
+  token?: string
+  is_test?: boolean
+  is_cod?: boolean
+  delivery_cost_vat?: string
+  default_product_length?: number
+  default_product_width?: number
+  default_product_height?: number
+  default_product_weight?: number
+  sender_country_code?: string
+  sender_address_string?: string
+  sender_contact_name?: string
+  sender_phone?: string
+  settings?: {
+    connections?: DeepPartial<ApishipConnectionDTO>[]
+  }
 }
 
 export interface ApishipAccountConnectionDTO {

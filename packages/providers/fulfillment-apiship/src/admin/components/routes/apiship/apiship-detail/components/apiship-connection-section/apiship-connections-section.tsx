@@ -39,7 +39,7 @@ export const ApishipConnectionsSection = ({
   })
 
   const apishipConnections: ApishipHttpTypes.AdminApishipConnection[] = useMemo(() => {
-    return (apishipOptions?.settings?.connections ?? []).map((connection) => ({
+    return (apishipOptions?.connections ?? []).map((connection) => ({
       id: connection?.id ?? "",
       name: connection?.name ?? "",
       provider_key: connection?.provider_key ?? "",

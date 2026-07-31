@@ -9,6 +9,7 @@ import {
 import { Modules } from "@medusajs/framework/utils"
 
 import { getApishipOptionsStep } from "./steps/get-apiship-options"
+import type { GetApishipOptionsMode } from "./steps/get-apiship-options"
 import { validateApishipOptionsStep } from "./steps/validate-apiship-options"
 import { resolveApishipProviderIdStep } from "./steps/resolve-apiship-provider-id"
 
@@ -121,6 +122,8 @@ export type GetApishipPointsWorkflowInput = {
   offset?: number
   provider_id?: string
   shipping_option_id?: string
+  /** `"resolved"` for storefront callers — see `getApishipOptionsStep`. */
+  mode?: GetApishipOptionsMode
 }
 
 export const getApishipPointsWorkflow = createWorkflow(
@@ -136,7 +139,7 @@ export const getApishipPointsWorkflow = createWorkflow(
       (data) => data.input.provider_id ?? data.resolvedFromShippingOption
     )
 
-    const apishipOptions = getApishipOptionsStep({ provider_id: providerId })
+    const apishipOptions = getApishipOptionsStep({ provider_id: providerId, mode: input.mode })
     const apishipClientConfig = validateApishipOptionsStep({ apishipOptions })
 
     const cachedApishipPoints = when(
