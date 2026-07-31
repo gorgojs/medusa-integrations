@@ -140,7 +140,7 @@ describe("ApishipBase.createFulfillment", () => {
 
   it("throws when sender country_code is missing (assertOrderOptions_)", async () => {
     const invalidOptions = makeApishipOptions()
-    invalidOptions.settings.default_sender_settings.country_code = ""
+    invalidOptions.sender_country_code = ""
     service = makeProvider(invalidOptions, apishipClient)
     setupWorkflowMocks()
 
@@ -160,7 +160,7 @@ describe("ApishipBase.createFulfillment", () => {
         },
       }),
     })
-    invalidOptions.settings.default_sender_settings.address_string = ""
+    invalidOptions.sender_address_string = ""
     service = makeProvider(invalidOptions, apishipClient)
     setupWorkflowMocks()
     ;(getStockLocationWorkflow as unknown as jest.Mock).mockReturnValue({

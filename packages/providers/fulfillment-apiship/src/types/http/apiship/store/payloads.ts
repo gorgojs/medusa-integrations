@@ -4,8 +4,8 @@ export interface StoreGetApishipPointList {
   fields?: string
   limit?: number
   offset?: number
-  provider_id?: string
   shipping_option_id?: string
+  provider_id?: string
 }
 
 export interface StoreCalculateApishipShippingOption {

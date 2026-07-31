@@ -5,8 +5,6 @@
     "loading": "Загрузка..."
   },
   "statuses": {
-    "test": "Тестовый",
-    "production": "Рабочий",
     "enabled": "Включено",
     "disabled": "Выключено"
   },
@@ -15,108 +13,43 @@
     "description": "Агрегатор служб доставки ApiShip",
     "sections": {
       "credentials": "Доступы",
-      "settings": "Настройки"
+      "paymentAndTax": "Оплата и НДС",
+      "defaultProductSizes": "Параметры товара по умолчанию",
+      "sender": "Отправитель"
     },
     "fields": {
       "token": "API токен",
       "isTest": "Тестовый режим",
-      "settings": "Настройки"
+      "settings": "Настройки",
+      "isCod": "Наложенный платёж",
+      "isCodHint": "Разрешить наложенный платёж для отправлений.",
+      "deliveryCostVat": "Ставка НДС на доставку",
+      "defaultProductLength": "Длина, см",
+      "defaultProductLengthPlaceholder": "10",
+      "defaultProductWidth": "Ширина, см",
+      "defaultProductWidthPlaceholder": "10",
+      "defaultProductHeight": "Высота, см",
+      "defaultProductHeightPlaceholder": "10",
+      "defaultProductWeight": "Вес, г",
+      "defaultProductWeightPlaceholder": "20",
+      "senderCountryCode": "Страна",
+      "senderCountryCodePlaceholder": "Выберите страну",
+      "senderAddressString": "Адрес",
+      "senderAddressStringPlaceholder": "Москва, ул. Тверская, 1",
+      "senderAddressStringHint": "Полный адрес одной строкой. Используется, когда у склада нет собственного адреса.",
+      "senderContactName": "ФИО",
+      "senderContactNamePlaceholder": "Иван Иванов",
+      "senderPhone": "Телефон",
+      "senderPhonePlaceholder": "+79001234567"
     },
-    "general": {
-      "title": "ApiShip",
-      "subtitle": "Настраивайте подключение к сервису ApiShip для расчёта стоимости доставки и оформления заказов.",
-      "edit": {
-        "header": "Редактировать ApiShip",
-        "description": "Обновите API токен и режим.",
-        "successToast": "Настройки ApiShip обновлены.",
-        "errorToast": "Не удалось обновить настройки ApiShip."
-      },
-      "fields": {
-        "token": {
-          "label": "API токен",
-          "placeholder": "Введите API токен ApiShip"
-        },
-        "mode": {
-          "label": "Режим"
-        }
-      }
-    },
-    "defaultStoreAddress": {
-      "title": "Отправитель",
-      "subtitle": "Настраивайте данные отправителя по умолчанию.",
-      "edit": {
-        "header": "Редактировать данные отправителя",
-        "successToast": "Данные отправителя обновлены.",
-        "errorToast": "Не удалось обновить данные отправителя."
-      },
-      "fields": {
-        "countryCode": {
-          "label": "Страна",
-          "placeholder": "Выберите страну"
-        },
-        "address": {
-          "label": "Адрес",
-          "placeholder": "Введите полный адрес"
-        },
-        "contactName": {
-          "label": "ФИО",
-          "placeholder": "Введите ФИО"
-        },
-        "phone": {
-          "label": "Телефон",
-          "placeholder": "Введите номер телефона"
-        }
-      }
-    },
-    "defaultProductSizes": {
-      "title": "Параметры товаров по умолчанию",
-      "subtitle": "Используются, если у товара нет своих параметров.",
-      "edit": {
-        "header": "Редактировать размеры",
-        "successToast": "Размеры обновлены.",
-        "errorToast": "Не удалось обновить размеры."
-      },
-      "fields": {
-        "length": {
-          "label": "Длина"
-        },
-        "width": {
-          "label": "Ширина"
-        },
-        "height": {
-          "label": "Высота"
-        },
-        "weight": {
-          "label": "Вес"
-        }
-      }
-    },
-    "paymentAndTax": {
-      "title": "Оплата и НДС",
-      "edit": {
-        "header": "Редактировать оплату и налоги",
-        "successToast": "Настройки обновлены.",
-        "errorToast": "Не удалось обновить настройки."
-      },
-      "fields": {
-        "isCod": {
-          "label": "Наложенный платеж",
-          "hint": "Разрешить оплату при получении."
-        },
-        "deliveryCostVat": {
-          "label": "Ставка НДС доставки",
-          "placeholder": "Выберите ставку НДС"
-        }
-      },
-      "values": {
-        "noVat": "Без НДС",
-        "vat0": "0%",
-        "vat5": "5%",
-        "vat7": "7%",
-        "vat10": "10%",
-        "vat20": "20%",
-        "vat22": "22%"
-      }
+    "vat": {
+      "noVat": "Без НДС",
+      "vat0": "0%",
+      "vat5": "5%",
+      "vat7": "7%",
+      "vat10": "10%",
+      "vat20": "20%",
+      "vat22": "22%"
     },
     "connections": {
       "title": "Службы доставки",

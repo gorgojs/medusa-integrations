@@ -1,6 +1,6 @@
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
 import { ContainerRegistrationKeys, MedusaError, Modules } from "@medusajs/framework/utils"
-import { DEFAULT_APISHIP_PROVIDER_ID } from "../../types/apiship"
+import { apishipProviderId } from "../../lib/provider-id"
 import { ProviderKeys } from "../../types"
 
 export type ResolveApishipProviderIdStepInput = {
@@ -41,8 +41,6 @@ export const resolveApishipProviderIdStep = createStep(
 
     const instanceId = entry.options?.id as string | undefined
 
-    return new StepResponse(
-      instanceId ? `${DEFAULT_APISHIP_PROVIDER_ID}_${instanceId}` : DEFAULT_APISHIP_PROVIDER_ID
-    )
+    return new StepResponse(apishipProviderId(instanceId))
   }
 )

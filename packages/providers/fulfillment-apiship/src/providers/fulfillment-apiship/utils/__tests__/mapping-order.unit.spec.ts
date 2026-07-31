@@ -17,7 +17,7 @@ const fullAddressStockLocation = {
   },
 }
 
-// Stock location with no address_2 (falls back to default_sender_settings.address_string)
+// Stock location with no address_2 (falls back to sender_address_string)
 const partialAddressStockLocation = {
   ...baseStockLocation,
   address: {
@@ -57,10 +57,10 @@ describe("mapToApishipOrderRequest", () => {
       expect(result.sender!.addressString).toBe("Санкт-Петербург, Невский пр., д. 1")
     })
 
-    it("falls back to default_sender_settings.address_string when parts missing", () => {
+    it("falls back to sender_address_string when parts missing", () => {
       const result = callMapping({ stockLocation: partialAddressStockLocation })
       expect(result.sender!.addressString).toBe(
-        makeApishipOptions().settings.default_sender_settings.address_string
+        makeApishipOptions().sender_address_string
       )
     })
 
@@ -134,7 +134,7 @@ describe("mapToApishipOrderRequest", () => {
       expect(item.weight).toBe(500)
     })
 
-    it("falls back to default_product_sizes when variant dimensions missing", () => {
+    it("falls back to the configured default sizes when variant dimensions missing", () => {
       const order = makeOrder({
         items: [{ id: "i1", title: "T", subtitle: null, quantity: 1, unit_price: 100, variant: {} }],
       })
@@ -183,7 +183,7 @@ describe("mapToApishipOrderRequest", () => {
 
     it("is_cod=true: item cost equals unit_price, codCost equals total, paymentMethod=3", () => {
       const options = makeApishipOptions()
-      options.settings.is_cod = true
+      options.is_cod = true
       const result = callMapping({ options })
 
       expect(result.places![0].items![0].cost).toBe(1000) // unit_price from makeOrder
@@ -233,7 +233,7 @@ describe("mapToApishipOrderRequest", () => {
   describe("providerConnectId lookup", () => {
     it("throws MedusaError when no enabled connection found for providerKey", () => {
       const options = makeApishipOptions()
-      options.settings.connections = [
+      options.connections = [
         { id: "c1", name: "n", provider_key: "cdek", provider_connect_id: "p1", is_enabled: false },
       ]
       expect(() => callMapping({ options, providerKey: "cdek" })).toThrow(

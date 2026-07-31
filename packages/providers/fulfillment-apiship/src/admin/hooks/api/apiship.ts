@@ -138,13 +138,7 @@ export const useCreateApishipConnection = (providerId?: string) => {
           ...prev,
           apiship_options: {
             ...prev.apiship_options,
-            settings: {
-              ...prev.apiship_options.settings,
-              connections: [
-                ...(prev.apiship_options.settings?.connections ?? []),
-                data.connection,
-              ],
-            },
+            connections: [...(prev.apiship_options.connections ?? []), data.connection],
           },
         }
       })
@@ -179,12 +173,9 @@ export const useUpdateApishipConnection = (
           ...prev,
           apiship_options: {
             ...prev.apiship_options,
-            settings: {
-              ...prev.apiship_options.settings,
-              connections: (prev.apiship_options.settings?.connections ?? []).map((connection) =>
-                connection.id === id ? data.connection : connection
-              ),
-            },
+            connections: (prev.apiship_options.connections ?? []).map((connection) =>
+              connection.id === id ? data.connection : connection
+            ),
           },
         }
       })
@@ -217,12 +208,9 @@ export const useDeleteApishipConnection = (
           ...prev,
           apiship_options: {
             ...prev.apiship_options,
-            settings: {
-              ...prev.apiship_options.settings,
-              connections: (prev.apiship_options.settings?.connections ?? []).filter(
-                (connection) => connection.id !== id
-              ),
-            },
+            connections: (prev.apiship_options.connections ?? []).filter(
+              (connection) => connection.id !== id
+            ),
           },
         }
       })

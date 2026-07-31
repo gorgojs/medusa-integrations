@@ -5,8 +5,6 @@
     "loading": "Loading..."
   },
   "statuses": {
-    "test": "Test",
-    "production": "Production",
     "enabled": "Enabled",
     "disabled": "Disabled"
   },
@@ -15,108 +13,43 @@
     "description": "ApiShip delivery service aggregator",
     "sections": {
       "credentials": "Credentials",
-      "settings": "Settings"
+      "paymentAndTax": "Payment & VAT",
+      "defaultProductSizes": "Default Product Settings",
+      "sender": "Sender"
     },
     "fields": {
       "token": "API token",
       "isTest": "Test mode",
-      "settings": "Settings"
+      "settings": "Settings",
+      "isCod": "Cash on Delivery",
+      "isCodHint": "Allow cash on delivery for shipments.",
+      "deliveryCostVat": "Delivery VAT Rate",
+      "defaultProductLength": "Length, cm",
+      "defaultProductLengthPlaceholder": "10",
+      "defaultProductWidth": "Width, cm",
+      "defaultProductWidthPlaceholder": "10",
+      "defaultProductHeight": "Height, cm",
+      "defaultProductHeightPlaceholder": "10",
+      "defaultProductWeight": "Weight, g",
+      "defaultProductWeightPlaceholder": "20",
+      "senderCountryCode": "Country",
+      "senderCountryCodePlaceholder": "Select country",
+      "senderAddressString": "Address",
+      "senderAddressStringPlaceholder": "Moscow, Tverskaya st. 1",
+      "senderAddressStringHint": "Full address on one line. Used when the stock location has no address of its own.",
+      "senderContactName": "Full Name",
+      "senderContactNamePlaceholder": "Ivan Ivanov",
+      "senderPhone": "Phone",
+      "senderPhonePlaceholder": "+79001234567"
     },
-    "general": {
-      "title": "ApiShip",
-      "subtitle": "Manage your ApiShip connection settings to calculate shipping rates and create orders.",
-      "edit": {
-        "header": "Edit ApiShip",
-        "description": "Update API Token and mode.",
-        "successToast": "ApiShip options updated.",
-        "errorToast": "Failed to update ApiShip options."
-      },
-      "fields": {
-        "token": {
-          "label": "API Token",
-          "placeholder": "ApiShip Token"
-        },
-        "mode": {
-          "label": "Mode"
-        }
-      }
-    },
-    "defaultStoreAddress": {
-      "title": "Sender",
-      "subtitle": "Configure the default sender details.",
-      "edit": {
-        "header": "Edit Default Sender Data",
-        "successToast": "Default sender data updated.",
-        "errorToast": "Failed to update default sender data."
-      },
-      "fields": {
-        "countryCode": {
-          "label": "Country",
-          "placeholder": "Select country"
-        },
-        "address": {
-          "label": "Address",
-          "placeholder": "Enter address"
-        },
-        "contactName": {
-          "label": "Full Name",
-          "placeholder": "Enter full name"
-        },
-        "phone": {
-          "label": "Phone",
-          "placeholder": "Enter phone number"
-        }
-      }
-    },
-    "defaultProductSizes": {
-      "title": "Default Product Settings",
-      "subtitle": "Used when a product has no custom settings.",
-      "edit": {
-        "header": "Edit Default Product Sizes",
-        "successToast": "Default product sizes updated.",
-        "errorToast": "Failed to update default product sizes."
-      },
-      "fields": {
-        "length": {
-          "label": "Length"
-        },
-        "width": {
-          "label": "Width"
-        },
-        "height": {
-          "label": "Height"
-        },
-        "weight": {
-          "label": "Weight"
-        }
-      }
-    },
-    "paymentAndTax": {
-      "title": "Payment & VAT",
-      "edit": {
-        "header": "Edit Payment & Tax",
-        "successToast": "Payment and tax settings updated.",
-        "errorToast": "Failed to update payment and tax settings."
-      },
-      "fields": {
-        "isCod": {
-          "label": "Cash on Delivery",
-          "hint": "Allow cash on delivery for shipments."
-        },
-        "deliveryCostVat": {
-          "label": "Delivery VAT Rate",
-          "placeholder": "Select VAT rate"
-        }
-      },
-      "values": {
-        "noVat": "No VAT",
-        "vat0": "0%",
-        "vat5": "5%",
-        "vat7": "7%",
-        "vat10": "10%",
-        "vat20": "20%",
-        "vat22": "22%"
-      }
+    "vat": {
+      "noVat": "No VAT",
+      "vat0": "0%",
+      "vat5": "5%",
+      "vat7": "7%",
+      "vat10": "10%",
+      "vat20": "20%",
+      "vat22": "22%"
     },
     "connections": {
       "title": "Delivery Services",

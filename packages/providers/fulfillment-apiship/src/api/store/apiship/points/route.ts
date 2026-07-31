@@ -20,6 +20,7 @@ export const GET = async (
       offset,
       provider_id,
       shipping_option_id,
+      mode: "resolved",
     },
   })
 

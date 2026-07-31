@@ -23,36 +23,30 @@ export function makeProvider(
   return provider
 }
 
-/** Valid fully-populated ApishipOptionsDTO (after normalization) */
+/** Valid fully-populated ApishipOptionsDTO (as `assembleApishipOptions` returns it) */
 export function makeApishipOptions(overrides: Record<string, any> = {}): any {
   return {
     token: "test-apiship-token",
     is_test: true,
-    settings: {
-      connections: [
-        {
-          id: "conn-1",
-          name: "CDEK Test",
-          provider_key: "cdek",
-          provider_connect_id: "connect-123",
-          is_enabled: true,
-        },
-      ],
-      default_sender_settings: {
-        country_code: "RU",
-        address_string: "Санкт-Петербург, Невский пр. 1",
-        contact_name: "Иван Иванов",
-        phone: "+79001234567",
+    is_cod: false,
+    delivery_cost_vat: -1,
+    default_product_length: 10,
+    default_product_width: 10,
+    default_product_height: 10,
+    default_product_weight: 20,
+    sender_country_code: "RU",
+    sender_address_string: "Санкт-Петербург, Невский пр. 1",
+    sender_contact_name: "Иван Иванов",
+    sender_phone: "+79001234567",
+    connections: [
+      {
+        id: "conn-1",
+        name: "CDEK Test",
+        provider_key: "cdek",
+        provider_connect_id: "connect-123",
+        is_enabled: true,
       },
-      default_product_sizes: {
-        length: 10,
-        width: 10,
-        height: 10,
-        weight: 20,
-      },
-      delivery_cost_vat: -1,
-      is_cod: false,
-    },
+    ],
     ...overrides,
   }
 }
