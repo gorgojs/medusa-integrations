@@ -24,7 +24,7 @@
     "tunnel": "lt --port 9000 --subdomain medusa-apiship"
   },
   "dependencies": {
-    "@gorgo/medusa-fulfillment-apiship": "latest",
+    "@gorgo/medusa-fulfillment-apiship": "beta",
     "@gorgo/medusa-integration": "latest",
     "@medusajs/admin-sdk": "2.18.0",
     "@medusajs/cli": "2.18.0",

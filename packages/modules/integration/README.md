@@ -7,7 +7,7 @@ Integration Module for Medusa
   <br/>
   A Medusa module that lets plugins declare their settings and store admins configure them right in the Admin — no <code>medusa-config</code> edits, no redeploys, secrets encrypted at rest.
   <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/modules/integration/README.ru.md">Читать README на русском ↗</a>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/modules/integration/README-ru.md">Читать README на русском ↗</a>
 </p>
 
 <br/>
@@ -16,8 +16,8 @@ Integration Module for Medusa
   <a href="https://medusajs.com">
     <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
-  <a href="https://medusajs.com">
-    <img src="https://img.shields.io/badge/Tested_with_Medusa-v2.17.2-green?logo=checkmarx" alt="Medusa" />
+  <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-integration.json&logo=checkmarx" alt="Medusa" />
   </a>
 </p>
 
