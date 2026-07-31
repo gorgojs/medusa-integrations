@@ -29,10 +29,6 @@ type CartItem = NonNullable<CalculateShippingOptionPriceDTO["context"]["items"]>
   }
 }
 
-const ITEM_LENGTH = 10
-const ITEM_WIDTH = 10
-const ITEM_HEIGHT = 10
-const ITEM_WEIGHT = 20
 
 function mapItemVatRateToEnum(item: OrderItem): ItemCostVatEnum {
   const rate = item?.tax_lines?.[0]?.rate
@@ -53,15 +49,14 @@ export function mapToApishipOrderRequest(
   pointOutId?: number
 ): OrderRequest {
   const stolstockLocationAddress = stockLocation.address!
-  const defaultSenderSettings = apishipOptions.settings.default_sender_settings
   const sender = {
     countryCode:
-      stolstockLocationAddress.country_code || defaultSenderSettings.country_code,
+      stolstockLocationAddress.country_code || apishipOptions.sender_country_code,
     ...((stolstockLocationAddress.city && stolstockLocationAddress.address_1 && stolstockLocationAddress.address_2) ?
       { addressString: `${stolstockLocationAddress.city}, ${stolstockLocationAddress.address_1}, ${stolstockLocationAddress.address_2}` } :
-      { addressString: defaultSenderSettings.address_string }),
-    contactName: defaultSenderSettings.contact_name,
-    phone: stolstockLocationAddress.phone || defaultSenderSettings.phone,
+      { addressString: apishipOptions.sender_address_string }),
+    contactName: apishipOptions.sender_contact_name,
+    phone: stolstockLocationAddress.phone || apishipOptions.sender_phone,
     ...(stolstockLocationAddress.province ? { region: stolstockLocationAddress.province } : {}),
     ...(stolstockLocationAddress.city ? { city: stolstockLocationAddress.city } : {}),
     ...(stolstockLocationAddress.company ? { companyName: stolstockLocationAddress.company } : {}),
@@ -85,7 +80,6 @@ export function mapToApishipOrderRequest(
     ...(order.customer?.email ? { email: order.customer?.email } : {}),
   }
 
-  const defaultProductSizes = apishipOptions.settings.default_product_sizes
   const items = (order.items ?? []) as OrderItem[]
   const placeItems = items!.map((item) => {
     const quantity = item.quantity
@@ -96,12 +90,12 @@ export function mapToApishipOrderRequest(
     const articul = item.variant?.sku ?? undefined
     const barcode = item.variant?.barcode ?? undefined
     const description = [item.title, item.subtitle].filter(Boolean).join(" ")
-    const cost = apishipOptions.settings.is_cod ? item.unit_price : 0
+    const cost = apishipOptions.is_cod ? item.unit_price : 0
     return {
-      length: length ?? defaultProductSizes?.length ?? ITEM_LENGTH,
-      width: width ?? defaultProductSizes?.width ?? ITEM_WIDTH,
-      height: height ?? defaultProductSizes?.height ?? ITEM_HEIGHT,
-      weight: weight ?? defaultProductSizes?.weight ?? ITEM_WEIGHT,
+      length: length ?? apishipOptions.default_product_length,
+      width: width ?? apishipOptions.default_product_width,
+      height: height ?? apishipOptions.default_product_height,
+      weight: weight ?? apishipOptions.default_product_weight,
       description,
       quantity,
       cost,
@@ -140,7 +134,7 @@ export function mapToApishipOrderRequest(
     items: placeItems,
   }
 
-  const deliveryCostVat = apishipOptions.settings.delivery_cost_vat
+  const deliveryCostVat = apishipOptions.delivery_cost_vat
   const assessedCost =
     placeItems.reduce((sum, item) => {
       const assessedCost = item.assessedCost
@@ -153,18 +147,18 @@ export function mapToApishipOrderRequest(
       const quantity = item.quantity
       return sum + cost * quantity
     }, 0)
-  const codCost = apishipOptions.settings.is_cod ? itemsCost : 0
+  const codCost = apishipOptions.is_cod ? itemsCost : 0
   const cost = {
     codCost,
     assessedCost,
     isDeliveryPayedByRecipient: false,
-    ...(apishipOptions.settings.is_cod ? { deliveryCostVat } : {}),
-    ...(apishipOptions.settings.is_cod
+    ...(apishipOptions.is_cod ? { deliveryCostVat } : {}),
+    ...(apishipOptions.is_cod
       ? { paymentMethod: 3 as CostPaymentMethodEnum }
       : {}),
   }
 
-  const providerConnection = apishipOptions.settings.connections?.find(
+  const providerConnection = apishipOptions.connections?.find(
     (connection) =>
       connection.provider_key === providerKey && connection.is_enabled
   )
@@ -227,10 +221,10 @@ export function mapToApishipCalculatorRequest(
 
   const items = context.items as CartItem[]
   const places = items.flatMap((item) => {
-    const weight = item.variant?.weight ?? ITEM_WEIGHT
-    const height = item.variant?.height ?? ITEM_HEIGHT
-    const length = item.variant?.length ?? ITEM_LENGTH
-    const width = item.variant?.width ?? ITEM_WIDTH
+    const weight = item.variant?.weight ?? apishipOptions.default_product_weight
+    const height = item.variant?.height ?? apishipOptions.default_product_height
+    const length = item.variant?.length ?? apishipOptions.default_product_length
+    const width = item.variant?.width ?? apishipOptions.default_product_width
     const quantity = item.quantity as number
     return Array.from({ length: quantity }, () => ({
       height,
@@ -248,7 +242,7 @@ export function mapToApishipCalculatorRequest(
     const quantity = item.quantity as number
     return sum + unitPrice * quantity
   }, 0)
-  const codCost = apishipOptions.settings.is_cod ? assessedCost : 0
+  const codCost = apishipOptions.is_cod ? assessedCost : 0
   const includeFees = false
 
   const calculatorRequest: CalculatorRequest = {

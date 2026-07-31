@@ -100,7 +100,7 @@ describe("mapToApishipCalculatorRequest", () => {
       expect(result.places[1]).toMatchObject({ height: 10, length: 20, width: 15, weight: 500 })
     })
 
-    it("falls back to default constants when variant has no dimensions", () => {
+    it("falls back to the configured default sizes when variant has no dimensions", () => {
       const ctx = {
         ...baseContext,
         items: [{ id: "item-02", quantity: 1, unit_price: 500, variant: {} }],
@@ -130,13 +130,13 @@ describe("mapToApishipCalculatorRequest", () => {
     })
 
     it("codCost is 0 when is_cod=false", () => {
-      const result = mapToApishipCalculatorRequest(baseOptionData, baseContext, makeApishipOptions({ settings: { ...makeApishipOptions().settings, is_cod: false } }))
+      const result = mapToApishipCalculatorRequest(baseOptionData, baseContext, makeApishipOptions({ is_cod: false }))
       expect(result.codCost).toBe(0)
     })
 
     it("codCost equals assessedCost when is_cod=true", () => {
       const options = makeApishipOptions()
-      options.settings.is_cod = true
+      options.is_cod = true
       const result = mapToApishipCalculatorRequest(baseOptionData, baseContext, options)
       expect(result.codCost).toBe(result.assessedCost)
     })
