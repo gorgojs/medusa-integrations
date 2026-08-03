@@ -54,7 +54,6 @@ function fallbackEnv(): EnvInfo {
     medusa_version: "0.0.0",
     node_version: process.version,
     os: process.platform,
-    arch: process.arch,
     ci: false,
     container: false,
     node_env: process.env.NODE_ENV ?? "development",
@@ -91,7 +90,6 @@ export class TelemetryDispatcher {
   private readonly startedAt = Date.now()
   private pingIndex = 0
   private pingTimer?: ReturnType<typeof setInterval>
-  private firstFlush = true
 
   private nextTimeUnixNano(): string {
     const candidate = BigInt(Date.now()) * 1_000_000n
@@ -171,6 +169,7 @@ export class TelemetryDispatcher {
 
   private armPingTimer(): void {
     if (this.pingTimer || this.pingInterval <= 0) return
+    if (!this.isEnabledCached()) return
     this.pingTimer = setInterval(() => this.emitPing(), this.pingInterval)
     this.pingTimer.unref?.()
   }
@@ -193,7 +192,7 @@ export class TelemetryDispatcher {
 
   enqueue(pkg: PackageInfo, eventName: string, properties: Record<string, unknown> = {}): void {
     try {
-      if (!this.firstFlush && !this.isEnabledCached()) return
+      if (!this.isEnabledCached()) return
 
       const key = `${pkg.name}@${pkg.version}`
 
@@ -244,14 +243,13 @@ export class TelemetryDispatcher {
     if (this.flushing) return
     if (this.totalCount === 0) return
 
-    if (!this.firstFlush && !this.isEnabledCached()) {
+    if (!this.isEnabledCached()) {
       this.buckets.clear()
       this.totalCount = 0
       return
     }
 
     this.flushing = true
-    this.firstFlush = false
 
     const inflight = this.buckets
     const inflightCount = this.totalCount
@@ -308,6 +306,7 @@ export class TelemetryDispatcher {
     try {
       setTelemetryEnabled(enabled)
       this.telemetryEnabledCache = enabled
+      if (enabled) this.armPingTimer()
     } catch (err) {
       if (VERBOSE) console.warn("[gorgo/telemetry] setEnabled failed:", err)
     }
@@ -401,7 +400,6 @@ export class TelemetryDispatcher {
       "env.medusa_version": env.medusa_version,
       "env.node_version": env.node_version,
       "env.os": env.os,
-      "env.arch": env.arch,
       "env.ci": env.ci,
       "env.container": env.container,
       "env.node_env": env.node_env,
@@ -409,7 +407,6 @@ export class TelemetryDispatcher {
       "env.timezone": env.timezone,
       "env.package_manager": env.package_manager,
       "env.store_id": env.store_id ?? null,
-      "env.admin_id": env.admin_id ?? null,
       "enabled": this.isEnabledCached(),
     })
   }
