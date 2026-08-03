@@ -111,7 +111,6 @@ export async function collectEnvInfo(): Promise<EnvInfo> {
     medusa_version,
     node_version: process.version,
     os: process.platform,
-    arch: process.arch,
     ci: isCI(),
     container,
     node_env: process.env.NODE_ENV ?? "development",

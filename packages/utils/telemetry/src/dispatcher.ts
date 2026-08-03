@@ -54,7 +54,6 @@ function fallbackEnv(): EnvInfo {
     medusa_version: "0.0.0",
     node_version: process.version,
     os: process.platform,
-    arch: process.arch,
     ci: false,
     container: false,
     node_env: process.env.NODE_ENV ?? "development",
@@ -175,12 +174,6 @@ export class TelemetryDispatcher {
     this.pingTimer.unref?.()
   }
 
-  private scheduleFlush(): void {
-    if (this.timer) return
-    if (!this.isEnabledCached()) return
-    this.timer = setTimeout(() => void this.flush(), this.flushInterval)
-  }
-
   private emitPing(): void {
     try {
       this.pingIndex++
@@ -233,8 +226,8 @@ export class TelemetryDispatcher {
 
       if (this.totalCount >= this.flushAt) {
         void this.flush()
-      } else {
-        this.scheduleFlush()
+      } else if (!this.timer) {
+        this.timer = setTimeout(() => void this.flush(), this.flushInterval)
       }
     } catch (err) {
       if (VERBOSE) console.warn("[gorgo/telemetry] enqueue failed:", err)
@@ -303,8 +296,8 @@ export class TelemetryDispatcher {
       this.requeue(inflight)
     } finally {
       this.flushing = false
-      if (this.totalCount > 0) {
-        this.scheduleFlush()
+      if (this.totalCount > 0 && !this.timer) {
+        this.timer = setTimeout(() => void this.flush(), this.flushInterval)
       }
     }
   }
@@ -407,7 +400,6 @@ export class TelemetryDispatcher {
       "env.medusa_version": env.medusa_version,
       "env.node_version": env.node_version,
       "env.os": env.os,
-      "env.arch": env.arch,
       "env.ci": env.ci,
       "env.container": env.container,
       "env.node_env": env.node_env,

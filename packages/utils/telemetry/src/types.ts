@@ -7,7 +7,6 @@ export interface EnvInfo {
   medusa_version: string
   node_version: string
   os: string
-  arch: string
   ci: boolean
   container: boolean
   node_env: string
