@@ -17,7 +17,6 @@ export interface EnvInfo {
   package_manager: "npm" | "yarn" | "pnpm" | "unknown"
 
   store_id?: string
-  admin_id?: string
 }
 
 export interface TelemetryEvent {

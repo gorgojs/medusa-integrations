@@ -91,7 +91,6 @@ export class TelemetryDispatcher {
   private readonly startedAt = Date.now()
   private pingIndex = 0
   private pingTimer?: ReturnType<typeof setInterval>
-  private firstFlush = true
 
   private nextTimeUnixNano(): string {
     const candidate = BigInt(Date.now()) * 1_000_000n
@@ -171,8 +170,15 @@ export class TelemetryDispatcher {
 
   private armPingTimer(): void {
     if (this.pingTimer || this.pingInterval <= 0) return
+    if (!this.isEnabledCached()) return
     this.pingTimer = setInterval(() => this.emitPing(), this.pingInterval)
     this.pingTimer.unref?.()
+  }
+
+  private scheduleFlush(): void {
+    if (this.timer) return
+    if (!this.isEnabledCached()) return
+    this.timer = setTimeout(() => void this.flush(), this.flushInterval)
   }
 
   private emitPing(): void {
@@ -193,7 +199,7 @@ export class TelemetryDispatcher {
 
   enqueue(pkg: PackageInfo, eventName: string, properties: Record<string, unknown> = {}): void {
     try {
-      if (!this.firstFlush && !this.isEnabledCached()) return
+      if (!this.isEnabledCached()) return
 
       const key = `${pkg.name}@${pkg.version}`
 
@@ -227,8 +233,8 @@ export class TelemetryDispatcher {
 
       if (this.totalCount >= this.flushAt) {
         void this.flush()
-      } else if (!this.timer) {
-        this.timer = setTimeout(() => void this.flush(), this.flushInterval)
+      } else {
+        this.scheduleFlush()
       }
     } catch (err) {
       if (VERBOSE) console.warn("[gorgo/telemetry] enqueue failed:", err)
@@ -244,14 +250,13 @@ export class TelemetryDispatcher {
     if (this.flushing) return
     if (this.totalCount === 0) return
 
-    if (!this.firstFlush && !this.isEnabledCached()) {
+    if (!this.isEnabledCached()) {
       this.buckets.clear()
       this.totalCount = 0
       return
     }
 
     this.flushing = true
-    this.firstFlush = false
 
     const inflight = this.buckets
     const inflightCount = this.totalCount
@@ -298,8 +303,8 @@ export class TelemetryDispatcher {
       this.requeue(inflight)
     } finally {
       this.flushing = false
-      if (this.totalCount > 0 && !this.timer) {
-        this.timer = setTimeout(() => void this.flush(), this.flushInterval)
+      if (this.totalCount > 0) {
+        this.scheduleFlush()
       }
     }
   }
@@ -308,6 +313,7 @@ export class TelemetryDispatcher {
     try {
       setTelemetryEnabled(enabled)
       this.telemetryEnabledCache = enabled
+      if (enabled) this.armPingTimer()
     } catch (err) {
       if (VERBOSE) console.warn("[gorgo/telemetry] setEnabled failed:", err)
     }
@@ -409,7 +415,6 @@ export class TelemetryDispatcher {
       "env.timezone": env.timezone,
       "env.package_manager": env.package_manager,
       "env.store_id": env.store_id ?? null,
-      "env.admin_id": env.admin_id ?? null,
       "enabled": this.isEnabledCached(),
     })
   }
