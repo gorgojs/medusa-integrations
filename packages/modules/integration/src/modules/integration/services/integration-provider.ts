@@ -1,4 +1,5 @@
 import { IntegrationProviderRegistrationPrefix } from "../types"
+import { integrationProviderKey } from "../utils/provider-id"
 import type { AbstractIntegrationProvider } from "../utils/abstract-integration-provider"
 import type { IntegrationDescriptor } from "../descriptor/define"
 
@@ -34,7 +35,7 @@ export default class IntegrationProviderService {
 
   /** Build the container key for a `(identifier, instanceId)` pair. */
   static key(identifier: string, instanceId?: string | null): string {
-    return `${IntegrationProviderRegistrationPrefix}${identifier}${instanceId ? `_${instanceId}` : ""}`
+    return integrationProviderKey(identifier, instanceId)
   }
 
   /** All registered provider instances. */

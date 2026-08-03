@@ -25,9 +25,9 @@ export const upsertIntegrationWorkflow = createWorkflow(
 
     const recordInput = transform({ input, prepared }, (data) => ({
       provider_id: data.input.provider_id,
-      title: data.input.title ?? null,
       category: data.prepared.category,
       options: data.prepared.options,
+      ...(data.input.title !== undefined ? { title: data.input.title } : {}),
     }))
 
     const record = upsertIntegrationRecordStep(recordInput)
