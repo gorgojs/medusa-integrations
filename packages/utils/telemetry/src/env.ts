@@ -1,3 +1,4 @@
+import crypto from "node:crypto"
 import { existsSync } from "node:fs"
 import { readFile } from "node:fs/promises"
 import path from "node:path"
@@ -67,13 +68,30 @@ function detectTimezone(): string {
   }
 }
 
-function normalizeUrlEnv(raw: string | undefined): string | undefined {
+function getStoreId(raw: string | undefined): string | undefined {
   if (raw === undefined) return undefined
   const normalized = raw
     .split(",")
     .map((part) => part.trim().replace(/^https?:\/\//i, ""))
+    .filter(Boolean)
     .join(",")
-  return Buffer.from(normalized, "utf-8").toString("base64")
+  if (!normalized) return undefined
+  return crypto.createHash("sha256").update(normalized, "utf-8").digest("hex")
+}
+
+let storeIdCache: { value: string | undefined } | undefined
+
+function getStoreIdCached(): string | undefined {
+  if (!storeIdCache) {
+    storeIdCache = {
+      value: getStoreId(
+        process.env.MEDUSA_STOREFRONT_URL ??
+          process.env.STORE_CORS ??
+          process.env.STOREFRONT_URL,
+      ),
+    }
+  }
+  return storeIdCache.value
 }
 
 async function detectMedusaVersion(): Promise<string> {
@@ -93,21 +111,13 @@ export async function collectEnvInfo(): Promise<EnvInfo> {
     medusa_version,
     node_version: process.version,
     os: process.platform,
-    arch: process.arch,
     ci: isCI(),
     container,
     node_env: process.env.NODE_ENV ?? "development",
     locale: detectLocale(),
     timezone: detectTimezone(),
     package_manager: detectPackageManager(),
-    store_id: normalizeUrlEnv(
-      process.env.MEDUSA_STOREFRONT_URL ??
-        process.env.STORE_CORS ??
-        process.env.STOREFRONT_URL,
-    ),
-    admin_id: normalizeUrlEnv(
-      process.env.MEDUSA_BACKEND_URL ?? process.env.ADMIN_CORS ?? process.env.ADMIN_URL,
-    ),
+    store_id: getStoreIdCached(),
   }
 }
 
