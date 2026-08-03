@@ -2,7 +2,8 @@ import { z } from "@medusajs/deps/zod"
 
 export type AdminUpsertIntegrationType = z.infer<typeof AdminUpsertIntegration>
 export const AdminUpsertIntegration = z.object({
-  title: z.string().optional(),
+  // Omitted → the stored title is kept; explicit `null` → cleared.
+  title: z.string().nullable().optional(),
   // Which descriptor section these values belong to. Omitted by widgets, which submit
   // their own option ids directly — the server then validates exactly the submitted keys.
   section_id: z.string().optional(),

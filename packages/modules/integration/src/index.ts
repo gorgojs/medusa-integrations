@@ -29,6 +29,14 @@ export type {
   GetResolvedIntegrationOptionsStepInput,
 } from "./workflows/integration"
 
+export { upsertIntegrationWorkflow } from "./workflows/integration"
+export type { UpsertIntegrationWorkflowInput } from "./workflows/integration"
+
+// The `provider_id` convention (`int_<identifier>[_<instanceId>]`) — for providers that
+// receive a provider_id on their own routes and need to build or parse one.
+export { integrationProviderKey, parseIntegrationProviderKey } from "./modules/integration/utils"
+export type { ParsedIntegrationProviderKey } from "./modules/integration/utils"
+
 // ── For consumers of the integration module ──────────────────────────────────
 export { INTEGRATION_MODULE } from "./modules/integration"
 export { default as IntegrationModuleService } from "./modules/integration/services/integration-module"

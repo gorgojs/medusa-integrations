@@ -191,7 +191,7 @@ const EditPage = () => {
             <Row key={f.name} label={t(f.label)}>
               <IntegrationFieldValue
                 field={f}
-                value={record?.values?.[f.name]}
+                value={record?.values?.[f.name] ?? f.default}
                 secretConfigured={configuredSecrets.has(f.name)}
               />
             </Row>
