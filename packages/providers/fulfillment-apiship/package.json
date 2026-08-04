@@ -58,7 +58,7 @@
     "test:unit": "jest --config jest.config.js"
   },
   "dependencies": {
-    "@gorgo/telemetry": "^1.3.0",
+    "@gorgo/telemetry": "^1.4.0",
     "axios": "^1.13.2"
   },
   "devDependencies": {
