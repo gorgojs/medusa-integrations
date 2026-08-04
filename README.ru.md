@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://www.medusajs.com">
+  <a href="https://gorgojs.ru">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/gorgo-logo-dark.svg">
       <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/gorgo-logo-light.svg">
@@ -8,7 +8,7 @@
   </a>
 </p>
 <h1 align="center">
-  Плагины для Medusa<br>
+  Интеграции для Medusa<br>
   от Gorgo
 </h1>
 
@@ -18,7 +18,7 @@
 </h4>
 
 <p align="center">
-  Набор production-ready плагинов, адаптирующих <a href="https://medusajs.com/">Medusa</a> к рынкам России и СНГ - платежи, доставка, ERP и маркетплейсы. С примерами приложений и документацией.
+  Набор production-ready интеграционных плагинов <a href="https://medusajs.com/">Medusa</a> для интернет-магазинов – платежи, доставка, ERP. С примерами приложений и документацией.
 </p>
 
 <p align="center">
@@ -37,15 +37,32 @@
   </a>
 </p>
 
-## Плагины Medusa
+## Базовые модули
+
+<p>
+  <a href="./packages/modules/integration">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-module-logo.svg" width="64" hspace="8" align="left" alt="Integration Module logo">
+  </a>
+  <strong><a href="./packages/modules/integration">Модуль интеграций</a></strong><br/>
+  Позволяет любому плагину, провайдеру или модулю описывать свои параметры, чтобы администраторы настраивали их в разделе <strong>Настройки → Интеграции</strong> прямо в Admin — без правок <code>medusa-config</code> и передеплоя. CRUD API для админки, формы и валидацию модуль генерирует сам.<br/>
+  <a href="https://docs.gorgojs.ru/medusa-modules/integration">документация</a> |
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-integration">npm</a> |
+  <a href="./examples/all-integrations">пример</a>
+</p>
+
+##
+
+<br clear="left"/>
+
+## Интеграции
 
 <p>
   <a href="./packages/providers/payment-yookassa">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yookassa-logo.svg" width="100" align="left" alt="ЮKassa logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yookassa-logo.svg" width="80" align="left" alt="ЮKassa logo">
   </a>
   <strong><a href="./packages/providers/payment-yookassa">ЮKassa</a></strong><br/>
   Провайдер платежей: создание платеже, обработка вебхуков, возвраты и фискальные чеки по 54-ФЗ. В комплекте пример витрины.<br/>
-  <a href="https://docs.gorgojs.ru/integrations/yookassa">документация</a> |
+  <a href="https://docs.gorgojs.ru/medusa-integrations/yookassa">документация</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-yookassa">npm</a> |
   <a href="./examples/payment-yookassa">пример</a>
 </p>
@@ -54,11 +71,11 @@
 
 <p>
   <a href="./packages/providers/payment-tkassa">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/tkassa-logo.svg" width="100" align="left" alt="T-Kassa logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/tkassa-logo.svg" width="80" align="left" alt="T-Kassa logo">
   </a>
   <strong><a href="./packages/providers/payment-tkassa">Т-Касса от Т-Банка</a></strong><br/>
   Провайдер платежей: создание платежей, обработка вебхуков, возвраты и фискальные чеки по 54-ФЗ. В комплекте пример витрины.<br/>
-  <a href="https://docs.gorgojs.ru/integrations/t-kassa">документация</a> |
+  <a href="https://docs.gorgojs.ru/medusa-integrations/t-kassa">документация</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-tkassa">npm</a> |
   <a href="./examples/payment-tkassa">пример</a>
 </p>
@@ -69,11 +86,11 @@
 
 <p>
   <a href="./packages/providers/payment-robokassa">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/robokassa-logo.svg" width="100" align="left" alt="Robokassa logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/robokassa-logo.svg" width="80" align="left" alt="Robokassa logo">
   </a>
   <strong><a href="./packages/providers/payment-robokassa">Robokassa</a></strong><br/>
   Провайдер платежей: создание платежей, обработка уведомлений, возвраты и фискальные чеки по 54-ФЗ. В комплекте пример интеграции с витриной.<br/>
-  <a href="https://docs.gorgojs.ru/integrations/robokassa">документация</a> |
+  <a href="https://docs.gorgojs.ru/medusa-integrations/robokassa">документация</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-robokassa">npm</a> |
   <a href="./examples/payment-robokassa">пример</a>
 </p>
@@ -84,11 +101,11 @@
 
 <p>
   <a href="./packages/providers/fulfillment-apiship">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/apiship-logo.svg" width="100" align="left" alt="ApiShip logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/apiship-logo.svg" width="80" align="left" alt="ApiShip logo">
   </a>
   <strong><a href="./packages/providers/fulfillment-apiship">ApiShip</a></strong><br/>
   Провайдер доставки: расчёт тарифов, создание отправлений, доставка в пункты выдачи, получение сопроводительных документов и управление из Medusa Admin.<br/>
-  <a href="https://docs.gorgojs.ru/integrations/apiship">документация</a> |
+  <a href="https://docs.gorgojs.ru/medusa-integrations/apiship">документация</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-fulfillment-apiship">npm</a> |
   <a href="./examples/fulfillment-apiship">пример</a>
 </p>
@@ -99,13 +116,13 @@
 
 <p>
   <a href="./packages/providers/erp-1c">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-logo.svg" width="100" align="left" alt="1C:Enterprise logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-logo.svg" width="80" align="left" alt="1C:Enterprise logo">
   </a>
   <strong><a href="./packages/providers/erp-1c">1С:Предприятие</a></strong><br/>
   Синхронизация каталога и заказов между Medusa и 1С:Предприятием. В комплекте пример backend-приложения.<br/>
-  <a href="https://docs.gorgojs.ru/integrations/1c-enterprise">документация</a> |
+  <a href="https://docs.gorgojs.ru/medusa-integrations/1c-enterprise">документация</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">npm</a> |
-  <a href="./examples/1c">пример</a>
+  <a href="./examples/erp-1c">пример</a>
 </p>
 
 ##
@@ -114,11 +131,11 @@
 
 <p>
   <a href="./packages/providers/feed-yandex">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yandex-logo.svg" width="100" align="left" alt="Yandex Market logo">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/yandex-logo.svg" width="80" align="left" alt="Yandex Market logo">
   </a>
   <strong><a href="./packages/providers/feed-yandex">YML-фид для Яндекс Маркета</a></strong><br/>
   Экспорт каталога в формате YML (Yandex Market Language) с управлением фидами из Medusa Admin.<br/>
-  <a href="https://docs.gorgojs.ru/integrations/yandex-yml-feed">документация</a> |
+  <a href="https://docs.gorgojs.ru/medusa-integrations/yandex-yml-feed">документация</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-feed-yandex">npm</a> |
   <a href="./examples/feed-yandex">пример</a>
 </p>
@@ -145,57 +162,11 @@
     └── tools/
 ```
 
-### `packages/`
-
-Публикуемые плагины Medusa. Каждый NPM-пакет содержит исходный код, манифест, CHANGELOG и собственный README. Общие внутренние утилиты находятся в `packages/utils/` (например, `@gorgo/telemetry`).
-
-### `examples/`
-
-Примеры сгруппированы по плагинам и, как правило, включают:
-
-- `medusa/` — backend с подключённым плагином.
-- `medusa-storefront/` — пример интеграции с витриной, когда плагину нужна frontend-часть.
-
-Корневой [examples/docker-compose.yml](examples/docker-compose.yml) поднимает PostgreSQL и pgAdmin для примеров. Подробнее — в [examples/README.md](examples/README.md).
-
-### `integration-tests/`
-
-Отдельные пакеты-воркспейсы, поднимающие реальное Medusa-приложение с подключённым плагином через `workspace:*`. См. раздел [Тесты](#тесты) ниже.
-
-### `scripts/`
-
-Скрипты автоматизации репозитория (обновление версии Medusa, генерация changeset'ов, релизные хелперы).
-
-### `docs/`
-
-Контент документации (MDX + анонсы), доступный по адресам:
-
-- [docs.gorgojs.com](https://docs.gorgojs.com)
-- [docs.gorgojs.ru](https://docs.gorgojs.ru)
-
-В `integrations/` лежит документация по плагинам; в `tools/` — документация по сопутствующим CLI, например [`create-medusa-plugin`](https://docs.gorgojs.ru/tools/create-medusa-plugin).
-
-## Установка и разработка
-
-### Работа над плагином
-
-Установите корневые зависимости:
-
-```bash
-yarn install
-```
-
-Затем перейдите в директорию нужного плагина и запустите dev-режим. Например, для Т-Кассы:
-
-```bash
-cd packages/providers/payment-tkassa
-yarn dev
-```
-
 ### Работа над примером приложения
 
 Читайте подробности в README соответствующего примера:
 
+- [examples/all-integrations/README.md](examples/all-integrations/README.md)
 - [examples/erp-1c/README.md](examples/erp-1c/README.md)
 - [examples/feed-yandex/README.md](examples/feed-yandex/README.md)
 - [examples/fulfillment-apiship/README.md](examples/fulfillment-apiship/README.md)

@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://www.medusajs.com">
+  <a href="https://gorgojs.com">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/gorgo-logo-dark.svg">
       <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/gorgo-logo-light.svg">
@@ -8,7 +8,7 @@
   </a>
 </p>
 <h1 align="center">
-  Medusa Plugins<br>
+  Medusa Integrations<br>
   by Gorgo
 </h1>
 
@@ -18,7 +18,7 @@
 </h4>
 
 <p align="center">
-  A production-ready suite of <a href="https://medusajs.com/">Medusa</a> plugins built for Russia and CIS markets — payments, fulfillment, ERP, and marketplaces, with example apps and documentation.
+  A production-ready suite of <a href="https://medusajs.com/">Medusa</a> integration plugins built for online stores – payments, fulfillment, ERP, with example apps and documentation.
 </p>
 
 <p align="center">
@@ -37,7 +37,24 @@
   </a>
 </p>
 
-## Medusa Plugins
+## Core Modules
+
+<p>
+  <a href="./packages/modules/integration">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-module-logo.svg" width="64" hspace="8" align="left" alt="Integration Module logo">
+  </a>
+  <strong><a href="./packages/modules/integration">Integration Module</a></strong><br/>
+  Lets any plugin, provider, or module declare its options so store admins configure them under <strong>Settings → Integrations</strong> in the Admin — no <code>medusa-config</code> edits, no redeploys. It generates the admin CRUD API, forms, and validation for you.<br/>
+  <a href="https://docs.gorgojs.com/medusa-modules/integration">docs</a> |
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-integration">npm</a> |
+  <a href="./examples/all-integrations">example</a>
+</p>
+
+##
+
+<br clear="left"/>
+
+## Integrations
 
 <p>
   <a href="./packages/providers/payment-yookassa">
@@ -46,7 +63,7 @@
   <strong><a href="./packages/providers/payment-yookassa">Yookassa</a></strong><br/>
   Payment provider with hosted checkout, webhook handling, refunds, fiscal receipts, and a storefront example.
   <br/>
-  <a href="https://docs.gorgojs.com/integrations/yookassa">docs</a> |
+  <a href="https://docs.gorgojs.com/medusa-integrations/yookassa">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-yookassa">npm</a> |
   <a href="./examples/payment-yookassa">example</a>
 </p>
@@ -61,7 +78,7 @@
   </a>
   <strong><a href="./packages/providers/payment-tkassa">T-Kassa by T-Bank</a></strong><br/>
   Payment provider with payment initialization, webhook handling, refunds, receipt support, and a storefront example.<br/>
-  <a href="https://docs.gorgojs.com/integrations/t-kassa">docs</a> |
+  <a href="https://docs.gorgojs.com/medusa-integrations/t-kassa">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-tkassa">npm</a> |
   <a href="./examples/payment-tkassa">example</a>
 </p>
@@ -76,7 +93,7 @@
   </a>
   <strong><a href="./packages/providers/payment-robokassa">Robokassa</a></strong><br/>
   Payment provider with hosted checkout flows, notifications, refunds, receipt generation, and example storefront integration.<br/>
-  <a href="https://docs.gorgojs.com/integrations/robokassa">docs</a> |
+  <a href="https://docs.gorgojs.com/medusa-integrations/robokassa">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-robokassa">npm</a> |
   <a href="./examples/payment-robokassa">example</a>
 </p>
@@ -91,7 +108,7 @@
   </a>
   <strong><a href="./packages/providers/fulfillment-apiship">ApiShip</a></strong><br/>
   Fulfillment provider with delivery rate calculation, shipment creation, pickup-point delivery, document retrieval, and Admin tooling.<br/>
-  <a href="https://docs.gorgojs.com/integrations/apiship">docs</a> |
+  <a href="https://docs.gorgojs.com/medusa-integrations/apiship">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-fulfillment-apiship">npm</a> |
   <a href="./examples/fulfillment-apiship">example</a>
 </p>
@@ -106,9 +123,9 @@
   </a>
   <strong><a href="./packages/providers/erp-1c">1C:Enterprise</a></strong><br/>
   Integration for synchronizing catalog and order data between Medusa and 1C:Enterprise, with an example backend.<br/>
-  <a href="https://docs.gorgojs.com/integrations/1c-enterprise">docs</a> |
+  <a href="https://docs.gorgojs.com/medusa-integrations/1c-enterprise">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">npm</a> |
-  <a href="./examples/1c">example</a>
+  <a href="./examples/erp-1c">example</a>
 </p>
 
 ##
@@ -121,7 +138,7 @@
   </a>
   <strong><a href="./packages/providers/feed-yandex">Yandex Market YML Feed</a></strong><br/>
   Feed generator that exports catalog data in YML format and exposes feed management through Medusa Admin.<br/>
-  <a href="https://docs.gorgojs.com/integrations/yandex-yml-feed">docs</a> |
+  <a href="https://docs.gorgojs.com/medusa-integrations/yandex-yml-feed">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-feed-yandex">npm</a> |
   <a href="./examples/feed-yandex">example</a>
 </p>
@@ -132,7 +149,7 @@
 
 ## Repo Structure
 
-This repository is organized as a Yarn monorepo with shared workspaces for plugin packages.
+This repository is organized as a Yarn workspaces monorepo with shared dependencies and tooling across all plugin packages.
 
 ```text
 ├── examples/
@@ -152,7 +169,8 @@ This repository is organized as a Yarn monorepo with shared workspaces for plugi
 
 See the plugin example README for details:
 
-- [examples/erp-1c/README.md](examples//erp-1c/README.md)
+- [examples/all-integrations/README.md](examples/all-integrations/README.md)
+- [examples/erp-1c/README.md](examples/erp-1c/README.md)
 - [examples/feed-yandex/README.md](examples/feed-yandex/README.md)
 - [examples/fulfillment-apiship/README.md](examples/fulfillment-apiship/README.md)
 - [examples/payment-robokassa/README.md](examples/payment-robokassa/README.md)
