@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "../..",
     "paths": {
       "@gorgo/medusa-fulfillment-apiship/types": ["src/types/index.ts"]
     },
