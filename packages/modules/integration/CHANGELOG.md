@@ -1,5 +1,10 @@
 # @gorgo/medusa-integration
 
+
+## 0.1.3
+
+- Update docs
+
 ## 0.1.2
 
 - Export upsert workflow and provider_id helpers

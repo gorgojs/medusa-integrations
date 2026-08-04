@@ -31,7 +31,7 @@ The Integration Module is a good fit for Medusa developers building plugins, pro
 ## Features
 
 - **Settings management in Admin:** Set in the **Settings → Integrations** section, no `medusa-config`/env edits and no redeploys.
-- **Provider-agnostic:** Works for payments, fulfillment, ERP, notifications, content, and more.
+- **Any plugin, provider, or module:** Works across payment, fulfillment, ERP, notification, content, and other extensions.
 - **Declarative descriptor (`defineIntegration`):** A single description of the options, settings sections, validation, and connection test.
 - **Flexible typing and validation:** Typed fields (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) with per-option and cross-section rules, conditional visibility, and read-only fields. At runtime, the plugin gets a typed, decrypted object: incomplete or disabled settings never resolve, so an unfilled draft is never returned.
 - **Encrypted secrets:** Fields marked `secret` are encrypted (AES-256-GCM) and never reach the browser.
