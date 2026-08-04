@@ -6,6 +6,9 @@
     "name": "Gorgo",
     "url": "https://gorgojs.com"
   },
+  "license": "MIT",
+  "homepage": "https://gorgojs.com/medusa-integration-module",
+  "bugs": "https://github.com/gorgojs/medusa-integrations/issues",
   "files": [
     ".medusa/server"
   ],
