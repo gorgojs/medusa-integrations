@@ -1,5 +1,11 @@
 # @gorgo/telemetry
 
+## 1.4.0
+
+### Features
+
+- remove extra telemetry and add docs
+  
 ## 1.3.0
 
 ### Features
