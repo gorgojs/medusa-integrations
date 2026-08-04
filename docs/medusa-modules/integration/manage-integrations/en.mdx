@@ -14,9 +14,29 @@ To view the integrations list:
 1. Open Medusa Admin.
 2. Go to **Settings → Integrations**.
 
-This opens the list of every integration registered in the project: the provider's name and icon, the package author, its description, and category. Each integration shows a status — **Not configured**, **Incomplete**, **Enabled**, or **Disabled** — and, if the provider supports connection testing, also either **Connected** or **Connection failed**. You can filter the list by category and search by name.
+This opens the list of every integration registered in the project: the provider's name and icon, the package author, its description, and category. Each integration shows a status. You can filter the list by category and search by name.
 
 ![Integrations list](/static/integration/en/integrations-overview.png)
+
+### Integration Statuses
+
+The lifecycle status is always shown, and can be one of the following:
+
+| Status | Description |
+| --- | --- |
+| Not configured | No section of the settings has been saved yet. |
+| Incomplete | Some sections are saved, but not all required fields are filled in, or the values entered don't pass validation. |
+| Enabled | The integration is fully configured and enabled: the provider receives its options at runtime. |
+| Disabled | The integration is fully configured, but disabled: the provider stops receiving its options, as if it weren't configured. |
+
+If the provider supports connection testing, a separate status is shown alongside the lifecycle status, based on the result of the last test:
+
+| Status | Description |
+| --- | --- |
+| Connected | The last connection test succeeded. |
+| Connection failed | The last connection test failed. |
+
+While the connection test hasn't been run yet, this status isn't shown.
 
 ---
 
@@ -41,7 +61,7 @@ The integration then appears in the list as **Not configured**, ready to configu
 
 ## Configure an Integration
 
-Until an integration is configured, its page shows sections with empty required fields. There's no separate action for the initial setup — saving any section with its fields filled in creates the configuration.
+Until an integration is configured, its page shows sections with empty required fields. There's no separate action for the initial setup: saving any section with its fields filled in creates the configuration.
 
 To configure an integration:
 
@@ -56,9 +76,9 @@ To configure an integration:
 
 ---
 
-## Test the Connection
+## Test Connection
 
-Some providers support connection testing — it confirms the values you entered are actually accepted by the provider, before the integration is used for real. If a provider doesn't support this, the action won't appear in the menu.
+Some providers support connection testing, which confirms the values you entered are actually accepted by the provider before the integration is used for real. If a provider doesn't support this, the action won't appear in the menu.
 
 To test the connection:
 
@@ -68,6 +88,8 @@ To test the connection:
 4. Choose **Test connection**.
 
 The result appears in a notification.
+
+![Test Connection](/static/integration/en/test-connection.png)
 
 ---
 
@@ -88,7 +110,7 @@ To edit a section:
 
 ## Enable and Disable an Integration
 
-A disabled integration keeps its stored settings, but the provider stops receiving them — as if the integration weren't configured.
+A disabled integration keeps its stored settings, but the provider stops receiving them, as if the integration weren't configured.
 
 To enable or disable an integration:
 
@@ -101,7 +123,7 @@ To enable or disable an integration:
 
 ## Delete an Integration
 
-Deleting an integration only erases its stored data — the token and the rest of its section values. The provider itself isn't removed as a source of the integration: it stays registered in `medusa-config.ts` and reappears in the list as not configured. To remove the provider entirely, delete its entry from `providers` in `medusa-config.ts`.
+Deleting an integration only erases its stored data: the token and the rest of its section values. The provider itself isn't removed as a source of the integration: it stays registered in `medusa-config.ts` and reappears in the list as not configured. To remove the provider entirely, delete its entry from `providers` in `medusa-config.ts`.
 
 To delete an integration:
 

@@ -1,6 +1,6 @@
 ---
 title: "Integration Module for Medusa"
-description: "A Medusa module that lets any plugin or provider declare its options and store admins configure them in the Admin – no medusa-config edits, no redeploys."
+description: "A Medusa module that lets any plugin or provider declare its options and store admins configure them in the Admin: no medusa-config edits, no redeploys."
 ---
 
 <div>
@@ -9,22 +9,21 @@ description: "A Medusa module that lets any plugin or provider declare its optio
 
 # {frontmatter.title}
 
-The Integration Module lets any plugin declare its options, and store admins configure them as **integrations** right in the Admin – no `medusa-config` edits, no redeploys. It generates the admin CRUD API and validation, so there are no data models, routes, or forms to write.
+The Integration Module lets any plugin declare its options and lets store admins configure them in the Admin, no `medusa-config` edits and no redeploys. The module takes care of the UI, storage, encryption, and validation.
 
-The Integration Module is useful for any Medusa developer building plugins, providers, or custom modules that need configurable settings – API keys, credentials, modes, webhooks — but who'd rather not hand-build settings UI pages, a data layer, and validation for each one.
+The Integration Module is a good fit for Medusa developers building plugins, providers, or custom modules with configurable options (API keys, credentials, modes, webhooks) who'd rather not write a separate UI page, data layer, and validation for each one.
 
 ## Features
 
-- **No-code configuration in Medusa Admin:** Credentials and options are managed under Settings – no `medusa-config`/env edits and no redeploys.
-- **Provider-agnostic:** Works for any provider type – payment, fulfillment, content, notification, ERP, and beyond – as well as any plugin or custom Medusa module.
-- **Declarative descriptor (`defineIntegration`)**: Options, settings sections, validation, and a connection test in a single declaration.
-- **Rich option types & validation:** Typed fields (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) with per-option and cross-section rules, conditional visibility, and read-only fields.
-- **Encrypted secrets at rest:** Fields marked `secret` are encrypted (AES-256-GCM) and never reach the browser.
-- **Multiple instances:** Configure the same provider more than once, each with its own settings (e.g. several accounts).
+- **Settings management in Admin:** Set in the **Settings → Integrations** section, no `medusa-config`/env edits and no redeploys.
+- **Provider-agnostic:** Works for payments, fulfillment, ERP, notifications, content, and more.
+- **Declarative descriptor (`defineIntegration`):** A single description of the options, settings sections, validation, and connection test.
+- **Flexible typing and validation:** Typed fields (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) with per-option and cross-section rules, conditional visibility, and read-only fields. At runtime, the plugin gets a typed, decrypted object: incomplete or disabled settings never resolve, so an unfilled draft is never returned.
+- **Encrypted secrets:** Fields marked `secret` are encrypted (AES-256-GCM) and never reach the browser.
+- **Multiple instances:** The same provider can be configured more than once. For example, for several accounts in the same third-party service.
 - **Connection test:** Verify credentials against the third-party service right from the Admin.
-- **Typed runtime resolve:** Consumers read validated, decrypted options; incomplete or disabled options never resolve, so drafts don't leak into runtime.
-- **Customizable admin UI:** Reorderable sections ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)); if the rendered sections aren't enough, build any UI for your options with custom widgets.
-- **Browse integrations:** Discover available integrations right in the Admin.
+- **Extensible UI:** Sections can be reordered ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). If the generated sections aren't enough, you can implement any UI for your options using custom widgets.
+- **Integration catalog:** Available integrations are shown in the Admin, and any plugin appears there on equal footing with the built-in ones.
 
 ---
 
