@@ -1,0 +1,55 @@
+---
+title: "Usage Data"
+description: "What anonymous usage data Gorgo plugins collect, why, and how to turn it off."
+---
+
+# {frontmatter.title}
+
+All Gorgo plugins for Medusa collect anonymous usage data about which plugins and providers are running, and in what environments. This lets us prioritize fixes and improvements based on how our products are actually used.
+
+No personally identifiable information, customer data, or business data is ever collected, and the data cannot be tied back to you or your store. Collection is on by default and can be [turned off](#how-to-opt-out) with a single environment variable.
+
+---
+
+## What is collected
+
+The data falls into a few broad, non-identifying categories:
+
+- **Anonymous identifiers** – a random per-machine id, a per-session id, and one-way hashes of your `package.json` used only to count distinct projects.
+- **Plugin info** – which Gorgo plugin and version is running, and which providers are active.
+- **Environment** – OS, Node.js and Medusa versions, whether it runs in CI or a container, `NODE_ENV`, system locale and timezone, and the package manager.
+
+This data is sent as lightweight events at two points:
+
+- **On startup** – when a plugin is loaded by Medusa.
+- **Periodically** – a lightweight heartbeat carrying only uptime, to estimate how long installations stay up.
+
+All events are sent to `https://telemetry.gorgojs.com` over HTTPS.
+
+---
+
+## What is never collected
+
+- **Customer or business data** – no order IDs, product names, SKUs, prices, customer emails, phone numbers, or any store content.
+- **Transactional events** – no events are sent for payments, orders, shipments, or any other business operation.
+- **Secrets or credentials** – no API keys, tokens, passwords, or environment variables from your project.
+- **Error text** – if a plugin reports a failure, the event carries only a short classification (e.g. an `error_code`), never raw exception messages, stack traces, or file paths.
+- **Any data that would allow us to identify you or your store.**
+
+---
+
+## How to opt out
+
+Set the following environment variable to `1` or `true`:
+
+```bash title="Environments"
+GORGO_DISABLE_TELEMETRY=true
+```
+
+When it is set, nothing is sent.
+
+---
+
+## Source code
+
+This telemetry module is fully open source. The complete implementation is available in the [`medusa-integrations` repository](https://github.com/gorgojs/medusa-integrations/tree/main/packages/utils/telemetry).
