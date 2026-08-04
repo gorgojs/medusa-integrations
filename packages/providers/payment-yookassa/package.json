@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@a2seven/yoo-checkout": "^1.1.4",
-    "@gorgo/telemetry": "^1.3.0",
+    "@gorgo/telemetry": "^1.4.0",
     "axios": "^1.9.0"
   },
   "devDependencies": {
