@@ -27,7 +27,7 @@
   "dependencies": {
     "@gorgo/medusa-1c": "beta",
     "@gorgo/medusa-fulfillment-apiship": "beta",
-    "@gorgo/medusa-integration": "0.1.0",
+    "@gorgo/medusa-integration": "latest",
     "@gorgo/medusa-payment-robokassa": "beta",
     "@gorgo/medusa-payment-tkassa": "beta",
     "@gorgo/medusa-payment-yookassa": "beta",

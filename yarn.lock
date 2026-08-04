@@ -1965,7 +1965,7 @@ __metadata:
   resolution: "@gorgo/medusa-1c@workspace:packages/providers/erp-1c"
   dependencies:
     "@gorgo/medusa-integration": "npm:^0.1.0"
-    "@gorgo/telemetry": "npm:^1.3.0"
+    "@gorgo/telemetry": "npm:^1.4.0"
     "@medusajs/admin-sdk": "npm:^2.17.2"
     "@medusajs/cli": "npm:^2.17.2"
     "@medusajs/framework": "npm:^2.17.2"
@@ -2007,7 +2007,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-feed-yandex@workspace:packages/providers/feed-yandex"
   dependencies:
-    "@gorgo/telemetry": "npm:^1.3.0"
+    "@gorgo/telemetry": "npm:^1.4.0"
     "@medusajs/admin-sdk": "npm:^2.14.0"
     "@medusajs/cli": "npm:^2.14.0"
     "@medusajs/framework": "npm:^2.14.0"
@@ -2051,8 +2051,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-fulfillment-apiship@workspace:packages/providers/fulfillment-apiship"
   dependencies:
-    "@gorgo/medusa-integration": "npm:^0.1.0"
-    "@gorgo/telemetry": "npm:^1.3.0"
+    "@gorgo/medusa-integration": "npm:^0.1.2"
+    "@gorgo/telemetry": "npm:^1.4.0"
     "@medusajs/admin-sdk": "npm:^2.17.2"
     "@medusajs/cli": "npm:^2.17.2"
     "@medusajs/framework": "npm:^2.17.2"
@@ -2077,7 +2077,7 @@ __metadata:
     vite: "npm:^5.2.11"
     yalc: "npm:^1.0.0-pre.53"
   peerDependencies:
-    "@gorgo/medusa-integration": ^0.1.0
+    "@gorgo/medusa-integration": ^0.1.2
     "@medusajs/admin-sdk": ^2.17.2
     "@medusajs/cli": ^2.17.2
     "@medusajs/framework": ^2.17.2
@@ -2107,11 +2107,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gorgo/medusa-integration@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "@gorgo/medusa-integration@npm:0.1.2"
+  dependencies:
+    "@gorgo/telemetry": "npm:^1.4.0"
+  peerDependencies:
+    "@medusajs/admin-sdk": ^2.17.2
+    "@medusajs/cli": ^2.17.2
+    "@medusajs/dashboard": ^2.17.2
+    "@medusajs/deps": ^2.17.2
+    "@medusajs/framework": ^2.17.2
+    "@medusajs/icons": ^2.17.2
+    "@medusajs/medusa": ^2.17.2
+    "@medusajs/test-utils": ^2.17.2
+    "@medusajs/ui": ^4.1.16
+  checksum: 10c0/c6d611d737524ac96055416d86e105c6362d32407b0d34641be2e74c0bee4664e764793502379b87c51be8392150ad08eeaccf4343d9a909fcef2ce145ed6e2e
+  languageName: node
+  linkType: hard
+
 "@gorgo/medusa-integration@workspace:*, @gorgo/medusa-integration@workspace:packages/modules/integration":
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-integration@workspace:packages/modules/integration"
   dependencies:
-    "@gorgo/telemetry": "npm:^1.3.0"
+    "@gorgo/telemetry": "npm:^1.4.0"
     "@medusajs/admin-sdk": "npm:^2.17.2"
     "@medusajs/cli": "npm:^2.17.2"
     "@medusajs/dashboard": "npm:^2.17.2"
@@ -2152,7 +2171,7 @@ __metadata:
   resolution: "@gorgo/medusa-payment-robokassa@workspace:packages/providers/payment-robokassa"
   dependencies:
     "@gorgo/medusa-integration": "npm:^0.1.0"
-    "@gorgo/telemetry": "npm:^1.3.0"
+    "@gorgo/telemetry": "npm:^1.4.0"
     "@medusajs/admin-sdk": "npm:^2.17.2"
     "@medusajs/cli": "npm:^2.17.2"
     "@medusajs/framework": "npm:^2.17.2"
@@ -2194,7 +2213,7 @@ __metadata:
   resolution: "@gorgo/medusa-payment-tkassa@workspace:packages/providers/payment-tkassa"
   dependencies:
     "@gorgo/medusa-integration": "npm:^0.1.0"
-    "@gorgo/telemetry": "npm:^1.3.0"
+    "@gorgo/telemetry": "npm:^1.4.0"
     "@medusajs/admin-sdk": "npm:^2.17.2"
     "@medusajs/cli": "npm:^2.17.2"
     "@medusajs/framework": "npm:^2.17.2"
@@ -2236,7 +2255,7 @@ __metadata:
   dependencies:
     "@a2seven/yoo-checkout": "npm:^1.1.4"
     "@gorgo/medusa-integration": "npm:^0.1.0"
-    "@gorgo/telemetry": "npm:^1.3.0"
+    "@gorgo/telemetry": "npm:^1.4.0"
     "@medusajs/admin-sdk": "npm:^2.17.2"
     "@medusajs/cli": "npm:^2.17.2"
     "@medusajs/framework": "npm:^2.17.2"
@@ -2276,6 +2295,15 @@ __metadata:
   dependencies:
     configstore: "npm:^5.0.1"
   checksum: 10c0/35e3cff8884e8a85ee96d6f882cceffaddaa1287a4962c5d979088eaf3faafda71b90c1f7b0c2816bf9e35f550969700b04a0a36bf914a4cba7da57ba7e4b398
+  languageName: node
+  linkType: hard
+
+"@gorgo/telemetry@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@gorgo/telemetry@npm:1.4.0"
+  dependencies:
+    configstore: "npm:^5.0.1"
+  checksum: 10c0/c0eeb55ac969a8bde46ead0898b9ea9f6d63bf7ce32a43a4007ca931bba51d979835859e242344a216c773c08e7aa3d18210548b1f1bf73ccb5b62b38a898875
   languageName: node
   linkType: hard
 
