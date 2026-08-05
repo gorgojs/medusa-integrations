@@ -13,49 +13,130 @@ shortDescription:
   ru: "Приём платежей через Robokassa"
 icon: "robokassa.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
-docsUrl: "https://docs.gorgojs.com/integrations/robokassa"
-configSnippet: |
-  // ...
-  const ROBOKASSA_INTEGRATION_ID = "robokassa-1"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/robokassa"
+docsSnippet:
+  en: |
+    ## Install
 
-  module.exports = defineConfig({
-    // ...
-    plugins: [
-      // ...
-      {
-        resolve: "@gorgo/medusa-integration",
-        options: {
-          encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
-          providers: [
-            {
-              resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
-              id: ROBOKASSA_INTEGRATION_ID,
-              options: {},
-            },
-          ],
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-robokassa@beta
+    # or with yarn
+    yarn add @gorgo/medusa-payment-robokassa@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-robokassa@beta
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    const ROBOKASSA_INTEGRATION_ID = "robokassa-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
+                id: ROBOKASSA_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
         },
-      },
-      {
-        resolve: "@gorgo/medusa-payment-robokassa",
-        options: {},
-      },
-    ],
-    modules: [
-      // ...
-      {
-        resolve: "@medusajs/medusa/payment",
-        options: {
-          providers: [
-            {
-              resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
-              id: "robokassa",
-              options: {
-                id: ROBOKASSA_INTEGRATION_ID
-              }
-            },
-          ],
+        {
+          resolve: "@gorgo/medusa-payment-robokassa",
+          options: {},
         },
-      },
-    ],
-  })
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
+                id: "robokassa",
+                options: { id: ROBOKASSA_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Then restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → Robokassa**.
+    2. Configure integration settings.
+  ru: |
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-robokassa@beta
+    # or with yarn
+    yarn add @gorgo/medusa-payment-robokassa@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-robokassa@beta
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    const ROBOKASSA_INTEGRATION_ID = "robokassa-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
+                id: ROBOKASSA_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-robokassa",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
+                id: "robokassa",
+                options: { id: ROBOKASSA_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Затем перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → Robokassa**.
+    2. Настройте параметры интеграции.
 active: true

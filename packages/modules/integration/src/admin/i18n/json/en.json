@@ -23,8 +23,9 @@
       "notInstalled": "Not installed",
       "add": "Add",
       "settings": "Settings",
-      "install_addToConfig": "Add this to your medusa-config.ts and restart the server.",
-      "install_docs": "Documentation"
+      "install_docs": "Read docs",
+      "install_empty": "Setup instructions for this integration aren't available yet.",
+      "install_truncated": "These instructions are too long to show here — open the documentation."
     },
     "columns": {
       "integration": "Integration",

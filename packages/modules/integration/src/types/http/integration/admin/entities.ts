@@ -50,9 +50,14 @@ export interface CatalogIntegration {
   label: string
   shortDescription: string
   repository: string
-  docsUrl: string
-  /** Config to paste into medusa-config (absent for some providers). */
-  configSnippet?: string
+  /** Dropped at the catalog boundary unless it is an absolute https URL — see `isSafeHref`. */
+  docsUrl?: string
+  /**
+   * Markdown setup guide shown in the Admin install drawer, per locale. Either locale may be
+   * absent: the catalog boundary keeps a locale only when it is a usable string, so a
+   * single-locale snippet is common, not malformed.
+   */
+  docsSnippet?: { en?: string; ru?: string }
   /** Icon URL (relative to the Gorgo host). */
   icon: string
   stars: number | null

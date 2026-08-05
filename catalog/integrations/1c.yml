@@ -2,10 +2,10 @@
 # See example.yml for the fully-annotated template.
 #
 # NOTE: unlike tkassa/apiship/robokassa/yookassa, this ships as its own standalone Medusa
-# module (registered under `modules`, module name "onec") rather than an AbstractIntegrationProvider
-# plugged into @gorgo/medusa-integration's `options.providers`. `identifier` below is a catalog-only
-# id (matches the npm scope / docs slug), not a provider `static identifier`. configSnippet reflects
-# that: it's a `modules` entry, not a `providers` entry.
+# plugin (registered under `plugins`, package "@gorgo/medusa-1c") rather than a provider plugged
+# into a Medusa module's `options.providers` (under `modules`). `identifier` below is a
+# catalog-only id (matches the npm scope / docs slug), not a provider `static identifier`.
+# docsSnippet reflects that: it's a `plugins` entry, not a `modules` entry.
 
 identifier: "1c"
 npm: "@gorgo/medusa-1c"
@@ -19,32 +19,98 @@ shortDescription:
   ru: "Обмен данными между Medusa и ERP 1С:Предприятие"
 icon: "1c.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
-docsUrl: "https://docs.gorgojs.com/integrations/1c-enterprise"
-configSnippet: |
-  # ...
-  const ONEC_INTEGRATION_ID = "1c-1"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/1c-enterprise"
+docsSnippet:
+  en: |
+    ## Install
 
-  module.exports = defineConfig({
-    # ...
-    plugins: [
-      # ...
-      {
-        resolve: "@gorgo/medusa-integration",
-        options: {
-          encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
-          providers: [
-            {
-              resolve: "@gorgo/medusa-1c/providers/integration-1c",
-              id: ONEC_INTEGRATION_ID,
-              options: {},
-            },
-          ],
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-1c@beta
+    # or with yarn
+    yarn add @gorgo/medusa-1c@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-1c@beta
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+    
+    ```medusa-config.ts
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-1c/providers/integration-1c",
+                id: "1c-1",
+                options: {},
+              },
+            ],
+          },
         },
-      },
-      {
-        resolve: "@gorgo/medusa-1c",
-        options: {}
-      },
-    ],
-  })
+        {
+          resolve: "@gorgo/medusa-1c",
+          options: {},
+        },
+      ],
+    })
+    ```
+
+    Then restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → 1C:Enterprise**.
+    2. Configure integration settings.
+  ru: |
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-1c@beta
+    # or with yarn
+    yarn add @gorgo/medusa-1c@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-1c@beta
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-1c/providers/integration-1c",
+                id: "1c-1",
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-1c",
+          options: {},
+        },
+      ],
+    })
+    ```
+
+    Затем перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → 1С:Предприятие**.
+    2. Настройте параметры интеграции.
 active: true

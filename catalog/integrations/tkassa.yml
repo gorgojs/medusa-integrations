@@ -13,49 +13,130 @@ shortDescription:
   ru: "Приём платежей через Т-Кассу от Т-Банка"
 icon: "tkassa.png"
 repository: "https://github.com/gorgojs/medusa-integrations"
-docsUrl: "https://docs.gorgojs.com/integrations/t-kassa"
-configSnippet: |
-  # ...
-  const TKASSA_INTEGRATION_ID = "tkassa-1"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/t-kassa"
+docsSnippet:
+  en: |
+    ## Install
 
-  module.exports = defineConfig({
-    # ...
-    plugins: [
-      # ...
-      {
-        resolve: "@gorgo/medusa-integration",
-        options: {
-          encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
-          providers: [
-            {
-              resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
-              id: TKASSA_INTEGRATION_ID,
-              options: {},
-            },
-          ],
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-tkassa@beta
+    # or with yarn
+    yarn add @gorgo/medusa-payment-tkassa@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-tkassa@beta
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    const TKASSA_INTEGRATION_ID = "tkassa-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+                id: TKASSA_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
         },
-      },
-      {
-        resolve: "@gorgo/medusa-payment-tkassa",
-        options: {},
-      },
-    ],
-    modules: [
-      # ...
-      {
-        resolve: "@medusajs/medusa/payment",
-        options: {
-          providers: [
-            {
-              resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
-              id: "tkassa",
-              options: {
-                id: TKASSA_INTEGRATION_ID
-              }
-            },
-          ],
+        {
+          resolve: "@gorgo/medusa-payment-tkassa",
+          options: {},
         },
-      },
-    ],
-  })
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
+                id: "tkassa",
+                options: { id: TKASSA_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Then restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → T-Kassa**.
+    2. Configure integration settings.
+  ru: |
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-tkassa@beta
+    # or with yarn
+    yarn add @gorgo/medusa-payment-tkassa@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-tkassa@beta
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    const TKASSA_INTEGRATION_ID = "tkassa-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+                id: TKASSA_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-tkassa",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
+                id: "tkassa",
+                options: { id: TKASSA_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Затем перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → Т-Касса**.
+    2. Настройте параметры интеграции.
 active: true

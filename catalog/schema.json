@@ -48,9 +48,9 @@
       "type": "string",
       "pattern": "^https://"
     },
-    "configSnippet": {
-      "type": "string",
-      "description": "Illustrative medusa-config.ts registration, shown in the Admin \"Setup guide\" drawer."
+    "docsSnippet": {
+      "$ref": "#/$defs/localizedMarkdown",
+      "description": "Markdown setup guide shown in the Admin install drawer. Restricted subset: headings, paragraphs, flat lists, fenced code, inline code, bold/italic, https-only links. Raw HTML, images and tables render as literal text."
     },
     "active": {
       "type": "boolean",
@@ -70,6 +70,15 @@
       "properties": {
         "en": { "type": "string", "minLength": 1 },
         "ru": { "type": "string", "minLength": 1 }
+      }
+    },
+    "localizedMarkdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "ru"],
+      "properties": {
+        "en": { "type": "string", "minLength": 1, "maxLength": 8000 },
+        "ru": { "type": "string", "minLength": 1, "maxLength": 8000 }
       }
     }
   }
