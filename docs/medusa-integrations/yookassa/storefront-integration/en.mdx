@@ -19,7 +19,7 @@ To make YooKassa available as a payment method on the storefront checkout page, 
 
 Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/lib/constants.tsx#L37-L40) and add the following:
 
-![Directory structure in the Medusa Storefront after updating the file for constants](https://github.com/user-attachments/assets/0aee001e-958f-40c6-b329-618e318ff019)
+![Directory structure in the Medusa Storefront after updating the file for constants](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-lib-constants.png)
 
 ```ts title="src/lib/constants.tsx"
 export const paymentInfoMap: Record<
@@ -51,7 +51,7 @@ When integrating YooKassa, you need to adjust your cookie policy to allow cross-
 
 Open [`src/lib/data/cookies.ts`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/lib/data/cookies.ts#L79) and update the cookie configuration as follows:
 
-![Directory structure in the Medusa Storefront after updating the file for cookies](https://github.com/user-attachments/assets/4274d249-6994-4d9f-b4b6-98f2016f0e9f)
+![Directory structure in the Medusa Storefront after updating the file for cookies](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-lib-data-cookies.png)
 
 ```ts title="src/lib/data/cookies.ts"
 export const setCartId = async (cartId: string) => {
@@ -74,7 +74,7 @@ To redirect a customer to YooKassa, the payment session must be properly initial
 
 Open [`src/modules/checkout/components/payment/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/modules/checkout/components/payment/index.tsx#L83-L95) and update the payment initialization logic to include YooKassa's redirect URL and cart:
 
-![Directory structure in the Medusa Storefront after updating the file for payment component](https://github.com/user-attachments/assets/5c4dfcf9-57e7-48f6-956c-0e0a91ec6c8f)
+![Directory structure in the Medusa Storefront after updating the file for payment component](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-modules-checkout-components-payment-index.png)
 
 ```ts title="src/modules/checkout/components/payment/index.tsx"
 import { getBaseURL } from "@lib/util/env"
@@ -119,7 +119,7 @@ Medusa storefront requires a dedicated payment button component for each payment
 
 Open [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/modules/checkout/components/payment-button/index.tsx#L163-L205) and add the following code:
 
-![Directory structure in the Medusa Storefront after updating the file for payment button component](https://github.com/user-attachments/assets/4b76ee52-747f-452e-9160-6365f742e33e)
+![Directory structure in the Medusa Storefront after updating the file for payment button component](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-modules-checkout-components-payment-button-index.png)
 
 ```ts title="src/modules/checkout/components/payment-button/index.tsx"
 import { 
@@ -209,7 +209,7 @@ After the customer completes payment on the YooKassa page, he is redirected back
 
 Create the [`src/app/api/capture-payment/[cartId]/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/app/api/capture-payment/%5BcartId%5D/route.ts) file with the following content:
 
-![Directory structure in the Medusa Storefront after creating the file for API route](https://github.com/user-attachments/assets/89ac89de-62ad-4b6c-af61-ab6299587dbf)
+![Directory structure in the Medusa Storefront after creating the file for API route](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-app-api-capture-payment-cartid-route.png)
 
 ```ts title="src/app/api/capture-payment/[cartId]/route.ts"
 import { NextRequest, NextResponse } from "next/server"

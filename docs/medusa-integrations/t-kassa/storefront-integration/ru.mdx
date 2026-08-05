@@ -19,7 +19,7 @@ description: "Узнайте, как интегрировать платёжны
 
 Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/lib/constants.tsx#L33-L36) и добавьте следующий код:
 
-![Структура проекта Medusa Storefront после обновления файла с константами](https://github.com/user-attachments/assets/0aee001e-958f-40c6-b329-618e318ff019)
+![Структура проекта Medusa Storefront после обновления файла с константами](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-lib-constants.png)
 
 ```ts title="src/lib/constants.tsx"
 export const paymentInfoMap: Record<
@@ -52,7 +52,7 @@ export const isTkassa = (providerId?: string) => {
 
 Откройте [`src/lib/data/cookies.ts`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/lib/data/cookies.ts#L79) и обновите конфигурацию файлов cookie следующим образом:
 
-![Структура проекта Medusa Storefront после обновления файлов cookie](https://github.com/user-attachments/assets/4274d249-6994-4d9f-b4b6-98f2016f0e9f)
+![Структура проекта Medusa Storefront после обновления файлов cookie](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-lib-data-cookies.png)
 
 ```ts title="src/lib/data/cookies.ts"
 export const setCartId = async (cartId: string) => {
@@ -75,7 +75,7 @@ export const setCartId = async (cartId: string) => {
 
 Откройте [`src/modules/checkout/components/payment/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/modules/checkout/components/payment/index.tsx#L90-L91) и обновите логику инициализации платежа, включив в нее данные корзины и URL возврата для Т-Касса:
 
-![Структура проекта Medusa Storefront после обновления файла для компонента оплаты](https://github.com/user-attachments/assets/5c4dfcf9-57e7-48f6-956c-0e0a91ec6c8f)
+![Структура проекта Medusa Storefront после обновления файла для компонента оплаты](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-modules-checkout-components-payment-index.png)
 
 ```ts title="src/modules/checkout/components/payment/index.tsx"
 import { getBaseURL } from "@lib/util/env"
@@ -116,7 +116,7 @@ const Payment = ({
 
 Откройте [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/modules/checkout/components/payment-button/index.tsx#L163-L211) и добавьте следующий код:
 
-![Структура проекта Medusa Storefront после обновления файла для компонента кнопки оплаты](https://github.com/user-attachments/assets/4b76ee52-747f-452e-9160-6365f742e33e)
+![Структура проекта Medusa Storefront после обновления файла для компонента кнопки оплаты](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-modules-checkout-components-payment-button-index.png)
 
 ```ts title="src/modules/checkout/components/payment-button/index.tsx"
 import { 
@@ -213,7 +213,7 @@ const TkassaPaymentButton: React.FC<TkassaPaymentProps> = ({
 
 Создайте файл [`src/app/api/capture-payment/[cartId]/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/app/api/capture-payment/%5BcartId%5D/route.ts) со следующим содержимым:
 
-![Структура проекта Medusa Storefront после создания файла для API route](https://github.com/user-attachments/assets/89ac89de-62ad-4b6c-af61-ab6299587dbf)
+![Структура проекта Medusa Storefront после создания файла для API route](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-app-api-capture-payment-cartid-route.png)
 
 ```ts title="src/app/api/capture-payment/[cartId]/route.ts"
 import { NextRequest, NextResponse } from "next/server"
