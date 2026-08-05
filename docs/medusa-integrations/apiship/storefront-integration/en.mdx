@@ -30,7 +30,7 @@ ApiShip requires the recipient’s phone number for shipping calculations and fo
 
 Open [`src/modules/checkout/components/shipping-address/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and mark the phone input as required:
 
-![Directory structure in the Medusa Storefront after updating the file for shipping address component](https://github.com/user-attachments/assets/08552cbd-f3f3-4526-a334-b86b66f48e37)
+![Directory structure in the Medusa Storefront after updating the file for shipping address component](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-address-index.png)
 
 ```tsx title="src/modules/checkout/components/shipping-address/index.tsx"
 <Input
@@ -54,7 +54,7 @@ To integrate ApiShip into checkout, the storefront needs a way to save the custo
 
 Open [`src/lib/data/cart.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/lib/data/cart.ts#L217-L242) and add the following:
 
-![Directory structure in the Medusa Storefront after updating the file for cart](https://github.com/user-attachments/assets/f2563a45-53bd-4e28-8d25-8b612d0bb8ba)
+![Directory structure in the Medusa Storefront after updating the file for cart](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-lib-data-cart.png)
 
 ```ts title="src/lib/data/cart.ts"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
@@ -130,7 +130,7 @@ To properly render ApiShip delivery options in the shipping step, the storefront
 
 Open [`src/lib/data/fulfillment.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/lib/data/fulfillment.ts#L70-L134) and add the following helpers:
 
-![Directory structure in the Medusa Storefront after updating the file for fulfillment](https://github.com/user-attachments/assets/c37d99e7-403a-4fef-84dc-ed351087a4dc)
+![Directory structure in the Medusa Storefront after updating the file for fulfillment](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-lib-data-fulfillment.png)
 
 ```ts title="src/lib/data/fulfillment.ts"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
@@ -334,7 +334,7 @@ The storefront integration relies on a small set of shared types that describe t
 
 Open [`src/modules/checkout/components/shipping/apiship/types/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following types:
 
-![Directory structure in the Medusa Storefront after creating the file for ApiShip types](https://github.com/user-attachments/assets/759f8e54-1f6b-4371-a518-78bddcdcf0f1)
+![Directory structure in the Medusa Storefront after creating the file for ApiShip types](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-types-index.png)
 
 ```ts title="src/modules/checkout/components/shipping/apiship/types/index.ts"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
@@ -385,7 +385,7 @@ The storefront integration uses a set of shared utilities to keep the UI consist
 
 Open [`src/modules/checkout/components/shipping/apiship/utils/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following helpers:
 
-![Directory structure in the Medusa Storefront after creating the file for ApiShip utilities](https://github.com/user-attachments/assets/a59ef69b-72e1-4dba-b094-793e39d978ef)
+![Directory structure in the Medusa Storefront after creating the file for ApiShip utilities](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-utils-index.png)
 
 ```ts title="src/modules/checkout/components/shipping/apiship/utils/index.ts"
 import {
@@ -485,7 +485,7 @@ This component is responsible for rendering the Yandex Map, placing pickup point
 
 Open [`src/modules/checkout/components/shipping/apiship/apiship-map.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
-![Directory structure in the Medusa Storefront after creating the file for pickup point map](https://github.com/user-attachments/assets/bffa1d01-eaf7-4c54-93bb-927b34a139a7)
+![Directory structure in the Medusa Storefront after creating the file for pickup point map](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-apiship-map.png)
 
 ```tsx title="src/modules/checkout/components/shipping/apiship/apiship-map.tsx"
 "use client"
@@ -926,7 +926,7 @@ This component renders a compact summary of the shipping option the customer has
 
 Open [`src/modules/checkout/components/shipping/apiship/apiship-chosen.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
-![Directory structure in the Medusa Storefront after creating the file for ApiShip chosen](https://github.com/user-attachments/assets/898bba01-7197-461c-89fe-ce97682b834c)
+![Directory structure in the Medusa Storefront after creating the file for ApiShip chosen](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-apiship-chosen.png)
 
 ```tsx title="src/modules/checkout/components/shipping/apiship/apiship-chosen.tsx"
 "use client"
@@ -1032,7 +1032,7 @@ This component implements a dedicated modal window that allows the customer to s
 
 Open [`src/modules/checkout/components/shipping/apiship/apiship-pickup-point-modal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
-![Directory structure in the Medusa Storefront after creating the file for ApiShip pickup point modal window](https://github.com/user-attachments/assets/ffb59344-83e4-4b02-a437-58d4660e2e63)
+![Directory structure in the Medusa Storefront after creating the file for ApiShip pickup point modal window](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-apiship-pickup-point-modal.png)
 
 ```tsx title="src/modules/checkout/components/shipping/apiship/apiship-pickup-point-modal.tsx"
 "use client"
@@ -1259,7 +1259,7 @@ When the modal window is open, it restores the previously selected tariff (if on
 
 Open [`src/modules/checkout/components/shipping/apiship/apiship-courier-modal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
-![Directory structure in the Medusa Storefront after creating the file for ApiShip courier modal window](https://github.com/user-attachments/assets/cbe90ee1-11af-46ce-bdb3-5eee32617c34)
+![Directory structure in the Medusa Storefront after creating the file for ApiShip courier modal window](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-apiship-courier-modal.png)
 
 ```tsx title="src/modules/checkout/components/shipping/apiship/apiship-courier-modal.tsx"
 "use client"
@@ -1545,7 +1545,7 @@ All ApiShip storefront components and helpers are exported through a barrel file
 
 Open [`src/modules/checkout/components/shipping/apiship/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
-![Directory structure in the Medusa Storefront after creating the file for single entry point for the integration](https://github.com/user-attachments/assets/39d446d4-2708-49ce-9f51-d40b6eeed470)
+![Directory structure in the Medusa Storefront after creating the file for single entry point for the integration](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-index.png)
 
 ```ts title="src/modules/checkout/components/shipping/apiship/index.ts"
 export * from "./apiship-courier-modal"
@@ -1566,7 +1566,7 @@ To support ApiShip calculated delivery methods, the delivery step needs an extra
 
 Open [`src/modules/checkout/components/shipping/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
-![Directory structure in the Medusa Storefront after updating the file for shipping component](https://github.com/user-attachments/assets/b526af99-7356-4bb6-ba42-12f2442aac99)
+![Directory structure in the Medusa Storefront after updating the file for shipping component](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-index.png)
 
 ```tsx title="src/modules/checkout/components/shipping/index.tsx"
 // ... other imports
