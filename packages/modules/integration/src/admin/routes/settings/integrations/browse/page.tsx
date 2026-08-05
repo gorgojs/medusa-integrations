@@ -1,4 +1,4 @@
-import { Plus, Spinner } from "@medusajs/icons"
+import { ArrowUpRightOnBox, Plus, Spinner } from "@medusajs/icons"
 import {
   Container,
   Heading,
@@ -8,7 +8,6 @@ import {
   Tabs,
   Input,
   Drawer,
-  Copy,
 } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
@@ -16,55 +15,46 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { sdk } from "../../../../lib/sdk"
 import { IntegrationIcon } from "../../../../components/integration-icon"
+import { Markdown } from "../../../../components/markdown"
 import type { AdminIntegrationCatalogResponse, CatalogItem } from "../../../../../types"
 
 const PUBLISH_URL = "https://docs.gorgojs.com/medusa-modules/integration"
 const API_URL = "https://gorgojs.com"
 
-const InstallModal = ({ item, onOpenChange }: { item: CatalogItem | null; onOpenChange: (open: boolean) => void }) => {
-  const { t } = useTranslation()
+/**
+ * `icon` is either a data URI or a path on the Gorgo host
+ */
+const iconSrc = (icon: string) => (icon.startsWith("data:") ? icon : API_URL + icon)
+
+const InstallModal = ({
+  item,
+  onOpenChange,
+}: {
+  item: CatalogItem | null
+  onOpenChange: (open: boolean) => void
+}) => {
+  const { t, i18n } = useTranslation()
+  const lang = i18n.language.split("-")[0] === "ru" ? "ru" : "en"
+  const source = item?.docsSnippet?.[lang] || item?.docsSnippet?.en || item?.docsSnippet?.ru || ""
+
   return (
     <Drawer open={!!item} onOpenChange={onOpenChange}>
       <Drawer.Content>
         <Drawer.Header>
           <Drawer.Title asChild>
             <div className="flex items-center gap-x-2">
-              {item && <IntegrationIcon src={API_URL + item.icon} alt={item.label} size="small" />}
+              {item && <IntegrationIcon src={iconSrc(item.icon)} alt={item.label} size="small" />}
               <span>{item?.label}</span>
             </div>
           </Drawer.Title>
         </Drawer.Header>
         <Drawer.Body className="flex flex-1 flex-col gap-y-4 overflow-auto">
-          {item && (
-            <>
-              <Text size="small" className="text-ui-fg-subtle">
-                {t("integration.browse.install_addToConfig")}
-              </Text>
-              <div className="bg-ui-bg-subtle flex items-center justify-between gap-x-2 rounded-md px-3 py-2">
-                <code className="txt-compact-small text-ui-fg-subtle">{`yarn add @gorgo/medusa-integration ${item.npm}@beta`}</code>
-                <Copy content={`yarn add @gorgo/medusa-integration ${item.npm}@beta`} />
-              </div>
-              <div className="bg-ui-bg-subtle flex items-center justify-between gap-x-2 rounded-md px-3 py-2">
-                <code className="txt-compact-small text-ui-fg-subtle">{`npm install @gorgo/medusa-integration ${item.npm}@beta`}</code>
-                <Copy content={`npm install @gorgo/medusa-integration ${item.npm}@beta`} />
-              </div>
-              {item.configSnippet && (
-                <div className="bg-ui-bg-subtle flex flex-col gap-y-2 rounded-md px-3 py-2">
-                  <div className="flex items-center justify-between gap-x-2">
-                    <Text size="xsmall" weight="plus" className="text-ui-fg-subtle">
-                      medusa-config.ts
-                    </Text>
-                    <Copy content={item.configSnippet} />
-                  </div>
-                  <pre className="txt-compact-small text-ui-fg-subtle overflow-x-auto whitespace-pre">
-                    {item.configSnippet}
-                  </pre>
-                </div>
-              )}
-              <a href={item.docsUrl} target="_blank" rel="noreferrer" className="text-ui-fg-base txt-small">
-                {t("integration.browse.install_docs")} →
-              </a>
-            </>
+          {source.trim() ? (
+            <Markdown source={source} truncatedLabel={t("integration.browse.install_truncated")} />
+          ) : (
+            <Text size="small" className="text-ui-fg-subtle">
+              {t("integration.browse.install_empty")}
+            </Text>
           )}
         </Drawer.Body>
         <Drawer.Footer>
@@ -73,6 +63,14 @@ const InstallModal = ({ item, onOpenChange }: { item: CatalogItem | null; onOpen
               {t("integration.actions.cancel")}
             </Button>
           </Drawer.Close>
+          {item?.docsUrl && (
+            <Button size="small" variant="primary" asChild>
+              <a href={item.docsUrl} target="_blank" rel="noopener noreferrer">
+                {t("integration.browse.install_docs")}
+                <ArrowUpRightOnBox />
+              </a>
+            </Button>
+          )}
         </Drawer.Footer>
       </Drawer.Content>
     </Drawer>
@@ -159,7 +157,7 @@ const BrowsePage = () => {
               <div className="flex flex-1 flex-col gap-y-3 p-4">
                 <div className="flex items-start justify-between gap-x-2">
                   <div className="flex items-center gap-x-3">
-                    <IntegrationIcon src={API_URL + item.icon} alt={item.label} />
+                    <IntegrationIcon src={iconSrc(item.icon)} alt={item.label} />
                     <div className="flex flex-col">
                       <Text size="small" weight="plus" leading="compact">
                         {item.label}

@@ -13,49 +13,130 @@ shortDescription:
   ru: "Приём платежей через ЮKassa"
 icon: "yookassa.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
-docsUrl: "https://docs.gorgojs.com/integrations/yookassa"
-configSnippet: |
-  // ...
-  const YOOKASSA_INTEGRATION_ID = "yookassa-1"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/yookassa"
+docsSnippet:
+  en: |
+    ## Install
 
-  module.exports = defineConfig({
-    // ...
-    plugins: [
-      // ...
-      {
-        resolve: "@gorgo/medusa-integration",
-        options: {
-          encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
-          providers: [
-            {
-              resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
-              id: YOOKASSA_INTEGRATION_ID,
-              options: {},
-            },
-          ],
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-yookassa@beta
+    # or with yarn
+    yarn add @gorgo/medusa-payment-yookassa@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-yookassa@beta
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    const YOOKASSA_INTEGRATION_ID = "yookassa-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
+                id: YOOKASSA_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
         },
-      },
-      {
-        resolve: "@gorgo/medusa-payment-yookassa",
-        options: {}
-      },
-    ],
-    modules: [
-      // ...
-      {
-        resolve: "@medusajs/medusa/payment",
-        options: {
-          providers: [
-            {
-              resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
-              id: "yookassa",
-              options: {
-                id: YOOKASSA_INTEGRATION_ID
-              }
-            },
-          ],
+        {
+          resolve: "@gorgo/medusa-payment-yookassa",
+          options: {},
         },
-      },
-    ],
-  })
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
+                id: "yookassa",
+                options: { id: YOOKASSA_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Then restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → YooKassa**.
+    2. Configure integration settings.
+  ru: |
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-yookassa@beta
+    # or with yarn
+    yarn add @gorgo/medusa-payment-yookassa@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-yookassa@beta
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    const YOOKASSA_INTEGRATION_ID = "yookassa-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
+                id: YOOKASSA_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-yookassa",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
+                id: "yookassa",
+                options: { id: YOOKASSA_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Затем перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → ЮKassa**.
+    2. Настройте параметры интеграции.
 active: true

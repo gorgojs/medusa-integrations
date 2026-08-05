@@ -3,12 +3,25 @@
 Machine-readable registry of Medusa integrations configurable through
 [`@gorgo/medusa-integration`](../packages/modules/integration) — both Gorgo-authored and community.
 
-Two consumers read this catalog:
+Three consumers read this catalog:
 
 - the **`gorgojs.com` scrapper**, which merges these entries into the site plugin catalog
   (`packages/site/content/plugins.yml` in the `gorgojs/gorgo` repo);
 - the **Integrations → Browse** tab inside Medusa Admin (shows what a merchant *can* add, not just
-  what's already applied).
+  what's already applied);
+- the **offline fallback shipped with the plugin** —
+  `packages/modules/integration/src/lib/catalog.generated.ts`, what Admin displays when
+  `gorgojs.com` is unreachable.
+
+> **After changing any entry, regenerate the fallback and commit it:**
+> `cd packages/modules/integration && yarn catalog:gen`
+>
+> `prepublishOnly` runs the same script, so a release can never ship a stale fallback — but until
+> someone regenerates, the committed `catalog.generated.ts` lags the catalog, and that is what
+> anyone reading the repo or running from source sees.
+>
+> The generator derives `slug` from `npm` and `authorLocalized` from `authors.yml`, and fails
+> loudly on an entry whose `author` does not resolve.
 
 ## Layout
 
@@ -40,6 +53,12 @@ its icon, never a shared list.
 Icons are **committed, not hotlinked**: they render inside a merchant's production Admin panel, so
 the source must be reviewable in the PR — never an arbitrary external URL.
 
+**Keep the icon small — under ~12 KB of source.** The generator inlines it into the offline
+fallback as a data URI, but only while the encoded result stays under 16 KB; past that the entry
+keeps a hosted URL and its icon simply does not render when `gorgojs.com` is unreachable. An SVG
+exported at 512×512 with flattened paths is typically 1–3 KB; a PNG at that size is not, so prefer
+SVG. `yarn catalog:gen` warns by name about every icon it had to skip.
+
 ## Field reference
 
 | Field | Required | Notes |
@@ -53,9 +72,26 @@ the source must be reviewable in the PR — never an arbitrary external URL.
 | `repository` | yes | `https://…` |
 | `shortDescription` | no | `{ en, ru }` — card subtitle (≤ 160 chars) |
 | `docsUrl` | no | `https://…` |
-| `configSnippet` | no | Illustrative `medusa-config.ts` registration (Admin setup drawer) |
+| `docsSnippet` | no | `{ en, ru }` — markdown-инструкция для Admin setup drawer (ограниченный подсет, ≤ 8000 символов на язык) |
 | `active` | no | Default `true`; set `false` to hide |
 | `supportsMultipleInstances` | no | Default `false` |
+
+## docsSnippet
+
+Единственное, что показывает Admin в модалке установки. Поддерживается **ограниченный подсет
+markdown**: заголовки `#`–`###`, абзацы, плоские списки, fenced code с кнопкой Copy, inline code,
+`**bold**`/`*italic*`, ссылки **только `https://`**.
+
+Всё остальное — сырой HTML, картинки, таблицы, вложенные списки — рендерится **буквальным
+текстом**. Это не ошибка, а гарантия: модалка живёт внутри аутентифицированной админки мерчанта,
+поэтому разметка собирается по белому списку, а не санитайзится.
+
+Подпись блока кода берётся из info string фенса: ` ```medusa-config.ts ` даёт подпись
+«medusa-config.ts».
+
+Включайте команду установки — она больше не захардкожена в UI. Заполняйте `docsUrl`, а не
+дублируйте ссылку на документацию в тексте сниппета: ссылка в футере модалки появляется, только
+когда `docsUrl` заполнен, — без него у модалки не остаётся пути на документацию вовсе.
 
 ## Authors
 

@@ -1,5 +1,6 @@
 import { loadCatalog, resetCatalogCacheForTests } from "../catalog"
 import { FALLBACK_CATALOG } from "../catalog.generated"
+import { MD_MAX_CHARS } from "../markdown/parse"
 
 const remoteItem = {
   integrationId: "remote-only",
@@ -75,5 +76,74 @@ describe("loadCatalog", () => {
     const second = await loadCatalog() // stale → fetch #2 rejects → last-good, not yml
     expect(second).toEqual([remoteItem])
     expect(fetchMock).toHaveBeenCalledTimes(2)
+  })
+
+  it("keeps a well-formed docsSnippet", async () => {
+    const snippet = { en: "## Install", ru: "## Установка" }
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue(okResponse([{ ...remoteItem, docsSnippet: snippet }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.docsSnippet).toEqual(snippet)
+  })
+
+  it.each([
+    ["a string", "## Install"],
+    ["an array", ["## Install"]],
+    ["null", null],
+    ["non-string members", { en: 1, ru: 2 }],
+  ])("drops a malformed docsSnippet (%s) but keeps the entry", async (_label, docsSnippet) => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue(okResponse([{ ...remoteItem, docsSnippet }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.docsSnippet).toBeUndefined()
+    expect(entry.integrationId).toBe("remote-only")
+  })
+
+  it("keeps a single-locale docsSnippet (ru absent)", async () => {
+    const snippet = { en: "## Install" }
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue(okResponse([{ ...remoteItem, docsSnippet: snippet }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.docsSnippet).toEqual(snippet)
+  })
+
+  it("drops docsSnippet when both locales are oversized, but keeps the entry", async () => {
+    const oversized = "x".repeat(MD_MAX_CHARS + 1)
+    const docsSnippet = { en: oversized, ru: oversized }
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue(okResponse([{ ...remoteItem, docsSnippet }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.docsSnippet).toBeUndefined()
+    expect(entry.integrationId).toBe("remote-only")
+  })
+
+  it("drops only the oversized locale, keeping the usable one", async () => {
+    const docsSnippet = { en: "x".repeat(MD_MAX_CHARS + 1), ru: "## Установка" }
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue(okResponse([{ ...remoteItem, docsSnippet }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.docsSnippet).toEqual({ ru: "## Установка" })
+  })
+
+  it("drops an unsafe docsUrl but keeps the entry", async () => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue(okResponse([{ ...remoteItem, docsUrl: "javascript:alert(1)" }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.docsUrl).toBeUndefined()
+    expect(entry.integrationId).toBe("remote-only")
+  })
+
+  it("keeps a valid https docsUrl", async () => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue(okResponse([{ ...remoteItem, docsUrl: "https://example.com/docs" }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.docsUrl).toBe("https://example.com/docs")
   })
 })

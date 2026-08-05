@@ -39,15 +39,104 @@ repository: "https://github.com/your-org/your-repo"
 # Docs entry (optional).
 docsUrl: "https://example.com/docs"
 
-# Illustrative medusa-config.ts registration for the Admin "Setup guide" drawer (optional).
+# Markdown setup guide for the Admin "Setup guide" drawer, per locale (optional).
 # Actual configuration is done in Admin -> Settings -> Integrations.
-configSnippet: |
-  {
-    resolve: "@your-scope/medusa-integration-example",
-    options: {
-      // credentials & settings are managed in Admin, not here
-    },
-  }
+# Supported subset: headings `#`-`###`, paragraphs, flat lists (no nesting), fenced code (the
+# fence's info string becomes the block's caption), inline code, **bold**/*italic*, and links —
+# https:// only. Everything else (raw HTML, images, tables, nested lists) renders as literal text.
+docsSnippet:
+  en: |
+    ## Install
+
+    ```bash
+    # with npm
+    npm install @your-scope/medusa-integration-example
+    # or with yarn
+    yarn add @your-scope/medusa-integration-example
+    # or with pnpm
+    pnpm add @your-scope/medusa-integration-example
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@your-scope/medusa-integration-example/providers/integration-example",
+                id: "example-1",
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@your-scope/medusa-integration-example",
+          options: {},
+        },
+      ],
+    })
+    ```
+
+    Then restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → Example Integration**.
+    2. Configure integration settings.
+  ru: |
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @your-scope/medusa-integration-example
+    # or with yarn
+    yarn add @your-scope/medusa-integration-example
+    # or with pnpm
+    pnpm add @your-scope/medusa-integration-example
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@your-scope/medusa-integration-example/providers/integration-example",
+                id: "example-1",
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@your-scope/medusa-integration-example",
+          options: {},
+        },
+      ],
+    })
+    ```
+
+    Затем перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → Example Integration**.
+    2. Настройте параметры интеграции.
 
 # Keep false for this template. Real entries default to true; set false to hide without deleting.
 active: false

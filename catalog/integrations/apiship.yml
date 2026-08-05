@@ -1,5 +1,5 @@
 # ApiShip — multi-carrier shipping aggregation, authored by Gorgo.
-# Minimal entry (no optional configSnippet). See example.yml for the fully-annotated template.
+# See example.yml for the fully-annotated template.
 
 identifier: "apiship"
 npm: "@gorgo/medusa-fulfillment-apiship"
@@ -13,49 +13,130 @@ shortDescription:
   ru: "Агрегатор доставки по нескольким службам через ApiShip"
 icon: "apiship.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
-docsUrl: "https://docs.gorgojs.com/integrations/apiship"
-configSnippet: |
-  // ...
-  const APISHIP_INTEGRATION_ID = "apiship-1"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/apiship"
+docsSnippet:
+  en: |
+    ## Install
 
-  module.exports = defineConfig({
-    // ...
-    plugins: [
-      // ...
-      {
-        resolve: "@gorgo/medusa-integration",
-        options: {
-          encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
-          providers: [
-            {
-              resolve: "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
-              id: APISHIP_INTEGRATION_ID,
-              options: {},
-            },
-          ],
-        },
-      },
-      {
-        resolve: "@gorgo/medusa-fulfillment-apiship",
-        options: {},
-      },
-    ],
-    modules: [
-      // ...
-      {
-        resolve: "@medusajs/medusa/fulfillment",
-        options: {
-          providers: [
-            {
-              resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
-              id: "apiship",
-              options: {
-                id: APISHIP_INTEGRATION_ID
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-fulfillment-apiship@beta
+    # or with yarn
+    yarn add @gorgo/medusa-fulfillment-apiship@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-fulfillment-apiship@beta
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    const APISHIP_INTEGRATION_ID = "apiship-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
+                id: APISHIP_INTEGRATION_ID,
+                options: {},
               },
-            },
-          ],
+            ],
+          },
         },
-      },
-    ],
-  })
+        {
+          resolve: "@gorgo/medusa-fulfillment-apiship",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/fulfillment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
+                id: "apiship",
+                options: { id: APISHIP_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Then restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → ApiShip**.
+    2. Configure integration settings.
+  ru: |
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-fulfillment-apiship@beta
+    # or with yarn
+    yarn add @gorgo/medusa-fulfillment-apiship@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-fulfillment-apiship@beta
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    const APISHIP_INTEGRATION_ID = "apiship-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
+                id: APISHIP_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-fulfillment-apiship",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/fulfillment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
+                id: "apiship",
+                options: { id: APISHIP_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Затем перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → ApiShip**.
+    2. Настройте параметры интеграции.
 active: true
