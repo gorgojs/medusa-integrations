@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Integrációk",
+      "subtitle": "Integrációk beállításainak kezelése",
+      "browseIntegrations": "Integrációk böngészése",
+      "learnMore": "Ismerje meg, hogyan készíthet integrációkat",
+      "searchPlaceholder": "Integrációk keresése",
+      "empty": "Nincsenek regisztrált integrációk. Adja meg a szolgáltatókat az integrációs bővítmény options.providers beállításában a medusa-config fájlban.",
+      "emptyFiltered": "Egyetlen integráció sem felel meg a szűrőknek.",
+      "tested": "tesztelve",
+      "testFailed": "a teszt sikertelen",
+      "tabs": {
+        "all": "Összes"
+      }
+    },
+    "browse": {
+      "title": "Katalógus",
+      "subtitle": "Találjon elérhető integrációkat",
+      "publish": "Integráció hozzáadása",
+      "learnMore": "Ismerje meg, hogyan készítheti el és teheti közzé saját integrációját",
+      "searchPlaceholder": "Integrációk keresése",
+      "by": "{{author}} által",
+      "installed": "Telepítve",
+      "notInstalled": "Nincs telepítve",
+      "add": "Hozzáadás",
+      "settings": "Beállítások",
+      "install_docs": "Dokumentáció olvasása",
+      "install_empty": "Ehhez az integrációhoz még nem érhető el beállítási útmutató.",
+      "install_truncated": "Ez az útmutató túl hosszú ahhoz, hogy itt megjelenjen — nyissa meg a dokumentációt."
+    },
+    "columns": {
+      "integration": "Integráció",
+      "description": "Leírás",
+      "category": "Kategória",
+      "status": "Státusz"
+    },
+    "status": {
+      "notConfigured": "Nincs konfigurálva",
+      "incomplete": "Befejezetlen",
+      "enabled": "Engedélyezve",
+      "disabled": "Letiltva",
+      "configured": "Konfigurálva",
+      "connected": "Csatlakoztatva",
+      "connectionFailed": "A kapcsolódás sikertelen"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "készítette:"
+    },
+    "labels": {
+      "category": "Kategória"
+    },
+    "categories": {
+      "payment": "Fizetés",
+      "notification": "Értesítések",
+      "fulfillment": "Teljesítés",
+      "search": "Keresés",
+      "content": "Tartalom",
+      "analytics": "Analitika",
+      "authentication": "Hitelesítés",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Piactér",
+      "feed": "Hírcsatornák",
+      "file_providers": "Fájlszolgáltatók",
+      "other": "Egyéb"
+    },
+    "actions": {
+      "test": "Kapcsolat tesztelése",
+      "enable": "Engedélyezés",
+      "disable": "Letiltás",
+      "delete": "Törlés",
+      "edit": "Szerkesztés",
+      "save": "Mentés",
+      "cancel": "Mégse"
+    },
+    "delete": {
+      "title": "Konfiguráció törlése",
+      "description": "Eltávolítja a(z) {{name}} mentett konfigurációját? Ez a művelet nem vonható vissza."
+    },
+    "form": {
+      "required": "A(z) {{field}} megadása kötelező",
+      "invalidJson": "Érvénytelen JSON",
+      "keepSecret": "•••••• – hagyja üresen a megtartáshoz",
+      "items": "{{count}} elem"
+    },
+    "toast": {
+      "saved": "Mentve",
+      "saveFailed": "A mentés sikertelen",
+      "connectionOk": "A kapcsolat rendben",
+      "testFailed": "A teszt sikertelen",
+      "enabled": "Engedélyezve",
+      "disabled": "Letiltva",
+      "deleted": "Konfiguráció törölve",
+      "deleteFailed": "A törlés sikertelen",
+      "updateFailed": "A frissítés sikertelen"
+    },
+    "unknown": "Ismeretlen integráció: „{{id}}”.",
+    "back": "Vissza az integrációkhoz"
+  }
+}
