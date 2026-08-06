@@ -143,6 +143,17 @@ jobs:
             | "\(.key)<<__EOF_SECRET_\(.key)__\n\(.value)\n__EOF_SECRET_\(.key)__"
           ' >> "$GITHUB_ENV"
 
+      - name: Trust Russian Trusted Root CA
+        run: |
+          CA="$PWD/.github/certs/russian-trusted-root-ca.pem"
+          EXPECTED="D26D2D0231B7C39F92CC738512BA54103519E4405D68B5BD703E9788CA8ECF31"
+          ACTUAL="$(openssl x509 -in "$CA" -noout -fingerprint -sha256 | cut -d= -f2 | tr -d ':')"
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "::error::Unexpected SHA-256 fingerprint for $CA: $ACTUAL"
+            exit 1
+          fi
+          echo "NODE_EXTRA_CA_CERTS=$CA" >> "$GITHUB_ENV"
+
       - name: Update, test per plugin, and prepare results
         id: update
         shell: bash
