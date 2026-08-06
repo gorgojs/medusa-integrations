@@ -1,5 +1,9 @@
 # @gorgo/medusa-integration
 
+## 0.1.4
+
+- Improve docs snippet and UI
+- Update docs
 
 ## 0.1.3
 
