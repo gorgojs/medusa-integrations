@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Integrări",
+      "subtitle": "Gestionează setările integrărilor",
+      "browseIntegrations": "Răsfoiește integrările",
+      "learnMore": "Află cum să creezi integrări",
+      "searchPlaceholder": "Caută integrări",
+      "empty": "Nicio integrare înregistrată. Declară furnizorii în options.providers al pluginului de integrări din medusa-config.",
+      "emptyFiltered": "Nicio integrare nu corespunde filtrelor.",
+      "tested": "testat",
+      "testFailed": "testul a eșuat",
+      "tabs": {
+        "all": "Toate"
+      }
+    },
+    "browse": {
+      "title": "Catalog",
+      "subtitle": "Găsește integrările disponibile",
+      "publish": "Adaugă integrare",
+      "learnMore": "Află cum să creezi și să publici propria integrare",
+      "searchPlaceholder": "Caută integrări",
+      "by": "de {{author}}",
+      "installed": "Instalat",
+      "notInstalled": "Neinstalat",
+      "add": "Adaugă",
+      "settings": "Setări",
+      "install_docs": "Citește documentația",
+      "install_empty": "Instrucțiunile de configurare pentru această integrare nu sunt încă disponibile.",
+      "install_truncated": "Aceste instrucțiuni sunt prea lungi pentru a fi afișate aici — deschide documentația."
+    },
+    "columns": {
+      "integration": "Integrare",
+      "description": "Descriere",
+      "category": "Categorie",
+      "status": "Stare"
+    },
+    "status": {
+      "notConfigured": "Neconfigurat",
+      "incomplete": "Incomplet",
+      "enabled": "Activat",
+      "disabled": "Dezactivat",
+      "configured": "Configurat",
+      "connected": "Conectat",
+      "connectionFailed": "Conectarea a eșuat"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "de"
+    },
+    "labels": {
+      "category": "Categorie"
+    },
+    "categories": {
+      "payment": "Plăți",
+      "notification": "Notificări",
+      "fulfillment": "Îndeplinire",
+      "search": "Căutare",
+      "content": "Conținut",
+      "analytics": "Analize",
+      "authentication": "Autentificare",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Marketplace",
+      "feed": "Fluxuri",
+      "file_providers": "Furnizori de fișiere",
+      "other": "Altele"
+    },
+    "actions": {
+      "test": "Testează conexiunea",
+      "enable": "Activează",
+      "disable": "Dezactivează",
+      "delete": "Șterge",
+      "edit": "Editează",
+      "save": "Salvează",
+      "cancel": "Anulează"
+    },
+    "delete": {
+      "title": "Șterge configurația",
+      "description": "Elimini configurația salvată pentru {{name}}? Această acțiune nu poate fi anulată."
+    },
+    "form": {
+      "required": "{{field}} este obligatoriu",
+      "invalidJson": "JSON invalid",
+      "keepSecret": "•••••• – lasă gol pentru a păstra",
+      "items": "{{count}} elemente"
+    },
+    "toast": {
+      "saved": "Salvat",
+      "saveFailed": "Salvarea a eșuat",
+      "connectionOk": "Conexiune reușită",
+      "testFailed": "Testul a eșuat",
+      "enabled": "Activat",
+      "disabled": "Dezactivat",
+      "deleted": "Configurație ștearsă",
+      "deleteFailed": "Ștergerea a eșuat",
+      "updateFailed": "Actualizarea a eșuat"
+    },
+    "unknown": "Integrare necunoscută „{{id}}”.",
+    "back": "Înapoi la integrări"
+  }
+}

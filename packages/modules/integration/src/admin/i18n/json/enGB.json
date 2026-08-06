@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Integrations",
+      "subtitle": "Manage integrations settings",
+      "browseIntegrations": "Browse Integrations",
+      "learnMore": "Learn how to build integrations",
+      "searchPlaceholder": "Search integrations",
+      "empty": "No integrations registered. Declare providers under the integration plugin's options.providers in medusa-config.",
+      "emptyFiltered": "No integrations match your filters.",
+      "tested": "tested",
+      "testFailed": "test failed",
+      "tabs": {
+        "all": "All"
+      }
+    },
+    "browse": {
+      "title": "Browse",
+      "subtitle": "Find available integrations",
+      "publish": "Add Integration",
+      "learnMore": "Learn how to build and publish your own integration",
+      "searchPlaceholder": "Search integrations",
+      "by": "by {{author}}",
+      "installed": "Installed",
+      "notInstalled": "Not installed",
+      "add": "Add",
+      "settings": "Settings",
+      "install_docs": "Read docs",
+      "install_empty": "Setup instructions for this integration aren't available yet.",
+      "install_truncated": "These instructions are too long to show here — open the documentation."
+    },
+    "columns": {
+      "integration": "Integration",
+      "description": "Description",
+      "category": "Category",
+      "status": "Status"
+    },
+    "status": {
+      "notConfigured": "Not configured",
+      "incomplete": "Incomplete",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "configured": "Configured",
+      "connected": "Connected",
+      "connectionFailed": "Connection failed"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "by"
+    },
+    "labels": {
+      "category": "Category"
+    },
+    "categories": {
+      "payment": "Payment",
+      "notification": "Notification",
+      "fulfillment": "Fulfilment",
+      "search": "Search",
+      "content": "Content",
+      "analytics": "Analytics",
+      "authentication": "Authentication",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Marketplace",
+      "feed": "Feed",
+      "file_providers": "File providers",
+      "other": "Other"
+    },
+    "actions": {
+      "test": "Test connection",
+      "enable": "Enable",
+      "disable": "Disable",
+      "delete": "Delete",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "delete": {
+      "title": "Delete configuration",
+      "description": "Remove the stored configuration for {{name}}? This can't be undone."
+    },
+    "form": {
+      "required": "{{field}} is required",
+      "invalidJson": "Invalid JSON",
+      "keepSecret": "•••••• – leave blank to keep",
+      "items": "{{count}} items"
+    },
+    "toast": {
+      "saved": "Saved",
+      "saveFailed": "Save failed",
+      "connectionOk": "Connection OK",
+      "testFailed": "Test failed",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "deleted": "Configuration deleted",
+      "deleteFailed": "Delete failed",
+      "updateFailed": "Update failed"
+    },
+    "unknown": "Unknown integration \"{{id}}\".",
+    "back": "Back to integrations"
+  }
+}

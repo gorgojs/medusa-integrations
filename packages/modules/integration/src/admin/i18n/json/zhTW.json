@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "整合",
+      "subtitle": "管理整合設定",
+      "browseIntegrations": "瀏覽整合",
+      "learnMore": "了解如何建立整合",
+      "searchPlaceholder": "搜尋整合",
+      "empty": "尚未註冊任何整合。請在 medusa-config 中整合外掛的 options.providers 下宣告提供者。",
+      "emptyFiltered": "沒有符合篩選條件的整合。",
+      "tested": "已測試",
+      "testFailed": "測試失敗",
+      "tabs": {
+        "all": "全部"
+      }
+    },
+    "browse": {
+      "title": "目錄",
+      "subtitle": "尋找可用的整合",
+      "publish": "新增整合",
+      "learnMore": "了解如何建立並發布您自己的整合",
+      "searchPlaceholder": "搜尋整合",
+      "by": "由 {{author}} 提供",
+      "installed": "已安裝",
+      "notInstalled": "未安裝",
+      "add": "新增",
+      "settings": "設定",
+      "install_docs": "閱讀說明文件",
+      "install_empty": "此整合的設定說明尚未提供。",
+      "install_truncated": "這些說明過長，無法在此顯示 — 請開啟說明文件。"
+    },
+    "columns": {
+      "integration": "整合",
+      "description": "描述",
+      "category": "分類",
+      "status": "狀態"
+    },
+    "status": {
+      "notConfigured": "未設定",
+      "incomplete": "未完成",
+      "enabled": "已啟用",
+      "disabled": "已停用",
+      "configured": "已設定",
+      "connected": "已連線",
+      "connectionFailed": "連線失敗"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "由"
+    },
+    "labels": {
+      "category": "分類"
+    },
+    "categories": {
+      "payment": "付款",
+      "notification": "通知",
+      "fulfillment": "出貨",
+      "search": "搜尋",
+      "content": "內容",
+      "analytics": "分析",
+      "authentication": "驗證",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "市集",
+      "feed": "資料來源",
+      "file_providers": "檔案提供者",
+      "other": "其他"
+    },
+    "actions": {
+      "test": "測試連線",
+      "enable": "啟用",
+      "disable": "停用",
+      "delete": "刪除",
+      "edit": "編輯",
+      "save": "儲存",
+      "cancel": "取消"
+    },
+    "delete": {
+      "title": "刪除設定",
+      "description": "移除 {{name}} 的已儲存設定？此操作無法復原。"
+    },
+    "form": {
+      "required": "{{field}} 為必填",
+      "invalidJson": "無效的 JSON",
+      "keepSecret": "•••••• – 留空以保持不變",
+      "items": "{{count}} 項"
+    },
+    "toast": {
+      "saved": "已儲存",
+      "saveFailed": "儲存失敗",
+      "connectionOk": "連線成功",
+      "testFailed": "測試失敗",
+      "enabled": "已啟用",
+      "disabled": "已停用",
+      "deleted": "設定已刪除",
+      "deleteFailed": "刪除失敗",
+      "updateFailed": "更新失敗"
+    },
+    "unknown": "未知的整合「{{id}}」。",
+    "back": "返回整合"
+  }
+}

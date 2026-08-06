@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Intégrations",
+      "subtitle": "Gérer les paramètres des intégrations",
+      "browseIntegrations": "Parcourir les intégrations",
+      "learnMore": "Découvrez comment créer des intégrations",
+      "searchPlaceholder": "Rechercher des intégrations",
+      "empty": "Aucune intégration enregistrée. Déclarez les fournisseurs dans options.providers du plugin d'intégrations dans medusa-config.",
+      "emptyFiltered": "Aucune intégration ne correspond à vos filtres.",
+      "tested": "testé",
+      "testFailed": "échec du test",
+      "tabs": {
+        "all": "Toutes"
+      }
+    },
+    "browse": {
+      "title": "Catalogue",
+      "subtitle": "Trouvez les intégrations disponibles",
+      "publish": "Ajouter une intégration",
+      "learnMore": "Découvrez comment créer et publier votre propre intégration",
+      "searchPlaceholder": "Rechercher des intégrations",
+      "by": "par {{author}}",
+      "installed": "Installé",
+      "notInstalled": "Non installé",
+      "add": "Ajouter",
+      "settings": "Paramètres",
+      "install_docs": "Lire la documentation",
+      "install_empty": "Les instructions de configuration de cette intégration ne sont pas encore disponibles.",
+      "install_truncated": "Ces instructions sont trop longues pour être affichées ici — ouvrez la documentation."
+    },
+    "columns": {
+      "integration": "Intégration",
+      "description": "Description",
+      "category": "Catégorie",
+      "status": "Statut"
+    },
+    "status": {
+      "notConfigured": "Non configuré",
+      "incomplete": "Incomplet",
+      "enabled": "Activé",
+      "disabled": "Désactivé",
+      "configured": "Configuré",
+      "connected": "Connecté",
+      "connectionFailed": "Échec de la connexion"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "par"
+    },
+    "labels": {
+      "category": "Catégorie"
+    },
+    "categories": {
+      "payment": "Paiement",
+      "notification": "Notifications",
+      "fulfillment": "Livraison",
+      "search": "Recherche",
+      "content": "Contenu",
+      "analytics": "Analytique",
+      "authentication": "Authentification",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Marketplace",
+      "feed": "Flux",
+      "file_providers": "Fournisseurs de fichiers",
+      "other": "Autres"
+    },
+    "actions": {
+      "test": "Tester la connexion",
+      "enable": "Activer",
+      "disable": "Désactiver",
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "save": "Enregistrer",
+      "cancel": "Annuler"
+    },
+    "delete": {
+      "title": "Supprimer la configuration",
+      "description": "Supprimer la configuration enregistrée pour {{name}} ? Cette action ne peut être annulée."
+    },
+    "form": {
+      "required": "{{field}} est requis",
+      "invalidJson": "JSON invalide",
+      "keepSecret": "•••••• – laissez vide pour conserver",
+      "items": "{{count}} éléments"
+    },
+    "toast": {
+      "saved": "Enregistré",
+      "saveFailed": "Échec de l'enregistrement",
+      "connectionOk": "Connexion OK",
+      "testFailed": "Échec du test",
+      "enabled": "Activé",
+      "disabled": "Désactivé",
+      "deleted": "Configuration supprimée",
+      "deleteFailed": "Échec de la suppression",
+      "updateFailed": "Échec de la mise à jour"
+    },
+    "unknown": "Intégration inconnue « {{id}} ».",
+    "back": "Retour aux intégrations"
+  }
+}

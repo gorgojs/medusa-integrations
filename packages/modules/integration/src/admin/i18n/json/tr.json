@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Entegrasyonlar",
+      "subtitle": "Entegrasyon ayarlarını yönetin",
+      "browseIntegrations": "Entegrasyonlara göz atın",
+      "learnMore": "Entegrasyonların nasıl oluşturulduğunu öğrenin",
+      "searchPlaceholder": "Entegrasyon ara",
+      "empty": "Kayıtlı entegrasyon yok. Sağlayıcıları medusa-config içindeki entegrasyon eklentisinin options.providers alanında tanımlayın.",
+      "emptyFiltered": "Filtrelerinizle eşleşen entegrasyon yok.",
+      "tested": "test edildi",
+      "testFailed": "test başarısız",
+      "tabs": {
+        "all": "Tümü"
+      }
+    },
+    "browse": {
+      "title": "Katalog",
+      "subtitle": "Mevcut entegrasyonları bulun",
+      "publish": "Entegrasyon ekle",
+      "learnMore": "Kendi entegrasyonunuzu nasıl oluşturup yayımlayacağınızı öğrenin",
+      "searchPlaceholder": "Entegrasyon ara",
+      "by": "{{author}} tarafından",
+      "installed": "Kurulu",
+      "notInstalled": "Kurulu değil",
+      "add": "Ekle",
+      "settings": "Ayarlar",
+      "install_docs": "Dokümantasyonu oku",
+      "install_empty": "Bu entegrasyon için kurulum talimatları henüz mevcut değil.",
+      "install_truncated": "Bu talimatlar burada gösterilemeyecek kadar uzun — dokümantasyonu açın."
+    },
+    "columns": {
+      "integration": "Entegrasyon",
+      "description": "Açıklama",
+      "category": "Kategori",
+      "status": "Durum"
+    },
+    "status": {
+      "notConfigured": "Yapılandırılmadı",
+      "incomplete": "Tamamlanmadı",
+      "enabled": "Etkin",
+      "disabled": "Devre dışı",
+      "configured": "Yapılandırıldı",
+      "connected": "Bağlandı",
+      "connectionFailed": "Bağlantı başarısız"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "geliştiren"
+    },
+    "labels": {
+      "category": "Kategori"
+    },
+    "categories": {
+      "payment": "Ödeme",
+      "notification": "Bildirimler",
+      "fulfillment": "Sipariş karşılama",
+      "search": "Arama",
+      "content": "İçerik",
+      "analytics": "Analitik",
+      "authentication": "Kimlik doğrulama",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Pazar yeri",
+      "feed": "Beslemeler",
+      "file_providers": "Dosya sağlayıcıları",
+      "other": "Diğer"
+    },
+    "actions": {
+      "test": "Bağlantıyı test et",
+      "enable": "Etkinleştir",
+      "disable": "Devre dışı bırak",
+      "delete": "Sil",
+      "edit": "Düzenle",
+      "save": "Kaydet",
+      "cancel": "İptal"
+    },
+    "delete": {
+      "title": "Yapılandırmayı sil",
+      "description": "{{name}} için kayıtlı yapılandırma kaldırılsın mı? Bu işlem geri alınamaz."
+    },
+    "form": {
+      "required": "{{field}} zorunludur",
+      "invalidJson": "Geçersiz JSON",
+      "keepSecret": "•••••• – korumak için boş bırakın",
+      "items": "{{count}} öğe"
+    },
+    "toast": {
+      "saved": "Kaydedildi",
+      "saveFailed": "Kaydetme başarısız",
+      "connectionOk": "Bağlantı başarılı",
+      "testFailed": "Test başarısız",
+      "enabled": "Etkinleştirildi",
+      "disabled": "Devre dışı bırakıldı",
+      "deleted": "Yapılandırma silindi",
+      "deleteFailed": "Silme başarısız",
+      "updateFailed": "Güncelleme başarısız"
+    },
+    "unknown": "Bilinmeyen entegrasyon \"{{id}}\".",
+    "back": "Entegrasyonlara dön"
+  }
+}

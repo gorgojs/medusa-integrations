@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Integraties",
+      "subtitle": "Beheer de instellingen van integraties",
+      "browseIntegrations": "Integraties bekijken",
+      "learnMore": "Leer hoe je integraties bouwt",
+      "searchPlaceholder": "Integraties zoeken",
+      "empty": "Geen integraties geregistreerd. Declareer providers in options.providers van de integratieplug-in in medusa-config.",
+      "emptyFiltered": "Geen integraties komen overeen met je filters.",
+      "tested": "getest",
+      "testFailed": "test mislukt",
+      "tabs": {
+        "all": "Alle"
+      }
+    },
+    "browse": {
+      "title": "Catalogus",
+      "subtitle": "Vind beschikbare integraties",
+      "publish": "Integratie toevoegen",
+      "learnMore": "Leer hoe je je eigen integratie bouwt en publiceert",
+      "searchPlaceholder": "Integraties zoeken",
+      "by": "door {{author}}",
+      "installed": "Geïnstalleerd",
+      "notInstalled": "Niet geïnstalleerd",
+      "add": "Toevoegen",
+      "settings": "Instellingen",
+      "install_docs": "Documentatie lezen",
+      "install_empty": "Installatie-instructies voor deze integratie zijn nog niet beschikbaar.",
+      "install_truncated": "Deze instructies zijn te lang om hier te tonen — open de documentatie."
+    },
+    "columns": {
+      "integration": "Integratie",
+      "description": "Beschrijving",
+      "category": "Categorie",
+      "status": "Status"
+    },
+    "status": {
+      "notConfigured": "Niet geconfigureerd",
+      "incomplete": "Onvolledig",
+      "enabled": "Ingeschakeld",
+      "disabled": "Uitgeschakeld",
+      "configured": "Geconfigureerd",
+      "connected": "Verbonden",
+      "connectionFailed": "Verbinding mislukt"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "door"
+    },
+    "labels": {
+      "category": "Categorie"
+    },
+    "categories": {
+      "payment": "Betalingen",
+      "notification": "Notificaties",
+      "fulfillment": "Verzending",
+      "search": "Zoeken",
+      "content": "Content",
+      "analytics": "Analytics",
+      "authentication": "Authenticatie",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Marktplaats",
+      "feed": "Feeds",
+      "file_providers": "Bestandsproviders",
+      "other": "Overig"
+    },
+    "actions": {
+      "test": "Verbinding testen",
+      "enable": "Inschakelen",
+      "disable": "Uitschakelen",
+      "delete": "Verwijderen",
+      "edit": "Bewerken",
+      "save": "Opslaan",
+      "cancel": "Annuleren"
+    },
+    "delete": {
+      "title": "Configuratie verwijderen",
+      "description": "De opgeslagen configuratie voor {{name}} verwijderen? Deze actie kan niet ongedaan worden gemaakt."
+    },
+    "form": {
+      "required": "{{field}} is verplicht",
+      "invalidJson": "Ongeldige JSON",
+      "keepSecret": "•••••• – laat leeg om te behouden",
+      "items": "{{count}} items"
+    },
+    "toast": {
+      "saved": "Opgeslagen",
+      "saveFailed": "Opslaan mislukt",
+      "connectionOk": "Verbinding OK",
+      "testFailed": "Test mislukt",
+      "enabled": "Ingeschakeld",
+      "disabled": "Uitgeschakeld",
+      "deleted": "Configuratie verwijderd",
+      "deleteFailed": "Verwijderen mislukt",
+      "updateFailed": "Bijwerken mislukt"
+    },
+    "unknown": "Onbekende integratie \"{{id}}\".",
+    "back": "Terug naar integraties"
+  }
+}
