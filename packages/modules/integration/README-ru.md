@@ -75,7 +75,7 @@
 
 <p>
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-tkassa">
-    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/tkassa.png" width="50" hspace="5" align="left" alt="T-Kassa logo"/>
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/tkassa.svg" width="50" hspace="5" align="left" alt="T-Kassa logo"/>
   </a>
   <b>Т-Касса от Т-Банка</b><br/>
   Платежи · <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-tkassa">@gorgo/medusa-payment-tkassa</a>
