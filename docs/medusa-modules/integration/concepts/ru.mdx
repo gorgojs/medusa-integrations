@@ -85,15 +85,271 @@ int_<identifier>[_<instanceId>]
 - **Один инстанс:** вариант по умолчанию. У него нет id инстанса, поэтому его ключ выглядит как `int_acme`.
 - **Несколько инстансов:** зарегистрируйте один и тот же провайдер несколько раз, каждый со своим `id`, например `int_acme_eu` и `int_acme_us`. Каждый инстанс настраивается независимо, поэтому поддерживается сразу несколько аккаунтов.
 
+Например, две независимые регистрации одного и того же провайдера:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        // ...
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-acme/providers/integration-acme",
+            id: "eu",
+            options: {},
+          },
+          {
+            resolve: "@gorgo/medusa-payment-acme/providers/integration-acme",
+            id: "us",
+            options: {},
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Это даст `int_acme_eu` и `int_acme_us` соответственно. `id` задаётся на верхнем уровне записи. Если случайно поместить его внутрь `options`, провайдер зарегистрируется под дефолтным (безымянным) инстансом без предупреждения.
+
 Потребитель получает параметры по идентификатору и инстансу, поэтому один и тот же код может обращаться к нужному.
 
 ## Параметры интеграции
 
 Параметры интеграции движутся по предсказуемому пути. Автор объявляет их в дескрипторе, администратор настраивает, модуль валидирует, они становятся активными, как только интеграция включена и заполнена, а потребитель получает их в рантайме. По пути проверка соединения может сверить их со сторонним сервисом.
 
+## Поля параметра
+
+Каждый параметр в `options` объект вида `{ type, ... }`. Поле `type` определяет доступные значения и остальные поля, общие для всех типов:
+
+<MedusaTypeList
+  sectionTitle="Options"
+  types={[
+    {
+      name: "type",
+      type: "enum",
+      description: "Тип параметра. Определяет валидацию, доступный UI-контрол по умолчанию и дополнительные поля:\n- `string`\n- `url`\n- `email`\n- `uuid`\n- `number`\n- `boolean`\n- `enum`\n- `json`",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "label",
+      type: "string",
+      description: "i18n-ключ метки поля. Резолвится в Admin по активному языку с откатом на английский.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "control",
+      type: "enum",
+      description: "UI-контрол для рендера поля:\n- `text`\n- `secret`\n- `switch`\n- `number`\n- `url`\n- `select`\n- `json`\nПодбирается автоматически по `type`, но можно переопределить.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "default",
+      type: "string | number | boolean | unknown",
+      description: "Значение по умолчанию; тип соответствует `type` параметра. Наличие `default` делает параметр фактически всегда присутствующим в резолвнутых опциях, даже если `required` не задан.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "required",
+      type: "boolean",
+      description: "Отклоняет пустое (`undefined`) значение и при сохранении этого параметра, и при проверке полноты интеграции. По умолчанию параметр необязателен.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "secret",
+      type: "boolean",
+      description: "Шифрует значение (AES-256-GCM) при сохранении и никогда не передаёт его в браузер. Admin API маскирует значение и сообщает лишь, задано ли оно. Сохранение пустым оставляет прежнее хранимое значение.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "hint",
+      type: "string",
+      description: "i18n-ключ подсказки, отображаемой под полем.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "placeholder",
+      type: "string",
+      description: "i18n-ключ плейсхолдера поля.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "readonly",
+      type: "boolean",
+      description: "Рендерит поле как нередактируемое в Admin.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "visibleWhen",
+      type: "object",
+      description: "`{ field, equals }` скрывает поле в Admin, пока значение соседнего параметра `field` не равно `equals`. Влияет только на отображение: требуемость на сервере по-прежнему задаётся через `required` или `validate`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "validate",
+      type: "function",
+      description: "Кастомная проверка значения этого параметра, вызывается вместе со встроенной схемой типа.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+## Дополнительные поля по типу параметра
+
+У некоторых типов есть свои поля сверх общих:
+
+- **`string`:** `minLength`, `maxLength`, `pattern`
+- **`url`:** `protocols`
+- **`number`:** `min`, `max`, `int`, `positive`, `nonnegative`, `multipleOf`
+- **`enum`:** `values`, `valueLabels`
+
+<MedusaTypeList
+  sectionTitle="Options"
+  types={[
+    {
+      name: "minLength",
+      type: "number",
+      description: "Минимальная длина строки.\nПрименимо только при `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "maxLength",
+      type: "number",
+      description: "Максимальная длина строки.\nПрименимо только при `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "pattern",
+      type: "string",
+      description: "Regex-шаблон для валидации строки.\nПрименимо только при `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "protocols",
+      type: "string[]",
+      description: "Ограничивает допустимые схемы URL, например `[\"https\"]`. Без ограничения разрешён любой протокол.\nПрименимо только при `type: \"url\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "min",
+      type: "number",
+      description: "Минимальное значение.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "max",
+      type: "number",
+      description: "Максимальное значение.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "int",
+      type: "boolean",
+      description: "Требует целое число.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "positive",
+      type: "boolean",
+      description: "Требует значение больше нуля.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "nonnegative",
+      type: "boolean",
+      description: "Требует значение не меньше нуля.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "multipleOf",
+      type: "number",
+      description: "Требует, чтобы значение было кратно указанному числу.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "values",
+      type: "string[]",
+      description: "Список допустимых значений. Обязательное поле.\nПрименимо только при `type: \"enum\"`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "valueLabels",
+      type: "object",
+      description: "i18n-ключи меток для отдельных значений из `values`.\nПрименимо только при `type: \"enum\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
 ### Сгенерированный CRUD и валидация
 
 Модуль генерирует admin CRUD API из дескриптора и валидирует каждую запись. Валидация покрывает правила на уровне отдельного параметра (типы, диапазоны, паттерны) вместе с правилами между секциями, охватывающими всю конфигурацию. Ничего писать под каждую интеграцию не нужно.
+
+Правила между секциями объявляются через `validate` дескриптора. В отличие от `validate` отдельного параметра, он получает весь собранный конфиг и может пометить проблемой любое поле:
+
+```ts title="providers/integration-acme/services/acme-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  validate: (full, { addIssue }) => {
+    if (full.mode === "webhook" && !full.webhookSecret) {
+      addIssue({ path: ["webhookSecret"], message: "Required when mode is \"webhook\"" })
+    }
+  },
+})
+```
+
+В отличие от `required` или `validate` конкретного параметра, это правило запускается только при полной валидации (проверке готовности интеграции к включению), а не при сохранении отдельной секции.
 
 ### Включена и заполнена
 
@@ -103,9 +359,55 @@ int_<identifier>[_<instanceId>]
 
 Параметры с пометкой `secret` шифруются при хранении алгоритмом AES-256-GCM и никогда не попадают в браузер. Admin API маскирует их и сообщает лишь, задано значение или нет. Сохранение секрета пустым оставляет прежнее хранимое значение, а не стирает его.
 
+Для шифрования модулю нужен ключ. Задайте его как `encryptionKey` при регистрации модуля в `medusa-config.ts`:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          // ...
+        ],
+      },
+    },
+  ],
+})
+```
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+Ключом может быть любая непустая строка, но для продакшена подойдёт высокоэнтропийное значение, например `openssl rand -hex 32`. Без него модуль выбрасывает ошибку при первой попытке сохранить или прочитать интеграцию, у которой есть хотя бы один параметр с `secret: true`.
+
 ### Проверка соединения
 
 Дескриптор может объявить необязательную проверку соединения, которая сверяет учётные данные со сторонним сервисом. Администраторы запускают её по требованию, а запланированная задача периодически перепроверяет настроенные интеграции.
+
+Добавьте `testConnection` в дескриптор. Он получает уже резолвнутые (расшифрованные) параметры и возвращает статус:
+
+```ts title="providers/integration-acme/services/acme-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  testConnection: async ({ options }) => {
+    const res = await fetch("https://api.acme.com/ping", {
+      headers: { Authorization: `Bearer ${options.apiKey}` },
+    })
+
+    if (!res.ok) {
+      return { status: "failed", message: `Acme ответил ${res.status}` }
+    }
+
+    return { status: "passed" }
+  },
+})
+```
+
+`status` принимает одно из значений: `passed`, `failed` или `skipped`; необязательное `message` отображается в Admin рядом с результатом проверки.
 
 ### Резолв параметров в рантайме
 
