@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://docs.gorgojs.com/integrations/integration">
-    <img alt="Integration Module logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-medusa-logo.svg" width="100">
+    <img alt="Integration Module logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-medusa-logo.svg" width="270">
   </a>
 </p>
 
@@ -47,7 +47,7 @@ Integration Module for Medusa
 
 ## What is the Integration Module?
 
-The Integration Module lets any plugin declare its options, and store admins configure them as **integrations** right in the Admin – no `medusa-config` edits, no redeploys. It generates the admin CRUD API and validation, so there are no data models, routes, or forms to write.
+The Integration Module lets any plugin declare its options, and store admins configure them as **integrations** right in the Admin – no `medusa-config` edits, no redeploys. The module takes care of the UI, storage, encryption, and validation.
 
 The Integration Module is useful for any Medusa developer building plugins, providers, or custom modules that need configurable settings, such as API keys, credentials, modes, or webhooks, but who'd rather not hand-build settings UI pages, a data layer, and validation for each one.
 
