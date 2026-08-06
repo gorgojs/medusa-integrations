@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Интеграциуд",
+      "subtitle": "Интеграцийн тохиргоог удирдах",
+      "browseIntegrations": "Интеграциудыг үзэх",
+      "learnMore": "Интеграци хэрхэн бүтээхийг сурах",
+      "searchPlaceholder": "Интеграци хайх",
+      "empty": "Бүртгэгдсэн интеграци алга. medusa-config дахь интеграци залгаасын options.providers-д үйлчилгээ үзүүлэгчдийг зарлана уу.",
+      "emptyFiltered": "Таны шүүлтүүрт тохирох интеграци алга.",
+      "tested": "шалгасан",
+      "testFailed": "шалгалт амжилтгүй",
+      "tabs": {
+        "all": "Бүгд"
+      }
+    },
+    "browse": {
+      "title": "Каталог",
+      "subtitle": "Боломжтой интеграциудыг олох",
+      "publish": "Интеграци нэмэх",
+      "learnMore": "Өөрийн интеграцийг хэрхэн бүтээж нийтлэхийг сурах",
+      "searchPlaceholder": "Интеграци хайх",
+      "by": "{{author}}-ээс",
+      "installed": "Суулгасан",
+      "notInstalled": "Суулгаагүй",
+      "add": "Нэмэх",
+      "settings": "Тохиргоо",
+      "install_docs": "Баримтжуулалтыг унших",
+      "install_empty": "Энэ интеграцийн тохируулгын заавар хараахан бэлэн болоогүй байна.",
+      "install_truncated": "Энэ заавар энд харуулахад хэт урт байна — баримтжуулалтыг нээнэ үү."
+    },
+    "columns": {
+      "integration": "Интеграци",
+      "description": "Тайлбар",
+      "category": "Ангилал",
+      "status": "Төлөв"
+    },
+    "status": {
+      "notConfigured": "Тохируулаагүй",
+      "incomplete": "Дуусаагүй",
+      "enabled": "Идэвхтэй",
+      "disabled": "Идэвхгүй",
+      "configured": "Тохируулсан",
+      "connected": "Холбогдсон",
+      "connectionFailed": "Холболт амжилтгүй"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "зохиогч"
+    },
+    "labels": {
+      "category": "Ангилал"
+    },
+    "categories": {
+      "payment": "Төлбөр",
+      "notification": "Мэдэгдэл",
+      "fulfillment": "Биелэлт",
+      "search": "Хайлт",
+      "content": "Контент",
+      "analytics": "Аналитик",
+      "authentication": "Баталгаажуулалт",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Маркетплейс",
+      "feed": "Фийд",
+      "file_providers": "Файлын үйлчилгээ үзүүлэгчид",
+      "other": "Бусад"
+    },
+    "actions": {
+      "test": "Холболтыг шалгах",
+      "enable": "Идэвхжүүлэх",
+      "disable": "Идэвхгүй болгох",
+      "delete": "Устгах",
+      "edit": "Засварлах",
+      "save": "Хадгалах",
+      "cancel": "Цуцлах"
+    },
+    "delete": {
+      "title": "Тохиргоог устгах",
+      "description": "{{name}}-ийн хадгалагдсан тохиргоог устгах уу? Энэ үйлдлийг буцаах боломжгүй."
+    },
+    "form": {
+      "required": "{{field}} шаардлагатай",
+      "invalidJson": "Буруу JSON",
+      "keepSecret": "•••••• – хэвээр үлдээхийн тулд хоосон орхино уу",
+      "items": "{{count}} зүйл"
+    },
+    "toast": {
+      "saved": "Хадгалагдлаа",
+      "saveFailed": "Хадгалахад алдаа гарлаа",
+      "connectionOk": "Холболт амжилттай",
+      "testFailed": "Шалгалт амжилтгүй боллоо",
+      "enabled": "Идэвхжлээ",
+      "disabled": "Идэвхгүй боллоо",
+      "deleted": "Тохиргоог устгалаа",
+      "deleteFailed": "Устгахад алдаа гарлаа",
+      "updateFailed": "Шинэчлэхэд алдаа гарлаа"
+    },
+    "unknown": "Тодорхойгүй интеграци «{{id}}».",
+    "back": "Интеграциуд руу буцах"
+  }
+}

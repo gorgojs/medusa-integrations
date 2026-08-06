@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "אינטגרציות",
+      "subtitle": "ניהול הגדרות האינטגרציות",
+      "browseIntegrations": "עיון באינטגרציות",
+      "learnMore": "למדו כיצד לבנות אינטגרציות",
+      "searchPlaceholder": "חיפוש אינטגרציות",
+      "empty": "לא רשומות אינטגרציות. הגדירו ספקים תחת options.providers של תוסף האינטגרציות ב-medusa-config.",
+      "emptyFiltered": "אין אינטגרציות התואמות את הסינון שלך.",
+      "tested": "נבדק",
+      "testFailed": "הבדיקה נכשלה",
+      "tabs": {
+        "all": "הכל"
+      }
+    },
+    "browse": {
+      "title": "קטלוג",
+      "subtitle": "מצאו אינטגרציות זמינות",
+      "publish": "הוספת אינטגרציה",
+      "learnMore": "למדו כיצד לבנות ולפרסם אינטגרציה משלכם",
+      "searchPlaceholder": "חיפוש אינטגרציות",
+      "by": "על ידי {{author}}",
+      "installed": "מותקן",
+      "notInstalled": "לא מותקן",
+      "add": "הוסף",
+      "settings": "הגדרות",
+      "install_docs": "קרא את התיעוד",
+      "install_empty": "הוראות ההתקנה עבור אינטגרציה זו אינן זמינות עדיין.",
+      "install_truncated": "ההוראות ארוכות מדי להצגה כאן — פתחו את התיעוד."
+    },
+    "columns": {
+      "integration": "אינטגרציה",
+      "description": "תיאור",
+      "category": "קטגוריה",
+      "status": "סטטוס"
+    },
+    "status": {
+      "notConfigured": "לא מוגדר",
+      "incomplete": "לא הושלם",
+      "enabled": "מופעל",
+      "disabled": "מושבת",
+      "configured": "מוגדר",
+      "connected": "מחובר",
+      "connectionFailed": "החיבור נכשל"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "על ידי"
+    },
+    "labels": {
+      "category": "קטגוריה"
+    },
+    "categories": {
+      "payment": "תשלומים",
+      "notification": "התראות",
+      "fulfillment": "מימוש",
+      "search": "חיפוש",
+      "content": "תוכן",
+      "analytics": "אנליטיקה",
+      "authentication": "אימות",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "זירת מסחר",
+      "feed": "פידים",
+      "file_providers": "ספקי קבצים",
+      "other": "אחר"
+    },
+    "actions": {
+      "test": "בדיקת חיבור",
+      "enable": "הפעל",
+      "disable": "השבת",
+      "delete": "מחק",
+      "edit": "ערוך",
+      "save": "שמור",
+      "cancel": "בטל"
+    },
+    "delete": {
+      "title": "מחיקת תצורה",
+      "description": "להסיר את התצורה השמורה עבור {{name}}? פעולה זו אינה ניתנת לביטול."
+    },
+    "form": {
+      "required": "{{field}} הוא שדה חובה",
+      "invalidJson": "JSON לא תקין",
+      "keepSecret": "•••••• – השאירו ריק כדי לשמור",
+      "items": "{{count}} פריטים"
+    },
+    "toast": {
+      "saved": "נשמר",
+      "saveFailed": "השמירה נכשלה",
+      "connectionOk": "החיבור תקין",
+      "testFailed": "הבדיקה נכשלה",
+      "enabled": "הופעל",
+      "disabled": "הושבת",
+      "deleted": "התצורה נמחקה",
+      "deleteFailed": "המחיקה נכשלה",
+      "updateFailed": "העדכון נכשל"
+    },
+    "unknown": "אינטגרציה לא ידועה \"{{id}}\".",
+    "back": "חזרה לאינטגרציות"
+  }
+}

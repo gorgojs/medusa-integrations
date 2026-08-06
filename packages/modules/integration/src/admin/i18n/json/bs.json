@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Integracije",
+      "subtitle": "Upravljanje postavkama integracija",
+      "browseIntegrations": "Pregledaj integracije",
+      "learnMore": "Saznajte kako izraditi integracije",
+      "searchPlaceholder": "Pretraži integracije",
+      "empty": "Nema registrovanih integracija. Deklarišite pružatelje u options.providers dodatka za integracije u medusa-config.",
+      "emptyFiltered": "Nijedna integracija ne odgovara vašim filterima.",
+      "tested": "testirano",
+      "testFailed": "test nije uspio",
+      "tabs": {
+        "all": "Sve"
+      }
+    },
+    "browse": {
+      "title": "Katalog",
+      "subtitle": "Pronađite dostupne integracije",
+      "publish": "Dodaj integraciju",
+      "learnMore": "Saznajte kako izraditi i objaviti vlastitu integraciju",
+      "searchPlaceholder": "Pretraži integracije",
+      "by": "od {{author}}",
+      "installed": "Instalirano",
+      "notInstalled": "Nije instalirano",
+      "add": "Dodaj",
+      "settings": "Postavke",
+      "install_docs": "Pročitaj dokumentaciju",
+      "install_empty": "Upute za podešavanje ove integracije još nisu dostupne.",
+      "install_truncated": "Ove upute su predugačke za prikaz ovdje — otvorite dokumentaciju."
+    },
+    "columns": {
+      "integration": "Integracija",
+      "description": "Opis",
+      "category": "Kategorija",
+      "status": "Status"
+    },
+    "status": {
+      "notConfigured": "Nije konfigurisano",
+      "incomplete": "Nepotpuno",
+      "enabled": "Omogućeno",
+      "disabled": "Onemogućeno",
+      "configured": "Konfigurisano",
+      "connected": "Povezano",
+      "connectionFailed": "Povezivanje nije uspjelo"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "od"
+    },
+    "labels": {
+      "category": "Kategorija"
+    },
+    "categories": {
+      "payment": "Plaćanja",
+      "notification": "Obavijesti",
+      "fulfillment": "Ispuna",
+      "search": "Pretraga",
+      "content": "Sadržaj",
+      "analytics": "Analitika",
+      "authentication": "Autentifikacija",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Tržnica",
+      "feed": "Feedovi",
+      "file_providers": "Pružatelji datoteka",
+      "other": "Ostalo"
+    },
+    "actions": {
+      "test": "Testiraj vezu",
+      "enable": "Omogući",
+      "disable": "Onemogući",
+      "delete": "Izbriši",
+      "edit": "Uredi",
+      "save": "Sačuvaj",
+      "cancel": "Otkaži"
+    },
+    "delete": {
+      "title": "Brisanje konfiguracije",
+      "description": "Ukloniti sačuvanu konfiguraciju za {{name}}? Ova radnja se ne može poništiti."
+    },
+    "form": {
+      "required": "{{field}} je obavezno",
+      "invalidJson": "Neispravan JSON",
+      "keepSecret": "•••••• – ostavite prazno da zadržite",
+      "items": "{{count}} stavki"
+    },
+    "toast": {
+      "saved": "Sačuvano",
+      "saveFailed": "Spremanje nije uspjelo",
+      "connectionOk": "Veza uspostavljena",
+      "testFailed": "Test nije uspio",
+      "enabled": "Omogućeno",
+      "disabled": "Onemogućeno",
+      "deleted": "Konfiguracija izbrisana",
+      "deleteFailed": "Brisanje nije uspjelo",
+      "updateFailed": "Ažuriranje nije uspjelo"
+    },
+    "unknown": "Nepoznata integracija \"{{id}}\".",
+    "back": "Nazad na integracije"
+  }
+}

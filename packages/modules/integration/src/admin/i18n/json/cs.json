@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Integrace",
+      "subtitle": "Správa nastavení integrací",
+      "browseIntegrations": "Procházet integrace",
+      "learnMore": "Zjistěte, jak vytvářet integrace",
+      "searchPlaceholder": "Hledat integrace",
+      "empty": "Nejsou registrovány žádné integrace. Deklarujte poskytovatele v options.providers pluginu integrací v medusa-config.",
+      "emptyFiltered": "Žádné integrace neodpovídají vašim filtrům.",
+      "tested": "otestováno",
+      "testFailed": "test selhal",
+      "tabs": {
+        "all": "Vše"
+      }
+    },
+    "browse": {
+      "title": "Katalog",
+      "subtitle": "Najděte dostupné integrace",
+      "publish": "Přidat integraci",
+      "learnMore": "Zjistěte, jak vytvořit a publikovat vlastní integraci",
+      "searchPlaceholder": "Hledat integrace",
+      "by": "od {{author}}",
+      "installed": "Nainstalováno",
+      "notInstalled": "Nenainstalováno",
+      "add": "Přidat",
+      "settings": "Nastavení",
+      "install_docs": "Přečíst dokumentaci",
+      "install_empty": "Pokyny k nastavení této integrace zatím nejsou k dispozici.",
+      "install_truncated": "Tyto pokyny jsou příliš dlouhé na zobrazení zde — otevřete dokumentaci."
+    },
+    "columns": {
+      "integration": "Integrace",
+      "description": "Popis",
+      "category": "Kategorie",
+      "status": "Stav"
+    },
+    "status": {
+      "notConfigured": "Nenakonfigurováno",
+      "incomplete": "Nedokončeno",
+      "enabled": "Aktivní",
+      "disabled": "Neaktivní",
+      "configured": "Nakonfigurováno",
+      "connected": "Připojeno",
+      "connectionFailed": "Připojení selhalo"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "od"
+    },
+    "labels": {
+      "category": "Kategorie"
+    },
+    "categories": {
+      "payment": "Platby",
+      "notification": "Oznámení",
+      "fulfillment": "Plnění",
+      "search": "Vyhledávání",
+      "content": "Obsah",
+      "analytics": "Analytika",
+      "authentication": "Ověřování",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Tržiště",
+      "feed": "Feedy",
+      "file_providers": "Poskytovatelé souborů",
+      "other": "Ostatní"
+    },
+    "actions": {
+      "test": "Otestovat připojení",
+      "enable": "Aktivovat",
+      "disable": "Deaktivovat",
+      "delete": "Smazat",
+      "edit": "Upravit",
+      "save": "Uložit",
+      "cancel": "Zrušit"
+    },
+    "delete": {
+      "title": "Smazat konfiguraci",
+      "description": "Odstranit uloženou konfiguraci pro {{name}}? Tuto akci nelze vrátit zpět."
+    },
+    "form": {
+      "required": "{{field}} je povinné",
+      "invalidJson": "Neplatný JSON",
+      "keepSecret": "•••••• – ponechte prázdné pro zachování",
+      "items": "{{count}} položek"
+    },
+    "toast": {
+      "saved": "Uloženo",
+      "saveFailed": "Uložení se nezdařilo",
+      "connectionOk": "Připojení v pořádku",
+      "testFailed": "Test se nezdařil",
+      "enabled": "Aktivováno",
+      "disabled": "Deaktivováno",
+      "deleted": "Konfigurace smazána",
+      "deleteFailed": "Smazání se nezdařilo",
+      "updateFailed": "Aktualizace se nezdařila"
+    },
+    "unknown": "Neznámá integrace „{{id}}“.",
+    "back": "Zpět na integrace"
+  }
+}

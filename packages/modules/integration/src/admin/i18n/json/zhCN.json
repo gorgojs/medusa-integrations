@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "集成",
+      "subtitle": "管理集成设置",
+      "browseIntegrations": "浏览集成",
+      "learnMore": "了解如何构建集成",
+      "searchPlaceholder": "搜索集成",
+      "empty": "尚未注册任何集成。请在 medusa-config 中集成插件的 options.providers 下声明供应商。",
+      "emptyFiltered": "没有符合筛选条件的集成。",
+      "tested": "已测试",
+      "testFailed": "测试失败",
+      "tabs": {
+        "all": "全部"
+      }
+    },
+    "browse": {
+      "title": "目录",
+      "subtitle": "查找可用的集成",
+      "publish": "添加集成",
+      "learnMore": "了解如何构建并发布你自己的集成",
+      "searchPlaceholder": "搜索集成",
+      "by": "由 {{author}} 提供",
+      "installed": "已安装",
+      "notInstalled": "未安装",
+      "add": "添加",
+      "settings": "设置",
+      "install_docs": "阅读文档",
+      "install_empty": "该集成的设置说明尚不可用。",
+      "install_truncated": "这些说明过长，无法在此显示 — 请打开文档。"
+    },
+    "columns": {
+      "integration": "集成",
+      "description": "描述",
+      "category": "分类",
+      "status": "状态"
+    },
+    "status": {
+      "notConfigured": "未配置",
+      "incomplete": "未完成",
+      "enabled": "已启用",
+      "disabled": "已禁用",
+      "configured": "已配置",
+      "connected": "已连接",
+      "connectionFailed": "连接失败"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "由"
+    },
+    "labels": {
+      "category": "分类"
+    },
+    "categories": {
+      "payment": "支付",
+      "notification": "通知",
+      "fulfillment": "履约",
+      "search": "搜索",
+      "content": "内容",
+      "analytics": "分析",
+      "authentication": "身份验证",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "市场",
+      "feed": "数据源",
+      "file_providers": "文件供应商",
+      "other": "其他"
+    },
+    "actions": {
+      "test": "测试连接",
+      "enable": "启用",
+      "disable": "禁用",
+      "delete": "删除",
+      "edit": "编辑",
+      "save": "保存",
+      "cancel": "取消"
+    },
+    "delete": {
+      "title": "删除配置",
+      "description": "移除 {{name}} 的已保存配置？此操作无法撤销。"
+    },
+    "form": {
+      "required": "{{field}} 为必填项",
+      "invalidJson": "无效的 JSON",
+      "keepSecret": "•••••• – 留空以保持不变",
+      "items": "{{count}} 项"
+    },
+    "toast": {
+      "saved": "已保存",
+      "saveFailed": "保存失败",
+      "connectionOk": "连接成功",
+      "testFailed": "测试失败",
+      "enabled": "已启用",
+      "disabled": "已禁用",
+      "deleted": "配置已删除",
+      "deleteFailed": "删除失败",
+      "updateFailed": "更新失败"
+    },
+    "unknown": "未知集成“{{id}}”。",
+    "back": "返回集成"
+  }
+}

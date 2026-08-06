@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "التكاملات",
+      "subtitle": "إدارة إعدادات التكاملات",
+      "browseIntegrations": "تصفح التكاملات",
+      "learnMore": "تعرّف على كيفية إنشاء التكاملات",
+      "searchPlaceholder": "البحث في التكاملات",
+      "empty": "لا توجد تكاملات مسجلة. عرّف المزودين ضمن options.providers الخاصة بإضافة التكاملات في medusa-config.",
+      "emptyFiltered": "لا توجد تكاملات مطابقة لعوامل التصفية.",
+      "tested": "تم الاختبار",
+      "testFailed": "فشل الاختبار",
+      "tabs": {
+        "all": "الكل"
+      }
+    },
+    "browse": {
+      "title": "التصفح",
+      "subtitle": "ابحث عن التكاملات المتاحة",
+      "publish": "إضافة تكامل",
+      "learnMore": "تعرّف على كيفية إنشاء ونشر تكاملك الخاص",
+      "searchPlaceholder": "البحث في التكاملات",
+      "by": "بواسطة {{author}}",
+      "installed": "مثبَّت",
+      "notInstalled": "غير مثبَّت",
+      "add": "إضافة",
+      "settings": "الإعدادات",
+      "install_docs": "قراءة التوثيق",
+      "install_empty": "تعليمات الإعداد لهذا التكامل غير متوفرة بعد.",
+      "install_truncated": "هذه التعليمات أطول من أن تُعرض هنا — افتح التوثيق."
+    },
+    "columns": {
+      "integration": "التكامل",
+      "description": "الوصف",
+      "category": "الفئة",
+      "status": "الحالة"
+    },
+    "status": {
+      "notConfigured": "غير مُهيّأ",
+      "incomplete": "غير مكتمل",
+      "enabled": "ممكّن",
+      "disabled": "معطل",
+      "configured": "مُهيّأ",
+      "connected": "متصل",
+      "connectionFailed": "فشل الاتصال"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "بواسطة"
+    },
+    "labels": {
+      "category": "الفئة"
+    },
+    "categories": {
+      "payment": "الدفع",
+      "notification": "الإشعارات",
+      "fulfillment": "التنفيذ",
+      "search": "البحث",
+      "content": "المحتوى",
+      "analytics": "التحليلات",
+      "authentication": "المصادقة",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "الأسواق",
+      "feed": "الخلاصات",
+      "file_providers": "مزودو الملفات",
+      "other": "أخرى"
+    },
+    "actions": {
+      "test": "اختبار الاتصال",
+      "enable": "تمكين",
+      "disable": "تعطيل",
+      "delete": "حذف",
+      "edit": "تحرير",
+      "save": "حفظ",
+      "cancel": "إلغاء"
+    },
+    "delete": {
+      "title": "حذف التهيئة",
+      "description": "هل تريد إزالة التهيئة المحفوظة لـ {{name}}؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "form": {
+      "required": "{{field}} مطلوب",
+      "invalidJson": "JSON غير صالح",
+      "keepSecret": "•••••• – اتركه فارغًا للإبقاء عليه",
+      "items": "{{count}} عناصر"
+    },
+    "toast": {
+      "saved": "تم الحفظ",
+      "saveFailed": "فشل الحفظ",
+      "connectionOk": "الاتصال ناجح",
+      "testFailed": "فشل الاختبار",
+      "enabled": "تم التمكين",
+      "disabled": "تم التعطيل",
+      "deleted": "تم حذف التهيئة",
+      "deleteFailed": "فشل الحذف",
+      "updateFailed": "فشل التحديث"
+    },
+    "unknown": "تكامل غير معروف \"{{id}}\".",
+    "back": "العودة إلى التكاملات"
+  }
+}

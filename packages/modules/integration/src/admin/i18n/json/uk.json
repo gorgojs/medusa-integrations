@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Інтеграції",
+      "subtitle": "Керування налаштуваннями інтеграцій",
+      "browseIntegrations": "Переглянути інтеграції",
+      "learnMore": "Дізнайтеся, як створювати інтеграції",
+      "searchPlaceholder": "Пошук інтеграцій",
+      "empty": "Немає зареєстрованих інтеграцій. Оголосіть постачальників у options.providers плагіна інтеграцій у medusa-config.",
+      "emptyFiltered": "Немає інтеграцій, що відповідають вашим фільтрам.",
+      "tested": "перевірено",
+      "testFailed": "помилка перевірки",
+      "tabs": {
+        "all": "Усі"
+      }
+    },
+    "browse": {
+      "title": "Каталог",
+      "subtitle": "Знайдіть доступні інтеграції",
+      "publish": "Додати інтеграцію",
+      "learnMore": "Дізнайтеся, як створити та опублікувати власну інтеграцію",
+      "searchPlaceholder": "Пошук інтеграцій",
+      "by": "від {{author}}",
+      "installed": "Встановлено",
+      "notInstalled": "Не встановлено",
+      "add": "Додати",
+      "settings": "Налаштування",
+      "install_docs": "Читати документацію",
+      "install_empty": "Інструкція з налаштування для цієї інтеграції поки недоступна.",
+      "install_truncated": "Інструкція надто довга для показу тут — відкрийте документацію."
+    },
+    "columns": {
+      "integration": "Інтеграція",
+      "description": "Опис",
+      "category": "Категорія",
+      "status": "Статус"
+    },
+    "status": {
+      "notConfigured": "Не налаштовано",
+      "incomplete": "Не завершено",
+      "enabled": "Увімкнено",
+      "disabled": "Вимкнено",
+      "configured": "Налаштовано",
+      "connected": "Підключено",
+      "connectionFailed": "Помилка підключення"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "від"
+    },
+    "labels": {
+      "category": "Категорія"
+    },
+    "categories": {
+      "payment": "Платежі",
+      "notification": "Сповіщення",
+      "fulfillment": "Виконання",
+      "search": "Пошук",
+      "content": "Контент",
+      "analytics": "Аналітика",
+      "authentication": "Автентифікація",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Маркетплейс",
+      "feed": "Фіди",
+      "file_providers": "Файлові постачальники",
+      "other": "Інше"
+    },
+    "actions": {
+      "test": "Перевірити з'єднання",
+      "enable": "Увімкнути",
+      "disable": "Вимкнути",
+      "delete": "Видалити",
+      "edit": "Редагувати",
+      "save": "Зберегти",
+      "cancel": "Скасувати"
+    },
+    "delete": {
+      "title": "Видалити конфігурацію",
+      "description": "Видалити збережену конфігурацію для {{name}}? Цю дію неможливо скасувати."
+    },
+    "form": {
+      "required": "Поле «{{field}}» обов'язкове",
+      "invalidJson": "Некоректний JSON",
+      "keepSecret": "•••••• – залиште порожнім, щоб не змінювати",
+      "items": "{{count}} шт."
+    },
+    "toast": {
+      "saved": "Збережено",
+      "saveFailed": "Не вдалося зберегти",
+      "connectionOk": "З'єднання встановлено",
+      "testFailed": "Перевірка не вдалася",
+      "enabled": "Увімкнено",
+      "disabled": "Вимкнено",
+      "deleted": "Конфігурацію видалено",
+      "deleteFailed": "Не вдалося видалити",
+      "updateFailed": "Не вдалося оновити"
+    },
+    "unknown": "Невідома інтеграція «{{id}}».",
+    "back": "До інтеграцій"
+  }
+}

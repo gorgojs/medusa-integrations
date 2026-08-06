@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Integracijos",
+      "subtitle": "Integracijų nustatymų valdymas",
+      "browseIntegrations": "Naršyti integracijas",
+      "learnMore": "Sužinokite, kaip kurti integracijas",
+      "searchPlaceholder": "Ieškoti integracijų",
+      "empty": "Nėra registruotų integracijų. Nurodykite teikėjus integracijų papildinio options.providers medusa-config faile.",
+      "emptyFiltered": "Nė viena integracija neatitinka jūsų filtrų.",
+      "tested": "patikrinta",
+      "testFailed": "patikra nepavyko",
+      "tabs": {
+        "all": "Visos"
+      }
+    },
+    "browse": {
+      "title": "Katalogas",
+      "subtitle": "Raskite prieinamas integracijas",
+      "publish": "Pridėti integraciją",
+      "learnMore": "Sužinokite, kaip sukurti ir paskelbti savo integraciją",
+      "searchPlaceholder": "Ieškoti integracijų",
+      "by": "sukūrė {{author}}",
+      "installed": "Įdiegta",
+      "notInstalled": "Neįdiegta",
+      "add": "Pridėti",
+      "settings": "Nustatymai",
+      "install_docs": "Skaityti dokumentaciją",
+      "install_empty": "Šios integracijos sąrankos instrukcijos dar nepasiekiamos.",
+      "install_truncated": "Šios instrukcijos per ilgos, kad būtų rodomos čia — atverkite dokumentaciją."
+    },
+    "columns": {
+      "integration": "Integracija",
+      "description": "Aprašymas",
+      "category": "Kategorija",
+      "status": "Būsena"
+    },
+    "status": {
+      "notConfigured": "Nesukonfigūruota",
+      "incomplete": "Nebaigta",
+      "enabled": "Įjungta",
+      "disabled": "Išjungta",
+      "configured": "Sukonfigūruota",
+      "connected": "Prijungta",
+      "connectionFailed": "Nepavyko prisijungti"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "sukūrė"
+    },
+    "labels": {
+      "category": "Kategorija"
+    },
+    "categories": {
+      "payment": "Mokėjimai",
+      "notification": "Pranešimai",
+      "fulfillment": "Vykdymas",
+      "search": "Paieška",
+      "content": "Turinys",
+      "analytics": "Analitika",
+      "authentication": "Autentifikavimas",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Prekyvietė",
+      "feed": "Srautai",
+      "file_providers": "Failų teikėjai",
+      "other": "Kita"
+    },
+    "actions": {
+      "test": "Tikrinti ryšį",
+      "enable": "Įjungti",
+      "disable": "Išjungti",
+      "delete": "Ištrinti",
+      "edit": "Keisti",
+      "save": "Išsaugoti",
+      "cancel": "Atšaukti"
+    },
+    "delete": {
+      "title": "Ištrinti konfigūraciją",
+      "description": "Pašalinti išsaugotą {{name}} konfigūraciją? Šis veiksmas neatstatomas."
+    },
+    "form": {
+      "required": "{{field}} yra privalomas",
+      "invalidJson": "Netinkamas JSON",
+      "keepSecret": "•••••• – palikite tuščią, kad išliktų",
+      "items": "{{count}} elementai"
+    },
+    "toast": {
+      "saved": "Išsaugota",
+      "saveFailed": "Nepavyko išsaugoti",
+      "connectionOk": "Ryšys sėkmingas",
+      "testFailed": "Patikra nepavyko",
+      "enabled": "Įjungta",
+      "disabled": "Išjungta",
+      "deleted": "Konfigūracija ištrinta",
+      "deleteFailed": "Nepavyko ištrinti",
+      "updateFailed": "Nepavyko atnaujinti"
+    },
+    "unknown": "Nežinoma integracija „{{id}}“.",
+    "back": "Atgal į integracijas"
+  }
+}

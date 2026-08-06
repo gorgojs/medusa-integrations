@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Integrasi",
+      "subtitle": "Kelola pengaturan integrasi",
+      "browseIntegrations": "Jelajahi integrasi",
+      "learnMore": "Pelajari cara membangun integrasi",
+      "searchPlaceholder": "Cari integrasi",
+      "empty": "Tidak ada integrasi yang terdaftar. Deklarasikan penyedia di options.providers plugin integrasi pada medusa-config.",
+      "emptyFiltered": "Tidak ada integrasi yang cocok dengan filter Anda.",
+      "tested": "teruji",
+      "testFailed": "pengujian gagal",
+      "tabs": {
+        "all": "Semua"
+      }
+    },
+    "browse": {
+      "title": "Katalog",
+      "subtitle": "Temukan integrasi yang tersedia",
+      "publish": "Tambah integrasi",
+      "learnMore": "Pelajari cara membangun dan memublikasikan integrasi Anda sendiri",
+      "searchPlaceholder": "Cari integrasi",
+      "by": "oleh {{author}}",
+      "installed": "Terpasang",
+      "notInstalled": "Belum terpasang",
+      "add": "Tambah",
+      "settings": "Pengaturan",
+      "install_docs": "Baca dokumentasi",
+      "install_empty": "Petunjuk penyiapan untuk integrasi ini belum tersedia.",
+      "install_truncated": "Petunjuk ini terlalu panjang untuk ditampilkan di sini — buka dokumentasinya."
+    },
+    "columns": {
+      "integration": "Integrasi",
+      "description": "Deskripsi",
+      "category": "Kategori",
+      "status": "Status"
+    },
+    "status": {
+      "notConfigured": "Belum dikonfigurasi",
+      "incomplete": "Belum lengkap",
+      "enabled": "Diaktifkan",
+      "disabled": "Dinonaktifkan",
+      "configured": "Terkonfigurasi",
+      "connected": "Terhubung",
+      "connectionFailed": "Koneksi gagal"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "oleh"
+    },
+    "labels": {
+      "category": "Kategori"
+    },
+    "categories": {
+      "payment": "Pembayaran",
+      "notification": "Notifikasi",
+      "fulfillment": "Pemenuhan",
+      "search": "Pencarian",
+      "content": "Konten",
+      "analytics": "Analitik",
+      "authentication": "Autentikasi",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Marketplace",
+      "feed": "Feed",
+      "file_providers": "Penyedia file",
+      "other": "Lainnya"
+    },
+    "actions": {
+      "test": "Uji koneksi",
+      "enable": "Aktifkan",
+      "disable": "Nonaktifkan",
+      "delete": "Hapus",
+      "edit": "Edit",
+      "save": "Simpan",
+      "cancel": "Batal"
+    },
+    "delete": {
+      "title": "Hapus konfigurasi",
+      "description": "Hapus konfigurasi tersimpan untuk {{name}}? Tindakan ini tidak dapat dibatalkan."
+    },
+    "form": {
+      "required": "{{field}} wajib diisi",
+      "invalidJson": "JSON tidak valid",
+      "keepSecret": "•••••• – biarkan kosong untuk mempertahankan",
+      "items": "{{count}} item"
+    },
+    "toast": {
+      "saved": "Tersimpan",
+      "saveFailed": "Gagal menyimpan",
+      "connectionOk": "Koneksi berhasil",
+      "testFailed": "Pengujian gagal",
+      "enabled": "Diaktifkan",
+      "disabled": "Dinonaktifkan",
+      "deleted": "Konfigurasi dihapus",
+      "deleteFailed": "Gagal menghapus",
+      "updateFailed": "Gagal memperbarui"
+    },
+    "unknown": "Integrasi tidak dikenal \"{{id}}\".",
+    "back": "Kembali ke integrasi"
+  }
+}

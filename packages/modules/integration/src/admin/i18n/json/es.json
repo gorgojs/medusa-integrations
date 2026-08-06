@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Integraciones",
+      "subtitle": "Gestiona la configuración de las integraciones",
+      "browseIntegrations": "Explorar integraciones",
+      "learnMore": "Aprende a crear integraciones",
+      "searchPlaceholder": "Buscar integraciones",
+      "empty": "No hay integraciones registradas. Declara los proveedores en options.providers del plugin de integraciones en medusa-config.",
+      "emptyFiltered": "Ninguna integración coincide con tus filtros.",
+      "tested": "probado",
+      "testFailed": "prueba fallida",
+      "tabs": {
+        "all": "Todas"
+      }
+    },
+    "browse": {
+      "title": "Catálogo",
+      "subtitle": "Encuentra integraciones disponibles",
+      "publish": "Añadir integración",
+      "learnMore": "Aprende a crear y publicar tu propia integración",
+      "searchPlaceholder": "Buscar integraciones",
+      "by": "por {{author}}",
+      "installed": "Instalado",
+      "notInstalled": "No instalado",
+      "add": "Añadir",
+      "settings": "Configuración",
+      "install_docs": "Leer documentación",
+      "install_empty": "Las instrucciones de configuración de esta integración aún no están disponibles.",
+      "install_truncated": "Estas instrucciones son demasiado largas para mostrarlas aquí — abre la documentación."
+    },
+    "columns": {
+      "integration": "Integración",
+      "description": "Descripción",
+      "category": "Categoría",
+      "status": "Estado"
+    },
+    "status": {
+      "notConfigured": "Sin configurar",
+      "incomplete": "Incompleto",
+      "enabled": "Habilitado",
+      "disabled": "Deshabilitado",
+      "configured": "Configurado",
+      "connected": "Conectado",
+      "connectionFailed": "Error de conexión"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "por"
+    },
+    "labels": {
+      "category": "Categoría"
+    },
+    "categories": {
+      "payment": "Pagos",
+      "notification": "Notificaciones",
+      "fulfillment": "Cumplimiento",
+      "search": "Búsqueda",
+      "content": "Contenido",
+      "analytics": "Analíticas",
+      "authentication": "Autenticación",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Marketplace",
+      "feed": "Feeds",
+      "file_providers": "Proveedores de archivos",
+      "other": "Otros"
+    },
+    "actions": {
+      "test": "Probar conexión",
+      "enable": "Habilitar",
+      "disable": "Deshabilitar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    },
+    "delete": {
+      "title": "Eliminar configuración",
+      "description": "¿Eliminar la configuración guardada de {{name}}? Esta acción no puede deshacerse."
+    },
+    "form": {
+      "required": "{{field}} es obligatorio",
+      "invalidJson": "JSON no válido",
+      "keepSecret": "•••••• – déjalo en blanco para mantenerlo",
+      "items": "{{count}} elementos"
+    },
+    "toast": {
+      "saved": "Guardado",
+      "saveFailed": "No se pudo guardar",
+      "connectionOk": "Conexión correcta",
+      "testFailed": "La prueba falló",
+      "enabled": "Habilitado",
+      "disabled": "Deshabilitado",
+      "deleted": "Configuración eliminada",
+      "deleteFailed": "No se pudo eliminar",
+      "updateFailed": "No se pudo actualizar"
+    },
+    "unknown": "Integración desconocida «{{id}}».",
+    "back": "Volver a integraciones"
+  }
+}

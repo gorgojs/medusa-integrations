@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "インテグレーション",
+      "subtitle": "インテグレーションの設定を管理します",
+      "browseIntegrations": "インテグレーションを探す",
+      "learnMore": "インテグレーションの作り方を学ぶ",
+      "searchPlaceholder": "インテグレーションを検索",
+      "empty": "登録されているインテグレーションはありません。medusa-config のインテグレーションプラグインの options.providers にプロバイダーを宣言してください。",
+      "emptyFiltered": "フィルターに一致するインテグレーションはありません。",
+      "tested": "テスト済み",
+      "testFailed": "テスト失敗",
+      "tabs": {
+        "all": "すべて"
+      }
+    },
+    "browse": {
+      "title": "カタログ",
+      "subtitle": "利用可能なインテグレーションを探す",
+      "publish": "インテグレーションを追加",
+      "learnMore": "独自のインテグレーションを作成して公開する方法を学ぶ",
+      "searchPlaceholder": "インテグレーションを検索",
+      "by": "{{author}} 作",
+      "installed": "インストール済み",
+      "notInstalled": "未インストール",
+      "add": "追加",
+      "settings": "設定",
+      "install_docs": "ドキュメントを読む",
+      "install_empty": "このインテグレーションのセットアップ手順はまだ利用できません。",
+      "install_truncated": "この手順はここに表示するには長すぎます — ドキュメントを開いてください。"
+    },
+    "columns": {
+      "integration": "インテグレーション",
+      "description": "説明",
+      "category": "カテゴリー",
+      "status": "ステータス"
+    },
+    "status": {
+      "notConfigured": "未設定",
+      "incomplete": "未完了",
+      "enabled": "有効",
+      "disabled": "無効",
+      "configured": "設定済み",
+      "connected": "接続済み",
+      "connectionFailed": "接続に失敗しました"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "作成者"
+    },
+    "labels": {
+      "category": "カテゴリー"
+    },
+    "categories": {
+      "payment": "決済",
+      "notification": "通知",
+      "fulfillment": "フルフィルメント",
+      "search": "検索",
+      "content": "コンテンツ",
+      "analytics": "分析",
+      "authentication": "認証",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "マーケットプレイス",
+      "feed": "フィード",
+      "file_providers": "ファイルプロバイダー",
+      "other": "その他"
+    },
+    "actions": {
+      "test": "接続テスト",
+      "enable": "有効化",
+      "disable": "無効化",
+      "delete": "削除",
+      "edit": "編集",
+      "save": "保存",
+      "cancel": "キャンセル"
+    },
+    "delete": {
+      "title": "設定を削除",
+      "description": "{{name}} の保存済み設定を削除しますか？この操作は元に戻せません。"
+    },
+    "form": {
+      "required": "{{field}} は必須です",
+      "invalidJson": "無効な JSON",
+      "keepSecret": "•••••• – 変更しない場合は空欄のまま",
+      "items": "{{count}} 件"
+    },
+    "toast": {
+      "saved": "保存しました",
+      "saveFailed": "保存に失敗しました",
+      "connectionOk": "接続に成功しました",
+      "testFailed": "テストに失敗しました",
+      "enabled": "有効にしました",
+      "disabled": "無効にしました",
+      "deleted": "設定を削除しました",
+      "deleteFailed": "削除に失敗しました",
+      "updateFailed": "更新に失敗しました"
+    },
+    "unknown": "不明なインテグレーション「{{id}}」。",
+    "back": "インテグレーションに戻る"
+  }
+}

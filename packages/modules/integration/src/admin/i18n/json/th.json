@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "การเชื่อมต่อ",
+      "subtitle": "จัดการการตั้งค่าการเชื่อมต่อ",
+      "browseIntegrations": "เรียกดูการเชื่อมต่อ",
+      "learnMore": "เรียนรู้วิธีสร้างการเชื่อมต่อ",
+      "searchPlaceholder": "ค้นหาการเชื่อมต่อ",
+      "empty": "ยังไม่มีการเชื่อมต่อที่ลงทะเบียน ประกาศผู้ให้บริการใน options.providers ของปลั๊กอินการเชื่อมต่อใน medusa-config",
+      "emptyFiltered": "ไม่มีการเชื่อมต่อที่ตรงกับตัวกรองของคุณ",
+      "tested": "ทดสอบแล้ว",
+      "testFailed": "ทดสอบล้มเหลว",
+      "tabs": {
+        "all": "ทั้งหมด"
+      }
+    },
+    "browse": {
+      "title": "แคตตาล็อก",
+      "subtitle": "ค้นหาการเชื่อมต่อที่พร้อมใช้งาน",
+      "publish": "เพิ่มการเชื่อมต่อ",
+      "learnMore": "เรียนรู้วิธีสร้างและเผยแพร่การเชื่อมต่อของคุณเอง",
+      "searchPlaceholder": "ค้นหาการเชื่อมต่อ",
+      "by": "โดย {{author}}",
+      "installed": "ติดตั้งแล้ว",
+      "notInstalled": "ยังไม่ได้ติดตั้ง",
+      "add": "เพิ่ม",
+      "settings": "การตั้งค่า",
+      "install_docs": "อ่านเอกสาร",
+      "install_empty": "คำแนะนำการตั้งค่าสำหรับการเชื่อมต่อนี้ยังไม่พร้อมใช้งาน",
+      "install_truncated": "คำแนะนำนี้ยาวเกินกว่าจะแสดงที่นี่ — เปิดเอกสารประกอบ"
+    },
+    "columns": {
+      "integration": "การเชื่อมต่อ",
+      "description": "คำอธิบาย",
+      "category": "หมวดหมู่",
+      "status": "สถานะ"
+    },
+    "status": {
+      "notConfigured": "ยังไม่ได้ตั้งค่า",
+      "incomplete": "ไม่สมบูรณ์",
+      "enabled": "เปิดใช้งาน",
+      "disabled": "ปิดใช้งาน",
+      "configured": "ตั้งค่าแล้ว",
+      "connected": "เชื่อมต่อแล้ว",
+      "connectionFailed": "การเชื่อมต่อล้มเหลว"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "โดย"
+    },
+    "labels": {
+      "category": "หมวดหมู่"
+    },
+    "categories": {
+      "payment": "การชำระเงิน",
+      "notification": "การแจ้งเตือน",
+      "fulfillment": "การจัดส่ง",
+      "search": "ค้นหา",
+      "content": "เนื้อหา",
+      "analytics": "การวิเคราะห์",
+      "authentication": "การยืนยันตัวตน",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "มาร์เก็ตเพลส",
+      "feed": "ฟีด",
+      "file_providers": "ผู้ให้บริการไฟล์",
+      "other": "อื่นๆ"
+    },
+    "actions": {
+      "test": "ทดสอบการเชื่อมต่อ",
+      "enable": "เปิดใช้งาน",
+      "disable": "ปิดใช้งาน",
+      "delete": "ลบ",
+      "edit": "แก้ไข",
+      "save": "บันทึก",
+      "cancel": "ยกเลิก"
+    },
+    "delete": {
+      "title": "ลบการตั้งค่า",
+      "description": "ลบการตั้งค่าที่บันทึกไว้สำหรับ {{name}} หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้"
+    },
+    "form": {
+      "required": "ต้องระบุ {{field}}",
+      "invalidJson": "JSON ไม่ถูกต้อง",
+      "keepSecret": "•••••• – เว้นว่างไว้เพื่อคงค่าเดิม",
+      "items": "{{count}} รายการ"
+    },
+    "toast": {
+      "saved": "บันทึกแล้ว",
+      "saveFailed": "บันทึกไม่สำเร็จ",
+      "connectionOk": "เชื่อมต่อสำเร็จ",
+      "testFailed": "ทดสอบไม่สำเร็จ",
+      "enabled": "เปิดใช้งานแล้ว",
+      "disabled": "ปิดใช้งานแล้ว",
+      "deleted": "ลบการตั้งค่าแล้ว",
+      "deleteFailed": "ลบไม่สำเร็จ",
+      "updateFailed": "อัปเดตไม่สำเร็จ"
+    },
+    "unknown": "ไม่รู้จักการเชื่อมต่อ \"{{id}}\"",
+    "back": "กลับไปที่การเชื่อมต่อ"
+  }
+}

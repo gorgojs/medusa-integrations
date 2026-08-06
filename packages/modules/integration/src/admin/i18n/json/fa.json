@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "یکپارچه‌سازی‌ها",
+      "subtitle": "مدیریت تنظیمات یکپارچه‌سازی‌ها",
+      "browseIntegrations": "مرور یکپارچه‌سازی‌ها",
+      "learnMore": "بیاموزید چگونه یکپارچه‌سازی بسازید",
+      "searchPlaceholder": "جستجوی یکپارچه‌سازی‌ها",
+      "empty": "هیچ یکپارچه‌سازی ثبت نشده است. ارائه‌دهندگان را در options.providers افزونه یکپارچه‌سازی در medusa-config تعریف کنید.",
+      "emptyFiltered": "هیچ یکپارچه‌سازی با فیلترهای شما مطابقت ندارد.",
+      "tested": "آزمایش شد",
+      "testFailed": "آزمایش ناموفق بود",
+      "tabs": {
+        "all": "همه"
+      }
+    },
+    "browse": {
+      "title": "مرور",
+      "subtitle": "یکپارچه‌سازی‌های موجود را پیدا کنید",
+      "publish": "افزودن یکپارچه‌سازی",
+      "learnMore": "بیاموزید چگونه یکپارچه‌سازی خود را بسازید و منتشر کنید",
+      "searchPlaceholder": "جستجوی یکپارچه‌سازی‌ها",
+      "by": "توسط {{author}}",
+      "installed": "نصب‌شده",
+      "notInstalled": "نصب نشده",
+      "add": "افزودن",
+      "settings": "تنظیمات",
+      "install_docs": "خواندن مستندات",
+      "install_empty": "دستورالعمل راه‌اندازی این یکپارچه‌سازی هنوز در دسترس نیست.",
+      "install_truncated": "این دستورالعمل برای نمایش در اینجا بسیار طولانی است — مستندات را باز کنید."
+    },
+    "columns": {
+      "integration": "یکپارچه‌سازی",
+      "description": "توضیحات",
+      "category": "دسته‌بندی",
+      "status": "وضعیت"
+    },
+    "status": {
+      "notConfigured": "پیکربندی نشده",
+      "incomplete": "ناقص",
+      "enabled": "فعال",
+      "disabled": "غیرفعال",
+      "configured": "پیکربندی شده",
+      "connected": "متصل",
+      "connectionFailed": "اتصال ناموفق بود"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "توسط"
+    },
+    "labels": {
+      "category": "دسته‌بندی"
+    },
+    "categories": {
+      "payment": "پرداخت",
+      "notification": "اعلان‌ها",
+      "fulfillment": "پردازش سفارش",
+      "search": "جستجو",
+      "content": "محتوا",
+      "analytics": "تحلیل‌ها",
+      "authentication": "احراز هویت",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "بازارگاه",
+      "feed": "فیدها",
+      "file_providers": "ارائه‌دهندگان فایل",
+      "other": "سایر"
+    },
+    "actions": {
+      "test": "آزمایش اتصال",
+      "enable": "فعال کردن",
+      "disable": "غیرفعال کردن",
+      "delete": "حذف",
+      "edit": "ویرایش",
+      "save": "ذخیره",
+      "cancel": "لغو"
+    },
+    "delete": {
+      "title": "حذف پیکربندی",
+      "description": "پیکربندی ذخیره‌شده برای {{name}} حذف شود؟ این عمل قابل بازگشت نیست."
+    },
+    "form": {
+      "required": "{{field}} الزامی است",
+      "invalidJson": "JSON نامعتبر",
+      "keepSecret": "•••••• – برای حفظ مقدار خالی بگذارید",
+      "items": "{{count}} مورد"
+    },
+    "toast": {
+      "saved": "ذخیره شد",
+      "saveFailed": "ذخیره‌سازی ناموفق بود",
+      "connectionOk": "اتصال برقرار است",
+      "testFailed": "آزمایش ناموفق بود",
+      "enabled": "فعال شد",
+      "disabled": "غیرفعال شد",
+      "deleted": "پیکربندی حذف شد",
+      "deleteFailed": "حذف ناموفق بود",
+      "updateFailed": "به‌روزرسانی ناموفق بود"
+    },
+    "unknown": "یکپارچه‌سازی ناشناخته «{{id}}».",
+    "back": "بازگشت به یکپارچه‌سازی‌ها"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Tích hợp",
+      "subtitle": "Quản lý cài đặt tích hợp",
+      "browseIntegrations": "Duyệt các tích hợp",
+      "learnMore": "Tìm hiểu cách xây dựng tích hợp",
+      "searchPlaceholder": "Tìm kiếm tích hợp",
+      "empty": "Chưa có tích hợp nào được đăng ký. Khai báo nhà cung cấp trong options.providers của plugin tích hợp trong medusa-config.",
+      "emptyFiltered": "Không có tích hợp nào khớp với bộ lọc của bạn.",
+      "tested": "đã kiểm tra",
+      "testFailed": "kiểm tra thất bại",
+      "tabs": {
+        "all": "Tất cả"
+      }
+    },
+    "browse": {
+      "title": "Danh mục",
+      "subtitle": "Tìm các tích hợp có sẵn",
+      "publish": "Thêm tích hợp",
+      "learnMore": "Tìm hiểu cách xây dựng và phát hành tích hợp của riêng bạn",
+      "searchPlaceholder": "Tìm kiếm tích hợp",
+      "by": "bởi {{author}}",
+      "installed": "Đã cài đặt",
+      "notInstalled": "Chưa cài đặt",
+      "add": "Thêm",
+      "settings": "Cài đặt",
+      "install_docs": "Đọc tài liệu",
+      "install_empty": "Hướng dẫn thiết lập cho tích hợp này chưa có sẵn.",
+      "install_truncated": "Hướng dẫn này quá dài để hiển thị ở đây — hãy mở tài liệu."
+    },
+    "columns": {
+      "integration": "Tích hợp",
+      "description": "Mô tả",
+      "category": "Danh mục",
+      "status": "Trạng thái"
+    },
+    "status": {
+      "notConfigured": "Chưa cấu hình",
+      "incomplete": "Chưa hoàn tất",
+      "enabled": "Đã bật",
+      "disabled": "Đã tắt",
+      "configured": "Đã cấu hình",
+      "connected": "Đã kết nối",
+      "connectionFailed": "Kết nối thất bại"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "bởi"
+    },
+    "labels": {
+      "category": "Danh mục"
+    },
+    "categories": {
+      "payment": "Thanh toán",
+      "notification": "Thông báo",
+      "fulfillment": "Xử lý giao hàng",
+      "search": "Tìm kiếm",
+      "content": "Nội dung",
+      "analytics": "Phân tích",
+      "authentication": "Xác thực",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Sàn thương mại",
+      "feed": "Nguồn cấp",
+      "file_providers": "Nhà cung cấp tệp",
+      "other": "Khác"
+    },
+    "actions": {
+      "test": "Kiểm tra kết nối",
+      "enable": "Bật",
+      "disable": "Tắt",
+      "delete": "Xóa",
+      "edit": "Chỉnh sửa",
+      "save": "Lưu",
+      "cancel": "Hủy"
+    },
+    "delete": {
+      "title": "Xóa cấu hình",
+      "description": "Xóa cấu hình đã lưu cho {{name}}? Hành động này không thể hoàn tác."
+    },
+    "form": {
+      "required": "{{field}} là bắt buộc",
+      "invalidJson": "JSON không hợp lệ",
+      "keepSecret": "•••••• – để trống để giữ nguyên",
+      "items": "{{count}} mục"
+    },
+    "toast": {
+      "saved": "Đã lưu",
+      "saveFailed": "Lưu thất bại",
+      "connectionOk": "Kết nối thành công",
+      "testFailed": "Kiểm tra thất bại",
+      "enabled": "Đã bật",
+      "disabled": "Đã tắt",
+      "deleted": "Đã xóa cấu hình",
+      "deleteFailed": "Xóa thất bại",
+      "updateFailed": "Cập nhật thất bại"
+    },
+    "unknown": "Tích hợp không xác định \"{{id}}\".",
+    "back": "Quay lại tích hợp"
+  }
+}
