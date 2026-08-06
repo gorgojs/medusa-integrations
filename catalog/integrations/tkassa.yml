@@ -11,7 +11,7 @@ displayName:
 shortDescription:
   en: "Accept payments via T-Kassa by T-Bank"
   ru: "Приём платежей через Т-Кассу от Т-Банка"
-icon: "tkassa.png"
+icon: "tkassa.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
 docsUrl: "https://docs.gorgojs.com/medusa-integrations/t-kassa"
 docsSnippet:
