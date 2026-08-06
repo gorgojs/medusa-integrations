@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://docs.gorgojs.ru/integrations/integration">
-    <img alt="Integration Module logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-medusa-logo.svg" width="100">
+    <img alt="Integration Module logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-medusa-logo.svg" width="270">
   </a>
 </p>
 
@@ -47,7 +47,7 @@
 
 ## Что такое Модуль интеграций?
 
-Модуль интеграций позволяет любому плагину описывать свои опции, а администраторам магазина настраивать их как **интеграции** прямо в Admin – без правок `medusa-config` и передеплоя. Он сам генерирует admin CRUD API и валидацию, так что не нужно писать ни модели данных, ни роуты, ни формы.
+Модуль интеграций позволяет любому плагину описывать свои опции, а администраторам магазина настраивать их как **интеграции** прямо в Admin – без правок `medusa-config` и передеплоя. UI, хранение, шифрование и валидацию модуль берёт на себя.
 
 Модуль интеграций пригодится любому разработчику Medusa, который создаёт плагины, провайдеры или кастомные модули с настраиваемыми параметрами, такими как ключи API, учётные данные, режимы или вебхуки, но не хочет вручную собирать страницы настроек, слой хранения и валидацию для каждого из них.
 
