@@ -5,7 +5,17 @@ description: "Core concepts of the Integration Module: the descriptor, roles, an
 
 # {frontmatter.title}
 
-This page introduces the core concepts behind the Integration Module: the roles involved, the descriptor at its center, and how an integration's options flow from configuration to runtime and into the admin UI. Later pages turn each idea into a step-by-step guide.
+This page introduces the core concepts behind the Integration Module: the roles involved, the descriptor at its center, and how an integration's options flow from configuration to runtime and into the UI. Later pages turn each idea into a step-by-step guide.
+
+## Where it can be used
+
+The Integration Module is provider-agnostic. It does not care what the options are for.
+
+- **Any provider type:** payment, fulfillment, ERP, notification, content, and more.
+- **Plugins:** add configurable settings to a plugin without building a settings page and a data layer.
+- **Custom modules and admin customizations:** any Medusa module that needs admin-configurable options, such as API keys, modes, or feature flags.
+
+If a store admin should be able to manage a setting, it can be an integration.
 
 ## Providers and consumers
 
@@ -21,7 +31,7 @@ The provider and the consumer are usually the same package. A payment plugin dec
 
 A descriptor is a single declaration of an integration's metadata, options, settings sections, validation, and an optional connection test. You create it with `defineIntegration`.
 
-For example:
+Here's a payment provider's descriptor, declaring two options and one section:
 
 ```ts title="providers/integration-acme/services/acme-integration.ts"
 import { defineIntegration, AbstractIntegrationProvider } from "@gorgo/medusa-integration"
@@ -62,28 +72,97 @@ export class AcmeIntegration extends AbstractIntegrationProvider {
 }
 ```
 
-The descriptor is the source of truth for the integration. The module uses it to generate the admin CRUD API, validate writes, render the settings UI, and define what consumers resolve at runtime. You never write data models, routes, or forms.
-
-## Where it can be used
-
-The Integration Module is provider-agnostic. It does not care what the options are for.
-
-- **Any provider type:** payment, fulfillment, ERP, notification, content, and more.
-- **Plugins:** add configurable settings to a plugin without building a settings page and a data layer.
-- **Custom modules and admin customizations:** any Medusa module that needs admin-configurable options, such as API keys, modes, or feature flags.
-
-If a store admin should be able to manage a setting, it can be an integration.
+The descriptor is the source of truth for the integration: this one declares `apiKey` and `sandbox`, grouped into a single `credentials` section. The module uses it to generate the CRUD API, validate writes, render the settings UI, and define what consumers resolve at runtime. You never write data models, routes, or forms.
 
 ## Identifiers and instances
 
-Every integration has a stable identifier, such as `acme`, set as the provider's `static identifier`. Each registration is keyed by a `provider_id` of the form:
+An instance is one registration of an integration provider, with its own configuration. You can register the same provider more than once; each registration becomes an independent instance with its own settings in the Admin.
+
+Every integration instance is addressed by a `provider_id` of the form:
 
 ```
 int_<identifier>[_<instanceId>]
 ```
 
-- **Single instance:** the default. It has no instance id, so its key is `int_acme`.
-- **Multiple instances:** Register the same provider more than once, each with its own `id`, for example `int_acme_eu` and `int_acme_us`. Each instance is configured independently, which is how you support several accounts.
+`<identifier>` is the provider's `static identifier`, shared by every one of its instances. `<instanceId>` is that particular registration's `id`, present only for named instances.
+
+Every integration has a stable identifier, such as `acme`, set as the provider's `static identifier`:
+
+```ts title="providers/integration-acme/services/acme-integration.ts"
+import { defineIntegration, AbstractIntegrationProvider } from "@gorgo/medusa-integration"
+
+// ...
+
+export class AcmeIntegration extends AbstractIntegrationProvider {
+  static identifier = "acme"
+
+  // ...
+}
+```
+
+This `static identifier` is shared across every instance of the provider: it's always `acme`, and only the `instanceId` in the `provider_id` tells the instances apart.
+
+### Single instance
+
+This is the default. It has no instance id (`instanceId`), so its `provider_id` looks like `int_acme`.
+
+Register it without an `id`:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        // ...
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-acme/providers/integration-acme",
+            options: {},
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Without an `id` in the registration entry, the provider gets the single, unnamed instance keyed `int_acme`.
+
+### Multiple instances
+
+Register the same provider more than once, each with its own `id`. Each instance is configured independently, which is how you support several accounts on the integrated service.
+
+For example, two independent registrations of the same provider:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        // ...
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-acme/providers/integration-acme",
+            id: "eu",
+            options: {},
+          },
+          {
+            resolve: "@gorgo/medusa-payment-acme/providers/integration-acme",
+            id: "us",
+            options: {},
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+That gives `int_acme_eu` and `int_acme_us` respectively. `id` goes at the top level of the entry, not inside `options`. Putting it inside `options` instead makes the provider silently register under the default (unnamed) instance.
 
 A consumer resolves options by identifier and instance, so the same code can target the right one.
 
@@ -91,9 +170,235 @@ A consumer resolves options by identifier and instance, so the same code can tar
 
 An integration's options move through a predictable path. An author declares them in the descriptor, an admin configures them, the module validates them, they become live once the integration is enabled and complete, and a consumer resolves them at runtime. A connection test can check them against the third-party service along the way.
 
+## Option fields
+
+Each option in `options` is an object shaped `{ type, ... }`. The `type` field determines the available values and the remaining fields that are common to every type:
+
+<MedusaTypeList
+  sectionTitle="Options"
+  types={[
+    {
+      name: "type",
+      type: "enum",
+      description: "The option's type. Determines validation, the default UI control, and the extra fields available:\n- `string`\n- `url`\n- `email`\n- `uuid`\n- `number`\n- `boolean`\n- `enum`\n- `json`",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "label",
+      type: "string",
+      description: "The field's i18n label key. Resolved admin-side against the active language, falling back to English.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "control",
+      type: "enum",
+      description: "The UI control used to render the field:\n- `text`\n- `secret`\n- `switch`\n- `number`\n- `url`\n- `select`\n- `json`\nPicked automatically from `type`, but can be overridden.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "default",
+      type: "string | number | boolean | unknown",
+      description: "The default value; its type matches the option's `type`. A `default` makes the option effectively always present in resolved options, even without `required`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "required",
+      type: "boolean",
+      description: "Rejects an empty (`undefined`) value on validation, both when this option is saved and when checking whether the integration is complete. Options are optional by default.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "secret",
+      type: "boolean",
+      description: "Encrypts the value (AES-256-GCM) at rest and never sends it to the browser. The CRUD API masks it and reports only whether it is set. Saving it blank keeps the stored value.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "hint",
+      type: "string",
+      description: "The i18n key for the hint text shown under the field.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "placeholder",
+      type: "string",
+      description: "The i18n key for the field's placeholder.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "readonly",
+      type: "boolean",
+      description: "Renders the field as non-editable in the Admin.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "visibleWhen",
+      type: "object",
+      description: "`{ field, equals }` hides the field in the Admin until a sibling option `field` equals `equals`. UI-only: server-side requiredness is still set via `required` or `validate`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "validate",
+      type: "function",
+      description: "A custom check for this option's value, run alongside the type's built-in schema.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+## Type-specific fields
+
+Some types have extra fields on top of the common ones:
+
+- **`string`:** `minLength`, `maxLength`, `pattern`
+- **`url`:** `protocols`
+- **`number`:** `min`, `max`, `int`, `positive`, `nonnegative`, `multipleOf`
+- **`enum`:** `values`, `valueLabels`
+
+<MedusaTypeList
+  sectionTitle="Options"
+  types={[
+    {
+      name: "minLength",
+      type: "number",
+      description: "The string's minimum length.\nApplies only when `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "maxLength",
+      type: "number",
+      description: "The string's maximum length.\nApplies only when `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "pattern",
+      type: "string",
+      description: "A regex pattern to validate the string against.\nApplies only when `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "protocols",
+      type: "string[]",
+      description: "Restricts the allowed URL schemes, for example `[\"https\"]`. Any protocol is allowed when omitted.\nApplies only when `type: \"url\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "min",
+      type: "number",
+      description: "The minimum value.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "max",
+      type: "number",
+      description: "The maximum value.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "int",
+      type: "boolean",
+      description: "Requires an integer value.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "positive",
+      type: "boolean",
+      description: "Requires a value greater than zero.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "nonnegative",
+      type: "boolean",
+      description: "Requires a value of zero or more.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "multipleOf",
+      type: "number",
+      description: "Requires the value to be a multiple of this number.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "values",
+      type: "string[]",
+      description: "The list of allowed values. Required.\nApplies only when `type: \"enum\"`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "valueLabels",
+      type: "object",
+      description: "i18n label keys for individual `values`.\nApplies only when `type: \"enum\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
 ### Generated CRUD and validation
 
-The module generates the admin CRUD API from the descriptor and validates every write. Validation covers per-option rules, such as types, ranges, and patterns, along with cross-section rules that span the whole configuration. There is nothing to build for each integration.
+The module generates the CRUD API from the descriptor and validates every write. Validation covers per-option rules, such as types, ranges, and patterns, along with cross-section rules that span the whole configuration. There is nothing to build for each integration.
+
+Cross-section rules are declared through the descriptor's `validate`. Unlike a single option's `validate`, it receives the whole assembled config and can flag an issue on any field:
+
+```ts title="providers/integration-acme/services/acme-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  validate: (full, { addIssue }) => {
+    if (full.mode === "webhook" && !full.webhookSecret) {
+      addIssue({ path: ["webhookSecret"], message: "Required when mode is \"webhook\"" })
+    }
+  },
+})
+```
+
+Unlike `required` or an option's own `validate`, this rule only runs during full validation (checking whether the integration is ready to be enabled), not when a single section is saved.
 
 ### Enabled and complete
 
@@ -101,19 +406,67 @@ Options become live only when the integration is both enabled and complete, mean
 
 ### Secrets and encryption
 
-Options marked `secret` are encrypted at rest with AES-256-GCM and never reach the browser. The admin API masks them and reports only whether each one is set. Saving a secret as blank keeps its stored value instead of clearing it.
+Options marked `secret` are encrypted at rest with AES-256-GCM and never reach the browser. The CRUD API masks them and reports only whether each one is set. Saving a secret as blank keeps its stored value instead of clearing it.
+
+Encryption needs a key. Set it as `encryptionKey` when you register the module in `medusa-config.ts`:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          // ...
+        ],
+      },
+    },
+  ],
+})
+```
+
+The module derives this key once, the first time it's needed, and reuses it for every registered integration's `secret` fields from then on. Set the same value as an environment variable:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+The key can be any non-empty string, though a high-entropy value is best for production, for example `openssl rand -hex 32`. Without it, the module throws the first time it tries to save or read an integration that has at least one `secret: true` option.
 
 ### Connection test
 
-A descriptor can declare an optional connection test that checks credentials against the third-party service. Admins run it on demand, and a scheduled job re-checks configured integrations periodically.
+A descriptor can declare an optional connection test that checks credentials against the third-party service. Admins run it on demand, and a scheduled job re-checks configured integrations daily.
+
+Add `testConnection` to the descriptor. It receives the already-resolved (decrypted) options and returns a status:
+
+```ts title="providers/integration-acme/services/acme-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  testConnection: async ({ options }) => {
+    const res = await fetch("https://api.acme.com/ping", {
+      headers: { Authorization: `Bearer ${options.apiKey}` },
+    })
+
+    if (!res.ok) {
+      return { status: "failed", message: `Acme responded with ${res.status}` }
+    }
+
+    return { status: "passed" }
+  },
+})
+```
+
+`status` is one of `passed`, `failed`, or `skipped`; the optional `message` is shown to the admin in the Admin next to the test result.
 
 ### Runtime options resolution
 
 Consumers read typed, validated, and decrypted options, with descriptor defaults applied. An incomplete or disabled integration resolves to nothing rather than partial data. Resolved options are cached briefly and refreshed whenever the configuration changes.
 
-## Admin UI generation
+## UI generation
 
-The module generates the admin UI for an integration from its descriptor, so there are no pages to build.
+The module generates the UI for an integration from its descriptor, so there are no pages to build.
 
 ### Sections
 
@@ -121,16 +474,27 @@ Options are grouped into settings sections and rendered with Medusa's [LayoutCom
 
 ### Custom sections
 
-When the generated Admin UI is not enough, you can build any UI for your options with custom admin widgets. These are standard Medusa admin widgets built on the same `defineWidgetConfig` and injection-zone mechanism you already use elsewhere, so there's nothing new to learn. The module exposes injection zones on each integration's page (for example `gorgo.integration.<identifier>.main.after`), and a widget targeting one of them receives the resolved `providerId` and reads and writes the integration's options directly.
+When the generated UI is not enough, you can build any UI for your options with custom admin widgets. These are standard Medusa admin widgets built on the same `defineWidgetConfig` and injection-zone mechanism you already use elsewhere, so there's nothing new to learn. The module exposes injection zones on each integration's page (for example `gorgo.integration.<identifier>.main.after`), and a widget targeting one of them receives the resolved `providerId` and reads and writes the integration's options directly.
 
 ### Localization
 
 Descriptor labels, hints, and titles are i18n keys. Ship translations with your integration and the settings UI is localized automatically.
 
-This builds on Medusa's standard admin i18n, so there's nothing new to learn. Register your translations the usual way and the keys resolve against the admin's active language, falling back to English when a key is missing. Custom widgets localize the same way, using the same message catalog as the generated form.
+This builds on Medusa's standard i18n, so there's nothing new to learn. Register your translations the usual way and the keys resolve against the admin's active language, falling back to English when a key is missing. Custom widgets localize the same way, using the same message catalog as the generated form.
 
 ## Next steps
 
-- [Reading Options](/medusa-modules/integration/reading-options)
-- [Migrate a Provider to the Integration Module](/medusa-modules/integration/migrate-provider-to-integration-module)
-- [Admin User guide](/medusa-modules/integration/manage-integrations)
+<CardList items={[
+  {
+    title: "Reading Options",
+    href: "/medusa-modules/integration/reading-options"
+  },
+  {
+    title: "Migrate a Medusa Module Provider to the Integration Module",
+    href: "/medusa-modules/integration/migrate-provider-to-integration-module"
+  },
+  {
+    title: "Manage Integrations in Medusa Admin",
+    href: "/medusa-modules/integration/manage-integrations"
+  }
+]}/>
