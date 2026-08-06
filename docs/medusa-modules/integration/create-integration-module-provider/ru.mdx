@@ -1,0 +1,265 @@
+---
+title: "Создание провайдера Модуля интеграций Medusa"
+description: "Как создать провайдер Модуля интеграций и какие методы в нём реализовать: дескриптор, identifier, validateOptions, testConnection и регистрация в medusa-config.ts."
+---
+
+# {frontmatter.title}
+
+В этом руководстве вы узнаете, как создать провайдер Medusa для управления своими настройками через [Модуль интеграций](/medusa-modules/integration).
+
+<Note type="info" title="Что такое Модуль интеграций?">
+
+Модуль интеграций позволяет любому плагину описывать свои параметры в виде схемы, а администраторам магазина настраивать их в Admin, без правок `medusa-config` и без повторного развёртывания приложения Medusa. Он генерирует UI, предоставляет CRUD API и валидацию, поэтому вам не нужно писать свои модели данных, роуты, формы или воркфлоу.
+
+</Note>
+
+## Пример реализации
+
+При разработке своего провайдера Модуля интеграций бывает полезно посмотреть, как устроен готовый провайдер.
+
+Если вам нужен пример реальной реализации, посмотрите [провайдер платежей YooKassa в репозитории Medusa Integrations](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/payment-yookassa).
+
+## 1. Создайте директорию провайдера
+
+Начните с создания новой директории для вашего провайдера Модуля интеграций. Для плагина она размещается в `src/providers`, например `src/providers/integration-my`.
+
+## 2. Создайте сервис провайдера Модуля интеграций
+
+Создайте файл `src/providers/integration-my/services/my-integration.ts`, который объявляет дескриптор интеграции и сам сервис.
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import {
+  AbstractIntegrationProvider
+} from "@gorgo/medusa-integration"
+
+class MyIntegrationProvider extends AbstractIntegrationProvider {
+  // TODO add methods
+}
+
+export default MyIntegrationProvider
+```
+
+Родительский класс, который вы расширяете здесь, `AbstractIntegrationProvider`, абстрактный, поэтому подкласс обязан реализовать его свойство `descriptor` (объявленное через `get`). Классу также нужен `static identifier`: на него рассчитывает загрузчик.
+
+### identifier
+
+Каждый провайдер Модуля интеграций имеет уникальный идентификатор. По нему администратор настраивает провайдер, а потребитель получает его параметры.
+
+#### Пример
+
+```ts title="providers/integration-my/services/my-integration.ts"
+class MyIntegrationProvider extends AbstractIntegrationProvider {
+  static identifier = "my"
+  // ...
+}
+```
+
+Базовый класс читает это статическое поле в методе `getIdentifier()` во время выполнения, а загрузчик использует его, чтобы собрать ключ контейнера, под которым регистрируется ваш инстанс: `int_<identifier>_<id>`, либо просто `int_<identifier>` без id.
+
+### descriptor
+
+Класс провайдера обязан реализовать свойство `descriptor`. Дескриптор содержит единое описание параметров, их группировку в секции настроек и метод проверки соединения (опционально). Создайте его через `defineIntegration`.
+
+<Note type="default" title="">
+
+Общий обзор дескриптора смотрите в разделе [Основные концепции](/medusa-modules/integration/concepts). Полный список полей `options` (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate` и другие) объявлен в экспортируемом типе `OptionDef`.
+
+</Note>
+
+#### Пример
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import {
+  AbstractIntegrationProvider,
+  defineIntegration,
+  z
+} from "@gorgo/medusa-integration"
+
+const descriptor = defineIntegration({
+  category: "payment",
+  displayName: "my.name",
+  options: {
+    apiKey: {
+      type: "string",
+      control: "secret",
+      secret: true,
+      required: true,
+      label: "my.apiKey"
+    },
+    sandbox: {
+      type: "boolean",
+      control: "switch",
+      default: false,
+      label: "my.sandbox"
+    },
+  },
+  sections: [
+    {
+      id: "credentials",
+      title: "my.credentials",
+      options: ["apiKey", "sandbox"]
+    },
+  ],
+})
+
+export type MyOptions = z.infer<typeof descriptor.optionsSchema>
+
+export class MyIntegrationProvider extends AbstractIntegrationProvider {
+  // ...
+  get descriptor() {
+    return descriptor
+  }
+}
+
+export default MyIntegrationProvider
+```
+
+`MyOptions` описывает итоговый набор параметров: `defineIntegration` собирает `optionsSchema` из каталога `options`, и поскольку у `apiKey` указан `required`, а у `sandbox` задан `default`, оба поля в `MyOptions` становятся обязательными.
+
+<Note type="default" title="">
+
+В отличие от других провайдеров Medusa, конструктор переопределять не нужно. Загрузчик передаёт id инстанса в базовый класс, а параметры провайдер запрашивает у модуля во время выполнения, а не получает через конструктор (см. [Шаг 5](#5-протестируйте)).
+
+</Note>
+
+### validateOptions
+
+Как и другие провайдеры Medusa, провайдер Модуля интеграций может объявить статический `validateOptions`, чтобы проверить свою конфигурацию из `medusa-config.ts` уже при загрузке приложения.
+
+#### Пример
+
+```ts title="providers/integration-my/services/my-integration.ts"
+class MyIntegrationProvider extends AbstractIntegrationProvider {
+  // ...
+  static validateOptions(options: Record<string, unknown>) {
+    // необязательная fail-fast проверка options.providers[].options
+  }
+}
+```
+
+Собственный `validateOptions` базового класса ничего не делает (`(): void | never {}`), поэтому переопределять его не обязательно. Тип возврата `void | never` показывает, что метод либо ничего не возвращает, либо выбрасывает исключение, чтобы прервать загрузку.
+
+<Note type="default" title="">
+
+На практике `options.providers[].options` у провайдера Модуля интеграций почти всегда `{}`. Реальные настройки администратор задаёт в Admin, а не в `medusa-config.ts`, поэтому `validateOptions` здесь нужен реже, чем у других провайдеров Medusa.
+
+</Note>
+
+### testConnection
+
+В отличие от `validateOptions`, который проверяет конфигурацию провайдера в `medusa-config.ts`, `testConnection` проверяет сами параметры интеграции (например, API-ключ), обращаясь к стороннему сервису. Администратор запускает эту проверку из Admin, а запланированная задача ежедневно перепроверяет настроенные интеграции. Объявите её прямо в дескрипторе.
+
+#### Пример
+
+```ts title="providers/integration-my/services/my-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  testConnection: async ({ options }) => {
+    const res = await fetch("https://api.my.com/ping", {
+      headers: { Authorization: `Bearer ${options.apiKey}` },
+    })
+
+    return res.ok
+      ? { status: "passed" }
+      : { status: "failed", message: `My responded with ${res.status}` }
+  },
+})
+```
+
+`status` принимает одно из значений `"passed" | "failed" | "skipped"`. Возврат `{ status: "failed", message }` не считается исключением: кнопка «Проверить соединение» в Admin и ежедневная задача воспринимают это как обычный результат, и только настоящее исключение фиксируется отдельно, со статусом `errored`.
+
+## 3. Создайте файл определения провайдера
+
+Создайте файл `src/providers/integration-my/index.ts` со следующим содержимым:
+
+```ts title="providers/integration-my/index.ts"
+import { ModuleProvider } from "@medusajs/framework/utils"
+import { INTEGRATION_MODULE } from "@gorgo/medusa-integration"
+import MyIntegrationProvider from "./services/my-integration"
+
+export default ModuleProvider(INTEGRATION_MODULE, {
+  services: [MyIntegrationProvider],
+})
+```
+
+Это экспортирует определение провайдера, указывая, что `MyIntegrationProvider` является его сервисом.
+
+## 4. Подключите провайдер
+
+Чтобы использовать провайдер Модуля интеграций, добавьте его в массив `providers` модуля интеграций в `medusa-config.ts`:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "./src/providers/integration-my",
+            id: "my-1",
+            options: {},
+          },
+        ],
+      },
+    },
+    // ...
+  ],
+})
+```
+
+Именно эта запись заставляет загрузчик создать инстанс `MyIntegrationProvider`, передав в конструктор `options` и `id` из этой регистрации, поэтому `getInstanceId()` возвращает `"my-1"`.
+
+<Note type="warning">
+
+У провайдера Модуля интеграций вы задаёте параметр `id`, из него модуль собирает итоговый идентификатор инстанса вида `int_<identifier>_<id>`. Без `id` провайдер регистрируется как единственный инстанс с ключом `int_<identifier>`. Если провайдер Модуля интеграций поддерживает несколько инстансов, то у каждого будет свой `id`.
+
+</Note>
+
+Далее добавьте секретный ключ шифрования в переменные окружения. Модуль интеграций использует его, чтобы зашифровать секреты перед сохранением в базу данных:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+Подходит любое непустое значение: модуль преобразует его через SHA-256 в 32-байтовый ключ AES-256-GCM, поэтому используйте значение с высокой энтропией, например `openssl rand -hex 32`.
+
+## 5. Протестируйте
+
+Запустите сервер и откройте **Настройки → Интеграции** в Medusa Admin. Интеграция появится в списке. Заполните параметры и нажмите **Проверить соединение**, чтобы вызвать `testConnection`.
+
+Чтобы прочитать сохранённые параметры, используйте `resolveIntegrationOptions`, передав тот же `identifier`, который объявляет ваш класс провайдера:
+
+```ts title="providers/payment-my/services/my-payment.ts"
+import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
+import type { MyOptions } from "../../integration-my/services/my-integration"
+
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my",
+})
+```
+
+Возвращённые `options` типизированы как `MyOptions`, уже расшифрованные и проверенные, а по умолчанию вызов выбрасывает `MedusaError`, если интеграция не настроена, выключена или не заполнена. Так параметры читает изолированный провайдер; для роута, подписчика или шага воркфлоу способ другой, он разобран в разделе [Использование провайдера Модуля интеграций](/medusa-modules/integration/reading-options).
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Основные концепции",
+    href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "Чтение параметров",
+    href: "/medusa-modules/integration/reading-options"
+  },
+  {
+    title: "Миграция провайдера модуля Medusa на Модуль интеграций",
+    href: "/medusa-modules/integration/migrate-provider-to-integration-module"
+  },
+  {
+    title: "Управление интеграциями в Medusa Admin",
+    href: "/medusa-modules/integration/manage-integrations"
+  }
+]}/>
