@@ -1,6 +1,6 @@
 ---
-title: "Создание провайдера модуля Medusa для Модуля интеграций"
-description: "Как создать провайдер интеграции и методы, которые в нём нужно реализовать: дескриптор, identifier, testConnection и регистрация в medusa-config.ts."
+title: "Создание провайдера Модуля интеграций Medusa"
+description: "Как создать провайдер Модуля интеграции и методы, которые в нём нужно реализовать: дескриптор, identifier, testConnection и регистрация в medusa-config.ts."
 ---
 
 # {frontmatter.title}
@@ -15,92 +15,108 @@ description: "Как создать провайдер интеграции и �
 
 ## Пример реализации
 
-При реализации провайдера интеграции полезно смотреть на то, как это сделано в существующих провайдерах. Полный код провайдера модуля фулфилмента ApiShip после миграции доступен в репозитории [`medusa-integrations`](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/fulfillment-apiship).
+При разработке своего провайдера Модуля интеграций бывает полезно посмотреть, как устроен готовый провайдер.
+
+Если вам нужен пример реальной реализации, посмотрите [провайдер платежей YooKassa в репозитории Medusa Integrations](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/payment-yookassa).
 
 ## 1. Создайте директорию провайдера
 
-Начните с создания новой директории для вашего провайдера интеграции. Для плагина она размещается в `src/providers`, например `src/providers/integration-acme`.
+Начните с создания новой директории для вашего провайдера интеграции. Для плагина она размещается в `src/providers`, например `src/providers/integration-my`.
 
 ## 2. Создайте сервис провайдера интеграции
 
-Создайте файл `src/providers/integration-acme/services/acme-integration.ts`, который объявляет дескриптор интеграции и сам сервис.
+Создайте файл `src/providers/integration-my/services/my-integration.ts`, который объявляет дескриптор интеграции и сам сервис.
 
-### Дескриптор
+```ts title="providers/integration-my/services/my-integration.ts"
+import {
+  AbstractIntegrationProvider
+} from "@gorgo/medusa-integration"
 
-Дескриптор: единое описание параметров, их группировки в секции настроек и (опционально) проверки соединения. Создаётся через `defineIntegration`:
+class MyIntegrationProvider extends AbstractIntegrationProvider {
+  // TODO add methods
+}
 
-```ts title="providers/integration-acme/services/acme-integration.ts"
-import { defineIntegration, z } from "@gorgo/medusa-integration"
-
-const descriptor = defineIntegration({
-  category: "payment",
-  displayName: "acme.name",
-  options: {
-    apiKey: {
-      type: "string",
-      control: "secret",
-      secret: true,
-      required: true,
-      label: "acme.apiKey"
-    },
-    sandbox: {
-      type: "boolean",
-      control: "switch",
-      default: false,
-      label: "acme.sandbox"
-    },
-  },
-  sections: [
-    {
-      id: "credentials",
-      title: "acme.credentials",
-      options: ["apiKey", "sandbox"]
-    },
-  ],
-})
-
-export type AcmeOptions = z.infer<typeof descriptor.optionsSchema>
+export default MyIntegrationProvider
 ```
-
-<Note type="default" title="">Полный список полей `options` (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate` и другие) см. в разделе [Основные концепции](/medusa-modules/integration/concepts#поля-определения-параметра).</Note>
 
 ### identifier
 
-Каждый провайдер интеграции имеет уникальный идентификатор, по которому администратор его настраивает, а потребитель резолвит параметры:
+Каждый провайдер интеграции имеет уникальный идентификатор, по которому администратор его настраивает, а потребитель резолвит параметры
 
-```ts
-class AcmeIntegration extends AbstractIntegrationProvider {
-  static identifier = "acme"
+#### Пример
+
+```ts title="providers/integration-my/services/my-integration.ts"
+class MyIntegrationProvider extends AbstractIntegrationProvider {
+  static identifier = "my"
   // ...
 }
 ```
 
 ### descriptor
 
-Класс провайдера обязан реализовать свойство `descriptor`, возвращающее объявленный выше дескриптор:
+Класс провайдера обязан реализовать свойство `descriptor`. Дескриптор содержит единое описание параметров, их группировку в секции настроек и метод проверки соединения (опционально). Он оздаётся через `defineIntegration`.
 
-```ts
-import { AbstractIntegrationProvider } from "@gorgo/medusa-integration"
+<Note type="default" title="">Полный список полей `options` (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate` и другие) см. в разделе [Основные концепции](/medusa-modules/integration/concepts#поля-определения-параметра).</Note>
 
-export class AcmeIntegration extends AbstractIntegrationProvider {
-  static identifier = "acme"
 
+#### Пример
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import {
+  AbstractIntegrationProvider,
+  defineIntegration,
+  z
+} from "@gorgo/medusa-integration"
+
+const descriptor = defineIntegration({
+  category: "payment",
+  displayName: "my.name",
+  options: {
+    apiKey: {
+      type: "string",
+      control: "secret",
+      secret: true,
+      required: true,
+      label: "my.apiKey"
+    },
+    sandbox: {
+      type: "boolean",
+      control: "switch",
+      default: false,
+      label: "my.sandbox"
+    },
+  },
+  sections: [
+    {
+      id: "credentials",
+      title: "my.credentials",
+      options: ["apiKey", "sandbox"]
+    },
+  ],
+})
+
+export type MyOptions = z.infer<typeof descriptor.optionsSchema>
+
+export class MyIntegrationProvider extends AbstractIntegrationProvider {
+  // ...
   get descriptor() {
     return descriptor
   }
 }
 
-export default AcmeIntegration
+export default MyIntegrationProvider
 ```
 
 <Note type="default" title="">В отличие от других провайдеров Medusa, конструктор переопределять не нужно: базовый класс сам получает id инстанса из контейнера, а параметры провайдер получает не через конструктор, а резолвит из модуля в рантайме (см. [Шаг 5](#5-протестируйте)).</Note>
 
 ### validateOptions
 
-Как и другие провайдеры Medusa, провайдер интеграции может объявить статический `validateOptions`, чтобы падать на старте, если конфиг в `medusa-config.ts` некорректен:
+Как и другие провайдеры Medusa, провайдер интеграции может объявить статический `validateOptions`, чтобы падать на старте, если конфиг в `medusa-config.ts` некорректен.
 
-```ts
-class AcmeIntegration extends AbstractIntegrationProvider {
+#### Пример
+
+```ts title="providers/integration-my/services/my-integration.ts"
+class MyIntegrationProvider extends AbstractIntegrationProvider {
   // ...
   static validateOptions(options: Record<string, unknown>) {
     // необязательная fail-fast проверка options.providers[].options
@@ -112,38 +128,40 @@ class AcmeIntegration extends AbstractIntegrationProvider {
 
 ### testConnection
 
-В отличие от `validateOptions`, который проверяет конфиг провайдера в `medusa-config.ts`, `testConnection` проверяет сами параметры интеграции (например, API-ключ) против стороннего сервиса. Администратор запускает её из Admin. Объявляется прямо в дескрипторе:
+В отличие от `validateOptions`, который проверяет конфиг провайдера в `medusa-config.ts`, `testConnection` проверяет сами параметры интеграции (например, API-ключ) против стороннего сервиса. Администратор запускает её из Admin. Объявляется прямо в дескрипторе.
 
-```ts
+#### Пример
+
+```ts title="providers/integration-my/services/my-integration.ts"
 const descriptor = defineIntegration({
   // ...
   testConnection: async ({ options }) => {
-    const res = await fetch("https://api.acme.com/ping", {
+    const res = await fetch("https://api.my.com/ping", {
       headers: { Authorization: `Bearer ${options.apiKey}` },
     })
 
     return res.ok
       ? { status: "passed" }
-      : { status: "failed", message: `Acme responded with ${res.status}` }
+      : { status: "failed", message: `My responded with ${res.status}` }
   },
 })
 ```
 
 ## 3. Создайте файл определения провайдера
 
-Создайте файл `src/providers/integration-acme/index.ts` со следующим содержимым:
+Создайте файл `src/providers/integration-my/index.ts` со следующим содержимым:
 
-```ts title="providers/integration-acme/index.ts"
+```ts title="providers/integration-my/index.ts"
 import { ModuleProvider } from "@medusajs/framework/utils"
 import { INTEGRATION_MODULE } from "@gorgo/medusa-integration"
-import AcmeIntegration from "./services/acme-integration"
+import MyIntegrationProvider from "./services/my-integration"
 
 export default ModuleProvider(INTEGRATION_MODULE, {
-  services: [AcmeIntegration],
+  services: [MyIntegrationProvider],
 })
 ```
 
-Это экспортирует определение провайдера, указывая, что `AcmeIntegration` является его сервисом.
+Это экспортирует определение провайдера, указывая, что `MyIntegrationProvider` является его сервисом.
 
 ## 4. Подключите провайдер
 
@@ -159,8 +177,8 @@ module.exports = defineConfig({
         encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
         providers: [
           {
-            resolve: "./src/providers/integration-acme",
-            id: "acme-1",
+            resolve: "./src/providers/integration-my",
+            id: "my-1",
             options: {},
           },
         ],
@@ -189,12 +207,12 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
 
 Чтобы прочитать сохранённые параметры используйте `resolveIntegrationOptions`, передав тот же `identifier`, что объявлен в дескрипторе:
 
-```ts title="providers/payment-acme/services/acme-payment.ts"
+```ts title="providers/payment-my/services/my-payment.ts"
 import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
-import type { AcmeOptions } from "../../integration-acme/services/acme-integration"
+import type { MyOptions } from "../../integration-my/services/my-integration"
 
-const options = await resolveIntegrationOptions<AcmeOptions>({
-  identifier: "acme",
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my",
 })
 ```
 
