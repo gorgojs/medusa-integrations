@@ -1,0 +1,225 @@
+---
+title: "Create an Integration Module Provider"
+description: "How to create an Integration Module provider and which methods to implement in it: the descriptor, identifier, validateOptions, testConnection, and registration in medusa-config.ts."
+---
+
+# {frontmatter.title}
+
+In this guide you'll learn how to create a Medusa provider that manages its settings through the [Integration Module](/medusa-modules/integration).
+
+<Note type="info" title="What is the Integration Module?">
+
+The Integration Module lets any plugin describe its options as a schema, and store admins configure them in the Admin, with no `medusa-config` edits and no redeploy of the Medusa app. It generates the UI, provides a CRUD API and validation, so you don't have to write your own data models, routes, forms, or workflows.
+
+</Note>
+
+## Implementation example
+
+When you write your own Integration Module provider, it helps to see how a finished one is put together.
+
+For a real implementation, read the [YooKassa payment provider in the Medusa Integrations repository](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/payment-yookassa).
+
+## 1. Create the provider directory
+
+Start by creating a new directory for your Integration Module provider. In a plugin it goes under `src/providers`, for example `src/providers/integration-my`.
+
+## 2. Create the Integration Module provider service
+
+Create the file `src/providers/integration-my/services/my-integration.ts`, which declares the integration's descriptor and the service itself.
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import {
+  AbstractIntegrationProvider
+} from "@gorgo/medusa-integration"
+
+class MyIntegrationProvider extends AbstractIntegrationProvider {
+  // TODO add methods
+}
+
+export default MyIntegrationProvider
+```
+
+### identifier
+
+Every Integration Module provider has a unique identifier. The store admin configures the provider under it, and a consumer reads the provider's options by the same one.
+
+#### Example
+
+```ts title="providers/integration-my/services/my-integration.ts"
+class MyIntegrationProvider extends AbstractIntegrationProvider {
+  static identifier = "my"
+  // ...
+}
+```
+
+### descriptor
+
+The provider class must implement the `descriptor` property. The descriptor holds a single declaration of the options, how they group into settings sections, and an optional connection test. You create it with `defineIntegration`.
+
+<Note type="default" title="">See [General Concepts](/medusa-modules/integration/concepts) for an overview of the descriptor. The full list of `options` fields (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate`, and others) is declared in the exported `OptionDef` type.</Note>
+
+#### Example
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import {
+  AbstractIntegrationProvider,
+  defineIntegration,
+  z
+} from "@gorgo/medusa-integration"
+
+const descriptor = defineIntegration({
+  category: "payment",
+  displayName: "my.name",
+  options: {
+    apiKey: {
+      type: "string",
+      control: "secret",
+      secret: true,
+      required: true,
+      label: "my.apiKey"
+    },
+    sandbox: {
+      type: "boolean",
+      control: "switch",
+      default: false,
+      label: "my.sandbox"
+    },
+  },
+  sections: [
+    {
+      id: "credentials",
+      title: "my.credentials",
+      options: ["apiKey", "sandbox"]
+    },
+  ],
+})
+
+export type MyOptions = z.infer<typeof descriptor.optionsSchema>
+
+export class MyIntegrationProvider extends AbstractIntegrationProvider {
+  // ...
+  get descriptor() {
+    return descriptor
+  }
+}
+
+export default MyIntegrationProvider
+```
+
+<Note type="default" title="">Unlike other Medusa providers, you don't override the constructor. The loader passes the instance id into the base class, and the provider requests its options from the module at runtime instead of receiving them through the constructor (see [Step 5](#5-test-it-out)).</Note>
+
+### validateOptions
+
+Like other Medusa providers, an Integration Module provider can declare a static `validateOptions` to check its `medusa-config.ts` configuration at load time.
+
+#### Example
+
+```ts title="providers/integration-my/services/my-integration.ts"
+class MyIntegrationProvider extends AbstractIntegrationProvider {
+  // ...
+  static validateOptions(options: Record<string, unknown>) {
+    // optional fail-fast check of options.providers[].options
+  }
+}
+```
+
+<Note type="default" title="">In practice, `options.providers[].options` is almost always `{}` for an Integration Module provider. The store admin sets the real settings in the Admin rather than in `medusa-config.ts`, so `validateOptions` matters less here than it does for other Medusa providers.</Note>
+
+### testConnection
+
+Unlike `validateOptions`, which checks the provider's configuration in `medusa-config.ts`, `testConnection` checks the integration's own options, such as an API key, against the third-party service. The store admin runs it from the Admin, and a scheduled job re-checks configured integrations daily. You declare it directly in the descriptor.
+
+#### Example
+
+```ts title="providers/integration-my/services/my-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  testConnection: async ({ options }) => {
+    const res = await fetch("https://api.my.com/ping", {
+      headers: { Authorization: `Bearer ${options.apiKey}` },
+    })
+
+    return res.ok
+      ? { status: "passed" }
+      : { status: "failed", message: `My responded with ${res.status}` }
+  },
+})
+```
+
+## 3. Create the provider definition file
+
+Create the file `src/providers/integration-my/index.ts` with the following content:
+
+```ts title="providers/integration-my/index.ts"
+import { ModuleProvider } from "@medusajs/framework/utils"
+import { INTEGRATION_MODULE } from "@gorgo/medusa-integration"
+import MyIntegrationProvider from "./services/my-integration"
+
+export default ModuleProvider(INTEGRATION_MODULE, {
+  services: [MyIntegrationProvider],
+})
+```
+
+This exports the provider definition, declaring `MyIntegrationProvider` as its service.
+
+## 4. Register the provider
+
+To use your Integration Module provider, add it to the Integration Module's `providers` array in `medusa-config.ts`:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "./src/providers/integration-my",
+            id: "my-1",
+            options: {},
+          },
+        ],
+      },
+    },
+    // ...
+  ],
+})
+```
+
+<Note type="warning">
+
+You set an `id` option on the Integration Module provider, and the module assembles the final instance key `int_<identifier>_<id>` from it. Without an `id`, the provider registers as the single instance under the key `int_<identifier>`. If the Integration Module provider supports multiple instances, each one gets its own `id`.
+
+</Note>
+
+Next, add the secret encryption key to your environment variables. The Integration Module uses it to encrypt secrets before saving them to the database:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+## 5. Test it out
+
+Start the server and open **Settings → Integrations** in Medusa Admin. Your integration appears in the list. Fill in the options and click **Test connection** to run `testConnection`.
+
+To read the saved options, use `resolveIntegrationOptions` and pass the same `identifier` your provider class declares:
+
+```ts title="providers/payment-my/services/my-payment.ts"
+import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
+import type { MyOptions } from "../../integration-my/services/my-integration"
+
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my",
+})
+```
+
+How you read them depends on where your code runs: an isolated provider, a route or a subscriber with access to the app container, or a workflow step. All three are covered in [Using an Integration Module provider](/medusa-modules/integration/reading-options).
+
+## References
+
+- [General Concepts](/medusa-modules/integration/concepts)
+- [Reading Options](/medusa-modules/integration/reading-options)
+- [Migrate a Medusa Module Provider to the Integration Module](/medusa-modules/integration/migrate-provider-to-integration-module)
+- [Manage Integrations in Medusa Admin](/medusa-modules/integration/manage-integrations)
