@@ -20,14 +20,28 @@ description: "One sentence."
 ## `<Note>`
 
 ```mdx
-<Note type="default" title="">Short inline note.</Note>
+<Note type="default" title="">
 
-<Note type="warning">A gotcha worth calling out on its own paragraph.</Note>
+Short inline note.
 
-<Note type="success" title="Модуль интеграций">Feature-flag style callout, used on plugin landing pages.</Note>
+</Note>
+
+<Note type="warning">
+
+A gotcha worth calling out on its own paragraph.
+
+</Note>
+
+<Note type="success" title="Модуль интеграций">
+
+Feature-flag style callout, used on plugin landing pages.
+
+</Note>
 
 <Note type="info" title="Что такое Модуль интеграций?">
+
 Multi-paragraph note — blank line after the opening tag, blank line before the closing tag.
+
 </Note>
 ```
 
@@ -95,11 +109,11 @@ A different component, for a plugin's own **real customers**, not for the module
 ```mdx
 <UsedByList items={[
   {
-    image: "https://static.gorgojs.com/www/medusa-cases/solidno/solidno-logo.svg",
-    alt: "Логотип solidno.shop",
-    name: "Solidno",
-    href: "https://solidno.shop/",
-    displayUrl: "solidno.shop",
+    image: "https://static.gorgojs.com/www/medusa-cases/shop-example/example-logo.svg",
+    alt: "Логотип shop.example",
+    name: "Shop Example",
+    href: "https://shop.example/",
+    displayUrl: "shop.example",
     description: "Бренд мужской одежды",
   }
 ]}/>

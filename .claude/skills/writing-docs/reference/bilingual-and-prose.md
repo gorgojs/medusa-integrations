@@ -34,6 +34,100 @@ Don't produce a word-for-word rendering. Write what a native speaker would natur
 
 When a rough draft in one language is handed to you as a *pattern* to follow (heading order, section names, what to cover), that's a structural instruction, not a translation request — reproduce the structure, but still write natural, independent prose for the content in each language.
 
+## Terminology: terms that stay transliterated in Russian
+
+These docs are written for Russian-speaking Medusa developers, who say the transliterated term, not
+the dictionary translation. Treat the table below as a **do-not-translate list**: when the English
+side uses one of these, the Russian side uses the transliteration, and you never "improve" an
+existing transliteration into its formal Russian equivalent.
+
+| EN | RU | Notes |
+|---|---|---|
+| workflow | воркфлоу | Indeclinable: `внутри воркфлоу`, `запускает воркфлоу`, `без воркфлоу` |
+| route / API route | роут / API-роут | Declines normally (`роуты`, `роута`, `роутов`). `API-роут` is hyphenated |
+| instance | инстанс | Declines normally. Also in compounds: `идентификатор инстанса` |
+| provider | провайдер | |
+| plugin | плагин | |
+| module | модуль | |
+| container | контейнер | `изолированный контейнер модуля`, `контейнер приложения` |
+| descriptor | дескриптор | |
+| webhook | вебхук | One word, no hyphen |
+| hook (React) | хук | Only the React sense. A webhook URL path is `вебхук` |
+| resolver | резолвер | The **noun** only. The verb `резолвить` is not accepted, see "Transliterations that are *not* accepted" below |
+| cache | кэш | `кэширование`, `кэшируются` |
+| widget | виджет | |
+| token | токен | |
+| migration | миграция | |
+| backend | бэкенд | |
+
+Terms that go the **other** way — translate these, don't transliterate:
+
+| EN | RU | Notes |
+|---|---|---|
+| storefront | витрина (магазина) | On a page's first mention, gloss the English once: `storefront (витрину магазина)`. After that, just `витрина`. Keep `medusa-storefront` as-is in paths and repo names |
+| subscriber | подписчик | |
+| scheduled job | запланированная задача | |
+| admin (dashboard) | панель администратора / администратор | Not `админка` |
+| settings | настройки | |
+| option | параметр *or* опция | Split by sense, and the split is deliberate: `параметр` is the default in running prose (`параметры интеграции`, `Чтение параметров`, `параметры доступа`), `опция` only where the word sits next to the literal identifier (`чтение опций через resolveIntegrationOptions`, `Опция sameSite`, `{ ..., options: {} }`) or labels a UI toggle or a CLI's `[options]` |
+| environment variable | переменная окружения | |
+| deployment | развёртывание | |
+| step | шаг | |
+| cart | корзина | |
+| checkout | оформление заказа | |
+| fallback | резервный | |
+| redirect | редирект *or* перенаправление | Split by sense, and the split is deliberate: `редирект` for the mechanism (`междоменные редиректы`, `этот API-роут обрабатывает редирект`), `перенаправление` for what happens to the buyer (`подготовит покупателя к перенаправлению`) |
+
+Never use these renderings — each one already lost to a transliteration above, and reintroducing it
+splits the vocabulary of the docs:
+
+```
+❌ экземпляр (для instance)   ✅ инстанс
+❌ маршрут (для route)         ✅ роут
+❌ рабочий процесс / сценарий  ✅ воркфлоу
+❌ крючок / перехватчик        ✅ хук
+❌ кеш                         ✅ кэш
+```
+
+### Transliterations that are *not* accepted
+
+An accepted term is one the ecosystem uses as a name for a thing. A transliterated **verb or
+participle** built off an English root is developer slang, and this repo's Russian prose doesn't use
+it — even though the older pages still contain some. Rewrite on touch:
+
+| ❌ Slang | ✅ Write instead |
+|---|---|
+| резолвить, резолвится, резолвнутые опции | получить из контейнера; итоговые опции |
+| рантайм, в рантайме | во время выполнения |
+| рендерит, при рендеринге | отрисовывает; при отрисовке |
+| задеплоить, передеплой | развернуть, повторное развёртывание |
+| смёржит | объединит |
+| прокидывать | передавать |
+| кастомный | собственный |
+| гайд | руководство |
+| конфиг | конфигурация |
+| дефолтный, по дефолту | по умолчанию |
+| из коробки | предоставляется по умолчанию |
+
+The line is the part of speech, not the alphabet: `резолвер` (a named component) stays, `резолвить`
+(a verb) goes; `кэш` stays, `рантайм` goes because it's standing in for a plain phrase Russian
+already has.
+
+Two more standing conventions in the Russian prose:
+
+- **Write `ё`.** The docs use it consistently (`платёжный`, `передаётся`, `развёртывание`, `объём`), so don't drop it to `е`.
+- **A Latin term glued to a Russian suffix takes a hyphen:** `API-роут`, `UI-компонент`, `admin-панель`.
+
+When you hit a term that isn't in either table, check what the existing `ru.mdx` pages already do
+before inventing a rendering:
+
+```bash
+grep -rn "<candidate>" docs --include=ru.mdx | head
+```
+
+Pick whichever form is already established and add it here; a term rendered two ways across the docs
+is worse than either rendering on its own.
+
 ## Voice
 
 Second-person imperative is the default for instructional content: "set X", "add the provider", "you can configure...". Avoid first-person plural ("we", "our") in how-to and reference content — there's rarely a reason to speak as "we" when directly instructing a reader what to do; it belongs, if anywhere, in prose that's explicitly speaking as the project/maintainers about their own decisions, not in step-by-step instructions.

@@ -2,19 +2,64 @@
 
 Docs for a module package itself (currently just `integration`, for `@gorgo/medusa-integration`). Four page kinds, each with its own shape.
 
+## Writing Style
+
+- **Second person**: "You create a workflow..." not "We create..."
+- **Imperative for steps**: "Create the file `src/provider/payment-my/my-payment.ts`..."
+- **Present tense**: "The workflow runs..." not "The workflow will run..."
+- **Concrete examples**: Every concept must have at least one working TypeScript code example
+- **Sandwich every code example**: a lead-in sentence before it, a follow-up paragraph after it
+- **No jargon without explanation**: Define terms on first use
+
+### Sandwiching a code example
+
+The **lead-in** names the situation the code is for, not the code itself — "When your code already has the container, resolve the module and call `getResolvedOptions` directly", not "The example below shows `getResolvedOptions`."
+
+The **follow-up** explains what the code doesn't show on its face: what comes back, its type, what has already been done to it, which case it doesn't cover.
+
+```
+✅ The returned `options` is typed as `AcmeOptions`, already decrypted and validated.
+✅ `getResolvedOptions(identifier, instanceId?)` returns `ResolvedOptions | null`.
+❌ In this example we import the helper, then call it with the identifier, and store the result.
+```
+
+Never narrate the code line by line. If the follow-up only restates what a reader can already read off the block, it's noise — cut it and let the block stand.
+
+Three cases legitimately have no follow-up paragraph, and they're the only ones:
+
+- **A paired block** — a `text title="Structure"` tree or a bare skeleton immediately followed by the implementation it introduces. The pair explains itself; the follow-up belongs after the second block.
+- **A block whose caveat is carried by the `<Note>` right after it.** Don't write a paragraph *and* a `<Note>` saying the same thing.
+- **A pure literal** — an `.env` snippet, a terminal command, a registration entry in `medusa-config.ts` — where the lead-in already stated everything the reader needs.
+
 ## 1. Module landing page — `docs/medusa-modules/<module>/{en,ru}.mdx`
 
 ```
-<div><img .../></div>          — logo
+<div><img .../></div> - module logo
+
 # {frontmatter.title}
-intro paragraph(s)
-<div><video .../></div>        — optional demo video
-## Возможности / Features      — bullet list, one bold lead-in per bullet
+
+- intro paragraph(s)
+- <div><video .../></div> - optional demo video
+
+## Возможности / Features
+
+- bullet list, one bold lead-in per bullet
+
 ---
-## Доступные интеграции / Available Integrations  — <IntegrationCardList> catalog grid, if any
+
+## Доступные интеграции / Available Integrations
+
+- <IntegrationCardList> catalog grid, only if the module has integrations
+
 ---
-## 💬 Поддержка и сообщество / 💬 Support & Community   — Telegram links
-## Дальнейшие шаги / Next steps — <CardList> to every sub-page in this module
+
+## 💬 Поддержка и сообщество / 💬 Support & Community
+
+- Telegram links
+
+## Дальнейшие шаги / Next steps
+
+- <CardList> to every sub-page in this module
 ```
 
 The `## Дальнейшие шаги` `CardList` is the module's table of contents — every page you add under this module must get an entry here, or it's unreachable from the module's own nav.
@@ -25,16 +70,28 @@ Pure orientation, no step-by-step instructions, deliberately light on code — a
 
 ```
 ## <Roles involved>
-## <The central declarative object, with one worked example>
+
+## <The central declarative object>
+
+- one worked example
+
 ## <Where/when this applies>
+
 ## <Identifiers/addressing scheme>
-## <The main lifecycle, intro paragraph>
+
+## <The main lifecycle>
+
+- intro paragraph, then one ### per step
+
 ### <lifecycle step 1>
 ### <lifecycle step 2>
 ### <lifecycle step 3>
 ...
+
 ## <Generated UI / admin surface>
+
 ### <sub-aspect>
+
 ## Дальнейшие шаги / Next steps
 ```
 
@@ -48,28 +105,49 @@ Two different shapes live under this one style, depending on whether the content
 
 ```
 # {frontmatter.title}
-intro
-<Note> pointing to the concept page for anything this guide doesn't re-explain
-## <Topic>                      — a whole capability, e.g. "Хелпер resolveIntegrationOptions"
-### <Sub-case>                  — a specific usage of it
+
+- intro
+- <Note> pointing to the concept page for anything this guide doesn't re-explain
+
+## <Topic>
+
+- a whole capability, e.g. "Хелпер resolveIntegrationOptions"
+
+### <Sub-case>
+
+- one specific usage of that capability
+
 ## <Another topic>
-## Материалы / References       — plain markdown link list, NOT a CardList
+
+## Материалы / References
+
+- plain markdown link list, NOT a CardList
 ```
 
 **Step-based** (`migrate-provider-to-integration-module.mdx`) — for a genuinely linear "do this, then this" migration/setup narrative:
 
 ```
 # {frontmatter.title}
-intro
+
+- intro
+
 ## Зачем <делать это> / Why <do this>
-## Пример <миграции/реализации> / Example   — grounds the guide in one real, named package
-                                               in this repo, not a hypothetical
+
+## Пример <миграции/реализации> / Example
+
+- grounds the guide in one real, named package in this repo, not a hypothetical
+
 ## Шаг 1: <action>
 ## Шаг 2: <action>
-...                                          — flat ## siblings, NOT nested under a topic
-                                               heading, and NOT ### — a step is its own
-                                               top-level section
-## Итог / Result                            — only on a before/after migration narrative
+...
+
+- flat ## siblings, never nested under a wrapping topic heading
+- never ###: a step is its own top-level section
+
+## Итог / Result
+
+- only on a before/after migration narrative
+
 ## Материалы / References
 ```
 
@@ -81,42 +159,51 @@ Used when a page is explicitly modeling itself on one of docs.medusajs.com's own
 
 ```
 # {frontmatter.title}
-intro: "In this document you'll learn how to create X and the methods you must implement."
-<Note> pointing elsewhere for prerequisites/concepts
+
+- intro: "In this document you'll learn how to create X and the methods you must implement."
+- <Note> pointing elsewhere for prerequisites/concepts
 
 ## Пример реализации / Implementation Example
-   Link ONE real, already-shipped example of this kind of thing elsewhere in this repo
-   as the model to read, not a hypothetical.
+
+- link ONE real, already-shipped example of this kind of thing elsewhere in this repo, as the model to read
+- never a hypothetical
 
 ## 1. <Create the directory>
-   One sentence: where the new thing goes on disk.
+
+- one sentence: where the new thing goes on disk
 
 ## 2. <Create the service/main file>
-   Show a bare skeleton first (extends whatever base class, "// TODO add methods", one
-   export) — mirrors the official reference's own incremental-reveal style. Then one
-   ### per method/property the reader must or can implement:
 
-   ### <method or property name>
-   One-sentence explanation, an optional <Note> for a gotcha, then a nested
-   #### Пример / #### Example sub-heading holding just that piece's own code —
-   not the whole skeleton repeated in every sub-section. Repeat this
-   ###-then-####-Пример pair for each method/property being documented.
+- a bare skeleton first: extends whatever base class, "// TODO add methods", one export
+- this mirrors the official reference's own incremental-reveal style
+- then one ### per method/property the reader must or can implement
+
+### <method or property name>
+
+- one-sentence explanation
+- an optional <Note> for a gotcha
+- a nested #### Пример / #### Example sub-heading holding just that piece's own code, not the whole skeleton repeated in every sub-section
+- repeat this ###-then-####-Пример pair for each method/property being documented
 
 ## 3. <Create the definition/registration file>
-   Whatever glues the thing from step 2 into the framework's own registration mechanism.
+
+- whatever glues the thing from step 2 into the framework's own registration mechanism
 
 ## 4. <Register it in the app's config>
-   One <Note type="warning"> for whatever config-placement gotcha the real API has,
-   if it has one — don't invent a warning where the API has none.
+
+- one <Note type="warning"> for whatever config-placement gotcha the real API has
+- don't invent a warning where the API has none
 
 ## 5. Протестируйте / Test it out
-   An observable check (open the relevant Admin screen, or run the thing) followed by
-   a programmatic check, then hand off to whichever guide already covers reading/using
-   the result in depth, rather than re-explaining it here.
+
+- an observable check: open the relevant Admin screen, or run the thing
+- then a programmatic check
+- then hand off to whichever guide already covers reading/using the result in depth, rather than re-explaining it here
 
 ## Материалы / References
-   Plain link list — link to that guide by its own real title, not by an invented
-   paired label (see "Cross-linking" below for where a paired label does belong).
+
+- plain link list
+- link to each guide by its own real title, not by an invented paired label (see "Cross-linking" below for where a paired label does belong)
 ```
 
 Don't mix this with the repo-native `## Шаг N:` style on the same page — pick one.

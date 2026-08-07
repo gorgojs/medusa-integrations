@@ -16,7 +16,7 @@ Skill for writing and updating MDX documentation under `docs/` in this repo. Thi
 - **Never invent a technical claim.** Every fact about behavior (what a field does, what gets encrypted, when a hook runs, what a real registered path is) must be traceable to real source, not inferred from the feature's name. For most module/plugin docs that's `packages/modules/` or `packages/providers/` in this repo; `docs/tools/` pages can document a package that lives outside this repo entirely (`create-medusa-plugin` isn't in `packages/` at all) — find its real source or published docs before writing about it. If you can't find the source, say so instead of guessing.
 - **Never write `# {frontmatter.title}` as anything else.** Every page's H1 is exactly `# {frontmatter.title}` — no page hardcodes its own H1 text, even when the reader-facing title reads like an instruction ("How to Create..."). Put that phrasing in `title` itself.
 - **Don't invent screenshots.** If a step needs one and you don't have a real URL, leave `<!-- TODO: screenshot -->` — see `reference/mdx-components.md` for the two real screenshot conventions in use.
-- **Don't leave a new page unlinked.** A module page needs an entry in its landing page's `Дальнейшие шаги`/`Next steps` `CardList`; a module how-to page also needs a mutual link with any sibling page covering the complementary half of the same workflow, in each page's `## Материалы`/`## References`. When moving or renaming a page, `grep -rl "<old-path>" docs/` for every inbound link — including anchor links into a specific section, not just whole-page links — before considering the move done.
+- **Don't leave a new page unlinked.** A module page needs an entry in its landing page's `Дальнейшие шаги`/`Next steps` (use `CardList` component); a module how-to page also needs a mutual link with any sibling page covering the complementary half of the same workflow, in each page's `## Материалы`/`## References`. When moving or renaming a page, `grep -rl "<old-path>" docs/` for every inbound link — including anchor links into a specific section, not just whole-page links — before considering the move done.
 
 ## Load Reference Files When Needed
 
@@ -27,7 +27,9 @@ Skill for writing and updating MDX documentation under `docs/` in this repo. Thi
 | Which components/props exist, code block and screenshot conventions | `reference/mdx-components.md` |
 | Writing/editing a page under `docs/medusa-modules/<module>/` | `reference/module-docs-style.md` |
 | Writing/editing a page under `docs/medusa-integrations/<plugin>/` or `docs/tools/` | `reference/plugin-docs-style.md` |
-| Checking en/ru parity, prose/voice choices | `reference/bilingual-and-prose.md` |
+| Checking en/ru parity, prose/voice choices, RU terminology glossary | `reference/bilingual-and-prose.md` |
+
+Writing or editing any `ru.mdx` counts as "RU terminology" — load `reference/bilingual-and-prose.md` for the do-not-translate glossary before you write a single Russian sentence.
 
 ## Quick Reference
 
@@ -72,6 +74,8 @@ Anchors are auto-generated per-language from the heading text in that language �
 - [ ] Using em dashes (`—`) in prose — rewrite the sentence to avoid them (an en dash as a bullet-item label separator, `**Label** – text`, is a separate, accepted pattern — see `reference/bilingual-and-prose.md`)
 - [ ] Using passive voice ("настройки задаются", "is created", "can be configured") — write active ("задайте настройки", "you can configure", "call X to create")
 - [ ] Using `e.g.,` / `т.е.` — write `for example` / `например` instead
+- [ ] Translating a term this repo keeps transliterated in Russian (`воркфлоу`, `роут`, `инстанс`, `вебхук`, `дескриптор`, `кэш`) — `экземпляр`, `маршрут`, `рабочий процесс`, `крючок` are all wrong here
+- [ ] The reverse: keeping a transliterated *verb* (`резолвить`, `рендерит`, `задеплоить`, `прокидывать`) or a slang noun (`рантайм`, `кастомный`, `конфиг`, `гайд`) — those get rewritten. Both lists live in `reference/bilingual-and-prose.md`
 - [ ] Mismatching `## Шаг N:` (repo-native step-based tutorial style) with the numbered `## N. Title` reference style (modeled on docs.medusajs.com's own "How to Create a ... Provider" pages) — pick one per page, see `reference/module-docs-style.md`
 - [ ] Adding a fields/options reference table without grouping rows by the thing they gate on (e.g. by `type`) when there are more than ~6 rows
 
