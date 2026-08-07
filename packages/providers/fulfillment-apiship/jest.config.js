@@ -45,6 +45,9 @@ const baseConfig = {
   testEnvironment: "node",
   moduleFileExtensions: ["js", "mjs", "ts", "json"],
   modulePathIgnorePatterns: ["dist/", "<rootDir>/.medusa/"],
+  moduleNameMapper: {
+    "(?:^|/)apiship-client$": "<rootDir>/src/lib/__mocks__/apiship-client.ts",
+  },
   transformIgnorePatterns: [
     `/node_modules/(?!(${esmPackagesToTransform.join("|")})/)`,
   ],
