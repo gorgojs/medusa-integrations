@@ -55,7 +55,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install --no-immutable
 
       - name: Generate changesets from conventional commits
         run: node scripts/generate-changesets.js

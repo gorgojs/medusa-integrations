@@ -126,7 +126,7 @@ jobs:
           corepack prepare yarn@4.9.2 --activate
 
       - name: Install root dependencies
-        run: corepack yarn install --immutable
+        run: corepack yarn install --no-immutable
 
       - name: Tag telemetry machine_id as gorgo-ci
         run: |

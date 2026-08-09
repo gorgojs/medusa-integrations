@@ -40,7 +40,7 @@ jobs:
           cache: yarn
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install --no-immutable
 
       - name: Run unit tests for changed plugins
         if: github.event_name != 'workflow_dispatch' && github.event_name != 'schedule'
@@ -89,7 +89,7 @@ jobs:
           cache: yarn
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install --no-immutable
 
       - name: Tag telemetry machine_id as gorgo-ci
         run: |
