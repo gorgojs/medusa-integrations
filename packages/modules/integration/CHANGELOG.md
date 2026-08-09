@@ -1,5 +1,22 @@
 # @gorgo/medusa-integration
 
+## 0.2.0
+
+### Features
+
+- show markdown docsSnippet in install drawer and improve offline catalog by [@KaneFlak](https://github.com/KaneFlak) in [#439](https://github.com/gorgojs/medusa-integrations/pull/439) ([`2cabc9b`](https://github.com/gorgojs/medusa-integrations/commit/2cabc9b1e42a7d2e92dbc1f90708986acebb6f2d))
+
+- export upsert workflow and provider_id helpers by [@KaneFlak](https://github.com/KaneFlak) in [#422](https://github.com/gorgojs/medusa-integrations/pull/422) ([`f720768`](https://github.com/gorgojs/medusa-integrations/commit/f720768c9b490527c61ad9ab9a891a2d28630280))
+
+### Documentation
+
+- add license and imrpove docs by [@gorgohead](https://github.com/gorgohead) in [#422](https://github.com/gorgojs/medusa-integrations/pull/422) ([`ea998d9`](https://github.com/gorgojs/medusa-integrations/commit/ea998d9c5551c9cecf93a447590551afc185edec))
+
+### Dependencies
+
+- Updated dependencies:
+  - @gorgo/telemetry@1.5.0
+
 ## 0.1.4
 
 - Improve docs snippet and UI

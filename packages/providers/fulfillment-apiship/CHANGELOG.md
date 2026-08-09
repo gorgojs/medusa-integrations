@@ -1,5 +1,25 @@
 # @gorgo/medusa-fulfillment-apiship
 
+## 2.0.0
+
+### Bug Fixes
+
+- remove deprecated baseUrl from tsconfig by [@KaneFlak](https://github.com/KaneFlak) in [#422](https://github.com/gorgojs/medusa-integrations/pull/422) ([`5bd4d5f`](https://github.com/gorgojs/medusa-integrations/commit/5bd4d5f3c115fe4a5b7b36e7b9cc85221a548e6a))
+
+### Refactoring
+
+- move all sections except connections to integration's descriptor by [@KaneFlak](https://github.com/KaneFlak) in [#422](https://github.com/gorgojs/medusa-integrations/pull/422) ([`d76ca9e`](https://github.com/gorgojs/medusa-integrations/commit/d76ca9e7f94c2207d200b97e1532d3ba15b5b185))
+
+### Tests
+
+- add apiship-client mock by [@KaneFlak](https://github.com/KaneFlak) in [#441](https://github.com/gorgojs/medusa-integrations/pull/441) ([`d7c4fa8`](https://github.com/gorgojs/medusa-integrations/commit/d7c4fa87c0187924068c13e03168621fc2306da1))
+
+### Dependencies
+
+- Updated dependencies:
+  - @gorgo/medusa-integration@0.2.0
+  - @gorgo/telemetry@1.5.0
+
 ## 2.0.0-beta.1
 
 ### Highlights
