@@ -20,5 +20,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["."]
+  "include": [
+    ".",
+    "../../.medusa/types/augmentation-refs.d.ts"
+  ]
 }

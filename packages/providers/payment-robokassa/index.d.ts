@@ -2,7 +2,7 @@ export {}
 
 declare module "@medusajs/admin-shared" {
   interface InjectionZoneRegistry {
-    "gorgo.integration.apiship": true,
-    "gorgo.integration.apiship.side": true
+    "gorgo.integration.robokassa": true,
+    "gorgo.integration.robokassa.side": true
   }
 }
