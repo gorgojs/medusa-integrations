@@ -22,6 +22,6 @@
   },
   "include": [
     ".",
-    "../../.medusa/types/plugin-augmentations.d.ts"
+    "../../.medusa/types/augmentation-refs.d.ts"
   ]
 }

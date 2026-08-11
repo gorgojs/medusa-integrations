@@ -3,7 +3,8 @@
   "version": "2.0.0-beta.1",
   "description": "T-Kassa payment provider for Medusa",
   "files": [
-    ".medusa/server"
+    ".medusa/server",
+    "index.d.ts"
   ],
   "repository": {
     "type": "git",
@@ -11,6 +12,9 @@
     "directory": "packages/providers/payment-tkassa"
   },
   "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    },
     "./package.json": "./package.json",
     "./providers/*": "./.medusa/server/src/providers/*/index.js",
     "./admin": {
