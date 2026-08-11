@@ -3,7 +3,30 @@ import type { IntegrationDescriptorInput } from "@gorgo/medusa-integration"
 import { YooCheckout } from "@a2seven/yoo-checkout"
 import { YOOKASSA_ICON } from "../icon"
 import { validateVatCode, validateTaxSystemCode } from "../utils"
+import { vatCodes, taxSystemCodes } from "../../payment-yookassa/types"
 import { ProviderKeys } from "../../../types"
+
+const VAT_CODE_LABELS = {
+  1: "yookassa.vatCodes.noVat",
+  2: "yookassa.vatCodes.vat0",
+  3: "yookassa.vatCodes.vat10",
+  4: "yookassa.vatCodes.vat20",
+  5: "yookassa.vatCodes.vat10of110",
+  6: "yookassa.vatCodes.vat20of120",
+  7: "yookassa.vatCodes.vat5",
+  8: "yookassa.vatCodes.vat7",
+  9: "yookassa.vatCodes.vat5of105",
+  10: "yookassa.vatCodes.vat7of107",
+}
+
+const TAX_SYSTEM_LABELS = {
+  1: "yookassa.taxSystems.general",
+  2: "yookassa.taxSystems.simplifiedIncome",
+  3: "yookassa.taxSystems.simplifiedIncomeMinusExpenses",
+  4: "yookassa.taxSystems.imputedIncome",
+  5: "yookassa.taxSystems.agricultural",
+  6: "yookassa.taxSystems.patent",
+}
 
 const descriptor = defineIntegration({
   category: "payment",
@@ -55,29 +78,26 @@ const descriptor = defineIntegration({
       visibleWhen: { field: "useReceipt", equals: true },
     },
     taxSystemCode: {
-      type: "number",
-      int: true,
-      control: "number",
+      type: "enum",
+      values: taxSystemCodes,
       label: "yookassa.fields.taxSystemCode",
-      hint: "yookassa.hints.taxSystemCode",
+      valueLabels: TAX_SYSTEM_LABELS,
       visibleWhen: { field: "useAtolOnlineFFD120", equals: true },
       validate: validateTaxSystemCode,
     },
     taxItemDefault: {
-      type: "number",
-      int: true,
-      control: "number",
+      type: "enum",
+      values: vatCodes,
       label: "yookassa.fields.taxItemDefault",
-      hint: "yookassa.hints.taxItemDefault",
+      valueLabels: VAT_CODE_LABELS,
       visibleWhen: { field: "useReceipt", equals: true },
       validate: validateVatCode,
     },
     taxShippingDefault: {
-      type: "number",
-      int: true,
-      control: "number",
+      type: "enum",
+      values: vatCodes,
       label: "yookassa.fields.taxShippingDefault",
-      hint: "yookassa.hints.taxShippingDefault",
+      valueLabels: VAT_CODE_LABELS,
       visibleWhen: { field: "useReceipt", equals: true },
       validate: validateVatCode,
     },

@@ -1,8 +1,10 @@
 import YookassaIntegrationProvider from "../services/yookassa-integration"
 import { collectValidationIssues } from "@gorgo/medusa-integration"
+import { vatCodes, taxSystemCodes } from "../../payment-yookassa/types"
 
 const descriptor = new YookassaIntegrationProvider().descriptor
 const schema = descriptor.optionsSchema
+const option = (id: string) => (descriptor.options as any)[id]
 
 const validBase = {
   shopId: "test-shop-id",
@@ -96,6 +98,65 @@ describe("YooKassa integration descriptor schema", () => {
 
     it("is complete with a valid taxSystemCode", () => {
       expect(validationPaths(validReceiptWithAtol)).toEqual([])
+    })
+  })
+
+  describe("tax codes as numeric enums", () => {
+    it.each<[string, readonly number[]]>([
+      ["taxSystemCode", taxSystemCodes],
+      ["taxItemDefault", vatCodes],
+      ["taxShippingDefault", vatCodes],
+    ])("%s declares its codes as a select over numbers", (field, codes) => {
+      expect(option(field).type).toBe("enum")
+      expect(option(field).control).toBe("select")
+      expect(option(field).values).toEqual(codes)
+      expect(option(field).values.every((v: unknown) => typeof v === "number")).toBe(true)
+    })
+
+    it.each<[string, readonly number[]]>([
+      ["taxSystemCode", taxSystemCodes],
+      ["taxItemDefault", vatCodes],
+      ["taxShippingDefault", vatCodes],
+    ])("%s labels every code it declares", (field, codes) => {
+      for (const code of codes) expect(option(field).valueLabels[code]).toBeDefined()
+    })
+
+    it("keeps every declared code numeric through the schema", () => {
+      for (const code of vatCodes) {
+        const res = schema.safeParse({ ...validReceipt, taxItemDefault: code })
+        expect(res.success).toBe(true)
+        if (res.success) expect(res.data.taxItemDefault).toBe(code)
+      }
+    })
+
+    // The admin's `<Select>` submits the picked value as a string, and rows written while
+    // these were plain number inputs may also hold one.
+    it("coerces a code submitted as a string back to the number", () => {
+      const res = schema.safeParse({
+        ...validReceiptWithAtol,
+        taxSystemCode: "3",
+        taxItemDefault: "10",
+      })
+      expect(res.success).toBe(true)
+      if (res.success) {
+        expect(res.data.taxSystemCode).toBe(3)
+        expect(res.data.taxItemDefault).toBe(10)
+      }
+    })
+
+    it.each<[string, unknown]>([
+      ["taxSystemCode", 7],
+      ["taxSystemCode", "7"],
+      ["taxItemDefault", 11],
+      ["taxItemDefault", "11"],
+    ])("rejects %s = %p, which is outside the declared set", (field, value) => {
+      expect(schema.safeParse({ ...validReceiptWithAtol, [field]: value }).success).toBe(false)
+    })
+
+    it("treats a cleared select as unset rather than as a code", () => {
+      const res = schema.safeParse({ ...validBase, useReceipt: false, taxItemDefault: "" })
+      expect(res.success).toBe(true)
+      if (res.success) expect(res.data.taxItemDefault).toBeUndefined()
     })
   })
 })

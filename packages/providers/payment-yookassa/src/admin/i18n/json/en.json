@@ -19,10 +19,27 @@
       "taxShippingDefault": "Default shipping VAT code"
     },
     "hints": {
-      "paymentDescription": "Used when the checkout context doesn't provide one.",
-      "taxSystemCode": "1=General, 2=Simplified (income), 3=Simplified (income-expenses), 4=Imputed income, 5=Agricultural, 6=Patent.",
-      "taxItemDefault": "1=No VAT, 2=0%, 3=10%, 4=20%, 5=10/110, 6=20/120, 7=5%, 8=7%, 9=5/105, 10=7/107.",
-      "taxShippingDefault": "1=No VAT, 2=0%, 3=10%, 4=20%, 5=10/110, 6=20/120, 7=5%, 8=7%, 9=5/105, 10=7/107."
+      "paymentDescription": "Used when the checkout context doesn't provide one."
+    },
+    "taxSystems": {
+      "general": "General",
+      "simplifiedIncome": "Simplified (income)",
+      "simplifiedIncomeMinusExpenses": "Simplified (income minus expenses)",
+      "imputedIncome": "Imputed income",
+      "agricultural": "Agricultural",
+      "patent": "Patent"
+    },
+    "vatCodes": {
+      "noVat": "No VAT",
+      "vat0": "0%",
+      "vat10": "10%",
+      "vat20": "20%",
+      "vat10of110": "10/110",
+      "vat20of120": "20/120",
+      "vat5": "5%",
+      "vat7": "7%",
+      "vat5of105": "5/105",
+      "vat7of107": "7/107"
     }
   }
 }
