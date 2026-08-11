@@ -115,24 +115,30 @@ function renderControl(field: UiField, f: any, secretConfigured: boolean, t: Tra
   switch (field.control) {
     case "switch":
       return <Switch checked={!!f.value} onCheckedChange={f.onChange} disabled={disabled} />
-    case "select":
+    case "select": {
+      const declared = field.options ?? []
       return (
-        <Select value={f.value ?? ""} onValueChange={f.onChange} disabled={disabled}>
+        <Select
+          value={f.value == null ? "" : String(f.value)}
+          onValueChange={(next) => f.onChange(declared.find((o) => String(o) === next) ?? next)}
+          disabled={disabled}
+        >
           <Select.Trigger>
             <Select.Value placeholder={placeholder} />
           </Select.Trigger>
           <Select.Content>
-            {(field.options ?? []).map((o) => {
-              const labelKey = field.optionLabels?.[o]
+            {declared.map((o) => {
+              const labelKey = field.optionLabels?.[String(o)]
               return (
-                <Select.Item key={o} value={o}>
-                  {labelKey ? t(labelKey) : o}
+                <Select.Item key={String(o)} value={String(o)}>
+                  {labelKey ? t(labelKey) : String(o)}
                 </Select.Item>
               )
             })}
           </Select.Content>
         </Select>
       )
+    }
     case "number":
       return (
         <Input

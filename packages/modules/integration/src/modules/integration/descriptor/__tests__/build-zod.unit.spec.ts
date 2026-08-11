@@ -49,6 +49,41 @@ describe("optionToZod", () => {
     expect(s.safeParse("c").success).toBe(false)
   })
 
+  describe("numeric enum", () => {
+    const s = optionToZod({ type: "enum", values: [-1, 0, 20], label: "l" })
+
+    it("accepts the declared numbers and rejects anything else", () => {
+      expect(s.safeParse(-1).success).toBe(true)
+      expect(s.safeParse(0).success).toBe(true)
+      expect(s.safeParse(18).success).toBe(false)
+    })
+
+    // A `<Select>` submits a string, and configs written before an option became numeric
+    // still hold one. Both must land on the declared number.
+    it("coerces a submitted string back to the declared number", () => {
+      for (const [input, expected] of [["-1", -1], ["0", 0], ["20", 20]] as const) {
+        const r = s.safeParse(input)
+        expect(r.success && r.data).toBe(expected)
+      }
+    })
+
+    it("still rejects a string that is not in the set", () => {
+      expect(s.safeParse("18").success).toBe(false)
+    })
+
+    it("treats a cleared select as unset, so a default can apply", () => {
+      expect(optionToZod({ type: "enum", values: [1, 2], label: "l" }).safeParse("").success).toBe(true)
+      const r = optionToZod({ type: "enum", values: [1, 2], default: 2, label: "l" }).safeParse("")
+      expect(r.success && r.data).toBe(2)
+    })
+
+    it("works with a single declared value", () => {
+      const one = optionToZod({ type: "enum", values: [7], label: "l" })
+      expect(one.safeParse("7").success && one.safeParse("7").data).toBe(7)
+      expect(one.safeParse(8).success).toBe(false)
+    })
+  })
+
   it("number honors int/min/max/positive/nonnegative/multipleOf", () => {
     expect(optionToZod({ type: "number", int: true, label: "l" }).safeParse(2.5).success).toBe(false)
     expect(optionToZod({ type: "number", min: 1, max: 10, label: "l" }).safeParse(0).success).toBe(false)

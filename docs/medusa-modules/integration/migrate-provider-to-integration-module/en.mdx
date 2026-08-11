@@ -84,9 +84,9 @@ const descriptor = defineIntegration({
     },
     delivery_cost_vat: {
       type: "enum",
-      // Enum values are strings; ApiShip's numeric VAT rate is coerced back on read.
-      values: ["-1", "0", "5", "10", "20" /* ... */],
-      default: "-1",
+      // Homogeneous values: all numbers here, so the rate stays numeric end to end.
+      values: [-1, 0, 5, 10, 20 /* ... */],
+      default: -1,
       control: "select",
       label: "apiship.fields.deliveryCostVat",
       // Only sent to ApiShip together with cash on delivery, so hide it otherwise.

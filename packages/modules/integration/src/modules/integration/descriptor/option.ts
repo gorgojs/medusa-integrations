@@ -64,7 +64,7 @@ export type BooleanOption = OptionBase & {
   default?: boolean
   validate?: (v: boolean | undefined, c: OptionValidateContext) => void
 }
-export type EnumOption<V extends string = string> = OptionBase & {
+export type EnumOption<V extends string | number = string> = OptionBase & {
   type: "enum"
   values: readonly V[]
   valueLabels?: Partial<Record<V, I18nKey>>
@@ -84,7 +84,8 @@ export type OptionDef =
   | UuidOption
   | NumberOption
   | BooleanOption
-  | EnumOption
+  | EnumOption<string>
+  | EnumOption<number>
   | JsonOption
 
 export type OptionValue<D> =
