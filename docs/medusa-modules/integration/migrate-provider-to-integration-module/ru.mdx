@@ -84,9 +84,9 @@ const descriptor = defineIntegration({
     },
     delivery_cost_vat: {
       type: "enum",
-      // Значения enum строковые; числовая ставка НДС для ApiShip приводится при чтении.
-      values: ["-1", "0", "5", "10", "20" /* ... */],
-      default: "-1",
+      // Значения однородные: здесь числа, поэтому ставка остаётся числом на всём пути.
+      values: [-1, 0, 5, 10, 20 /* ... */],
+      default: -1,
       control: "select",
       label: "apiship.fields.deliveryCostVat",
       // Уходит в ApiShip только вместе с наложенным платежом, иначе поле скрыто.

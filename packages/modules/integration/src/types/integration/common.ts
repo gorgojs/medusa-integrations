@@ -31,7 +31,7 @@ export interface UiField {
   label: I18nKey
   hint?: I18nKey
   placeholder?: string
-  options?: string[]
+  options?: (string | number)[]
   /** For `select`: i18n-key label per enum value (value → key). UI shows the label, stores the value. */
   optionLabels?: Partial<Record<string, I18nKey>>
   /** Descriptor default for a (non-secret) field — pre-fills the edit form when there's no stored value. */

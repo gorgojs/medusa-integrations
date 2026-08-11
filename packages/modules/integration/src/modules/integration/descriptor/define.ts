@@ -93,6 +93,19 @@ export function defineIntegration<const O extends Record<string, OptionDef>>(
       }
     }
   }
+  // Fail fast: an enum's values must be all strings or all numbers. A `<Select>` submits the
+  // picked value as a string, and with a mixed set there is no way to tell whether "1" means
+  // the number 1 or the string "1".
+  for (const [id, def] of Object.entries(input.options)) {
+    if (def.type !== "enum") continue
+    const kinds = new Set(def.values.map((v) => typeof v))
+    if (kinds.size > 1) {
+      throw new Error(
+        `Option "${id}" mixes ${[...kinds].sort().join(" and ")} enum values. ` +
+          `Use either all strings or all numbers.`
+      )
+    }
+  }
   const shape: Record<string, z.ZodType> = {}
   for (const [id, def] of Object.entries(input.options)) shape[id] = optionToZod(def)
   const optionsSchema = z.object(shape) as unknown as z.ZodType<Settings<O>>

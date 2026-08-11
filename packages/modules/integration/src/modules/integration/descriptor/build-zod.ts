@@ -55,9 +55,19 @@ function buildOptionSchema(def: OptionDef): z.ZodType {
     case "boolean":
       base = z.boolean()
       break
-    case "enum":
-      base = z.enum(def.values as [string, ...string[]])
+    case "enum": {
+      if (def.values.every((v) => typeof v === "string")) {
+        base = z.enum(def.values as [string, ...string[]])
+        break
+      }
+      const declared = [...def.values]
+      base = z.preprocess(
+        (v) => declared.find((d) => String(d) === String(v)) ?? v,
+        // `z.literal` takes a list and builds the union of those literals.
+        z.literal(declared)
+      )
       break
+    }
     case "json": {
       // Opaque JSON; presence handled here (z.unknown() otherwise accepts undefined).
       if (def.default !== undefined) return z.unknown().default(def.default as never)
