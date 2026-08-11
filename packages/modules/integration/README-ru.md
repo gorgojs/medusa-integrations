@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.ru/integrations/integration">
+  <a href="https://docs.gorgojs.ru/medusa-modules/integration">
     <img alt="Integration Module logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.ru/integrations/integration">Документация</a>
+  <a href="https://docs.gorgojs.ru/medusa-modules/integration">Документация</a>
   <br/>
   Модуль Medusa, который позволяет любому плагину описывать свои параметры, а администраторам магазина управлять ими в Admin – без правок <code>medusa-config</code> и без передеплоя.
   <br/>

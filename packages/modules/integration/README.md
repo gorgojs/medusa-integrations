@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/integration">
+  <a href="https://docs.gorgojs.com/medusa-modules/integration">
     <img alt="Integration Module logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/integration-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,7 +9,7 @@ Integration Module for Medusa
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/integration">Documentation</a>
+  <a href="https://docs.gorgojs.com/medusa-modules/integration">Documentation</a>
   <br/>
   A Medusa module that lets any plugin or provider declare its options and store admins manage them in the Admin – no <code>medusa-config</code> edits, no redeploys.
   <br/>
