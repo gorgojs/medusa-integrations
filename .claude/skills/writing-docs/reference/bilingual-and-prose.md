@@ -169,6 +169,61 @@ The hyphenated Latin-plus-Russian-suffix compound documented in `mdx-components.
 - Statement form, never a literal question, even for "why"/"what is" headings — `## What this module does`, not `## What does this module do?`. Apply this in both languages.
 - H1 is always `# {frontmatter.title}`. If a page's reader-facing heading should read like an instruction ("How to Create a Provider"), put that phrasing in `title` itself — never hardcode a different literal H1 string on the page.
 
+### English headings are title case
+
+Capitalize every word of an English heading, including short verbs and adverbs that a casual writer
+lowercases (`Is`, `Are`, `It`, `Do`, `Not`, `Out`). Only these stay lowercase, and only when they are
+neither the first nor the last word of the heading:
+
+| Lowercase | Words |
+|---|---|
+| Articles | a, an, the |
+| Prepositions | of, in, on, to, for, with, from, at, by, into, through, without |
+| Coordinating conjunctions | and, or, but, nor |
+| Infinitive marker | to, as in `## How to Create a Provider` |
+
+```
+❌ ## Caching and freshness          ✅ ## Caching and Freshness
+❌ ## What is YooKassa               ✅ ## What Is YooKassa
+❌ ## Two ways to read               ✅ ## Two Ways to Read
+❌ ### Secrets and encryption        ✅ ### Secrets and Encryption
+❌ ## Type-specific fields           ✅ ## Type-Specific Fields
+❌ ## 1. Create the provider directory   ✅ ## 1. Create the Provider Directory
+```
+
+Both halves of a hyphenated compound are capitalized (`Type-Specific`, `Step-by-Step`). A number or
+`Step N:` prefix is left as it is; title case applies to the words after it.
+
+The rule covers every heading level and frontmatter `title`, which renders as the page's H1. It does
+**not** cover `description`, `<Note title="...">` labels, or a code block's `title="path/to/file.ts"`
+— those are sentences and literal paths, not headings.
+
+**Exception: a heading that is nothing but a code identifier** keeps that identifier's own casing and
+gets no capitalization at all — the heading names the literal symbol a reader will type:
+
+```mdx
+### testConnection
+### descriptor
+### validateOptions
+### INTEGRATION_MODULE
+```
+
+The exception is the entire heading, not an identifier inside one. When an identifier sits next to
+real words, the identifier keeps its casing and the words around it take title case:
+
+```
+❌ ## The `resolveIntegrationOptions` helper   ✅ ## The `resolveIntegrationOptions` Helper
+❌ ## Resolving inside a workflow              ✅ ## Resolving Inside a Workflow
+```
+
+**Russian headings stay in sentence case** — first word and proper nouns only (`## Пример реализации`,
+`## Кэширование и актуальность`). Title case is an English-only convention; never carry it into
+`ru.mdx`, and don't treat an EN/RU capitalization difference as structural drift.
+
+Older pages, mostly under `docs/medusa-modules/`, still use sentence case. Rewrite on touch: fix the
+heading of a section you're already editing, rather than reformatting every heading on the page in an
+otherwise unrelated diff.
+
 ## Em dash vs. en dash
 
 Two different characters with two different, non-overlapping jobs:
@@ -187,7 +242,20 @@ Two different characters with two different, non-overlapping jobs:
 - No `e.g.,` — write "for example" instead (and its equivalent in the other language, not a literal abbreviation).
 - No filler words that don't carry information: "simply", "just", "easy", "obviously", "basically" — remove rather than translate them.
 - No bare URLs in prose — always `[label](url)`.
-- Keep sentences short enough to parse in one pass; split a sentence carrying two unrelated claims rather than joining them with a comma.
+- Keep sentences short enough to parse in one pass; split a sentence carrying two unrelated claims rather than joining them with a comma. Watch for subordinate clauses stacked one after another (`which`/`that`/`который`/`когда`) — two or more in one sentence forces the reader to hold every clause in memory before reaching the verb. Split them out instead:
+
+  ```
+  ❌ The module, which validates every write against the descriptor's rules, including cross-section rules that span the whole configuration, generates the CRUD API automatically.
+  ✅ The module generates the CRUD API automatically. It validates every write against the descriptor's rules, including cross-section rules that span the whole configuration.
+  ```
+
+- Don't lean on `:` as a substitute for the banned em dash. A colon earns its place introducing a list, or introducing a direct restatement or example of the clause before it. But when it welds two independent clauses together in nearly every paragraph, it's the same tic as the em dash, just wearing a different character. If a page splices clauses with a colon in most of its paragraphs, split those into separate sentences instead:
+
+  ```
+  ❌ This `static identifier` is shared across every instance of the provider: it's always `acme`, and only the `instanceId` in the `provider_id` tells the instances apart.
+  ✅ Every instance of the provider shares this `static identifier`. It's always `acme`. Only the `instanceId` in the `provider_id` tells the instances apart.
+  ```
+
 - Verify every technical claim (what a field does, what a real import path is, what a hook's signature is) against the real source before writing it — see `SKILL.md`'s constraint on this. An admittedly-unverified placeholder is more useful to the next editor than a confident, wrong statement.
 - Don't attribute a fact to "TypeScript" by name — every code sample in these docs is already TypeScript, so naming it adds nothing the `ts` fence's language tag doesn't already say. State what happens instead of who enforces it:
 

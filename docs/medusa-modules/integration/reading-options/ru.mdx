@@ -1,13 +1,17 @@
 ---
 title: "Чтение параметров"
-description: "Как потребитель читает резолвнутые параметры настроенной интеграции в рантайме: из изолированного провайдера, из кода с доступом к контейнеру или внутри воркфлоу."
+description: "Узнайте, как потребитель читает итоговые параметры настроенной интеграции во время выполнения: из изолированного провайдера, из кода с доступом к контейнеру или внутри воркфлоу."
 ---
 
 # {frontmatter.title}
 
-После того как администратор магазина настроил интеграцию, потребитель читает её параметры в рантайме. Часто потребителем оказывается тот же пакет, что объявил интеграцию (например, платёжный провайдер, читающий собственные учётные данные), но это может быть и любой другой код: API-роут, подписчик или запланированная задача.
+После того как администратор магазина настроил интеграцию, потребитель читает её параметры во время выполнения. Часто потребителем оказывается тот же пакет, что объявил интеграцию (например, платёжный провайдер, читающий собственные учётные данные), но это может быть и любой другой код: API-роут, подписчик или запланированная задача.
 
-<Note type="default" title="">То, что вы получаете обратно, уже резолвнуто: параметры расшифрованы, провалидированы и с применёнными значениями по умолчанию. Подробности см. в разделе [Что значит «резолвнуто»](#что-значит-резолвнуто).</Note>
+<Note type="default" title="">
+
+То, что вы получаете обратно, представляет собой итоговые параметры: модуль их расшифровал, проверил и применил к ним значения по умолчанию. Подробности см. в разделе [Что значат «итоговые параметры»](#что-значат-итоговые-параметры).
+
+</Note>
 
 ## Два способа чтения
 
@@ -17,44 +21,46 @@ description: "Как потребитель читает резолвнутые 
 | --- | --- |
 | Провайдер в изолированном контейнере модуля или сервис модуля | [`resolveIntegrationOptions`](#хелпер-resolveintegrationoptions) |
 | Код с контейнером приложения или запроса (API-роуты, подписчики, запланированные задачи, лоадеры) | [`getResolvedOptions`](#метод-сервиса-getresolvedoptions) |
-| Шаг внутри вашего воркфлоу | [`getResolvedIntegrationOptionsStep`](#резолв-внутри-воркфлоу) |
+| Шаг внутри вашего воркфлоу | [`getResolvedIntegrationOptionsStep`](#получение-параметров-внутри-воркфлоу) |
 
-Платёжный или логистический провайдер выполняется внутри изолированного контейнера своего модуля, поэтому не может резолвить модуль интеграций напрямую. Он использует `resolveIntegrationOptions`, который запускает воркфлоу, дотягивающийся до контейнера приложения. Код, у которого контейнер уже есть, резолвит модуль и вызывает `getResolvedOptions` напрямую, без воркфлоу.
+Платёжный или логистический провайдер выполняется внутри изолированного контейнера своего модуля, поэтому не может получить Модуль интеграций напрямую. Он использует `resolveIntegrationOptions`, который запускает воркфлоу, чтобы обратиться к контейнеру приложения. Код, у которого контейнер уже есть, получает модуль из контейнера и вызывает `getResolvedOptions` напрямую, без воркфлоу.
 
 ## Хелпер `resolveIntegrationOptions`
 
-Используйте хелпер из провайдера, который не может достучаться до модуля интеграций напрямую.
+Используйте хелпер из провайдера, который не может обратиться к модулю интеграций напрямую.
 
 ### Базовое использование
 
 Передайте идентификатор, который объявляет ваша интеграция, и тип-параметр для типизированных настроек. Например:
 
-```ts title="providers/payment-acme/services/acme-payment.ts"
+```ts title="providers/payment-my/services/my-payment.ts"
 import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
-import type { AcmeOptions } from "../../../integration-acme/service"
+import type { MyOptions } from "../../integration-my/services/my-integration"
 
 // внутри любого метода провайдера
-const options = await resolveIntegrationOptions<AcmeOptions>({
-  identifier: "acme"
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my"
 })
 ```
 
-Возвращённый `options` типизирован как `AcmeOptions`, уже расшифрован и провалидирован.
+Возвращённый `options` типизирован как `MyOptions`, уже расшифрован и проверен.
 
 ### Обращение к конкретному инстансу
 
-Для провайдера, который поддерживает [несколько инстансов](/medusa-modules/integration/concepts#идентификаторы-и-инстансы), передайте `instance_id`. Обычно это собственный id регистрации вашего провайдера. Опустите его или передайте `null` для инстанса по умолчанию:
+Для провайдера, который поддерживает [несколько инстансов](/medusa-modules/integration/concepts#инстансы-и-их-идентификаторы), передайте `instance_id`. Обычно это собственный id регистрации вашего провайдера. Опустите его или передайте `null` для инстанса по умолчанию:
 
-```ts title="providers/payment-acme/services/acme-payment.ts"
+```ts title="providers/payment-my/services/my-payment.ts"
 import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
-import type { AcmeOptions } from "../../../integration-acme/service"
+import type { MyOptions } from "../../integration-my/services/my-integration"
 
 // внутри любого метода провайдера
-const options = await resolveIntegrationOptions<AcmeOptions>({
-  identifier: "acme",
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my",
   instance_id: this.instanceId_,
 })
 ```
+
+`this.instanceId_` подходит сюда, потому что базовый класс провайдера сохраняет id своей регистрации ещё в конструкторе; провайдеру без нескольких инстансов `instance_id` можно вообще не передавать.
 
 ### Когда интеграция не настроена
 
@@ -62,16 +68,16 @@ const options = await resolveIntegrationOptions<AcmeOptions>({
 
 ```ts
 // бросит исключение, если интеграцией ещё нельзя пользоваться
-const options = await resolveIntegrationOptions<AcmeOptions>({
-  identifier: "acme"
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my"
 })
 ```
 
 Передайте `{ optional: true }`, чтобы вместо этого получить `null` и обработать отсутствие настройки самостоятельно:
 
 ```ts
-const options = await resolveIntegrationOptions<AcmeOptions>(
-  { identifier: "acme" },
+const options = await resolveIntegrationOptions<MyOptions>(
+  { identifier: "my" },
   { optional: true }
 )
 
@@ -80,63 +86,76 @@ if (!options) {
 }
 ```
 
+С `{ optional: true }` не настроенная, выключенная или незаполненная интеграция даёт здесь `null` вместо исключения. Именно от этого случая защищает проверка `if (!options)` выше.
+
 ## Метод сервиса `getResolvedOptions`
 
-Когда у вашего кода уже есть контейнер, резолвите модуль и вызовите `getResolvedOptions` напрямую. Это подходит для API-роутов, подписчиков, запланированных задач и лоадеров, и никакой воркфлоу не задействуется. Например, в API-роуте:
+Когда у вашего кода уже есть контейнер, получите модуль из контейнера и вызовите `getResolvedOptions` напрямую. Это подходит для API-роутов, подписчиков, запланированных задач и лоадеров, и никакой воркфлоу не задействуется. Например, в API-роуте:
 
-```ts title="api/admin/acme-payment/route.ts"
+```ts title="api/admin/my-payment/route.ts"
 import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const integration: IntegrationModuleService = req.scope.resolve(INTEGRATION_MODULE)
 
-  const resolved = await integration.getResolvedOptions("acme")
+  const resolved = await integration.getResolvedOptions("my")
   if (!resolved) {
-    return res.status(503).send("Acme is not configured")
+    return res.status(503).send("My is not configured")
   }
 
-  const options = resolved.options as AcmeOptions
+  const options = resolved.options as MyOptions
   const { provider_id, category, is_enabled } = resolved.meta
 }
 ```
 
 `getResolvedOptions(identifier, instanceId?)` возвращает `ResolvedOptions | null`. Значение представляет собой `{ options, meta }`, где `meta` содержит `provider_id`, `category` и `is_enabled`. Результат `null` означает, что интеграция не настроена, выключена или не заполнена.
 
-## Резолв внутри воркфлоу
+## Получение параметров внутри воркфлоу
 
 Когда вы собираете собственный воркфлоу, используйте экспортируемый шаг вместо хелпера:
 
-```ts title="workflows/create-acme.ts"
+```ts title="workflows/create-my.ts"
 import { createWorkflow, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
 import { getResolvedIntegrationOptionsStep } from "@gorgo/medusa-integration"
 
-export const createAcmeWorkflow = createWorkflow("create-acme", () => {
+export const createMyWorkflow = createWorkflow("create-my", () => {
   const resolved = getResolvedIntegrationOptionsStep({
-    identifier: "acme"
+    identifier: "my"
   })
   return new WorkflowResponse(resolved)
 })
 ```
 
-Также экспортируется самостоятельный `getResolvedIntegrationOptionsWorkflow`. Именно его хелпер запускает внутри себя.
+Также экспортируется `getResolvedIntegrationOptionsWorkflow`. Именно его хелпер запускает внутри себя.
 
-## Что значит «резолвнуто»
+## Что значат «итоговые параметры»
 
-Резолвнутые параметры не совпадают с сырыми хранимыми значениями. При каждом резолве модуль делает три вещи:
+Итоговые параметры не совпадают с сырыми хранимыми значениями. При каждом их получении модуль делает три вещи:
 
 - расшифровывает секретные поля,
 - подтверждает, что интеграция включена и заполнена, то есть проходит полную валидацию,
 - применяет значения по умолчанию из дескриптора для параметров, которые администратор так и не задал.
 
-Если интеграция не настроена, выключена или не заполнена, она резолвится в `null`. В этом случае хелпер бросает исключение или возвращает `null` при `{ optional: true }`. Частичные черновики никогда не попадают в рантайм.
+Если интеграция не настроена, выключена или не заполнена, она даёт `null`. В этом случае хелпер бросает исключение или возвращает `null` при `{ optional: true }`. Частичные черновики никогда не доходят до работающего приложения.
 
 ## Кэширование и актуальность
 
-Резолвнутые параметры ненадолго кэшируются в памяти, чтобы на горячих путях не перечитывать и не расшифровывать их при каждом вызове. Кэш инвалидируется при любом изменении интеграции (сохранении, включении, выключении или удалении), поэтому потребители подхватывают новую конфигурацию без передеплоя.
+Итоговые параметры ненадолго кэшируются в памяти, чтобы на горячих путях не перечитывать и не расшифровывать их при каждом вызове. Кэш инвалидируется при любом изменении интеграции (сохранении, включении, выключении или удалении), поэтому потребители подхватывают новую конфигурацию без повторного развёртывания.
 
 ## Материалы
 
-- [Основные концепции](/medusa-modules/integration/concepts)
-- [Создание провайдера Модуля интеграций Medusa](/medusa-modules/integration/create-integration-module-provider)
-- [Перенос провайдера на модуль интеграций](/medusa-modules/integration/migrate-provider-to-integration-module)
+<CardList items={[
+  {
+    title: "Основные концепции",
+    href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "Создание провайдера Модуля интеграций Medusa",
+    href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Миграция провайдера модуля Medusa на Модуль интеграций",
+    href: "/medusa-modules/integration/migrate-provider-to-integration-module"
+  }
+]}/>

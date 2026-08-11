@@ -33,38 +33,38 @@ description: "Основные концепции модуля интеграц�
 
 Вот дескриптор платёжного провайдера с двумя параметрами и одной секцией:
 
-```ts title="providers/integration-acme/services/acme-integration.ts"
+```ts title="providers/integration-my/services/my-integration.ts"
 import { defineIntegration, AbstractIntegrationProvider } from "@gorgo/medusa-integration"
 
 const descriptor = defineIntegration({
   category: "payment",
-  displayName: "acme.name",
+  displayName: "my.name",
   options: {
     apiKey:  {
       type: "string",
       control: "secret",
       secret: true,
       required: true,
-      label: "acme.apiKey"
+      label: "my.apiKey"
     },
     sandbox: {
       type: "boolean",
       control: "switch",
       default: false,
-      label: "acme.sandbox"
+      label: "my.sandbox"
     },
   },
   sections: [
     {
       id: "credentials",
-      title: "acme.credentials",
+      title: "my.credentials",
       options: ["apiKey", "sandbox"]
     },
   ],
 })
 
-export class AcmeIntegration extends AbstractIntegrationProvider {
-  static identifier = "acme"
+export class MyIntegration extends AbstractIntegrationProvider {
+  static identifier = "my"
 
   get descriptor() {
     return descriptor
@@ -72,7 +72,7 @@ export class AcmeIntegration extends AbstractIntegrationProvider {
 }
 ```
 
-Дескриптор служит единым источником истины для интеграции: в этом примере он объявляет `apiKey` и `sandbox`, сгруппированные в одну секцию `credentials`. По нему модуль генерирует CRUD API, валидирует запись, рендерит UI настроек и определяет, что потребители получают во время выполнения. Вам не нужно писать ни модели данных, ни API-роуты, ни UI-формы.
+Дескриптор служит единым источником истины для интеграции: в этом примере он объявляет `apiKey` и `sandbox`, сгруппированные в одну секцию `credentials`. По нему модуль генерирует CRUD API, валидирует запись, отрисовывает UI настроек и определяет, что потребители получают во время выполнения. Вам не нужно писать ни модели данных, ни API-роуты, ни UI-формы.
 
 ## Инстансы и их идентификаторы
 
@@ -86,25 +86,25 @@ int_<identifier>[_<instanceId>]
 
 В `<identifier>` подставляется `static identifier` провайдера, общий для всех его инстансов. `<instanceId>` берётся из `id` конкретной регистрации и присутствует только у именованных инстансов.
 
-У каждой интеграции есть стабильный идентификатор, например `acme`, заданный как `static identifier` в провайдере:
+У каждой интеграции есть стабильный идентификатор, например `my`, заданный как `static identifier` в провайдере:
 
-```ts title="providers/integration-acme/services/acme-integration.ts"
+```ts title="providers/integration-my/services/my-integration.ts"
 import { defineIntegration, AbstractIntegrationProvider } from "@gorgo/medusa-integration"
 
 // ...
 
-export class AcmeIntegration extends AbstractIntegrationProvider {
-  static identifier = "acme"
+export class MyIntegration extends AbstractIntegrationProvider {
+  static identifier = "my"
 
   // ...
 }
 ```
 
-Этот `static identifier` общий для всех инстансов провайдера: он всегда `acme`, а различает инстансы только `instanceId` в `provider_id`.
+Все инстансы провайдера используют общий `static identifier`. Он всегда `my`. Различает инстансы только `instanceId` в `provider_id`.
 
 ### Один инстанс
 
-Это вариант по умолчанию. У него нет ID инстанса (`instanceId`), поэтому его `provider_id` выглядит, например, как `int_acme`.
+Это вариант по умолчанию. У него нет ID инстанса (`instanceId`), поэтому его `provider_id` выглядит, например, как `int_my`.
 
 Зарегистрируйте его без `id`:
 
@@ -118,7 +118,7 @@ module.exports = defineConfig({
         // ...
         providers: [
           {
-            resolve: "@gorgo/medusa-payment-acme/providers/integration-acme",
+            resolve: "@gorgo/medusa-payment-my/providers/integration-my",
             options: {},
           },
         ],
@@ -128,7 +128,7 @@ module.exports = defineConfig({
 })
 ```
 
-Без `id` в записи регистрации провайдер получает единственный, безымянный инстанс с ключом `int_acme`.
+Без `id` в записи регистрации провайдер получает единственный, безымянный инстанс с ключом `int_my`.
 
 ### Несколько инстансов
 
@@ -146,12 +146,12 @@ module.exports = defineConfig({
         // ...
         providers: [
           {
-            resolve: "@gorgo/medusa-payment-acme/providers/integration-acme",
+            resolve: "@gorgo/medusa-payment-my/providers/integration-my",
             id: "eu",
             options: {},
           },
           {
-            resolve: "@gorgo/medusa-payment-acme/providers/integration-acme",
+            resolve: "@gorgo/medusa-payment-my/providers/integration-my",
             id: "us",
             options: {},
           },
@@ -162,7 +162,7 @@ module.exports = defineConfig({
 })
 ```
 
-Это даст `int_acme_eu` и `int_acme_us` соответственно. `id` задаётся на верхнем уровне записи. Если случайно поместить его внутрь `options`, провайдер зарегистрируется под инстансом по умолчанию (безымянным) без предупреждения.
+Это даст `int_my_eu` и `int_my_us` соответственно. `id` задаётся на верхнем уровне записи. Если случайно поместить его внутрь `options`, провайдер зарегистрируется под инстансом по умолчанию (безымянным) без предупреждения.
 
 Потребитель получает параметры по идентификатору и инстансу, поэтому один и тот же код может обращаться к нужному.
 
@@ -387,7 +387,7 @@ module.exports = defineConfig({
 
 Правила между секциями объявляются через `validate` дескриптора. В отличие от `validate` отдельного параметра, он получает всю собранную конфигурацию и может пометить проблемой любое поле:
 
-```ts title="providers/integration-acme/services/acme-integration.ts"
+```ts title="providers/integration-my/services/my-integration.ts"
 const descriptor = defineIntegration({
   // ...
   validate: (full, { addIssue }) => {
@@ -441,16 +441,16 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
 
 Добавьте `testConnection` в дескриптор. Он получает уже итоговые (расшифрованные) параметры и возвращает статус:
 
-```ts title="providers/integration-acme/services/acme-integration.ts"
+```ts title="providers/integration-my/services/my-integration.ts"
 const descriptor = defineIntegration({
   // ...
   testConnection: async ({ options }) => {
-    const res = await fetch("https://api.acme.com/ping", {
+    const res = await fetch("https://api.my.com/ping", {
       headers: { Authorization: `Bearer ${options.apiKey}` },
     })
 
     if (!res.ok) {
-      return { status: "failed", message: `Acme ответил ${res.status}` }
+      return { status: "failed", message: `My responded with ${res.status}` }
     }
 
     return { status: "passed" }

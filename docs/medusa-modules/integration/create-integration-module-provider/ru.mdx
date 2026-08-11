@@ -1,6 +1,6 @@
 ---
-title: "Создание провайдера Модуля интеграций Medusa"
-description: "Как создать провайдер Модуля интеграций и какие методы в нём реализовать: дескриптор, identifier, validateOptions, testConnection и регистрация в medusa-config.ts."
+title: "Как создать провайдер Модуля интеграций"
+description: "Узнайте, как создать провайдер для Medusa, который управляет своими настройками через Модуль интеграций."
 ---
 
 # {frontmatter.title}
@@ -54,7 +54,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 }
 ```
 
-Базовый класс читает это статическое поле в методе `getIdentifier()` во время выполнения, а загрузчик использует его, чтобы собрать ключ контейнера, под которым регистрируется ваш инстанс: `int_<identifier>_<id>`, либо просто `int_<identifier>` без id.
+Загрузчик читает это статическое поле, чтобы собрать ключ, под которым регистрируется ваш инстанс: `int_<identifier>_<id>`, либо `int_<identifier>` без ID.
 
 ### descriptor
 
@@ -62,7 +62,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 
 <Note type="default" title="">
 
-Общий обзор дескриптора смотрите в разделе [Основные концепции](/medusa-modules/integration/concepts). Полный список полей `options` (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate` и другие) объявлен в экспортируемом типе `OptionDef`.
+Общий обзор дескриптора смотрите в разделе [Основные концепции](/medusa-modules/integration/concepts#дескриптор). Полный список полей `options` (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate` и другие) объявлен в экспортируемом типе `OptionDef`.
 
 </Note>
 
@@ -114,13 +114,7 @@ export class MyIntegrationProvider extends AbstractIntegrationProvider {
 export default MyIntegrationProvider
 ```
 
-`MyOptions` описывает итоговый набор параметров: `defineIntegration` собирает `optionsSchema` из каталога `options`, и поскольку у `apiKey` указан `required`, а у `sandbox` задан `default`, оба поля в `MyOptions` становятся обязательными.
-
-<Note type="default" title="">
-
-В отличие от других провайдеров Medusa, конструктор переопределять не нужно. Загрузчик передаёт id инстанса в базовый класс, а параметры провайдер запрашивает у модуля во время выполнения, а не получает через конструктор (см. [Шаг 5](#5-протестируйте)).
-
-</Note>
+`MyOptions` описывает итоговый набор параметров: `defineIntegration` собирает `optionsSchema` из объекта `options`, и поскольку у `apiKey` указан `required`, а у `sandbox` задан `default`, оба поля в `MyOptions` становятся обязательными.
 
 ### validateOptions
 
@@ -166,9 +160,9 @@ const descriptor = defineIntegration({
 })
 ```
 
-`status` принимает одно из значений `"passed" | "failed" | "skipped"`. Возврат `{ status: "failed", message }` не считается исключением: кнопка «Проверить соединение» в Admin и ежедневная задача воспринимают это как обычный результат, и только настоящее исключение фиксируется отдельно, со статусом `errored`.
+`status` принимает одно из значений `"passed" | "failed" | "skipped"`. Возврат `{ status: "failed", message }` считается обычным результатом, а не ошибкой. Если провайдер выбросит исключение, ежедневная задача учтёт его отдельно, как `status: "errored"`.
 
-## 3. Создайте файл определения провайдера
+## 3. Создайте файл определения модуля провайдера
 
 Создайте файл `src/providers/integration-my/index.ts` со следующим содержимым:
 
@@ -210,7 +204,7 @@ module.exports = defineConfig({
 })
 ```
 
-Именно эта запись заставляет загрузчик создать инстанс `MyIntegrationProvider`, передав в конструктор `options` и `id` из этой регистрации, поэтому `getInstanceId()` возвращает `"my-1"`.
+По этой записи загрузчик создаёт инстанс `MyIntegrationProvider`.
 
 <Note type="warning">
 
@@ -224,7 +218,7 @@ module.exports = defineConfig({
 INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
-Подходит любое непустое значение: модуль преобразует его через SHA-256 в 32-байтовый ключ AES-256-GCM, поэтому используйте значение с высокой энтропией, например `openssl rand -hex 32`.
+Подходит любое непустое значение. Модуль преобразует его через SHA-256 в 32-байтовый ключ AES-256-GCM, поэтому используйте значение с высокой энтропией, например `openssl rand -hex 32`.
 
 ## 5. Протестируйте
 
@@ -241,7 +235,13 @@ const options = await resolveIntegrationOptions<MyOptions>({
 })
 ```
 
-Возвращённые `options` типизированы как `MyOptions`, уже расшифрованные и проверенные, а по умолчанию вызов выбрасывает `MedusaError`, если интеграция не настроена, выключена или не заполнена. Так параметры читает изолированный провайдер; для роута, подписчика или шага воркфлоу способ другой, он разобран в разделе [Использование провайдера Модуля интеграций](/medusa-modules/integration/reading-options).
+Возвращённые `options` типизированы как `MyOptions`, уже расшифрованные и проверенные. По умолчанию вызов выбрасывает `MedusaError`, если интеграция не настроена, выключена или не заполнена.
+
+<Note type="default" title="">
+
+Подробнее о том, как получить параметры интеграции из роута, подписчика или шага воркфлоу, читайте в разделе [Чтение параметров](/medusa-modules/integration/reading-options).
+
+</Note>
 
 ## Материалы
 

@@ -70,6 +70,7 @@ Anchors are auto-generated per-language from the heading text in that language �
 - [ ] `en.mdx` and `ru.mdx` drifting structurally (different heading count, a code example present in one but not the other)
 - [ ] Translating literally instead of writing what a native speaker of that language would naturally write for the same technical fact
 - [ ] Writing a "why"/"what is" heading as a literal question with `?` — this repo's convention is a statement-form heading, no question mark (`## Что такое модуль интеграций`, not `## Что такое модуль интеграций?`)
+- [ ] Sentence-casing an English heading — every word is capitalized except articles, prepositions and coordinating conjunctions in a non-edge position (`## Caching and Freshness`, not `## Caching and freshness`). A heading that is *only* a code identifier keeps its own casing (`### testConnection`); Russian headings stay sentence case. See `reference/bilingual-and-prose.md`
 - [ ] A code example that doesn't match the real import path, real export shape (named vs default), or real signature in `packages/` — check the source, don't pattern-match from memory
 - [ ] Using em dashes (`—`) in prose — rewrite the sentence to avoid them (an en dash as a bullet-item label separator, `**Label** – text`, is a separate, accepted pattern — see `reference/bilingual-and-prose.md`)
 - [ ] Using passive voice ("настройки задаются", "is created", "can be configured") — write active ("задайте настройки", "you can configure", "call X to create")

@@ -7,9 +7,13 @@ description: "How a consumer reads a configured integration's resolved options a
 
 After a store admin configures an integration, a consumer reads its options at runtime. The consumer is often the same package that declared the integration, such as a payment provider reading its own credentials, but it can be any other code, like an API route, a subscriber, or a scheduled job.
 
-<Note type="default" title="">What you get back is resolved: the options are decrypted, validated, and have their defaults applied. See [What resolved means](#what-resolved-means) for the details.</Note>
+<Note type="default" title="">
 
-## Two ways to read
+What you get back is resolved: the module has decrypted and validated the options, and applied their defaults. See [What Resolved Means](#what-resolved-means) for the details.
+
+</Note>
+
+## Two Ways to Read
 
 The API you use depends on where your code runs.
 
@@ -19,59 +23,61 @@ The API you use depends on where your code runs.
 | Code with the app or request container (API routes, subscribers, scheduled jobs, loaders) | [`getResolvedOptions`](#the-getresolvedoptions-service-method) |
 | A step inside a workflow you compose | [`getResolvedIntegrationOptionsStep`](#resolving-inside-a-workflow) |
 
-A payment or fulfillment provider runs inside its own module's isolated container, so it cannot resolve the Integration Module directly. It uses `resolveIntegrationOptions`, which runs a workflow that reaches the app container. Code that already holds the container resolves the module and calls `getResolvedOptions` directly, without a workflow.
+A payment or fulfillment provider runs inside its own module's isolated container, so it cannot resolve the Integration Module directly. It uses `resolveIntegrationOptions`, which runs a workflow to reach the app container. Code that already holds the container resolves the module and calls `getResolvedOptions` directly, without a workflow.
 
-## The `resolveIntegrationOptions` helper
+## The `resolveIntegrationOptions` Helper
 
 Use the helper from a provider that cannot reach the Integration Module directly.
 
-### Basic usage
+### Basic Usage
 
 Pass the identifier your integration declares, and a type parameter for typed options. For example:
 
-```ts title="providers/payment-acme/services/acme-payment.ts"
+```ts title="providers/payment-my/services/my-payment.ts"
 import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
-import type { AcmeOptions } from "../../../integration-acme/service"
+import type { MyOptions } from "../../integration-my/services/my-integration"
 
 // inside any provider method
-const options = await resolveIntegrationOptions<AcmeOptions>({
-  identifier: "acme"
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my"
 })
 ```
 
-The returned `options` is typed as `AcmeOptions`, already decrypted and validated.
+The returned `options` is typed as `MyOptions`, already decrypted and validated.
 
-### Targeting a specific instance
+### Targeting a Specific Instance
 
 For a provider that supports [multiple instances](/medusa-modules/integration/concepts#identifiers-and-instances), pass `instance_id`. It is usually your provider's own registration id. Omit it, or pass `null`, for the default instance:
 
-```ts title="providers/payment-acme/services/acme-payment.ts"
+```ts title="providers/payment-my/services/my-payment.ts"
 import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
-import type { AcmeOptions } from "../../../integration-acme/service"
+import type { MyOptions } from "../../integration-my/services/my-integration"
 
 // inside any provider method
-const options = await resolveIntegrationOptions<AcmeOptions>({
-  identifier: "acme",
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my",
   instance_id: this.instanceId_,
 })
 ```
 
-### When it isn't configured
+`this.instanceId_` works here because the base provider class stores the registration's own instance id at construction; a provider that doesn't support multiple instances can leave `instance_id` out entirely.
+
+### When It Isn't Configured
 
 By default, the helper throws a `MedusaError` when the integration is not configured, disabled, or incomplete:
 
 ```ts
 // throws if the integration isn't usable yet
-const options = await resolveIntegrationOptions<AcmeOptions>({
-  identifier: "acme"
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my"
 })
 ```
 
 Pass `{ optional: true }` to receive `null` instead, so you can handle the missing case yourself:
 
 ```ts
-const options = await resolveIntegrationOptions<AcmeOptions>(
-  { identifier: "acme" },
+const options = await resolveIntegrationOptions<MyOptions>(
+  { identifier: "my" },
   { optional: true }
 )
 
@@ -80,40 +86,42 @@ if (!options) {
 }
 ```
 
-## The `getResolvedOptions` service method
+With `{ optional: true }`, a missing, disabled, or incomplete integration resolves to `null` here instead of throwing, which is what the `if (!options)` check above is guarding against.
+
+## The `getResolvedOptions` Service Method
 
 When your code already has the container, resolve the module and call `getResolvedOptions` directly. This suits API routes, subscribers, scheduled jobs, and loaders, and no workflow is involved. For example, in an API route:
 
-```ts title="api/admin/acme-payment/route.ts"
+```ts title="api/admin/my-payment/route.ts"
 import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const integration: IntegrationModuleService = req.scope.resolve(INTEGRATION_MODULE)
 
-  const resolved = await integration.getResolvedOptions("acme")
+  const resolved = await integration.getResolvedOptions("my")
   if (!resolved) {
-    return res.status(503).send("Acme is not configured")
+    return res.status(503).send("My is not configured")
   }
 
-  const options = resolved.options as AcmeOptions
+  const options = resolved.options as MyOptions
   const { provider_id, category, is_enabled } = resolved.meta
 }
 ```
 
 `getResolvedOptions(identifier, instanceId?)` returns `ResolvedOptions | null`. A value is `{ options, meta }`, where `meta` holds `provider_id`, `category`, and `is_enabled`. A `null` result means the integration is not configured, disabled, or incomplete.
 
-## Resolving inside a workflow
+## Resolving Inside a Workflow
 
 When you compose your own workflow, use the exported step instead of the helper:
 
-```ts title="workflows/create-acme.ts"
+```ts title="workflows/create-my.ts"
 import { createWorkflow, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
 import { getResolvedIntegrationOptionsStep } from "@gorgo/medusa-integration"
 
-export const createAcmeWorkflow = createWorkflow("create-acme", () => {
+export const createMyWorkflow = createWorkflow("create-my", () => {
   const resolved = getResolvedIntegrationOptionsStep({
-    identifier: "acme"
+    identifier: "my"
   })
   return new WorkflowResponse(resolved)
 })
@@ -121,7 +129,7 @@ export const createAcmeWorkflow = createWorkflow("create-acme", () => {
 
 The standalone `getResolvedIntegrationOptionsWorkflow` is also exported. It is what the helper runs internally.
 
-## What resolved means
+## What Resolved Means
 
 Resolved options are not the raw stored values. On every resolve, the module does three things:
 
@@ -131,12 +139,23 @@ Resolved options are not the raw stored values. On every resolve, the module doe
 
 If the integration is not configured, disabled, or incomplete, it resolves to `null`. The helper throws in that case, or returns `null` with `{ optional: true }`. Partial drafts never reach runtime.
 
-## Caching and freshness
+## Caching and Freshness
 
 Resolved options are cached in memory for a short time, so hot paths do not re-read and decrypt on every call. The cache is invalidated whenever the integration changes, whether it is saved, enabled, disabled, or deleted, so consumers pick up new configuration without a redeploy.
 
 ## References
 
-- [General Concepts](/medusa-modules/integration/concepts)
-- [Create an Integration Module Provider](/medusa-modules/integration/create-integration-module-provider)
-- [Migrate a Provider to the Integration Module](/medusa-modules/integration/migrate-provider-to-integration-module)
+<CardList items={[
+  {
+    title: "General Concepts",
+    href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "Create an Integration Module Provider",
+    href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Migrate a Medusa Module Provider to the Integration Module",
+    href: "/medusa-modules/integration/migrate-provider-to-integration-module"
+  }
+]}/>
