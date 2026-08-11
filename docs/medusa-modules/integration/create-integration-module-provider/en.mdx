@@ -1,6 +1,6 @@
 ---
-title: "Create an Integration Module Provider"
-description: "How to create an Integration Module provider and which methods to implement in it: the descriptor, identifier, validateOptions, testConnection, and registration in medusa-config.ts."
+title: "How to Create an Integration Module Provider"
+description: "Learn how to create a Medusa provider that manages its settings through the Integration Module."
 ---
 
 # {frontmatter.title}
@@ -13,17 +13,17 @@ The Integration Module lets any plugin describe its options as a schema, and sto
 
 </Note>
 
-## Implementation example
+## Implementation Example
 
 When you write your own Integration Module provider, it helps to see how a finished one is put together.
 
 For a real implementation, read the [YooKassa payment provider in the Medusa Integrations repository](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/payment-yookassa).
 
-## 1. Create the provider directory
+## 1. Create the Provider Directory
 
 Start by creating a new directory for your Integration Module provider. In a plugin it goes under `src/providers`, for example `src/providers/integration-my`.
 
-## 2. Create the Integration Module provider service
+## 2. Create the Integration Module Provider Service
 
 Create the file `src/providers/integration-my/services/my-integration.ts`, which declares the integration's descriptor and the service itself.
 
@@ -54,7 +54,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 }
 ```
 
-The base class's `getIdentifier()` reads this static field at runtime, and the loader uses it to build the container key your instance is registered under: `int_<identifier>_<id>`, or just `int_<identifier>` without an id.
+The loader reads this static field to build the key your instance is registered under: `int_<identifier>_<id>`, or `int_<identifier>` without an ID.
 
 ### descriptor
 
@@ -62,7 +62,7 @@ The provider class must implement the `descriptor` property. The descriptor hold
 
 <Note type="default" title="">
 
-See [General Concepts](/medusa-modules/integration/concepts) for an overview of the descriptor. The full list of `options` fields (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate`, and others) is declared in the exported `OptionDef` type.
+See [General Concepts](/medusa-modules/integration/concepts#descriptor) for an overview of the descriptor. The full list of `options` fields (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate`, and others) is declared in the exported `OptionDef` type.
 
 </Note>
 
@@ -114,13 +114,7 @@ export class MyIntegrationProvider extends AbstractIntegrationProvider {
 export default MyIntegrationProvider
 ```
 
-`MyOptions` is the resolved, validated shape: `defineIntegration` builds `optionsSchema` from the `options` catalog, and since `apiKey` is `required` and `sandbox` has a `default`, both end up non-optional in `MyOptions`.
-
-<Note type="default" title="">
-
-Unlike other Medusa providers, you don't override the constructor. The loader passes the instance id into the base class, and the provider requests its options from the module at runtime instead of receiving them through the constructor (see [Step 5](#5-test-it-out)).
-
-</Note>
+`MyOptions` is the resolved, validated shape: `defineIntegration` builds `optionsSchema` from the `options` object, and since `apiKey` is `required` and `sandbox` has a `default`, both end up non-optional in `MyOptions`.
 
 ### validateOptions
 
@@ -166,9 +160,9 @@ const descriptor = defineIntegration({
 })
 ```
 
-`status` is one of `"passed" | "failed" | "skipped"`. Returning `{ status: "failed", message }` isn't a throw: the Admin's Test connection button and the daily job both treat it as a normal result, and only an actual throw gets recorded differently, as `errored`.
+`status` is one of `"passed" | "failed" | "skipped"`. Returning `{ status: "failed", message }` counts as a normal result, not an error. If the provider throws, the daily job counts it separately, as `errored`.
 
-## 3. Create the provider definition file
+## 3. Create Module Provider Definition File
 
 Create the file `src/providers/integration-my/index.ts` with the following content:
 
@@ -184,7 +178,7 @@ export default ModuleProvider(INTEGRATION_MODULE, {
 
 This exports the provider definition, declaring `MyIntegrationProvider` as its service.
 
-## 4. Register the provider
+## 4. Register the Provider
 
 To use your Integration Module provider, add it to the Integration Module's `providers` array in `medusa-config.ts`:
 
@@ -210,7 +204,7 @@ module.exports = defineConfig({
 })
 ```
 
-Registering it here is what makes the loader instantiate `MyIntegrationProvider`, passing this registration's `options` and `id` into the constructor so `getInstanceId()` returns `"my-1"`.
+The loader instantiates `MyIntegrationProvider` from this registration.
 
 <Note type="warning">
 
@@ -224,9 +218,9 @@ Next, add the secret encryption key to your environment variables. The Integrati
 INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
-Any non-empty value works: the module derives it via SHA-256 into a 32-byte AES-256-GCM key, so use a high-entropy one, for example `openssl rand -hex 32`.
+Any non-empty value works. The module derives it via SHA-256 into a 32-byte AES-256-GCM key, so use a high-entropy one, for example `openssl rand -hex 32`.
 
-## 5. Test it out
+## 5. Test It Out
 
 Start the server and open **Settings → Integrations** in Medusa Admin. Your integration appears in the list. Fill in the options and click **Test connection** to run `testConnection`.
 
@@ -241,7 +235,13 @@ const options = await resolveIntegrationOptions<MyOptions>({
 })
 ```
 
-The returned `options` is typed as `MyOptions`, already decrypted and validated, and by default the call throws a `MedusaError` if the integration is not configured, disabled, or incomplete. This is how an isolated provider reads it; a route, subscriber, or workflow step reads it differently, covered in [Using an Integration Module provider](/medusa-modules/integration/reading-options).
+The returned `options` is typed as `MyOptions`, already decrypted and validated. By default the call throws a `MedusaError` if the integration is not configured, disabled, or incomplete.
+
+<Note type="default" title="">
+
+See [Reading Options](/medusa-modules/integration/reading-options) for how to read an integration's options from a route, subscriber, or workflow step.
+
+</Note>
 
 ## References
 

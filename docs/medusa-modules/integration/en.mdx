@@ -30,15 +30,15 @@ The Integration Module is a good fit for Medusa developers building plugins, pro
 
 ## Features
 
-- **Settings management in Admin:** Set in the **Settings → Integrations** section, no `medusa-config`/env edits and no redeploys.
+- **Settings management in Admin:** Set in the **Settings → Integrations** section, no `medusa-config` edits and no redeploys.
 - **Any plugin, provider, or module:** Works across payment, fulfillment, ERP, notification, content, and other extensions.
 - **Declarative descriptor (`defineIntegration`):** A single description of the options, settings sections, validation, and connection test.
-- **Flexible typing and validation:** Typed fields (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) with per-option and cross-section rules, conditional visibility, and read-only fields. At runtime, the plugin gets a typed, decrypted object: incomplete or disabled settings never resolve, so an unfilled draft is never returned.
-- **Encrypted secrets:** Fields marked `secret` are encrypted (AES-256-GCM) and never reach the browser.
-- **Multiple instances:** The same provider can be configured more than once. For example, for several accounts in the same third-party service.
+- **Flexible typing and validation:** Typed fields (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) with per-option and cross-section rules, conditional visibility, and read-only fields. At runtime, the plugin gets a typed, decrypted object. Incomplete or disabled settings never resolve, so the plugin never gets an unfilled draft.
+- **Encrypted secrets:** The module encrypts fields marked `secret` (AES-256-GCM) and never sends them to the browser.
+- **Multiple instances:** Register the same provider more than once, for example for several accounts in the same third-party service.
 - **Connection test:** Verify credentials against the third-party service right from the Admin.
 - **Extensible UI:** Sections can be reordered ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). If the generated sections aren't enough, you can implement any UI for your options using custom widgets.
-- **Integration catalog:** Available integrations are shown in the Admin, and any plugin appears there on equal footing with the built-in ones.
+- **Integration catalog:** Available integrations are shown in the Admin.
 
 ---
 
@@ -82,17 +82,21 @@ The Integration Module is a good fit for Medusa developers building plugins, pro
   }
 ]}/>
 
-<Note type="success" title="">**Want to add your integrations to this list?** Make a [Pull Request](https://github.com/gorgojs/medusa-integrations#contribution) or write to [support chat](https://t.me/gorgojs_bot) on Telegram.</Note>
+<Note type="success" title="">
+
+**Want to add your integrations to this list?** Make a [Pull Request](https://github.com/gorgojs/medusa-integrations#contribution) or write to [support chat](https://t.me/gorgojs_bot) on Telegram.
+
+</Note>
 
 ---
 
-## 💬  Support & Community
+## 💬 Support & Community
 
-Got questions or ideas about the plugin? Join the Telegram support chat — [@gorgojs_chat](https://t.me/gorgojs_chat)
+Got questions or ideas about the plugin? Join the Telegram support chat [@gorgojs_chat](https://t.me/gorgojs_chat)
 
-Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
+Connect with other Medusa developers on Telegram [@medusajs_chat](https://t.me/medusajs_chat)
 
-## Next steps
+## Next Steps
 
 <CardList items={[
   {
@@ -108,11 +112,11 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
     href: "/medusa-modules/integration/reading-options"
   },
   {
-    title: "Migrate a Provider to the Integration Module",
+    title: "Migrate a Medusa Module Provider to the Integration Module",
     href: "/medusa-modules/integration/migrate-provider-to-integration-module"
   },
   {
-    title: "Admin User guide",
+    title: "Manage Integrations in Medusa Admin",
     href: "/medusa-modules/integration/manage-integrations"
   }
 ]}/>

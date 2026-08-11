@@ -1,6 +1,6 @@
 ---
 title: "Migrate a Medusa Module Provider to the Integration Module"
-description: "A step-by-step guide to moving the settings of an existing provider of any Medusa module into the Integration Module."
+description: "Learn how to move the settings of an existing provider of any Medusa module into the Integration Module."
 ---
 
 # {frontmatter.title}
@@ -15,7 +15,7 @@ The Integration Module lets any plugin describe its options as a schema, and sto
 
 ---
 
-## Why migrate
+## Why Migrate
 
 When a provider's options are set in `medusa-config.ts`, changing a token, password, or any other setting means editing code, updating environment variables, and redeploying Medusa. The Integration Module removes this routine. It builds a UI for managing the provider's settings from a simple declarative description of their schema, and the store admin manages them in the Admin, with no `medusa-config.ts` edits and no redeploy.
 
@@ -29,15 +29,15 @@ If you've already written a UI for your provider, migrating to the Integration M
 
 ---
 
-## Migration example
+## Migration Example
 
 The code examples in this guide come from a real migration of our [ApiShip Fulfillment Module Provider](https://www.npmjs.com/package/@gorgo/medusa-fulfillment-apiship).
 
 Before the migration, ApiShip's settings lived in `store.metadata.apiship`: the token, courier-service connections, the default sender address, product dimensions, and tax settings. Behind them stood a dedicated Admin UI and a separate API route for each CRUD operation. The Integration Module brings all of this into a single **Settings → Integrations** section.
 
-The provider's option list is flat, and every option maps to a single control in the generated UI form. That makes the split easy to decide: scalar settings become descriptor options, and only what the catalog has no suitable control for moves to your custom UI, for instance options with a `json` type. For our ApiShip provider that leaves exactly one thing: the list of courier-service connections, because it's an array of JSON objects.
+The provider's option list is flat, and every option maps to a single control in the generated UI form. Scalar settings become descriptor options, and only what the catalog has no suitable control for moves to your custom UI, for instance options with a `json` type. For the ApiShip provider, that's only the list of courier-service connections, because it's an array of JSON objects.
 
-## Step 1: Describe the descriptor
+## Step 1: Describe the Descriptor
 
 Next to your existing fulfillment provider, create a new Integration Module provider in `providers/integration-apiship/services/apiship-integration.ts` and describe the descriptor in it. It's the same list of settings as before, but every field is now declared explicitly: its type, whether it's required, its default, and how it renders in the UI form.
 
@@ -46,6 +46,8 @@ src/providers/
 ├── integration-apiship/          # new: settings descriptor for the Integration Module
 └── fulfillment-apiship/          # existing: fulfillment-module provider that reads settings through the Integration Module
 ```
+
+`integration-apiship` is the new directory; `fulfillment-apiship` is the existing fulfillment-module provider, and it's the one that changes in Step 3 to start reading through the new descriptor instead of `store.metadata`.
 
 ```ts title="providers/integration-apiship/services/apiship-integration.ts"
 import { AbstractIntegrationProvider, defineIntegration, z } from "@gorgo/medusa-integration"
@@ -173,6 +175,8 @@ export class ApishipIntegrationProvider extends AbstractIntegrationProvider {
 export default ApishipIntegrationProvider
 ```
 
+This groups the settings into the same four sections the old page used: credentials, payment and tax, product sizes, and sender. The one exception is the courier-service connections, which stay a single `settings` option of type `json` instead of their own page.
+
 <Note type="default" title="">
 
 `secret: true` on the `token` option encrypts that field before saving. Keep your defaults in one shared constant and reference it from `default`. The resolver applies them at runtime, the edit form pre-fills the inputs, and the read-only card shows the default as the current value, so all three stay in sync.
@@ -185,7 +189,7 @@ Options without a `default` stay absent from the resolved configuration. That's 
 
 </Note>
 
-## Step 2: Register the provider in `medusa-config.ts`
+## Step 2: Register the Provider in `medusa-config.ts`
 
 ```ts title="medusa-config.ts"
 // ...
@@ -230,6 +234,8 @@ module.exports = defineConfig({
 })
 ```
 
+Both registrations share the same `APISHIP_INTEGRATION_ID`: the Integration Module provider stores its settings under it, and the fulfillment-module provider's own `options.id` tells it which one to read.
+
 <Note type="warning">
 
 The Integration Module provider takes an `id` option, from which the final instance key `int_<identifier>_<id>` is assembled. The same `id` must be passed to the fulfillment-module provider so it knows which settings to read. If the integration provider supports multiple instances, each has its own `id`, which you can pass to different fulfillment-module providers.
@@ -242,7 +248,9 @@ Next, add the secret encryption key to the environment variables. The Integratio
 INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
-## Step 3: Switch to reading options through `resolveIntegrationOptions`
+This needs to match whatever `process.env.INTEGRATION_ENCRYPTION_KEY` reads in `medusa-config.ts` above.
+
+## Step 3: Switch to Reading Options through `resolveIntegrationOptions`
 
 Previously the fulfillment-module provider read its options from `store.metadata.apiship`. Now it gets them from the Integration Module through `resolveIntegrationOptions()`, passing its `identifier` and instance `id` (the same `id` from `medusa-config.ts`). The module returns the option values already decrypted, validated, and with defaults applied:
 
@@ -274,7 +282,9 @@ class ApishipBase extends AbstractFulfillmentProviderService {
 }
 ```
 
-## Step 4: Move your custom Admin UI
+`this.instanceId_`, set from the fulfillment-module registration's own `options.id`, becomes the `instance_id` passed to `resolveIntegrationOptions`, so each fulfillment-module instance reads back exactly the Integration Module instance it was paired with in `medusa-config.ts`.
+
+## Step 4: Move Your Custom Admin UI
 
 ApiShip used to have its own settings page in the Admin. Now the Integration Module builds the integration page from the descriptor: credentials, payment and VAT, product dimensions, and the sender are generated as sections.
 
@@ -309,6 +319,8 @@ export const config = defineWidgetConfig({
 export default ApishipIntegrationWidget
 ```
 
+`useApishipOptions` hits your own admin route instead of reading the connections list from `data.values`. It's not about server access. `data.values` already carries the integration's non-secret options, including `settings`. It's that the connections need per-record editing (add, update, delete), which calls for a real CRUD route, not a one-time snapshot.
+
 <Note type="warning">
 
 `resolveIntegrationOptions` is server-side only. It runs a workflow in the app container. A widget reads through your own admin route instead, and that route decides what to expose: keep secrets out of the response, and let the Integration Module's own `GET /admin/integrations/:provider_id` serve everything a descriptor section already covers.
@@ -342,6 +354,17 @@ The full code of the ApiShip fulfillment-module provider after migration is avai
 
 ## References
 
-- [General Concepts](/medusa-modules/integration/concepts)
-- [Create an Integration Module Provider](/medusa-modules/integration/create-integration-module-provider)
-- [Reading Options](/medusa-modules/integration/reading-options)
+<CardList items={[
+  {
+    title: "General Concepts",
+    href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "Create an Integration Module Provider",
+    href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Reading Options",
+    href: "/medusa-modules/integration/reading-options"
+  }
+]}/>
