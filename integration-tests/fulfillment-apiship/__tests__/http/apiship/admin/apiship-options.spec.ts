@@ -203,7 +203,7 @@ medusaIntegrationTestRunner({
         ["token", { token: "tok" }],
         ["is_test", { is_test: true }],
         ["is_cod", { is_cod: true }],
-        ["delivery_cost_vat", { delivery_cost_vat: "20" }],
+        ["delivery_cost_vat", { delivery_cost_vat: 20 }],
         ["default_product_length", { default_product_length: 50 }],
         ["sender_country_code", { sender_country_code: "RU" }],
         ["the old nested settings blob", { settings: { connections: [CONNECTION] } }],
@@ -241,7 +241,7 @@ medusaIntegrationTestRunner({
 
         expect(await readResolved()).toMatchObject({
           is_cod: false,
-          delivery_cost_vat: "-1",
+          delivery_cost_vat: -1,
           default_product_length: 10,
           default_product_width: 10,
           default_product_height: 10,
@@ -251,9 +251,9 @@ medusaIntegrationTestRunner({
 
       it("writes payment & VAT", async () => {
         await setCredentials({ token: "tok" })
-        expect((await saveSection("payment_and_tax", { is_cod: true, delivery_cost_vat: "20" })).status).toBe(200)
+        expect((await saveSection("payment_and_tax", { is_cod: true, delivery_cost_vat: 20 })).status).toBe(200)
 
-        expect(await readResolved()).toMatchObject({ is_cod: true, delivery_cost_vat: "20" })
+        expect(await readResolved()).toMatchObject({ is_cod: true, delivery_cost_vat: 20 })
       })
 
       it("writes the default product sizes", async () => {
@@ -291,7 +291,7 @@ medusaIntegrationTestRunner({
       })
 
       it("400s on a VAT rate ApiShip doesn't support", async () => {
-        expect((await saveSection("payment_and_tax", { delivery_cost_vat: "18" })).status).toBe(400)
+        expect((await saveSection("payment_and_tax", { delivery_cost_vat: 18 })).status).toBe(400)
       })
 
       it("400s on a non-positive size", async () => {

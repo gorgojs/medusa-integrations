@@ -137,18 +137,24 @@ describe("Apiship integration descriptor schema", () => {
   })
 
   describe("payment & VAT", () => {
-    it("accepts every ApiShip VAT rate as a string", () => {
-      for (const rate of ["-1", "0", "5", "7", "10", "20", "22"]) {
-        expect(schema.safeParse({ ...validBase, delivery_cost_vat: rate }).success).toBe(true)
+    it("accepts every ApiShip VAT rate as the number its API expects", () => {
+      for (const rate of [-1, 0, 5, 7, 10, 20, 22]) {
+        const res = schema.safeParse({ ...validBase, delivery_cost_vat: rate })
+        expect(res.success).toBe(true)
+        if (res.success) expect(res.data.delivery_cost_vat).toBe(rate)
       }
     })
 
-    it("rejects a rate ApiShip doesn't support", () => {
-      expect(schema.safeParse({ ...validBase, delivery_cost_vat: "18" }).success).toBe(false)
+    // A `<Select>` submits a string, so the option coerces it back to the declared number.
+    it("coerces a rate submitted as a string", () => {
+      const res = schema.safeParse({ ...validBase, delivery_cost_vat: "20" })
+      expect(res.success).toBe(true)
+      if (res.success) expect(res.data.delivery_cost_vat).toBe(20)
     })
 
-    it("rejects a numeric rate — the select stores strings", () => {
-      expect(schema.safeParse({ ...validBase, delivery_cost_vat: 20 }).success).toBe(false)
+    it("rejects a rate ApiShip doesn't support, as number or string", () => {
+      expect(schema.safeParse({ ...validBase, delivery_cost_vat: 18 }).success).toBe(false)
+      expect(schema.safeParse({ ...validBase, delivery_cost_vat: "18" }).success).toBe(false)
     })
 
     it("only shows the VAT rate when cash on delivery is on", () => {
