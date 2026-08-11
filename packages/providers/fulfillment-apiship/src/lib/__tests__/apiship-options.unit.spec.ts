@@ -76,14 +76,28 @@ describe("assembleApishipOptions", () => {
   })
 
   describe("VAT rate", () => {
-    it("coerces the descriptor's string value to ApiShip's number", () => {
-      expect(assembleApishipOptions({ token: "tok", delivery_cost_vat: "20" }).delivery_cost_vat).toBe(20)
-      expect(assembleApishipOptions({ token: "tok", delivery_cost_vat: "0" }).delivery_cost_vat).toBe(0)
-      expect(assembleApishipOptions({ token: "tok", delivery_cost_vat: "-1" }).delivery_cost_vat).toBe(-1)
+    it("passes the stored number through", () => {
+      expect(assembleApishipOptions({ token: "tok", delivery_cost_vat: 20 }).delivery_cost_vat).toBe(20)
+      expect(assembleApishipOptions({ token: "tok", delivery_cost_vat: 0 }).delivery_cost_vat).toBe(0)
     })
 
     it("falls back to no-VAT when unset", () => {
       expect(assembleApishipOptions({ token: "tok" }).delivery_cost_vat).toBe(-1)
+    })
+
+    // The option is a numeric enum, so the string-to-number coercion belongs to the
+    // descriptor's schema (a `<Select>` submits a string), not here.
+    it("is coerced by the descriptor when it arrives as a string", () => {
+      const parsed = schema.safeParse({ token: "tok", delivery_cost_vat: "20" })
+      expect(parsed.success).toBe(true)
+      if (parsed.success) {
+        expect(assembleApishipOptions(parsed.data as any).delivery_cost_vat).toBe(20)
+      }
+    })
+
+    it("is rejected by the descriptor when it is not a supported rate", () => {
+      expect(schema.safeParse({ token: "tok", delivery_cost_vat: 18 }).success).toBe(false)
+      expect(schema.safeParse({ token: "tok", delivery_cost_vat: "18" }).success).toBe(false)
     })
   })
 

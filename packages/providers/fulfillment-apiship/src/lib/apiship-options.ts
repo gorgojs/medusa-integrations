@@ -6,12 +6,8 @@ import type {
   StoredApishipOptions,
 } from "../types/apiship"
 
-/**
- * VAT rates ApiShip accepts, as descriptor enum values. The integration module's `enum`
- * option is string-only, so they are declared (and stored) as strings and converted back to
- * the numeric `CostDeliveryCostVatEnum` by {@link assembleApishipOptions}.
- */
-export const APISHIP_VAT_RATES = ["-1", "0", "5", "7", "10", "20", "22"] as const
+/** VAT rates ApiShip accepts, declared and stored as the numbers its API expects. */
+export const APISHIP_VAT_RATES = [-1, 0, 5, 7, 10, 20, 22] as const
 export type ApishipVatRate = (typeof APISHIP_VAT_RATES)[number]
 
 /**
@@ -22,7 +18,7 @@ export type ApishipVatRate = (typeof APISHIP_VAT_RATES)[number]
  */
 export const APISHIP_DEFAULTS = {
   is_cod: false,
-  delivery_cost_vat: "-1",
+  delivery_cost_vat: -1,
   /** cm */
   default_product_length: 10,
   default_product_width: 10,
@@ -30,11 +26,6 @@ export const APISHIP_DEFAULTS = {
   /** grams */
   default_product_weight: 20,
 } as const satisfies Partial<Record<keyof StoredApishipOptions, unknown>>
-
-function toVatRate(value: unknown): ApishipOptionsDTO["delivery_cost_vat"] {
-  const n = Number(value ?? APISHIP_DEFAULTS.delivery_cost_vat)
-  return (Number.isFinite(n) ? n : -1) as ApishipOptionsDTO["delivery_cost_vat"]
-}
 
 /**
  * Drop connections that are missing a field the order/calculator mapping relies on. `name`
@@ -70,8 +61,7 @@ function normalizeConnections(
 
 /**
  * Assemble the stored row into a complete `ApishipOptionsDTO`: lift the connection list out
- * of the `settings` blob, coerce the VAT rate from its stored string, and fill anything the
- * caller didn't get from the resolver.
+ * of the `settings` blob and fill anything the caller didn't get from the resolver.
  *
  * Runtime reads come through `resolveIntegrationOptions`, where the descriptor's schema has
  * already applied {@link APISHIP_DEFAULTS}; the `??` here covers admin reads of a draft that
@@ -85,7 +75,7 @@ export function assembleApishipOptions(
     token: options?.token ?? "",
     is_test: options?.is_test ?? false,
     is_cod: options?.is_cod ?? APISHIP_DEFAULTS.is_cod,
-    delivery_cost_vat: toVatRate(options?.delivery_cost_vat),
+    delivery_cost_vat: options?.delivery_cost_vat ?? APISHIP_DEFAULTS.delivery_cost_vat,
     default_product_length:
       options?.default_product_length ?? APISHIP_DEFAULTS.default_product_length,
     default_product_width:

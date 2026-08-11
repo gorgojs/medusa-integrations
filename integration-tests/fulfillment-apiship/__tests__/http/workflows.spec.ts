@@ -333,13 +333,12 @@ medusaIntegrationTestRunner({
           input: {
             provider_id: PROVIDER_ID,
             section_id: "payment_and_tax",
-            values: { is_cod: true, delivery_cost_vat: "20" },
+            values: { is_cod: true, delivery_cost_vat: 20 },
           },
         })
 
         const { result } = await getApishipOptionsWorkflow(container).run({ input: { provider_id: PROVIDER_ID } })
         expect(result.is_cod).toBe(true)
-        // Stored as a string by the select, normalized back to ApiShip's numeric enum.
         expect(result.delivery_cost_vat).toBe(20)
         expect(result.sender_country_code).toBe("RU")
       })

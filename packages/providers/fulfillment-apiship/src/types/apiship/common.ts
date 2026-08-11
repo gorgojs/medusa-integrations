@@ -91,15 +91,13 @@ export interface ApishipOptionsDTO {
  * Как конфигурация лежит в строке интеграции: плоские опции дескриптора плюс json-блоб
  * `settings`, в котором остался только список подключений (для списка записей в каталоге
  * контролов дескриптора нет варианта, поэтому его редактирует виджет плагина).
- *
- * `delivery_cost_vat` — строка: enum-опции модуля строковые, к числу приводит
- * `assembleApishipOptions`.
+
  */
 export interface StoredApishipOptions {
   token?: string
   is_test?: boolean
   is_cod?: boolean
-  delivery_cost_vat?: string
+  delivery_cost_vat?: CostDeliveryCostVatEnum
   default_product_length?: number
   default_product_width?: number
   default_product_height?: number
