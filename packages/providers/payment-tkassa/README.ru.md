@@ -81,7 +81,7 @@
 - Medusa v2.17.2 или выше  
 - Node.js v20 или выше  
 - Аккаунт Т-Бизнес с подключённым интернет-эквайрингом Т-Касса – [зарегистрируйтесь или войдите](https://www.tbank.ru/kassa/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
-- Модуль интеграций v0.1.0 или новее
+- Модуль интеграций
 
 ## Установка
 

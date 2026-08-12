@@ -54,7 +54,7 @@
     "t-kassa-api": "^1.0.6"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.1.0",
+    "@gorgo/medusa-integration": "^0.1.5",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",
@@ -79,7 +79,7 @@
     "yalc": "^1.0.0-pre.53"
   },
   "peerDependencies": {
-    "@gorgo/medusa-integration": "^0.1.0",
+    "@gorgo/medusa-integration": "^0.1.5",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",

@@ -70,7 +70,7 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 - Medusa v2.17.2 or later
 - Node.js v20 or later
 - A Robokassa account – [sign in or create one](https://login.robokassa.ru/reg?promoCode=gorgo)
-- Integration Module v0.1.0 or later
+- Integration Module
 
 ## Installation
 
