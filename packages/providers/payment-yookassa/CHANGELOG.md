@@ -1,10 +1,16 @@
 # @gorgo/medusa-payment-yookassa
 
-## 2.0.0-beta.1
+## 2.0.0
 
 ### Highlights
 
-- **Migrated to the Integration Module.** YooKassa is now configured in the Admin under **Settings → Integrations**, powered by the new [`@gorgo/medusa-integration`](https://www.npmjs.com/package/@gorgo/medusa-integration) module. Credentials are no longer read from `medusa-config` and env — a store admin fills in the settings form, secrets are encrypted at rest (AES-256-GCM), and the provider resolves the validated, decrypted config at runtime. No code edits and no redeploys to change settings.
+- **Migrated to the Integration Module.** YooKassa is now configured in the Admin under **Settings → Integrations**, powered by the new [Integration Module](https://docs.gorgojs.com/medusa-modules/integration). Credentials are no longer read from `medusa-config` and env: a store admin fills in the settings form, secrets are encrypted at rest (AES-256-GCM), and the payment provider resolves the validated, decrypted config at runtime. No code edits and no redeploys to change settings. Read the [announcement](https://gorgojs.com/blog/announcing-medusa-integration-module).
+
+### Breaking Changes
+
+- `@gorgo/medusa-integration` is now required. Install it next to the provider, register `@gorgo/medusa-payment-yookassa/providers/integration-yookassa` under it, and set `INTEGRATION_ENCRYPTION_KEY` in the env.
+- Provider options in `medusa-config` (`shopId`, `secretKey`, `capture`, `paymentDescription`, `useReceipt`, `taxSystemCode`, and the rest) are no longer read. Re-enter them once in **Settings → Integrations**. The payment provider now takes a single option, `id`, pointing at the integration instance.
+- See [Getting Started](https://docs.gorgojs.com/medusa-integrations/yookassa/getting-started) for the full v2 setup. The v1 guide stays at [Getting Started (v1)](https://docs.gorgojs.com/medusa-integrations/yookassa/getting-started-v1).
 
 ## 1.0.5
 
