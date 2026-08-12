@@ -14,12 +14,20 @@
       "paymentDescription": "Default payment description",
       "useReceipt": "Send receipts",
       "useAtolOnlineFFD120": "Atol Online FFD 1.2",
-      "taxSystemCode": "Tax system code",
-      "taxItemDefault": "Default item VAT code",
-      "taxShippingDefault": "Default shipping VAT code"
+      "taxSystemCode": "Tax system",
+      "taxItemDefault": "Default item VAT rate",
+      "taxShippingDefault": "Default shipping VAT rate"
     },
     "hints": {
-      "paymentDescription": "Used when the checkout context doesn't provide one."
+      "shopId": "Taken from your YooKassa dashboard, next to the secret key.",
+      "secretKey": "Issued in your YooKassa dashboard. Stored encrypted and never sent back to the browser.",
+      "capture": "On: one-stage payment, the money is debited right away. Off: two-stage payment, the amount is held and you capture it later.",
+      "paymentDescription": "Used when the checkout context doesn't provide one. Up to 128 characters, shown to the customer during payment and in your YooKassa dashboard.",
+      "useReceipt": "Sends receipt data with every payment so it can be registered under 54-FZ.",
+      "useAtolOnlineFFD120": "Turn on if an Atol Online sales register on FFD 1.2 registers the receipts. It makes the tax system required.",
+      "taxSystemCode": "Applies to the whole receipt. Items under different tax systems have to be sent in separate receipts.",
+      "taxItemDefault": "The rate applied to every product line of the receipt.",
+      "taxShippingDefault": "The rate applied to the shipping line of the receipt."
     },
     "taxSystems": {
       "general": "General",

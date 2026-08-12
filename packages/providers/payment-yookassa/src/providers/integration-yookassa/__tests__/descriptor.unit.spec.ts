@@ -102,13 +102,13 @@ describe("YooKassa integration descriptor schema", () => {
   })
 
   describe("tax codes as numeric enums", () => {
+    // No explicit `control` here: the module derives `select` from `type: "enum"`.
     it.each<[string, readonly number[]]>([
       ["taxSystemCode", taxSystemCodes],
       ["taxItemDefault", vatCodes],
       ["taxShippingDefault", vatCodes],
-    ])("%s declares its codes as a select over numbers", (field, codes) => {
+    ])("%s declares its codes as an enum over numbers", (field, codes) => {
       expect(option(field).type).toBe("enum")
-      expect(option(field).control).toBe("select")
       expect(option(field).values).toEqual(codes)
       expect(option(field).values.every((v: unknown) => typeof v === "number")).toBe(true)
     })
