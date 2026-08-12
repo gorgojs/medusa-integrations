@@ -1,5 +1,10 @@
 # @gorgo/medusa-integration
 
+## 0.1.5
+
+- Add number value support for enum
+- Improve docs
+
 ## 0.1.4
 
 - Improve docs snippet and UI
