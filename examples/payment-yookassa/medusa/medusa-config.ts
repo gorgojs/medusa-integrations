@@ -2,6 +2,8 @@ import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
+const YOOKASSA_INTEGRATION_ID = "yookassa-1";
+
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
@@ -37,9 +39,8 @@ module.exports = defineConfig({
         providers: [
           {
             resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
-            options: {
-               id: "yookassa", // must match the provider id used in the payment module below
-            },
+            id: YOOKASSA_INTEGRATION_ID,
+            options: {},
           },
         ],
       },
@@ -61,7 +62,9 @@ module.exports = defineConfig({
           {
             resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
             id: "yookassa",
-            options: {},
+            options: {
+              id: YOOKASSA_INTEGRATION_ID, // must match the provider id used in the integration module above
+            },
           },
         ],
       },
