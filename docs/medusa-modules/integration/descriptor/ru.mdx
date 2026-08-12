@@ -1,0 +1,349 @@
+---
+title: "Дескриптор интеграции"
+description: "Полный справочник по дескриптору интеграции: defineIntegration, все поля параметров по типу, валидация, секреты и проверка соединения."
+---
+
+# {frontmatter.title}
+
+В [дескрипторе](/medusa-modules/integration/concepts#дескриптор) интеграции вы объявляете её параметры, их группировку по секциям настроек, валидацию и необязательную проверку соединения. На этой странице собран полный справочник по каждому полю, которое можно в нём указать.
+
+<Note type="default" title="">
+
+Роли участников и то, как параметр проходит путь от дескриптора до итогового значения во время выполнения, описаны в разделе [Основные концепции](/medusa-modules/integration/concepts).
+
+</Note>
+
+## defineIntegration
+
+Создайте дескриптор через `defineIntegration`. Он собирает из каталога `options` схему `optionsSchema`, которая используется для `z.infer`, значений по умолчанию и полной валидации.
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import { defineIntegration, AbstractIntegrationProvider } from "@gorgo/medusa-integration"
+
+const descriptor = defineIntegration({
+  category: "payment",
+  displayName: "my.name",
+  options: {
+    apiKey:  {
+      type: "string",
+      control: "secret",
+      secret: true,
+      required: true,
+      label: "my.apiKey"
+    },
+    sandbox: {
+      type: "boolean",
+      control: "switch",
+      default: false,
+      label: "my.sandbox"
+    },
+  },
+  sections: [
+    {
+      id: "credentials",
+      title: "my.credentials",
+      options: ["apiKey", "sandbox"]
+    },
+  ],
+})
+
+export class MyIntegration extends AbstractIntegrationProvider {
+  static identifier = "my"
+
+  get descriptor() {
+    return descriptor
+  }
+}
+```
+
+Этот дескриптор объявляет `apiKey` и `sandbox`, сгруппированные в одну секцию `credentials`. `defineIntegration` сразу выбрасывает ошибку при загрузке в двух случаях: если секция ссылается на id параметра, которого нет в `options`, и если `values` параметра типа `enum` смешивает строки и числа.
+
+## Поля параметра
+
+Каждый параметр в `options` представляет собой объект вида `{ type, ... }`. Поле `type` определяет доступные значения и остальные поля, общие для всех типов:
+
+<MedusaTypeList
+  sectionTitle="Options"
+  types={[
+    {
+      name: "type",
+      type: "enum",
+      description: "Тип параметра. Определяет валидацию, доступный UI-контрол по умолчанию и дополнительные поля:\n- `string`\n- `url`\n- `email`\n- `uuid`\n- `number`\n- `boolean`\n- `enum`\n- `json`",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "label",
+      type: "string",
+      description: "i18n-ключ метки поля. Подставляется в Admin по активному языку с откатом на английский.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "control",
+      type: "enum",
+      description: "UI-контрол для рендера поля:\n- `text`\n- `secret`\n- `switch`\n- `number`\n- `url`\n- `select`\n- `json`\nПодбирается автоматически по `type`, но можно переопределить.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "default",
+      type: "string | number | boolean | unknown",
+      description: "Значение по умолчанию; тип соответствует `type` параметра. Наличие `default` делает параметр фактически всегда присутствующим в итоговых параметрах, даже если `required` не задан.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "required",
+      type: "boolean",
+      description: "Отклоняет пустое (`undefined`) значение и при сохранении этого параметра, и при проверке полноты интеграции. По умолчанию параметр необязателен.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "secret",
+      type: "boolean",
+      description: "Шифрует значение (AES-256-GCM) при сохранении и никогда не передаёт его в браузер. CRUD API маскирует значение и сообщает лишь, задано ли оно. Сохранение пустым оставляет прежнее хранимое значение.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "hint",
+      type: "string",
+      description: "i18n-ключ подсказки, отображаемой под полем.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "placeholder",
+      type: "string",
+      description: "i18n-ключ плейсхолдера поля.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "readonly",
+      type: "boolean",
+      description: "Рендерит поле как нередактируемое в Admin.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "visibleWhen",
+      type: "object",
+      description: "`{ field, equals }` скрывает поле в Admin, пока значение соседнего параметра `field` не равно `equals`. Влияет только на отображение: требуемость на сервере по-прежнему задаётся через `required` или `validate`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "validate",
+      type: "function",
+      description: "Кастомная проверка значения этого параметра, вызывается вместе со встроенной схемой типа.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+## Дополнительные поля по типу параметра
+
+У некоторых типов есть свои поля сверх общих:
+
+- **`string`:** `minLength`, `maxLength`, `pattern`
+- **`url`:** `protocols`
+- **`number`:** `min`, `max`, `int`, `positive`, `nonnegative`, `multipleOf`
+- **`enum`:** `values`, `valueLabels`
+
+<MedusaTypeList
+  sectionTitle="Options"
+  types={[
+    {
+      name: "minLength",
+      type: "number",
+      description: "Минимальная длина строки.\nПрименимо только при `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "maxLength",
+      type: "number",
+      description: "Максимальная длина строки.\nПрименимо только при `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "pattern",
+      type: "string",
+      description: "Regex-шаблон для валидации строки.\nПрименимо только при `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "protocols",
+      type: "string[]",
+      description: "Ограничивает допустимые схемы URL, например `[\"https\"]`. Без ограничения разрешён любой протокол.\nПрименимо только при `type: \"url\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "min",
+      type: "number",
+      description: "Минимальное значение.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "max",
+      type: "number",
+      description: "Максимальное значение.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "int",
+      type: "boolean",
+      description: "Требует целое число.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "positive",
+      type: "boolean",
+      description: "Требует значение больше нуля.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "nonnegative",
+      type: "boolean",
+      description: "Требует значение не меньше нуля.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "multipleOf",
+      type: "number",
+      description: "Требует, чтобы значение было кратно указанному числу.\nПрименимо только при `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "values",
+      type: "string[] | number[]",
+      description: "Список допустимых значений. Обязательное поле. Либо только строки, либо только числа, и `default` должен быть того же типа.\nПрименимо только при `type: \"enum\"`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "valueLabels",
+      type: "object",
+      description: "i18n-ключи меток для отдельных значений из `values`.\nПрименимо только при `type: \"enum\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+## Сгенерированный CRUD и валидация
+
+Модуль генерирует CRUD API из дескриптора и валидирует каждую запись. Валидация покрывает правила на уровне отдельного параметра (типы, диапазоны, паттерны) вместе с правилами между секциями, охватывающими всю конфигурацию. Ничего писать под каждую интеграцию не нужно.
+
+Правила между секциями объявляются через `validate` дескриптора. В отличие от `validate` отдельного параметра, он получает всю собранную конфигурацию и может пометить проблемой любое поле:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  validate: (full, { addIssue }) => {
+    if (full.mode === "webhook" && !full.webhookSecret) {
+      addIssue({ path: ["webhookSecret"], message: "Required when mode is \"webhook\"" })
+    }
+  },
+})
+```
+
+В отличие от `required` или `validate` конкретного параметра, это правило запускается только при полной валидации (проверке готовности интеграции к включению), а не при сохранении отдельной секции.
+
+## Включена и заполнена
+
+Параметры становятся активными, только когда интеграция и включена, и заполнена, то есть проходит полную валидацию. Незавершённый черновик или выключенная интеграция никогда не отдают параметры, поэтому недоделанная конфигурация не может попасть в работающее приложение.
+
+## Секреты и шифрование
+
+Параметры с пометкой `secret` шифруются при хранении алгоритмом AES-256-GCM и никогда не попадают в браузер. CRUD API маскирует их и сообщает лишь, задано значение или нет. Сохранение секрета пустым оставляет прежнее хранимое значение, а не стирает его.
+
+Для шифрования модулю нужен ключ, задайте его как `encryptionKey` при регистрации модуля. О том, как задать его и что происходит без него, смотрите в разделе [Параметры Модуля интеграций](/medusa-modules/integration/integration-module-options#encryptionkey).
+
+## Проверка соединения
+
+Дескриптор может объявить необязательную проверку соединения, которая сверяет учётные данные со сторонним сервисом. Администраторы запускают её по требованию, а запланированная задача ежедневно перепроверяет настроенные интеграции.
+
+Добавьте `testConnection` в дескриптор. Он получает уже итоговые (расшифрованные) параметры и возвращает статус:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  testConnection: async ({ options }) => {
+    const res = await fetch("https://api.my.com/ping", {
+      headers: { Authorization: `Bearer ${options.apiKey}` },
+    })
+
+    if (!res.ok) {
+      return { status: "failed", message: `My responded with ${res.status}` }
+    }
+
+    return { status: "passed" }
+  },
+})
+```
+
+`status` принимает одно из значений: `passed`, `failed` или `skipped`; необязательное `message` отображается в Admin рядом с результатом проверки.
+
+## Получение параметров во время выполнения
+
+Потребители читают типизированные, проверенные и расшифрованные параметры с применёнными значениями по умолчанию из дескриптора. Незаполненная или выключенная интеграция возвращает пустой результат, а не частичные данные. Итоговые параметры кэшируются ненадолго и обновляются при каждом изменении конфигурации.
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Основные концепции",
+    href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "Создание провайдера Модуля интеграций Medusa",
+    href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Параметры Модуля интеграций",
+    href: "/medusa-modules/integration/integration-module-options"
+  },
+  {
+    title: "Чтение параметров",
+    href: "/medusa-modules/integration/reading-options"
+  }
+]}/>
