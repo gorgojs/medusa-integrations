@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/1c-enterprise">
+  <a href="https://docs.gorgojs.com/medusa-integrations/1c-enterprise">
     <img alt="Medusa-1C logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/1c-enterprise">Documentation</a>
+  <a href="https://docs.gorgojs.com/medusa-integrations/1c-enterprise">Documentation</a>
   <br/>
   Sync products and orders between Medusa and 1C:Enterprise.
   <br/>
@@ -78,7 +78,7 @@ npm install @gorgo/medusa-integration @gorgo/medusa-1c@beta
 
 ## Documentation
 
-The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/integrations/1c-enterprise).
+The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-integrations/1c-enterprise).
 
 ## License
 

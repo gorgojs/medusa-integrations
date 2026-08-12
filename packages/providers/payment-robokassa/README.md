@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/robokassa">
+  <a href="https://docs.gorgojs.com/medusa-integrations/robokassa">
     <img alt="Medusa-Robokassa logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/robokassa-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,7 +9,7 @@ Robokassa Payments for Medusa
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/robokassa">Documentation</a>
+  <a href="https://docs.gorgojs.com/medusa-integrations/robokassa">Documentation</a>
   <br/>
   A Medusa plugin that provides Robokassa payments. Production-ready.
   <br/>
@@ -82,7 +82,7 @@ npm install @gorgo/medusa-integration @gorgo/medusa-payment-robokassa@beta
 
 ## Documentation
 
-The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/integrations/robokassa).
+The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-integrations/robokassa).
 
 ## License
 
