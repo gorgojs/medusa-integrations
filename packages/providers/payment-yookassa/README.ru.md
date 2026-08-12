@@ -39,6 +39,11 @@
   </a>
 </p>
 
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/release-yookassa-v2/yookassa-v2-overview.mp4">
+    <img src="https://static.gorgojs.com/videos/release-yookassa-v2/yookassa-v2-preview-play-1776169330.webp" alt="Смотреть демо-видео плагина ЮKassa" width="100%" style="border-radius: 8px; max-width: 720px;">
+  </a>
+</p>
 
 ## Возможности плагина
 
