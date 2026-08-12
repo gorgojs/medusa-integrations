@@ -69,7 +69,7 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 - Medusa v2.17.2 or later
 - Node.js v20 or later
 - A YooKassa account – [sign in or create one](https://yookassa.ru/joinups/?source=ks)
-- Integration Module v0.1.0 or later
+- Integration Module
 
 ## Installation
 

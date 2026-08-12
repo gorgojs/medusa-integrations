@@ -78,7 +78,7 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 - Medusa v2.17.2 or later
 - Node.js v20 or later
 - An ApiShip account - [sign in or create one](https://a.apiship.ru)
-- Integration Module v0.1.0 or later
+- Integration Module
 
 ## Installation
 
