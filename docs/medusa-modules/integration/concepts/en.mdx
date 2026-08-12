@@ -364,8 +364,8 @@ Some types have extra fields on top of the common ones:
     },
     {
       name: "values",
-      type: "string[]",
-      description: "The list of allowed values. Required.\nApplies only when `type: \"enum\"`.",
+      type: "string[] | number[]",
+      description: "The list of allowed values. Required. Either all strings or all numbers, and `default` must be the same kind.\nApplies only when `type: \"enum\"`.",
       optional: false,
       expandable: false,
       children: []

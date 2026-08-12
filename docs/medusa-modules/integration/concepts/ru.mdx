@@ -364,8 +364,8 @@ module.exports = defineConfig({
     },
     {
       name: "values",
-      type: "string[]",
-      description: "Список допустимых значений. Обязательное поле.\nПрименимо только при `type: \"enum\"`.",
+      type: "string[] | number[]",
+      description: "Список допустимых значений. Обязательное поле. Либо только строки, либо только числа, и `default` должен быть того же типа.\nПрименимо только при `type: \"enum\"`.",
       optional: false,
       expandable: false,
       children: []
