@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-yookassa",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0",
   "description": "YooKassa payment provider for Medusa",
   "files": [
     ".medusa/server",
