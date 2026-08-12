@@ -1,0 +1,81 @@
+---
+title: "Integration Module Options"
+description: "The options you can pass when you register the Integration Module in medusa-config.ts."
+---
+
+# {frontmatter.title}
+
+In this document, you'll learn about the options of the Integration Module. You can pass these options when you register the module as a plugin in `medusa-config.ts`.
+
+## encryptionKey
+
+The `encryptionKey` option is the passphrase the module derives its encryption key from. It encrypts every option marked `secret: true` (AES-256-GCM) before saving it, and decrypts those values back at runtime.
+
+Set it when you register the module:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+      },
+    },
+  ],
+})
+```
+
+The value can be any non-empty string, though a high-entropy one is best for production, for example the output of `openssl rand -hex 32`. The module derives the key once, the first time it's needed, and reuses it for every registered integration's `secret` fields from then on. Without `encryptionKey`, the module throws the first time it tries to save or read an integration that has at least one `secret: true` option.
+
+## providers
+
+The `providers` option is an array of [Integration Module providers](/medusa-modules/integration/create-integration-module-provider).
+
+When the Medusa application starts, these providers are registered under the Integration Module and their options become configurable in the Admin.
+
+For example:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-my/providers/integration-my",
+            id: "my-1",
+            options: {},
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+The `providers` option is an array of objects that accept the following properties:
+
+- `resolve`: A string indicating either the package name of the Integration Module provider or its relative path.
+- `id`: An optional string identifying this particular registration. Omit it for the provider's single, unnamed instance, or set it to register [multiple instances](/medusa-modules/integration/concepts#identifiers-and-instances) of the same provider.
+- `options`: An object of the module provider's own options. For an Integration Module provider, this is almost always `{}`, since the store admin sets the real configuration in the Admin instead.
+
+## References
+
+<CardList items={[
+  {
+    title: "General Concepts",
+    href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "Create an Integration Module Provider",
+    href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Reading Options",
+    href: "/medusa-modules/integration/reading-options"
+  }
+]}/>
