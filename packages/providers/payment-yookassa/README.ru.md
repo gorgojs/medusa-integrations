@@ -75,9 +75,9 @@
 ## Установка
 
 ```bash
-yarn add @gorgo/medusa-integration @gorgo/medusa-payment-yookassa@beta
+yarn add @gorgo/medusa-integration @gorgo/medusa-payment-yookassa
 # или
-npm install @gorgo/medusa-integration @gorgo/medusa-payment-yookassa@beta
+npm install @gorgo/medusa-integration @gorgo/medusa-payment-yookassa
 ```
 
 ## Документация

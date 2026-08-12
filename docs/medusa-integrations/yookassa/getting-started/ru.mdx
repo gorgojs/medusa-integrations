@@ -9,9 +9,10 @@ description: "Узнайте, как установить и настроить 
 
 ## Требования
 
-- Medusa v2.14.0 или новее
+- Medusa v2.17.2 или новее
 - Node.js v20 или новее
 - Аккаунт ЮKassa – [зарегистрируйтесь или войдите](https://yookassa.ru/joinups/?source=ks)
+- Модуль интеграций
 
 ---
 
@@ -20,12 +21,12 @@ description: "Узнайте, как установить и настроить 
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-payment-yookassa
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-yookassa
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-payment-yookassa
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-yookassa
     ```
   </CodeTab>
 </CodeTabs>
@@ -38,9 +39,32 @@ description: "Узнайте, как установить и настроить 
 
 ```ts title="medusa-config.js"
 // ...
+const YOOKASSA_INTEGRATION_ID = "yookassa-1"
+
 module.exports = defineConfig({
   // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
+            id: YOOKASSA_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-yookassa",
+      options: {}
+    },
+  ],
   modules: [
+    // ...
     {
       resolve: "@medusajs/medusa/payment",
       options: {
@@ -49,29 +73,20 @@ module.exports = defineConfig({
             resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
             id: "yookassa",
             options: {
-              shopId: process.env.YOOKASSA_SHOP_ID,
-              secretKey: process.env.YOOKASSA_SECRET_KEY,
-              capture: true,
-              paymentDescription: "Test payment",
-              useReceipt: true,
-              useAtolOnlineFFD120: true,
-              taxSystemCode: 1,
-              taxItemDefault: 1,
-              taxShippingDefault: 1
-            },
-          }
-        ]
-      }
-    }
-  ]
+              id: YOOKASSA_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
 })
 ```
 
-Добавьте следующие переменные окружения: идентификатор магазина `shopId` и секретный ключ `secretKey`:
+Добавьте переменную окружения с секретным ключом шифрования:
 
 ```text title=".env"
-YOOKASSA_SHOP_ID=1234567
-YOOKASSA_SECRET_KEY=live_secret_api_key
+INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
 ---
@@ -82,80 +97,13 @@ YOOKASSA_SECRET_KEY=live_secret_api_key
   sectionTitle="ProviderOptions"
   types={[
     {
-      name: "shopId",
+      name: "id",
       type: "string",
-      description: "Идентификатор вашего магазина в ЮKassa.",
+      description: "Суффикс итогового ключа `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
       optional: false,
       expandable: false,
       children: []
     },
-    {
-      name: "secretKey",
-      type: "string",
-      description: "Секретный ключ для проведения операций через ЮKassa.",
-      optional: false,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "paymentDescription",
-      type: "string",
-      description: "Описание платежа по умолчанию, отображаемое в ЮKassa, если контекст не задан.",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "capture",
-      type: "boolean",
-      description: "Определяет тип проведения платежа:\n- `true` - одностадийная оплата\n- `false` - двухстадийная оплата (предавторизация)",
-      optional: true,
-      defaultValue: "true",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "useReceipt",
-      type: "boolean",
-      description: "Включает формирование онлайн-чеков по 54-ФЗ.",
-      optional: true,
-      defaultValue: "false",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "useAtolOnlineFFD120",
-      type: "boolean",
-      description: "Включается, если вы используете онлайн-кассу Атол Онлайн с ФФД 1.2.\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      defaultValue: "false",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxSystemCode",
-      type: "enum",
-      description: "Система налогообложения:\n- `1` - общая СН\n- `2` - упрощенная СН (доходы)\n- `3` - упрощенная СН (доходы минус расходы)\n- `4` - единый налог на вмененный доход\n- `5` - единый сельскохозяйственный налог\n- `6` - патентная СН\nОбязателен при использовании онлайн-кассы Атол Онлайн с ФФД 1.2.\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxItemDefault",
-      type: "enum",
-      description: "Ставка НДС по умолчанию для товаров:\n- `1` - без НДС\n- `2` - 0%\n- `3` - 10%\n- `4` - 20%\n- `5` - 10/110\n- `6` - 20/120\n- `7` - 5%\n- `8` - 7%\n- `9` - 5/105\n- `10` - 7/107\nДля самозанятых — фиксированное значение `1`.\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxShippingDefault",
-      type: "enum",
-      description: "Ставка НДС по умолчанию для доставки, аналогично `taxItemDefault`.\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    }
   ]}
 />
 
