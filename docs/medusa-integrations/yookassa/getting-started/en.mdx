@@ -12,7 +12,7 @@ In this document, you'll learn how to install and configure the YooKassa payment
 - Medusa v2.17.2 or later
 - Node.js v20 or later
 - A YooKassa account – [sign in or create one](https://yookassa.ru/joinups/?source=ks)
-- Integration Module
+- [Integration Module](/medusa-modules/integration)
 
 ---
 
@@ -35,7 +35,7 @@ In this document, you'll learn how to install and configure the YooKassa payment
 
 ## Configuration
 
-Add the provider configuration in your `medusa-config.js` file of the Medusa Admin application:
+Add the configurations of the Integration Module provider and of the Medusa Payment Module in your `medusa-config.js` file of the Medusa Admin application:
 
 ```ts title="medusa-config.js"
 // ...
@@ -82,30 +82,27 @@ module.exports = defineConfig({
   ],
 })
 ```
-
-Add environment variables with your secret `Encryption Key`:
-
-```text title=".env"
-INTEGRATION_ENCRYPTION_KEY=supersecret
-```
-
----
-
-## Provider Options
-
 <MedusaTypeList
   sectionTitle="ProviderOptions"
   types={[
     {
       name: "id",
       type: "string",
-      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
+      description: "Suffix in the resulting integration key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
       optional: false,
       expandable: false,
       children: []
     },
   ]}
 />
+
+<Note type="warning">For the payment provider to use the integration's settings, pass the integration's `id` in the payment provider's options.</Note>
+
+Add environment variables with your secret `Encryption Key`:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
 
 ---
 

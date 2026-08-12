@@ -130,10 +130,10 @@ Don't confuse the two: `IntegrationCardList` catalogs plugins (module side), `Us
 ## `<AccentBadge>`
 
 ```mdx
-- **[Модуль интеграций](/medusa-modules/integration)**<AccentBadge bage="New" />: ...
+- **[Модуль интеграций](/medusa-modules/integration)**<AccentBadge badge="New" />: ...
 ```
 
-The prop is spelled `bage`, not `badge` — that's the real prop name in the component, reproduce it exactly or the badge won't render.
+The prop is `badge`. It used to be misspelled `bage`; if you find that spelling in an older page, fix it — the component no longer reads it and the badge silently renders nothing.
 
 ## `<CodeTabs>` / `<CodeTab>`
 

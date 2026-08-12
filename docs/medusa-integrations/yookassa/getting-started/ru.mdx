@@ -12,7 +12,7 @@ description: "Узнайте, как установить и настроить 
 - Medusa v2.17.2 или новее
 - Node.js v20 или новее
 - Аккаунт ЮKassa – [зарегистрируйтесь или войдите](https://yookassa.ru/joinups/?source=ks)
-- Модуль интеграций
+- [Модуль интеграций](/medusa-modules/integration)
 
 ---
 
@@ -35,7 +35,7 @@ description: "Узнайте, как установить и настроить 
 
 ## Настройка
 
-Добавьте конфигурацию провайдера в файл `medusa-config.js` в приложении Medusa Admin:
+Добавьте конфигурации провайдера модуля интеграций и платежного модуля Medusa в файл `medusa-config.js` в приложении Medusa Admin:
 
 ```ts title="medusa-config.js"
 // ...
@@ -82,30 +82,27 @@ module.exports = defineConfig({
   ],
 })
 ```
-
-Добавьте переменную окружения с секретным ключом шифрования:
-
-```text title=".env"
-INTEGRATION_ENCRYPTION_KEY=supersecret
-```
-
----
-
-## Параметры провайдера
-
 <MedusaTypeList
   sectionTitle="ProviderOptions"
   types={[
     {
       name: "id",
       type: "string",
-      description: "Суффикс итогового ключа `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
+      description: "Суффикс итогового ключа интеграции `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
       optional: false,
       expandable: false,
       children: []
     },
   ]}
 />
+
+<Note type="warning">Для того, чтобы платёжный провайдер использовал настройки интеграции, необходимо указать в его опциях соответствующий интеграции `id`.</Note>
+
+Добавьте переменную окружения с секретным ключом шифрования:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
 
 ---
 
