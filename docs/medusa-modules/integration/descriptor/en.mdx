@@ -1,0 +1,349 @@
+---
+title: "Integration Descriptor"
+description: "The full reference for an integration's descriptor: defineIntegration, every option field by type, validation, secrets, and the connection test."
+---
+
+# {frontmatter.title}
+
+An integration's [descriptor](/medusa-modules/integration/concepts#descriptor) is where you declare its options, how they group into settings sections, its validation, and an optional connection test. This page is the full reference for every field you can put in one.
+
+<Note type="default" title="">
+
+For the roles involved and how an option moves from the descriptor to a resolved value at runtime, see [General Concepts](/medusa-modules/integration/concepts).
+
+</Note>
+
+## defineIntegration
+
+Create a descriptor with `defineIntegration`. It builds `optionsSchema` from your `options` catalog, used for `z.infer`, defaults, and full validation.
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import { defineIntegration, AbstractIntegrationProvider } from "@gorgo/medusa-integration"
+
+const descriptor = defineIntegration({
+  category: "payment",
+  displayName: "my.name",
+  options: {
+    apiKey:  {
+      type: "string",
+      control: "secret",
+      secret: true,
+      required: true,
+      label: "my.apiKey"
+    },
+    sandbox: {
+      type: "boolean",
+      control: "switch",
+      default: false,
+      label: "my.sandbox"
+    },
+  },
+  sections: [
+    {
+      id: "credentials",
+      title: "my.credentials",
+      options: ["apiKey", "sandbox"]
+    },
+  ],
+})
+
+export class MyIntegration extends AbstractIntegrationProvider {
+  static identifier = "my"
+
+  get descriptor() {
+    return descriptor
+  }
+}
+```
+
+This descriptor declares `apiKey` and `sandbox`, grouped into a single `credentials` section. `defineIntegration` fails fast at load time in two cases: a section referencing an option id that isn't in `options`, and an `enum` option whose `values` mixes strings and numbers.
+
+## Option Fields
+
+Each option in `options` is an object shaped `{ type, ... }`. The `type` field determines the available values and the remaining fields that are common to every type:
+
+<MedusaTypeList
+  sectionTitle="Options"
+  types={[
+    {
+      name: "type",
+      type: "enum",
+      description: "The option's type. Determines validation, the default UI control, and the extra fields available:\n- `string`\n- `url`\n- `email`\n- `uuid`\n- `number`\n- `boolean`\n- `enum`\n- `json`",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "label",
+      type: "string",
+      description: "The field's i18n label key. Resolved admin-side against the active language, falling back to English.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "control",
+      type: "enum",
+      description: "The UI control used to render the field:\n- `text`\n- `secret`\n- `switch`\n- `number`\n- `url`\n- `select`\n- `json`\nPicked automatically from `type`, but can be overridden.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "default",
+      type: "string | number | boolean | unknown",
+      description: "The default value; its type matches the option's `type`. A `default` makes the option effectively always present in resolved options, even without `required`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "required",
+      type: "boolean",
+      description: "Rejects an empty (`undefined`) value on validation, both when this option is saved and when checking whether the integration is complete. Options are optional by default.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "secret",
+      type: "boolean",
+      description: "Encrypts the value (AES-256-GCM) at rest and never sends it to the browser. The CRUD API masks it and reports only whether it is set. Saving it blank keeps the stored value.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "hint",
+      type: "string",
+      description: "The i18n key for the hint text shown under the field.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "placeholder",
+      type: "string",
+      description: "The i18n key for the field's placeholder.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "readonly",
+      type: "boolean",
+      description: "Renders the field as non-editable in the Admin.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "visibleWhen",
+      type: "object",
+      description: "`{ field, equals }` hides the field in the Admin until a sibling option `field` equals `equals`. UI-only: server-side requiredness is still set via `required` or `validate`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "validate",
+      type: "function",
+      description: "A custom check for this option's value, run alongside the type's built-in schema.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+## Type-Specific Fields
+
+Some types have extra fields on top of the common ones:
+
+- **`string`:** `minLength`, `maxLength`, `pattern`
+- **`url`:** `protocols`
+- **`number`:** `min`, `max`, `int`, `positive`, `nonnegative`, `multipleOf`
+- **`enum`:** `values`, `valueLabels`
+
+<MedusaTypeList
+  sectionTitle="Options"
+  types={[
+    {
+      name: "minLength",
+      type: "number",
+      description: "The string's minimum length.\nApplies only when `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "maxLength",
+      type: "number",
+      description: "The string's maximum length.\nApplies only when `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "pattern",
+      type: "string",
+      description: "A regex pattern to validate the string against.\nApplies only when `type: \"string\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "protocols",
+      type: "string[]",
+      description: "Restricts the allowed URL schemes, for example `[\"https\"]`. Any protocol is allowed when omitted.\nApplies only when `type: \"url\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "min",
+      type: "number",
+      description: "The minimum value.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "max",
+      type: "number",
+      description: "The maximum value.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "int",
+      type: "boolean",
+      description: "Requires an integer value.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "positive",
+      type: "boolean",
+      description: "Requires a value greater than zero.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "nonnegative",
+      type: "boolean",
+      description: "Requires a value of zero or more.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "multipleOf",
+      type: "number",
+      description: "Requires the value to be a multiple of this number.\nApplies only when `type: \"number\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "values",
+      type: "string[] | number[]",
+      description: "The list of allowed values. Required. Either all strings or all numbers, and `default` must be the same kind.\nApplies only when `type: \"enum\"`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "valueLabels",
+      type: "object",
+      description: "i18n label keys for individual `values`.\nApplies only when `type: \"enum\"`.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+## Generated CRUD and Validation
+
+The module generates the CRUD API from the descriptor and validates every write. Validation covers per-option rules, such as types, ranges, and patterns, along with cross-section rules that span the whole configuration. There is nothing to build for each integration.
+
+Cross-section rules are declared through the descriptor's `validate`. Unlike a single option's `validate`, it receives the whole assembled config and can flag an issue on any field:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  validate: (full, { addIssue }) => {
+    if (full.mode === "webhook" && !full.webhookSecret) {
+      addIssue({ path: ["webhookSecret"], message: "Required when mode is \"webhook\"" })
+    }
+  },
+})
+```
+
+Unlike `required` or an option's own `validate`, this rule only runs during full validation (checking whether the integration is ready to be enabled), not when a single section is saved.
+
+## Enabled and Complete
+
+Options become live only when the integration is both enabled and complete, meaning it passes full validation. An incomplete draft or a disabled integration never resolves, so half-finished configuration cannot leak into runtime.
+
+## Secrets and Encryption
+
+Options marked `secret` are encrypted at rest with AES-256-GCM and never reach the browser. The CRUD API masks them and reports only whether each one is set. Saving a secret as blank keeps its stored value instead of clearing it.
+
+Encryption needs a key, set as `encryptionKey` when you register the module. See [Integration Module Options](/medusa-modules/integration/integration-module-options#encryptionkey) for how to set it and what happens without one.
+
+## Connection Test
+
+A descriptor can declare an optional connection test that checks credentials against the third-party service. Admins run it on demand, and a scheduled job re-checks configured integrations daily.
+
+Add `testConnection` to the descriptor. It receives the already-resolved (decrypted) options and returns a status:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  testConnection: async ({ options }) => {
+    const res = await fetch("https://api.my.com/ping", {
+      headers: { Authorization: `Bearer ${options.apiKey}` },
+    })
+
+    if (!res.ok) {
+      return { status: "failed", message: `My responded with ${res.status}` }
+    }
+
+    return { status: "passed" }
+  },
+})
+```
+
+`status` is one of `passed`, `failed`, or `skipped`; the optional `message` is shown to the admin in the Admin next to the test result.
+
+## Runtime Options Resolution
+
+Consumers read typed, validated, and decrypted options, with descriptor defaults applied. An incomplete or disabled integration resolves to nothing rather than partial data. Resolved options are cached briefly and refreshed whenever the configuration changes.
+
+## References
+
+<CardList items={[
+  {
+    title: "General Concepts",
+    href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "Create an Integration Module Provider",
+    href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Integration Module Options",
+    href: "/medusa-modules/integration/integration-module-options"
+  },
+  {
+    title: "Reading Options",
+    href: "/medusa-modules/integration/reading-options"
+  }
+]}/>
