@@ -1,7 +1,7 @@
 {
   "yookassa": {
     "name": "YooKassa",
-    "description": "YooKassa/YooMoney payment gateway",
+    "description": "Online acquiring service by Yandex",
     "sections": {
       "credentials": "Credentials",
       "behavior": "Behavior",
@@ -13,21 +13,21 @@
       "capture": "Auto-capture",
       "paymentDescription": "Default payment description",
       "useReceipt": "Send receipts",
-      "useAtolOnlineFFD120": "Atol Online FFD 1.2",
+      "useAtolOnlineFFD120": "ATOL Online FFD 1.2",
       "taxSystemCode": "Tax system",
       "taxItemDefault": "Default item VAT rate",
       "taxShippingDefault": "Default shipping VAT rate"
     },
     "hints": {
-      "shopId": "Taken from your YooKassa dashboard, next to the secret key.",
-      "secretKey": "Issued in your YooKassa dashboard. Stored encrypted and never sent back to the browser.",
-      "capture": "On: one-stage payment, the money is debited right away. Off: two-stage payment, the amount is held and you capture it later.",
-      "paymentDescription": "Used when the checkout context doesn't provide one. Up to 128 characters, shown to the customer during payment and in your YooKassa dashboard.",
-      "useReceipt": "Sends receipt data with every payment so it can be registered under 54-FZ.",
-      "useAtolOnlineFFD120": "Turn on if an Atol Online sales register on FFD 1.2 registers the receipts. It makes the tax system required.",
-      "taxSystemCode": "Applies to the whole receipt. Items under different tax systems have to be sent in separate receipts.",
-      "taxItemDefault": "The rate applied to every product line of the receipt.",
-      "taxShippingDefault": "The rate applied to the shipping line of the receipt."
+      "shopId": "From the YooKassa dashboard, next to the secret key.",
+      "secretKey": "Issued in the YooKassa dashboard.",
+      "capture": "On: one-stage payment, the money is debited right away. Off: two-stage, the amount is held until you capture it.",
+      "paymentDescription": "Shown to the customer during payment and in the YooKassa dashboard, up to 128 characters. Applied when the storefront doesn't pass one at checkout.",
+      "useReceipt": "Sends receipt data with every payment for registration under 54-FZ.",
+      "useAtolOnlineFFD120": "Turn on if the receipts are registered by ATOL Online on FFD 1.2. The tax system then becomes required.",
+      "taxSystemCode": "Applies to the whole receipt. Items under different tax systems must be sent in separate receipts.",
+      "taxItemDefault": "Applied to every product line of the receipt.",
+      "taxShippingDefault": "Applied to the shipping line of the receipt."
     },
     "taxSystems": {
       "general": "General",
