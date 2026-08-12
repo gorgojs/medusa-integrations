@@ -1,0 +1,81 @@
+---
+title: "Параметры Модуля интеграций"
+description: "Параметры, которые можно передать при регистрации Модуля интеграций в medusa-config.ts."
+---
+
+# {frontmatter.title}
+
+В этом документе вы узнаете о параметрах Модуля интеграций. Эти параметры можно передать при регистрации модуля как плагина в `medusa-config.ts`.
+
+## encryptionKey
+
+Опция `encryptionKey` задаёт пароль, из которого модуль выводит ключ шифрования. Он шифрует (AES-256-GCM) каждый параметр с пометкой `secret: true` перед сохранением и расшифровывает эти значения обратно во время выполнения.
+
+Задайте её при регистрации модуля:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+      },
+    },
+  ],
+})
+```
+
+Значением может быть любая непустая строка, но для продакшена лучше подходит значение с высокой энтропией, например результат `openssl rand -hex 32`. Модуль выводит ключ один раз, при первом обращении, и затем использует его для полей `secret` всех зарегистрированных интеграций. Без `encryptionKey` модуль выбрасывает ошибку при первой попытке сохранить или прочитать интеграцию с хотя бы одним параметром `secret: true`.
+
+## providers
+
+Опция `providers` содержит массив [провайдеров Модуля интеграций](/medusa-modules/integration/create-integration-module-provider).
+
+При старте приложения Medusa эти провайдеры регистрируются в Модуле интеграций, и их параметры становятся доступны для настройки в Admin.
+
+Например:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-my/providers/integration-my",
+            id: "my-1",
+            options: {},
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Опция `providers` принимает массив объектов с такими свойствами:
+
+- `resolve`: строка с именем пакета провайдера Модуля интеграций или путь до него.
+- `id`: необязательная строка, задающая конкретную регистрацию. Не указывайте её для единственного безымянного инстанса провайдера, либо задайте её, чтобы зарегистрировать [несколько инстансов](/medusa-modules/integration/concepts#инстансы-и-их-идентификаторы) одного и того же провайдера.
+- `options`: объект с собственными параметрами провайдера.
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Основные концепции",
+    href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "Создание провайдера Модуля интеграций Medusa",
+    href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Чтение параметров",
+    href: "/medusa-modules/integration/reading-options"
+  }
+]}/>
