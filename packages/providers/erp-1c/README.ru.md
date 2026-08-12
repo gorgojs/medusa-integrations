@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/1c-enterprise">Документация</a>
+  <a href="https://docs.gorgojs.com/medusa-integrations/1c-enterprise">Документация</a>
   <br/>
   Синхронизация товаров и заказов между Medusa и 1С:Предприятие.
   <br/>
@@ -78,7 +78,7 @@ npm install @gorgo/medusa-integration @gorgo/medusa-1c@beta
 
 ## Документация
 
-Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.com/integrations/1c-enterprise).
+Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.com/medusa-integrations/1c-enterprise).
 
 ## Лицензия
 

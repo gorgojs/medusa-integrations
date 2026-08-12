@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/yandex-yml-feed">Документация</a>
+  <a href="https://docs.gorgojs.com/medusa-integrations/yandex-yml-feed">Документация</a>
   <br/>
   Плагин Medusa, который генерирует фид товаров в формате <a href="https://yandex.com/support/direct/feeds/requirements-yml.html">YML (Yandex Market Language)</a>.
   <br/>
@@ -74,7 +74,7 @@ npm install @gorgo/medusa-feed-yandex
 
 ## Документация
 
-Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.com/integrations/yandex-yml-feed).
+Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.com/medusa-integrations/yandex-yml-feed).
 
 ## Лицензия
 

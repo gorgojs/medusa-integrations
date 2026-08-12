@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/apiship">Документация</a>
+  <a href="https://docs.gorgojs.com/medusa-integrations/apiship">Документация</a>
   <br/>
   Плагин Medusa для интеграции с агрегатором служб доставки ApiShip, предоставляющий вашему магазину доступ к 40+ перевозчикам при минимальной настройке. Готов к продакшену.
   <br/>

@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/apiship">
+  <a href="https://docs.gorgojs.com/medusa-integrations/apiship">
     <img alt="Medusa-ApiShip logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/apiship-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,7 +9,7 @@ ApiShip Integration for Medusa
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/integrations/apiship">Documentation</a>
+  <a href="https://docs.gorgojs.com/medusa-integrations/apiship">Documentation</a>
   <br/>
   A Medusa plugin that integrates the ApiShip delivery aggregator platform, giving your store access to 40+ delivery carriers with minimal configuration. Production-ready.
   <br/>
@@ -90,7 +90,7 @@ npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship@beta
 
 ## Documentation
 
-The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/integrations/apiship).
+The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-integrations/apiship).
 
 ## License
 
