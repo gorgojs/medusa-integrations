@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.ru/integrations/t-kassa">
+  <a href="https://docs.gorgojs.ru/medusa-integrations/t-kassa">
     <img alt="Medusa-T-Kassa logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/tkassa-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.ru/integrations/t-kassa">Документация</a>
+  <a href="https://docs.gorgojs.ru/medusa-integrations/t-kassa">Документация</a>
   <br/>
   Плагин Medusa для приёма платежей через Т-Касса от Т-Банка. Готов к продакшену.
   <br/>
@@ -50,7 +50,7 @@
 - **Подробное логирование:** Логи запросов и ответов для отладки и поддержки в режиме разработки.
 - **Полное тестовое покрытие:** Юнит- и интеграционные тесты, покрывающие основные сценарии и граничные случаи.
 - **Пример витрины магазина:** Готовый [пример витрины на Next.js](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-tkassa/medusa-storefront) для использования как референс.
-- **[Модуль интеграций](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> :** Настройте плагин прямо в приложении Medusa Admin — без редактирования конфигурационных файлов и повторного развёртывания магазина.
+- **[Модуль интеграций](https://gorgojs.ru/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> :** Настройте плагин прямо в приложении Medusa Admin — без редактирования конфигурационных файлов и повторного развёртывания магазина.
 
 > **Модуль интеграций:** Этот плагин поддерживает модуль интеграций — он позволяет администратору магазина настраивать его прямо в приложении Medusa Admin, не редактируя конфигурационные файлы и не выполняя повторное развёртывание магазина. Конфиденциальные значения шифруются, а настройки проверяются перед применением.
 
@@ -93,7 +93,7 @@ npm install @gorgo/medusa-integration @gorgo/medusa-payment-tkassa@beta
 
 ## Документация
 
-Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/integrations/t-kassa).
+Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/medusa-integrations/t-kassa).
 
 ## Лицензия
 

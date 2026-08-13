@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.ru/integrations/1c-enterprise">
+  <a href="https://docs.gorgojs.ru/medusa-integrations/1c-enterprise">
     <img alt="Medusa-1C logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/medusa-integrations/1c-enterprise">Документация</a>
+  <a href="https://docs.gorgojs.ru/medusa-integrations/1c-enterprise">Документация</a>
   <br/>
   Синхронизация товаров и заказов между Medusa и 1С:Предприятие.
   <br/>
@@ -60,7 +60,7 @@
 - [ ] Расширение админки для журналирования и аудита
 - [ ] Подробная документация
 
-> **Модуль интеграций:** Этот плагин поддерживает [Модуль интеграций](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> — он позволяет администратору магазина настраивать его прямо в приложении Medusa Admin, не редактируя конфигурационные файлы и не выполняя повторное развёртывание магазина. Конфиденциальные значения шифруются, а настройки проверяются перед применением.
+> **Модуль интеграций:** Этот плагин поддерживает [Модуль интеграций](https://gorgojs.ru/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> — он позволяет администратору магазина настраивать его прямо в приложении Medusa Admin, не редактируя конфигурационные файлы и не выполняя повторное развёртывание магазина. Конфиденциальные значения шифруются, а настройки проверяются перед применением.
 
 ## Требования
 
