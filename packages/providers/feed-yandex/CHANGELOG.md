@@ -1,5 +1,10 @@
 # @gorgo/medusa-feed-yandex
 
+## 0.2.34
+
+- update deps
+- improve docs
+
 ## 0.2.33
 
 ### Chores

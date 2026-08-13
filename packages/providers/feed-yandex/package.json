@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-feed-yandex",
-  "version": "0.2.33",
+  "version": "0.2.34",
   "description": "A Medusa plugin that generates a product feed in YML (Yandex Market Language) format",
   "license": "MIT",
   "repository": {
