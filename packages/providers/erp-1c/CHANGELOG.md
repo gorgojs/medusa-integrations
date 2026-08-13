@@ -1,5 +1,12 @@
 # @gorgo/medusa-1c
 
+## 2.0.0-beta.2
+
+- improve types
+- update deps
+- improve docs
+- improve integration descriptor
+
 ## 2.0.0-beta.1
 
 ### Highlights

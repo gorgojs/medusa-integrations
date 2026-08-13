@@ -1,5 +1,11 @@
 # @gorgo/medusa-payment-robokassa
 
+## 2.0.0-beta.2
+
+- improve types
+- update deps
+- improve docs
+
 ## 2.0.0-beta.1
 
 ### Highlights

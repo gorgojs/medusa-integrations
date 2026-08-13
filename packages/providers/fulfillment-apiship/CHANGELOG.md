@@ -1,5 +1,16 @@
 # @gorgo/medusa-fulfillment-apiship
 
+## 2.0.0-beta.3
+
+- improve types
+- update deps
+- improve docs
+
+## 2.0.0-beta.2
+
+- improve integration descriptor
+- fix tests
+
 ## 2.0.0-beta.1
 
 ### Highlights
