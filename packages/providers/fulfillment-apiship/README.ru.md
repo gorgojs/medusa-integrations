@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://docs.gorgojs.ru/integrations/apiship">
+  <a href="https://docs.gorgojs.ru/medusa-integrations/apiship">
     <img alt="Medusa-ApiShip logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/apiship-medusa-logo.svg" width="270">
   </a>
 </p>
@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://docs.gorgojs.com/medusa-integrations/apiship">Документация</a>
+  <a href="https://docs.gorgojs.ru/medusa-integrations/apiship">Документация</a>
   <br/>
   Плагин Medusa для интеграции с агрегатором служб доставки ApiShip, предоставляющий вашему магазину доступ к 40+ перевозчикам при минимальной настройке. Готов к продакшену.
   <br/>
@@ -57,7 +57,7 @@
 - **Пример витрины магазина:** Готовый [пример витрины на Next.js](https://github.com/gorgojs/medusa-integrations/tree/main/examples/fulfillment-apiship/medusa-storefront) - можно использовать как референс.
 - **Тестовый режим:** Симуляция калькуляций и заказов без влияния на реальные данные.
 - **Подробное логирование:** Логи запросов и ответов для отладки и поддержки в режиме разработки.
-- **[Модуль интеграций](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> :** Настройте плагин прямо в приложении Medusa Admin — без редактирования конфигурационных файлов и повторного развёртывания магазина.
+- **[Модуль интеграций](https://gorgojs.ru/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> :** Настройте плагин прямо в приложении Medusa Admin — без редактирования конфигурационных файлов и повторного развёртывания магазина.
 
 > **Модуль интеграций:** Этот плагин поддерживает модуль интеграций — он позволяет администратору магазина настраивать его прямо в приложении Medusa Admin, не редактируя конфигурационные файлы и не выполняя повторное развёртывание магазина. Конфиденциальные значения шифруются, а настройки проверяются перед применением.
 
@@ -90,7 +90,7 @@ npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship@beta
 
 ## Документация
 
-Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/integrations/apiship).
+Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/medusa-integrations/apiship).
 
 ## Лицензия
 
