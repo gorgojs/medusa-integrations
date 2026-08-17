@@ -25,6 +25,9 @@ Yandex Market YML Feed Generator for Medusa
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-feed-yandex.json&logo=checkmarx" alt="Medusa" />
   </a>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-feed-yandex">
+    <img src="https://img.shields.io/npm/v/@gorgo/medusa-feed-yandex.svg?logo=npm&label=npm" alt="npm version" />
+  </a>
 </p>
 
 <p align="center">
