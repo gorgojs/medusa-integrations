@@ -25,6 +25,9 @@ Integration Module for Medusa
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-integration.json&logo=checkmarx" alt="Medusa" />
   </a>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-integration">
+    <img src="https://img.shields.io/npm/v/@gorgo/medusa-integration.svg?logo=npm&label=npm" alt="npm version" />
+  </a>
 </p>
 
 <p align="center">
