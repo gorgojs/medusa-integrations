@@ -25,6 +25,9 @@ YooKassa Payments for Medusa
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-payment-yookassa.json&logo=checkmarx" alt="Tested with latest Medusa" />
   </a>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-yookassa">
+    <img src="https://img.shields.io/npm/v/@gorgo/medusa-payment-yookassa.svg?logo=npm&label=npm" alt="npm version" />
+  </a>
 </p>
 
 <p align="center">
