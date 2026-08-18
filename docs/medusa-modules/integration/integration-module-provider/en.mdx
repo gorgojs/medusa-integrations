@@ -1,0 +1,120 @@
+---
+title: "Integration Module Provider"
+description: "What an Integration Module Provider is, how the module registers it at application start, and the Integration data model that represents each registered instance."
+---
+
+# {frontmatter.title}
+
+In this guide you'll learn about the Integration Module Provider: what it is, what it takes to implement one, how the module registers it at application start, and the `Integration` data model that represents each registered instance in the database.
+
+## What Is an Integration Module Provider
+
+An Integration Module Provider declares an integration: its options, how they group into settings sections, and an optional connection test. A store admin configures it in the Admin, with no `medusa-config` edits and no redeploy.
+
+The Integration Module is provider-agnostic, so unlike Medusa's built-in commerce modules, it ships no default or placeholder provider of its own. Any plugin, provider, or custom module can be an Integration Module Provider. See [Where It Can Be Used](/medusa-modules/integration/concepts#where-it-can-be-used) for the full range of cases.
+
+Every provider registered in the Integration Module's `providers` option is represented in the database by the [`Integration` data model](#the-integration-data-model).
+
+## Creating a Custom Integration Module Provider
+
+An Integration Module Provider is a module whose service extends `AbstractIntegrationProvider`, imported from `@gorgo/medusa-integration`. As with other Medusa module providers, a single module can register more than one Integration Module Provider service, each with its own `static identifier`, and each ends up as a separate provider.
+
+`AbstractIntegrationProvider` declares the following members:
+
+| Member | Description |
+| --- | --- |
+| `static identifier: string` | Required. The provider's stable identifier, shared by every instance of it. |
+| `get descriptor()` | Required, abstract. Returns the descriptor built with `defineIntegration`: the options, sections, validation, and optional connection test. |
+| `static validateOptions(options)` | Optional. A fail-fast check of the provider's `medusa-config.ts` configuration at load time. No-op by default. |
+| `getIdentifier()` | Implemented by the base class. Returns the constructor's `static identifier`. |
+| `getInstanceId()` | Implemented by the base class. Returns this instance's registration `id`, or `null` for the default instance. |
+
+Here's the shape of a minimal provider, with every member from the table above in place except the ones the base class already implements:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import { AbstractIntegrationProvider } from "@gorgo/medusa-integration"
+
+class MyIntegrationProvider extends AbstractIntegrationProvider {
+  static identifier = "my"
+
+  static validateOptions(options: Record<string, unknown>) {
+    // optional fail-fast check
+  }
+
+  get descriptor() {
+    return descriptor
+  }
+}
+
+export default MyIntegrationProvider
+```
+
+`descriptor` here is whatever `defineIntegration` returns, covered in [General Concepts](/medusa-modules/integration/concepts#descriptor). `getIdentifier()` and `getInstanceId()` aren't shown: `AbstractIntegrationProvider` already implements both from the constructor's `instanceId` argument, so a subclass only adds `static identifier`, `descriptor`, and, optionally, `static validateOptions`.
+
+<Note type="default" title="">
+
+See [How to Create an Integration Module Provider](/medusa-modules/integration/create-integration-module-provider) for a full walkthrough with code.
+
+</Note>
+
+## Registering Integration Module Providers
+
+### Configuring the Integration Module's Providers
+
+The Integration Module accepts a `providers` option, where you configure the providers registered in your application, alongside the `encryptionKey` option used for the module's secret fields. See [step 4 of How to Create an Integration Module Provider](/medusa-modules/integration/create-integration-module-provider#4-register-the-provider) for the exact `medusa-config.ts` shape.
+
+### Registration on Application Start
+
+When the Medusa application starts, the Integration Module registers every provider listed in its `providers` option. For each entry, it combines the provider class's `static identifier` with the entry's own `id` into the key `int_<identifier>[_<id>]`, the same format used for that instance's `provider_id` in the database, then constructs the provider with `new ProviderClass(container, options, instanceId)`.
+
+### The `Integration` Data Model
+
+A registered Integration Module Provider's instance is represented by the `Integration` data model in the Medusa application.
+
+<Note type="warning">
+
+The model's own `id` is just its internal record id, generated like on any other Medusa data model. It is not the same as `provider_id`, the column that actually holds the `int_<identifier>[_<id>]` key from [Identifiers and Instances](/medusa-modules/integration/concepts#identifiers-and-instances).
+
+</Note>
+
+| Property | Description |
+| --- | --- |
+| `provider_id` | The instance's key, `int_<identifier>[_<id>]`. Unique. The CRUD API, the resolver, and the Admin all look up a row by this column. |
+| `category` | The integration's category, for example `payment` or `fulfillment`, set from the descriptor's `category`. |
+| `title` | The integration's display title, or `null` when the descriptor doesn't set one. |
+| `options` | The integration's non-secret settings, as saved by the store admin. |
+| `is_enabled` | `true` by default. Toggled from the Admin, see [Enable and Disable an Integration](/medusa-modules/integration/manage-integrations#enable-and-disable-an-integration). |
+| `last_test_status` | The result of the last connection test, `passed`, `failed`, or `skipped`, or `null` if it was never run. |
+
+### Removing an Integration Module Provider
+
+You can remove a registered Integration Module Provider by deleting its entry from the `providers` option in `medusa-config.ts`. Unlike disabling an integration from the Admin, this doesn't touch the stored row. It only stops the provider from being registered, so the module can no longer look up its `Integration` row by `provider_id`. The integration disappears from the list in the Admin, and its stored data becomes unreachable through the Integration Module's own admin routes.
+
+<Note type="warning">
+
+Delete the integration from the Admin before removing the provider from `medusa-config.ts`, not after. Once the provider is gone from the config, its `Integration` row can no longer be reached, including through the delete route itself, so it stays in the database with no way to remove it from the Admin. See [Delete an Integration](/medusa-modules/integration/manage-integrations#delete-an-integration) for the normal deletion flow.
+
+</Note>
+
+To stop a provider from being used while keeping its configuration intact and easy to bring back, disable it from the Admin instead of removing it from `medusa-config.ts`. See [Enable and Disable an Integration](/medusa-modules/integration/manage-integrations#enable-and-disable-an-integration).
+
+## References
+
+<CardList items={[
+  {
+    title: "General Concepts",
+    href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "How to Create an Integration Module Provider",
+    href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Reading Options",
+    href: "/medusa-modules/integration/reading-options"
+  },
+  {
+    title: "Manage Integrations in Medusa Admin",
+    href: "/medusa-modules/integration/manage-integrations"
+  }
+]}/>
