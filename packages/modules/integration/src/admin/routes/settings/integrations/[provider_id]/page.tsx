@@ -12,8 +12,9 @@ import {
 import { EllipsisHorizontal, PencilSquare, Trash, Spinner } from "@medusajs/icons"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useState, type ReactNode } from "react"
+import { FetchError } from "@medusajs/js-sdk"
 import { LayoutComposer } from "@medusajs/dashboard/components"
 import { sdk } from "../../../../lib/sdk"
 import { toModuleProviderId } from "../../../../lib/provider-id"
@@ -119,15 +120,10 @@ const EditPage = () => {
   }
 
   if (!descriptor) {
-    return (
-      <Container className="p-6">
-        <Text size="small" className="text-ui-fg-subtle">
-          {t("integration.unknown", { id: provider_id })}
-        </Text>
-        <Link to="/settings/integrations" className="text-ui-fg-base">
-          {t("integration.back")}
-        </Link>
-      </Container>
+    throw new FetchError(
+      `Integration with provider_id: ${provider_id} was not found`,
+      "There is no page at this address",
+      404
     )
   }
 
