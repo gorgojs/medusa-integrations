@@ -1,0 +1,71 @@
+---
+title: "Customize Seed Data"
+description: "How the starter's initial data seed script builds regions, currencies, locales, and a demo catalog from JSON data files, and how to adapt it for your own markets and products."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how the starter's seed script builds regions, currencies, locales, and a demo catalog from JSON data files, and how to adapt them for your own markets and products.
+
+The backend ships a one-off seed script, [`initial-data-seed.ts`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/initial-data-seed.ts), instead of a generated migration. It checks whether the store is already seeded, then creates the store, regions, catalog, and translations in order. Each stage reads its own input from JSON files under `src/migration-scripts/data/`.
+
+<Note type="success" title="">
+
+The only existence check is the sales channel from `data/store/json/store.json`. If you delete it and run the script again, every other stage runs again without checking for duplicates.
+
+</Note>
+
+## Regions and Currencies
+
+Each file under [`data/regions/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/regions/json) is one region, for example [`ru.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/regions/json/ru.json). The starter ships 241 of these, one per country.
+
+To add or edit a region, copy an existing file and edit it. It needs `name`, `currency_code`, `countries`, `stock_location`, and prices in `shipping_prices`/`product_prices`. Prices are keyed by a camelCase product handle or shipping option code, for example `t-shirt` becomes `tShirt`. A new region needs a price for every existing product, and a new product needs a price entry in every existing region.
+
+<Note type="success" title="">
+
+The default currency (`default_currency_code` in `store.json`) must match one of your regions' currencies. Otherwise, the seed script refuses to run rather than leaving the store without a default currency.
+
+</Note>
+
+## Locales and Translations
+
+Locale data follows the same pattern as regions, from [`data/i18n/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/i18n/json), for example [`ru.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/i18n/json/ru.json). The starter ships 36 locale files. To add a locale, add a JSON file with the same shape. It feeds translations for categories, collections, product options, products, variants, shipping options, and refund reasons.
+
+<Note type="success" title="">
+
+This is a third, independent locale list. The storefront's own UI languages live in [`apps/storefront/src/i18n/config.ts`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/storefront/src/i18n/config.ts), and email languages live in [`EMAIL_LANGS`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/emails/i18n). Adding a locale here doesn't add it to either of those.
+
+</Note>
+
+## Products, Categories, and Shipping Options
+
+The demo catalog itself is plain JSON, not TypeScript. Categories, product options, products, and collections live in [`data/products/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/products/json), and shipping options live in [`data/fulfillment/json/shipping-options.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/fulfillment/json/shipping-options.json). A product references its category by handle and its options by title, so both must already exist in their own files. It also needs a price in every region's `product_prices`.
+
+## Running the Seed
+
+Run the `seed` script from `apps/backend` with `pnpm seed`, `npm run seed`, or `yarn seed`. From the repository root, `pnpm backend:seed` does the same through the pnpm workspace. Every one of them runs `medusa exec ./src/migration-scripts/initial-data-seed.ts`, declared in [`apps/backend/package.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/package.json).
+
+<Note type="success" title="">
+
+Migration scripts load data from `<cwd>/src`. If you seed from a build output rather than from the development server, copy `src/**/*.json` into the build output alongside the compiled code.
+
+</Note>
+
+## Before You Go Live
+
+- Replace the demo categories, products, and collections in `data/products/json/` with your own catalog before you consider the store ready. `createProductCategoriesWorkflow` and `createProductsWorkflow` don't check for existing handles, so re-running the script after editing this data can create duplicates rather than update anything.
+- Trim `data/regions/json/` down to your real target markets. Every file in that directory creates its own stock location, fulfillment set, and shipping options, so 241 regions means 241 of each.
+- Update `default_currency_code` in `store.json` if the region backing it isn't one you kept.
+
+## References
+
+<CardList items={[
+  {
+    title: "Production-ready Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter"
+  },
+  {
+    title: "Getting Started with Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter/getting-started"
+  }
+]}/>

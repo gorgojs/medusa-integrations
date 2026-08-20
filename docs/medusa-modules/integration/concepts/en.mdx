@@ -74,7 +74,7 @@ export class MyIntegration extends AbstractIntegrationProvider {
 
 The descriptor is the source of truth for the integration: this one declares `apiKey` and `sandbox`, grouped into a single `credentials` section. The module uses it to generate the CRUD API, validate writes, render the settings UI, and define what consumers resolve at runtime. You never write data models, routes, or forms.
 
-See [Integration Descriptor](/medusa-modules/integration/descriptor) for the full reference of every option field, by type, along with validation, secrets, and the connection test.
+See [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every option field, by type, along with validation, secrets, and the connection test.
 
 ## Identifiers and Instances
 
@@ -172,7 +172,7 @@ A consumer resolves options by identifier and instance, so the same code can tar
 
 An integration's options move through a predictable path. An author declares them in the descriptor, an admin configures them, the module validates them, they become live once the integration is enabled and complete, and a consumer resolves them at runtime. A connection test can check them against the third-party service along the way.
 
-See [Integration Descriptor](/medusa-modules/integration/descriptor) for the full reference of every option field, by type, along with validation, secrets, and the connection test.
+See [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every option field, by type, along with validation, secrets, and the connection test.
 
 ## UI Generation
 
@@ -196,7 +196,7 @@ This builds on Medusa's standard i18n, so there's nothing new to learn. Register
 
 <CardList items={[
   {
-    title: "Integration Descriptor",
+    title: "Integration Provider Descriptor",
     href: "/medusa-modules/integration/descriptor"
   },
   {

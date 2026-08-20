@@ -1,0 +1,207 @@
+---
+title: "Начало работы с Medusa DTC Starter"
+description: "Установите Medusa DTC Starter через собственный инструмент Medusa для скаффолдинга или клонированием репозитория напрямую, затем настройте оба приложения и подключите первую интеграцию."
+---
+
+# {frontmatter.title}
+
+В этом руководстве вы узнаете, как установить [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter), настроить оба приложения и подключить первую интеграцию.
+
+## Требования
+
+- Node.js v20 или новее
+- PostgreSQL v15 или новее
+- npm, yarn или pnpm
+
+---
+
+## Установка
+
+Установите стартер одним из двух способов: разверните новый проект через собственный CLI Medusa либо клонируйте репозиторий и настройте каждое приложение вручную.
+
+### Способ 1: Установка через Medusa Application
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn dlx create-medusa-app@latest --repo-url https://github.com/gorgojs/medusa-dtc-starter
+    ```
+  </CodeTab>
+  <CodeTab label="pnpm" value="pnpm">
+    ```bash
+    pnpm dlx create-medusa-app@latest --repo-url https://github.com/gorgojs/medusa-dtc-starter
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npx create-medusa-app@latest --repo-url https://github.com/gorgojs/medusa-dtc-starter
+    ```
+  </CodeTab>
+</CodeTabs>
+
+`--repo-url` указывает `create-medusa-app` разворачивать проект из указанного репозитория вместо официального стартера Medusa, но обычные запросы про имя проекта и базу данных остаются такими же. По умолчанию команда также запускает миграции, создаёт администратора и засеивает базу данных. Передайте `--no-migrations`, чтобы пропустить все три шага.
+
+### Способ 2: Раздельная установка
+
+1. Клонируйте репозиторий и установите зависимости:
+
+   <CodeTabs>
+     <CodeTab label="yarn" value="yarn">
+       ```bash
+       git clone https://github.com/gorgojs/medusa-dtc-starter.git
+       cd medusa-dtc-starter
+       yarn install
+       ```
+     </CodeTab>
+     <CodeTab label="pnpm" value="pnpm">
+       ```bash
+       git clone https://github.com/gorgojs/medusa-dtc-starter.git
+       cd medusa-dtc-starter
+       pnpm install
+       ```
+     </CodeTab>
+     <CodeTab label="npm" value="npm">
+       ```bash
+       git clone https://github.com/gorgojs/medusa-dtc-starter.git
+       cd medusa-dtc-starter
+       npm install
+       ```
+     </CodeTab>
+   </CodeTabs>
+
+2. Создайте файл переменных окружения бэкенда и укажите в `DATABASE_URL` реальную базу данных:
+
+   ```bash title="Terminal"
+   cp apps/backend/.env.template apps/backend/.env
+   ```
+
+   ```bash title="apps/backend/.env"
+   DATABASE_URL=postgres://postgres:@localhost:5432/medusa-dtc-starter
+   ```
+
+3. Запустите миграции, создайте администратора, загрузите начальные данные и запустите бэкенд:
+
+   <CodeTabs>
+     <CodeTab label="yarn" value="yarn">
+       ```bash
+       cd apps/backend
+       yarn medusa db:migrate
+       yarn medusa user -e admin@medusajs.com -p supersecret
+       yarn seed
+       yarn dev
+       ```
+     </CodeTab>
+     <CodeTab label="pnpm" value="pnpm">
+       ```bash
+       cd apps/backend
+       pnpm medusa db:migrate
+       pnpm medusa user -e admin@medusajs.com -p supersecret
+       pnpm seed
+       pnpm dev
+       ```
+     </CodeTab>
+     <CodeTab label="npm" value="npm">
+       ```bash
+       cd apps/backend
+       npx medusa db:migrate
+       npx medusa user -e admin@medusajs.com -p supersecret
+       npm run seed
+       npm run dev
+       ```
+     </CodeTab>
+   </CodeTabs>
+
+4. Откройте панель администратора по адресу `http://localhost:9000/app`, войдите и скопируйте публикуемый API-ключ в **Настройки → Публикуемые API-ключи**.
+
+5. Создайте файл переменных окружения витрины с этим ключом:
+
+   ```bash title="Terminal"
+   cp apps/storefront/.env.template apps/storefront/.env.local
+   ```
+
+   ```bash title="apps/storefront/.env.local"
+   NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_6c3...
+   ```
+
+6. Запустите витрину:
+
+   <CodeTabs>
+     <CodeTab label="yarn" value="yarn">
+       ```bash
+       cd apps/storefront
+       yarn dev
+       ```
+     </CodeTab>
+     <CodeTab label="pnpm" value="pnpm">
+       ```bash
+       cd apps/storefront
+       pnpm dev
+       ```
+     </CodeTab>
+     <CodeTab label="npm" value="npm">
+       ```bash
+       cd apps/storefront
+       npm run dev
+       ```
+     </CodeTab>
+   </CodeTabs>
+
+Витрина запускается на `http://localhost:8000`. Корень репозитория настроен под pnpm, поэтому `pnpm dev` оттуда поднимает оба приложения сразу. С npm или yarn запускайте каждое приложение из его собственной папки.
+
+---
+
+## Конфигурация
+
+Перед запуском бэкенда нужно задать реальное значение для `DATABASE_URL` и `INTEGRATION_ENCRYPTION_KEY`:
+
+```bash title="apps/backend/.env"
+DATABASE_URL=postgres://postgres:@localhost:5432/medusa-dtc-starter
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+`INTEGRATION_ENCRYPTION_KEY` шифрует секретные поля, которые хранит Модуль интеграций. Смените значение `supersecret` перед продакшеном.
+
+Для витрины нужен как минимум публикуемый API-ключ вашего бэкенда:
+
+```bash title="apps/storefront/.env.local"
+NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_6c3...
+NEXT_PUBLIC_MEDUSA_BACKEND_URL=http://localhost:9000
+NEXT_PUBLIC_DEFAULT_REGION=en
+NEXT_PUBLIC_BASE_URL=https://localhost:8000
+NEXT_PUBLIC_STRIPE_KEY=
+MEDUSA_CLOUD_S3_HOSTNAME=
+MEDUSA_CLOUD_S3_PATHNAME=
+NODE_ENV=development
+REVALIDATE_SECRET=supersecret
+NEXT_PUBLIC_SITE_NAME="Gorgo Medusa Store"
+NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER=dadata
+NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY=
+```
+
+Остальные переменные уже заданы рабочими значениями по умолчанию для localhost. `NEXT_PUBLIC_SITE_NAME` задаёт название магазина в шапке, подвале и при оформлении заказа, а также попадает в разметку `schema.org` и в эндпоинт `llms.txt`. `NEXT_PUBLIC_STRIPE_KEY` нужен только если вы используете Stripe. `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` нужен только для встроенного автозаполнения адреса, читайте в документации [Настройка автозаполнения адреса](/tools/medusa-dtc-starter/setup-address-autocomplete). `MEDUSA_CLOUD_S3_HOSTNAME` и `MEDUSA_CLOUD_S3_PATHNAME` нужны только при развёртывании на Medusa Cloud. Значение `REVALIDATE_SECRET` должно совпадать с одноимённой переменной в `apps/backend/.env`, потому что бэкенд отправляет его с каждым вебхуком ревалидации. Смените его перед продакшеном.
+
+---
+
+## Добавление интеграций
+
+Модуль интеграций ([`@gorgo/medusa-integration`](/medusa-modules/integration)) уже зарегистрирован в `medusa-config.ts` с пустым массивом `providers`, так что перед добавлением интеграции ничего дополнительно подключать не нужно. Когда бэкенд запущен, добавьте платёжную, логистическую или ERP-интеграцию и настройте ее из Medusa Admin, читайте в документации [Поиск и добавление интеграции](/medusa-modules/integration/manage-integrations#поиск-и-добавление-интеграции).
+
+---
+
+## Устранение неполадок
+
+### Витрина не может обратиться к бэкенду или показывает ошибку региона
+
+Если в логах витрины видно `Error fetching regions. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable.`, причина одна из двух: либо `NEXT_PUBLIC_MEDUSA_BACKEND_URL` не задан или указывает не туда, либо на бэкенде пока не настроен ни один регион. Проверьте, что бэкенд запущен и доступен по этому адресу. Если регионов правда нет, их создаёт сид-скрипт, читайте в документации [Настройка начальных данных](/tools/medusa-dtc-starter/customize-seed-data).
+
+### Оплата через Stripe не загружается
+
+`Stripe key is missing. Set NEXT_PUBLIC_STRIPE_KEY environment variable.` означает, что витрина попыталась отрисовать Stripe Elements без публикуемого ключа Stripe. `Stripe client secret is missing. Cannot initialize Stripe.` означает, что для корзины ещё не создана платёжная сессия Stripe. Обычно это значит, что в выбранном регионе не настроен провайдер Stripe.
+
+### Не работает автозаполнение адреса
+
+Если поле адреса при оформлении заказа не подсказывает варианты по мере набора, скорее всего не задан ключ DaData. Заведите аккаунт на [DaData](https://dadata.ru/?ref=276331), укажите свой ключ в `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` и оставьте `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER` равным `dadata`. Подробнее о настройке автозаполнения и подключении другого провайдера читайте в документации [Настройка автозаполнения адреса](/tools/medusa-dtc-starter/setup-address-autocomplete).
+
+### Ошибки CORS в консоли браузера
+
+`STORE_CORS`, `ADMIN_CORS` и `AUTH_CORS` в `.env` бэкенда задают списки разрешённых источников. Если вы переносите витрину или Admin на другой порт или домен, добавьте этот адрес в соответствующую переменную и перезапустите бэкенд.

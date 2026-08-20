@@ -1,0 +1,207 @@
+---
+title: "Getting Started with Medusa DTC Starter"
+description: "Install Medusa DTC Starter, either through Medusa's own scaffolding tool or by cloning the repository directly, then configure both apps and connect your first integration."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to install [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter), configure both apps, and connect your first integration.
+
+## Requirements
+
+- Node.js v20 or later
+- PostgreSQL v15 or later
+- npm, yarn, or pnpm
+
+---
+
+## Installation
+
+Install the starter one of two ways: scaffold a new project with Medusa's own CLI, or clone the repository and configure each app by hand.
+
+### Approach 1: Install with Medusa Application
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn dlx create-medusa-app@latest --repo-url https://github.com/gorgojs/medusa-dtc-starter
+    ```
+  </CodeTab>
+  <CodeTab label="pnpm" value="pnpm">
+    ```bash
+    pnpm dlx create-medusa-app@latest --repo-url https://github.com/gorgojs/medusa-dtc-starter
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npx create-medusa-app@latest --repo-url https://github.com/gorgojs/medusa-dtc-starter
+    ```
+  </CodeTab>
+</CodeTabs>
+
+`--repo-url` tells `create-medusa-app` to scaffold from the specified repository instead of the official Medusa starter, but the usual prompts for a project name and a database stay the same. By default, the command also runs migrations, creates an admin user, and seeds the database. Pass `--no-migrations` to skip all three.
+
+### Approach 2: Install Separately
+
+1. Clone the repository and install dependencies:
+
+   <CodeTabs>
+     <CodeTab label="yarn" value="yarn">
+       ```bash
+       git clone https://github.com/gorgojs/medusa-dtc-starter.git
+       cd medusa-dtc-starter
+       yarn install
+       ```
+     </CodeTab>
+     <CodeTab label="pnpm" value="pnpm">
+       ```bash
+       git clone https://github.com/gorgojs/medusa-dtc-starter.git
+       cd medusa-dtc-starter
+       pnpm install
+       ```
+     </CodeTab>
+     <CodeTab label="npm" value="npm">
+       ```bash
+       git clone https://github.com/gorgojs/medusa-dtc-starter.git
+       cd medusa-dtc-starter
+       npm install
+       ```
+     </CodeTab>
+   </CodeTabs>
+
+2. Create the backend's environment file and point `DATABASE_URL` at a real database:
+
+   ```bash title="Terminal"
+   cp apps/backend/.env.template apps/backend/.env
+   ```
+
+   ```bash title="apps/backend/.env"
+   DATABASE_URL=postgres://postgres:@localhost:5432/medusa-dtc-starter
+   ```
+
+3. Run the migrations, create an admin user, seed the initial data, and start the backend:
+
+   <CodeTabs>
+     <CodeTab label="yarn" value="yarn">
+       ```bash
+       cd apps/backend
+       yarn medusa db:migrate
+       yarn medusa user -e admin@medusajs.com -p supersecret
+       yarn seed
+       yarn dev
+       ```
+     </CodeTab>
+     <CodeTab label="pnpm" value="pnpm">
+       ```bash
+       cd apps/backend
+       pnpm medusa db:migrate
+       pnpm medusa user -e admin@medusajs.com -p supersecret
+       pnpm seed
+       pnpm dev
+       ```
+     </CodeTab>
+     <CodeTab label="npm" value="npm">
+       ```bash
+       cd apps/backend
+       npx medusa db:migrate
+       npx medusa user -e admin@medusajs.com -p supersecret
+       npm run seed
+       npm run dev
+       ```
+     </CodeTab>
+   </CodeTabs>
+
+4. Open the Admin dashboard at `http://localhost:9000/app`, log in, and copy the publishable API key from **Settings → Publishable API Keys**.
+
+5. Create the storefront's environment file with that key:
+
+   ```bash title="Terminal"
+   cp apps/storefront/.env.template apps/storefront/.env.local
+   ```
+
+   ```bash title="apps/storefront/.env.local"
+   NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_6c3...
+   ```
+
+6. Start the storefront:
+
+   <CodeTabs>
+     <CodeTab label="yarn" value="yarn">
+       ```bash
+       cd apps/storefront
+       yarn dev
+       ```
+     </CodeTab>
+     <CodeTab label="pnpm" value="pnpm">
+       ```bash
+       cd apps/storefront
+       pnpm dev
+       ```
+     </CodeTab>
+     <CodeTab label="npm" value="npm">
+       ```bash
+       cd apps/storefront
+       npm run dev
+       ```
+     </CodeTab>
+   </CodeTabs>
+
+The storefront runs at `http://localhost:8000`. The repository root is set up for pnpm, so `pnpm dev` there starts both apps at once. With npm or yarn, start each app from its own directory.
+
+---
+
+## Configuration
+
+Before the backend can run, set a real value for `DATABASE_URL` and `INTEGRATION_ENCRYPTION_KEY`:
+
+```bash title="apps/backend/.env"
+DATABASE_URL=postgres://postgres:@localhost:5432/medusa-dtc-starter
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+`INTEGRATION_ENCRYPTION_KEY` encrypts the secret fields the Integration Module stores. Change the `supersecret` value before production.
+
+For the storefront, you need at least the publishable API key from your Medusa backend:
+
+```bash title="apps/storefront/.env.local"
+NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_6c3...
+NEXT_PUBLIC_MEDUSA_BACKEND_URL=http://localhost:9000
+NEXT_PUBLIC_DEFAULT_REGION=en
+NEXT_PUBLIC_BASE_URL=https://localhost:8000
+NEXT_PUBLIC_STRIPE_KEY=
+MEDUSA_CLOUD_S3_HOSTNAME=
+MEDUSA_CLOUD_S3_PATHNAME=
+NODE_ENV=development
+REVALIDATE_SECRET=supersecret
+NEXT_PUBLIC_SITE_NAME="Gorgo Medusa Store"
+NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER=dadata
+NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY=
+```
+
+The rest already ship with working localhost defaults. `NEXT_PUBLIC_SITE_NAME` sets the store name shown in the header, footer, and checkout, and it also feeds the `schema.org` markup and the `llms.txt` endpoint. `NEXT_PUBLIC_STRIPE_KEY` is only needed if you use Stripe. `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` is only needed for the built-in address autocomplete, see the [Set Up Address Autocomplete](/tools/medusa-dtc-starter/setup-address-autocomplete) documentation. `MEDUSA_CLOUD_S3_HOSTNAME` and `MEDUSA_CLOUD_S3_PATHNAME` are only needed when deploying to Medusa Cloud. `REVALIDATE_SECRET` has to match the same variable in `apps/backend/.env`, because the backend sends that value with every revalidation webhook. Change it before production.
+
+---
+
+## Add Integrations
+
+The Integration Module ([`@gorgo/medusa-integration`](/medusa-modules/integration)) is already registered in `medusa-config.ts` with an empty `providers` array, so there's nothing to wire up before you can add one. Once the backend is running, add a payment, fulfillment, or ERP integration and configure it from Medusa Admin, see the [Browse and Add an Integration](/medusa-modules/integration/manage-integrations#browse-and-add-an-integration) documentation.
+
+---
+
+## Troubleshooting
+
+### Storefront Can't Reach the Backend, or Shows a Region Error
+
+If the storefront's logs show `Error fetching regions. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable.`, the cause is one of two things: either `NEXT_PUBLIC_MEDUSA_BACKEND_URL` isn't set or points to the wrong place, or the backend has no region configured yet. Check that the backend is running and reachable at that URL. If there really are no regions, the seed script creates several, see the [Customize Seed Data](/tools/medusa-dtc-starter/customize-seed-data) documentation.
+
+### Stripe Checkout Doesn't Load
+
+`Stripe key is missing. Set NEXT_PUBLIC_STRIPE_KEY environment variable.` means the storefront tried to render Stripe Elements without a Stripe publishable key set. `Stripe client secret is missing. Cannot initialize Stripe.` means no Stripe payment session exists on the cart yet. This usually happens because the selected region has no Stripe provider configured.
+
+### Address Autocomplete Doesn't Work
+
+If the address field doesn't suggest anything as you type during checkout, the DaData key is probably missing. Create an account on [DaData](https://dadata.ru/?ref=276331), set your key in `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY`, and leave `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER` set to `dadata`. See the [Set Up Address Autocomplete](/tools/medusa-dtc-starter/setup-address-autocomplete) documentation for configuring autocomplete and connecting a different provider.
+
+### CORS Errors in the Browser Console
+
+`STORE_CORS`, `ADMIN_CORS`, and `AUTH_CORS` in the backend's `.env` are allow-lists. If you move the storefront or Admin to a different port or domain, add that origin to the matching variable and restart the backend.

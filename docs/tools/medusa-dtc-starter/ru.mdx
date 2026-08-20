@@ -1,0 +1,85 @@
+---
+title: "Готовый к продакшену Medusa DTC Starter"
+description: "Стартер на Medusa для прямых продаж потребителю, объединяющий бэкенд и витрину на Next.js со встроенной поддержкой нескольких регионов, валют и языков."
+---
+
+# {frontmatter.title}
+
+[Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter) реализует функциональность, которой не хватает в официальном стартере Medusa, доводя его до продакшен уровня. В нём есть всё, что нужно для старта продаж: конверсионный чекаут, полный SEO и llms.txt для AI-краулеров, транзационные письма, ревалидация кэша товаров при изменениях, мультирегиональность и предустановленный Модуль интеграций для подключения ваших провайдеров платежей, доставок и других сервисов. Все эти возможности уже настроены и готовы к использованию.
+
+## Возможности
+
+Все возможности официального [DTC-стартера Medusa](https://github.com/medusajs/dtc-starter) плюс:
+
+- **Конверсионный чекаут:** Шаги оформления заказа реализованы как модальные окна, которые упрощают процесс покупки. За основу взят передовой опыт чекаута [Яндекс KIT](https://kit.yandex.ru), платформы Яндекса для запуска интернет-магазинов. Вы легко можете убрать или добавить любое поле.
+
+- **Автозаполнение адреса:** Поле адреса подсказывает варианты по мере ввода, а после выбора подсказки индекс, город и регион заполняются автоматически, покупатель в любой момент может отметить «Ввести адрес вручную» и заполнить поля сам.
+
+  <Note type="success" title="Сервис автозаполнения адреса">
+
+  Используйте встроенный сервис автозаполнения адресов [DaData](https://dadata.ru/?ref=276331) или подключите свой. Про подключение своего сервиса читайте в документации [Настройка автозаполнения адреса](/tools/medusa-dtc-starter/setup-address-autocomplete).
+
+  </Note>
+
+- **Полная поддержка i18n:** [36 языков](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/i18n/json) с поддержкой RTL и [241 страна](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/regions/json) по умолчанию, лишние легко убрать
+
+  <Note type="success" title="Настройка регионов">
+
+  Добавляйте свои регионы или убирайте лишние прямо в файлах сид-скрипта. Про их формат и валюты читайте в документации [Настройка начальных данных](/tools/medusa-dtc-starter/customize-seed-data).
+
+  </Note>
+
+- **Поиск по каталогу:** Быстрый и удобный поиск по товарам и категориям. Вы можете подключить свой поисковый движок, например [Meilisearch](https://www.meilisearch.com/).
+
+- **Каталог с фильтрами:** Фильтры по опциям товаров, сортировка по новизне и цене, боковая панель с категориями и подкатегориями, а на мобильных фильтры открываются в панели снизу. Выбранные фильтры остаются в адресе страницы, поэтому ссылкой на подборку можно поделиться. За основу взят каталог магазина брендовой одежды [12 STOREEZ](https://12storeez.store).
+
+- **Транзакционные письма:** Собственный SMTP-провайдер уведомлений отправляет письма по шаблонам React Email с помощью пакета `nodemailer`. Семь подписчиков реагируют на события `customer.created`, `auth.password_reset`, `order.placed`, `order.completed`, `order.fulfillment_created`, `order.transfer_requested` и `payment.captured`. Смотрите [шаблоны писем на GitHub](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/emails).
+- **Ревалидация кэша по запросу:** При изменении товара, категории, коллекции или перевода подписчик бэкенда отправляет вебхук на витрину, и витрина сбрасывает кэш именно тех страниц, которых это касается, смотрите [код подписчика на GitHub](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/subscribers/product-updated.ts#L36-L63).
+
+- **[Модуль интеграций](/medusa-modules/integration)**<AccentBadge badge="New" />: Настройте плагин прямо в приложении Medusa Admin - без редактирования конфигурационных файлов и повторного развёртывания магазина.
+
+  <Note type="success" title="Модуль интеграций">
+
+  Этот стартер поддерживает модуль интеграций, который позволяет администратору магазина настраивать плагин прямо в приложении Medusa Admin, не редактируя конфигурационные файлы и не выполняя повторное развёртывание магазина. Конфиденциальные значения шифруются, а настройки проверяются перед применением.
+
+  </Note>
+
+- **SEO и AI оптимизация:** [sitemap.xml](https://dtc-starter-demo.gorgojs.com/sitemap.xml), [robots.txt](https://dtc-starter-demo.gorgojs.com/robots.txt) и hreflang-альтернативы генерируются автоматически, Open Graph и Twitter Card мета-теги настраиваются для каждой страницы, а также есть эндпоинт [llms.txt](https://dtc-starter-demo.gorgojs.com/llms.txt) для AI-краулеров.
+  ![Результаты PageSpeed](/static/dtc-starter/ru/pagespeed.png)
+
+
+---
+
+## Разработчикам
+
+<CardList items={[
+  {
+    title: "Medusa DTC Starter на GitHub",
+    href: "https://github.com/gorgojs/medusa-dtc-starter"
+  }
+]}/>
+
+---
+
+## 💬 Поддержка и сообщество
+
+Есть вопросы по стартеру? Пишите в чат поддержки в Telegram - [@gorgojs_chat](https://t.me/gorgojs_chat)
+
+Общайтесь с другими разработчиками Medusa в Telegram - [@medusajs_chat](https://t.me/medusajs_chat)
+
+## Дальнейшие шаги
+
+<CardList items={[
+  {
+    title: "Начало работы с Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter/getting-started"
+  },
+  {
+    title: "Настройка начальных данных",
+    href: "/tools/medusa-dtc-starter/customize-seed-data"
+  },
+  {
+    title: "Настройка автозаполнения адреса",
+    href: "/tools/medusa-dtc-starter/setup-address-autocomplete"
+  }
+]}/>
