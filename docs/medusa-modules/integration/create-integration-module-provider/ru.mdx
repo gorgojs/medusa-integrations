@@ -25,7 +25,7 @@ description: "Узнайте, как создать провайдер для Me
 
 ## 2. Создайте сервис провайдера Модуля интеграций
 
-Создайте файл `src/providers/integration-my/services/my-integration.ts`, который объявляет дескриптор интеграции и сам сервис.
+Создайте файл `src/providers/integration-my/services/my-integration.ts`, который объявляет дескриптор провайдера интеграций и сам сервис.
 
 ```ts title="providers/integration-my/services/my-integration.ts"
 import {
@@ -62,7 +62,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 
 <Note type="default" title="">
 
-Общий обзор дескриптора смотрите в разделе [Основные концепции](/medusa-modules/integration/concepts#дескриптор). Полный справочник по каждому полю `options` (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate` и другие), по типу, приведён в разделе [Дескриптор интеграции](/medusa-modules/integration/descriptor).
+Общий обзор дескриптора смотрите в разделе [Основные концепции](/medusa-modules/integration/concepts#дескриптор). Полный справочник по каждому полю `options` (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate` и другие), по типу, приведён в разделе [Дескриптор провайдера интеграций](/medusa-modules/integration/descriptor).
 
 </Note>
 

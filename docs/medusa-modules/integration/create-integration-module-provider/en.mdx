@@ -25,7 +25,7 @@ Start by creating a new directory for your Integration Module provider. In a plu
 
 ## 2. Create the Integration Module Provider Service
 
-Create the file `src/providers/integration-my/services/my-integration.ts`, which declares the integration's descriptor and the service itself.
+Create the file `src/providers/integration-my/services/my-integration.ts`, which declares the integration provider's descriptor and the service itself.
 
 ```ts title="providers/integration-my/services/my-integration.ts"
 import {
@@ -62,7 +62,7 @@ The provider class must implement the `descriptor` property. The descriptor hold
 
 <Note type="default" title="">
 
-See [General Concepts](/medusa-modules/integration/concepts#descriptor) for an overview of the descriptor, and [Integration Descriptor](/medusa-modules/integration/descriptor) for the full reference of every `options` field (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate`, and others), by type.
+See [General Concepts](/medusa-modules/integration/concepts#descriptor) for an overview of the descriptor, and [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every `options` field (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate`, and others), by type.
 
 </Note>
 

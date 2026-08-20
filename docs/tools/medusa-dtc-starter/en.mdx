@@ -1,0 +1,84 @@
+---
+title: "Production-ready Medusa DTC Starter"
+description: "A Medusa starter for direct-to-consumer commerce, pairing a backend with a Next.js storefront, with built-in support for multiple regions, currencies, and languages."
+---
+
+# {frontmatter.title}
+
+[Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter) fills in what's missing from the official Medusa DTC Starter and brings it to production quality. It has everything you need to start selling: a conversion-focused checkout, full SEO and an llms.txt endpoint for AI crawlers, transactional emails, on-demand catalog cache revalidation, multi-region support, and a pre-wired Integration Module for connecting your payment, shipping, and other providers. All of these features are already configured and ready to use.
+
+## Features
+
+All the features of the official [Medusa DTC Starter](https://github.com/medusajs/dtc-starter), plus:
+
+- **Conversion-focused checkout:** Checkout steps are built as modals that streamline the purchase flow. The design borrows from the [Yandex KIT](https://kit.yandex.ru) checkout, Yandex's platform for launching online stores. You can remove or add any field.
+
+- **Address autocomplete:** The address field suggests options as you type, and picking a suggestion fills in the postal code, city, and region automatically. At any point, the buyer can check "Enter address manually" and fill in the fields themselves.
+
+  <Note type="success" title="Address Autocomplete Service">
+
+  Use the built-in [DaData](https://dadata.ru/?ref=276331) address autocomplete service, or connect your own. To connect your own service, see [Set Up Address Autocomplete](/tools/medusa-dtc-starter/setup-address-autocomplete).
+
+  </Note>
+
+- **Full i18n support:** [36 languages](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/i18n/json) with RTL support and [241 countries](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/regions/json) by default, and you can remove the ones you don't need.
+
+  <Note type="success" title="Region Setup">
+
+  Add your own regions or remove extra ones directly in the seed script's data files. For their format and currencies, see [Customize Seed Data](/tools/medusa-dtc-starter/customize-seed-data).
+
+  </Note>
+
+- **Catalog search:** Fast, convenient search across products and categories. You can plug in your own search engine, for example [Meilisearch](https://www.meilisearch.com/).
+
+- **Filterable catalog:** Filters by product options, sorting by newest and price, and a sidebar with categories and subcategories. On mobile, filters open in a sheet from the bottom. Selected filters stay in the page's URL, so a curated selection can be shared as a link. The design borrows from the catalog of fashion brand [12 STOREEZ](https://12storeez.store).
+
+- **Transactional emails:** A custom SMTP notification provider sends emails from React Email templates using the `nodemailer` package. Seven subscribers react to the `customer.created`, `auth.password_reset`, `order.placed`, `order.completed`, `order.fulfillment_created`, `order.transfer_requested`, and `payment.captured` events. See [the email templates on GitHub](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/emails).
+- **On-demand cache revalidation:** Whenever a product, category, collection, or translation changes, a backend subscriber posts a webhook to the storefront, and the storefront revalidates exactly the pages that are affected. See [the subscriber's code on GitHub](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/subscribers/product-updated.ts#L36-L63).
+
+- **[Integration Module](/medusa-modules/integration)**<AccentBadge badge="New" />: Configure the plugin directly in the Medusa Admin application. No editing configuration files or redeploying the store.
+
+  <Note type="success" title="Integration Module">
+
+  This starter supports the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
+
+  </Note>
+
+- **SEO and AI optimization:** [sitemap.xml](https://dtc-starter-demo.gorgojs.com/sitemap.xml), [robots.txt](https://dtc-starter-demo.gorgojs.com/robots.txt), and hreflang alternates are generated automatically, Open Graph meta tags are set on product pages, and there's an [llms.txt](https://dtc-starter-demo.gorgojs.com/llms.txt) endpoint for AI crawlers.
+  ![PageSpeed results](/static/dtc-starter/en/pagespeed.png)
+
+---
+
+## Development
+
+<CardList items={[
+  {
+    title: "Medusa DTC Starter on GitHub",
+    href: "https://github.com/gorgojs/medusa-dtc-starter"
+  }
+]}/>
+
+---
+
+## 💬 Support & Community
+
+Have questions about the starter? Join the Telegram support chat - [@gorgojs_chat](https://t.me/gorgojs_chat)
+
+Connect with other Medusa developers on Telegram - [@medusajs_chat](https://t.me/medusajs_chat)
+
+## Next Steps
+
+<CardList items={[
+  {
+    title: "Getting Started with Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter/getting-started"
+  },
+  {
+    title: "Customize Seed Data",
+    href: "/tools/medusa-dtc-starter/customize-seed-data"
+  },
+  {
+    title: "Set Up Address Autocomplete",
+    href: "/tools/medusa-dtc-starter/setup-address-autocomplete"
+  }
+]}/>

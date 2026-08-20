@@ -1,0 +1,71 @@
+---
+title: "Настройка начальных данных"
+description: "Как сид-скрипт стартера собирает регионы, валюты, локали и демо-каталог из JSON-файлов с данными, и как адаптировать его под собственные рынки и товары."
+---
+
+# {frontmatter.title}
+
+В этом руководстве вы узнаете, как сид-скрипт стартера собирает регионы, валюты, локали и демо-каталог из JSON-файлов с данными, и как адаптировать их под собственные рынки и товары.
+
+Вместо сгенерированной миграции бэкенд поставляется с одноразовым сид-скриптом [`initial-data-seed.ts`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/initial-data-seed.ts). Он проверяет, не засеян ли магазин, а затем поэтапно создаёт магазин, регионы, каталог и переводы. Каждый этап читает свои данные из JSON-файлов в `src/migration-scripts/data/`.
+
+<Note type="success" title="">
+
+Единственную проверку на существование выполняет канал продаж из `data/store/json/store.json`. Если вы удалите его и запустите скрипт снова, все остальные этапы выполнятся заново без проверки на дубликаты.
+
+</Note>
+
+## Регионы и валюты
+
+Каждый файл в [`data/regions/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/regions/json) описывает один регион, например [`ru.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/regions/json/ru.json). Стартер поставляется с 241 таким файлом, по одному на страну.
+
+Чтобы добавить или изменить регион, скопируйте существующий файл и отредактируйте его. Обязательны поля `name`, `currency_code`, `countries`, `stock_location` и цены в `shipping_prices`/`product_prices`. Цены используют camelCase-ключ товара или способа доставки, например `t-shirt` превращается в `tShirt`. Новому региону нужна цена для каждого существующего товара, а новому товару нужна цена в каждом существующем регионе.
+
+<Note type="success" title="">
+
+Валюта по умолчанию (`default_currency_code` в `store.json`) должна совпадать с валютой одного из ваших регионов. Иначе сид-скрипт откажется запускаться, а не оставит магазин без валюты по умолчанию.
+
+</Note>
+
+## Локали и переводы
+
+Локали собираются по тому же принципу, что и регионы, из [`data/i18n/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/i18n/json), например [`ru.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/i18n/json/ru.json). Стартер поставляется с 36 файлами локалей. Чтобы добавить локаль, добавьте JSON-файл такой же формы. Он попадёт в переводы категорий, коллекций, товаров, вариантов, способов доставки и причин возврата.
+
+<Note type="success" title="">
+
+Это отдельный, третий список локалей. Языки интерфейса витрины заданы в [`apps/storefront/src/i18n/config.ts`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/storefront/src/i18n/config.ts), а языки писем живут в [`EMAIL_LANGS`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/emails/i18n). Добавление локали здесь не затрагивает ни один из этих списков.
+
+</Note>
+
+## Товары, категории и способы доставки
+
+Демо-каталог хранится как обычный JSON, а не как TypeScript. Категории, опции товаров, товары и коллекции лежат в [`data/products/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/products/json), способы доставки лежат в [`data/fulfillment/json/shipping-options.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/fulfillment/json/shipping-options.json). Товар указывает категорию по handle и опции по названию, поэтому категория и опции должны уже существовать в соответствующих файлах. Ему также нужна цена в `product_prices` каждого региона.
+
+## Запуск сида
+
+Запустите скрипт `seed` из `apps/backend` командой `pnpm seed`, `npm run seed` или `yarn seed`. Из корня репозитория то же самое делает `pnpm backend:seed` через pnpm workspace. Все они вызывают `medusa exec ./src/migration-scripts/initial-data-seed.ts`, скрипт `seed` объявлен в [`apps/backend/package.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/package.json).
+
+<Note type="success" title="">
+
+Скрипты миграции читают данные из `<cwd>/src`. Если вы загружаете данные из собранного билда, а не через сервер разработки, скопируйте `src/**/*.json` в билд рядом со скомпилированным кодом.
+
+</Note>
+
+## Перед запуском в продакшене
+
+- Замените демо-категории, демо-товары и демо-коллекции в `data/products/json/` на собственный каталог, прежде чем считать магазин готовым. `createProductCategoriesWorkflow` и `createProductsWorkflow` не проверяют существующие handle, поэтому повторный запуск скрипта после правки этих данных может создать дубликаты, а не обновить существующие записи.
+- Сократите `data/regions/json/` до ваших настоящих целевых рынков. Каждый файл в этой директории создаёт собственный склад, набор доставки и способы доставки, поэтому 241 регион означает 241 экземпляр каждого из них.
+- Обновите `default_currency_code` в `store.json`, если регион, который его обеспечивал, не входит в число оставленных.
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Готовый к продакшену Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter"
+  },
+  {
+    title: "Начало работы с Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter/getting-started"
+  }
+]}/>

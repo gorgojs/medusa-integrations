@@ -1,0 +1,84 @@
+---
+title: "Set Up Address Autocomplete"
+description: "Enable the storefront's built-in DaData address autocomplete for checkout, or add a provider of your own for another country or service."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to enable the storefront's built-in DaData address autocomplete for checkout, or add a provider of your own for another country or service.
+
+Address input on the checkout's address step is a pluggable provider, not a fixed set of fields. The storefront ships one real provider, DaData for Russian addresses, plus a plain address field as the fallback and a manual entry mode the buyer can switch to at any point.
+
+## How Provider Selection Works
+
+`AddressAutocomplete` reads the active provider from an environment variable and switches on it:
+
+```tsx title="src/modules/common/components/address-autocomplete/index.tsx"
+const renderAutocomplete = () => {
+  switch (true) {
+    case isDaData(addressAutocompleteProvider):
+      return <DaDataAddressInput {...props} />
+    default:
+      return <PlainAddressInput {...props} />
+  }
+}
+```
+
+`addressAutocompleteProvider` and `isDaData` both come from `src/lib/constants.tsx`. Any value other than `dadata`, including an unset variable, falls through to `PlainAddressInput` (`providers/plain.tsx`), which renders a single address field with no autocomplete at all.
+
+<Note type="success" title="">
+
+Whichever provider is active, `AddressAutocomplete` also renders a checkbox that lets the visitor switch to manual entry immediately. The checkbox swaps the provider for `ManualAddressFields`, four plain inputs for address, postal code, city, and province. As a result, autocomplete never blocks someone whose address doesn't match what the provider expects.
+
+</Note>
+
+## Enable the Built-In DaData Provider
+
+Set two environment variables in `apps/storefront/.env.local`:
+
+```bash title="apps/storefront/.env.local"
+NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER=dadata
+NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY=
+```
+
+Get the API key from your [DaData](https://dadata.ru/?ref=276331) account. `DaDataAddressInput` (`src/modules/common/components/address-autocomplete/providers/dadata.tsx`) passes it directly to `react-dadata`'s `AddressSuggestions` component, which only suggests Russian addresses.
+
+## Add a Provider for Another Country
+
+Every provider component takes the same props, `AddressFields` in, `AddressFields` out:
+
+```ts title="src/modules/common/components/address-autocomplete/types.ts"
+export type AddressFields = {
+  address_1: string
+  postal_code: string
+  city: string
+  province: string
+}
+
+export type AddressAutocompleteProps = {
+  values: AddressFields
+  onChange: (fields: AddressFields) => void
+  required?: boolean
+}
+```
+
+To add a provider for another country or service:
+
+1. Create a file under `providers/`, implementing `AddressAutocompleteProps`, that calls `onChange` with an `AddressFields` object whenever the visitor picks a suggestion.
+2. Add a `case` for it in the `renderAutocomplete` switch shown above, alongside a small `isYourProvider(provider?: string)` helper next to `isDaData` in `src/lib/constants.tsx`.
+3. Point `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER` at the id your `case` and helper check for.
+
+You can model a new provider's props and `onChange` calls on `PlainAddressInput`, a working, minimal example. It doesn't call any external API itself.
+
+## References
+
+<CardList items={[
+  {
+    title: "Production-ready Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter"
+  },
+  {
+    title: "Getting Started with Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter/getting-started"
+  }
+]}/>
