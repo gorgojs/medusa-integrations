@@ -9,6 +9,10 @@
     "integration-tests/*"
   ],
   "packageManager": "yarn@4.9.2",
+  "resolutions": {
+    "@gorgo/telemetry": "workspace:*",
+    "@gorgo/medusa-integration": "workspace:*"
+  },
   "scripts": {
     "update": "./scripts/update.sh",
     "postinstall": "husky",

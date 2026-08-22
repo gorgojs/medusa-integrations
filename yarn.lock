@@ -2270,25 +2270,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gorgo/medusa-integration@npm:^0.1.5":
-  version: 0.1.5
-  resolution: "@gorgo/medusa-integration@npm:0.1.5"
-  dependencies:
-    "@gorgo/telemetry": "npm:^1.4.0"
-  peerDependencies:
-    "@medusajs/admin-sdk": ^2.17.2
-    "@medusajs/cli": ^2.17.2
-    "@medusajs/dashboard": ^2.17.2
-    "@medusajs/deps": ^2.17.2
-    "@medusajs/framework": ^2.17.2
-    "@medusajs/icons": ^2.17.2
-    "@medusajs/medusa": ^2.17.2
-    "@medusajs/test-utils": ^2.17.2
-    "@medusajs/ui": ^4.1.16
-  checksum: 10c0/1e392795076917d55b9da982f67d52a8c632f6ef78925080ba673fb311d4b0a18eff2028f0c299b6c8fb5c51acacfae5db015b5e75c8c2aace5ab71236b6c691
-  languageName: node
-  linkType: hard
-
 "@gorgo/medusa-integration@workspace:*, @gorgo/medusa-integration@workspace:packages/modules/integration":
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-integration@workspace:packages/modules/integration"
@@ -2452,16 +2433,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gorgo/telemetry@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "@gorgo/telemetry@npm:1.4.0"
-  dependencies:
-    configstore: "npm:^5.0.1"
-  checksum: 10c0/c0eeb55ac969a8bde46ead0898b9ea9f6d63bf7ce32a43a4007ca931bba51d979835859e242344a216c773c08e7aa3d18210548b1f1bf73ccb5b62b38a898875
-  languageName: node
-  linkType: hard
-
-"@gorgo/telemetry@workspace:packages/utils/telemetry":
+"@gorgo/telemetry@workspace:*, @gorgo/telemetry@workspace:packages/utils/telemetry":
   version: 0.0.0-use.local
   resolution: "@gorgo/telemetry@workspace:packages/utils/telemetry"
   dependencies:
