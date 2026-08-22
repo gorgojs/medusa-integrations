@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-fulfillment-apiship",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0",
   "description": "Medusa plugin for ApiShip — delivery service aggregator",
   "files": [
     ".medusa/server",
@@ -58,11 +58,11 @@
     "test:unit": "jest --config jest.config.js"
   },
   "dependencies": {
-    "@gorgo/telemetry": "^1.4.0",
+    "@gorgo/telemetry": "^1.5.0",
     "axios": "^1.13.2"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.1.5",
+    "@gorgo/medusa-integration": "^0.2.0",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",
@@ -87,7 +87,7 @@
     "yalc": "^1.0.0-pre.53"
   },
   "peerDependencies": {
-    "@gorgo/medusa-integration": "^0.1.5",
+    "@gorgo/medusa-integration": "^0.2.0",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",

@@ -1,5 +1,13 @@
 # @gorgo/medusa-payment-tkassa
 
+## 2.0.0
+
+### Dependencies
+
+- Updated dependencies:
+  - @gorgo/medusa-integration@0.2.0
+  - @gorgo/telemetry@1.5.0
+
 ## 2.0.0-beta.2
 
 - improve types

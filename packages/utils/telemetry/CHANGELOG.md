@@ -1,11 +1,17 @@
 # @gorgo/telemetry
 
+## 1.5.0
+
+### Features
+
+- remove extra telemetry by [@Ghost1863](https://github.com/Ghost1863) in [#422](https://github.com/gorgojs/medusa-integrations/pull/422) ([`e2eb20b`](https://github.com/gorgojs/medusa-integrations/commit/e2eb20b6acd04cc5aba87fa5418256ca099a941e))
+
 ## 1.4.0
 
 ### Features
 
 - remove extra telemetry and add docs
-  
+
 ## 1.3.0
 
 ### Features
