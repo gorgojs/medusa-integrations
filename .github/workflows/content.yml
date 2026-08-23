@@ -1,8 +1,12 @@
 name: Content Checks
 
-# The existing test.yml only fires on packages/**, so documentation and catalog changes had no gate
-# at all. This is that gate: the machine-decidable half of the Gorgo writing voice plus bilingual
-# structural parity. The judgement half stays with the style-reviewer and docs-reviewer agents.
+# The existing test.yml only fires on packages/** and excludes markdown, so documentation, catalog
+# and Admin locale changes had no gate at all. This is that gate: the machine-decidable half of the
+# Gorgo writing voice plus bilingual structural parity. The judgement half stays with the
+# style-reviewer and docs-reviewer agents.
+#
+# Admin locale catalogs are checked for en and ru only. modules/integration ships 33 locales, but the
+# other 31 are Medusa's own translations and are not ours to police.
 
 on:
   pull_request:
@@ -11,6 +15,7 @@ on:
     paths:
       - 'docs/**'
       - 'catalog/**'
+      - 'packages/*/*/src/admin/i18n/**'
       - 'scripts/style-rules.js'
       - 'scripts/style-lint.js'
       - 'scripts/check-docs-parity.js'
@@ -21,6 +26,7 @@ on:
     paths:
       - 'docs/**'
       - 'catalog/**'
+      - 'packages/*/*/src/admin/i18n/**'
       - 'scripts/style-rules.js'
       - 'scripts/style-lint.js'
       - 'scripts/check-docs-parity.js'

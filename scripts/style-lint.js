@@ -17,7 +17,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const rules = require('./style-rules')
 
-const DEFAULT_ROOTS = ['docs', 'catalog']
+const DEFAULT_ROOTS = ['docs', 'catalog', 'packages']
 const REPO_ROOT = path.resolve(__dirname, '..')
 
 const argv = process.argv.slice(2)
@@ -40,6 +40,10 @@ function collect(root) {
         out.push({ file: p, lang: entry.name.slice(0, 2), type: 'mdx' })
       } else if (entry.name.endsWith('.yml') && !entry.name.startsWith('.')) {
         out.push({ file: p, lang: 'any', type: 'yml' })
+      } else if (/[/\\]admin[/\\]i18n[/\\]/.test(p) && /^(en|ru)\.json$/.test(entry.name)) {
+        // Admin locale catalogs. Only en and ru have house rules; the other 31 locales
+        // modules/integration ships are Medusa's own and are not ours to police.
+        out.push({ file: p, lang: entry.name.slice(0, 2), type: 'json' })
       }
     }
   }
@@ -65,6 +69,15 @@ function maskable(src) {
   s = s.replace(/\]\([^)\n]*\)/g, blank)                  // link targets, keep anchor text
   s = s.replace(/<[A-Z][A-Za-z]*[^>]*>/g, blank)          // MDX component tags and their props
   return s
+}
+
+/**
+ * In a locale catalog, only the string values are prose. Keys are identifiers and must never be
+ * flagged. Offsets are preserved so reported line numbers stay true.
+ */
+function maskableJson(src) {
+  return src.replace(/"(?:[^"\\\n]|\\.)*"(\s*:)?/g, (m, isKey) =>
+    isKey ? m.replace(/[^\n]/g, ' ') : ` ${m.slice(1, -1)} `)
 }
 
 /** In YAML, only the human-facing scalar values are prose. */
@@ -96,7 +109,8 @@ const findings = []
 function lint({ file, lang, type }) {
   const src = fs.readFileSync(file, 'utf8')
   const rel = path.relative(REPO_ROOT, file)
-  const prose = type === 'yml' ? maskableYaml(src) : maskable(src)
+  const prose =
+    type === 'yml' ? maskableYaml(src) : type === 'json' ? maskableJson(src) : maskable(src)
 
   for (const rule of rules.substring) {
     if (!applies(rule, lang)) continue
