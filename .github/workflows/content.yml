@@ -19,6 +19,7 @@ on:
       - 'scripts/style-rules.js'
       - 'scripts/style-lint.js'
       - 'scripts/check-docs-parity.js'
+      - 'scripts/check-i18n-parity.js'
       - '.github/workflows/content.yml'
   push:
     branches:
@@ -30,6 +31,7 @@ on:
       - 'scripts/style-rules.js'
       - 'scripts/style-lint.js'
       - 'scripts/check-docs-parity.js'
+      - 'scripts/check-i18n-parity.js'
   workflow_dispatch:
 
 jobs:
@@ -43,10 +45,13 @@ jobs:
         with:
           node-version: 24
 
-      # No install step: both scripts are dependency-free, on purpose. A docs-only pull request
+      # No install step: all three scripts are dependency-free, on purpose. A docs-only pull request
       # should not wait on a Yarn install of the whole monorepo.
       - name: Style
         run: node scripts/style-lint.js
 
       - name: Bilingual parity
         run: node scripts/check-docs-parity.js
+
+      - name: Admin locale parity
+        run: node scripts/check-i18n-parity.js
