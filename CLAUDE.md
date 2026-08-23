@@ -209,13 +209,14 @@ External contributors don't need it.
 
 ## Workflow: Research → Plan → Implement
 
-Three slash commands drive non-trivial work, each writing outputs to `thoughts/shared/`:
+Three slash commands drive non-trivial work. Their outputs go to the private **`gorgojs/thoughts`**
+repo, not into this one: this repo is public, and it has no `thoughts/` directory at all.
 
-- **`/research`** — spawn parallel agents to document how existing code works. Output: `thoughts/shared/research/YYYY-MM-DD-topic.md`.
-- **`/create_plan`** — interactive planning with phased implementation, automated + manual verification criteria. Output: `thoughts/shared/plans/YYYY-MM-DD-topic.md`.
+- **`/research`** — spawn parallel agents to document how existing code works. Output: `repos/medusa-integrations/research/YYYY-MM-DD-topic.md` in `gorgojs/thoughts`.
+- **`/create_plan`** — interactive planning with phased implementation, automated + manual verification criteria. Output: `repos/medusa-integrations/plans/YYYY-MM-DD-topic.md` in `gorgojs/thoughts`. Link it from the pull request description.
 - **`/implement_plan`** — execute an approved plan phase by phase, checking off items and pausing for manual verification.
 
-Read existing docs in `thoughts/shared/` before re-exploring the same area. See `thoughts/shared/README.md` for conventions.
+Read what's already in `gorgojs/thoughts` before re-exploring the same area. The conventions are in the `thoughts` skill of the `gorgo` plugin.
 
 ### Sub-agents
 
