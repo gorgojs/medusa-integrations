@@ -190,6 +190,23 @@ Use the **medusa** MCP (`docs.medusajs.com`) for Medusa v2 APIs and patterns, an
 | `update-medusa-version.yml` | Daily 6 AM + manual | Check latest Medusa, run integration tests, open update PR |
 | `notify-deploy-docs.yml` | Push to main (docs/**) | Notify automation repo (`gorgo-docs-updated`) to rebuild & deploy docs |
 
+## Claude Code setup
+
+Skills, agents and slash commands come not from this repo. Because
+this repo is public, the plugin is enabled per-developer through `.claude/settings.local.json`
+(gitignored) rather than committed:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "gorgo": { "source": { "source": "github", "repo": "gorgojs/claude-plugins" } }
+  },
+  "enabledPlugins": { "gorgo@gorgo": true }
+}
+```
+
+External contributors don't need it.
+
 ## Workflow: Research → Plan → Implement
 
 Three slash commands drive non-trivial work, each writing outputs to `thoughts/shared/`:
@@ -202,14 +219,15 @@ Read existing docs in `thoughts/shared/` before re-exploring the same area. See 
 
 ### Sub-agents
 
-Four specialized read-only agents live in `.claude/agents/`:
+Four specialized read-only agents ship with the `gorgo` plugin:
 
 - **codebase-locator** — WHERE files live (Grep/Glob/LS)
 - **codebase-analyzer** — HOW code works (Read + search)
 - **codebase-pattern-finder** — existing examples to model after
 - **web-search-researcher** — external docs (Medusa v2, third-party SDKs)
 
-Run them in parallel when investigating independent areas. See `.claude/agents/README.md`.
+Run them in parallel when investigating independent areas. Their selection guide is
+`agents/README.md` in the plugin repo.
 
 ## Examples
 

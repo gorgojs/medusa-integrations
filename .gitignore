@@ -33,3 +33,6 @@ examples/**/yalc.lock
 .zed
 
 **/tsconfig.tsbuildinfo
+
+# Claude Code local settings (per-developer, never committed)
+.claude/settings.local.json
