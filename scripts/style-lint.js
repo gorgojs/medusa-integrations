@@ -205,6 +205,15 @@ for (const root of roots.length ? roots : DEFAULT_ROOTS) {
       }
     }
 
+    // Document rules ask "is this whole file in the wrong language", so they need the file to have
+    // one language. A both-languages file (a YAML catalog entry with en: and ru: keys) has none.
+    if (lang !== 'any') {
+      for (const rule of rules.document ?? []) {
+        if (rule.lang !== lang) continue;
+        if (rule.test(prose, { lang })) record(rule, 1, path.basename(rel));
+      }
+    }
+
     if (type !== 'mdx' && type !== 'md') continue;
 
     let section = null;

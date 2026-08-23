@@ -199,6 +199,42 @@ module.exports = {
   ],
 
   /**
+   * Whole-document rules. `test(prose, ctx)` receives the masked prose (code and frontmatter already
+   * blanked) plus `ctx.lang`. For defects that no single line reveals.
+   */
+  document: [
+    {
+      id: 'ru/untranslated',
+      lang: 'ru',
+      severity: 'warn',
+      kind: 'translation',
+      fix: 'translate the page, or delete it until it is translated',
+      // A page copied from en.md and never translated is invisible to every other check: no Russian
+      // rule fires because there is no Russian, no English rule fires because the file is declared
+      // ru, and a structural parity check passes perfectly because a copy matches its original.
+      test: (prose) => {
+        const words = prose.match(/[\p{L}]{3,}/gu) || [];
+        if (words.length < 50) return false;
+        return !/[а-яё]/i.test(prose);
+      },
+    },
+    {
+      id: 'en/untranslated',
+      lang: 'en',
+      severity: 'warn',
+      kind: 'translation',
+      fix: 'this page is declared English but reads as Russian',
+      test: (prose) => {
+        const words = prose.match(/[\p{L}]{3,}/gu) || [];
+        if (words.length < 50) return false;
+        const cyr = (prose.match(/[а-яё]/gi) || []).length;
+        const lat = (prose.match(/[a-z]/gi) || []).length;
+        return cyr > lat;
+      },
+    },
+  ],
+
+  /**
    * Heading rules. `test(text, ctx)` receives the heading text with the leading #s stripped, plus
    * `ctx.section` — the nearest preceding H2, so a rule can be section-aware.
    */
