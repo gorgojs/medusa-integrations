@@ -120,12 +120,17 @@ function collect(root) {
  */
 function maskMarkdown(src) {
   const blank = (m) => m.replace(/[^\n]/g, ' ');
-  return src
-    .replace(/^---\n[\s\S]*?\n---\n/, blank)
-    .replace(/^```[\s\S]*?^```/gm, blank)
-    .replace(/`[^`\n]*`/g, blank)
-    .replace(/\]\([^)\n]*\)/g, blank)
-    .replace(/<[A-Z][A-Za-z]*[^>]*>/g, blank);
+  return (
+    src
+      .replace(/^---\n[\s\S]*?\n---\n/, blank)
+      .replace(/^```[\s\S]*?^```/gm, blank)
+      .replace(/`[^`\n]*`/g, blank)
+      .replace(/\]\([^)\n]*\)/g, blank)
+      // Any HTML or JSX tag, opening or closing, plus its attributes. The text between tags is kept:
+      // that is what the reader sees. Without this a heading wrapped in <a href="..."> is judged on the
+      // URL instead of the link text. The letter after `<` keeps a prose `a < b` from matching.
+      .replace(/<\/?[A-Za-z][A-Za-z0-9-]*(?:\s[^>]*?)?\/?>/g, blank)
+  );
 }
 
 /** In a locale catalog, only the string values are prose. Keys are identifiers. */

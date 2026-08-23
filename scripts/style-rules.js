@@ -206,7 +206,8 @@ module.exports = {
     {
       id: 'ru/untranslated',
       lang: 'ru',
-      severity: 'warn',
+      // Promoted from warn to error on 2026-08-24, once all eight starter pages were translated.
+      severity: 'error',
       kind: 'translation',
       fix: 'translate the page, or delete it until it is translated',
       // A page copied from en.md and never translated is invisible to every other check: no Russian
