@@ -1547,7 +1547,7 @@ export const ApishipCourierModal: React.FC<ApishipCourierModalProps> = ({
 
 ![Структура проекта Medusa Storefront после создания файла для единой точки входа для интеграции](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-index.png)
 
-```ts
+```ts title="src/modules/checkout/components/shipping/apiship/index.ts"
 export * from «./apiship-courier-modal»
 export * from «./apiship-chosen»
 export * from «./apiship-map»
@@ -1568,7 +1568,7 @@ export * from «./utils»
 
 ![Структура проекта Medusa Storefront после обновления файла для компонента доставки](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-index.png)
 
-```tsx
+```tsx title="src/modules/checkout/components/shipping/index.tsx"
 // ... другие imports
 import { setShippingMethod, removeShippingMethodFromCart } from "@lib/data/cart"
 import { calculatePriceForShippingOption, retrieveProviders } from "@lib/data/fulfillment"
