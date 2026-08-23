@@ -15,11 +15,15 @@ on:
     paths:
       - 'docs/**'
       - 'catalog/**'
+      - 'packages/providers/*/package.json'
+      - 'examples/**'
+      - 'integration-tests/**'
       - 'packages/*/*/src/admin/i18n/**'
       - 'scripts/style-rules.js'
       - 'scripts/style-lint.js'
       - 'scripts/check-docs-parity.js'
       - 'scripts/check-i18n-parity.js'
+      - 'scripts/check-integration-complete.js'
       - '.github/workflows/content.yml'
   push:
     branches:
@@ -27,11 +31,15 @@ on:
     paths:
       - 'docs/**'
       - 'catalog/**'
+      - 'packages/providers/*/package.json'
+      - 'examples/**'
+      - 'integration-tests/**'
       - 'packages/*/*/src/admin/i18n/**'
       - 'scripts/style-rules.js'
       - 'scripts/style-lint.js'
       - 'scripts/check-docs-parity.js'
       - 'scripts/check-i18n-parity.js'
+      - 'scripts/check-integration-complete.js'
   workflow_dispatch:
 
 jobs:
@@ -55,3 +63,6 @@ jobs:
 
       - name: Admin locale parity
         run: node scripts/check-i18n-parity.js
+
+      - name: Integration completeness
+        run: node scripts/check-integration-complete.js
