@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-feed-yandex",
-  "version": "0.2.34",
+  "version": "0.2.35",
   "description": "A Medusa plugin that generates a product feed in YML (Yandex Market Language) format",
   "license": "MIT",
   "repository": {
@@ -51,7 +51,7 @@
     "test:unit": "jest --config jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@gorgo/telemetry": "^1.4.0",
+    "@gorgo/telemetry": "^1.5.0",
     "yandex-market-language": "^0.5.0"
   },
   "devDependencies": {
