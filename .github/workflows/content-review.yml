@@ -1,0 +1,95 @@
+name: Content Review
+
+# Judgement half of the content gates. content.yml runs the deterministic checks (glossary, bilingual
+# parity, integration completeness); this asks Claude for the half a regex cannot decide: whether a
+# code example still matches the real signature in packages/, whether a claim is true, and whether the
+# Russian rendered the fact or copied the English sentence.
+#
+# The two reviewer prompts live in the gorgo plugin as the docs-reviewer and style-reviewer agents.
+# This workflow points Claude at them rather than restating the checklist, so the review and a local
+# review stay the same review.
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'catalog/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    name: Docs and voice review
+    runs-on: ubuntu-latest
+    # This repository is public, and GitHub does not pass secrets to a pull_request event raised from
+    # a fork. Without this guard the job would fail on every external contribution with a missing-key
+    # error that looks like the contributor's fault. Skip cleanly instead; the deterministic gates in
+    # content.yml still run for everyone.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Run the deterministic gates first and capture their output, so the review is told what is
+      # already covered and does not spend itself re-reporting a glossary hit.
+      - name: Collect gate output
+        id: gates
+        run: |
+          {
+            echo 'report<<GATES_EOF'
+            node scripts/style-lint.js || true
+            node scripts/check-docs-parity.js || true
+            node scripts/check-integration-complete.js || true
+            echo GATES_EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          track_progress: true
+          prompt: |
+            Review the documentation changes in this pull request.
+
+            Load the `docs-reviewer` and `gorgo-voice` skills from the gorgo plugin and follow them.
+            They are the specification; do not restate their checklists in your output.
+
+            The deterministic gates already ran. Their full output is below. Do NOT report anything
+            they reported: no glossary hits, no em dashes, no heading case, no bilingual structural
+            drift, no integration-registration gaps. If you find something they should have caught but
+            did not, say so explicitly and name the rule that is missing from
+            `scripts/style-rules.js`. That finding is worth more than the one you started with,
+            because it fixes every future pull request rather than this one.
+
+            Spend the review on what only a reader of the source can find:
+
+            1. Every code example in the diff, against the real export shape and signature in
+               `packages/`. Named versus default exports and stale signatures are the most common real
+               defect and are invisible in the diff. Grep for the symbol and read it.
+            2. Every behavioural claim. Trace it or flag it. A page under `docs/tools/` may document a
+               package that is not in this repo at all, so say you could not verify rather than
+               assuming.
+            3. `MedusaTypeList` fields against the real type. The parity gate only proves `en` and `ru`
+               agree; both can be wrong together.
+            4. Reachability: a new page needs an entry in its section landing page, and a moved page
+               needs its inbound links moved with it.
+            5. Whether the Russian rendered the fact or copied the English clause order.
+
+            Scope yourself to the lines that changed. Separate a blocker from a nit. Give a concrete
+            replacement, not "consider rephrasing", and for a factual claim cite the `path:line` you
+            checked and what it actually says. If you verified everything and found nothing, say that
+            plainly rather than padding the report.
+
+            ---
+            Deterministic gate output:
+            ${{ steps.gates.outputs.report }}
