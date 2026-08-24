@@ -1,5 +1,16 @@
 # @gorgo/medusa-feed-yandex
 
+## 0.2.35
+
+### Documentation
+
+- add npm badges by [@ca11ba](https://github.com/ca11ba) in [#459](https://github.com/gorgojs/medusa-integrations/pull/459) ([`20dad3e`](https://github.com/gorgojs/medusa-integrations/commit/20dad3e91c2dd24ab4d1f17d33cc8b362a449340))
+
+### Dependencies
+
+- Updated dependencies:
+  - @gorgo/telemetry@1.5.0
+
 ## 0.2.34
 
 - update deps
