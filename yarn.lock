@@ -131,8 +131,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/client-dynamodb@npm:^3.218.0, @aws-sdk/client-dynamodb@npm:^3.980.0":
-  version: 3.1116.0
-  resolution: "@aws-sdk/client-dynamodb@npm:3.1116.0"
+  version: 3.1117.0
+  resolution: "@aws-sdk/client-dynamodb@npm:3.1117.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.977.9"
     "@aws-sdk/credential-provider-node": "npm:^3.972.81"
@@ -144,13 +144,13 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.11.3"
     "@smithy/types": "npm:^4.17.2"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/ec3db432ae6ff9bb1c310d5c89b473c17fb5eedb2a034508210a6d068865bcf31c4973fc0ea4b7c5d99624d241cd47d9c52eee38414578868d17b2a7a08ed079
+  checksum: 10c0/a9831508c903c85c3ffff469f1011f75ee92de1a2c1c495fba36d80b65a11097bd0ca17505eca6793775f691726c1db4c17a711523868d518f3edad682f0b8c5
   languageName: node
   linkType: hard
 
 "@aws-sdk/client-s3@npm:^3.980.0":
-  version: 3.1116.0
-  resolution: "@aws-sdk/client-s3@npm:3.1116.0"
+  version: 3.1117.0
+  resolution: "@aws-sdk/client-s3@npm:3.1117.0"
   dependencies:
     "@aws-sdk/checksums": "npm:^3.1000.29"
     "@aws-sdk/core": "npm:^3.977.9"
@@ -163,7 +163,7 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.11.3"
     "@smithy/types": "npm:^4.17.2"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/715aee8a37257fee0cfb325030b9d442c3f717b52817f526b02b67acaf09f6d25f61ece11c1e88bbbb7b4e69e0359e0a6bd8258cbf5d103a1576be13f82f0ad1
+  checksum: 10c0/8934461585d9b0be2aeca491aa2424bc90ffc4f3cbbe5fc5435ba2f2d6d9866e32b5c54601c303db7170eea67e9ed443de2bd06ecb0b754fecbd02718087db34
   languageName: node
   linkType: hard
 
@@ -330,8 +330,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/lib-storage@npm:^3.980.0":
-  version: 3.1116.0
-  resolution: "@aws-sdk/lib-storage@npm:3.1116.0"
+  version: 3.1117.0
+  resolution: "@aws-sdk/lib-storage@npm:3.1117.0"
   dependencies:
     "@smithy/core": "npm:^3.33.3"
     "@smithy/types": "npm:^4.17.2"
@@ -340,8 +340,8 @@ __metadata:
     stream-browserify: "npm:3.0.0"
     tslib: "npm:^2.6.2"
   peerDependencies:
-    "@aws-sdk/client-s3": ^3.1116.0
-  checksum: 10c0/c5eef00dcf298d15e584cc40b1167711fca6da9710517a890e7599d1313112d7cd7acadc516bbea87f0c5393920c94a5ac915121838102eaf580e65847327b51
+    "@aws-sdk/client-s3": ^3.1117.0
+  checksum: 10c0/a4d9050af4f0c4eb78cc58cf214fb7fb2a438d42a15b1fcaf2afaf2d8581928782832d98045b9f6e973be652885ecb0abcc75f5023cc6ffdd2ab887a57afe9e7
   languageName: node
   linkType: hard
 
@@ -389,8 +389,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/s3-request-presigner@npm:^3.980.0":
-  version: 3.1116.0
-  resolution: "@aws-sdk/s3-request-presigner@npm:3.1116.0"
+  version: 3.1117.0
+  resolution: "@aws-sdk/s3-request-presigner@npm:3.1117.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.977.9"
     "@aws-sdk/signature-v4-multi-region": "npm:^3.996.46"
@@ -398,7 +398,7 @@ __metadata:
     "@smithy/core": "npm:^3.33.3"
     "@smithy/types": "npm:^4.17.2"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/7aa60af4e01996b0f5b9766f0120cfeced9151b59d8625d661ec859cb8ac0808e3b6bb7921d0e0c071101602ab1046e482bd2375c24117c0391e22053ea70ef6
+  checksum: 10c0/eb268790076a6200164b3e3f5352734a0405d8f14cf6a47c0d66d1aa9aa616463d6431c7d6a15241399231066b7b052c7dcf0285f14b172a3584068995a86fff
   languageName: node
   linkType: hard
 
@@ -2015,9 +2015,9 @@ __metadata:
   dependencies:
     "@gorgo/medusa-1c": "workspace:*"
     "@gorgo/medusa-integration": "workspace:*"
-    "@medusajs/framework": "npm:2.18.0"
-    "@medusajs/medusa": "npm:2.18.0"
-    "@medusajs/test-utils": "npm:2.18.0"
+    "@medusajs/framework": "npm:2.19.0"
+    "@medusajs/medusa": "npm:2.19.0"
+    "@medusajs/test-utils": "npm:2.19.0"
     "@swc/core": "npm:^1.7.28"
     "@swc/jest": "npm:^0.2.36"
     "@types/jest": "npm:^29.5.13"
@@ -2033,9 +2033,9 @@ __metadata:
   resolution: "@gorgo/it-feed-yandex@workspace:integration-tests/feed-yandex"
   dependencies:
     "@gorgo/medusa-feed-yandex": "workspace:*"
-    "@medusajs/framework": "npm:2.18.0"
-    "@medusajs/medusa": "npm:2.18.0"
-    "@medusajs/test-utils": "npm:2.18.0"
+    "@medusajs/framework": "npm:2.19.0"
+    "@medusajs/medusa": "npm:2.19.0"
+    "@medusajs/test-utils": "npm:2.19.0"
     "@swc/core": "npm:^1.7.28"
     "@swc/jest": "npm:^0.2.36"
     "@types/jest": "npm:^29.5.13"
@@ -2054,9 +2054,9 @@ __metadata:
   dependencies:
     "@gorgo/medusa-fulfillment-apiship": "workspace:*"
     "@gorgo/medusa-integration": "workspace:*"
-    "@medusajs/framework": "npm:2.18.0"
-    "@medusajs/medusa": "npm:2.18.0"
-    "@medusajs/test-utils": "npm:2.18.0"
+    "@medusajs/framework": "npm:2.19.0"
+    "@medusajs/medusa": "npm:2.19.0"
+    "@medusajs/test-utils": "npm:2.19.0"
     "@swc/core": "npm:^1.7.28"
     "@swc/jest": "npm:^0.2.36"
     "@types/jest": "npm:^29.5.13"
@@ -2091,9 +2091,9 @@ __metadata:
   dependencies:
     "@gorgo/medusa-integration": "workspace:*"
     "@gorgo/medusa-payment-robokassa": "workspace:*"
-    "@medusajs/framework": "npm:2.18.0"
-    "@medusajs/medusa": "npm:2.18.0"
-    "@medusajs/test-utils": "npm:2.18.0"
+    "@medusajs/framework": "npm:2.19.0"
+    "@medusajs/medusa": "npm:2.19.0"
+    "@medusajs/test-utils": "npm:2.19.0"
     "@swc/core": "npm:^1.7.28"
     "@swc/jest": "npm:^0.2.36"
     "@types/jest": "npm:^29.5.13"
@@ -2112,9 +2112,9 @@ __metadata:
   dependencies:
     "@gorgo/medusa-integration": "workspace:*"
     "@gorgo/medusa-payment-tkassa": "workspace:*"
-    "@medusajs/framework": "npm:2.18.0"
-    "@medusajs/medusa": "npm:2.18.0"
-    "@medusajs/test-utils": "npm:2.18.0"
+    "@medusajs/framework": "npm:2.19.0"
+    "@medusajs/medusa": "npm:2.19.0"
+    "@medusajs/test-utils": "npm:2.19.0"
     "@types/jest": "npm:^29.5.13"
     "@types/node": "npm:^22.13.11"
     jest: "npm:^29.7.0"
@@ -2131,9 +2131,9 @@ __metadata:
     "@a2seven/yoo-checkout": "npm:^1.1.4"
     "@gorgo/medusa-integration": "workspace:*"
     "@gorgo/medusa-payment-yookassa": "workspace:*"
-    "@medusajs/framework": "npm:2.18.0"
-    "@medusajs/medusa": "npm:2.18.0"
-    "@medusajs/test-utils": "npm:2.18.0"
+    "@medusajs/framework": "npm:2.19.0"
+    "@medusajs/medusa": "npm:2.19.0"
+    "@medusajs/test-utils": "npm:2.19.0"
     "@types/jest": "npm:^29.5.13"
     "@types/node": "npm:^22.13.11"
     jest: "npm:^29.7.0"
@@ -4245,7 +4245,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/framework@npm:^2.14.0, @medusajs/framework@npm:^2.17.2":
+"@medusajs/framework@npm:2.19.0, @medusajs/framework@npm:^2.14.0, @medusajs/framework@npm:^2.17.2":
   version: 2.19.0
   resolution: "@medusajs/framework@npm:2.19.0"
   dependencies:
@@ -4564,7 +4564,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/medusa@npm:^2.14.0, @medusajs/medusa@npm:^2.17.2":
+"@medusajs/medusa@npm:2.19.0, @medusajs/medusa@npm:^2.14.0, @medusajs/medusa@npm:^2.17.2":
   version: 2.19.0
   resolution: "@medusajs/medusa@npm:2.19.0"
   dependencies:
@@ -5098,7 +5098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/test-utils@npm:^2.14.0, @medusajs/test-utils@npm:^2.17.2":
+"@medusajs/test-utils@npm:2.19.0, @medusajs/test-utils@npm:^2.14.0, @medusajs/test-utils@npm:^2.17.2":
   version: 2.19.0
   resolution: "@medusajs/test-utils@npm:2.19.0"
   dependencies:

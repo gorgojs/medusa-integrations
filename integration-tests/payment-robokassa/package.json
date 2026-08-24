@@ -10,9 +10,9 @@
   "dependencies": {
     "@gorgo/medusa-integration": "workspace:*",
     "@gorgo/medusa-payment-robokassa": "workspace:*",
-    "@medusajs/framework": "2.18.0",
-    "@medusajs/medusa": "2.18.0",
-    "@medusajs/test-utils": "2.18.0",
+    "@medusajs/framework": "2.19.0",
+    "@medusajs/medusa": "2.19.0",
+    "@medusajs/test-utils": "2.19.0",
     "axios": "^1.9.0",
     "fast-xml-parser": "^5.2.5",
     "pg-god": "^1.0.12"
