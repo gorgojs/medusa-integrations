@@ -3,21 +3,21 @@
   "envMode": "loose",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@gorgo/telemetry#build"],
       "outputs": [".medusa/**", "dist/**"],
       "inputs": ["src/**", "package.json", "tsconfig.json"]
     },
     "test:unit": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
       "outputs": [],
       "inputs": ["src/**", "jest.config.*", "package.json"]
     },
     "test:integration:http": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
       "outputs": []
     },
     "test:integration:modules": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
       "outputs": []
     }
   },
