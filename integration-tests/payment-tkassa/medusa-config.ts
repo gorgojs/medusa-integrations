@@ -2,6 +2,8 @@ import { loadEnv, defineConfig } from "@medusajs/framework/utils"
 
 loadEnv(process.env.NODE_ENV || "test", process.cwd())
 
+const TKASSA_INTEGRATION_ID = "tkassa-1";
+
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
@@ -22,23 +24,28 @@ module.exports = defineConfig({
           {
             resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
             options: {
-              id: "tkassa", // must match the provider id used in the payment module below
+              id: TKASSA_INTEGRATION_ID,
             },
           },
         ],
       },
     },
+    {
+      resolve: "@gorgo/medusa-payment-tkassa",
+      options: {},
+    },
   ],
   modules: [
     {
       resolve: "@medusajs/medusa/payment",
-      dependencies: ["integration"],
       options: {
         providers: [
           {
             resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
             id: "tkassa",
-            options: {},
+            options: {
+              id: TKASSA_INTEGRATION_ID,
+            },
           },
         ],
       },

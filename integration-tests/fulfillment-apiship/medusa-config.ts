@@ -29,10 +29,6 @@ module.exports = defineConfig({
         ],
       },
     },
-    // Registered as its own plugin (not just referenced from `modules` below) so the
-    // admin build discovers its admin extensions — i18n bundle (src/admin/i18n).
-    // Without this entry the provider still works, but its admin UI never loads
-    // and translation keys render raw (e.g. "apiship.name" instead of "ApiShip").
     {
       resolve: "@gorgo/medusa-fulfillment-apiship",
       options: {},
@@ -47,7 +43,7 @@ module.exports = defineConfig({
             resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
             id: "apiship",
             options: {
-              id: APISHIP_INTEGRATION_ID, // must match the provider id used in the integration module above
+              id: APISHIP_INTEGRATION_ID,
             },
           },
         ],

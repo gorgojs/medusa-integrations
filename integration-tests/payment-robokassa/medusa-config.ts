@@ -2,6 +2,8 @@ import { loadEnv, defineConfig } from "@medusajs/framework/utils"
 
 loadEnv(process.env.NODE_ENV || "test", process.cwd())
 
+const ROBOKASSA_INTEGRATION_ID = "robokassa-1";
+
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
@@ -22,23 +24,28 @@ module.exports = defineConfig({
           {
             resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
             options: {
-              id: "robokassa", // must match the provider id used in the payment module below
+              id: ROBOKASSA_INTEGRATION_ID,
             },
           },
         ],
       },
     },
+    {
+      resolve: "@gorgo/medusa-payment-robokassa",
+      options: {},
+    },
   ],
   modules: [
     {
       resolve: "@medusajs/medusa/payment",
-      dependencies: ["integration"],
       options: {
         providers: [
           {
             resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
             id: "robokassa",
-            options: {},
+            options: {
+              id: ROBOKASSA_INTEGRATION_ID,
+            },
           },
         ],
       },
