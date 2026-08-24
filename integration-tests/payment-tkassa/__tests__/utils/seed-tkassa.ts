@@ -1,4 +1,4 @@
-const PROVIDER_ID = "int_tkassa"
+const PROVIDER_ID = "int_tkassa_tkassa-1"
 
 /**
  * Seed a complete, enabled T-Kassa integration config directly via the integration module's

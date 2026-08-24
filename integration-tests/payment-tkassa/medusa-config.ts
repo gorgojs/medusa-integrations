@@ -23,9 +23,8 @@ module.exports = defineConfig({
         providers: [
           {
             resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
-            options: {
-              id: TKASSA_INTEGRATION_ID,
-            },
+            id: TKASSA_INTEGRATION_ID,
+            options: {},
           },
         ],
       },

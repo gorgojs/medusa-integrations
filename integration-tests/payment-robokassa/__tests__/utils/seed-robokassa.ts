@@ -1,4 +1,4 @@
-const PROVIDER_ID = "int_robokassa"
+const PROVIDER_ID = "int_robokassa_robokassa-1"
 
 export async function seedRobokassaIntegration(
   container: any,

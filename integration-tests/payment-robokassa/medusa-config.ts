@@ -23,9 +23,8 @@ module.exports = defineConfig({
         providers: [
           {
             resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
-            options: {
-              id: ROBOKASSA_INTEGRATION_ID,
-            },
+            id: ROBOKASSA_INTEGRATION_ID,
+            options: {},
           },
         ],
       },

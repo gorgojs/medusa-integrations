@@ -23,9 +23,8 @@ module.exports = defineConfig({
         providers: [
           {
             resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
-            options: {
-              id: YOOKASSA_INTEGRATION_ID, // must match the provider id used in the payment module below
-            },
+            id: YOOKASSA_INTEGRATION_ID, // must match the provider id used in the payment module below
+            options: {},
           },
         ],
       },
