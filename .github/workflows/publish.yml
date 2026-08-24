@@ -57,6 +57,14 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      # Nothing built is committed and `yarn install` runs no workspace build
+      # scripts, so the packages have to be compiled here: without dist/ and
+      # .medusa/server/ the dependents cannot resolve each other's types.
+      - name: Build packages
+        run: |
+          yarn workspace @gorgo/medusa-integration run catalog:gen
+          yarn build
+
       - name: Generate changesets from conventional commits
         run: node scripts/generate-changesets.js
         env:
@@ -79,6 +87,11 @@ jobs:
           commit: 'chore: release packages'
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          # Publish what the build step produced. `changeset publish` runs the
+          # packages in parallel, so the integration module's prepublishOnly
+          # wipes its own .medusa/server while yookassa is still type-checking
+          # against it.
+          npm_config_ignore_scripts: 'true'
 
   notify-docs:
     needs: publish
