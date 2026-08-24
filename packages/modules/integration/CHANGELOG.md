@@ -1,5 +1,25 @@
 # @gorgo/medusa-integration
 
+## 0.2.0
+
+### Features
+
+- improve not found page by [@KaneFlak](https://github.com/KaneFlak) in [#466](https://github.com/gorgojs/medusa-integrations/pull/466) ([`35d3592`](https://github.com/gorgojs/medusa-integrations/commit/35d3592412dc5a4ea747e79b96a00091f3827087))
+
+- add admin i18n translations for 31 locales by [@KaneFlak](https://github.com/KaneFlak) in [#466](https://github.com/gorgojs/medusa-integrations/pull/466) ([`8f37947`](https://github.com/gorgojs/medusa-integrations/commit/8f379478a4a39ab85093ad1b0095cc3f1a59680e))
+
+- show markdown docsSnippet in install drawer and improve offline catalog by [@KaneFlak](https://github.com/KaneFlak) in [#466](https://github.com/gorgojs/medusa-integrations/pull/466) ([`8e002da`](https://github.com/gorgojs/medusa-integrations/commit/8e002da77c3013be686760d74e48d2c70d722fea))
+
+- export upsert workflow and provider_id helpers by [@KaneFlak](https://github.com/KaneFlak) in [#466](https://github.com/gorgojs/medusa-integrations/pull/466) ([`361fb07`](https://github.com/gorgojs/medusa-integrations/commit/361fb07d3334e773cb64fce9e2bfe8b2c8f8c6dc))
+
+- add number value support for enum by [@KaneFlak](https://github.com/KaneFlak) in [#466](https://github.com/gorgojs/medusa-integrations/pull/466) ([`c931067`](https://github.com/gorgojs/medusa-integrations/commit/c93106777ceada99de9a61f98268ec9b5d115b9e))
+
+### Documentation
+
+- add license and imrpove docs by [@gorgohead](https://github.com/gorgohead) in [#422](https://github.com/gorgojs/medusa-integrations/pull/422) ([`ea998d9`](https://github.com/gorgojs/medusa-integrations/commit/ea998d9c5551c9cecf93a447590551afc185edec))
+
+- fix docs links in readme by [@gorgohead](https://github.com/gorgohead) in [#466](https://github.com/gorgojs/medusa-integrations/pull/466) ([`f0a4063`](https://github.com/gorgojs/medusa-integrations/commit/f0a406307b72275b4341351349b337990d0dded6))
+
 ## 0.1.5
 
 - Add number value support for enum

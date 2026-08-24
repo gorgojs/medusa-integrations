@@ -1,5 +1,22 @@
 # @gorgo/medusa-payment-yookassa
 
+## 3.0.0
+
+### Refactoring
+
+- add hints for options by [@KaneFlak](https://github.com/KaneFlak) in [#466](https://github.com/gorgojs/medusa-integrations/pull/466) ([`f55ea73`](https://github.com/gorgojs/medusa-integrations/commit/f55ea7397c486a235659a0aa5bbfa7df87f7d988))
+
+- change some number selects to enums by [@KaneFlak](https://github.com/KaneFlak) in [#466](https://github.com/gorgojs/medusa-integrations/pull/466) ([`b1aaa4e`](https://github.com/gorgojs/medusa-integrations/commit/b1aaa4e5d67633a280dbff8ce06e28ec4acf0e3e))
+
+### Documentation
+
+- add npm badges by [@ca11ba](https://github.com/ca11ba) in [#466](https://github.com/gorgojs/medusa-integrations/pull/466) ([`f9514e0`](https://github.com/gorgojs/medusa-integrations/commit/f9514e0c219c7fb5d0e575f360bdee110e3ffa14))
+
+### Dependencies
+
+- Updated dependencies:
+  - @gorgo/medusa-integration@0.2.0
+
 ## 2.0.0
 
 ### Highlights
