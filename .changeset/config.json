@@ -7,6 +7,14 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": [],
-  "privatePackages": false
+  "ignore": [
+    "@gorgo/medusa-1c",
+    "@gorgo/medusa-fulfillment-apiship",
+    "@gorgo/medusa-payment-robokassa",
+    "@gorgo/medusa-payment-tkassa"
+  ],
+  "privatePackages": false,
+  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
+    "onlyUpdatePeerDependentsWhenOutOfRange": true
+  }
 }

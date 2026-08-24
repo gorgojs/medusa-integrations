@@ -179,28 +179,28 @@ async function main() {
 
     const author = authors.get(commit.hash);
 
-    const content = [
-      '---',
-      ...packageNames.map((name) => `"${name}": ${bump}`),
-      '---',
-      '',
-      `commit: ${commit.hash}`,
-      ...(author ? [`author: @${author}`] : []),
-      commit.desc,
-      ...(commit.breakingNote
-        ? ['', `BREAKING CHANGE: ${commit.breakingNote}`]
-        : []),
-      '',
-    ].join('\n');
+    for (const name of packageNames) {
+      const content = [
+        '---',
+        `"${name}": ${bump}`,
+        '---',
+        '',
+        `commit: ${commit.hash}`,
+        ...(author ? [`author: @${author}`] : []),
+        commit.desc,
+        ...(commit.breakingNote
+          ? ['', `BREAKING CHANGE: ${commit.breakingNote}`]
+          : []),
+        '',
+      ].join('\n');
 
-    const shortHash = commit.hash?.slice(0, 7) ?? index;
-    const filename = path.join(CHANGESET_DIR, `auto-${index}-${shortHash}.md`);
-    writeFileSync(filename, content, 'utf8');
-    console.log(
-      `  ✔ auto-${index}-${shortHash}.md [${packageNames.join(', ')}: ${bump}]`,
-    );
-    index++;
-    generated++;
+      const shortHash = commit.hash?.slice(0, 7) ?? index;
+      const filename = path.join(CHANGESET_DIR, `auto-${index}-${shortHash}.md`);
+      writeFileSync(filename, content, 'utf8');
+      console.log(`  ✔ auto-${index}-${shortHash}.md [${name}: ${bump}]`);
+      index++;
+      generated++;
+    }
   }
 
   console.log(`Generated ${generated} changeset(s).`);
