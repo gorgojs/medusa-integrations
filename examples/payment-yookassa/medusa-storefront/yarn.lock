@@ -872,7 +872,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/icons@npm:2.19.0, @medusajs/icons@npm:latest":
+"@medusajs/icons@npm:2.19.0":
   version: 2.19.0
   resolution: "@medusajs/icons@npm:2.19.0"
   peerDependencies:
@@ -881,7 +881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/js-sdk@npm:latest":
+"@medusajs/js-sdk@npm:2.19.0":
   version: 2.19.0
   resolution: "@medusajs/js-sdk@npm:2.19.0"
   dependencies:
@@ -891,7 +891,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/types@npm:latest":
+"@medusajs/types@npm:2.19.0":
   version: 2.19.0
   resolution: "@medusajs/types@npm:2.19.0"
   dependencies:
@@ -908,7 +908,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/ui-preset@npm:latest":
+"@medusajs/ui-preset@npm:2.19.0":
   version: 2.19.0
   resolution: "@medusajs/ui-preset@npm:2.19.0"
   dependencies:
@@ -5778,11 +5778,11 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.17.5"
     "@headlessui/react": "npm:^2.2.0"
-    "@medusajs/icons": "npm:latest"
-    "@medusajs/js-sdk": "npm:latest"
-    "@medusajs/types": "npm:latest"
+    "@medusajs/icons": "npm:2.19.0"
+    "@medusajs/js-sdk": "npm:2.19.0"
+    "@medusajs/types": "npm:2.19.0"
     "@medusajs/ui": "npm:latest"
-    "@medusajs/ui-preset": "npm:latest"
+    "@medusajs/ui-preset": "npm:2.19.0"
     "@radix-ui/react-accordion": "npm:^1.2.1"
     "@stripe/react-stripe-js": "npm:^5.3.0"
     "@stripe/stripe-js": "npm:^8.2.0"
