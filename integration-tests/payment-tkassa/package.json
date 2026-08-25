@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test:integration:http": "TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js --silent=false --runInBand --forceExit --passWithNoTests",
+    "test:integration:http": "NODE_EXTRA_CA_CERTS=${NODE_EXTRA_CA_CERTS:-../../.github/certs/root-ca.pem} TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js --silent=false --runInBand --forceExit --passWithNoTests",
     "test:integration:modules": "TEST_TYPE=integration:modules NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js --silent --runInBand --forceExit --passWithNoTests",
     "test": "yarn run -T turbo run test:integration:http test:integration:modules"
   },
