@@ -30,7 +30,7 @@
     "@gorgo/medusa-integration": "latest",
     "@gorgo/medusa-payment-robokassa": "beta",
     "@gorgo/medusa-payment-tkassa": "beta",
-    "@gorgo/medusa-payment-yookassa": "beta",
+    "@gorgo/medusa-payment-yookassa": "latest",
     "@medusajs/admin-sdk": "2.18.0",
     "@medusajs/admin-shared": "2.18.0",
     "@medusajs/caching": "2.18.0",
