@@ -131,8 +131,18 @@ bump_manifest() {
     log "$dir" "Updating @medusajs packages to version $VERSION"
     cd "$dir" || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
 
+    # @medusajs/ui is on its own release line and stays out of the bump, so a project
+    # depending on nothing else would leave `yarn add` without arguments
+    local pkgs
+    pkgs=$(grep "\"@medusajs" package.json | grep -v "\"@medusajs/ui\"" | sed 's/.*"@medusajs\/\([^"]*\)".*/@medusajs\/\1@'"$VERSION"'/')
+    if [ -z "$pkgs" ]; then
+        warning "$dir" "Only @medusajs/ui found, nothing to bump"
+        cd "$root_pwd" || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
+        return 0
+    fi
+
     echo -e "\n${YELLOW}[$dir] Running: yarn add ...${NC}\n"
-    yarn add $(grep "\"@medusajs" package.json | grep -v "\"@medusajs/ui\"" | sed 's/.*"@medusajs\/\([^"]*\)".*/@medusajs\/\1@'"$VERSION"'/') || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
+    yarn add $pkgs || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
 
     # Remove all empty lines and ensure no trailing newline
     if sed --version > /dev/null 2>&1; then
