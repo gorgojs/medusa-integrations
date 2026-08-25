@@ -2,26 +2,36 @@
 # Bash view of scripts/packages.json, the one table describing the workspace packages.
 # Sourced by update.sh and test-and-bump.sh; not executable on its own.
 #
-# Keys are commit scopes, which are also the package directory names. A package that
-# ships an example declares where that example keeps its Medusa app (`medusa/` for most,
-# `apps/backend/` for the all-integrations monorepo) and which integration-tests
-# workspace covers it. The JS scripts read the same file, so a package is declared once.
-# Anything not listed is skipped, loudly.
+# Keys are commit scopes, which are also the package directory names. A package lists the
+# examples it ships — a package may have more than one — and each example declares where it
+# keeps its Medusa app (`medusa/` for most, `apps/backend/` for a monorepo one) and which
+# integration-tests workspace covers it. The JS scripts read the same file, so a package is
+# declared once. An example that is not listed is skipped, loudly.
 
 PACKAGES_JSON="$(dirname "${BASH_SOURCE[0]}")/packages.json"
 
-declare -A PACKAGE_DIR EXAMPLE_APP EXAMPLE_IT
-while IFS=$'\t' read -r scope dir example app it; do
-    [ -n "$scope" ] || continue
-    PACKAGE_DIR[$scope]=$dir
-    [ -n "$example" ] || continue
-    EXAMPLE_APP[$example]=$app
-    EXAMPLE_IT[$example]=$it
+declare -A PACKAGE_DIR EXAMPLE_DIR EXAMPLE_APP EXAMPLE_IT
+while IFS=$'\t' read -r kind name dir app it; do
+    case "$kind" in
+        pkg)
+            PACKAGE_DIR[$name]=$dir
+            ;;
+        example)
+            EXAMPLE_DIR[$name]=$dir
+            EXAMPLE_APP[$name]=$app
+            EXAMPLE_IT[$name]=$it
+            ;;
+    esac
 done < <(node -e '
 const fs = require("node:fs");
+const path = require("node:path");
 const table = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
-for (const [scope, e] of Object.entries(table)) {
-  console.log([scope, e.dir, e.example ?? "", e.app ?? "", e.it ?? ""].join("\t"));
+for (const [scope, entry] of Object.entries(table)) {
+  console.log(["pkg", scope, entry.dir].join("\t"));
+  for (const example of entry.examples ?? []) {
+    const name = path.basename(example.dir);
+    console.log(["example", name, example.dir, example.app, example.it].join("\t"));
+  }
 }
 ' "$PACKAGES_JSON")
 

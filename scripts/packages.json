@@ -1,47 +1,76 @@
 {
   "integration": {
     "dir": "packages/modules/integration",
-    "example": "all-integrations",
-    "app": "apps/backend",
-    "it": "integration"
+    "examples": [
+      {
+        "dir": "examples/all-integrations",
+        "app": "apps/backend",
+        "it": "integration"
+      }
+    ]
   },
   "erp-1c": {
     "dir": "packages/providers/erp-1c",
-    "example": "erp-1c",
-    "app": "medusa",
-    "it": "erp-1c"
+    "examples": [
+      {
+        "dir": "examples/erp-1c",
+        "app": "medusa",
+        "it": "erp-1c"
+      }
+    ]
   },
   "feed-yandex": {
     "dir": "packages/providers/feed-yandex",
-    "example": "feed-yandex",
-    "app": "medusa",
-    "it": "feed-yandex"
+    "examples": [
+      {
+        "dir": "examples/feed-yandex",
+        "app": "medusa",
+        "it": "feed-yandex"
+      }
+    ]
   },
   "fulfillment-apiship": {
     "dir": "packages/providers/fulfillment-apiship",
-    "example": "fulfillment-apiship",
-    "app": "medusa",
-    "it": "fulfillment-apiship"
+    "examples": [
+      {
+        "dir": "examples/fulfillment-apiship",
+        "app": "medusa",
+        "it": "fulfillment-apiship"
+      }
+    ]
   },
   "payment-robokassa": {
     "dir": "packages/providers/payment-robokassa",
-    "example": "payment-robokassa",
-    "app": "medusa",
-    "it": "payment-robokassa"
+    "examples": [
+      {
+        "dir": "examples/payment-robokassa",
+        "app": "medusa",
+        "it": "payment-robokassa"
+      }
+    ]
   },
   "payment-tkassa": {
     "dir": "packages/providers/payment-tkassa",
-    "example": "payment-tkassa",
-    "app": "medusa",
-    "it": "payment-tkassa"
+    "examples": [
+      {
+        "dir": "examples/payment-tkassa",
+        "app": "medusa",
+        "it": "payment-tkassa"
+      }
+    ]
   },
   "payment-yookassa": {
     "dir": "packages/providers/payment-yookassa",
-    "example": "payment-yookassa",
-    "app": "medusa",
-    "it": "payment-yookassa"
+    "examples": [
+      {
+        "dir": "examples/payment-yookassa",
+        "app": "medusa",
+        "it": "payment-yookassa"
+      }
+    ]
   },
   "telemetry": {
-    "dir": "packages/utils/telemetry"
+    "dir": "packages/utils/telemetry",
+    "examples": []
   }
 }

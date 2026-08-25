@@ -117,102 +117,113 @@ handle_error() {
     exit 1
 }
 
-# Function to process a directory
-process_directory() {
-    local example_dir="$1"
-    local dir="$1/$2"
+# Bump every @medusajs dependency except @medusajs/ui in one project's package.json
+bump_manifest() {
+    local dir=$1
     local root_pwd
     root_pwd=$(pwd)
-    log "$dir" "Processing directory"
-    echo -e "Processing"
 
-    # Change to the directory
-    cd "$dir" || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
-    
-    # Check if package.json contains @medusajs dependencies
-    if grep -q "\"@medusajs" package.json; then
-        log "$dir" "Updating @medusajs packages to version $VERSION"
-        
-        # Update all @medusajs packages except @medusajs/ui
-        echo -e "\n${YELLOW}[$dir] Running: yarn add ...${NC}\n"
-        yarn add $(grep "\"@medusajs" package.json | grep -v "\"@medusajs/ui\"" | sed 's/.*"@medusajs\/\([^"]*\)".*/@medusajs\/\1@'"$VERSION"'/') || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
-        
-        # Remove all empty lines and ensure no trailing newline
-        if sed --version > /dev/null 2>&1; then
-            sed -i -e '/^[[:space:]]*$/d' package.json || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
-        else
-            sed -i '' -e '/^[[:space:]]*$/d' package.json || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
-        fi
-        perl -i -pe 'chomp if eof' package.json || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
-        
-        # Check if this directory should skip migrations
-        local dirname=$(basename "$dir")
-        local parent_dir=$(basename "$(dirname "$dir")")
-        local example_name=$(basename "$example_dir")
-        local skip_migrations=false
-        
-        # Check the example itself, the app directory or its parent against SKIP_MIGRATIONS_DIRS
-        # (the app directory is `medusa` for most examples but `apps/backend` for a monorepo one)
-        for skip_dir in "${SKIP_MIGRATIONS_DIRS[@]}"; do
-            if [ "$example_name" = "$skip_dir" ] || [ "$dirname" = "$skip_dir" ] || [ "$parent_dir" = "$skip_dir" ]; then
-                skip_migrations=true
-                warning "$dir" "Skipping migrations for this directory"
-                break
-            fi
-        done
-        
-        if [ "$SKIP_BUILD" = false ]; then
-            # Run database migrations if not skipped
-            if [ "$skip_migrations" = false ]; then
-                log "$dir" "Running database migrations"
-                echo -e "\n${YELLOW}[$dir] Running: npx medusa db:migrate${NC}\n"
-                npx medusa db:migrate || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
-            fi
-            
-            # Build the project
-            log "$dir" "Building project"
-            echo -e "\n${YELLOW}[$dir] Running: yarn build${NC}\n"
-            yarn build || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
-        else
-            warning "$dir" "Skipping migrations and build"
-        fi
-        
-        # Integration tests are now run from the workflow via `yarn turbo` after
-        # all version bumps complete. The bash loop here only updates versions.
-
-        # Mirror the @medusajs version bump in the corresponding integration-tests workspace.
-        local it_name it_dir=""
-        if it_name=$(example_it "$(basename "$example_dir")"); then
-            it_dir="./integration-tests/$it_name"
-        fi
-        if [ -n "$it_dir" ] && [ -f "$root_pwd/$it_dir/package.json" ]; then
-            log "$it_dir" "Updating @medusajs packages to version $VERSION"
-            cd "$root_pwd/$it_dir" || handle_error "$it_dir" "$LAST_SUCCESSFUL_DIR"
-            if grep -q "\"@medusajs" package.json; then
-                echo -e "\n${YELLOW}[$it_dir] Running: yarn add ...${NC}\n"
-                yarn add $(grep "\"@medusajs" package.json | grep -v "\"@medusajs/ui\"" | sed 's/.*"@medusajs\/\([^"]*\)".*/@medusajs\/\1@'"$VERSION"'/') || handle_error "$it_dir" "$LAST_SUCCESSFUL_DIR"
-                if sed --version > /dev/null 2>&1; then
-                    sed -i -e '/^[[:space:]]*$/d' package.json || handle_error "$it_dir" "$LAST_SUCCESSFUL_DIR"
-                else
-                    sed -i '' -e '/^[[:space:]]*$/d' package.json || handle_error "$it_dir" "$LAST_SUCCESSFUL_DIR"
-                fi
-                perl -i -pe 'chomp if eof' package.json || handle_error "$it_dir" "$LAST_SUCCESSFUL_DIR"
-            fi
-            cd "$root_pwd/$dir" || handle_error "$it_dir" "$LAST_SUCCESSFUL_DIR"
-        fi
-
-        success "$dir" "Successfully updated"
-
-    else
+    if ! grep -q "\"@medusajs" "$dir/package.json"; then
         warning "$dir" "No @medusajs packages found, skipping..."
+        return 0
     fi
 
+    log "$dir" "Updating @medusajs packages to version $VERSION"
+    cd "$dir" || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
+
+    echo -e "\n${YELLOW}[$dir] Running: yarn add ...${NC}\n"
+    yarn add $(grep "\"@medusajs" package.json | grep -v "\"@medusajs/ui\"" | sed 's/.*"@medusajs\/\([^"]*\)".*/@medusajs\/\1@'"$VERSION"'/') || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
+
+    # Remove all empty lines and ensure no trailing newline
+    if sed --version > /dev/null 2>&1; then
+        sed -i -e '/^[[:space:]]*$/d' package.json || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
+    else
+        sed -i '' -e '/^[[:space:]]*$/d' package.json || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
+    fi
+    perl -i -pe 'chomp if eof' package.json || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
+
+    cd "$root_pwd" || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
+}
+
+# Every project manifest of an example: the root of a monorepo example, the Medusa app and
+# any storefront. node_modules, build output and vendored .yalc copies are not projects.
+example_manifests() {
+    find "$1" -name package.json \
+        -not -path '*/node_modules/*' \
+        -not -path '*/.medusa/*' \
+        -not -path '*/.next/*' \
+        -not -path '*/dist/*' \
+        -not -path '*/.yalc/*' | sort
+}
+
+# Function to process an example
+process_directory() {
+    local example_dir="$1"
+    local app_dir="$1/$2"
+    local root_pwd
+    root_pwd=$(pwd)
+    log "$example_dir" "Processing example"
+
+    # Bump every project of the example, not just the Medusa app
+    local manifest
+    while IFS= read -r manifest; do
+        [ -n "$manifest" ] || continue
+        bump_manifest "$(dirname "$manifest")"
+    done < <(example_manifests "$example_dir")
+
+    # Migrations and the build run where the Medusa app lives
+    local example_name app_name app_parent skip_migrations=false
+    example_name=$(basename "$example_dir")
+    app_name=$(basename "$app_dir")
+    app_parent=$(basename "$(dirname "$app_dir")")
+
+    # Check the example itself, the app directory or its parent against SKIP_MIGRATIONS_DIRS
+    # (the app directory is `medusa` for most examples but `apps/backend` for a monorepo one)
+    for skip_dir in "${SKIP_MIGRATIONS_DIRS[@]}"; do
+        if [ "$example_name" = "$skip_dir" ] || [ "$app_name" = "$skip_dir" ] || [ "$app_parent" = "$skip_dir" ]; then
+            skip_migrations=true
+            warning "$app_dir" "Skipping migrations for this directory"
+            break
+        fi
+    done
+
+    if [ "$SKIP_BUILD" = false ] && grep -q "\"@medusajs" "$app_dir/package.json"; then
+        cd "$app_dir" || handle_error "$app_dir" "$LAST_SUCCESSFUL_DIR"
+
+        # Run database migrations if not skipped
+        if [ "$skip_migrations" = false ]; then
+            log "$app_dir" "Running database migrations"
+            echo -e "\n${YELLOW}[$app_dir] Running: npx medusa db:migrate${NC}\n"
+            npx medusa db:migrate || handle_error "$app_dir" "$LAST_SUCCESSFUL_DIR"
+        fi
+
+        # Build the project
+        log "$app_dir" "Building project"
+        echo -e "\n${YELLOW}[$app_dir] Running: yarn build${NC}\n"
+        yarn build || handle_error "$app_dir" "$LAST_SUCCESSFUL_DIR"
+
+        cd "$root_pwd" || handle_error "$app_dir" "$LAST_SUCCESSFUL_DIR"
+    else
+        warning "$app_dir" "Skipping migrations and build"
+    fi
+
+    # Integration tests are run from the workflow via `yarn turbo` after all version bumps
+    # complete. Here we only mirror the bump in the workspace covering this example.
+    local it_name
+    if it_name=$(example_it "$example_name"); then
+        if [ -f "./integration-tests/$it_name/package.json" ]; then
+            bump_manifest "./integration-tests/$it_name"
+        fi
+    fi
+
+    success "$example_dir" "Successfully updated"
+
     # Store the last successful directory
-    LAST_SUCCESSFUL_DIR="$dir"
+    LAST_SUCCESSFUL_DIR="$example_dir"
 
     # Return to the repository root — `cd -` would only toggle between the last two
     # directories and leave the next example unreachable by its relative path
-    cd "$root_pwd" || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
+    cd "$root_pwd" || handle_error "$example_dir" "$LAST_SUCCESSFUL_DIR"
 }
 
 # Create a temporary file to store directories

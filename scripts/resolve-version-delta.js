@@ -17,9 +17,12 @@ const PACKAGES = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'packages.json'), 'utf8'),
 );
 const DIR_BY_EXAMPLE = Object.fromEntries(
-  Object.values(PACKAGES)
-    .filter((entry) => entry.example)
-    .map((entry) => [entry.example, entry.dir]),
+  Object.values(PACKAGES).flatMap((entry) =>
+    (entry.examples ?? []).map((example) => [
+      path.basename(example.dir),
+      entry.dir,
+    ]),
+  ),
 );
 
 const examples = fs.existsSync(examplesDir)
