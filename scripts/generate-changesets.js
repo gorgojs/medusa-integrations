@@ -10,13 +10,6 @@ import {
 import path from 'node:path';
 import { resolveCommitAuthors } from './github-authors.js';
 
-const PATHS_TO_DIR = [
-  'packages/modules',
-  'packages/providers',
-  'packages/plugins',
-  'packages/utils',
-];
-
 const BUMP_BY_TYPE = {
   feat: 'minor',
   fix: 'patch',
@@ -28,26 +21,25 @@ const BUMP_BY_TYPE = {
   test: 'patch',
 };
 
+// The package table, shared with the other scripts and with packages.sh
+const PACKAGES = JSON.parse(
+  readFileSync(new URL('./packages.json', import.meta.url), 'utf8'),
+);
+
 const CHANGESET_DIR = path.resolve('.changeset');
 const SUBJECT_RE =
   /^(?<type>\w+)(?:\((?<scope>[^)]+)\))?(?<breaking>!)?:\s*(?<desc>.+)$/;
 
 function loadScopeToPackage() {
   const map = {};
-  for (const dirPath of PATHS_TO_DIR) {
-    const packagesDir = path.resolve(dirPath);
-    if (!existsSync(packagesDir)) continue;
+  for (const [scope, entry] of Object.entries(PACKAGES)) {
+    const pkgPath = path.resolve(entry.dir, 'package.json');
+    if (!existsSync(pkgPath)) continue;
 
-    for (const dir of readdirSync(packagesDir, { withFileTypes: true })) {
-      if (!dir.isDirectory()) continue;
-      const pkgPath = path.join(packagesDir, dir.name, 'package.json');
-      if (!existsSync(pkgPath)) continue;
+    const { name } = JSON.parse(readFileSync(pkgPath, 'utf8'));
+    if (!name) continue;
 
-      const { name } = JSON.parse(readFileSync(pkgPath, 'utf8'));
-      if (!name) continue;
-
-      map[dir.name] = name;
-    }
+    map[scope] = name;
   }
   return map;
 }

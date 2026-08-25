@@ -15,14 +15,9 @@ SKIP_DIRS=(
 SKIP_MIGRATIONS_DIRS=(
 )
 
-# Mapping of example directories to integration-tests directories
-declare -A EXAMPLE_IT_MAP
-EXAMPLE_IT_MAP["./examples/erp-1c"]=./integration-tests/erp-1c
-EXAMPLE_IT_MAP["./examples/feed-yandex"]=./integration-tests/feed-yandex
-EXAMPLE_IT_MAP["./examples/fulfillment-apiship"]=./integration-tests/fulfillment-apiship
-EXAMPLE_IT_MAP["./examples/payment-robokassa"]=./integration-tests/payment-robokassa
-EXAMPLE_IT_MAP["./examples/payment-tkassa"]=./integration-tests/payment-tkassa
-EXAMPLE_IT_MAP["./examples/payment-yookassa"]=./integration-tests/payment-yookassa
+# The package table, shared with test-and-bump.sh and the JS scripts
+# shellcheck source=./packages.sh
+source "$(dirname "${BASH_SOURCE[0]}")/packages.sh"
 
 # Function to print script messages
 log() {
@@ -124,7 +119,8 @@ handle_error() {
 
 # Function to process a directory
 process_directory() {
-    local dir="$1/medusa"
+    local example_dir="$1"
+    local dir="$1/$2"
     local root_pwd
     root_pwd=$(pwd)
     log "$dir" "Processing directory"
@@ -152,11 +148,13 @@ process_directory() {
         # Check if this directory should skip migrations
         local dirname=$(basename "$dir")
         local parent_dir=$(basename "$(dirname "$dir")")
+        local example_name=$(basename "$example_dir")
         local skip_migrations=false
         
-        # Check if either the current directory or its parent is in SKIP_MIGRATIONS_DIRS
+        # Check the example itself, the app directory or its parent against SKIP_MIGRATIONS_DIRS
+        # (the app directory is `medusa` for most examples but `apps/backend` for a monorepo one)
         for skip_dir in "${SKIP_MIGRATIONS_DIRS[@]}"; do
-            if [ "$dirname" = "$skip_dir" ] || [ "$parent_dir" = "$skip_dir" ]; then
+            if [ "$example_name" = "$skip_dir" ] || [ "$dirname" = "$skip_dir" ] || [ "$parent_dir" = "$skip_dir" ]; then
                 skip_migrations=true
                 warning "$dir" "Skipping migrations for this directory"
                 break
@@ -183,7 +181,10 @@ process_directory() {
         # all version bumps complete. The bash loop here only updates versions.
 
         # Mirror the @medusajs version bump in the corresponding integration-tests workspace.
-        local it_dir="${EXAMPLE_IT_MAP[$1]:-}"
+        local it_name it_dir=""
+        if it_name=$(example_it "$(basename "$example_dir")"); then
+            it_dir="./integration-tests/$it_name"
+        fi
         if [ -n "$it_dir" ] && [ -f "$root_pwd/$it_dir/package.json" ]; then
             log "$it_dir" "Updating @medusajs packages to version $VERSION"
             cd "$root_pwd/$it_dir" || handle_error "$it_dir" "$LAST_SUCCESSFUL_DIR"
@@ -201,7 +202,6 @@ process_directory() {
         fi
 
         success "$dir" "Successfully updated"
-        cd - > /dev/null
 
     else
         warning "$dir" "No @medusajs packages found, skipping..."
@@ -210,8 +210,9 @@ process_directory() {
     # Store the last successful directory
     LAST_SUCCESSFUL_DIR="$dir"
 
-    # Return to the original directory
-    cd - > /dev/null
+    # Return to the repository root — `cd -` would only toggle between the last two
+    # directories and leave the next example unreachable by its relative path
+    cd "$root_pwd" || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
 }
 
 # Create a temporary file to store directories
@@ -272,9 +273,11 @@ for dir in "${DIRS[@]}"; do
         continue
     fi
 
-    # Check if this directory has a medusa subdirectory
-    if [ -d "$dir/medusa" ] && [ -f "$dir/medusa/package.json" ]; then
-        process_directory "$dir"
+    # Process the directory when packages.json declares a Medusa app for it
+    if app_sub=$(example_app "$(basename "$dir")" 2>/dev/null); then
+        process_directory "$dir" "$app_sub"
+    else
+        warning "$dir" "Not declared in scripts/packages.json, skipping..."
     fi
 done
 

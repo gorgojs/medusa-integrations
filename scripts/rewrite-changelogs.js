@@ -12,15 +12,14 @@ const TOKEN = process.env.GITHUB_TOKEN;
 const APPLY = process.argv.includes('--apply');
 const DRY_OUT = process.env.DRY_OUT || '.';
 
-const FILES = [
-  'packages/providers/erp-1c/CHANGELOG.md',
-  'packages/providers/feed-yandex/CHANGELOG.md',
-  'packages/providers/fulfillment-apiship/CHANGELOG.md',
-  'packages/providers/payment-robokassa/CHANGELOG.md',
-  'packages/providers/payment-tkassa/CHANGELOG.md',
-  'packages/providers/payment-yookassa/CHANGELOG.md',
-  'packages/utils/telemetry/CHANGELOG.md',
-];
+// The package table, shared with the other scripts and with packages.sh
+const PACKAGES = JSON.parse(
+  readFileSync(new URL('./packages.json', import.meta.url), 'utf8'),
+);
+
+const FILES = Object.values(PACKAGES)
+  .map((entry) => path.join(entry.dir, 'CHANGELOG.md'))
+  .filter((file) => existsSync(file));
 
 const SHA_AUTHOR_RE =
   /\/commit\/([0-9a-f]{7,40})(\)[^\n]*?Thanks \[@)([^\]]+)(\]\()([^)]+)(\)!)/g;

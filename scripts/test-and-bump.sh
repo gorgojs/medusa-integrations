@@ -6,6 +6,10 @@ set -uo pipefail
 
 GITHUB_OUTPUT="${GITHUB_OUTPUT:-/dev/stdout}"
 
+# The package table, shared with update.sh and the JS scripts
+# shellcheck source=./packages.sh
+source "$(dirname "${BASH_SOURCE[0]}")/packages.sh"
+
 chmod +x ./scripts/update.sh
 
 IFS=',' read -ra PACKAGES <<< "$OUTDATED_PACKAGES"
@@ -16,12 +20,17 @@ FAILED=()
 for package in "${PACKAGES[@]}"; do
   [ -z "$package" ] && continue
   example="${package#medusa-}"
+  if ! it=$(example_it "$example"); then
+    echo "::warning title=Medusa update::No integration-tests workspace mapped for '${example}'"
+    FAILED+=("$example")
+    continue
+  fi
   echo "::group::update.sh ${example}"
   if ./scripts/update.sh "$TARGET_VERSION" "$example" --single --skip-build; then
     BUMPED+=("$example")
   else
     echo "::warning title=Medusa update::Failed to bump '${example}' to v${TARGET_VERSION}"
-    git checkout -- "examples/${example}" "integration-tests/${example}" 2>/dev/null || true
+    git checkout -- "examples/${example}" "integration-tests/${it}" 2>/dev/null || true
     FAILED+=("$example")
   fi
   echo "::endgroup::"
@@ -32,13 +41,14 @@ corepack yarn install --no-immutable
 
 PASSED=()
 for example in "${BUMPED[@]}"; do
+  it=$(example_it "$example")
   echo "::group::test ${example}"
   if corepack yarn turbo run test:unit test:integration:http test:integration:modules \
-       --filter="@gorgo/it-${example}" --concurrency=1 --no-cache --force; then
+       --filter="@gorgo/it-${it}" --concurrency=1 --no-cache --force; then
     PASSED+=("$example")
   else
     echo "::warning title=Medusa update::Tests failed for '${example}' on v${TARGET_VERSION}"
-    git checkout -- "examples/${example}" "integration-tests/${example}" 2>/dev/null || true
+    git checkout -- "examples/${example}" "integration-tests/${it}" 2>/dev/null || true
     FAILED+=("$example")
   fi
   echo "::endgroup::"

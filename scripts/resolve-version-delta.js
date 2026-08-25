@@ -12,14 +12,15 @@ const cwd = process.cwd();
 const examplesDir = path.join(cwd, 'examples');
 const badgesDir = path.join(cwd, '.badges');
 
-const EXAMPLE_TO_DIR = {
-  'erp-1c': 'providers/erp-1c',
-  'feed-yandex': 'providers/feed-yandex',
-  'fulfillment-apiship': 'providers/fulfillment-apiship',
-  'payment-robokassa': 'providers/payment-robokassa',
-  'payment-tkassa': 'providers/payment-tkassa',
-  'payment-yookassa': 'providers/payment-yookassa',
-};
+// The package table, shared with update.sh and test-and-bump.sh through packages.sh
+const PACKAGES = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'packages.json'), 'utf8'),
+);
+const DIR_BY_EXAMPLE = Object.fromEntries(
+  Object.values(PACKAGES)
+    .filter((entry) => entry.example)
+    .map((entry) => [entry.example, entry.dir]),
+);
 
 const examples = fs.existsSync(examplesDir)
   ? fs
@@ -32,9 +33,8 @@ const versions = new Set();
 const outdated = [];
 
 for (const example of examples) {
-  const packageDir = EXAMPLE_TO_DIR[example];
-  if (!packageDir || !fs.existsSync(path.join(cwd, 'packages', packageDir)))
-    continue;
+  const packageDir = DIR_BY_EXAMPLE[example];
+  if (!packageDir || !fs.existsSync(path.join(cwd, packageDir))) continue;
 
   let tested = null;
   const badgeFile = path.join(badgesDir, `medusa-${example}.json`);
