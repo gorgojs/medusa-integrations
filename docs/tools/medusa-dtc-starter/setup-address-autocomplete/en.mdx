@@ -26,7 +26,7 @@ const renderAutocomplete = () => {
 
 `addressAutocompleteProvider` and `isDaData` both come from `src/lib/constants.tsx`. Any value other than `dadata`, including an unset variable, falls through to `PlainAddressInput` (`providers/plain.tsx`), which renders a single address field with no autocomplete at all.
 
-<Note type="success" title="">
+<Note type="default" title="">
 
 Whichever provider is active, `AddressAutocomplete` also renders a checkbox that lets the visitor switch to manual entry immediately. The checkbox swaps the provider for `ManualAddressFields`, four plain inputs for address, postal code, city, and province. As a result, autocomplete never blocks someone whose address doesn't match what the provider expects.
 

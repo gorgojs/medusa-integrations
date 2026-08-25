@@ -192,11 +192,29 @@ The Integration Module ([`@gorgo/medusa-integration`](/medusa-modules/integratio
 
 ### Storefront Can't Reach the Backend, or Shows a Region Error
 
-If the storefront's logs show `Error fetching regions. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable.`, the cause is one of two things: either `NEXT_PUBLIC_MEDUSA_BACKEND_URL` isn't set or points to the wrong place, or the backend has no region configured yet. Check that the backend is running and reachable at that URL. If there really are no regions, the seed script creates several, see the [Customize Seed Data](/tools/medusa-dtc-starter/customize-seed-data) documentation.
+The storefront's logs show:
+
+```text title="Storefront logs"
+Error fetching regions. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable.
+```
+
+The cause is one of two things: either `NEXT_PUBLIC_MEDUSA_BACKEND_URL` isn't set or points to the wrong place, or the backend has no region configured yet. Check that the backend is running and reachable at that URL. If there really are no regions, the seed script creates several, see the [Customize Seed Data](/tools/medusa-dtc-starter/customize-seed-data) documentation.
 
 ### Stripe Checkout Doesn't Load
 
-`Stripe key is missing. Set NEXT_PUBLIC_STRIPE_KEY environment variable.` means the storefront tried to render Stripe Elements without a Stripe publishable key set. `Stripe client secret is missing. Cannot initialize Stripe.` means no Stripe payment session exists on the cart yet. This usually happens because the selected region has no Stripe provider configured.
+The storefront's logs show one of two errors:
+
+```text title="Storefront logs"
+Stripe key is missing. Set NEXT_PUBLIC_STRIPE_KEY environment variable.
+```
+
+The first one means the storefront tried to render Stripe Elements without a Stripe publishable key set.
+
+```text title="Storefront logs"
+Stripe client secret is missing. Cannot initialize Stripe.
+```
+
+The second one means no Stripe payment session exists on the cart yet, usually because the selected region has no Stripe provider configured.
 
 ### Address Autocomplete Doesn't Work
 

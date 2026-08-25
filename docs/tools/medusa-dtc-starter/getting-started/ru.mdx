@@ -192,11 +192,29 @@ NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY=
 
 ### Витрина не может обратиться к бэкенду или показывает ошибку региона
 
-Если в логах витрины видно `Error fetching regions. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable.`, причина одна из двух: либо `NEXT_PUBLIC_MEDUSA_BACKEND_URL` не задан или указывает не туда, либо на бэкенде пока не настроен ни один регион. Проверьте, что бэкенд запущен и доступен по этому адресу. Если регионов правда нет, их создаёт сид-скрипт, читайте в документации [Настройка начальных данных](/tools/medusa-dtc-starter/customize-seed-data).
+В логах витрины видна ошибка:
+
+```text title="Логи витрины"
+Error fetching regions. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable.
+```
+
+Причина одна из двух: либо `NEXT_PUBLIC_MEDUSA_BACKEND_URL` не задан или указывает не туда, либо на бэкенде пока не настроен ни один регион. Проверьте, что бэкенд запущен и доступен по этому адресу. Если регионов правда нет, их создаёт сид-скрипт, читайте в документации [Настройка начальных данных](/tools/medusa-dtc-starter/customize-seed-data).
 
 ### Оплата через Stripe не загружается
 
-`Stripe key is missing. Set NEXT_PUBLIC_STRIPE_KEY environment variable.` означает, что витрина попыталась отрисовать Stripe Elements без публикуемого ключа Stripe. `Stripe client secret is missing. Cannot initialize Stripe.` означает, что для корзины ещё не создана платёжная сессия Stripe. Обычно это значит, что в выбранном регионе не настроен провайдер Stripe.
+В логах витрины видна одна из двух ошибок:
+
+```text title="Логи витрины"
+Stripe key is missing. Set NEXT_PUBLIC_STRIPE_KEY environment variable.
+```
+
+Первая означает, что витрина попыталась отрисовать Stripe Elements без публикуемого ключа Stripe.
+
+```text title="Логи витрины"
+Stripe client secret is missing. Cannot initialize Stripe.
+```
+
+Вторая означает, что для корзины ещё не создана платёжная сессия Stripe, обычно потому что в выбранном регионе не настроен провайдер Stripe.
 
 ### Не работает автозаполнение адреса
 

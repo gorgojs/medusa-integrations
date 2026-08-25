@@ -9,7 +9,7 @@ description: "Как сид-скрипт стартера собирает ре�
 
 Вместо сгенерированной миграции бэкенд поставляется с одноразовым сид-скриптом [`initial-data-seed.ts`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/initial-data-seed.ts). Он проверяет, не засеян ли магазин, а затем поэтапно создаёт магазин, регионы, каталог и переводы. Каждый этап читает свои данные из JSON-файлов в `src/migration-scripts/data/`.
 
-<Note type="success" title="">
+<Note type="warning">
 
 Единственную проверку на существование выполняет канал продаж из `data/store/json/store.json`. Если вы удалите его и запустите скрипт снова, все остальные этапы выполнятся заново без проверки на дубликаты.
 
@@ -21,7 +21,7 @@ description: "Как сид-скрипт стартера собирает ре�
 
 Чтобы добавить или изменить регион, скопируйте существующий файл и отредактируйте его. Обязательны поля `name`, `currency_code`, `countries`, `stock_location` и цены в `shipping_prices`/`product_prices`. Цены используют camelCase-ключ товара или способа доставки, например `t-shirt` превращается в `tShirt`. Новому региону нужна цена для каждого существующего товара, а новому товару нужна цена в каждом существующем регионе.
 
-<Note type="success" title="">
+<Note type="default" title="">
 
 Валюта по умолчанию (`default_currency_code` в `store.json`) должна совпадать с валютой одного из ваших регионов. Иначе сид-скрипт откажется запускаться, а не оставит магазин без валюты по умолчанию.
 
@@ -31,7 +31,7 @@ description: "Как сид-скрипт стартера собирает ре�
 
 Локали собираются по тому же принципу, что и регионы, из [`data/i18n/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/i18n/json), например [`ru.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/i18n/json/ru.json). Стартер поставляется с 36 файлами локалей. Чтобы добавить локаль, добавьте JSON-файл такой же формы. Он попадёт в переводы категорий, коллекций, товаров, вариантов, способов доставки и причин возврата.
 
-<Note type="success" title="">
+<Note type="default" title="">
 
 Это отдельный, третий список локалей. Языки интерфейса витрины заданы в [`apps/storefront/src/i18n/config.ts`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/storefront/src/i18n/config.ts), а языки писем живут в [`EMAIL_LANGS`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/emails/i18n). Добавление локали здесь не затрагивает ни один из этих списков.
 
@@ -45,7 +45,7 @@ description: "Как сид-скрипт стартера собирает ре�
 
 Запустите скрипт `seed` из `apps/backend` командой `pnpm seed`, `npm run seed` или `yarn seed`. Из корня репозитория то же самое делает `pnpm backend:seed` через pnpm workspace. Все они вызывают `medusa exec ./src/migration-scripts/initial-data-seed.ts`, скрипт `seed` объявлен в [`apps/backend/package.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/package.json).
 
-<Note type="success" title="">
+<Note type="warning">
 
 Скрипты миграции читают данные из `<cwd>/src`. Если вы загружаете данные из собранного билда, а не через сервер разработки, скопируйте `src/**/*.json` в билд рядом со скомпилированным кодом.
 
