@@ -156,10 +156,29 @@ example_manifests() {
         -not -path '*/.yalc/*' | sort
 }
 
+# Echo the project directory holding the example's Medusa app, or fail when it has none.
+# The marker is the medusa-config next to a package.json, the file `medusa db:migrate` needs;
+# storefronts and the root of a monorepo example have neither.
+example_app_dir() {
+    local manifest dir cfg
+    while IFS= read -r manifest; do
+        [ -n "$manifest" ] || continue
+        dir=$(dirname "$manifest")
+        for cfg in medusa-config.ts medusa-config.js medusa-config.mjs; do
+            if [ -f "$dir/$cfg" ]; then
+                echo "$dir"
+                return 0
+            fi
+        done
+    done < <(example_manifests "$1")
+    return 1
+}
+
 # Function to process an example
 process_directory() {
     local example_dir="$1"
-    local app_dir="$1/$2"
+    local app_dir
+    app_dir=$(example_app_dir "$example_dir") || app_dir=""
     local root_pwd
     root_pwd=$(pwd)
     log "$example_dir" "Processing example"
@@ -174,8 +193,8 @@ process_directory() {
     # Migrations and the build run where the Medusa app lives
     local example_name app_name app_parent skip_migrations=false
     example_name=$(basename "$example_dir")
-    app_name=$(basename "$app_dir")
-    app_parent=$(basename "$(dirname "$app_dir")")
+    app_name=$(basename "${app_dir:-}")
+    app_parent=$(basename "$(dirname "${app_dir:-.}")")
 
     # Check the example itself, the app directory or its parent against SKIP_MIGRATIONS_DIRS
     # (the app directory is `medusa` for most examples but `apps/backend` for a monorepo one)
@@ -187,7 +206,9 @@ process_directory() {
         fi
     done
 
-    if [ "$SKIP_BUILD" = false ] && grep -q "\"@medusajs" "$app_dir/package.json"; then
+    if [ -z "$app_dir" ]; then
+        warning "$example_dir" "No medusa-config found, skipping migrations and build"
+    elif [ "$SKIP_BUILD" = false ]; then
         cd "$app_dir" || handle_error "$app_dir" "$LAST_SUCCESSFUL_DIR"
 
         # Run database migrations if not skipped
@@ -284,9 +305,9 @@ for dir in "${DIRS[@]}"; do
         continue
     fi
 
-    # Process the directory when packages.json declares a Medusa app for it
-    if app_sub=$(example_app "$(basename "$dir")" 2>/dev/null); then
-        process_directory "$dir" "$app_sub"
+    # Process the directory when packages.json declares it as an example
+    if example_it "$(basename "$dir")" > /dev/null 2>&1; then
+        process_directory "$dir"
     else
         warning "$dir" "Not declared in scripts/packages.json, skipping..."
     fi

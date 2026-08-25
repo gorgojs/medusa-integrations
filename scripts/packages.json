@@ -4,7 +4,6 @@
     "examples": [
       {
         "dir": "examples/all-integrations",
-        "app": "apps/backend",
         "it": "integration"
       }
     ]
@@ -14,7 +13,6 @@
     "examples": [
       {
         "dir": "examples/erp-1c",
-        "app": "medusa",
         "it": "erp-1c"
       }
     ]
@@ -24,7 +22,6 @@
     "examples": [
       {
         "dir": "examples/feed-yandex",
-        "app": "medusa",
         "it": "feed-yandex"
       }
     ]
@@ -34,7 +31,6 @@
     "examples": [
       {
         "dir": "examples/fulfillment-apiship",
-        "app": "medusa",
         "it": "fulfillment-apiship"
       }
     ]
@@ -44,7 +40,6 @@
     "examples": [
       {
         "dir": "examples/payment-robokassa",
-        "app": "medusa",
         "it": "payment-robokassa"
       }
     ]
@@ -54,7 +49,6 @@
     "examples": [
       {
         "dir": "examples/payment-tkassa",
-        "app": "medusa",
         "it": "payment-tkassa"
       }
     ]
@@ -64,7 +58,6 @@
     "examples": [
       {
         "dir": "examples/payment-yookassa",
-        "app": "medusa",
         "it": "payment-yookassa"
       }
     ]
