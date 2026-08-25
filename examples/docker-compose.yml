@@ -61,9 +61,8 @@ configs:
     # This file will be executed when the database is initialized
     # It creates the necessary databases for all the examples
     content: |
-      CREATE DATABASE medusa_all;
-      CREATE DATABASE medusa_1c;
-      CREATE DATABASE medusa_feed;
+      CREATE DATABASE medusa_all_integrations;
+      CREATE DATABASE medusa_erp_1c;
       CREATE DATABASE medusa_feed_yandex;
       CREATE DATABASE medusa_fulfillment_apiship;
       CREATE DATABASE medusa_payment_tkassa;
