@@ -245,3 +245,5 @@ Each `examples/<name>/` contains a standalone Medusa project with the plugin pre
 
 - `scripts/resolve-version-delta.js` compares each badge against the latest published `@medusajs/medusa` and outputs the outdated package scopes;
 - `scripts/test-and-bump.sh` bumps and tests every example of those packages and rewrites `.badges/medusa-<scope>.json` only when **all** of a package's examples pass — a package with a failing example keeps its old badge and all of its examples are reverted, so the PR never ships a bump the badge does not cover.
+
+> `test-and-bump.sh` deletes `yarn.lock` before installing on purpose. Plugins depend on `@medusajs/*` through `^` ranges, and yarn will not re-resolve a range the lockfile already satisfies — a bumped example then loads two copies of `@medusajs/utils` and the integration tests die on broken DML/MikroORM metadata (`Cannot read properties of undefined (reading 'collection')`). The cost is unrelated transitive drift in every update PR.

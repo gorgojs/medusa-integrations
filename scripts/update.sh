@@ -144,14 +144,6 @@ bump_manifest() {
     echo -e "\n${YELLOW}[$dir] Running: yarn add ...${NC}\n"
     yarn add $pkgs || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
 
-    # Remove all empty lines and ensure no trailing newline
-    if sed --version > /dev/null 2>&1; then
-        sed -i -e '/^[[:space:]]*$/d' package.json || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
-    else
-        sed -i '' -e '/^[[:space:]]*$/d' package.json || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
-    fi
-    perl -i -pe 'chomp if eof' package.json || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
-
     cd "$root_pwd" || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
 }
 
