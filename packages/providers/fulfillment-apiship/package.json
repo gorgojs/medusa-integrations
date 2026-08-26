@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-fulfillment-apiship",
-  "version": "2.0.0-beta.4",
+  "version": "2.0.0-beta.5",
   "description": "Medusa plugin for ApiShip — delivery service aggregator",
   "files": [
     ".medusa/server",
@@ -81,9 +81,10 @@
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^7.18.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
-    "vite": "^5.2.11",
+    "vite": "^7.3.6",
     "yalc": "^1.0.0-pre.53"
   },
   "peerDependencies": {
@@ -94,9 +95,10 @@
     "@medusajs/icons": "^2.17.2",
     "@medusajs/medusa": "^2.17.2",
     "@medusajs/test-utils": "^2.17.2",
-    "@medusajs/ui": "^4.0.25"
+    "@medusajs/ui": "^4.0.25",
+    "react-router-dom": "^6.30.4 || ^7.0.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": "^20.19.0 || >=22.12.0"
   }
 }

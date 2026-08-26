@@ -30,7 +30,8 @@ const FeedDetailsPage = () => (
 const Breadcrumb = (
   props: UIMatch<FeedResponse>
 ) => {
-  const { feed } = props.data || {}
+  // React Router v7 deprecates `UIMatch.data` in favour of `loaderData`; v6 only has `data`
+  const feed = (props.loaderData ?? props.data)?.feed
   if (!feed)
     return null
 

@@ -39,10 +39,10 @@
     "@medusajs/draft-order": "2.19.0",
     "@medusajs/framework": "2.19.0",
     "@medusajs/medusa": "2.19.0",
-    "@medusajs/ui": "4.2.0",
+    "@medusajs/ui": "4.2.1",
     "@tanstack/react-query": "5.64.2",
     "react-i18next": "13.5.0",
-    "react-router-dom": "6.30.4",
+    "react-router-dom": "7.18.2",
     "zod": "4.2.0"
   },
   "devDependencies": {
@@ -61,11 +61,11 @@
     "react-dom": "^18.3.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2",
-    "vite": "^5.4.14",
+    "vite": "^7.3.6",
     "yalc": "^1.0.0-pre.53"
   },
   "engines": {
-    "node": ">=20"
+    "node": "^20.19.0 || >=22.12.0"
   },
   "packageManager": "yarn@4.9.2"
 }
