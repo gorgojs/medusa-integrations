@@ -23,7 +23,7 @@
     <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-1c.json&logo=checkmarx" alt="Medusa" />
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-erp-1c.json&logo=checkmarx" alt="Medusa" />
   </a>
   <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">
     <img src="https://img.shields.io/npm/v/@gorgo/medusa-1c.svg?logo=npm&label=npm" alt="npm version" />
