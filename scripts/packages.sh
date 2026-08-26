@@ -11,15 +11,17 @@
 
 PACKAGES_JSON="$(dirname "${BASH_SOURCE[0]}")/packages.json"
 
-declare -A PACKAGE_DIR EXAMPLE_DIR EXAMPLE_IT
-while IFS=$'\t' read -r kind name dir it; do
+declare -A PACKAGE_DIR PACKAGE_EXAMPLES EXAMPLE_DIR EXAMPLE_IT
+while IFS=$'\t' read -r kind name dir it scope; do
     case "$kind" in
         pkg)
             PACKAGE_DIR[$name]=$dir
+            PACKAGE_EXAMPLES[$name]=""
             ;;
         example)
             EXAMPLE_DIR[$name]=$dir
             EXAMPLE_IT[$name]=$it
+            PACKAGE_EXAMPLES[$scope]="${PACKAGE_EXAMPLES[$scope]:+${PACKAGE_EXAMPLES[$scope]} }$name"
             ;;
     esac
 done < <(node -e '
@@ -30,7 +32,7 @@ for (const [scope, entry] of Object.entries(table)) {
   console.log(["pkg", scope, entry.dir].join("\t"));
   for (const example of entry.examples ?? []) {
     const name = path.basename(example.dir);
-    console.log(["example", name, example.dir, example.it].join("\t"));
+    console.log(["example", name, example.dir, example.it, scope].join("\t"));
   }
 }
 ' "$PACKAGES_JSON")
@@ -39,6 +41,20 @@ if [ ${#PACKAGE_DIR[@]} -eq 0 ]; then
     echo "packages.sh: could not read $PACKAGES_JSON" >&2
     return 1 2>/dev/null || exit 1
 fi
+
+package_examples() {
+    local package=$1
+    if [ -z "${PACKAGE_DIR[$package]:-}" ]; then
+        echo "packages.sh: unknown package '$package' — add it to packages.json" >&2
+        return 1
+    fi
+    local examples="${PACKAGE_EXAMPLES[$package]:-}"
+    if [ -z "$examples" ]; then
+        echo "packages.sh: package '$package' declares no examples in packages.json" >&2
+        return 1
+    fi
+    echo "$examples"
+}
 
 # Echo the integration-tests workspace covering an example, or fail when it is not declared
 example_it() {

@@ -8,6 +8,7 @@ This repository is organized as a Yarn v4 monorepo with shared workspaces for pl
 
 ```text
 ├── examples/
+│   ├── all-integrations/
 │   ├── erp-1c/
 │   ├── feed-yandex/
 │   ├── fulfillment-apiship/
@@ -18,8 +19,10 @@ This repository is organized as a Yarn v4 monorepo with shared workspaces for pl
 │   ├── erp-1c/
 │   ├── feed-yandex/
 │   ├── fulfillment-apiship/
+│   ├── integration/
 │   ├── payment-robokassa/
-│   └── payment-tkassa/
+│   ├── payment-tkassa/
+│   └── payment-yookassa/
 ├── packages/
 │   ├── modules/
 │   │   └── integration/
@@ -233,3 +236,12 @@ Run them in parallel when investigating independent areas. Their selection guide
 ## Examples
 
 Each `examples/<name>/` contains a standalone Medusa project with the plugin pre-installed. They serve as integration test environments — the CI `update-medusa-version.yml` workflow runs `update.sh` against them. When developing a plugin, link it locally using `yalc` (`.yalc/` is gitignored).
+
+`scripts/packages.json` is the single table tying the three names together: a package scope (the `packages/**` folder name, also the commit scope), the examples it ships, and the `integration-tests/` workspace covering each. **The names do not derive from each other** — `integration` ships `examples/all-integrations`, tested by `integration-tests/integration`. `scripts/packages.sh` is the bash view of the same table, sourced by `update.sh` and `test-and-bump.sh`.
+
+## Medusa version badges
+
+`.badges/medusa-<package-scope>.json` is a [shields.io endpoint](https://shields.io/badges/endpoint-badge) rendering the *Tested with Medusa* badge in `packages/**/README*.md`. One badge per **package**, never per example:
+
+- `scripts/resolve-version-delta.js` compares each badge against the latest published `@medusajs/medusa` and outputs the outdated package scopes;
+- `scripts/test-and-bump.sh` bumps and tests every example of those packages and rewrites `.badges/medusa-<scope>.json` only when **all** of a package's examples pass — a package with a failing example keeps its old badge and all of its examples are reverted, so the PR never ships a bump the badge does not cover.
