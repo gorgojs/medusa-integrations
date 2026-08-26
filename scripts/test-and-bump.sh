@@ -12,46 +12,85 @@ source "$(dirname "${BASH_SOURCE[0]}")/packages.sh"
 
 chmod +x ./scripts/update.sh
 
-IFS=',' read -ra PACKAGES <<< "$OUTDATED_PACKAGES"
+IFS=',' read -ra BADGES <<< "$OUTDATED_PACKAGES"
+
+revert_example() {
+  local example=$1 it
+  it=$(example_it "$example" 2>/dev/null) || it=""
+  git checkout -- "examples/${example}" 2>/dev/null || true
+  [ -n "$it" ] && git checkout -- "integration-tests/${it}" 2>/dev/null || true
+  return 0
+}
+
+PACKAGES=()
+declare -A TARGET_EXAMPLES=()
+declare -A BROKEN=()
+declare -A TESTED=()
+
+for badge in "${BADGES[@]}"; do
+  [ -z "$badge" ] && continue
+  package="${badge#medusa-}"
+  PACKAGES+=("$package")
+  if examples=$(package_examples "$package"); then
+    TARGET_EXAMPLES[$package]="$examples"
+  else
+    echo "::warning title=Medusa update::No example declared for package '${package}'"
+    TARGET_EXAMPLES[$package]=""
+    BROKEN[$package]=1
+  fi
+done
 
 BUMPED=()
-FAILED=()
 
 for package in "${PACKAGES[@]}"; do
-  [ -z "$package" ] && continue
-  example="${package#medusa-}"
-  if ! it=$(example_it "$example"); then
-    echo "::warning title=Medusa update::No integration-tests workspace mapped for '${example}'"
-    FAILED+=("$example")
-    continue
-  fi
-  echo "::group::update.sh ${example}"
-  if ./scripts/update.sh "$TARGET_VERSION" "$example" --single --skip-build; then
-    BUMPED+=("$example")
-  else
-    echo "::warning title=Medusa update::Failed to bump '${example}' to v${TARGET_VERSION}"
-    git checkout -- "examples/${example}" "integration-tests/${it}" 2>/dev/null || true
-    FAILED+=("$example")
-  fi
-  echo "::endgroup::"
+  for example in ${TARGET_EXAMPLES[$package]}; do
+    if ! it=$(example_it "$example"); then
+      echo "::warning title=Medusa update::No integration-tests workspace mapped for '${example}'"
+      BROKEN[$package]=1
+      continue
+    fi
+    echo "::group::update.sh ${example}"
+    if ./scripts/update.sh "$TARGET_VERSION" "$example" --single --skip-build; then
+      BUMPED+=("${package}:${example}")
+    else
+      echo "::warning title=Medusa update::Failed to bump '${example}' to v${TARGET_VERSION}"
+      revert_example "$example"
+      BROKEN[$package]=1
+    fi
+    echo "::endgroup::"
+  done
 done
 
 rm -f yarn.lock
 corepack yarn install --no-immutable
 
-PASSED=()
-for example in "${BUMPED[@]}"; do
+for pair in "${BUMPED[@]}"; do
+  package="${pair%%:*}"
+  example="${pair#*:}"
   it=$(example_it "$example")
   echo "::group::test ${example}"
   if corepack yarn turbo run test:unit test:integration:http test:integration:modules \
        --filter="@gorgo/it-${it}" --concurrency=1 --no-cache --force; then
-    PASSED+=("$example")
+    TESTED[$package]=1
   else
     echo "::warning title=Medusa update::Tests failed for '${example}' on v${TARGET_VERSION}"
-    git checkout -- "examples/${example}" "integration-tests/${it}" 2>/dev/null || true
-    FAILED+=("$example")
+    revert_example "$example"
+    BROKEN[$package]=1
   fi
   echo "::endgroup::"
+done
+
+PASSED=()
+FAILED=()
+for package in "${PACKAGES[@]}"; do
+  if [ -z "${BROKEN[$package]:-}" ] && [ -n "${TESTED[$package]:-}" ]; then
+    PASSED+=("$package")
+  else
+    FAILED+=("$package")
+    for example in ${TARGET_EXAMPLES[$package]}; do
+      revert_example "$example"
+    done
+  fi
 done
 
 if [ ${#FAILED[@]} -gt 0 ]; then
@@ -60,8 +99,8 @@ if [ ${#FAILED[@]} -gt 0 ]; then
 fi
 
 mkdir -p .badges
-for example in "${PASSED[@]}"; do
-  cat > ".badges/medusa-${example}.json" <<JSON
+for package in "${PASSED[@]}"; do
+  cat > ".badges/medusa-${package}.json" <<JSON
 {
   "schemaVersion": 1,
   "label": "Tested with Medusa",
@@ -90,7 +129,7 @@ fi
   if [ ${#PASSED[@]} -gt 0 ]; then
     echo "> [!TIP]"
     echo "> Updated and tested on Medusa v${TARGET_VERSION}:"
-    for example in "${PASSED[@]}"; do echo "> - \`${example}\`"; done
+    for package in "${PASSED[@]}"; do echo "> - \`${package}\`"; done
     echo ""
   fi
   if [ ${#FAILED[@]} -gt 0 ]; then
@@ -100,7 +139,7 @@ fi
     else
       echo "> Tests failed on Medusa v${TARGET_VERSION} — excluded from this PR."
     fi
-    for example in "${FAILED[@]}"; do echo "> - **${example}**"; done
+    for package in "${FAILED[@]}"; do echo "> - **${package}**"; done
     echo ""
   fi
   echo "__PR_BODY_EOF__"

@@ -9,38 +9,32 @@ if (!target) {
 }
 
 const cwd = process.cwd();
-const examplesDir = path.join(cwd, 'examples');
 const badgesDir = path.join(cwd, '.badges');
 
 // The package table, shared with update.sh and test-and-bump.sh through packages.sh
 const PACKAGES = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'packages.json'), 'utf8'),
 );
-const DIR_BY_EXAMPLE = Object.fromEntries(
-  Object.values(PACKAGES).flatMap((entry) =>
-    (entry.examples ?? []).map((example) => [
-      path.basename(example.dir),
-      entry.dir,
-    ]),
-  ),
-);
-
-const examples = fs.existsSync(examplesDir)
-  ? fs
-      .readdirSync(examplesDir, { withFileTypes: true })
-      .filter((e) => e.isDirectory())
-      .map((e) => e.name)
-  : [];
 
 const versions = new Set();
 const outdated = [];
 
-for (const example of examples) {
-  const packageDir = DIR_BY_EXAMPLE[example];
-  if (!packageDir || !fs.existsSync(path.join(cwd, packageDir))) continue;
+for (const [scope, entry] of Object.entries(PACKAGES)) {
+  const examples = entry.examples ?? [];
+  if (examples.length === 0) continue;
+
+  const missing = [entry.dir, ...examples.map((e) => e.dir)].filter(
+    (dir) => !fs.existsSync(path.join(cwd, dir)),
+  );
+  if (missing.length) {
+    console.log(
+      `::warning title=Medusa update::${scope}: ${missing.join(', ')} declared in packages.json but missing — skipped`,
+    );
+    continue;
+  }
 
   let tested = null;
-  const badgeFile = path.join(badgesDir, `medusa-${example}.json`);
+  const badgeFile = path.join(badgesDir, `medusa-${scope}.json`);
   if (fs.existsSync(badgeFile)) {
     try {
       const data = JSON.parse(fs.readFileSync(badgeFile, 'utf8'));
@@ -52,7 +46,7 @@ for (const example of examples) {
   }
 
   if (tested) versions.add(tested);
-  if (tested !== target) outdated.push(`medusa-${example}`);
+  if (tested !== target) outdated.push(`medusa-${scope}`);
 }
 
 const sorted = [...versions].sort((a, b) => {
