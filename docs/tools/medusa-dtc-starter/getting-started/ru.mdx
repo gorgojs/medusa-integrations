@@ -176,9 +176,12 @@ REVALIDATE_SECRET=supersecret
 NEXT_PUBLIC_SITE_NAME="Gorgo Medusa Store"
 NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER=dadata
 NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY=
+GEOLOCATION_PROVIDER=ip-api
+GEOLOCATION_PROVIDER_API_KEY=
+GEOLOCATION_DEBUG=false
 ```
 
-Остальные переменные уже заданы рабочими значениями по умолчанию для localhost. `NEXT_PUBLIC_SITE_NAME` задаёт название магазина в шапке, подвале и при оформлении заказа, а также попадает в разметку `schema.org` и в эндпоинт `llms.txt`. `NEXT_PUBLIC_STRIPE_KEY` нужен только если вы используете Stripe. `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` нужен только для встроенного автозаполнения адреса, читайте в документации [Настройка автозаполнения адреса](/tools/medusa-dtc-starter/setup-address-autocomplete). `MEDUSA_CLOUD_S3_HOSTNAME` и `MEDUSA_CLOUD_S3_PATHNAME` нужны только при развёртывании на Medusa Cloud. Значение `REVALIDATE_SECRET` должно совпадать с одноимённой переменной в `apps/backend/.env`, потому что бэкенд отправляет его с каждым вебхуком ревалидации. Смените его перед продакшеном.
+Остальные переменные уже заданы рабочими значениями по умолчанию для localhost. `NEXT_PUBLIC_SITE_NAME` задаёт название магазина в шапке, подвале и при оформлении заказа, а также попадает в разметку `schema.org` и в эндпоинт `llms.txt`. `NEXT_PUBLIC_STRIPE_KEY` нужен только если вы используете Stripe. `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` нужен только для встроенного автозаполнения адреса, читайте в документации [Настройка автозаполнения адреса](/tools/medusa-dtc-starter/setup-address-autocomplete). `GEOLOCATION_PROVIDER` выбирает способ определения страны нового посетителя, а на Vercel или Cloudflare её можно оставить незаданной, читайте в документации [Настройка определения страны](/tools/medusa-dtc-starter/setup-country-detection). `MEDUSA_CLOUD_S3_HOSTNAME` и `MEDUSA_CLOUD_S3_PATHNAME` нужны только при развёртывании на Medusa Cloud. Значение `REVALIDATE_SECRET` должно совпадать с одноимённой переменной в `apps/backend/.env`, потому что бэкенд отправляет его с каждым вебхуком ревалидации. Смените его перед продакшеном.
 
 ---
 
@@ -215,6 +218,14 @@ Stripe client secret is missing. Cannot initialize Stripe.
 ```
 
 Вторая означает, что для корзины ещё не создана платёжная сессия Stripe, обычно потому что в выбранном регионе не настроен провайдер Stripe.
+
+### Витрина открывается не в той стране
+
+Новый посетитель попадает в регион, никак не связанный с его местоположением, обычно каждый раз в один и тот же.
+
+Задайте `GEOLOCATION_DEBUG=true` в `apps/storefront/.env.local`, перезагрузите страницу и прочитайте заголовки `x-geo-*` на запросе документа в панели сети браузера. `x-geo-source` называет, что дало ответ: `cookie` означает, что cookie `_medusa_country` не была удалена, тогда удалите её или откройте новое приватное окно; `fallback-first` означает, что определить страну не удалось, а `NEXT_PUBLIC_DEFAULT_REGION` тоже не совпала ни с одним регионом из seed-данных, тогда задайте в ней реальный код страны; `x-geo-provider: platform` означает, что переменная `GEOLOCATION_PROVIDER` не дошла до сервера. Что означает каждый заголовок, читайте в документации [Настройка определения страны](/tools/medusa-dtc-starter/setup-country-detection).
+
+---
 
 ### Не работает автозаполнение адреса
 

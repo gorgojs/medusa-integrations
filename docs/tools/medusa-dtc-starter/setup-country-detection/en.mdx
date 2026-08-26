@@ -1,0 +1,154 @@
+---
+title: "Set Up Country Detection"
+description: "Pick a first-time visitor's sales region automatically, from the hosting platform's geo headers or an IP lookup, and add a detection provider of your own."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how the storefront picks a sales region for a first-time visitor, how to enable an IP lookup through ip-api, and how to add a detection provider of your own.
+
+A visitor who has never opened the store has no region yet. Rather than falling back to whichever region the backend happens to return first, the storefront resolves their country in the middleware and stores it in the `_medusa_country` cookie, which every page and the cart then read. Detection itself is a pluggable provider, the same way address autocomplete is.
+
+## How Provider Selection Works
+
+`resolveGeolocationProvider` reads the active provider from an environment variable and switches on it:
+
+```ts title="src/lib/geolocation/detect.ts"
+export const resolveGeolocationProvider = (): GeolocationProvider => {
+  switch (true) {
+    case isIpApi(geolocationProvider):
+      return ipApiProvider
+    default:
+      return platformProvider
+  }
+}
+```
+
+`geolocationProvider` reads `GEOLOCATION_PROVIDER` and `isIpApi` checks it for the `ip-api` value, both in the same file. Any other value, including an unset variable, falls through to `platformProvider`, which reads the geo headers your hosting platform already sets.
+
+The middleware touches the feature in one place. `resolveCountry` returns a function that writes the cookie onto whichever response the request ends up returning, so cookie precedence, the fallback chain, and the debug headers all stay inside `src/lib/geolocation`:
+
+```ts title="src/middleware.ts"
+const applyCountry = await resolveCountry(request, regionMap)
+```
+
+The order it resolves in is the same for every provider: an existing `_medusa_country` cookie wins, then the provider's answer, then `NEXT_PUBLIC_DEFAULT_REGION`, then the first region the backend returned. The cookie comes first because the region switcher in the header writes to it, and detection must never override a choice the visitor made themselves.
+
+<Note type="warning">
+
+`.env.template` ships `NEXT_PUBLIC_DEFAULT_REGION=en`, and `en` is not a country code, so no seeded region matches it. That leaves the last link in the chain, the first region the backend returned, which is an arbitrary country. Set a real lowercase [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code, for example `us` or `de`, so a failed lookup lands somewhere you chose.
+
+</Note>
+
+## Use the Hosting Platform's Geo Headers
+
+The default provider needs no configuration and makes no network call. It reads the country your platform already resolved, in this order:
+
+| Source | Platform |
+|---|---|
+| `cf.country` | Cloudflare Workers |
+| `x-vercel-ip-country` | Vercel |
+| `cf-ipcountry` | Cloudflare |
+| `x-appengine-country` | Google App Engine |
+| `fastly-client-country` | Fastly |
+| `x-geo-country`, `x-country-code` | nginx GeoIP or your own proxy |
+
+Values that mean "country unknown", `xx`, `t1` and `zz`, are discarded rather than treated as a country, because a region lookup for `xx` fails and drops the visitor into the fallback chain.
+
+On Vercel and Cloudflare this is all you need. The header is free, instant, and more accurate than any third-party lookup, so leave `GEOLOCATION_PROVIDER` unset there.
+
+## Enable the ip-api Provider
+
+Deployments without geo headers, and local development, need a real lookup. Set the provider in `apps/storefront/.env.local`:
+
+```bash title="apps/storefront/.env.local"
+GEOLOCATION_PROVIDER=ip-api
+GEOLOCATION_PROVIDER_API_KEY=
+```
+
+Neither variable is prefixed with `NEXT_PUBLIC_`, because detection runs only on the server and the key must stay out of the browser bundle.
+
+The provider checks the platform headers first and calls [ip-api](https://ip-api.com) only when none of them carried a country, so enabling it on Vercel costs nothing. A successful lookup for a visitor's IP is cached for an hour, and concurrent requests for the same IP are collapsed into a single call. The provider also honours ip-api's rate limit budget: it reads the `X-Rl` and `X-Ttl` response headers and stops calling for `X-Ttl` seconds once the budget is spent or a `429` comes back, which is what keeps a busy store from being banned for an hour.
+
+<Note type="warning">
+
+ip-api works without a key, but its free endpoint is HTTP only, allows 45 requests per minute, and its [terms](https://ip-api.com/docs/legal) forbid commercial use, naming "local currency or closest store for visitors of an online shop" as an example of what is not allowed. That is exactly what a store does with the result, so a live store needs a [pro key](https://members.ip-api.com). With a key set, the provider queries `https://pro.ip-api.com` over HTTPS instead, and nothing else has to change.
+
+</Note>
+
+## How the Visitor's IP Decides the Lookup
+
+`resolveClientIp` reads `x-forwarded-for` first, then `cf-connecting-ip`, `true-client-ip`, `x-real-ip`, `x-client-ip` and `fly-client-ip`, and normalizes what it finds: it strips a port, strips IPv6 brackets, and unwraps an IPv4-mapped IPv6 address, so `::ffff:127.0.0.1` is recognized as the loopback address `127.0.0.1`. What it ends up with picks one of three behaviors:
+
+| Client address | Behavior |
+|---|---|
+| A public address | Looked up as the visitor's own IP, cached for an hour, 1.5 second timeout |
+| Loopback or a private range | The visitor shares the server's network, so ip-api is called with no IP and geolocates the server's own egress address. Never cached, 5 second timeout |
+| No address in any header | No country is resolved, and the fallback chain takes over |
+
+The middle row is what makes `localhost` and a LAN address resolve to the country the machine actually browses from, in `next dev` and in a `build` and `start` run alike. Because nothing is cached there, switching a VPN and clearing `_medusa_country` changes the region on the next request. It costs one lookup per cookieless page load, which is why it is limited to visitors on the server's own network.
+
+The last row is deliberately not a guess. Geolocating the server's egress address for a visitor whose IP is unknown would pin every such visitor to the country of the datacentre. If a deployment resolves no country at all, the reverse proxy in front of it is not forwarding `x-forwarded-for`.
+
+## Check How a Region Was Resolved
+
+Set `GEOLOCATION_DEBUG=true` and the middleware annotates every response with what it decided. The flag works in any mode, a production build included:
+
+```bash title="apps/storefront/.env.local"
+GEOLOCATION_DEBUG=true
+```
+
+| Header | Value |
+|---|---|
+| `x-geo-source` | `cookie`, `detected`, or one of the `fallback-*` reasons |
+| `x-geo-detected` | What the provider returned, `none` if it resolved nothing |
+| `x-geo-provider` | `ip-api`, `platform`, or `none` when the cookie answered |
+| `x-geo-client-ip` | The visitor's address, `local`, or `unknown` |
+| `x-geo-country` | The country that was applied |
+
+Open the network panel, reload, and read the headers on the document request. `x-geo-source: cookie` means the cookie was never cleared, `x-geo-provider: platform` means `GEOLOCATION_PROVIDER` never reached the server, and a `fallback-*` source names which link in the chain answered.
+
+A country the middleware could not resolve is stored for five minutes instead of a year, so one failed lookup can't pin a visitor to the fallback region for good. A country the visitor picked in the region switcher, and one that was really detected, are both kept for a year.
+
+## Add a Provider of Your Own
+
+Every provider implements the same two-field contract:
+
+```ts title="src/lib/geolocation/types.ts"
+export type GeolocationContext = {
+  headers: Headers
+  cf?: { country?: string | null }
+}
+
+export type GeolocationProvider = {
+  name: string
+  lookup: (context: GeolocationContext) => Promise<string | null>
+}
+```
+
+`lookup` returns a lowercase ISO 3166-1 alpha-2 code, or `null` when it resolved nothing. `name` is not decoration: it goes into the cache key, so two providers never read each other's results.
+
+To add a provider for another service, or a local database such as MaxMind GeoLite2:
+
+1. Create a file under `providers/` that exports a `GeolocationProvider`. Call `countryFromPlatform` from `providers/platform.ts` first if you want the free header to keep winning, and wrap any network call in `withLookupCache` from `lookup-cache.ts` to get the hour-long cache and the concurrent-request collapsing.
+2. Add a `case` for it in the `resolveGeolocationProvider` switch shown above, alongside a small `isYourProvider(provider?: string)` helper next to `isIpApi`.
+3. Point `GEOLOCATION_PROVIDER` at the id your `case` and helper check for.
+
+`providers/platform.ts` is the shorter example to model on, at 50 lines with no network call at all. `providers/ip-api.ts` shows what a real lookup adds: a timeout, a rate-limit budget, and the three-way branch on the client address.
+
+## References
+
+<CardList items={[
+  {
+    title: "Production-ready Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter"
+  },
+  {
+    title: "Getting Started with Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter/getting-started"
+  },
+  {
+    title: "Set Up Address Autocomplete",
+    href: "/tools/medusa-dtc-starter/setup-address-autocomplete"
+  }
+]}/>

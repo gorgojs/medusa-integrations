@@ -176,9 +176,12 @@ REVALIDATE_SECRET=supersecret
 NEXT_PUBLIC_SITE_NAME="Gorgo Medusa Store"
 NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER=dadata
 NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY=
+GEOLOCATION_PROVIDER=ip-api
+GEOLOCATION_PROVIDER_API_KEY=
+GEOLOCATION_DEBUG=false
 ```
 
-The rest already ship with working localhost defaults. `NEXT_PUBLIC_SITE_NAME` sets the store name shown in the header, footer, and checkout, and it also feeds the `schema.org` markup and the `llms.txt` endpoint. `NEXT_PUBLIC_STRIPE_KEY` is only needed if you use Stripe. `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` is only needed for the built-in address autocomplete, see the [Set Up Address Autocomplete](/tools/medusa-dtc-starter/setup-address-autocomplete) documentation. `MEDUSA_CLOUD_S3_HOSTNAME` and `MEDUSA_CLOUD_S3_PATHNAME` are only needed when deploying to Medusa Cloud. `REVALIDATE_SECRET` has to match the same variable in `apps/backend/.env`, because the backend sends that value with every revalidation webhook. Change it before production.
+The rest already ship with working localhost defaults. `NEXT_PUBLIC_SITE_NAME` sets the store name shown in the header, footer, and checkout, and it also feeds the `schema.org` markup and the `llms.txt` endpoint. `NEXT_PUBLIC_STRIPE_KEY` is only needed if you use Stripe. `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` is only needed for the built-in address autocomplete, see the [Set Up Address Autocomplete](/tools/medusa-dtc-starter/setup-address-autocomplete) documentation. `GEOLOCATION_PROVIDER` picks how a first-time visitor's country is detected, and on Vercel or Cloudflare you can leave it unset, see the [Set Up Country Detection](/tools/medusa-dtc-starter/setup-country-detection) documentation. `MEDUSA_CLOUD_S3_HOSTNAME` and `MEDUSA_CLOUD_S3_PATHNAME` are only needed when deploying to Medusa Cloud. `REVALIDATE_SECRET` has to match the same variable in `apps/backend/.env`, because the backend sends that value with every revalidation webhook. Change it before production.
 
 ---
 
@@ -215,6 +218,14 @@ Stripe client secret is missing. Cannot initialize Stripe.
 ```
 
 The second one means no Stripe payment session exists on the cart yet, usually because the selected region has no Stripe provider configured.
+
+### The Storefront Opens in the Wrong Country
+
+A first-time visitor lands in a region that has nothing to do with their location, usually the same one every time.
+
+Set `GEOLOCATION_DEBUG=true` in `apps/storefront/.env.local`, reload, and read the `x-geo-*` headers on the document request in the browser's network panel. `x-geo-source` names what answered: `cookie` means the `_medusa_country` cookie was never cleared, so clear it or open a new private window; `fallback-first` means nothing resolved and `NEXT_PUBLIC_DEFAULT_REGION` matched no seeded region either, so set it to a real country code; `x-geo-provider: platform` means `GEOLOCATION_PROVIDER` never reached the server. See the [Set Up Country Detection](/tools/medusa-dtc-starter/setup-country-detection) documentation for what each header means.
+
+---
 
 ### Address Autocomplete Doesn't Work
 
