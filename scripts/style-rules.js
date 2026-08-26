@@ -49,6 +49,15 @@ const RU_GLOSSARY = [
     re: /(?<!\p{L})админк\p{L}+/giu,
     fix: 'панель администратора',
   },
+  // `seed` stays in Latin: the developer types `pnpm seed` and reads `initial-data-seed.ts`, so a
+  // Cyrillic spelling renames the command. The hyphen branch catches the compound (`сид-скрипт`),
+  // the ending branch the bare noun (`сид`, `сида`, `сиды`). The trailing (?![\p{L}-]) is what keeps
+  // `сидеть`, `сиденье` and `сидр` out.
+  {
+    id: 'ru/seed',
+    re: /(?<!\p{L})сид(?:-\p{L}+|(?:ы|ов|ам|ах|ом|а|е|у)?(?![\p{L}-]))/giu,
+    fix: 'seed-скрипт / seed-данные',
+  },
 ];
 
 /**

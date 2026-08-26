@@ -1,13 +1,13 @@
 ---
 title: "Настройка начальных данных"
-description: "Как сид-скрипт стартера собирает регионы, валюты, локали и демо-каталог из JSON-файлов с данными, и как адаптировать его под собственные рынки и товары."
+description: "Как seed-скрипт стартера собирает регионы, валюты, локали и демо-каталог из JSON-файлов с данными, и как адаптировать его под собственные рынки и товары."
 ---
 
 # {frontmatter.title}
 
-В этом руководстве вы узнаете, как сид-скрипт стартера собирает регионы, валюты, локали и демо-каталог из JSON-файлов с данными, и как адаптировать их под собственные рынки и товары.
+В этом руководстве вы узнаете, как seed-скрипт стартера собирает регионы, валюты, локали и демо-каталог из JSON-файлов с данными, и как адаптировать их под собственные рынки и товары.
 
-Вместо сгенерированной миграции бэкенд поставляется с одноразовым сид-скриптом [`initial-data-seed.ts`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/initial-data-seed.ts). Он проверяет, не засеян ли магазин, а затем поэтапно создаёт магазин, регионы, каталог и переводы. Каждый этап читает свои данные из JSON-файлов в `src/migration-scripts/data/`.
+Вместо сгенерированной миграции бэкенд поставляется с одноразовым seed-скриптом [`initial-data-seed.ts`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/initial-data-seed.ts). Он проверяет, не засеян ли магазин, а затем поэтапно создаёт магазин, регионы, каталог и переводы. Каждый этап читает свои данные из JSON-файлов в `src/migration-scripts/data/`.
 
 <Note type="warning">
 
@@ -23,7 +23,7 @@ description: "Как сид-скрипт стартера собирает ре�
 
 <Note type="default" title="">
 
-Валюта по умолчанию (`default_currency_code` в `store.json`) должна совпадать с валютой одного из ваших регионов. Иначе сид-скрипт откажется запускаться, а не оставит магазин без валюты по умолчанию.
+Валюта по умолчанию (`default_currency_code` в `store.json`) должна совпадать с валютой одного из ваших регионов. Иначе seed-скрипт откажется запускаться, а не оставит магазин без валюты по умолчанию.
 
 </Note>
 
@@ -41,7 +41,7 @@ description: "Как сид-скрипт стартера собирает ре�
 
 Демо-каталог хранится как обычный JSON, а не как TypeScript. Категории, опции товаров, товары и коллекции лежат в [`data/products/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/products/json), способы доставки лежат в [`data/fulfillment/json/shipping-options.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/fulfillment/json/shipping-options.json). Товар указывает категорию по handle и опции по названию, поэтому категория и опции должны уже существовать в соответствующих файлах. Ему также нужна цена в `product_prices` каждого региона.
 
-## Запуск сида
+## Запуск seed-скрипта
 
 Запустите скрипт `seed` из `apps/backend` командой `pnpm seed`, `npm run seed` или `yarn seed`. Из корня репозитория то же самое делает `pnpm backend:seed` через pnpm workspace. Все они вызывают `medusa exec ./src/migration-scripts/initial-data-seed.ts`, скрипт `seed` объявлен в [`apps/backend/package.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/package.json).
 
