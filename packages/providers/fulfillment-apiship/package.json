@@ -62,7 +62,7 @@
     "axios": "^1.13.2"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.2.0",
+    "@gorgo/medusa-integration": "^0.2.1",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",

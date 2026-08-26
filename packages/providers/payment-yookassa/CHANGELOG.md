@@ -1,5 +1,11 @@
 # @gorgo/medusa-payment-yookassa
 
+## 2.0.2
+
+### Chores
+
+- update dependencies and peerDependencies across multiple packages by [@gorgohead](https://github.com/gorgohead) in [`10ecafc`](https://github.com/gorgojs/medusa-integrations/commit/10ecafcee59483b46d66a1d101ee1baa0b126e5a)
+
 ## 2.0.1
 
 ### Refactoring

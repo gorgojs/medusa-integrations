@@ -1,5 +1,11 @@
 # @gorgo/medusa-feed-yandex
 
+## 0.2.36
+
+### Chores
+
+- update dependencies and peerDependencies across multiple packages by [@gorgohead](https://github.com/gorgohead) in [`10ecafc`](https://github.com/gorgojs/medusa-integrations/commit/10ecafcee59483b46d66a1d101ee1baa0b126e5a)
+
 ## 0.2.35
 
 ### Documentation
