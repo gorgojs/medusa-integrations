@@ -7,9 +7,23 @@ on:
     paths:
       - 'packages/**'
   workflow_dispatch:
+    inputs:
+      prerelease:
+        description: 'Publish a single package at its current version under a dist-tag, bypassing changesets'
+        type: boolean
+        default: false
+      package:
+        description: 'Workspace to publish when prerelease is true'
+        type: string
+        default: '@gorgo/medusa-integration'
+      npm_tag:
+        description: 'dist-tag for the prerelease'
+        type: string
+        default: 'beta'
 
 jobs:
   publish:
+    if: github.event_name != 'workflow_dispatch' || inputs.prerelease != true
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -100,3 +114,66 @@ jobs:
     with:
       from_publish: true
     secrets: inherit
+
+  publish-prerelease:
+    if: github.event_name == 'workflow_dispatch' && inputs.prerelease == true
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    concurrency:
+      group: publish-packages-${{ github.ref }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Refuse to prerelease from the default branch
+        run: |
+          if [ "${{ github.ref_name }}" = "${{ github.event.repository.default_branch }}" ]; then
+            echo "prerelease publishes run from a feature branch, not ${{ github.ref_name }}" >&2
+            exit 1
+          fi
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.16.0
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build packages
+        run: |
+          yarn workspace @gorgo/medusa-integration run catalog:gen
+          yarn build
+
+      - name: Resolve the workspace and check it is a prerelease
+        id: pkg
+        env:
+          TARGET: ${{ inputs.package }}
+        run: |
+          dir="$(yarn workspaces list --json | node -e '
+            let out = ""
+            process.stdin.on("data", (d) => { out += d })
+            process.stdin.on("end", () => {
+              const row = out.trim().split("\n").map((l) => JSON.parse(l)).find((w) => w.name === process.env.TARGET)
+              if (!row) { console.error(`no such workspace: ${process.env.TARGET}`); process.exit(1) }
+              process.stdout.write(row.location)
+            })')"
+          version="$(node -p "require('./${dir}/package.json').version")"
+          case "$version" in
+            *-*) ;;
+            *) echo "refusing: ${version} is not a prerelease version" >&2; exit 1 ;;
+          esac
+          echo "publishing ${TARGET}@${version} from ${dir} as ${{ inputs.npm_tag }}"
+          echo "dir=${dir}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish
+        working-directory: ${{ steps.pkg.outputs.dir }}
+        run: npm publish --tag '${{ inputs.npm_tag }}' --access public --ignore-scripts
