@@ -28,4 +28,6 @@ export type IntegrationModuleOptions = {
   encryptionKey?: string
   /** Integration-providers, each `{ resolve, id?, options? }` — like payment/fulfillment. */
   providers?: ModuleProvider[]
+  /** Per-package license keys, keyed by npm package name. Falls back to `GORGO_LICENSE`. */
+  licenses?: Record<string, string>
 }
