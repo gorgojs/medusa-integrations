@@ -28,7 +28,11 @@ function makeContainer(
     resolve(key: string) {
       if (key === INTEGRATION_PACKAGE_META_KEY) return packageMeta
       if (key === "configModule") return { admin: { backendUrl } }
-      if (descriptors[key]) return { getDescriptor: () => descriptors[key] }
+      if (descriptors[key])
+        return {
+          descriptor: descriptors[key],
+          getIdentifier: () => descriptors[key].identifier,
+        }
       throw new Error(`not registered: ${key}`)
     },
   }
