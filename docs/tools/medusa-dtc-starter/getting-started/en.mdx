@@ -152,6 +152,8 @@ The storefront runs at `http://localhost:8000`. The repository root is set up fo
 
 ## Configuration
 
+### Backend
+
 Before the backend can run, set a real value for `DATABASE_URL` and `INTEGRATION_ENCRYPTION_KEY`:
 
 ```bash title="apps/backend/.env"
@@ -159,29 +161,54 @@ DATABASE_URL=postgres://postgres:@localhost:5432/medusa-dtc-starter
 INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
-`INTEGRATION_ENCRYPTION_KEY` encrypts the secret fields the Integration Module stores. Change the `supersecret` value before production.
+Everything else in `apps/backend/.env.template` ships with a working localhost default, apart from the SMTP block, which points at a placeholder host until you fill it in. What the rest of them do:
+
+| Variable | What it does |
+|---|---|
+| `DATABASE_URL` | Connection string for PostgreSQL. `DB_NAME` holds the database name it interpolates |
+| `INTEGRATION_ENCRYPTION_KEY` | Encrypts the secret fields the Integration Module stores |
+| `JWT_SECRET`, `COOKIE_SECRET` | Signing secrets for tokens and cookies |
+| `COOKIE_SECURE` | Set it to `true` on a live domain to send cookies over HTTPS only |
+| `STORE_CORS`, `ADMIN_CORS`, `AUTH_CORS` | Origins allowed to call the Store API, Admin, and authentication. Add your own domain here when you move either app off localhost |
+| `REDIS_URL` | Redis instance for the cache, event bus, and workflow engine. Production uses it whenever it is set. `CACHE_REDIS_URL` points the cache alone at a separate instance |
+| `USE_REDIS` | Set it to `true` to use `REDIS_URL` in development too. Without it all three run in memory, which is enough for development |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` | Mail server the transactional emails go through. Nothing is sent until you fill these in |
+| `SMTP_FROM`, `SMTP_REPLY_TO` | Sender and reply-to addresses on those emails |
+| `STORE_NAME`, `STORE_EMAIL`, `STORE_PHONE`, `STORE_ADDRESS` | Store details printed in the email templates |
+| `STOREFRONT_DEFAULT_LOCALE` | Language an email falls back to when the buyer's own is unknown |
+| `STOREFRONT_URL` | Storefront address, used for the links inside emails and for revalidation webhooks |
+| `REVALIDATE_SECRET` | Shared secret the backend sends with every revalidation webhook. It has to match the storefront's value |
+| `S3_BUCKET`, `S3_ENDPOINT`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_REGION` | Move file uploads to S3-compatible storage. Read in production only |
+| `MEDUSA_ADMIN_ONBOARDING_NEXTJS_DIRECTORY` | Storefront directory that Medusa's onboarding flow points at |
+
+Replace every `supersecret` value before going to production.
+
+### Storefront
 
 For the storefront, you need at least the publishable API key from your Medusa backend:
 
 ```bash title="apps/storefront/.env.local"
 NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_6c3...
-NEXT_PUBLIC_MEDUSA_BACKEND_URL=http://localhost:9000
-NEXT_PUBLIC_DEFAULT_REGION=en
-NEXT_PUBLIC_BASE_URL=https://localhost:8000
-NEXT_PUBLIC_STRIPE_KEY=
-MEDUSA_CLOUD_S3_HOSTNAME=
-MEDUSA_CLOUD_S3_PATHNAME=
-NODE_ENV=development
-REVALIDATE_SECRET=supersecret
-NEXT_PUBLIC_SITE_NAME="Gorgo Medusa Store"
-NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER=dadata
-NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY=
-GEOLOCATION_PROVIDER=ip-api
-GEOLOCATION_PROVIDER_API_KEY=
-GEOLOCATION_DEBUG=false
 ```
 
-The rest already ship with working localhost defaults. `NEXT_PUBLIC_SITE_NAME` sets the store name shown in the header, footer, and checkout, and it also feeds the `schema.org` markup and the `llms.txt` endpoint. `NEXT_PUBLIC_STRIPE_KEY` is only needed if you use Stripe. `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` is only needed for the built-in address autocomplete, see the [Set Up Address Autocomplete](/tools/medusa-dtc-starter/setup-address-autocomplete) documentation. `GEOLOCATION_PROVIDER` picks how a first-time visitor's country is detected, and on Vercel or Cloudflare you can leave it unset, see the [Set Up Country Detection](/tools/medusa-dtc-starter/setup-country-detection) documentation. `MEDUSA_CLOUD_S3_HOSTNAME` and `MEDUSA_CLOUD_S3_PATHNAME` are only needed when deploying to Medusa Cloud. `REVALIDATE_SECRET` has to match the same variable in `apps/backend/.env`, because the backend sends that value with every revalidation webhook. Change it before production.
+The rest already ship with working localhost defaults:
+
+| Variable | What it does |
+|---|---|
+| `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` | Publishable API key from Medusa Admin. Required |
+| `NEXT_PUBLIC_MEDUSA_BACKEND_URL` | Address the storefront calls the backend at |
+| `NEXT_PUBLIC_BASE_URL` | The storefront's own address, used for absolute URLs in metadata, the sitemap, and `llms.txt` |
+| `NEXT_PUBLIC_SITE_NAME` | Store name shown in the header, footer, and checkout, and used in the `schema.org` markup and the `llms.txt` endpoint |
+| `NEXT_PUBLIC_DEFAULT_REGION` | Country code the storefront falls back to when it cannot tell where a visitor is. The template's `en` matches no seeded region, and then the first region the backend returns wins |
+| `GEOLOCATION_PROVIDER`, `GEOLOCATION_PROVIDER_API_KEY` | How a first-time visitor's country is detected. On Vercel or Cloudflare you can leave the provider unset, see the [Set Up Country Detection](/tools/medusa-dtc-starter/setup-country-detection) documentation |
+| `GEOLOCATION_DEBUG` | Set it to `true` and every response explains which country the middleware picked and why |
+| `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER`, `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` | Address suggestions during checkout, see the [Set Up Address Autocomplete](/tools/medusa-dtc-starter/setup-address-autocomplete) documentation |
+| `NEXT_PUBLIC_STRIPE_KEY` | Stripe publishable key, needed only if you take payments through Stripe |
+| `NEXT_PUBLIC_MEDUSA_PAYMENTS_PUBLISHABLE_KEY`, `NEXT_PUBLIC_MEDUSA_PAYMENTS_ACCOUNT_ID` | Key and connected account for Medusa Cloud Payments. The key is used when `NEXT_PUBLIC_STRIPE_KEY` is empty |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID. Leave it empty and the storefront loads no analytics script at all |
+| `REVALIDATE_SECRET` | Has to match the same variable in `apps/backend/.env`, because the backend sends that value with every revalidation webhook. Change it before production |
+| `MEDUSA_CLOUD_S3_HOSTNAME`, `MEDUSA_CLOUD_S3_PATHNAME` | Allow images from the Medusa Cloud bucket. Needed only when you deploy there |
+| `NODE_ENV` | Node environment |
 
 ---
 

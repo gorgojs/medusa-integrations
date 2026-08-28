@@ -152,6 +152,8 @@ description: "Установите Medusa DTC Starter инструментом M
 
 ## Конфигурация
 
+### Бэкенд
+
 Перед запуском бэкенда нужно задать реальное значение для `DATABASE_URL` и `INTEGRATION_ENCRYPTION_KEY`:
 
 ```bash title="apps/backend/.env"
@@ -159,29 +161,54 @@ DATABASE_URL=postgres://postgres:@localhost:5432/medusa-dtc-starter
 INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
-`INTEGRATION_ENCRYPTION_KEY` шифрует секретные поля, которые хранит Модуль интеграций. Смените значение `supersecret` перед продакшеном.
+Остальные переменные в `apps/backend/.env.template` уже заданы рабочими значениями для localhost, кроме блока SMTP, в котором указан условный хост, пока вы не заполните его своим. Что делают остальные переменные:
+
+| Переменная | Что делает |
+|---|---|
+| `DATABASE_URL` | Строка подключения к PostgreSQL. Имя базы данных подставляется из `DB_NAME` |
+| `INTEGRATION_ENCRYPTION_KEY` | Шифрует секретные поля, которые хранит Модуль интеграций |
+| `JWT_SECRET`, `COOKIE_SECRET` | Секреты для подписи токенов и cookie |
+| `COOKIE_SECURE` | Задайте `true` на рабочем домене, чтобы cookie передавались только по HTTPS |
+| `STORE_CORS`, `ADMIN_CORS`, `AUTH_CORS` | Источники, которым разрешено обращаться к Store API, Admin и аутентификации. Добавьте сюда свой домен, когда перенесёте любое из приложений с localhost |
+| `REDIS_URL` | Инстанс Redis для кэша, шины событий и движка воркфлоу. В продакшене используется всегда, когда задана. `CACHE_REDIS_URL` направляет на отдельный инстанс только кэш |
+| `USE_REDIS` | Задайте `true`, чтобы использовать `REDIS_URL` и в разработке. Без неё все три работают в памяти, чего достаточно для разработки |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` | Почтовый сервер, через который уходят транзакционные письма. Пока они не заполнены, письма не отправляются |
+| `SMTP_FROM`, `SMTP_REPLY_TO` | Адрес отправителя и адрес для ответа в этих письмах |
+| `STORE_NAME`, `STORE_EMAIL`, `STORE_PHONE`, `STORE_ADDRESS` | Данные магазина, которые выводятся в шаблонах писем |
+| `STOREFRONT_DEFAULT_LOCALE` | Резервный язык письма, когда язык покупателя неизвестен |
+| `STOREFRONT_URL` | Адрес витрины для ссылок внутри писем и для вебхуков ревалидации |
+| `REVALIDATE_SECRET` | Общий секрет, который бэкенд отправляет с каждым вебхуком ревалидации. Должен совпадать со значением в витрине |
+| `S3_BUCKET`, `S3_ENDPOINT`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_REGION` | Переносят загрузку файлов в S3-совместимое хранилище. Читаются только в продакшене |
+| `MEDUSA_ADMIN_ONBOARDING_NEXTJS_DIRECTORY` | Директория витрины, на которую указывает сценарий онбординга Medusa |
+
+Смените все значения `supersecret` перед продакшеном.
+
+### Витрина
 
 Для витрины нужен как минимум публикуемый API-ключ вашего бэкенда:
 
 ```bash title="apps/storefront/.env.local"
 NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_6c3...
-NEXT_PUBLIC_MEDUSA_BACKEND_URL=http://localhost:9000
-NEXT_PUBLIC_DEFAULT_REGION=en
-NEXT_PUBLIC_BASE_URL=https://localhost:8000
-NEXT_PUBLIC_STRIPE_KEY=
-MEDUSA_CLOUD_S3_HOSTNAME=
-MEDUSA_CLOUD_S3_PATHNAME=
-NODE_ENV=development
-REVALIDATE_SECRET=supersecret
-NEXT_PUBLIC_SITE_NAME="Gorgo Medusa Store"
-NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER=dadata
-NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY=
-GEOLOCATION_PROVIDER=ip-api
-GEOLOCATION_PROVIDER_API_KEY=
-GEOLOCATION_DEBUG=false
 ```
 
-Остальные переменные уже заданы рабочими значениями по умолчанию для localhost. `NEXT_PUBLIC_SITE_NAME` задаёт название магазина в шапке, подвале и при оформлении заказа, а также попадает в разметку `schema.org` и в эндпоинт `llms.txt`. `NEXT_PUBLIC_STRIPE_KEY` нужен только если вы используете Stripe. `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` нужен только для встроенного автозаполнения адреса, читайте в документации [Настройка автозаполнения адреса](/tools/medusa-dtc-starter/setup-address-autocomplete). `GEOLOCATION_PROVIDER` выбирает способ определения страны нового посетителя, а на Vercel или Cloudflare её можно оставить незаданной, читайте в документации [Настройка определения страны](/tools/medusa-dtc-starter/setup-country-detection). `MEDUSA_CLOUD_S3_HOSTNAME` и `MEDUSA_CLOUD_S3_PATHNAME` нужны только при развёртывании на Medusa Cloud. Значение `REVALIDATE_SECRET` должно совпадать с одноимённой переменной в `apps/backend/.env`, потому что бэкенд отправляет его с каждым вебхуком ревалидации. Смените его перед продакшеном.
+Остальные переменные уже заданы рабочими значениями по умолчанию для localhost:
+
+| Переменная | Что делает |
+|---|---|
+| `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` | Публикуемый API-ключ из Medusa Admin. Обязательная |
+| `NEXT_PUBLIC_MEDUSA_BACKEND_URL` | Адрес, по которому витрина обращается к бэкенду |
+| `NEXT_PUBLIC_BASE_URL` | Собственный адрес витрины для абсолютных ссылок в метаданных, карте сайта и `llms.txt` |
+| `NEXT_PUBLIC_SITE_NAME` | Название магазина в шапке, подвале и при оформлении заказа. Оно же попадает в разметку `schema.org` и в эндпоинт `llms.txt` |
+| `NEXT_PUBLIC_DEFAULT_REGION` | Резервный код страны, когда определить местоположение посетителя не удалось. Значение `en` из шаблона не совпадает ни с одним регионом из seed-данных, и тогда выбирается первый регион, который вернёт бэкенд |
+| `GEOLOCATION_PROVIDER`, `GEOLOCATION_PROVIDER_API_KEY` | Способ определения страны нового посетителя. На Vercel или Cloudflare провайдер можно оставить незаданным, читайте в документации [Настройка определения страны](/tools/medusa-dtc-starter/setup-country-detection) |
+| `GEOLOCATION_DEBUG` | Задайте `true`, и каждый ответ будет объяснять, какую страну выбрал middleware и почему |
+| `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER`, `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` | Подсказки адреса при оформлении заказа, читайте в документации [Настройка автозаполнения адреса](/tools/medusa-dtc-starter/setup-address-autocomplete) |
+| `NEXT_PUBLIC_STRIPE_KEY` | Публикуемый ключ Stripe, нужен только если вы принимаете платежи через Stripe |
+| `NEXT_PUBLIC_MEDUSA_PAYMENTS_PUBLISHABLE_KEY`, `NEXT_PUBLIC_MEDUSA_PAYMENTS_ACCOUNT_ID` | Ключ и подключённый аккаунт Medusa Cloud Payments. Ключ используется, когда `NEXT_PUBLIC_STRIPE_KEY` пуст |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Идентификатор ресурса Google Analytics 4. Оставьте её пустой, и витрина не загрузит ни одного скрипта аналитики |
+| `REVALIDATE_SECRET` | Должен совпадать с одноимённой переменной в `apps/backend/.env`, потому что бэкенд отправляет его с каждым вебхуком ревалидации. Смените его перед продакшеном |
+| `MEDUSA_CLOUD_S3_HOSTNAME`, `MEDUSA_CLOUD_S3_PATHNAME` | Разрешают изображения из бакета Medusa Cloud. Нужны только при развёртывании там |
+| `NODE_ENV` | Окружение Node |
 
 ---
 
