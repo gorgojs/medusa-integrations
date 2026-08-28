@@ -54,10 +54,12 @@ export default async ({
   const seen = new Set<string>()
 
   for (const key of keys) {
-    const descriptor = safeResolve(container, key)?.getDescriptor?.()
+    const provider = safeResolve(container, key)
+    const descriptor = provider?.descriptor
     if (!descriptor?.requiresLicense) continue
 
-    const packageName = packageMeta[descriptor.identifier]?.name
+    const identifier = provider?.getIdentifier?.() ?? descriptor.identifier
+    const packageName = identifier ? packageMeta[identifier]?.name : undefined
     if (!packageName || seen.has(packageName)) continue
     seen.add(packageName)
 
