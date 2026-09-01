@@ -1,6 +1,7 @@
 import type { DeleteResponse } from "@medusajs/framework/types"
 import type { CatalogItem, IntegrationOverviewItem, MaskedIntegration } from "./entities"
 import type { CategoryKind, TestConnectionResult, UiDescriptor } from "../../../integration"
+import type { LicenseStateEntry } from "../../../../modules/integration/types"
 
 export interface AdminIntegrationListResponse {
   integrations: IntegrationOverviewItem[]
@@ -35,4 +36,8 @@ export interface AdminIntegrationTestResponse extends TestConnectionResult {}
 
 export interface AdminIntegrationCatalogResponse {
   integrations: CatalogItem[]
+}
+
+export interface AdminIntegrationLicenseStatusResponse {
+  packages: LicenseStateEntry[]
 }

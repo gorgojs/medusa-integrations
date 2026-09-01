@@ -98,6 +98,14 @@
       "updateFailed": "업데이트 실패"
     },
     "unknown": "알 수 없는 통합 \"{{id}}\".",
-    "back": "통합으로 돌아가기"
+    "back": "통합으로 돌아가기",
+    "license": {
+      "banner": "One or more paid integrations could not confirm their license. They keep working — update GORGO_LICENSE in this project's environment with the current key from your Gorgo account.",
+      "badgeOk": "Licensed",
+      "badgeGrace": "License expired",
+      "badgeStale": "License key out of date",
+      "badgeFailed": "Unlicensed",
+      "badgeUndetermined": "License unverified"
+    }
   }
 }

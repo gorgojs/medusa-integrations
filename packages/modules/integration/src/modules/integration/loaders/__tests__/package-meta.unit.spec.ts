@@ -67,4 +67,26 @@ describe("parsePackageMeta", () => {
     const m = parsePackageMeta({ name: "@gorgo/x", version: "1.0.0", author: "" })
     expect(m.author).toBe("Gorgo")
   })
+
+  it.each([
+    ["required", "required"],
+    ["optional", "optional"],
+  ])("reads gorgo.license %s", (value, expected) => {
+    expect(parsePackageMeta({ name: "@gorgo-store/a", gorgo: { license: value } }).license).toBe(
+      expected,
+    )
+  })
+
+  it.each([undefined, true, "yes", 1, null, { plan: "pro" }])(
+    "leaves a package unlicensed when gorgo.license is %p",
+    (value) => {
+      expect(
+        parsePackageMeta({ name: "@gorgo-store/a", gorgo: { license: value } } as any).license,
+      ).toBeNull()
+    },
+  )
+
+  it("leaves a package unlicensed when there is no gorgo block", () => {
+    expect(parsePackageMeta({ name: "@gorgo-store/a" }).license).toBeNull()
+  })
 })
