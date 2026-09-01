@@ -32,8 +32,6 @@ type DescriptorBase = {
   docsUrl?: string
   supportsMultipleInstances?: boolean
   preferredLayoutId?: IntegrationLayouts
-  /** Opt in to the license check run by the module's `checkLicenses` loader. */
-  requiresLicense?: boolean
 }
 
 type CrossSectionRules = {
