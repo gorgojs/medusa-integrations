@@ -98,6 +98,14 @@
       "updateFailed": "Gagal memperbarui"
     },
     "unknown": "Integrasi tidak dikenal \"{{id}}\".",
-    "back": "Kembali ke integrasi"
+    "back": "Kembali ke integrasi",
+    "license": {
+      "banner": "One or more paid integrations could not confirm their license. They keep working — update GORGO_LICENSE in this project's environment with the current key from your Gorgo account.",
+      "badgeOk": "Licensed",
+      "badgeGrace": "License expired",
+      "badgeStale": "License key out of date",
+      "badgeFailed": "Unlicensed",
+      "badgeUndetermined": "License unverified"
+    }
   }
 }

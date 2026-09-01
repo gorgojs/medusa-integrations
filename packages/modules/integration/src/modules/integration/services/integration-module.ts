@@ -7,7 +7,14 @@ import IntegrationProviderService from "./integration-provider"
 import type { IntegrationDescriptor, TestConnectionResult } from "../descriptor/define"
 import { introspectDescriptor, secretFieldNames, type UiDescriptor } from "../descriptor/introspect"
 import { isDescriptorComplete } from "../descriptor/validate"
-import { INTEGRATION_OPTIONS_KEY, INTEGRATION_PACKAGE_META_KEY, type IntegrationModuleOptions, type PackageMetaMap } from "../types"
+import {
+  INTEGRATION_OPTIONS_KEY,
+  INTEGRATION_PACKAGE_META_KEY,
+  type IntegrationModuleOptions,
+  type LicenseStateEntry,
+  type PackageMetaMap,
+} from "../types"
+import { licenseStates } from "../loaders/license-state"
 import { loadCatalog } from "../../../lib/catalog"
 import type { IntegrationOverviewItem, CatalogItem } from "../../../types"
 import type { CategoryKind } from "../../../types/integration"
@@ -53,6 +60,11 @@ export default class IntegrationModuleService extends MedusaService({
     this.providerService_ = deps.integrationProviderService
     this.options_ = deps[INTEGRATION_OPTIONS_KEY] ?? {}
     this.packageMeta_ = deps[INTEGRATION_PACKAGE_META_KEY] ?? {}
+  }
+
+  /** License verdict per npm package: the loader's own plus every self-reporting package. */
+  listLicenseStates(): LicenseStateEntry[] {
+    return licenseStates()
   }
 
   // ── descriptors (sourced from registered integration-providers) ──────────────
