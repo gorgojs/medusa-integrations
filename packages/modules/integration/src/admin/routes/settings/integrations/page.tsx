@@ -1,6 +1,7 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
 import { CogSixTooth, Trash } from "@medusajs/icons"
 import {
+  Alert,
   Container,
   Heading,
   Text,
@@ -22,7 +23,12 @@ import { useNavigate } from "react-router-dom"
 import { sdk } from "../../../lib/sdk"
 import { IntegrationIcon } from "../../../components/integration-icon"
 import { toModuleProviderId } from "../../../lib/provider-id"
-import type { AdminIntegrationListResponse, IntegrationOverviewItem } from "../../../../types"
+import type {
+  AdminIntegrationLicenseStatusResponse,
+  AdminIntegrationListResponse,
+  IntegrationOverviewItem,
+} from "../../../../types"
+import type { LicenseState } from "../../../../modules/integration/types"
 
 const PAGE_SIZE = 20
 const DOCS_URL = "https://docs.gorgojs.com/medusa-modules/integration"
@@ -72,8 +78,22 @@ const IntegrationCell = ({ item }: { item: IntegrationOverviewItem }) => {
   )
 }
 
-/** Status column: lifecycle badge, plus a connection badge when the provider supports testing. */
-const StatusCell = ({ item }: { item: IntegrationOverviewItem }) => {
+const LICENSE_BADGE: Record<LicenseState, { color: "green" | "orange" | "red" | "grey"; key: string }> = {
+  ok: { color: "green", key: "integration.license.badgeOk" },
+  grace: { color: "orange", key: "integration.license.badgeGrace" },
+  stale: { color: "orange", key: "integration.license.badgeStale" },
+  failed: { color: "red", key: "integration.license.badgeFailed" },
+  undetermined: { color: "grey", key: "integration.license.badgeUndetermined" },
+}
+
+/** Status column: lifecycle badge, a connection badge when supported, and the license verdict. */
+const StatusCell = ({
+  item,
+  licenseState,
+}: {
+  item: IntegrationOverviewItem
+  licenseState?: LicenseState
+}) => {
   const { t } = useTranslation()
 
   const lifecycle = !item.is_configured
@@ -92,10 +112,13 @@ const StatusCell = ({ item }: { item: IntegrationOverviewItem }) => {
         : null
     : null
 
+  const license = licenseState ? LICENSE_BADGE[licenseState] : null
+
   return (
     <div className="flex flex-col items-start gap-1">
       <StatusBadge color={lifecycle.color}>{lifecycle.label}</StatusBadge>
       {connection && <StatusBadge color={connection.color}>{connection.label}</StatusBadge>}
+      {license && <StatusBadge color={license.color}>{t(license.key)}</StatusBadge>}
     </div>
   )
 }
@@ -126,6 +149,27 @@ const IntegrationsPage = () => {
       sdk.client.fetch<AdminIntegrationListResponse>("/admin/integrations", { query: queryParams }),
     placeholderData: keepPreviousData,
   })
+
+  const { data: licenseData } = useQuery({
+    queryKey: ["integration-license-status"],
+    queryFn: () =>
+      sdk.client.fetch<AdminIntegrationLicenseStatusResponse>(
+        "/admin/integrations/license-status"
+      ),
+    staleTime: 60_000,
+  })
+
+  const licenseByIdentifier = useMemo(() => {
+    const map: Record<string, LicenseState> = {}
+    for (const entry of licenseData?.packages ?? []) {
+      for (const identifier of entry.identifiers ?? []) map[identifier] = entry.state
+    }
+    return map
+  }, [licenseData])
+
+  const licenseNeedsAttention = (licenseData?.packages ?? []).some(
+    (entry) => entry.state !== "ok"
+  )
 
   const integrations = data?.integrations ?? []
   const count = data?.count ?? 0
@@ -243,7 +287,12 @@ const IntegrationsPage = () => {
       columnHelper.display({
         id: "status",
         header: t("integration.columns.status"),
-        cell: ({ row }) => <StatusCell item={row.original} />,
+        cell: ({ row }) => (
+          <StatusCell
+            item={row.original}
+            licenseState={licenseByIdentifier[row.original.identifier]}
+          />
+        ),
       }),
       columnHelper.action({
         actions: (ctx) => buildActions(ctx.row.original),
@@ -252,7 +301,7 @@ const IntegrationsPage = () => {
     // Safe to memo on [t] only: react-query keeps each mutation's `mutate` ref stable across
     // renders (options updated internally), so the closed-over buildActions/mutations stay current.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [t]
+    [t, licenseByIdentifier]
   )
 
   const table = useDataTable({
@@ -275,6 +324,11 @@ const IntegrationsPage = () => {
 
   return (
     <Container className="divide-y p-0">
+      {licenseNeedsAttention && (
+        <div className="px-6 py-3">
+          <Alert variant="warning">{t("integration.license.banner")}</Alert>
+        </div>
+      )}
       <div className="flex items-start justify-between px-6 py-4">
         <div className="flex flex-col gap-1">
           <Heading level="h2">{t("integration.list.title")}</Heading>
