@@ -98,6 +98,14 @@
       "updateFailed": "Cập nhật thất bại"
     },
     "unknown": "Tích hợp không xác định \"{{id}}\".",
-    "back": "Quay lại tích hợp"
+    "back": "Quay lại tích hợp",
+    "license": {
+      "banner": "One or more paid integrations could not confirm their license. They keep working — update GORGO_LICENSE in this project's environment with the current key from your Gorgo account.",
+      "badgeOk": "Licensed",
+      "badgeGrace": "License expired",
+      "badgeStale": "License key out of date",
+      "badgeFailed": "Unlicensed",
+      "badgeUndetermined": "License unverified"
+    }
   }
 }

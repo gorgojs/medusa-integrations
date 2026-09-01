@@ -1,10 +1,11 @@
-import type { PackageMeta } from "../types"
+import type { PackageLicenseRequirement, PackageMeta } from "../types"
 
 type RawPkg = {
   name?: string
   version?: string
   author?: string | { name?: string; url?: string }
   homepage?: string
+  gorgo?: { license?: unknown }
 }
 
 /** Capitalize the first character ("gorgo" → "Gorgo"). */
@@ -21,6 +22,14 @@ export function authorFromScope(name: string | null | undefined): string | null 
   if (!name) return null
   const m = /^@([^/]+)\//.exec(name)
   return m ? cap(m[1]) : null
+}
+
+/**
+ * Read `gorgo.license` from a package.json. Only the two known words are accepted; anything
+ * else — including `true` — leaves the package unlicensed, so a typo cannot gate a plugin.
+ */
+export function parseLicenseRequirement(value: unknown): PackageLicenseRequirement {
+  return value === "required" || value === "optional" ? value : null
 }
 
 /**
@@ -47,5 +56,11 @@ export function parsePackageMeta(pkg: RawPkg): PackageMeta {
   if (!author) author = authorFromScope(name)
   if (!authorUrl) authorUrl = str(pkg.homepage)?.trim() || null
 
-  return { name, version, author, authorUrl }
+  return {
+    name,
+    version,
+    author,
+    authorUrl,
+    license: parseLicenseRequirement(pkg.gorgo?.license),
+  }
 }

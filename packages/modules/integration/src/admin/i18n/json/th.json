@@ -98,6 +98,14 @@
       "updateFailed": "อัปเดตไม่สำเร็จ"
     },
     "unknown": "ไม่รู้จักการเชื่อมต่อ \"{{id}}\"",
-    "back": "กลับไปที่การเชื่อมต่อ"
+    "back": "กลับไปที่การเชื่อมต่อ",
+    "license": {
+      "banner": "One or more paid integrations could not confirm their license. They keep working — update GORGO_LICENSE in this project's environment with the current key from your Gorgo account.",
+      "badgeOk": "Licensed",
+      "badgeGrace": "License expired",
+      "badgeStale": "License key out of date",
+      "badgeFailed": "Unlicensed",
+      "badgeUndetermined": "License unverified"
+    }
   }
 }
