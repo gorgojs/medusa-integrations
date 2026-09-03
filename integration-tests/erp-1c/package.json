@@ -10,9 +10,9 @@
   "dependencies": {
     "@gorgo/medusa-1c": "workspace:*",
     "@gorgo/medusa-integration": "workspace:*",
-    "@medusajs/framework": "2.19.0",
-    "@medusajs/medusa": "2.19.0",
-    "@medusajs/test-utils": "2.19.0",
+    "@medusajs/framework": "2.20.1",
+    "@medusajs/medusa": "2.20.1",
+    "@medusajs/test-utils": "2.20.1",
     "pg-god": "^1.0.12"
   },
   "devDependencies": {
