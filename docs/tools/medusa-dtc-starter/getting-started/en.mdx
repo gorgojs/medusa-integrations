@@ -79,14 +79,13 @@ Install the starter one of two ways: scaffold a new project with Medusa's own CL
    DATABASE_URL=postgres://postgres:@localhost:5432/medusa-dtc-starter
    ```
 
-3. Run the migrations, create an admin user, seed the initial data, and start the backend:
+3. Run the migrations, seed the initial data, and start the backend:
 
    <CodeTabs>
      <CodeTab label="yarn" value="yarn">
        ```bash
        cd apps/backend
        yarn medusa db:migrate
-       yarn medusa user -e admin@medusajs.com -p supersecret
        yarn seed
        yarn dev
        ```
@@ -95,7 +94,6 @@ Install the starter one of two ways: scaffold a new project with Medusa's own CL
        ```bash
        cd apps/backend
        pnpm medusa db:migrate
-       pnpm medusa user -e admin@medusajs.com -p supersecret
        pnpm seed
        pnpm dev
        ```
@@ -104,14 +102,15 @@ Install the starter one of two ways: scaffold a new project with Medusa's own CL
        ```bash
        cd apps/backend
        npx medusa db:migrate
-       npx medusa user -e admin@medusajs.com -p supersecret
        npm run seed
        npm run dev
        ```
      </CodeTab>
    </CodeTabs>
 
-4. Open the Admin dashboard at `http://localhost:9000/app`, log in, and copy the publishable API key from **Settings → Publishable API Keys**.
+4. Open the Admin dashboard at `http://localhost:9000/app`, sign in with `admin@medusajs.com` and `supersecret`, and copy the publishable API key from **Settings → Publishable API Keys**.
+
+   The seed creates that account. Change both values in `apps/backend/src/migration-scripts/data/store/json/store.json` before you seed a database anyone else can reach.
 
 5. Create the storefront's environment file with that key:
 
