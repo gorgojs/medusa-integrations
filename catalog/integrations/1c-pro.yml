@@ -1,0 +1,131 @@
+# 1C:Enterprise Pro — платная сборка обмена с 1С, автор Gorgo.
+# Полностью аннотированный шаблон — в example.yml.
+#
+# Пакет лежит в приватном реестре registry.gorgojs.com, поэтому `tier: pro`: сайт не спрашивает
+# у публичного npm ни версию, ни загрузки (их там нет), а на карточке появляются цена и кнопка
+# покупки. Цена приходит из платформы в рантайме и здесь не хранится.
+#
+# `identifier` здесь каталожный, как и у бесплатной записи `1c`: провайдер в обеих сборках
+# сообщает `static identifier = "1c"`, а различать записи каталога надо по разным именам.
+
+identifier: "1c-pro"
+npm: "@gorgo-store/medusa-erp-1c"
+category: "erp"
+author: "gorgo"
+tier: "pro"
+displayName:
+  en: "1C:Enterprise Pro"
+  ru: "1С:Предприятие Pro"
+shortDescription:
+  en: "Two-way exchange of products, stock, prices and orders with 1C:Enterprise"
+  ru: "Двусторонний обмен товарами, остатками, ценами и заказами с 1С:Предприятие"
+icon: "1c-pro.svg"
+repository: "https://github.com/gorgojs/medusa-integrations"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/1c-enterprise"
+docsSnippet:
+  en: |
+    ## Install
+
+    The package lives in the private registry. Point the scope at it and put the token in the
+    project environment, not in your shell profile:
+
+    ```.npmrc
+    @gorgo-store:registry=https://registry.gorgojs.com
+    //registry.gorgojs.com/:_authToken=${GORGO_TOKEN}
+    ```
+
+    ```bash
+    npm install @gorgo-store/medusa-erp-1c
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo-store/medusa-erp-1c/providers/integration-1c",
+                id: "1c-1",
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo-store/medusa-erp-1c",
+          options: {},
+        },
+      ],
+    })
+    ```
+
+    Put the project key into the environment and restart the server:
+
+    ```.env
+    GORGO_LICENSE=GORGO-LIC-...
+    ```
+
+    ## Set up
+
+    1. Open **Settings → Integrations → 1C:Enterprise**.
+    2. Configure integration settings.
+  ru: |
+    ## Установка
+
+    Пакет лежит в приватном реестре. Направьте скоуп на него, а токен положите в окружение
+    проекта, а не в профиль оболочки:
+
+    ```.npmrc
+    @gorgo-store:registry=https://registry.gorgojs.com
+    //registry.gorgojs.com/:_authToken=${GORGO_TOKEN}
+    ```
+
+    ```bash
+    npm install @gorgo-store/medusa-erp-1c
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo-store/medusa-erp-1c/providers/integration-1c",
+                id: "1c-1",
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo-store/medusa-erp-1c",
+          options: {},
+        },
+      ],
+    })
+    ```
+
+    Положите ключ проекта в окружение и перезапустите сервер:
+
+    ```.env
+    GORGO_LICENSE=GORGO-LIC-...
+    ```
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → 1С:Предприятие**.
+    2. Задайте параметры интеграции.

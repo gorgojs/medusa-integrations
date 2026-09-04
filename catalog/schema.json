@@ -60,6 +60,12 @@
     "supportsMultipleInstances": {
       "type": "boolean",
       "default": false
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["oss", "pro"],
+      "default": "oss",
+      "description": "Whether the package is free or sold. `pro` packages live in the private registry, so the site must not query the public npm for their version and download counts, and their card carries a price and a Buy button. Prices are never stored here: they come from the platform at runtime."
     }
   },
   "$defs": {

@@ -112,6 +112,7 @@ const flat = files
       ...(entry.docsUrl ? { docsUrl: entry.docsUrl } : {}),
       ...(entry.docsSnippet ? { docsSnippet: entry.docsSnippet } : {}),
       icon: inlineIcon(file, entry.icon, slug),
+      ...(entry.tier === "pro" ? { tier: "pro" } : {}),
       stars: null,
       downloads: null,
     }

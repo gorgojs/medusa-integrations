@@ -1,10 +1,20 @@
 import { FALLBACK_CATALOG } from "../catalog.generated"
 
 describe("FALLBACK_CATALOG (generated from catalog/integrations/*.yml)", () => {
-  it("contains all five active integrations", () => {
-    expect(FALLBACK_CATALOG).toHaveLength(5)
+  it("contains every active integration", () => {
+    expect(FALLBACK_CATALOG).toHaveLength(6)
     const ids = FALLBACK_CATALOG.map((c) => c.integrationId).sort()
-    expect(ids).toEqual(["1c", "apiship", "robokassa", "tkassa", "yookassa"])
+    expect(ids).toEqual(["1c", "1c-pro", "apiship", "robokassa", "tkassa", "yookassa"])
+  })
+
+  it("carries the paid tier and leaves free entries unmarked", () => {
+    const pro = FALLBACK_CATALOG.find((c) => c.integrationId === "1c-pro")!
+    expect(pro.tier).toBe("pro")
+    expect(pro.npm).toBe("@gorgo-store/medusa-erp-1c")
+
+    // Absence means free. Writing "oss" into every entry would put the word in front of
+    // merchants who have no paid packages at all.
+    expect(FALLBACK_CATALOG.find((c) => c.integrationId === "1c")!.tier).toBeUndefined()
   })
 
   it("flattens the 1c entry to the CatalogIntegration shape", () => {

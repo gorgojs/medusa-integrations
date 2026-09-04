@@ -60,6 +60,11 @@ export interface CatalogIntegration {
   docsSnippet?: { en?: string; ru?: string }
   /** Icon URL (relative to the Gorgo host). */
   icon: string
+  /**
+   * Whether the package is free or sold. Absent means free: the field is optional in the catalog
+   * schema, and an unknown value is dropped at the boundary rather than trusted.
+   */
+  tier?: "oss" | "pro"
   stars: number | null
   downloads: number | null
 }

@@ -57,6 +57,10 @@ const sanitizeEntry = (entry: CatalogIntegration): CatalogIntegration => {
     delete result.docsUrl
   }
 
+  if (result.tier !== undefined && result.tier !== "oss" && result.tier !== "pro") {
+    delete result.tier
+  }
+
   return result
 }
 
