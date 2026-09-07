@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Button,
@@ -57,8 +57,6 @@ export const ApishipConnectionCreateForm = ({
 
   const { mutateAsync, isPending } = useCreateApishipConnection(providerId)
 
-  const [hasRequestedPoints, setHasRequestedPoints] = useState(false)
-
   const selectedAccountConnectionId = useWatch({
     control: form.control,
     name: "account_connection_id",
@@ -72,14 +70,22 @@ export const ApishipConnectionCreateForm = ({
 
   const selectedProviderKey = selectedAccountConnection?.provider_key ?? ""
 
-  const { points, isLoading: isPointsLoading } = useApishipPoints(
-    selectedProviderKey,
-    providerId
-  )
+  const {
+    points,
+    isLoading: isPointsLoading,
+    isError: isPointsError,
+    refetch: refetchPoints,
+  } = useApishipPoints(selectedProviderKey, providerId)
+
+  useEffect(() => {
+    if (isPointsError) {
+      toast.error(t("apiship.points.loadError"))
+    }
+  }, [isPointsError, t])
+
   useEffect(() => {
     form.setValue("point_in_id", "")
     form.setValue("point_in_address", "")
-    setHasRequestedPoints(false)
   }, [selectedAccountConnectionId, form])
 
   const accountConnectionOptions = useMemo(() => {
@@ -101,19 +107,6 @@ export const ApishipConnectionCreateForm = ({
       label: point.address ?? String(point.id),
     }))
   }, [points])
-
-  const handleLoadPoints = () => {
-    if (!selectedProviderKey) {
-      toast.error(
-        t("apiship.connections.form.errors.selectAccountConnectionFirst")
-      )
-      return
-    }
-
-    form.setValue("point_in_id", "")
-    form.setValue("point_in_address", "")
-    setHasRequestedPoints(true)
-  }
 
   const handleSubmit = form.handleSubmit(async (values) => {
     try {
@@ -143,7 +136,6 @@ export const ApishipConnectionCreateForm = ({
 
       toast.success(t("apiship.connections.create.successToast"))
       form.reset()
-      setHasRequestedPoints(false)
       onClose()
     } catch (e: any) {
       toast.error(e.message ?? t("apiship.connections.create.errorToast"))
@@ -213,47 +205,61 @@ export const ApishipConnectionCreateForm = ({
                     {t("apiship.connections.form.fields.point.hint")}
                   </Form.Hint>
                   <Form.Control>
-                    <Combobox
-                      value={field.value}
-                      limit={20}
-                      onChange={(value) => {
-                        field.onChange(value)
+                    <div className="flex items-center gap-x-2">
+                      <div className="flex-1">
+                        <Combobox
+                          value={field.value}
+                          limit={20}
+                          onChange={(value) => {
+                            field.onChange(value)
 
-                        if (!value) {
-                          form.setValue("point_in_address", "")
-                          return
-                        }
+                            if (!value) {
+                              form.setValue("point_in_address", "")
+                              return
+                            }
 
-                        const selectedPoint = points.find(
-                          (point) => String(point.id) === value
-                        )
-
-                        form.setValue(
-                          "point_in_address",
-                          selectedPoint?.address ?? ""
-                        )
-                      }}
-                      options={pointOptions}
-                      placeholder={
-                        !selectedProviderKey
-                          ? t(
-                              "apiship.connections.form.fields.point.placeholderSelectAccountConnection"
+                            const selectedPoint = points.find(
+                              (point) => String(point.id) === value
                             )
-                          : isPointsLoading
-                            ? t(
-                                "apiship.connections.form.fields.point.placeholderLoading"
-                              )
-                            : pointOptions.length
+
+                            form.setValue(
+                              "point_in_address",
+                              selectedPoint?.address ?? ""
+                            )
+                          }}
+                          options={pointOptions}
+                          placeholder={
+                            !selectedProviderKey
                               ? t(
-                                  "apiship.connections.form.fields.point.placeholder"
+                                  "apiship.connections.form.fields.point.placeholderSelectAccountConnection"
                                 )
-                              : t(
-                                  "apiship.connections.form.fields.point.noResults"
-                                )
-                      }
-                      disabled={!selectedProviderKey || isPointsLoading}
-                      allowClear
-                    />
+                              : isPointsLoading
+                                ? t(
+                                    "apiship.connections.form.fields.point.placeholderLoading"
+                                  )
+                                : pointOptions.length
+                                  ? t(
+                                      "apiship.connections.form.fields.point.placeholder"
+                                    )
+                                  : t(
+                                      "apiship.connections.form.fields.point.noResults"
+                                    )
+                          }
+                          disabled={!selectedProviderKey || isPointsLoading}
+                          allowClear
+                        />
+                      </div>
+                      {isPointsError && (
+                        <Button
+                          size="small"
+                          variant="secondary"
+                          type="button"
+                          onClick={() => refetchPoints()}
+                        >
+                          {t("apiship.points.retry")}
+                        </Button>
+                      )}
+                    </div>
                   </Form.Control>
                   <Form.ErrorMessage />
                 </Form.Item>
