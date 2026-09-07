@@ -121,7 +121,8 @@
     },
     "points": {
       "loadSuccess": "Points loaded successfully.",
-      "loadError": "Failed to load points."
+      "loadError": "Failed to load points.",
+      "retry": "Try again"
     }
   }
 }

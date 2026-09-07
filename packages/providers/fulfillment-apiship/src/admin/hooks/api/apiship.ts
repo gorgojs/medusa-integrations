@@ -87,6 +87,7 @@ export const useApishipPoints = (
       }),
     // enabled: !!city && !!providerKey,
     enabled: !!providerKey,
+    retry: false,
   })
   return {
     points: query.data?.points ?? [],
