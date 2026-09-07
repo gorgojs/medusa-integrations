@@ -169,6 +169,15 @@ export function mapToApishipOrderRequest(
       "The `providerConnectId` parameter is missing or incorrectly specified."
     )
   }
+  const pointInId = providerConnection?.point_in_id
+    ? Number(providerConnection.point_in_id)
+    : undefined
+  if (pickupType === 2 && !pointInId) {
+    throw new MedusaError(
+      MedusaError.Types.INVALID_DATA,
+      "The `pointInId` parameter is missing or incorrectly specified."
+    )
+  }
   const apishipOrder: OrderRequest = {
     order: {
       providerKey,
@@ -178,6 +187,7 @@ export function mapToApishipOrderRequest(
       deliveryType,
       clientNumber: order.shipping_address?.customer_id || `medusa-${Date.now()}`,
       weight: totalWeight,
+      ...(pickupType === 2 ? { pointInId } : {}),
       ...(deliveryType === 2 ? { pointOutId } : {}),
     },
     cost,
