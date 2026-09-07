@@ -129,6 +129,48 @@ describe("ApishipBase.createFulfillment", () => {
     expect(orderRequest.order.pointOutId).toBe(42)
   })
 
+  it("passes pickupType=2 option: includes pointInId from the connection in order request", async () => {
+    const fulfillmentFromPoint = {
+      ...baseFulfillment,
+      shipping_option_id: "so-point-in",
+    }
+    const shippingOptionPointIn = {
+      id: "so-point-in",
+      data: { deliveryType: 1, pickupType: 2 },
+    }
+    const optionsWithPointIn = makeApishipOptions()
+    optionsWithPointIn.connections = [
+      {
+        id: "conn-1",
+        name: "CDEK Test",
+        provider_key: "cdek",
+        provider_connect_id: "connect-123",
+        is_enabled: true,
+        point_in_id: "77",
+      },
+    ]
+    service = makeProvider(optionsWithPointIn, apishipClient)
+    ;(getShippingOptionWorkflow as unknown as jest.Mock).mockReturnValue({
+      run: jest.fn().mockResolvedValue({ result: shippingOptionPointIn }),
+    })
+    setupWorkflowMocks()
+    ;(getShippingOptionWorkflow as unknown as jest.Mock).mockReturnValue({
+      run: jest.fn().mockResolvedValue({ result: shippingOptionPointIn }),
+    })
+    apishipClient.ordersApi.addOrder.mockResolvedValue({ data: { orderId: 2222 } })
+    apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
+      data: { order: { providerNumber: "X2", trackingUrl: "" } },
+    })
+    apishipClient.orderDocsApi.getLabels.mockResolvedValue({
+      data: { url: "https://api.apiship.ru/labels/2222.pdf" },
+    })
+
+    await service.createFulfillment(baseData, [], makeOrder(), fulfillmentFromPoint)
+
+    const orderRequest = apishipClient.ordersApi.addOrder.mock.calls[0][0].orderRequest
+    expect(orderRequest.order.pointInId).toBe(77)
+  })
+
   it("wraps addOrder errors with context message", async () => {
     setupWorkflowMocks()
     apishipClient.ordersApi.addOrder.mockRejectedValue(new Error("Connection refused"))
