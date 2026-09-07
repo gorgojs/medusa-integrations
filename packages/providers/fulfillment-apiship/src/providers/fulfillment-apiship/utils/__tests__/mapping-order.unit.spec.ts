@@ -248,6 +248,50 @@ describe("mapToApishipOrderRequest", () => {
     })
   })
 
+  describe("pointInId", () => {
+    it("includes pointInId from the connection when pickupType=2", () => {
+      const options = makeApishipOptions()
+      options.connections = [
+        {
+          id: "c1",
+          name: "n",
+          provider_key: "cdek",
+          provider_connect_id: "p1",
+          is_enabled: true,
+          point_in_id: "77",
+        },
+      ]
+      const result = callMapping({ options, pickupType: 2 })
+      expect((result.order as any).pointInId).toBe(77)
+    })
+
+    it("omits pointInId when pickupType=1", () => {
+      const options = makeApishipOptions()
+      options.connections = [
+        {
+          id: "c1",
+          name: "n",
+          provider_key: "cdek",
+          provider_connect_id: "p1",
+          is_enabled: true,
+          point_in_id: "77",
+        },
+      ]
+      const result = callMapping({ options, pickupType: 1 })
+      expect((result.order as any).pointInId).toBeUndefined()
+    })
+
+    it("throws MedusaError when pickupType=2 but the connection has no point_in_id", () => {
+      const options = makeApishipOptions()
+      options.connections = [
+        { id: "c1", name: "n", provider_key: "cdek", provider_connect_id: "p1", is_enabled: true },
+      ]
+      expect(() => callMapping({ options, pickupType: 2 })).toThrow(
+        /pointInId/
+      )
+    })
+  })
+
   describe("mapItemVatRateToEnum", () => {
     it.each([0, 5, 7, 10, 20])("maps valid VAT rate %i to itself", (rate) => {
       const order = makeOrder({
