@@ -2,6 +2,8 @@ import {
   APISHIP_DEFAULTS,
   assembleApishipOptions,
   assertApishipToken,
+  assertUniqueApishipConnectionForLocation,
+  findApishipConnection,
 } from "../apiship-options"
 import ApishipIntegrationProvider from "../../providers/integration-apiship/services/apiship-integration"
 
@@ -54,6 +56,25 @@ describe("assembleApishipOptions", () => {
       })
 
       expect(result.connections.map((c) => c.id)).toEqual(["c1"])
+    })
+
+    it("passes stock_location_id through", () => {
+      const result = assembleApishipOptions({
+        token: "tok",
+        settings: {
+          connections: [
+            {
+              id: "c1",
+              provider_key: "cdek",
+              provider_connect_id: "p1",
+              is_enabled: true,
+              stock_location_id: "loc-01",
+            },
+          ],
+        },
+      })
+
+      expect(result.connections[0].stock_location_id).toBe("loc-01")
     })
 
     it("keeps a nameless connection — `name` is optional on create", () => {
@@ -174,5 +195,166 @@ describe("assertApishipToken", () => {
 
   it("passes for a real token", () => {
     expect(() => assertApishipToken({ token: "tok" })).not.toThrow()
+  })
+})
+
+describe("findApishipConnection", () => {
+  const globalConnection = {
+    id: "c-global",
+    provider_key: "cdek",
+    provider_connect_id: "p-global",
+    is_enabled: true,
+  }
+  const locationConnection = {
+    id: "c-loc-01",
+    provider_key: "cdek",
+    provider_connect_id: "p-loc-01",
+    stock_location_id: "loc-01",
+    is_enabled: true,
+  }
+  const otherProviderConnection = {
+    id: "c-boxberry",
+    provider_key: "boxberry",
+    provider_connect_id: "p-boxberry",
+    is_enabled: true,
+  }
+  const disabledLocationConnection = {
+    id: "c-loc-02-disabled",
+    provider_key: "cdek",
+    provider_connect_id: "p-loc-02",
+    stock_location_id: "loc-02",
+    is_enabled: false,
+  }
+
+  it("prefers the connection scoped to the given stock location", () => {
+    const result = findApishipConnection(
+      [globalConnection, locationConnection],
+      "cdek",
+      "loc-01"
+    )
+
+    expect(result?.id).toBe("c-loc-01")
+  })
+
+  it("falls back to the connection with no stock_location_id when the location doesn't match any", () => {
+    const result = findApishipConnection(
+      [globalConnection, locationConnection],
+      "cdek",
+      "loc-99"
+    )
+
+    expect(result?.id).toBe("c-global")
+  })
+
+  it("falls back to the global connection when no stock location is given at all", () => {
+    const result = findApishipConnection([globalConnection, locationConnection], "cdek")
+
+    expect(result?.id).toBe("c-global")
+  })
+
+  it("ignores connections for a different provider_key", () => {
+    const result = findApishipConnection(
+      [otherProviderConnection, locationConnection],
+      "cdek",
+      "loc-01"
+    )
+
+    expect(result?.id).toBe("c-loc-01")
+  })
+
+  it("ignores disabled connections even when their stock_location_id matches", () => {
+    const result = findApishipConnection([disabledLocationConnection], "cdek", "loc-02")
+
+    expect(result).toBeUndefined()
+  })
+
+  it("returns undefined when nothing matches", () => {
+    expect(findApishipConnection([otherProviderConnection], "cdek", "loc-01")).toBeUndefined()
+    expect(findApishipConnection(undefined, "cdek", "loc-01")).toBeUndefined()
+  })
+})
+
+describe("assertUniqueApishipConnectionForLocation", () => {
+  const enabledGlobal = {
+    id: "c1",
+    provider_key: "cdek",
+    provider_connect_id: "p1",
+    is_enabled: true,
+  }
+  const enabledForLocOne = {
+    id: "c2",
+    provider_key: "cdek",
+    provider_connect_id: "p2",
+    stock_location_id: "loc-01",
+    is_enabled: true,
+  }
+
+  it("does nothing when the candidate itself is not enabled", () => {
+    expect(() =>
+      assertUniqueApishipConnectionForLocation([enabledGlobal], {
+        provider_key: "cdek",
+        stock_location_id: undefined,
+        is_enabled: false,
+      })
+    ).not.toThrow()
+  })
+
+  it("allows several enabled 'any warehouse' connections for the same provider — no location to disambiguate by", () => {
+    expect(() =>
+      assertUniqueApishipConnectionForLocation([enabledGlobal], {
+        provider_key: "cdek",
+        stock_location_id: undefined,
+        is_enabled: true,
+      })
+    ).not.toThrow()
+  })
+
+  it("throws when another enabled connection already covers the same provider + stock location", () => {
+    expect(() =>
+      assertUniqueApishipConnectionForLocation([enabledForLocOne], {
+        provider_key: "cdek",
+        stock_location_id: "loc-01",
+        is_enabled: true,
+      })
+    ).toThrow(/already exists/)
+  })
+
+  it("does not throw for a different stock location", () => {
+    expect(() =>
+      assertUniqueApishipConnectionForLocation([enabledForLocOne], {
+        provider_key: "cdek",
+        stock_location_id: "loc-02",
+        is_enabled: true,
+      })
+    ).not.toThrow()
+  })
+
+  it("does not throw for a different provider_key even at the same stock location", () => {
+    expect(() =>
+      assertUniqueApishipConnectionForLocation([enabledForLocOne], {
+        provider_key: "boxberry",
+        stock_location_id: "loc-01",
+        is_enabled: true,
+      })
+    ).not.toThrow()
+  })
+
+  it("does not throw against a disabled sibling", () => {
+    expect(() =>
+      assertUniqueApishipConnectionForLocation(
+        [{ ...enabledForLocOne, is_enabled: false }],
+        { provider_key: "cdek", stock_location_id: "loc-01", is_enabled: true }
+      )
+    ).not.toThrow()
+  })
+
+  it("excludes the connection's own id — updating it does not conflict with itself", () => {
+    expect(() =>
+      assertUniqueApishipConnectionForLocation(
+        [enabledForLocOne],
+        { provider_key: "cdek", stock_location_id: "loc-01", is_enabled: true },
+        "c2"
+      )
+    ).not.toThrow()
   })
 })
