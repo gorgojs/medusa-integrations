@@ -67,8 +67,10 @@
       "fields": {
         "deliveryService": "Delivery Service",
         "accountConnection": "Connection",
-        "pickupPoint": "Pickup Point",
+        "pickupPoint": "Drop-off Point",
         "pointId": "Point ID",
+        "stockLocation": "Stock Location",
+        "anyStockLocation": "Any location",
         "enabled": "Enabled"
       },
       "create": {
@@ -103,19 +105,26 @@
             "noResults": "No drop-off points found",
             "noResultsHint": "Try loading drop-off points again."
           },
+          "stockLocation": {
+            "label": "Stock location",
+            "hint": "Which orders this connection applies to — by the warehouse they ship from. Leave unset to use this connection as the fallback for any warehouse without a dedicated connection for this delivery service.",
+            "placeholder": "Select a stock location",
+            "any": "Any location"
+          },
           "enabled": {
             "label": "Enabled",
             "hint": "Specify whether the delivery service is enabled."
           }
         },
         "hints": {
-          "singleEnabledPerProvider": "Only one delivery service can be enabled per connection. All other delivery services for this connection will be automatically disabled."
+          "uniqueEnabledPerProviderAndLocation": "Only one connection can be enabled per delivery service and specific stock location. When no location is set (\"Any location\"), several such connections can be enabled at once — which one applies to a given fulfillment is picked automatically."
         },
         "errors": {
           "accountConnectionRequired": "Connection is required.",
           "pointRequired": "Point is required.",
           "accountConnectionNotFound": "Connection not found.",
-          "selectAccountConnectionFirst": "Select connection first."
+          "selectAccountConnectionFirst": "Select connection first.",
+          "duplicateForLocation": "An enabled connection already exists for this delivery service and stock location. Choose a different location or disable the existing connection first."
         }
       }
     },
