@@ -6,6 +6,7 @@ export interface AdminCreateApishipConnection {
   provider_connect_id: string
   point_in_id?: string
   point_in_address?: string
+  stock_location_id?: string
   is_enabled: boolean
 }
 
@@ -15,6 +16,7 @@ export interface AdminUpdateApishipConnection {
   provider_connect_id?: string
   point_in_id?: string
   point_in_address?: string
+  stock_location_id?: string
   is_enabled?: boolean
 }
 

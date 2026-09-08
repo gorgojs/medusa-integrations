@@ -53,10 +53,52 @@ function normalizeConnections(
         provider_connect_id: connection.provider_connect_id,
         point_in_id: connection.point_in_id,
         point_in_address: connection.point_in_address,
+        stock_location_id: connection.stock_location_id,
         is_enabled: connection.is_enabled,
       },
     ]
   })
+}
+
+export function findApishipConnection(
+  connections: ApishipConnectionDTO[] | undefined,
+  providerKey: string,
+  stockLocationId?: string
+): ApishipConnectionDTO | undefined {
+  const candidates = (connections ?? []).filter(
+    (connection) => connection.provider_key === providerKey && connection.is_enabled
+  )
+
+  return (
+    (stockLocationId &&
+      candidates.find((connection) => connection.stock_location_id === stockLocationId)) ||
+    candidates.find((connection) => !connection.stock_location_id)
+  )
+}
+
+export function assertUniqueApishipConnectionForLocation(
+  connections: ApishipConnectionDTO[],
+  candidate: Pick<ApishipConnectionDTO, "provider_key" | "stock_location_id" | "is_enabled">,
+  excludeId?: string
+): void {
+  if (!candidate.is_enabled || !candidate.stock_location_id) {
+    return
+  }
+
+  const conflict = connections.some(
+    (connection) =>
+      connection.id !== excludeId &&
+      connection.is_enabled &&
+      connection.provider_key === candidate.provider_key &&
+      connection.stock_location_id === candidate.stock_location_id
+  )
+
+  if (conflict) {
+    throw new MedusaError(
+      MedusaError.Types.INVALID_DATA,
+      `An enabled connection for provider "${candidate.provider_key}" and this stock location already exists.`
+    )
+  }
 }
 
 /**

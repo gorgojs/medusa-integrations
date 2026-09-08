@@ -1,6 +1,7 @@
 import { Tooltip, createDataTableColumnHelper } from "@medusajs/ui"
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
+import type { HttpTypes } from "@medusajs/framework/types"
 import { DataTableStatusCell } from "../../../../../common/data-table-status-cell"
 import { ApishipConnectionActions } from "./apiship-connection-actions"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
@@ -10,6 +11,7 @@ const columnHelper =
 
 export const useApishipConnectionsTableColumns = (
   providers: ApishipHttpTypes.AdminApishipProvider[],
+  stockLocations: HttpTypes.AdminStockLocation[],
   providerId?: string
 ) => {
   const { t } = useTranslation()
@@ -38,6 +40,22 @@ export const useApishipConnectionsTableColumns = (
           return (
             <span className="text-ui-fg-subtle text-small truncate">
               {value || "-"}
+            </span>
+          )
+        },
+      }),
+      columnHelper.accessor("stock_location_id", {
+        header: t("apiship.connections.fields.stockLocation"),
+        cell: ({ getValue }) => {
+          const stockLocationId = getValue()
+          const label = stockLocationId
+            ? stockLocations.find((location) => location.id === stockLocationId)?.name ??
+              stockLocationId
+            : t("apiship.connections.fields.anyStockLocation")
+
+          return (
+            <span className="text-ui-fg-subtle text-small truncate">
+              {label}
             </span>
           )
         },
@@ -99,6 +117,6 @@ export const useApishipConnectionsTableColumns = (
         size: 48,
       }),
     ],
-    [providers, providerId, t]
+    [providers, stockLocations, providerId, t]
   )
 }

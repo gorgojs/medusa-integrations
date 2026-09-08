@@ -21,7 +21,9 @@ import {
   useApishipPoints,
   useCreateApishipConnection,
 } from "../../../../../../hooks/api/apiship"
+import { useStockLocations } from "../../../../../../hooks/api/stock-locations"
 import { Combobox } from "../../../../../common/combobox"
+import { translateConnectionError } from "../../../../../../lib/translate-connection-error"
 
 type ApishipConnectionCreateFormProps = {
   onClose: () => void
@@ -30,10 +32,13 @@ type ApishipConnectionCreateFormProps = {
   providerId?: string
 }
 
+const ANY_STOCK_LOCATION = "__any__"
+
 const ApishipConnectionCreateSchema = z.object({
   account_connection_id: z.string().min(1, "Connection is required"),
   point_in_id: z.string().optional(),
   point_in_address: z.string().optional(),
+  stock_location_id: z.string().optional(),
   is_enabled: z.boolean().default(true),
 })
 
@@ -50,12 +55,14 @@ export const ApishipConnectionCreateForm = ({
       account_connection_id: "",
       point_in_id: "",
       point_in_address: "",
+      stock_location_id: ANY_STOCK_LOCATION,
       is_enabled: true,
     },
     resolver: zodResolver(ApishipConnectionCreateSchema),
   })
 
   const { mutateAsync, isPending } = useCreateApishipConnection(providerId)
+  const { stockLocations } = useStockLocations()
 
   const selectedAccountConnectionId = useWatch({
     control: form.control,
@@ -108,6 +115,19 @@ export const ApishipConnectionCreateForm = ({
     }))
   }, [points])
 
+  const stockLocationOptions = useMemo(() => {
+    return [
+      {
+        value: ANY_STOCK_LOCATION,
+        label: t("apiship.connections.form.fields.stockLocation.any"),
+      },
+      ...stockLocations.map((location) => ({
+        value: location.id,
+        label: location.name,
+      })),
+    ]
+  }, [stockLocations, t])
+
   const handleSubmit = form.handleSubmit(async (values) => {
     try {
       const accountConnection = accountConnections.find(
@@ -131,6 +151,9 @@ export const ApishipConnectionCreateForm = ({
               point_in_address: values.point_in_address,
             }
           : {}),
+        ...(values.stock_location_id && values.stock_location_id !== ANY_STOCK_LOCATION
+          ? { stock_location_id: values.stock_location_id }
+          : {}),
         is_enabled: values.is_enabled,
       })
 
@@ -138,7 +161,7 @@ export const ApishipConnectionCreateForm = ({
       form.reset()
       onClose()
     } catch (e: any) {
-      toast.error(e.message ?? t("apiship.connections.create.errorToast"))
+      toast.error(translateConnectionError(e, t, "apiship.connections.create.errorToast"))
     }
   })
 
@@ -181,6 +204,43 @@ export const ApishipConnectionCreateForm = ({
                       </Select.Trigger>
                       <Select.Content>
                         {accountConnectionOptions.map((option) => (
+                          <Select.Item key={option.value} value={option.value}>
+                            {option.label}
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select>
+                  </Form.Control>
+                  <Form.ErrorMessage />
+                </Form.Item>
+              )}
+            />
+
+            <Form.Field
+              control={form.control}
+              name="stock_location_id"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label optional>
+                    {t("apiship.connections.form.fields.stockLocation.label")}
+                  </Form.Label>
+                  <Form.Hint>
+                    {t("apiship.connections.form.fields.stockLocation.hint")}
+                  </Form.Hint>
+                  <Form.Control>
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) => field.onChange(value)}
+                    >
+                      <Select.Trigger>
+                        <Select.Value
+                          placeholder={t(
+                            "apiship.connections.form.fields.stockLocation.placeholder"
+                          )}
+                        />
+                      </Select.Trigger>
+                      <Select.Content>
+                        {stockLocationOptions.map((option) => (
                           <Select.Item key={option.value} value={option.value}>
                             {option.label}
                           </Select.Item>
@@ -293,7 +353,7 @@ export const ApishipConnectionCreateForm = ({
             />
 
             <InlineTip label={t("general.tip")}>
-              {t("apiship.connections.form.hints.singleEnabledPerProvider")}
+              {t("apiship.connections.form.hints.uniqueEnabledPerProviderAndLocation")}
             </InlineTip>
           </div>
         </FocusModal.Body>

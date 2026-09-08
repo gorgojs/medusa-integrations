@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
 import { useApishipConnectionsTableColumns } from "./use-apiship-connections-table-columns"
 import { Header } from "../../../../../common/header"
+import { useStockLocations } from "../../../../../../hooks/api/stock-locations"
 
 type ApishipConnectionsSectionProps = {
   apishipOptions?: ApishipHttpTypes.AdminApishipOptions
@@ -46,9 +47,12 @@ export const ApishipConnectionsSection = ({
       provider_connect_id: connection?.provider_connect_id ?? "",
       point_in_id: connection?.point_in_id ?? "",
       point_in_address: connection?.point_in_address ?? "",
+      stock_location_id: connection?.stock_location_id ?? "",
       is_enabled: Boolean(connection?.is_enabled),
     }))
   }, [apishipOptions])
+
+  const { stockLocations } = useStockLocations()
 
   const paginatedConnections = useMemo(() => {
     return apishipConnections.slice(
@@ -57,7 +61,7 @@ export const ApishipConnectionsSection = ({
     )
   }, [apishipConnections, pagination])
 
-  const columns = useApishipConnectionsTableColumns(providers, providerId)
+  const columns = useApishipConnectionsTableColumns(providers, stockLocations, providerId)
 
   const commands = useMemo(() => {
     return [

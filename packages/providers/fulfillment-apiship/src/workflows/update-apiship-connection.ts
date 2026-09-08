@@ -7,6 +7,7 @@ import type {
 } from "../types/apiship"
 import { requireApishipIntegration } from "../lib/integration"
 import { DEFAULT_APISHIP_PROVIDER_ID } from "../lib/provider-id"
+import { assertUniqueApishipConnectionForLocation } from "../lib/apiship-options"
 
 type ComposeUpdatedApishipConnectionStepInput = UpdateApishipConnectionWorkflowInput
 
@@ -37,6 +38,12 @@ const composeUpdatedApishipConnectionStep = createStep(
       ...input.update,
     }
 
+    assertUniqueApishipConnectionForLocation(
+      existingConnections,
+      updatedConnection,
+      input.id
+    )
+
     const updatedConnections = [...existingConnections]
     updatedConnections[connectionIndex] = updatedConnection
 
@@ -59,6 +66,7 @@ export type UpdateApishipConnectionWorkflowInput = {
     provider_connect_id?: string
     point_in_id?: string
     point_in_address?: string
+    stock_location_id?: string
     is_enabled?: boolean
   }
 }

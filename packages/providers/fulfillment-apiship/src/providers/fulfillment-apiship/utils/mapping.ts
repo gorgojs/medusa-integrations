@@ -13,6 +13,7 @@ import {
   type ItemCostVatEnum,
 } from "../../../lib/apiship-client"
 import { ApishipOptionsDTO } from "../../../types/apiship"
+import { findApishipConnection } from "../../../lib/apiship-options"
 import { MedusaError } from "@medusajs/framework/utils"
 
 type OrderItem = NonNullable<FulfillmentOrderDTO["items"]>[number] & {
@@ -158,9 +159,10 @@ export function mapToApishipOrderRequest(
       : {}),
   }
 
-  const providerConnection = apishipOptions.connections?.find(
-    (connection) =>
-      connection.provider_key === providerKey && connection.is_enabled
+  const providerConnection = findApishipConnection(
+    apishipOptions.connections,
+    providerKey,
+    stockLocation.id
   )
   const providerConnectId = providerConnection?.provider_connect_id
   if (!providerConnectId) {

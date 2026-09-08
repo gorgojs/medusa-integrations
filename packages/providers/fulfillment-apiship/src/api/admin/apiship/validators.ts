@@ -27,6 +27,7 @@ export const AdminCreateApishipConnection = z.object({
   provider_connect_id: z.string(),
   point_in_id: z.string().optional(),
   point_in_address: z.string().optional(),
+  stock_location_id: z.string().optional(),
   is_enabled: z.boolean(),
 })
 
@@ -37,6 +38,7 @@ export const AdminUpdateApishipConnection = z.object({
   provider_connect_id: z.string().optional(),
   point_in_id: z.string().optional(),
   point_in_address: z.string().optional(),
+  stock_location_id: z.string().optional(),
   is_enabled: z.boolean().optional(),
 })
 
@@ -50,6 +52,7 @@ export const AdminUpdateApishipOptions = z.strictObject({
     provider_connect_id: z.string(),
     point_in_id: z.string().optional(),
     point_in_address: z.string().optional(),
+    stock_location_id: z.string().optional(),
     is_enabled: z.boolean(),
   })).optional(),
 })
