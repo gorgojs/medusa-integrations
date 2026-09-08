@@ -1,9 +1,10 @@
 import { createStep, createWorkflow, StepResponse, WorkflowResponse, transform } from "@medusajs/framework/workflows-sdk"
 import { upsertIntegrationWorkflow } from "@gorgo/medusa-integration"
 import { ulid } from "ulid"
-import type { StoredApishipOptions } from "../types/apiship"
+import type { ApishipConnectionDTO, StoredApishipOptions } from "../types/apiship"
 import { requireApishipIntegration } from "../lib/integration"
 import { DEFAULT_APISHIP_PROVIDER_ID } from "../lib/provider-id"
+import { assertUniqueApishipConnectionForLocation } from "../lib/apiship-options"
 import type { AdminCreateApishipConnection } from "../types/http"
 
 export type ComposeCreatedApishipConnectionsStepInput = CreateApishipConnectionsWorkflowInput
@@ -14,12 +15,17 @@ const composeCreatedApishipConnectionsStep = createStep(
     const { service, providerId } = requireApishipIntegration(container, provider_id)
     const existing = (await service.getStoredValues(providerId)) as StoredApishipOptions
 
-    const existingConnections = existing.settings?.connections ?? []
+    const existingConnections = (existing.settings?.connections ?? []) as ApishipConnectionDTO[]
 
-    const createdConnections = connections.map((connection) => ({
-      id: `ascon_${ulid()}`,
-      ...connection
-    }))
+    const createdConnections: ApishipConnectionDTO[] = []
+    for (const connection of connections) {
+      const created = { id: `ascon_${ulid()}`, ...connection }
+      assertUniqueApishipConnectionForLocation(
+        [...existingConnections, ...createdConnections],
+        created
+      )
+      createdConnections.push(created)
+    }
 
     return new StepResponse({
       settings: {
