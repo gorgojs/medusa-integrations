@@ -248,6 +248,57 @@ describe("mapToApishipOrderRequest", () => {
     })
   })
 
+  describe("connection selection by stock location", () => {
+    const globalConnection = {
+      id: "c-global",
+      name: "n",
+      provider_key: "cdek",
+      provider_connect_id: "p-global",
+      is_enabled: true,
+    }
+    const loc01Connection = {
+      id: "c-loc-01",
+      name: "n",
+      provider_key: "cdek",
+      provider_connect_id: "p-loc-01",
+      stock_location_id: "loc-01",
+      is_enabled: true,
+    }
+    const loc02Connection = {
+      id: "c-loc-02",
+      name: "n",
+      provider_key: "cdek",
+      provider_connect_id: "p-loc-02",
+      stock_location_id: "loc-02",
+      is_enabled: true,
+    }
+
+    it("prefers the connection scoped to the fulfillment's stock location", () => {
+      const options = makeApishipOptions()
+      options.connections = [globalConnection, loc01Connection]
+
+      const result = callMapping({ options })
+
+      expect(result.order!.providerConnectId).toBe("p-loc-01")
+    })
+
+    it("falls back to the location-less connection when this location has no dedicated one", () => {
+      const options = makeApishipOptions()
+      options.connections = [globalConnection, loc02Connection]
+
+      const result = callMapping({ options })
+
+      expect(result.order!.providerConnectId).toBe("p-global")
+    })
+
+    it("throws when only a different location's connection exists and there is no fallback", () => {
+      const options = makeApishipOptions()
+      options.connections = [loc02Connection]
+
+      expect(() => callMapping({ options })).toThrow(/providerConnectId/)
+    })
+  })
+
   describe("pointInId", () => {
     it("includes pointInId from the connection when pickupType=2", () => {
       const options = makeApishipOptions()
