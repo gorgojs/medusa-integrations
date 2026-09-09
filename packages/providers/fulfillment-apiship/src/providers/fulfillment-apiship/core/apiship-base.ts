@@ -230,26 +230,62 @@ class ApishipBase extends AbstractFulfillmentProviderService {
       pickupType,
       pointOutId
     )
+
+    const idempotencyKey = `apiship:fulfillment:${this.instanceId_ ?? "default"}:${hashObject({
+      orderId: order?.id,
+      itemIds: (items ?? []).map((item) => item.line_item_id).filter(Boolean).sort(),
+      providerKey,
+      tariffId,
+      deliveryType,
+      pickupType,
+      pointOutId,
+    })}`
+    const { result: cachedOrder } = await getCalculationWorkflow().run({
+      input: { key: idempotencyKey },
+    })
+
+    let orderId: number | undefined
     try {
-      const response = await apishipClient.ordersApi.addOrder({
-        orderRequest: apishipOrder,
-      })
-      const orderId = response.data.orderId
-      const labels = await this.getShipmentDocuments({ orderId })
-      const result: CreateFulfillmentResult = {
-        data: {
-          orderId,
-          order: apishipOrder,
-        },
-        labels,
+      if (cachedOrder) {
+        this.logger_.debug(`There is a record with a key: ${idempotencyKey} in cache`)
+        orderId = (cachedOrder as any).orderId
+      } else {
+        const response = await apishipClient.ordersApi.addOrder({
+          orderRequest: apishipOrder,
+        })
+        orderId = response.data.orderId
+        await saveCalculationWorkflow().run({
+          input: {
+            key: idempotencyKey,
+            data: { orderId, order: apishipOrder },
+            ttl: 60 * 60 * 24,
+          },
+        })
       }
-      this.logger_.debug(
-        `Apiship.createFulfillment output: ${JSON.stringify(result, null, 2)}`
-      )
-      return result
     } catch (e: any) {
       throw this.buildError("An error occurred in createFulfillment", e)
     }
+
+    let labels: any[] = []
+    try {
+      labels = await this.getShipmentDocuments({ orderId })
+    } catch (e: any) {
+      this.logger_.error(
+        `Apiship.createFulfillment: order ${orderId} was created, but fetching shipment documents failed: ${e?.message ?? e}`
+      )
+    }
+
+    const result: CreateFulfillmentResult = {
+      data: {
+        orderId,
+        order: apishipOrder,
+      },
+      labels,
+    }
+    this.logger_.debug(
+      `Apiship.createFulfillment output: ${JSON.stringify(result, null, 2)}`
+    )
+    return result
   }
 
   /**
