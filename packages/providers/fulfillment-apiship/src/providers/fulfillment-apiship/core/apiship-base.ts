@@ -24,6 +24,7 @@ import {
   assertApishipToken,
   assembleApishipOptions,
 } from "../../../lib/apiship-options"
+import { fetchShipmentDocuments } from "../../../lib/shipment-documents"
 import { ProviderKeys } from "../../../types"
 import type {
   ApishipOptionsDTO,
@@ -279,6 +280,7 @@ class ApishipBase extends AbstractFulfillmentProviderService {
       data: {
         orderId,
         order: apishipOrder,
+        instanceId: this.instanceId_,
       },
       labels,
     }
@@ -345,93 +347,6 @@ class ApishipBase extends AbstractFulfillmentProviderService {
   }
 
   /**
-   * Execute API call with retries.
-   */
-  private async executeWithRetry<T>({
-    apiCall,
-    isReady,
-    maxAttempts = 10,
-    baseDelay = 500,
-    label,
-  }: {
-    apiCall: () => Promise<T>
-    isReady: (res: T) => boolean
-    maxAttempts?: number
-    baseDelay?: number
-    label?: string
-  }): Promise<T> {
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      try {
-        const response = await apiCall()
-        if (isReady(response)) return response
-        this.logger_.debug(`${label}: not ready (attempt ${attempt}/${maxAttempts})`)
-      } catch (err: any) {
-        this.logger_.debug(`${label}: error on attempt ${attempt}: ${err?.message ?? err}`)
-      }
-      if (attempt < maxAttempts) {
-        const delay =
-          baseDelay *
-          Math.pow(2, attempt - 1) *
-          (0.5 + Math.random() * 0.5)
-        await this.sleep(delay)
-      }
-    }
-
-    throw new Error(`${label}: data not ready after ${maxAttempts} attempts`)
-  }
-
-  /**
-   * Retrieve an order information.
-   */
-  private async waitForOrderInfo(
-    orderId: number,
-    apishipClient?: ApishipClient
-  ): Promise<{ trackingNumber: string; trackingUrl: string }> {
-    this.logger_.debug(`Apiship.waitForOrderInfo input: ${orderId}`)
-    const client = apishipClient ?? await this.getApishipClient_()
-
-    const response = await this.executeWithRetry({
-      apiCall: () => client.ordersApi.getOrderInfo({ orderId }),
-      isReady: (response: any) => Boolean(response?.data?.order?.providerNumber),
-      label: `orderInfo:${orderId}`,
-    })
-    const order = (response as any).data.order
-    const result = {
-      trackingNumber: String(order.providerNumber),
-      trackingUrl: String(order.trackingUrl ?? ""),
-    }
-    this.logger_.debug(`Apiship.waitForOrderInfo output: ${JSON.stringify(result, null, 2)}`)
-
-    return result
-  }
-
-  /**
-   * Retrieve a labels for orders.
-   */
-  private async waitForLabelUrl(
-    orderId: number,
-    apishipClient?: ApishipClient
-  ): Promise<string> {
-    this.logger_.debug(`Apiship.waitForLabelUrl input: ${orderId}`)
-    const client = apishipClient ?? await this.getApishipClient_()
-
-    const response = await this.executeWithRetry({
-      apiCall: () => client.orderDocsApi.getLabels({
-        labelsRequest: {
-          orderIds: [orderId],
-          format: "pdf"
-        }
-      }),
-      isReady: (response: any) => Boolean(response?.data?.url),
-      label: `labels:${orderId}`,
-    })
-    const result = String((response as any).data.url)
-    this.logger_.debug(`Apiship.waitForLabelUrl output: ${result}`)
-
-    return result
-  }
-
-  /**
    * Retrieve a trcking information for orders.
    */
   async getShipmentDocuments(data: Record<string, unknown>): Promise<never[]> {
@@ -440,18 +355,12 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     const orderId = data?.orderId as number
     try {
       const apishipClient = await this.getApishipClient_()
-      const { trackingNumber, trackingUrl } = await this.waitForOrderInfo(
+      const labels = await fetchShipmentDocuments({
+        apishipClient,
         orderId,
-        apishipClient
-      )
-      const labelUrl = await this.waitForLabelUrl(orderId, apishipClient)
-      const labels = [
-        {
-          tracking_number: String(trackingNumber),
-          tracking_url: trackingUrl || "",
-          label_url: labelUrl || "",
-        },
-      ]
+        logger: this.logger_,
+        sleep: (ms) => this.sleep(ms),
+      })
       this.logger_.debug(`Apiship.getShipmentDocuments output: ${JSON.stringify(labels, null, 2)}`)
       return labels as unknown as never[]
     } catch (e: any) {
