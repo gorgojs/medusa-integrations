@@ -7,15 +7,17 @@ import { Modules } from "@medusajs/framework/utils"
 export type SaveCalculationStepInput = {
   key: string
   data: Record<string, unknown>
+  ttl?: number
 }
 
 export const saveCalculationStep = createStep(
   "save-calculation-step",
-  async ({key, data}: SaveCalculationStepInput, { container }) => {
+  async ({key, data, ttl}: SaveCalculationStepInput, { container }) => {
     const cachingModuleService = container.resolve(Modules.CACHE)
     await cachingModuleService.set(
       key,
-      data
+      data,
+      ttl
     )
   }
 )
@@ -23,6 +25,7 @@ export const saveCalculationStep = createStep(
 type SaveCalculationWorkflowInput = {
   key: string
   data: Record<string, unknown>
+  ttl?: number
 }
 
 export const saveCalculationWorkflow = createWorkflow(
