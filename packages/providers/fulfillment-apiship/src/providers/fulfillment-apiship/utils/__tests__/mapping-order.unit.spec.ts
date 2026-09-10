@@ -368,4 +368,36 @@ describe("mapToApishipOrderRequest", () => {
       expect(result.places![0].items![0].costVat).toBe(-1)
     })
   })
+
+  describe("allowed tariff ids enforcement", () => {
+    it("throws when the tariff is not in the connection's door allow-list (deliveryType=1)", () => {
+      const options = makeApishipOptions()
+      options.connections[0].allowed_door_tariff_ids = ["999"]
+
+      expect(() => callMapping({ options, tariffId: 123, deliveryType: 1 })).toThrow(
+        /Tariff "123" is not allowed/
+      )
+    })
+
+    it("passes when the tariff is in the connection's door allow-list (deliveryType=1)", () => {
+      const options = makeApishipOptions()
+      options.connections[0].allowed_door_tariff_ids = ["123"]
+
+      expect(() => callMapping({ options, tariffId: 123, deliveryType: 1 })).not.toThrow()
+    })
+
+    it("checks the point allow-list (not the door one) when deliveryType=2", () => {
+      const options = makeApishipOptions()
+      options.connections[0].allowed_door_tariff_ids = ["999"] // would reject 123 if checked
+      options.connections[0].allowed_point_tariff_ids = ["123"]
+
+      expect(() => callMapping({ options, tariffId: 123, deliveryType: 2 })).not.toThrow()
+    })
+
+    it("allows any tariff when the connection has no allow-list", () => {
+      const options = makeApishipOptions()
+
+      expect(() => callMapping({ options, tariffId: 123 })).not.toThrow()
+    })
+  })
 })
