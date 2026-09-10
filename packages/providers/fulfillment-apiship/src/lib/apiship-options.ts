@@ -104,7 +104,7 @@ export function assertUniqueApishipConnectionForLocation(
   candidate: Pick<ApishipConnectionDTO, "provider_key" | "stock_location_id" | "is_enabled">,
   excludeId?: string
 ): void {
-  if (!candidate.is_enabled || !candidate.stock_location_id) {
+  if (!candidate.is_enabled) {
     return
   }
 
@@ -113,13 +113,15 @@ export function assertUniqueApishipConnectionForLocation(
       connection.id !== excludeId &&
       connection.is_enabled &&
       connection.provider_key === candidate.provider_key &&
-      connection.stock_location_id === candidate.stock_location_id
+      (connection.stock_location_id ?? undefined) === (candidate.stock_location_id ?? undefined)
   )
 
   if (conflict) {
     throw new MedusaError(
       MedusaError.Types.INVALID_DATA,
-      `An enabled connection for provider "${candidate.provider_key}" and this stock location already exists.`
+      candidate.stock_location_id
+        ? `An enabled connection for provider "${candidate.provider_key}" and this stock location already exists.`
+        : `An enabled connection for provider "${candidate.provider_key}" without a specific stock location already exists.`
     )
   }
 }
