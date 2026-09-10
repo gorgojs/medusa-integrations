@@ -174,6 +174,39 @@ describe("ApishipBase.calculatePrice", () => {
     expect(capturedKey).toMatch(/apiship_doortodoor$/)
   })
 
+  it("excludes tariffs not in the connection's allow-list from the cheapest computation and result.data", async () => {
+    const options = makeApishipOptions()
+    options.connections[0].allowed_door_tariff_ids = ["1"]
+    service = makeProvider(options, apishipClient)
+    setupWorkflowMocks()
+    apishipClient.calculatorApi.getCalculator.mockResolvedValue({
+      data: mockCalculatorResponse,
+    })
+
+    const result = await service.calculatePrice(baseOptionData, {}, baseContext)
+
+    // tariffId 2 (cost 300) is excluded, so the cheapest remaining is tariffId 1 (cost 500)
+    expect(result.calculated_amount).toBe(500)
+    expect(result.data.deliveryToDoor[0].tariffs.map((t: any) => t.tariffId)).toEqual([1])
+  })
+
+  it("ignores a previously chosen tariff that is no longer in the allow-list, and recomputes the cheapest allowed one", async () => {
+    const options = makeApishipOptions()
+    options.connections[0].allowed_door_tariff_ids = ["2"]
+    service = makeProvider(options, apishipClient)
+    setupWorkflowMocks(mockCalculatorResponse)
+
+    const dataWithStaleTariff = {
+      apishipData: {
+        tariff: { tariffId: 1, providerKey: "cdek", deliveryCost: 999 },
+      },
+    }
+
+    const result = await service.calculatePrice(baseOptionData, dataWithStaleTariff, baseContext)
+
+    expect(result.calculated_amount).toBe(300)
+  })
+
   it("wraps calculator API errors with context message", async () => {
     setupWorkflowMocks()
     apishipClient.calculatorApi.getCalculator.mockRejectedValue(

@@ -4,6 +4,7 @@ import {
   assertApishipToken,
   assertUniqueApishipConnectionForLocation,
   findApishipConnection,
+  isTariffAllowed,
 } from "../apiship-options"
 import ApishipIntegrationProvider from "../../providers/integration-apiship/services/apiship-integration"
 
@@ -75,6 +76,27 @@ describe("assembleApishipOptions", () => {
       })
 
       expect(result.connections[0].stock_location_id).toBe("loc-01")
+    })
+
+    it("passes allowed_door_tariff_ids and allowed_point_tariff_ids through independently", () => {
+      const result = assembleApishipOptions({
+        token: "tok",
+        settings: {
+          connections: [
+            {
+              id: "c1",
+              provider_key: "cdek",
+              provider_connect_id: "p1",
+              is_enabled: true,
+              allowed_door_tariff_ids: ["101", "202"],
+              allowed_point_tariff_ids: ["303"],
+            },
+          ],
+        },
+      })
+
+      expect(result.connections[0].allowed_door_tariff_ids).toEqual(["101", "202"])
+      expect(result.connections[0].allowed_point_tariff_ids).toEqual(["303"])
     })
 
     it("keeps a nameless connection — `name` is optional on create", () => {
@@ -356,5 +378,43 @@ describe("assertUniqueApishipConnectionForLocation", () => {
         "c2"
       )
     ).not.toThrow()
+  })
+})
+
+describe("isTariffAllowed", () => {
+  it("allows any tariff when neither allow-list is set", () => {
+    expect(isTariffAllowed(undefined, 123, 1)).toBe(true)
+    expect(isTariffAllowed({ allowed_door_tariff_ids: undefined }, 123, 1)).toBe(true)
+  })
+
+  it("allows any tariff when the relevant allow-list is empty", () => {
+    expect(isTariffAllowed({ allowed_door_tariff_ids: [] }, 123, 1)).toBe(true)
+    expect(isTariffAllowed({ allowed_point_tariff_ids: [] }, 123, 2)).toBe(true)
+  })
+
+  it("checks allowed_door_tariff_ids for deliveryType=1", () => {
+    expect(isTariffAllowed({ allowed_door_tariff_ids: ["123", "456"] }, 123, 1)).toBe(true)
+    expect(isTariffAllowed({ allowed_door_tariff_ids: ["123", "456"] }, "123", 1)).toBe(true)
+    expect(isTariffAllowed({ allowed_door_tariff_ids: ["123", "456"] }, 789, 1)).toBe(false)
+  })
+
+  it("checks allowed_point_tariff_ids for deliveryType=2", () => {
+    expect(isTariffAllowed({ allowed_point_tariff_ids: ["123", "456"] }, 123, 2)).toBe(true)
+    expect(isTariffAllowed({ allowed_point_tariff_ids: ["123", "456"] }, 789, 2)).toBe(false)
+  })
+
+  it("keeps the two lists independent — a door restriction doesn't affect point, and vice versa", () => {
+    const connection = {
+      allowed_door_tariff_ids: ["1"],
+      allowed_point_tariff_ids: ["2"],
+    }
+
+    // tariff "1" is allowed for door but not for point
+    expect(isTariffAllowed(connection, 1, 1)).toBe(true)
+    expect(isTariffAllowed(connection, 1, 2)).toBe(false)
+
+    // tariff "2" is allowed for point but not for door
+    expect(isTariffAllowed(connection, 2, 2)).toBe(true)
+    expect(isTariffAllowed(connection, 2, 1)).toBe(false)
   })
 })
