@@ -19,10 +19,12 @@ import { KeyboundForm } from "../../../../../utilities/keybound-form"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
 import {
   useApishipPoints,
+  useApishipTariffs,
   useCreateApishipConnection,
 } from "../../../../../../hooks/api/apiship"
 import { useStockLocations } from "../../../../../../hooks/api/stock-locations"
 import { Combobox } from "../../../../../common/combobox"
+import { ApishipAllowedTariffsField } from "../../../../../common/apiship-allowed-tariffs-field"
 import { translateConnectionError } from "../../../../../../lib/translate-connection-error"
 
 type ApishipConnectionCreateFormProps = {
@@ -39,6 +41,8 @@ const ApishipConnectionCreateSchema = z.object({
   point_in_id: z.string().optional(),
   point_in_address: z.string().optional(),
   stock_location_id: z.string().optional(),
+  allowed_door_tariff_ids: z.array(z.string()).optional(),
+  allowed_point_tariff_ids: z.array(z.string()).optional(),
   is_enabled: z.boolean().default(true),
 })
 
@@ -56,6 +60,8 @@ export const ApishipConnectionCreateForm = ({
       point_in_id: "",
       point_in_address: "",
       stock_location_id: ANY_STOCK_LOCATION,
+      allowed_door_tariff_ids: [],
+      allowed_point_tariff_ids: [],
       is_enabled: true,
     },
     resolver: zodResolver(ApishipConnectionCreateSchema),
@@ -68,6 +74,14 @@ export const ApishipConnectionCreateForm = ({
     control: form.control,
     name: "account_connection_id",
   })
+  const allowedDoorTariffIds = useWatch({
+    control: form.control,
+    name: "allowed_door_tariff_ids",
+  }) ?? []
+  const allowedPointTariffIds = useWatch({
+    control: form.control,
+    name: "allowed_point_tariff_ids",
+  }) ?? []
 
   const selectedAccountConnection = useMemo(() => {
     return accountConnections.find(
@@ -84,6 +98,13 @@ export const ApishipConnectionCreateForm = ({
     refetch: refetchPoints,
   } = useApishipPoints(selectedProviderKey, providerId)
 
+  const {
+    tariffs,
+    isLoading: isTariffsLoading,
+    isError: isTariffsError,
+    refetch: refetchTariffs,
+  } = useApishipTariffs(selectedProviderKey, providerId)
+
   useEffect(() => {
     if (isPointsError) {
       toast.error(t("apiship.points.loadError"))
@@ -91,8 +112,16 @@ export const ApishipConnectionCreateForm = ({
   }, [isPointsError, t])
 
   useEffect(() => {
+    if (isTariffsError) {
+      toast.error(t("apiship.tariffs.loadError"))
+    }
+  }, [isTariffsError, t])
+
+  useEffect(() => {
     form.setValue("point_in_id", "")
     form.setValue("point_in_address", "")
+    form.setValue("allowed_door_tariff_ids", [])
+    form.setValue("allowed_point_tariff_ids", [])
   }, [selectedAccountConnectionId, form])
 
   const accountConnectionOptions = useMemo(() => {
@@ -153,6 +182,12 @@ export const ApishipConnectionCreateForm = ({
           : {}),
         ...(values.stock_location_id && values.stock_location_id !== ANY_STOCK_LOCATION
           ? { stock_location_id: values.stock_location_id }
+          : {}),
+        ...(values.allowed_door_tariff_ids?.length
+          ? { allowed_door_tariff_ids: values.allowed_door_tariff_ids }
+          : {}),
+        ...(values.allowed_point_tariff_ids?.length
+          ? { allowed_point_tariff_ids: values.allowed_point_tariff_ids }
           : {}),
         is_enabled: values.is_enabled,
       })
@@ -326,6 +361,35 @@ export const ApishipConnectionCreateForm = ({
               )}
             />
             
+            <Form.Field
+              control={form.control}
+              name="allowed_door_tariff_ids"
+              render={() => (
+                <Form.Item>
+                  <Form.Label optional>
+                    {t("apiship.connections.form.fields.allowedTariffs.label")}
+                  </Form.Label>
+                  <Form.Hint>
+                    {t("apiship.connections.form.fields.allowedTariffs.hint")}
+                  </Form.Hint>
+                  <Form.Control>
+                    <ApishipAllowedTariffsField
+                      tariffs={tariffs}
+                      doorValue={allowedDoorTariffIds}
+                      onDoorChange={(value) => form.setValue("allowed_door_tariff_ids", value)}
+                      pointValue={allowedPointTariffIds}
+                      onPointChange={(value) => form.setValue("allowed_point_tariff_ids", value)}
+                      isLoading={isTariffsLoading}
+                      isError={isTariffsError}
+                      onRetry={() => refetchTariffs()}
+                      disabled={!selectedProviderKey}
+                      t={t}
+                    />
+                  </Form.Control>
+                </Form.Item>
+              )}
+            />
+
             <Form.Field
               control={form.control}
               name="is_enabled"

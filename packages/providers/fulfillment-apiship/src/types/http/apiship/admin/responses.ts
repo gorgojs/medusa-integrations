@@ -4,7 +4,8 @@ import {
   AdminApishipConnection,
   AdminApishipAccountConnection,
   AdminApishipProvider,
-  AdminApishipPoint
+  AdminApishipPoint,
+  AdminApishipTariff
 } from "./entities"
 
 export interface AdminApishipConnectionResponse {
@@ -43,4 +44,8 @@ export type AdminApishipOptionsResponse = {
 
 export type AdminApishipPointListResponse = {
   points: AdminApishipPoint[]
+}
+
+export type AdminApishipTariffListResponse = {
+  tariffs: AdminApishipTariff[]
 }
