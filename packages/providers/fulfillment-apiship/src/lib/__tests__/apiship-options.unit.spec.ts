@@ -321,14 +321,14 @@ describe("assertUniqueApishipConnectionForLocation", () => {
     ).not.toThrow()
   })
 
-  it("allows several enabled 'any warehouse' connections for the same provider — no location to disambiguate by", () => {
+  it("throws when another enabled connection already covers the same provider + no specific location", () => {
     expect(() =>
       assertUniqueApishipConnectionForLocation([enabledGlobal], {
         provider_key: "cdek",
         stock_location_id: undefined,
         is_enabled: true,
       })
-    ).not.toThrow()
+    ).toThrow(/already exists/)
   })
 
   it("throws when another enabled connection already covers the same provider + stock location", () => {
@@ -376,6 +376,25 @@ describe("assertUniqueApishipConnectionForLocation", () => {
         [enabledForLocOne],
         { provider_key: "cdek", stock_location_id: "loc-01", is_enabled: true },
         "c2"
+      )
+    ).not.toThrow()
+  })
+
+  it("does not throw against a disabled sibling with no specific location either", () => {
+    expect(() =>
+      assertUniqueApishipConnectionForLocation(
+        [{ ...enabledGlobal, is_enabled: false }],
+        { provider_key: "cdek", stock_location_id: undefined, is_enabled: true }
+      )
+    ).not.toThrow()
+  })
+
+  it("excludes the connection's own id for the no-location case too", () => {
+    expect(() =>
+      assertUniqueApishipConnectionForLocation(
+        [enabledGlobal],
+        { provider_key: "cdek", stock_location_id: undefined, is_enabled: true },
+        "c1"
       )
     ).not.toThrow()
   })
