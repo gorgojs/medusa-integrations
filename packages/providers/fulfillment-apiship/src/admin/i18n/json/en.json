@@ -72,7 +72,7 @@
         "stockLocation": "Stock Location",
         "anyStockLocation": "Any location",
         "allowedTariffs": "Tariffs",
-        "allowedTariffsCount": "Allowed: {{count}}",
+        "allowedTariffsCount": "{{count}}",
         "allTariffsAllowed": "All tariffs",
         "enabled": "Enabled"
       },
@@ -129,7 +129,7 @@
           }
         },
         "hints": {
-          "uniqueEnabledPerProviderAndLocation": "Only one connection can be enabled per delivery service and specific stock location. When no location is set (\"Any location\"), several such connections can be enabled at once — which one applies to a given fulfillment is picked automatically."
+          "uniqueEnabledPerProviderAndLocation": "Only one connection can be enabled per delivery service and stock location (including the \"Any location\" option). Add separate connections for different warehouses to use different drop-off points."
         },
         "errors": {
           "accountConnectionRequired": "Connection is required.",
