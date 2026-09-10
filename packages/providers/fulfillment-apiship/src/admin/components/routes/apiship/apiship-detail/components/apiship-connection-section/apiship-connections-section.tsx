@@ -48,6 +48,8 @@ export const ApishipConnectionsSection = ({
       point_in_id: connection?.point_in_id ?? "",
       point_in_address: connection?.point_in_address ?? "",
       stock_location_id: connection?.stock_location_id ?? "",
+      allowed_door_tariff_ids: connection?.allowed_door_tariff_ids ?? [],
+      allowed_point_tariff_ids: connection?.allowed_point_tariff_ids ?? [],
       is_enabled: Boolean(connection?.is_enabled),
     }))
   }, [apishipOptions])

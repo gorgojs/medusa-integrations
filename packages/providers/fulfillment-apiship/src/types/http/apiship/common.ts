@@ -21,6 +21,8 @@ export interface BaseApishipConnection {
   point_in_id?: string
   point_in_address?: string
   stock_location_id?: string
+  allowed_door_tariff_ids?: string[]
+  allowed_point_tariff_ids?: string[]
   is_enabled: boolean
 }
 

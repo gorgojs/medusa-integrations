@@ -20,6 +20,12 @@ export const AdminGetApishipPointsParams = createFindParams({
   })
 )
 
+export type AdminGetApishipTariffsParamsType = z.infer<typeof AdminGetApishipTariffsParams>
+export const AdminGetApishipTariffsParams = z.object({
+  provider_key: z.string(),
+  provider_id: z.string().optional(),
+})
+
 export type AdminCreateApishipConnectionType = z.infer<typeof AdminCreateApishipConnection>
 export const AdminCreateApishipConnection = z.object({
   name: z.string().optional(),
@@ -28,6 +34,8 @@ export const AdminCreateApishipConnection = z.object({
   point_in_id: z.string().optional(),
   point_in_address: z.string().optional(),
   stock_location_id: z.string().optional(),
+  allowed_door_tariff_ids: z.array(z.string()).optional(),
+  allowed_point_tariff_ids: z.array(z.string()).optional(),
   is_enabled: z.boolean(),
 })
 
@@ -39,6 +47,8 @@ export const AdminUpdateApishipConnection = z.object({
   point_in_id: z.string().optional(),
   point_in_address: z.string().optional(),
   stock_location_id: z.string().optional(),
+  allowed_door_tariff_ids: z.array(z.string()).optional(),
+  allowed_point_tariff_ids: z.array(z.string()).optional(),
   is_enabled: z.boolean().optional(),
 })
 
@@ -53,6 +63,8 @@ export const AdminUpdateApishipOptions = z.strictObject({
     point_in_id: z.string().optional(),
     point_in_address: z.string().optional(),
     stock_location_id: z.string().optional(),
+    allowed_door_tariff_ids: z.array(z.string()).optional(),
+    allowed_point_tariff_ids: z.array(z.string()).optional(),
     is_enabled: z.boolean(),
   })).optional(),
 })

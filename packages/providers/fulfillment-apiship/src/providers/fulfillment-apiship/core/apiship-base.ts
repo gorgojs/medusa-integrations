@@ -23,6 +23,8 @@ import {
 import {
   assertApishipToken,
   assembleApishipOptions,
+  findApishipConnection,
+  isTariffAllowed,
 } from "../../../lib/apiship-options"
 import { fetchShipmentDocuments } from "../../../lib/shipment-documents"
 import { ProviderKeys } from "../../../types"
@@ -32,6 +34,7 @@ import type {
 } from "../../../types/apiship"
 import {
   getCheapestTariff,
+  filterAllowedTariffs,
   mapToApishipOrderRequest,
   mapToApishipCalculatorRequest,
   hashObject
@@ -161,21 +164,35 @@ class ApishipBase extends AbstractFulfillmentProviderService {
       }
     }
 
+    const allowedTariffs = filterAllowedTariffs(
+      tariffs,
+      apishipOptions.connections,
+      context.from_location?.id
+    )
+
     const apishipData = (data as any)?.apishipData
     const chosenTariff = apishipData?.tariff
     let price: number | null = null
 
-    if (chosenTariff && typeof chosenTariff.deliveryCost === "number") {
+    if (
+      chosenTariff &&
+      typeof chosenTariff.deliveryCost === "number" &&
+      isTariffAllowed(
+        findApishipConnection(apishipOptions.connections, chosenTariff.providerKey, context.from_location?.id),
+        chosenTariff.tariffId,
+        optionData.deliveryType as number
+      )
+    ) {
       price = chosenTariff.deliveryCost
     }
     if (price === null) {
-      const cheapestTariff = getCheapestTariff(tariffs, optionData.deliveryType as number)
+      const cheapestTariff = getCheapestTariff(allowedTariffs, optionData.deliveryType as number)
       price = cheapestTariff.deliveryCost as number
     }
     const result = {
       calculated_amount: price,
       is_calculated_price_tax_inclusive: true,
-      data: tariffs,
+      data: allowedTariffs,
     }
 
     this.logger_.debug(`Apiship.calculatePrice output: ${JSON.stringify(result, null, 2)}`)

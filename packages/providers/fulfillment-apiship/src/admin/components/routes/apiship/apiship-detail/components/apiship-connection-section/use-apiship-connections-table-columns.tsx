@@ -87,6 +87,28 @@ export const useApishipConnectionsTableColumns = (
           )
         },
       }),
+      columnHelper.display({
+        id: "allowedTariffs",
+        header: t("apiship.connections.fields.allowedTariffs"),
+        cell: ({ row }) => {
+          const doorIds = row.original.allowed_door_tariff_ids
+          const pointIds = row.original.allowed_point_tariff_ids
+
+          const doorLabel = doorIds?.length
+            ? t("apiship.connections.fields.allowedTariffsCount", { count: doorIds.length })
+            : t("apiship.connections.fields.allTariffsAllowed")
+          const pointLabel = pointIds?.length
+            ? t("apiship.connections.fields.allowedTariffsCount", { count: pointIds.length })
+            : t("apiship.connections.fields.allTariffsAllowed")
+
+          return (
+            <span className="text-ui-fg-subtle text-small truncate">
+              {t("apiship.connections.form.fields.allowedTariffs.courier")}: {doorLabel} ·{" "}
+              {t("apiship.connections.form.fields.allowedTariffs.pvz")}: {pointLabel}
+            </span>
+          )
+        },
+      }),
       columnHelper.accessor("is_enabled", {
         header: t("fields.status"),
         cell: ({ getValue }) => {
