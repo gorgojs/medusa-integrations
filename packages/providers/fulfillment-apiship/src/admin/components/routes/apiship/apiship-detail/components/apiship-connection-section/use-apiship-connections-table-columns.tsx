@@ -102,10 +102,14 @@ export const useApishipConnectionsTableColumns = (
             : t("apiship.connections.fields.allTariffsAllowed")
 
           return (
-            <span className="text-ui-fg-subtle text-small truncate">
-              {t("apiship.connections.form.fields.allowedTariffs.courier")}: {doorLabel} ·{" "}
-              {t("apiship.connections.form.fields.allowedTariffs.pvz")}: {pointLabel}
-            </span>
+            <div className="flex flex-col">
+              <span className="text-ui-fg-subtle text-small truncate">
+                {t("apiship.connections.form.fields.allowedTariffs.pvz")}: {pointLabel}
+              </span>
+              <span className="text-ui-fg-subtle text-small truncate">
+                {t("apiship.connections.form.fields.allowedTariffs.courier")}: {doorLabel}
+              </span>
+            </div>
           )
         },
       }),
