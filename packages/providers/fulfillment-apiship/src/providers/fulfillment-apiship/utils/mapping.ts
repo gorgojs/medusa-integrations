@@ -13,7 +13,7 @@ import {
   type ItemCostVatEnum,
 } from "../../../lib/apiship-client"
 import { ApishipOptionsDTO } from "../../../types/apiship"
-import { findApishipConnection } from "../../../lib/apiship-options"
+import { findApishipConnection, isTariffAllowed } from "../../../lib/apiship-options"
 import { MedusaError } from "@medusajs/framework/utils"
 
 type OrderItem = NonNullable<FulfillmentOrderDTO["items"]>[number] & {
@@ -178,6 +178,12 @@ export function mapToApishipOrderRequest(
     throw new MedusaError(
       MedusaError.Types.INVALID_DATA,
       "The `pointInId` parameter is missing or incorrectly specified."
+    )
+  }
+  if (!isTariffAllowed(providerConnection, tariffId, deliveryType)) {
+    throw new MedusaError(
+      MedusaError.Types.INVALID_DATA,
+      `Tariff "${tariffId}" is not allowed for provider "${providerKey}".`
     )
   }
   const apishipOrder: OrderRequest = {

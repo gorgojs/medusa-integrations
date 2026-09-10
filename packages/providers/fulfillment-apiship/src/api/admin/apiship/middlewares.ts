@@ -2,6 +2,7 @@ import { validateAndTransformBody, validateAndTransformQuery } from "@medusajs/f
 import { MiddlewareRoute } from "@medusajs/framework/http"
 import {
   AdminGetApishipPointsParams,
+  AdminGetApishipTariffsParams,
   AdminCreateApishipConnection,
   AdminUpdateApishipConnection,
   AdminUpdateApishipOptions,
@@ -20,6 +21,13 @@ export const adminApishipRoutesMiddlewares: MiddlewareRoute[] = [
         AdminGetApishipPointsParams,
         queryConfig.listTransformQueryConfig
       )
+    ],
+  },
+  {
+    matcher: "/admin/apiship/tariffs",
+    method: "GET",
+    middlewares: [
+      validateAndTransformQuery(AdminGetApishipTariffsParams, providerIdQueryConfig)
     ],
   },
   {

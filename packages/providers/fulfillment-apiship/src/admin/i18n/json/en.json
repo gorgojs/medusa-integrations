@@ -71,6 +71,9 @@
         "pointId": "Point ID",
         "stockLocation": "Stock Location",
         "anyStockLocation": "Any location",
+        "allowedTariffs": "Tariffs",
+        "allowedTariffsCount": "Allowed: {{count}}",
+        "allTariffsAllowed": "All tariffs",
         "enabled": "Enabled"
       },
       "create": {
@@ -111,6 +114,15 @@
             "placeholder": "Select a stock location",
             "any": "Any location"
           },
+          "allowedTariffs": {
+            "label": "Allowed tariffs",
+            "hint": "Leave unselected to allow every tariff of this delivery service. Otherwise, only the checked tariffs will be offered to customers.",
+            "placeholderSelectAccountConnection": "Select a connection first",
+            "placeholderLoading": "Loading tariffs...",
+            "noResults": "No tariffs found",
+            "courier": "Courier",
+            "pvz": "Pickup point"
+          },
           "enabled": {
             "label": "Enabled",
             "hint": "Specify whether the delivery service is enabled."
@@ -131,6 +143,10 @@
     "points": {
       "loadSuccess": "Points loaded successfully.",
       "loadError": "Failed to load points.",
+      "retry": "Try again"
+    },
+    "tariffs": {
+      "loadError": "Failed to load tariffs.",
       "retry": "Try again"
     }
   }

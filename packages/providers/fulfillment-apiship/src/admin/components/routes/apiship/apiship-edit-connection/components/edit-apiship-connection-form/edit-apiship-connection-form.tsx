@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button, Drawer, Select, Switch, toast } from "@medusajs/ui"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
 
@@ -10,10 +10,12 @@ import { KeyboundForm } from "../../../../../utilities/keybound-form"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
 import {
   useApishipPoints,
+  useApishipTariffs,
   useUpdateApishipConnection,
 } from "../../../../../../hooks/api/apiship"
 import { useStockLocations } from "../../../../../../hooks/api/stock-locations"
 import { Combobox } from "../../../../../common/combobox"
+import { ApishipAllowedTariffsField } from "../../../../../common/apiship-allowed-tariffs-field"
 import { translateConnectionError } from "../../../../../../lib/translate-connection-error"
 
 type EditApishipConnectionFormProps = {
@@ -28,6 +30,8 @@ const EditApishipConnectionSchema = z.object({
   point_in_id: z.string().optional(),
   point_in_address: z.string().optional(),
   stock_location_id: z.string().optional(),
+  allowed_door_tariff_ids: z.array(z.string()).optional(),
+  allowed_point_tariff_ids: z.array(z.string()).optional(),
   is_enabled: z.boolean().default(true),
 })
 
@@ -42,7 +46,9 @@ export const EditApishipConnectionForm = ({
     defaultValues: {
       point_in_id: apishipConnection?.point_in_id ?? "",
       point_in_address: apishipConnection?.point_in_address ?? "",
-      stock_location_id: apishipConnection?.stock_location_id ?? ANY_STOCK_LOCATION,
+      stock_location_id: apishipConnection?.stock_location_id || ANY_STOCK_LOCATION,
+      allowed_door_tariff_ids: apishipConnection?.allowed_door_tariff_ids ?? [],
+      allowed_point_tariff_ids: apishipConnection?.allowed_point_tariff_ids ?? [],
       is_enabled: apishipConnection?.is_enabled ?? true,
     },
     resolver: zodResolver(EditApishipConnectionSchema),
@@ -56,12 +62,28 @@ export const EditApishipConnectionForm = ({
 
   const providerKey = apishipConnection?.provider_key ?? ""
 
+  const allowedDoorTariffIds = useWatch({
+    control: form.control,
+    name: "allowed_door_tariff_ids",
+  }) ?? []
+  const allowedPointTariffIds = useWatch({
+    control: form.control,
+    name: "allowed_point_tariff_ids",
+  }) ?? []
+
   const {
     points,
     isLoading: isPointsLoading,
     isError: isPointsError,
     refetch: refetchPoints,
   } = useApishipPoints(providerKey, providerId)
+
+  const {
+    tariffs,
+    isLoading: isTariffsLoading,
+    isError: isTariffsError,
+    refetch: refetchTariffs,
+  } = useApishipTariffs(providerKey, providerId)
 
   useEffect(() => {
     if (isPointsError) {
@@ -70,10 +92,18 @@ export const EditApishipConnectionForm = ({
   }, [isPointsError, t])
 
   useEffect(() => {
+    if (isTariffsError) {
+      toast.error(t("apiship.tariffs.loadError"))
+    }
+  }, [isTariffsError, t])
+
+  useEffect(() => {
     form.reset({
       point_in_id: apishipConnection?.point_in_id ?? "",
       point_in_address: apishipConnection?.point_in_address ?? "",
-      stock_location_id: apishipConnection?.stock_location_id ?? ANY_STOCK_LOCATION,
+      stock_location_id: apishipConnection?.stock_location_id || ANY_STOCK_LOCATION,
+      allowed_door_tariff_ids: apishipConnection?.allowed_door_tariff_ids ?? [],
+      allowed_point_tariff_ids: apishipConnection?.allowed_point_tariff_ids ?? [],
       is_enabled: apishipConnection?.is_enabled ?? true,
     })
   }, [apishipConnection, form])
@@ -108,12 +138,14 @@ export const EditApishipConnectionForm = ({
 
     try {
       await mutateAsync({
-        point_in_id: values.point_in_id || undefined,
-        point_in_address: values.point_in_id ? values.point_in_address : undefined,
+        point_in_id: values.point_in_id || "",
+        point_in_address: values.point_in_id ? values.point_in_address || "" : "",
         stock_location_id:
           values.stock_location_id && values.stock_location_id !== ANY_STOCK_LOCATION
             ? values.stock_location_id
-            : undefined,
+            : "",
+        allowed_door_tariff_ids: values.allowed_door_tariff_ids ?? [],
+        allowed_point_tariff_ids: values.allowed_point_tariff_ids ?? [],
         is_enabled: values.is_enabled,
       })
 
@@ -234,6 +266,34 @@ export const EditApishipConnectionForm = ({
                     </div>
                   </Form.Control>
                   <Form.ErrorMessage />
+                </Form.Item>
+              )}
+            />
+
+            <Form.Field
+              control={form.control}
+              name="allowed_door_tariff_ids"
+              render={() => (
+                <Form.Item>
+                  <Form.Label optional>
+                    {t("apiship.connections.form.fields.allowedTariffs.label")}
+                  </Form.Label>
+                  <Form.Hint>
+                    {t("apiship.connections.form.fields.allowedTariffs.hint")}
+                  </Form.Hint>
+                  <Form.Control>
+                    <ApishipAllowedTariffsField
+                      tariffs={tariffs}
+                      doorValue={allowedDoorTariffIds}
+                      onDoorChange={(value) => form.setValue("allowed_door_tariff_ids", value)}
+                      pointValue={allowedPointTariffIds}
+                      onPointChange={(value) => form.setValue("allowed_point_tariff_ids", value)}
+                      isLoading={isTariffsLoading}
+                      isError={isTariffsError}
+                      onRetry={() => refetchTariffs()}
+                      t={t}
+                    />
+                  </Form.Control>
                 </Form.Item>
               )}
             />

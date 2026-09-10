@@ -54,6 +54,8 @@ function normalizeConnections(
         point_in_id: connection.point_in_id,
         point_in_address: connection.point_in_address,
         stock_location_id: connection.stock_location_id,
+        allowed_door_tariff_ids: connection.allowed_door_tariff_ids as string[] | undefined,
+        allowed_point_tariff_ids: connection.allowed_point_tariff_ids as string[] | undefined,
         is_enabled: connection.is_enabled,
       },
     ]
@@ -74,6 +76,27 @@ export function findApishipConnection(
       candidates.find((connection) => connection.stock_location_id === stockLocationId)) ||
     candidates.find((connection) => !connection.stock_location_id)
   )
+}
+
+/**
+ * `deliveryType` (1 = door/courier, 2 = point/ПВЗ) picks which of the connection's two
+ * independent allow-lists applies — a tariff usable for both (ApiShip's own `deliveryType:
+ * null`) can be allowed for one direction and not the other.
+ */
+export function isTariffAllowed(
+  connection: Pick<ApishipConnectionDTO, "allowed_door_tariff_ids" | "allowed_point_tariff_ids"> | undefined,
+  tariffId: number | string,
+  deliveryType: number
+): boolean {
+  const allowList =
+    deliveryType === 2
+      ? connection?.allowed_point_tariff_ids
+      : connection?.allowed_door_tariff_ids
+
+  if (!allowList?.length) {
+    return true
+  }
+  return allowList.includes(String(tariffId))
 }
 
 export function assertUniqueApishipConnectionForLocation(

@@ -95,6 +95,32 @@ export const useApishipPoints = (
   }
 }
 
+export const useApishipTariffs = (
+  providerKey: string,
+  providerId?: string
+) => {
+  const query = useQuery<
+    ApishipHttpTypes.AdminApishipTariffListResponse,
+    FetchError
+  >({
+    queryKey: ["apiship-tariffs", providerKey, providerId],
+    queryFn: () =>
+      sdk.client.fetch("/admin/apiship/tariffs", {
+        method: "GET",
+        query: {
+          provider_key: providerKey,
+          provider_id: providerId,
+        },
+      }),
+    enabled: !!providerKey,
+    retry: false,
+  })
+  return {
+    tariffs: query.data?.tariffs ?? [],
+    ...query,
+  }
+}
+
 export const useUpdateApishipOptions = (providerId?: string) => {
   const queryClient = useQueryClient()
 

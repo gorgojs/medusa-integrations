@@ -7,6 +7,8 @@ export interface AdminCreateApishipConnection {
   point_in_id?: string
   point_in_address?: string
   stock_location_id?: string
+  allowed_door_tariff_ids?: string[]
+  allowed_point_tariff_ids?: string[]
   is_enabled: boolean
 }
 
@@ -17,6 +19,8 @@ export interface AdminUpdateApishipConnection {
   point_in_id?: string
   point_in_address?: string
   stock_location_id?: string
+  allowed_door_tariff_ids?: string[]
+  allowed_point_tariff_ids?: string[]
   is_enabled?: boolean
 }
 
@@ -26,6 +30,11 @@ export interface AdminGetApishipPointList {
   fields?: string
   limit?: number
   offset?: number
+  provider_id?: string
+}
+
+export interface AdminGetApishipTariffList {
+  provider_key: string
   provider_id?: string
 }
 
