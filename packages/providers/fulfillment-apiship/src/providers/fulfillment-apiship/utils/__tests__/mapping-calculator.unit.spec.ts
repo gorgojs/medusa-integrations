@@ -75,10 +75,9 @@ describe("mapToApishipCalculatorRequest", () => {
   })
 
   describe("fromAddress (from from_location.address)", () => {
-    it("maps country_code from stock location (not uppercased — uses raw value)", () => {
+    it("uppercases country_code from the stock location's address (Medusa stores it lowercase)", () => {
       const result = mapToApishipCalculatorRequest(baseOptionData, baseContext, makeApishipOptions())
-      // fromAddress uses the raw value (no .toUpperCase() in the mapping)
-      expect((result.from as any).countryCode).toBe("ru")
+      expect((result.from as any).countryCode).toBe("RU")
     })
 
     it("maps postal_code as index", () => {
