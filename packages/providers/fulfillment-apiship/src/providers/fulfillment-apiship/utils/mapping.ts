@@ -52,7 +52,7 @@ export function mapToApishipOrderRequest(
   const stolstockLocationAddress = stockLocation.address!
   const sender = {
     countryCode:
-      stolstockLocationAddress.country_code || apishipOptions.sender_country_code,
+      (stolstockLocationAddress.country_code || apishipOptions.sender_country_code)?.toUpperCase(),
     ...((stolstockLocationAddress.city && stolstockLocationAddress.address_1 && stolstockLocationAddress.address_2) ?
       { addressString: `${stolstockLocationAddress.city}, ${stolstockLocationAddress.address_1}, ${stolstockLocationAddress.address_2}` } :
       { addressString: apishipOptions.sender_address_string }),
@@ -226,7 +226,7 @@ export function mapToApishipCalculatorRequest(
 
   const stockLocationAddress = context.from_location!.address!
   const fromAddress = {
-    countryCode: stockLocationAddress.country_code,
+    countryCode: stockLocationAddress.country_code?.toUpperCase(),
     index: stockLocationAddress.postal_code!,
     addressString: [
       stockLocationAddress.city,
