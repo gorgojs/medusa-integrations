@@ -83,6 +83,25 @@ describe("mapToApishipOrderRequest", () => {
       const result = callMapping()
       expect((result.sender as any).postIndex).toBe("190000")
     })
+
+    it("uppercases countryCode from the stock location's address (Medusa stores it lowercase)", () => {
+      const stockLocation = {
+        ...fullAddressStockLocation,
+        address: { ...fullAddressStockLocation.address, country_code: "ru" },
+      }
+      const result = callMapping({ stockLocation })
+      expect(result.sender!.countryCode).toBe("RU")
+    })
+
+    it("uppercases countryCode from sender_country_code when the stock location has none", () => {
+      const options = makeApishipOptions({ sender_country_code: "ru" })
+      const stockLocation = {
+        ...fullAddressStockLocation,
+        address: { ...fullAddressStockLocation.address, country_code: undefined },
+      }
+      const result = callMapping({ options, stockLocation })
+      expect(result.sender!.countryCode).toBe("RU")
+    })
   })
 
   describe("recipient mapping", () => {
