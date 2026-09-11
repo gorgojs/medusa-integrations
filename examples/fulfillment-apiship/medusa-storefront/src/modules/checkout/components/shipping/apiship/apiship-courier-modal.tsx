@@ -99,7 +99,19 @@ export const ApishipCourierModal: React.FC<ApishipCourierModalProps> = ({
   }, [open, shippingOptionId, cart.id])
 
   const doorGroups = useMemo(() => {
-    return calculation?.deliveryToDoor ?? []
+    const seenKeys = new Set<string>()
+
+    return (calculation?.deliveryToDoor ?? [])
+      .map((g) => ({
+        ...g,
+        tariffs: (g.tariffs ?? []).filter((t, idx) => {
+          const key = buildTariffKey(g.providerKey, t, idx)
+          if (seenKeys.has(key)) return false
+          seenKeys.add(key)
+          return true
+        }),
+      }))
+      .filter((g) => (g.tariffs?.length ?? 0) > 0)
   }, [calculation])
 
   const tariffsFlat = useMemo(() => {
