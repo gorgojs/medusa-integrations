@@ -881,19 +881,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/js-sdk@npm:2.19.0":
-  version: 2.19.0
-  resolution: "@medusajs/js-sdk@npm:2.19.0"
-  dependencies:
-    fetch-event-stream: "npm:^0.1.5"
-    qs: "npm:^6.15.2"
-  checksum: 10/48f57229e6eed41a41cb2dde557179565dc9ab56763f7c34db5e3b1c873d0ecb3de03f2b5c9ef2203dcb180dc626ad22d210a5134b488584c722542071d362f8
+"@medusajs/icons@npm:2.21.0":
+  version: 2.21.0
+  resolution: "@medusajs/icons@npm:2.21.0"
+  peerDependencies:
+    react: ^18.3.1 || ^19.0.0
+  checksum: 10/f6aecfa6624c42afe380eb9901153c33229e393f63c0080ff3e25777765ff910d0ce03a211dc8b72033dbbad2883cb8a28bf76c8d9fb2f1c4b3aef8cd9123472
   languageName: node
   linkType: hard
 
-"@medusajs/types@npm:2.19.0":
-  version: 2.19.0
-  resolution: "@medusajs/types@npm:2.19.0"
+"@medusajs/js-sdk@npm:2.21.0":
+  version: 2.21.0
+  resolution: "@medusajs/js-sdk@npm:2.21.0"
+  dependencies:
+    fetch-event-stream: "npm:^0.1.5"
+    qs: "npm:^6.15.2"
+  checksum: 10/8789e895c9af6b9f7905b1f5015d5a26d03fe5d8e07602f321a44a0e2b113793e5997ab52b641803f6d0ff806f497c980fcf03da7cb5ec00b33ddadf1362c7e9
+  languageName: node
+  linkType: hard
+
+"@medusajs/types@npm:2.21.0":
+  version: 2.21.0
+  resolution: "@medusajs/types@npm:2.21.0"
   dependencies:
     bignumber.js: "npm:^9.1.2"
   peerDependencies:
@@ -904,19 +913,19 @@ __metadata:
       optional: true
     vite:
       optional: true
-  checksum: 10/9bfd8fe5fa741595e6451a23c41fd927e62bbab87fdbce2fdfc38c2267c49101ecb0a10070192de26de90e6022b70bd9a1901ea52ddf2b69cb78a17a23ac09dd
+  checksum: 10/ebbaf87199b973eaeddbde686a8c056f291c233743b8ce0d0bc541e90a6bb9f7972b975d953ed1f4c19c57c91894cd8cc2473bf64f0909324458d4cd4e954ce4
   languageName: node
   linkType: hard
 
-"@medusajs/ui-preset@npm:2.19.0":
-  version: 2.19.0
-  resolution: "@medusajs/ui-preset@npm:2.19.0"
+"@medusajs/ui-preset@npm:2.21.0":
+  version: 2.21.0
+  resolution: "@medusajs/ui-preset@npm:2.21.0"
   dependencies:
     "@tailwindcss/forms": "npm:^0.5.3"
     tailwindcss-animate: "npm:^1.0.6"
   peerDependencies:
     tailwindcss: ^3.4.3
-  checksum: 10/98ceb9979c7370278f73f5ae7b6427670c2d8fb853fe7dc98940c7c5631b2efd8b5549bf26cb29f53a87471ba2c8817306669ed0688085b31d4e1d2f013eaecf
+  checksum: 10/a358f00c528ca6dce262723e8d5e0e51a7e17058eb7e05370d269a62692bfe221a78b7e09f0a6a1df04269e4abd44247ebc7c2cc9b5abf2af5005e1adcfd77bc
   languageName: node
   linkType: hard
 
@@ -5778,11 +5787,11 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.17.5"
     "@headlessui/react": "npm:^2.2.0"
-    "@medusajs/icons": "npm:2.19.0"
-    "@medusajs/js-sdk": "npm:2.19.0"
-    "@medusajs/types": "npm:2.19.0"
+    "@medusajs/icons": "npm:2.21.0"
+    "@medusajs/js-sdk": "npm:2.21.0"
+    "@medusajs/types": "npm:2.21.0"
     "@medusajs/ui": "npm:latest"
-    "@medusajs/ui-preset": "npm:2.19.0"
+    "@medusajs/ui-preset": "npm:2.21.0"
     "@radix-ui/react-accordion": "npm:^1.2.1"
     "@stripe/react-stripe-js": "npm:^5.3.0"
     "@stripe/stripe-js": "npm:^8.2.0"

@@ -967,19 +967,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/js-sdk@npm:2.19.0":
-  version: 2.19.0
-  resolution: "@medusajs/js-sdk@npm:2.19.0"
+"@medusajs/js-sdk@npm:2.21.0":
+  version: 2.21.0
+  resolution: "@medusajs/js-sdk@npm:2.21.0"
   dependencies:
     fetch-event-stream: ^0.1.5
     qs: ^6.15.2
-  checksum: 11d23605ae0ae186aff58257cbd61b6d78f03a27efa239a4be7f51c8e5849a7cc1646595b7c0344d06feb28a6325ee850f48f2e5a0a9ea17c7a53b83c8e76e21
+  checksum: d0733d59243a7484a2a7a693a8a67095aa71a1f9f79cda43790bb83755c73b65e0d8897aab92dcc7940aa520a4b523bb13da69d6cf92fa351609aa8cbb41a0bf
   languageName: node
   linkType: hard
 
-"@medusajs/types@npm:2.19.0":
-  version: 2.19.0
-  resolution: "@medusajs/types@npm:2.19.0"
+"@medusajs/types@npm:2.21.0":
+  version: 2.21.0
+  resolution: "@medusajs/types@npm:2.21.0"
   dependencies:
     bignumber.js: ^9.1.2
   peerDependencies:
@@ -990,19 +990,19 @@ __metadata:
       optional: true
     vite:
       optional: true
-  checksum: 5eca429634a221322c0c6b97f8622ad4971ad42a26b8d13826e7c770d0911902e56588008d15175b6feadbe9fceb4300a7ba387b5676da0a878d0c2911d7149d
+  checksum: 0ffe5414ecf4eb0d5ac77833ff78dddb2649b9bcf91fce0094797414676bf83a6fd0524e99d018d07add57b13c0e96c7b9848d7106f540b5d6ffda4776344ce6
   languageName: node
   linkType: hard
 
-"@medusajs/ui-preset@npm:2.19.0":
-  version: 2.19.0
-  resolution: "@medusajs/ui-preset@npm:2.19.0"
+"@medusajs/ui-preset@npm:2.21.0":
+  version: 2.21.0
+  resolution: "@medusajs/ui-preset@npm:2.21.0"
   dependencies:
     "@tailwindcss/forms": ^0.5.3
     tailwindcss-animate: ^1.0.6
   peerDependencies:
     tailwindcss: ^3.4.3
-  checksum: 69be45385d130ebb4c7698a00fde7bc7d85564348770d40b0c63a8ee7c55b1195ef250aaad97652ae1680ab5cda4dd2841379c36b9975bafac24e172d30a926d
+  checksum: 48091bf93eec96672bccaee21b1fa336c473b2010ad61f769e9bab529b6a7a6072881da632b7c804fd14e2d7714e93ba247fe16944d2c0c239bc142323b799b1
   languageName: node
   linkType: hard
 
@@ -7527,10 +7527,10 @@ __metadata:
     "@babel/core": ^7.17.5
     "@gorgo/medusa-fulfillment-apiship": latest
     "@headlessui/react": ^2.2.0
-    "@medusajs/js-sdk": 2.19.0
-    "@medusajs/types": 2.19.0
+    "@medusajs/js-sdk": 2.21.0
+    "@medusajs/types": 2.21.0
     "@medusajs/ui": latest
-    "@medusajs/ui-preset": 2.19.0
+    "@medusajs/ui-preset": 2.21.0
     "@radix-ui/react-accordion": ^1.2.1
     "@stripe/react-stripe-js": ^1.7.2
     "@stripe/stripe-js": ^1.29.0
