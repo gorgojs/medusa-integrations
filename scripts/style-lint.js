@@ -66,8 +66,8 @@ function classify(filePath, name) {
     return { lang: 'any', type: 'yml' };
   }
 
-  // Social post drafts: media/social/<slug>/{telegram,discord}.md. The optional slug segment
-  // also matches the older <slug>/social/{telegram,discord}.md layout.
+  // Social posts: media/social/<slug>/<platform>-<channel>.md, one file per post. The optional
+  // slug segment also matches the older <slug>/social/<platform>.md layout.
   if (/(^|\/)social\/([a-z0-9-]+\/)?[a-z-]+\.md$/.test(posix))
     return { lang: 'any', type: 'md' };
 
