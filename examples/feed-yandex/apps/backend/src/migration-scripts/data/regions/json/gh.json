@@ -1,0 +1,29 @@
+{
+  "name": "Ghana",
+  "currency_code": "ghs",
+  "countries": ["gh"],
+  "stock_location": {
+    "name": "Accra Warehouse",
+    "address": {
+      "address_1": "Independence Avenue 20",
+      "country_code": "gh"
+    }
+  },
+  "shipping_prices": {
+    "courier": 90,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 225,
+    "sweatshirt": 435,
+    "sweatpants": 360,
+    "shorts": 285,
+    "hoodie": 525,
+    "chinoPants": 495,
+    "pufferJacket": 1050,
+    "wirelessHeadphones": 1410,
+    "electricBike": 15750,
+    "servingPlate": 615,
+    "espressoCup": 225
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Algeria",
+  "currency_code": "dzd",
+  "countries": [
+    "dz"
+  ],
+  "stock_location": {
+    "name": "Algiers Warehouse",
+    "address": {
+      "address_1": "شارع ديدوش مراد 12",
+      "country_code": "dz"
+    }
+  },
+  "shipping_prices": {
+    "courier": 810,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 2030,
+    "sweatshirt": 3920,
+    "sweatpants": 3240,
+    "shorts": 2570,
+    "hoodie": 4730,
+    "chinoPants": 4460,
+    "pufferJacket": 9450,
+    "wirelessHeadphones": 12690,
+    "electricBike": 141800,
+    "servingPlate": 5540,
+    "espressoCup": 2030
+  }
+}

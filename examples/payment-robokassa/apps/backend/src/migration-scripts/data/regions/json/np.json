@@ -1,0 +1,29 @@
+{
+  "name": "Nepal",
+  "currency_code": "npr",
+  "countries": ["np"],
+  "stock_location": {
+    "name": "Kathmandu Warehouse",
+    "address": {
+      "address_1": "दरबार मार्ग १५",
+      "country_code": "np"
+    }
+  },
+  "shipping_prices": {
+    "courier": 805,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 2010,
+    "sweatshirt": 3890,
+    "sweatpants": 3220,
+    "shorts": 2550,
+    "hoodie": 4690,
+    "chinoPants": 4420,
+    "pufferJacket": 9380,
+    "wirelessHeadphones": 12600,
+    "electricBike": 140700,
+    "servingPlate": 5490,
+    "espressoCup": 2010
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Malawi",
+  "currency_code": "mwk",
+  "countries": ["mw"],
+  "stock_location": {
+    "name": "Lilongwe Warehouse",
+    "address": {
+      "address_1": "Independence Drive 12",
+      "country_code": "mw"
+    }
+  },
+  "shipping_prices": {
+    "courier": 10440,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 26100,
+    "sweatshirt": 50500,
+    "sweatpants": 41800,
+    "shorts": 33100,
+    "hoodie": 60900,
+    "chinoPants": 57400,
+    "pufferJacket": 121800,
+    "wirelessHeadphones": 163600,
+    "electricBike": 1827000,
+    "servingPlate": 71300,
+    "espressoCup": 26100
+  }
+}

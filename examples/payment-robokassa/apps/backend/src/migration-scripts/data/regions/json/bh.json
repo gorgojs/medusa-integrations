@@ -1,0 +1,31 @@
+{
+  "name": "Bahrain",
+  "currency_code": "bhd",
+  "countries": [
+    "bh"
+  ],
+  "stock_location": {
+    "name": "Manama Warehouse",
+    "address": {
+      "address_1": "شارع الحكومة 45",
+      "country_code": "bh"
+    }
+  },
+  "shipping_prices": {
+    "courier": 2,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 6,
+    "sweatshirt": 11,
+    "sweatpants": 9,
+    "shorts": 7,
+    "hoodie": 13,
+    "chinoPants": 12,
+    "pufferJacket": 26,
+    "wirelessHeadphones": 35,
+    "electricBike": 395,
+    "servingPlate": 15,
+    "espressoCup": 6
+  }
+}

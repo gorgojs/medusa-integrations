@@ -1,0 +1,29 @@
+{
+  "name": "Sudan",
+  "currency_code": "sdg",
+  "countries": ["sd"],
+  "stock_location": {
+    "name": "Khartoum Warehouse",
+    "address": {
+      "address_1": "شارع الجمهورية 12",
+      "country_code": "sd"
+    }
+  },
+  "shipping_prices": {
+    "courier": 3600,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 9000,
+    "sweatshirt": 17400,
+    "sweatpants": 14400,
+    "shorts": 11400,
+    "hoodie": 21000,
+    "chinoPants": 19800,
+    "pufferJacket": 42000,
+    "wirelessHeadphones": 56400,
+    "electricBike": 630000,
+    "servingPlate": 24600,
+    "espressoCup": 9000
+  }
+}

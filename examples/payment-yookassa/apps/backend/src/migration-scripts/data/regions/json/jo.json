@@ -1,0 +1,29 @@
+{
+  "name": "Jordan",
+  "currency_code": "jod",
+  "countries": ["jo"],
+  "stock_location": {
+    "name": "Amman Warehouse",
+    "address": {
+      "address_1": "شارع الملك الحسين 27",
+      "country_code": "jo"
+    }
+  },
+  "shipping_prices": {
+    "courier": 4,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 11,
+    "sweatshirt": 21,
+    "sweatpants": 17,
+    "shorts": 13,
+    "hoodie": 25,
+    "chinoPants": 23,
+    "pufferJacket": 50,
+    "wirelessHeadphones": 67,
+    "electricBike": 745,
+    "servingPlate": 29,
+    "espressoCup": 11
+  }
+}

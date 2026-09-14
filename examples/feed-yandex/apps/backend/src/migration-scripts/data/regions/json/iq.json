@@ -1,0 +1,29 @@
+{
+  "name": "Iraq",
+  "currency_code": "iqd",
+  "countries": ["iq"],
+  "stock_location": {
+    "name": "Baghdad Warehouse",
+    "address": {
+      "address_1": "شارع الرشيد 45",
+      "country_code": "iq"
+    }
+  },
+  "shipping_prices": {
+    "courier": 7860,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 19650,
+    "sweatshirt": 38000,
+    "sweatpants": 31400,
+    "shorts": 24900,
+    "hoodie": 45900,
+    "chinoPants": 43200,
+    "pufferJacket": 91700,
+    "wirelessHeadphones": 123100,
+    "electricBike": 1376000,
+    "servingPlate": 53700,
+    "espressoCup": 19650
+  }
+}

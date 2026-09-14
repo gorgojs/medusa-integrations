@@ -1,0 +1,29 @@
+{
+  "name": "Kazakhstan",
+  "currency_code": "kzt",
+  "countries": ["kz"],
+  "stock_location": {
+    "name": "Astana Warehouse",
+    "address": {
+      "address_1": "Мәңгілік Ел даңғылы 10",
+      "country_code": "kz"
+    }
+  },
+  "shipping_prices": {
+    "courier": 2880,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 7200,
+    "sweatshirt": 13920,
+    "sweatpants": 11520,
+    "shorts": 9120,
+    "hoodie": 16800,
+    "chinoPants": 15840,
+    "pufferJacket": 33600,
+    "wirelessHeadphones": 45100,
+    "electricBike": 504000,
+    "servingPlate": 19680,
+    "espressoCup": 7200
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Israel",
+  "currency_code": "ils",
+  "countries": ["il"],
+  "stock_location": {
+    "name": "Jerusalem Warehouse",
+    "address": {
+      "address_1": "רחוב יפו 97",
+      "country_code": "il"
+    }
+  },
+  "shipping_prices": {
+    "courier": 22,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 56,
+    "sweatshirt": 107,
+    "sweatpants": 89,
+    "shorts": 70,
+    "hoodie": 130,
+    "chinoPants": 122,
+    "pufferJacket": 260,
+    "wirelessHeadphones": 350,
+    "electricBike": 3890,
+    "servingPlate": 152,
+    "espressoCup": 56
+  }
+}

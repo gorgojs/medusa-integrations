@@ -1,0 +1,29 @@
+{
+  "name": "Myanmar",
+  "currency_code": "mmk",
+  "countries": ["mm"],
+  "stock_location": {
+    "name": "Naypyidaw Warehouse",
+    "address": {
+      "address_1": "ရာဇသီရိလမ်း ၈",
+      "country_code": "mm"
+    }
+  },
+  "shipping_prices": {
+    "courier": 12600,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 31500,
+    "sweatshirt": 60900,
+    "sweatpants": 50400,
+    "shorts": 39900,
+    "hoodie": 73500,
+    "chinoPants": 69300,
+    "pufferJacket": 147000,
+    "wirelessHeadphones": 197400,
+    "electricBike": 2205000,
+    "servingPlate": 86100,
+    "espressoCup": 31500
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "My Store",
+  "default_currency_code": "usd",
+  "sales_channel": {
+    "name": "Default Sales Channel",
+    "description": "Created by Medusa"
+  },
+  "publishable_api_key": {
+    "title": "Default Publishable API Key"
+  }
+}

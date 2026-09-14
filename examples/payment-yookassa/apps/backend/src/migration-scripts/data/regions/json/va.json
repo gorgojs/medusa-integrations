@@ -1,0 +1,29 @@
+{
+  "name": "Vatican City",
+  "currency_code": "eur",
+  "countries": ["va"],
+  "stock_location": {
+    "name": "Vatican City Warehouse",
+    "address": {
+      "address_1": "Via Della Conciliazione 5",
+      "country_code": "va"
+    }
+  },
+  "shipping_prices": {
+    "courier": 6,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 14,
+    "sweatshirt": 27,
+    "sweatpants": 22,
+    "shorts": 18,
+    "hoodie": 33,
+    "chinoPants": 31,
+    "pufferJacket": 65,
+    "wirelessHeadphones": 87,
+    "electricBike": 975,
+    "servingPlate": 38,
+    "espressoCup": 14
+  }
+}

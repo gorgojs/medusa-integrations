@@ -1,0 +1,29 @@
+{
+  "name": "North Macedonia",
+  "currency_code": "mkd",
+  "countries": ["mk"],
+  "stock_location": {
+    "name": "Skopje Warehouse",
+    "address": {
+      "address_1": "Булевар Илинден 8",
+      "country_code": "mk"
+    }
+  },
+  "shipping_prices": {
+    "courier": 340,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 855,
+    "sweatshirt": 1655,
+    "sweatpants": 1370,
+    "shorts": 1085,
+    "hoodie": 1995,
+    "chinoPants": 1880,
+    "pufferJacket": 3990,
+    "wirelessHeadphones": 5360,
+    "electricBike": 59900,
+    "servingPlate": 2340,
+    "espressoCup": 855
+  }
+}

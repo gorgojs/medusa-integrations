@@ -1,0 +1,29 @@
+{
+  "name": "Trinidad and Tobago",
+  "currency_code": "ttd",
+  "countries": ["tt"],
+  "stock_location": {
+    "name": "Port of Spain Warehouse",
+    "address": {
+      "address_1": "Frederick Street 63",
+      "country_code": "tt"
+    }
+  },
+  "shipping_prices": {
+    "courier": 41,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 102,
+    "sweatshirt": 197,
+    "sweatpants": 163,
+    "shorts": 129,
+    "hoodie": 240,
+    "chinoPants": 225,
+    "pufferJacket": 475,
+    "wirelessHeadphones": 640,
+    "electricBike": 7140,
+    "servingPlate": 280,
+    "espressoCup": 102
+  }
+}

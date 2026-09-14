@@ -1,0 +1,103 @@
+{
+  "name": "中文",
+  "translations": {
+    "categories": {
+      "clothing": "服装",
+      "coffee": "咖啡",
+      "eTransport": "电动出行",
+      "electronics": "电子产品",
+      "headphones": "耳机",
+      "home": "家居",
+      "outerwear": "外套",
+      "pants": "裤装",
+      "shirts": "T恤",
+      "shorts": "短裤",
+      "sweatshirts": "卫衣",
+      "tableware": "餐具"
+    },
+    "collections": {
+      "new": "新品上市"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "经典黑色斜纹休闲裤，版型修身，设计简约。采用柔软耐穿的棉质面料，略带弹性，穿着更舒适。配有侧袋、腰带襻和纽扣开合设计，休闲正式皆宜。",
+        "title": "斜纹休闲裤"
+      },
+      "electricBike": {
+        "description": "哑光黑电动山地车，专为高性能与日常多场景骑行而打造。配备轻量化铝合金车架、内置电池和强劲电机，在各种路况下都能实现平顺的助力骑行。无论城市通勤还是越野骑行都能轻松应对。",
+        "title": "电动自行车"
+      },
+      "espressoCup": {
+        "description": "黑色陶瓷浓缩咖啡杯，适用于单份或双份浓缩咖啡。经久耐用，保温效果好，可放入洗碗机清洗。",
+        "title": "浓缩咖啡杯"
+      },
+      "hoodie": {
+        "description": "经典黑色连帽卫衣，采用柔软棉质面料制成，带来日常舒适穿着体验。版型宽松休闲，配有可调节抽绳帽子和前置袋鼠口袋，简约百搭，四季皆可叠穿。",
+        "title": "连帽卫衣"
+      },
+      "pufferJacket": {
+        "description": "黑色保暖羽绒服，专为寒冷天气的温暖与舒适而设计。高领设计，前襟拉链搭配按扣，多个口袋兼具实用功能。轻盈耐穿，适合日常穿着或户外活动。",
+        "title": "羽绒服"
+      },
+      "servingPlate": {
+        "description": "雕塑感十足的不锈钢餐盘，采用抛光镜面工艺打造。流畅的现代造型为餐桌增添精致格调，非常适合摆放水果、开胃菜或作装饰陈列之用。兼具实用性与视觉美感，光泽映照效果出众，百搭现代家居或餐厅风格。",
+        "title": "餐盘"
+      },
+      "shorts": {
+        "description": "重新定义经典短裤的穿着体验。选用纯棉面料打造，让日常必备不再平凡。",
+        "title": "Medusa 短裤"
+      },
+      "sweatpants": {
+        "description": "重新定义经典卫裤的穿着体验。选用纯棉面料打造，让日常必备不再平凡。",
+        "title": "Medusa 卫裤"
+      },
+      "sweatshirt": {
+        "description": "重新定义经典卫衣的穿着体验。选用纯棉面料打造，让日常必备不再平凡。",
+        "title": "Medusa 卫衣"
+      },
+      "tShirt": {
+        "description": "重新定义经典T恤的穿着体验。选用纯棉面料打造，让日常必备不再平凡。",
+        "title": "Medusa T恤"
+      },
+      "wirelessHeadphones": {
+        "description": "哑光黑无线耳机，采用舒适的头戴式设计，带来沉浸式聆听体验。音质清晰，低音强劲，续航持久。适合居家、办公或出行等日常场景使用。",
+        "title": "无线头戴式耳机"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "作为诚意或不便补偿而给予的退款",
+        "label": "客户关怀补偿"
+      },
+      "pricingError": {
+        "description": "因多收费、遗漏折扣或价格错误而进行的退款更正",
+        "label": "定价错误"
+      },
+      "shippingIssue": {
+        "description": "因包裹丢失、延迟或错误投递而退款",
+        "label": "物流问题"
+      }
+    },
+    "shippingOptions": {
+      "courier": "快递配送",
+      "pickup": "自提"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "2–3天内送达。",
+        "label": "快递"
+      },
+      "pickup": {
+        "description": "在自提点领取。",
+        "label": "自提"
+      }
+    },
+    "terms": {
+      "black": "黑色",
+      "color": "颜色",
+      "silver": "银色",
+      "size": "尺码",
+      "white": "白色"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Morocco",
+  "currency_code": "mad",
+  "countries": ["ma"],
+  "stock_location": {
+    "name": "Rabat Warehouse",
+    "address": {
+      "address_1": "شارع محمد الخامس 350",
+      "country_code": "ma"
+    }
+  },
+  "shipping_prices": {
+    "courier": 60,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 150,
+    "sweatshirt": 290,
+    "sweatpants": 240,
+    "shorts": 190,
+    "hoodie": 350,
+    "chinoPants": 330,
+    "pufferJacket": 700,
+    "wirelessHeadphones": 940,
+    "electricBike": 10500,
+    "servingPlate": 410,
+    "espressoCup": 150
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Laos",
+  "currency_code": "usd",
+  "countries": ["la"],
+  "stock_location": {
+    "name": "Vientiane Warehouse",
+    "address": {
+      "address_1": "ຖະໜົນລ້ານຊ້າງ 23",
+      "country_code": "la"
+    }
+  },
+  "shipping_prices": {
+    "courier": 6,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 15,
+    "sweatshirt": 29,
+    "sweatpants": 24,
+    "shorts": 19,
+    "hoodie": 35,
+    "chinoPants": 33,
+    "pufferJacket": 70,
+    "wirelessHeadphones": 94,
+    "electricBike": 1050,
+    "servingPlate": 41,
+    "espressoCup": 15
+  }
+}

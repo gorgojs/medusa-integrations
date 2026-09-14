@@ -1,0 +1,29 @@
+{
+  "name": "Saint Lucia",
+  "currency_code": "usd",
+  "countries": ["lc"],
+  "stock_location": {
+    "name": "Castries Warehouse",
+    "address": {
+      "address_1": "Bridge Street 22",
+      "country_code": "lc"
+    }
+  },
+  "shipping_prices": {
+    "courier": 6,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 15,
+    "sweatshirt": 29,
+    "sweatpants": 24,
+    "shorts": 19,
+    "hoodie": 35,
+    "chinoPants": 33,
+    "pufferJacket": 70,
+    "wirelessHeadphones": 94,
+    "electricBike": 1050,
+    "servingPlate": 41,
+    "espressoCup": 15
+  }
+}

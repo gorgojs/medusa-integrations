@@ -1,0 +1,29 @@
+{
+  "name": "Cambodia",
+  "currency_code": "khr",
+  "countries": ["kh"],
+  "stock_location": {
+    "name": "Phnom Penh Warehouse",
+    "address": {
+      "address_1": "មហាវិថីព្រះនរោត្តម 41",
+      "country_code": "kh"
+    }
+  },
+  "shipping_prices": {
+    "courier": 24600,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 61500,
+    "sweatshirt": 118900,
+    "sweatpants": 98400,
+    "shorts": 77900,
+    "hoodie": 143500,
+    "chinoPants": 135300,
+    "pufferJacket": 287000,
+    "wirelessHeadphones": 385000,
+    "electricBike": 4305000,
+    "servingPlate": 168100,
+    "espressoCup": 61500
+  }
+}

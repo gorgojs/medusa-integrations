@@ -1,0 +1,29 @@
+{
+  "name": "Pakistan",
+  "currency_code": "pkr",
+  "countries": ["pk"],
+  "stock_location": {
+    "name": "Islamabad Warehouse",
+    "address": {
+      "address_1": "Constitution Avenue 7",
+      "country_code": "pk"
+    }
+  },
+  "shipping_prices": {
+    "courier": 1670,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 4170,
+    "sweatshirt": 8060,
+    "sweatpants": 6670,
+    "shorts": 5280,
+    "hoodie": 9730,
+    "chinoPants": 9170,
+    "pufferJacket": 19460,
+    "wirelessHeadphones": 26100,
+    "electricBike": 292000,
+    "servingPlate": 11400,
+    "espressoCup": 4170
+  }
+}

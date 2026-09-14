@@ -1,0 +1,29 @@
+{
+  "name": "Tajikistan",
+  "currency_code": "tjs",
+  "countries": ["tj"],
+  "stock_location": {
+    "name": "Dushanbe Warehouse",
+    "address": {
+      "address_1": "Хиёбони Рӯдакӣ 22",
+      "country_code": "tj"
+    }
+  },
+  "shipping_prices": {
+    "courier": 65,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 164,
+    "sweatshirt": 315,
+    "sweatpants": 260,
+    "shorts": 205,
+    "hoodie": 380,
+    "chinoPants": 360,
+    "pufferJacket": 765,
+    "wirelessHeadphones": 1025,
+    "electricBike": 11450,
+    "servingPlate": 445,
+    "espressoCup": 164
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Djibouti",
+  "currency_code": "djf",
+  "countries": ["dj"],
+  "stock_location": {
+    "name": "Djibouti Warehouse",
+    "address": {
+      "address_1": "Avenue Georges Clemenceau 15",
+      "country_code": "dj"
+    }
+  },
+  "shipping_prices": {
+    "courier": 1070,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 2670,
+    "sweatshirt": 5160,
+    "sweatpants": 4270,
+    "shorts": 3380,
+    "hoodie": 6230,
+    "chinoPants": 5870,
+    "pufferJacket": 12460,
+    "wirelessHeadphones": 16730,
+    "electricBike": 186900,
+    "servingPlate": 7300,
+    "espressoCup": 2670
+  }
+}

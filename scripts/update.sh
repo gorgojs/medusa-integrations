@@ -117,6 +117,24 @@ handle_error() {
     exit 1
 }
 
+# The package manager an example is installed with. A lockfile at the example root wins over the
+# `packageManager` field, and yarn is the fallback, since most examples are yarn projects. An
+# example scaffolded from the Medusa DTC Starter is a pnpm workspace, and running yarn in it would
+# write a second lockfile next to the first.
+example_pm() {
+    local dir=$1
+    if [ -f "$dir/pnpm-lock.yaml" ]; then echo pnpm; return 0; fi
+    if [ -f "$dir/yarn.lock" ]; then echo yarn; return 0; fi
+    if [ -f "$dir/package-lock.json" ]; then echo npm; return 0; fi
+
+    local declared
+    declared=$(node -p "(require('$PWD/$dir/package.json').packageManager||'').split('@')[0]" 2>/dev/null) || declared=""
+    case "$declared" in
+        pnpm|yarn|npm) echo "$declared"; return 0 ;;
+    esac
+    echo yarn
+}
+
 # Bump every @medusajs dependency except @medusajs/ui in one project's package.json
 bump_manifest() {
     local dir=$1
@@ -141,8 +159,13 @@ bump_manifest() {
         return 0
     fi
 
-    echo -e "\n${YELLOW}[$dir] Running: yarn add ...${NC}\n"
-    yarn add $pkgs || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
+    local pm="${EXAMPLE_PM:-yarn}"
+    echo -e "\n${YELLOW}[$dir] Running: $pm add ...${NC}\n"
+    case "$pm" in
+        pnpm) pnpm add $pkgs || handle_error "$dir" "$LAST_SUCCESSFUL_DIR" ;;
+        npm) npm install --save $pkgs || handle_error "$dir" "$LAST_SUCCESSFUL_DIR" ;;
+        *) yarn add $pkgs || handle_error "$dir" "$LAST_SUCCESSFUL_DIR" ;;
+    esac
 
     cd "$root_pwd" || handle_error "$dir" "$LAST_SUCCESSFUL_DIR"
 }
@@ -183,7 +206,8 @@ process_directory() {
     app_dir=$(example_app_dir "$example_dir") || app_dir=""
     local root_pwd
     root_pwd=$(pwd)
-    log "$example_dir" "Processing example"
+    EXAMPLE_PM=$(example_pm "$example_dir")
+    log "$example_dir" "Processing example with $EXAMPLE_PM"
 
     # Bump every project of the example, not just the Medusa app
     local manifest
@@ -222,8 +246,8 @@ process_directory() {
 
         # Build the project
         log "$app_dir" "Building project"
-        echo -e "\n${YELLOW}[$app_dir] Running: yarn build${NC}\n"
-        yarn build || handle_error "$app_dir" "$LAST_SUCCESSFUL_DIR"
+        echo -e "\n${YELLOW}[$app_dir] Running: $EXAMPLE_PM run build${NC}\n"
+        "$EXAMPLE_PM" run build || handle_error "$app_dir" "$LAST_SUCCESSFUL_DIR"
 
         cd "$root_pwd" || handle_error "$app_dir" "$LAST_SUCCESSFUL_DIR"
     else
@@ -235,7 +259,8 @@ process_directory() {
     local it_name
     if it_name=$(example_it "$example_name"); then
         if [ -f "./integration-tests/$it_name/package.json" ]; then
-            bump_manifest "./integration-tests/$it_name"
+            # integration-tests is a yarn workspace of this repository, whatever the example uses
+            EXAMPLE_PM=yarn bump_manifest "./integration-tests/$it_name"
         fi
     fi
 

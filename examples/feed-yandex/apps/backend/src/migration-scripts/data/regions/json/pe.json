@@ -1,0 +1,29 @@
+{
+  "name": "Peru",
+  "currency_code": "pen",
+  "countries": ["pe"],
+  "stock_location": {
+    "name": "Lima Warehouse",
+    "address": {
+      "address_1": "Jiron de la Union 400",
+      "country_code": "pe"
+    }
+  },
+  "shipping_prices": {
+    "courier": 23,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 56,
+    "sweatshirt": 109,
+    "sweatpants": 90,
+    "shorts": 71,
+    "hoodie": 131,
+    "chinoPants": 124,
+    "pufferJacket": 265,
+    "wirelessHeadphones": 355,
+    "electricBike": 3940,
+    "servingPlate": 154,
+    "espressoCup": 56
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Japan",
+  "currency_code": "jpy",
+  "countries": ["jp"],
+  "stock_location": {
+    "name": "Tokyo Warehouse",
+    "address": {
+      "address_1": "丸の内通り 8",
+      "country_code": "jp"
+    }
+  },
+  "shipping_prices": {
+    "courier": 900,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 2250,
+    "sweatshirt": 4350,
+    "sweatpants": 3600,
+    "shorts": 2850,
+    "hoodie": 5250,
+    "chinoPants": 4950,
+    "pufferJacket": 10500,
+    "wirelessHeadphones": 14100,
+    "electricBike": 157500,
+    "servingPlate": 6150,
+    "espressoCup": 2250
+  }
+}

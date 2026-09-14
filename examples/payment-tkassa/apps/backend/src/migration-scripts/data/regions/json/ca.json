@@ -1,0 +1,29 @@
+{
+  "name": "Canada",
+  "currency_code": "cad",
+  "countries": ["ca"],
+  "stock_location": {
+    "name": "Ottawa Warehouse",
+    "address": {
+      "address_1": "Wellington Street 90",
+      "country_code": "ca"
+    }
+  },
+  "shipping_prices": {
+    "courier": 8,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 20,
+    "sweatshirt": 39,
+    "sweatpants": 32,
+    "shorts": 26,
+    "hoodie": 47,
+    "chinoPants": 45,
+    "pufferJacket": 95,
+    "wirelessHeadphones": 127,
+    "electricBike": 1420,
+    "servingPlate": 55,
+    "espressoCup": 20
+  }
+}

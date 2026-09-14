@@ -1,0 +1,29 @@
+{
+  "name": "Belize",
+  "currency_code": "bzd",
+  "countries": ["bz"],
+  "stock_location": {
+    "name": "Belmopan Warehouse",
+    "address": {
+      "address_1": "Constitution Drive 24",
+      "country_code": "bz"
+    }
+  },
+  "shipping_prices": {
+    "courier": 12,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 30,
+    "sweatshirt": 58,
+    "sweatpants": 48,
+    "shorts": 38,
+    "hoodie": 70,
+    "chinoPants": 66,
+    "pufferJacket": 140,
+    "wirelessHeadphones": 188,
+    "electricBike": 2100,
+    "servingPlate": 82,
+    "espressoCup": 30
+  }
+}

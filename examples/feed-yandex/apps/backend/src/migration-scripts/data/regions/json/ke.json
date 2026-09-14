@@ -1,0 +1,29 @@
+{
+  "name": "Kenya",
+  "currency_code": "kes",
+  "countries": ["ke"],
+  "stock_location": {
+    "name": "Nairobi Warehouse",
+    "address": {
+      "address_1": "Kenyatta Avenue 33",
+      "country_code": "ke"
+    }
+  },
+  "shipping_prices": {
+    "courier": 775,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1935,
+    "sweatshirt": 3740,
+    "sweatpants": 3100,
+    "shorts": 2450,
+    "hoodie": 4520,
+    "chinoPants": 4260,
+    "pufferJacket": 9030,
+    "wirelessHeadphones": 12130,
+    "electricBike": 135500,
+    "servingPlate": 5290,
+    "espressoCup": 1935
+  }
+}

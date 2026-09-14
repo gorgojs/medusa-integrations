@@ -1,0 +1,29 @@
+{
+  "name": "Jamaica",
+  "currency_code": "jmd",
+  "countries": ["jm"],
+  "stock_location": {
+    "name": "Kingston Warehouse",
+    "address": {
+      "address_1": "King Street 12",
+      "country_code": "jm"
+    }
+  },
+  "shipping_prices": {
+    "courier": 950,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 2370,
+    "sweatshirt": 4580,
+    "sweatpants": 3790,
+    "shorts": 3000,
+    "hoodie": 5530,
+    "chinoPants": 5210,
+    "pufferJacket": 11060,
+    "wirelessHeadphones": 14850,
+    "electricBike": 165900,
+    "servingPlate": 6480,
+    "espressoCup": 2370
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Mexico",
+  "currency_code": "mxn",
+  "countries": ["mx"],
+  "stock_location": {
+    "name": "Mexico City Warehouse",
+    "address": {
+      "address_1": "Avenida Paseo de la Reforma 222",
+      "country_code": "mx"
+    }
+  },
+  "shipping_prices": {
+    "courier": 108,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 270,
+    "sweatshirt": 522,
+    "sweatpants": 432,
+    "shorts": 342,
+    "hoodie": 630,
+    "chinoPants": 594,
+    "pufferJacket": 1260,
+    "wirelessHeadphones": 1692,
+    "electricBike": 18900,
+    "servingPlate": 738,
+    "espressoCup": 270
+  }
+}

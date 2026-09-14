@@ -1,0 +1,29 @@
+{
+  "name": "Philippines",
+  "currency_code": "php",
+  "countries": ["ph"],
+  "stock_location": {
+    "name": "Manila Warehouse",
+    "address": {
+      "address_1": "Roxas Boulevard 350",
+      "country_code": "ph"
+    }
+  },
+  "shipping_prices": {
+    "courier": 335,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 840,
+    "sweatshirt": 1625,
+    "sweatpants": 1345,
+    "shorts": 1065,
+    "hoodie": 1960,
+    "chinoPants": 1850,
+    "pufferJacket": 3920,
+    "wirelessHeadphones": 5260,
+    "electricBike": 58800,
+    "servingPlate": 2300,
+    "espressoCup": 840
+  }
+}

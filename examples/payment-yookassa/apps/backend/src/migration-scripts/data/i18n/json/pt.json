@@ -1,0 +1,103 @@
+{
+  "name": "Português",
+  "translations": {
+    "categories": {
+      "clothing": "Vestuário",
+      "coffee": "Café",
+      "eTransport": "Transporte elétrico",
+      "electronics": "Eletrónica",
+      "headphones": "Auscultadores",
+      "home": "Casa",
+      "outerwear": "Casacos",
+      "pants": "Calças",
+      "shirts": "T-shirts",
+      "shorts": "Calções",
+      "sweatshirts": "Sweatshirts",
+      "tableware": "Louça de mesa"
+    },
+    "collections": {
+      "new": "Novidades"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Calças chino pretas clássicas, com corte alinhado e design minimalista. Feitas em algodão macio e resistente, com um toque de elasticidade para maior conforto. Têm bolsos laterais, passadores de cinto e fecho de botão. Ideais tanto para o dia a dia como para um visual mais cuidado.",
+        "title": "Calças chino"
+      },
+      "electricBike": {
+        "description": "Bicicleta de montanha elétrica em preto fosco, criada para o desempenho e a versatilidade do dia a dia. Tem quadro leve em alumínio, bateria integrada e motor potente para uma condução assistida suave em qualquer terreno. Concebida tanto para deslocações na cidade como para trilhos todo-o-terreno.",
+        "title": "Bicicleta elétrica"
+      },
+      "espressoCup": {
+        "description": "Chávenas de café expresso em cerâmica preta, pensadas para doses simples ou duplas. Resistentes, mantêm o calor e vão à máquina de lavar loiça.",
+        "title": "Chávena de café expresso"
+      },
+      "hoodie": {
+        "description": "Hoodie preto clássico em algodão macio, pensado para o conforto do dia a dia. Com corte descontraído, capuz com cordão ajustável e bolso central tipo canguru. Simples e versátil, ideal para sobrepor em qualquer estação.",
+        "title": "Hoodie"
+      },
+      "pufferJacket": {
+        "description": "Casaco acolchoado preto, concebido para proporcionar calor e conforto em dias frios. Com gola alta, fecho de correr frontal com fecho de pressão e vários bolsos funcionais. Leve mas resistente, perfeito para o uso diário ou ao ar livre.",
+        "title": "Casaco acolchoado"
+      },
+      "servingPlate": {
+        "description": "Uma travessa escultural em aço inoxidável com acabamento espelhado e polido. A sua forma fluida e moderna acrescenta um toque sofisticado a qualquer mesa. Perfeita para fruta, entradas ou composições decorativas. Pensada para aliar funcionalidade e impacto visual, reflete a luz de forma deslumbrante e complementa qualquer casa ou restaurante de estilo contemporâneo.",
+        "title": "Travessa de servir"
+      },
+      "shorts": {
+        "description": "Reinvente a sensação de uns calções clássicos. Com os nossos calções de algodão, os básicos do dia a dia deixam de ser vulgares.",
+        "title": "Calções Medusa"
+      },
+      "sweatpants": {
+        "description": "Reinvente a sensação de umas calças de fato de treino clássicas. Com as nossas calças de fato de treino em algodão, os básicos do dia a dia deixam de ser vulgares.",
+        "title": "Calças de fato de treino Medusa"
+      },
+      "sweatshirt": {
+        "description": "Reinvente a sensação de uma sweatshirt clássica. Com a nossa sweatshirt de algodão, os básicos do dia a dia deixam de ser vulgares.",
+        "title": "Sweatshirt Medusa"
+      },
+      "tShirt": {
+        "description": "Reinvente a sensação de uma t-shirt clássica. Com as nossas t-shirts de algodão, os básicos do dia a dia deixam de ser vulgares.",
+        "title": "T-shirt Medusa"
+      },
+      "wirelessHeadphones": {
+        "description": "Auscultadores sem fios em preto fosco, com design over-ear confortável para uma audição envolvente. Som nítido, graves potentes e bateria de longa duração. Pensados para o uso diário em casa, no escritório ou em movimento.",
+        "title": "Auscultadores sem fios over-ear"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Reembolso concedido como gesto de boa vontade ou compensação por transtornos causados",
+        "label": "Ajuste de apoio ao cliente"
+      },
+      "pricingError": {
+        "description": "Reembolso para corrigir uma cobrança excessiva, um desconto em falta ou um preço incorreto",
+        "label": "Erro de preço"
+      },
+      "shippingIssue": {
+        "description": "Reembolso devido a encomenda extraviada, atrasada ou entregue incorretamente",
+        "label": "Problema de envio"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Entrega por estafeta",
+      "pickup": "Levantamento"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Entrega em 2 a 3 dias.",
+        "label": "Estafeta"
+      },
+      "pickup": {
+        "description": "Levantamento num ponto de recolha.",
+        "label": "Levantamento"
+      }
+    },
+    "terms": {
+      "black": "Preto",
+      "color": "Cor",
+      "silver": "Prateado",
+      "size": "Tamanho",
+      "white": "Branco"
+    }
+  }
+}

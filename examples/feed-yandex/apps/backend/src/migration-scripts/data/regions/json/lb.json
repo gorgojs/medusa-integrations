@@ -1,0 +1,29 @@
+{
+  "name": "Lebanon",
+  "currency_code": "lbp",
+  "countries": ["lb"],
+  "stock_location": {
+    "name": "Beirut Warehouse",
+    "address": {
+      "address_1": "شارع الحمرا 44",
+      "country_code": "lb"
+    }
+  },
+  "shipping_prices": {
+    "courier": 537000,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1343000,
+    "sweatshirt": 2596000,
+    "sweatpants": 2148000,
+    "shorts": 1701000,
+    "hoodie": 3133000,
+    "chinoPants": 2954000,
+    "pufferJacket": 6265000,
+    "wirelessHeadphones": 8413000,
+    "electricBike": 93975000,
+    "servingPlate": 3670000,
+    "espressoCup": 1343000
+  }
+}

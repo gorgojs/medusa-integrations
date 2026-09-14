@@ -1,0 +1,29 @@
+{
+  "name": "Mozambique",
+  "currency_code": "mzn",
+  "countries": ["mz"],
+  "stock_location": {
+    "name": "Maputo Warehouse",
+    "address": {
+      "address_1": "Avenida Julius Nyerere 1224",
+      "country_code": "mz"
+    }
+  },
+  "shipping_prices": {
+    "courier": 385,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 960,
+    "sweatshirt": 1855,
+    "sweatpants": 1535,
+    "shorts": 1215,
+    "hoodie": 2240,
+    "chinoPants": 2110,
+    "pufferJacket": 4480,
+    "wirelessHeadphones": 6020,
+    "electricBike": 67200,
+    "servingPlate": 2620,
+    "espressoCup": 960
+  }
+}

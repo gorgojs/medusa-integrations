@@ -1,0 +1,29 @@
+{
+  "name": "Brazil",
+  "currency_code": "brl",
+  "countries": ["br"],
+  "stock_location": {
+    "name": "Brasilia Warehouse",
+    "address": {
+      "address_1": "Eixo Monumental 100",
+      "country_code": "br"
+    }
+  },
+  "shipping_prices": {
+    "courier": 30,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 75,
+    "sweatshirt": 145,
+    "sweatpants": 120,
+    "shorts": 95,
+    "hoodie": 175,
+    "chinoPants": 165,
+    "pufferJacket": 350,
+    "wirelessHeadphones": 470,
+    "electricBike": 5250,
+    "servingPlate": 205,
+    "espressoCup": 75
+  }
+}

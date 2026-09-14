@@ -1,0 +1,699 @@
+{
+  "AccountInfo": {
+    "cancel": "Annuleren",
+    "edit": "Bewerken",
+    "errorDefault": "Er is een fout opgetreden, probeer het opnieuw",
+    "saveChanges": "Wijzigingen opslaan",
+    "updatedSuccessfully": "{label} succesvol bijgewerkt"
+  },
+  "AccountLayout": {
+    "customerService": "Klantenservice",
+    "faqDescription": "Veelgestelde vragen en antwoorden vindt u op onze klantenservicepagina.",
+    "gotQuestions": "Vragen en antwoorden"
+  },
+  "AccountNav": {
+    "account": "Account",
+    "addresses": "Adressen",
+    "logOut": "Uitloggen",
+    "orders": "Bestellingen",
+    "overview": "Overzicht",
+    "profile": "Profiel"
+  },
+  "AccountOverview": {
+    "addresses": "Adressen",
+    "completed": "Voltooid",
+    "hello": "Hallo {name}",
+    "noRecentOrders": "Geen recente bestellingen",
+    "profile": "Profiel",
+    "recentOrders": "Recente bestellingen",
+    "saved": "Opgeslagen",
+    "signedInAs": "Ingelogd als:"
+  },
+  "AddressCard": {
+    "addAddress": "Adres toevoegen",
+    "default": "Standaard",
+    "editAddress": "Adres bewerken",
+    "newAddress": "Nieuw adres"
+  },
+  "AddressForm": {
+    "address": "Adres",
+    "addressLine2": "Appartement, unit, enz.",
+    "addressName": "Naam",
+    "cancel": "Annuleren",
+    "city": "Plaats",
+    "company": "Bedrijf",
+    "country": "Land",
+    "edit": "Bewerken",
+    "firstName": "Voornaam",
+    "lastName": "Achternaam",
+    "phone": "Telefoon",
+    "postalCode": "Postcode",
+    "province": "Provincie / Staat",
+    "remove": "Verwijderen",
+    "save": "Opslaan",
+    "stateProvince": "Staat / Provincie"
+  },
+  "AddressesPage": {
+    "description": "Bekijk en werk uw verzendadressen bij, u kunt er zoveel toevoegen als u wilt. Opgeslagen adressen zijn beschikbaar tijdens het afrekenen.",
+    "heading": "Verzendadressen"
+  },
+  "Breadcrumb": {
+    "home": "Home",
+    "store": "Winkel"
+  },
+  "Cart": {
+    "emptyMessage": "Uw winkelwagen is leeg. Gebruik de onderstaande link om onze producten te bekijken.",
+    "exploreProducts": "Bekijk producten",
+    "heading": "Winkelwagen"
+  },
+  "CartDropdown": {
+    "bagEmpty": "Uw winkelwagen is leeg.",
+    "exploreProducts": "Bekijk producten",
+    "goToCart": "Naar winkelwagen",
+    "heading": "Winkelwagen",
+    "subtotal": "Subtotaal",
+    "subtotalNote": "(excl. btw)"
+  },
+  "CartMismatchBanner": {
+    "errorMessage": "Er is iets misgegaan bij het overzetten van uw winkelwagen",
+    "runTransferAgain": "Overzetten opnieuw proberen",
+    "transferring": "Overzetten..."
+  },
+  "CartSummary": {
+    "goToCheckout": "Naar afrekenen"
+  },
+  "CartTotals": {
+    "discount": "Korting",
+    "shipping": "Verzending",
+    "subtotal": "Subtotaal (excl. verzending en btw)",
+    "taxes": "Btw",
+    "total": "Totaal"
+  },
+  "CategoryMenu": {
+    "title": "Categorieën",
+    "viewAll": "Alles bekijken"
+  },
+  "CheckoutPage": {
+    "addNewAddress": "Nieuw adres toevoegen",
+    "addressHeading": "Verzendadres",
+    "addressModalTitle": "Verzendadres",
+    "addressNotNeededForPickup": "Niet nodig bij afhalen",
+    "back": "Terug",
+    "backToCart": "Terug naar winkelwagen",
+    "billingHeading": "Factuuradres",
+    "billingSameAsShipping": "Factuuradres hetzelfde als verzendadres",
+    "close": "Sluiten",
+    "contactsHeading": "Contactgegevens",
+    "contactsModalTitle": "Contactgegevens",
+    "copyright": "© {year} {siteName}. Alle rechten voorbehouden.",
+    "deliveryDateFrom": "vanaf {date}",
+    "deliveryDateUntil": "voor {date}",
+    "deliveryToday": "Vandaag",
+    "discount": "Korting",
+    "edit": "Bewerken",
+    "fieldAddress": "Adres",
+    "fieldCity": "Plaats",
+    "fieldCompany": "Bedrijf",
+    "fieldEmail": "E-mail",
+    "fieldFirstName": "Voornaam",
+    "fieldLastName": "Achternaam",
+    "fieldPhone": "Telefoon",
+    "fieldPostalCode": "Postcode",
+    "fieldProvince": "Provincie",
+    "freeShipping": "Gratis",
+    "giftCard": "Cadeaubon",
+    "itemsCount": "{count, plural, one {{count} artikel} other {{count} artikelen}}",
+    "legal": "Door op «Betalen» te klikken, accepteert u onze <terms>voorwaarden</terms>, <termsOfUse>gebruiksvoorwaarden</termsOfUse> en <returnPolicy>retourbeleid</returnPolicy>, en gaat u akkoord met ons <privacyPolicy>privacybeleid</privacyPolicy>.",
+    "manualInput": "Adres handmatig invoeren",
+    "orderComposition": "Besteloverzicht",
+    "paymentHeading": "Betaalmethode",
+    "recipientCheckbox": "Ontvanger is een andere persoon",
+    "recipientHeading": "Gegevens ontvanger",
+    "recipientLabel": "Ontvanger:",
+    "returnsLink": "Retourbeleid",
+    "sameAsShipping": "Zelfde als verzendadres",
+    "save": "Opslaan",
+    "saving": "Opslaan...",
+    "shippingCost": "Verzending",
+    "shippingDescription": "Kies hoe u uw bestelling wilt laten bezorgen",
+    "shippingHeading": "Verzendmethode",
+    "shippingLink": "Verzending",
+    "shippingUnavailable": "Geen verzendmethoden beschikbaar",
+    "signIn": "Inloggen",
+    "total": "Totaal"
+  },
+  "Common": {
+    "clear": "Wissen",
+    "close": "Sluiten",
+    "hidePassword": "Wachtwoord verbergen",
+    "orderNumber": "Bestelling #{id}",
+    "poweredBy": "Powered by",
+    "remove": "Verwijderen",
+    "showPassword": "Wachtwoord tonen"
+  },
+  "ContentPages": {
+    "faq": [
+      {
+        "answer": "Op de verzendpagina staan de bezorgopties en wat elk daarvan kost.",
+        "question": "Wanneer komt mijn bestelling aan?"
+      },
+      {
+        "answer": "De retourpagina legt uit hoe u een artikel terugstuurt of ruilt voor een ander.",
+        "question": "Hoe retourneer of ruil ik een artikel?"
+      },
+      {
+        "answer": "Schrijf ons via de contactpagina, wij antwoorden zo snel mogelijk.",
+        "question": "Hoe bereik ik u?"
+      }
+    ],
+    "placeholder": "Deze pagina hoort als voorbeeldtekst bij de starter. Vervang hem door uw eigen tekst voordat u live gaat."
+  },
+  "DiscountCode": {
+    "addPromotionCode": "Kortingscode toevoegen",
+    "apply": "Toepassen",
+    "removeDiscount": "Kortingscode uit bestelling verwijderen"
+  },
+  "Errors": {
+    "emailExists": "Er bestaat al een account met dit e-mailadres.",
+    "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+    "insufficientInventory": "Sorry, er is niet genoeg voorraad van dit artikel.",
+    "invalidCredentials": "Onjuist e-mailadres of wachtwoord.",
+    "invalidDiscount": "Deze kortingscode is ongeldig of verlopen.",
+    "invalidEmail": "Voer een geldig e-mailadres in.",
+    "invalidResetLink": "Deze link is niet meer geldig. Hij is mogelijk al gebruikt of verlopen. Vraag een nieuwe aan.",
+    "network": "Verbindingsprobleem. Controleer uw internetverbinding en probeer het opnieuw.",
+    "notFound": "We konden niet vinden wat u zocht.",
+    "passwordMismatch": "De wachtwoorden komen niet overeen.",
+    "passwordTooShort": "Het wachtwoord moet minstens 8 tekens lang zijn.",
+    "paymentFailed": "We konden uw betaling niet verwerken. Probeer het opnieuw of gebruik een andere methode.",
+    "unauthorized": "Log in om verder te gaan."
+  },
+  "Filters": {
+    "sort": "Sorteren",
+    "title": "Filters"
+  },
+  "Footer": {
+    "categoriesHeading": "Categorieën",
+    "collectionsHeading": "Collecties",
+    "copyright": "© {year} {siteName}. Alle rechten voorbehouden.",
+    "infoHeading": "Informatie",
+    "medusaDocs": "Medusa-documentatie",
+    "sourceCode": "Broncode van de starter",
+    "starterDocs": "Documentatie van de starter"
+  },
+  "ForgotPassword": {
+    "backToSignIn": "Terug naar inloggen",
+    "description": "Vul het e-mailadres in waarmee u zich hebt aangemeld, dan sturen we u een link voor een nieuw wachtwoord.",
+    "email": "E-mail",
+    "emailTitle": "Vul een geldig e-mailadres in.",
+    "guestAction": "Registreren",
+    "guestPrompt": "Als gast besteld en nooit geregistreerd? Dan is er nog geen wachtwoord. Maak een account met hetzelfde adres, dan kunt u die bestellingen eraan koppelen.",
+    "heading": "Wachtwoord herstellen",
+    "invalidEmail": "Vul een geldig e-mailadres in.",
+    "requestFailed": "De link kon niet worden verstuurd. Probeer het zo meteen opnieuw.",
+    "sent": "Bestaat er een account met dat adres, dan is de link onderweg. Kijk in uw inbox en in de spammap.",
+    "submit": "Link versturen"
+  },
+  "FreeShipping": {
+    "onlyAway": "Nog maar {amount} te gaan",
+    "unlock": "Ontgrendel gratis verzending",
+    "unlocked": "Gratis verzending ontgrendeld!",
+    "viewCart": "Bekijk winkelwagen",
+    "viewProducts": "Bekijk producten"
+  },
+  "Help": {
+    "contact": "Contact",
+    "needHelp": "Hulp",
+    "returnsExchanges": "Retourneren & Ruilen"
+  },
+  "Hero": {
+    "eyebrow": "Kant-en-klaar · Open source",
+    "features": [
+      {
+        "description": "verbeterd, zonder onnodige stappen, met automatisch aanvullen van adressen",
+        "label": "Checkout geoptimaliseerd voor conversie"
+      },
+      {
+        "description": "zoeken, filterbare catalogus, meerlaagse categorieën & mobile-first",
+        "label": "Volledig uitgeruste winkel"
+      },
+      {
+        "description": "metatags, Open Graph en Twitter cards, JSON-LD, sitemap, robots, llms.txt & 100/100 in PageSpeed Insights",
+        "label": "Geoptimaliseerd voor SEO en AI"
+      },
+      {
+        "description": "36 talen voor de storefront met RTL-ondersteuning en 241 landen voor verkoopregio's, landdetectie, eenvoudig terug te brengen tot wat je nodig hebt",
+        "label": "Volledige lokalisatie"
+      },
+      {
+        "description": "React Email-templates via SMTP",
+        "label": "Transactionele e-mails"
+      },
+      {
+        "description": "bij wijzigingen in de productcatalogus",
+        "label": "Cache-revalidatie op aanvraag"
+      },
+      {
+        "badge": "New",
+        "description": "beheer de instellingen van uw providers via Admin",
+        "href": "https://gorgojs.com/medusa-integration-module",
+        "label": "Integratiemodule"
+      }
+    ],
+    "featuresHeading": "Functies",
+    "readDocs": "Documentatie lezen",
+    "subtitle": "Alles wat de officiële Medusa DTC starter niet biedt.",
+    "title": "Productieklare Medusa DTC Starter",
+    "viewOnGitHub": "Bekijk op GitHub"
+  },
+  "ImageGallery": {
+    "goToImage": "Naar afbeelding {index}",
+    "openFullImage": "Volledige afbeelding openen"
+  },
+  "LanguageSelect": {
+    "locales": {
+      "ar": "العربية",
+      "bg": "Български",
+      "bn": "বাংলা",
+      "cs": "Čeština",
+      "da": "Dansk",
+      "de": "Deutsch",
+      "el": "Ελληνικά",
+      "en": "English",
+      "es": "Español",
+      "fi": "Suomi",
+      "fr": "Français",
+      "he": "עברית",
+      "hi": "हिन्दी",
+      "hu": "Magyar",
+      "id": "Bahasa Indonesia",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ka": "ქართული",
+      "ko": "한국어",
+      "lt": "Lietuvių",
+      "mn": "Монгол",
+      "ms": "Bahasa Melayu",
+      "nb": "Norsk bokmål",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "ro": "Română",
+      "ru": "Русский",
+      "sk": "Slovenčina",
+      "sv": "Svenska",
+      "th": "ไทย",
+      "tl": "Tagalog",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "vi": "Tiếng Việt",
+      "zh": "中文"
+    }
+  },
+  "LineItemOptions": {
+    "variant": "Variant:"
+  },
+  "Login": {
+    "description": "Uw bestellingen en bezorgadressen blijven in uw account, en afrekenen gaat sneller.",
+    "email": "E-mail",
+    "emailTitle": "Voer een geldig e-mailadres in.",
+    "forgotPassword": "Wachtwoord vergeten?",
+    "heading": "Inloggen",
+    "joinUs": "Word lid",
+    "notMember": "Nog geen lid?",
+    "password": "Wachtwoord",
+    "signIn": "Inloggen"
+  },
+  "Metadata": {
+    "account": {
+      "description": "Overzicht van uw accountactiviteit.",
+      "title": "Account"
+    },
+    "addresses": {
+      "description": "Bekijk uw adressen",
+      "title": "Adressen"
+    },
+    "cart": {
+      "description": "Bekijk uw winkelwagen",
+      "title": "Winkelwagen"
+    },
+    "category": {
+      "description": "Bekijk {category} bij {siteName}. Vergelijk opties, check de prijzen en vind wat bij je past."
+    },
+    "checkout": {
+      "description": "Controleer je bestelling, vul de bezorggegevens in en betaal veilig.",
+      "title": "Afrekenen"
+    },
+    "collection": {
+      "description": "Ontdek de collectie {collection} bij {siteName}. Bekijk alle items en vind wat bij je past."
+    },
+    "contact": {
+      "description": "Neem contact op over een bestelling, een product of iets anders.",
+      "title": "Contact"
+    },
+    "customerService": {
+      "description": "Antwoorden op de vragen die we het vaakst krijgen en hoe u ons bereikt.",
+      "title": "Klantenservice"
+    },
+    "home": {
+      "description": "Ontdek onze zorgvuldig samengestelde productcollectie. Shop de nieuwste stijlen en vind iets waar u van houdt."
+    },
+    "login": {
+      "description": "Meld u aan bij uw {siteName}-account.",
+      "title": "Inloggen"
+    },
+    "orderConfirmed": {
+      "description": "Uw aankoop is geslaagd",
+      "title": "Bestelling bevestigd"
+    },
+    "orderDetails": {
+      "description": "Bekijk uw bestelling"
+    },
+    "orderTransfer": {
+      "title": "Overdracht van bestelling"
+    },
+    "orders": {
+      "description": "Overzicht van uw eerdere bestellingen.",
+      "title": "Bestellingen"
+    },
+    "privacy": {
+      "description": "Bekijk welke persoonsgegevens de winkel verzamelt en waarom.",
+      "title": "Privacybeleid"
+    },
+    "profile": {
+      "description": "Bekijk en wijzig uw {siteName}-profiel.",
+      "title": "Profiel"
+    },
+    "resetPassword": {
+      "description": "Stel een nieuw wachtwoord in voor uw account.",
+      "title": "Wachtwoord herstellen"
+    },
+    "returns": {
+      "description": "Lees hoe je een artikel terugstuurt of ruilt, hoeveel tijd je hebt en wanneer je je geld terugkrijgt.",
+      "title": "Retourneren en ruilen"
+    },
+    "shipping": {
+      "description": "Bekijk hoe bestellingen worden bezorgd en wat verzending kost.",
+      "title": "Verzending"
+    },
+    "store": {
+      "description": "Bekijk de hele catalogus. Filter op categorie en optie, sorteer op prijs en vind precies wat je zoekt.",
+      "title": "Winkel"
+    },
+    "terms": {
+      "description": "Lees de regels waarmee u akkoord gaat bij een aankoop.",
+      "title": "Gebruiksvoorwaarden"
+    }
+  },
+  "NativeSelect": {
+    "defaultPlaceholder": "Selecteer..."
+  },
+  "Nav": {
+    "account": "Account",
+    "cart": "Winkelwagen ({count})"
+  },
+  "NotFound": {
+    "cartDescription": "De winkelwagen die u probeerde te bezoeken bestaat niet. Wis uw cookies en probeer het opnieuw.",
+    "description": "De pagina die u probeerde te bezoeken bestaat niet.",
+    "goHome": "Naar de homepage",
+    "title": "Pagina niet gevonden"
+  },
+  "OnboardingCta": {
+    "completeInAdmin": "Installatie afronden in admin",
+    "completeSetup": "U kunt nu de installatie van uw winkel afronden in de admin.",
+    "orderCreated": "Uw testbestelling is succesvol aangemaakt!"
+  },
+  "OrderCard": {
+    "itemsCount": "{count, plural, one {{count} artikel} other {{count} artikelen}}",
+    "more": "meer",
+    "seeDetails": "Bekijk details"
+  },
+  "OrderCompleted": {
+    "orderSuccess": "Uw bestelling is succesvol geplaatst.",
+    "thankYou": "Bedankt!"
+  },
+  "OrderDetails": {
+    "backToOrders": "Terug naar bestellingen",
+    "confirmationSentBefore": "We hebben de bestelbevestiging verzonden naar",
+    "fulfillmentStatuses": {
+      "canceled": "Geannuleerd",
+      "delivered": "Bezorgd",
+      "fulfilled": "Verwerkt",
+      "not_fulfilled": "Niet verwerkt",
+      "partially_delivered": "Deels bezorgd",
+      "partially_fulfilled": "Deels verwerkt",
+      "partially_shipped": "Deels verzonden",
+      "shipped": "Verzonden"
+    },
+    "items": "Artikelen",
+    "orderDate": "Besteldatum:",
+    "orderNumber": "Bestelnummer:",
+    "paymentStatuses": {
+      "authorized": "Geautoriseerd",
+      "awaiting": "Wacht op betaling",
+      "canceled": "Geannuleerd",
+      "captured": "Betaald",
+      "not_paid": "Niet betaald",
+      "partially_authorized": "Deels geautoriseerd",
+      "partially_captured": "Deels betaald",
+      "partially_refunded": "Deels terugbetaald",
+      "refunded": "Terugbetaald",
+      "requires_action": "Actie vereist"
+    }
+  },
+  "OrderOverview": {
+    "continueShopping": "Verder winkelen",
+    "noOrdersYet": "U heeft nog geen bestellingen",
+    "nothingToSeeHere": "Hier is niets te zien"
+  },
+  "OrderSummary": {
+    "discount": "Korting",
+    "giftCard": "Cadeaubon",
+    "heading": "Besteloverzicht",
+    "shipping": "Verzending",
+    "subtotal": "Subtotaal",
+    "taxes": "Btw",
+    "total": "Totaal"
+  },
+  "OrdersPage": {
+    "description": "Bekijk uw eerdere bestellingen en hun status.",
+    "heading": "Bestellingen"
+  },
+  "Payment": {
+    "anotherStep": "Er verschijnt nog een stap",
+    "continueToReview": "Verder naar controleren",
+    "edit": "Bewerken",
+    "enterPaymentDetails": "Betaalgegevens invoeren",
+    "giftCard": "Cadeaubon",
+    "heading": "Betaling",
+    "paymentDetails": "Betaalgegevens",
+    "paymentMethod": "Betaalmethode"
+  },
+  "PaymentButton": {
+    "placeOrder": "Betalen",
+    "selectPaymentMethod": "Selecteer een betaalmethode"
+  },
+  "PaymentContainer": {
+    "enterPaymentDetails": "Voer uw betaalgegevens in:",
+    "loadError": "De betaalmethoden konden niet worden geladen."
+  },
+  "PaymentDetails": {
+    "heading": "Betaling",
+    "paidAt": "betaald op",
+    "paymentDetails": "Betaalgegevens",
+    "paymentMethod": "Betaalmethode"
+  },
+  "PaymentMethods": {
+    "pp_medusa-payments_default": "Creditcard",
+    "pp_paypal_paypal": "PayPal",
+    "pp_robokassa_robokassa": "Robokassa",
+    "pp_stripe-bancontact_stripe": "Bancontact",
+    "pp_stripe-ideal_stripe": "iDeal",
+    "pp_stripe_stripe": "Creditcard",
+    "pp_system_default": "Handmatige betaling"
+  },
+  "PaymentTest": {
+    "attention": "Let op:",
+    "testingOnly": "Alleen voor testdoeleinden."
+  },
+  "ProductActions": {
+    "addToCart": "In winkelwagen",
+    "outOfStock": "Niet op voorraad",
+    "selectOptions": "Selecteer opties",
+    "selectVariant": "Selecteer variant"
+  },
+  "ProductOnboardingCta": {
+    "continueInAdmin": "Installatie voortzetten in admin",
+    "continueSetup": "U kunt nu doorgaan met het instellen van uw winkel in de admin.",
+    "demoCreated": "Uw demoproduct is succesvol aangemaakt!"
+  },
+  "ProductPrice": {
+    "from": "Vanaf ",
+    "original": "Oorspronkelijk: "
+  },
+  "ProductRail": {
+    "viewAll": "Alles bekijken"
+  },
+  "ProductTabs": {
+    "easyReturns": "Gemakkelijk retourneren",
+    "easyReturnsDesc": "Retourneer eenvoudig uw product en wij betalen uw geld terug. Geen vragen gesteld – we doen ons best om uw retour zo moeiteloos mogelijk te maken.",
+    "fastDelivery": "Snelle levering",
+    "fastDeliveryDesc": "Uw pakket komt binnen 3-5 werkdagen aan op uw afhaallocatie of gewoon bij u thuis.",
+    "shippingReturns": "Verzending & Retourneren",
+    "simpleExchanges": "Eenvoudig ruilen",
+    "simpleExchangesDesc": "Past het toch niet helemaal goed? Geen zorgen - we ruilen uw product om voor een nieuw exemplaar."
+  },
+  "ProfileBillingAddress": {
+    "billingAddress": "Factuuradres",
+    "noBillingAddress": "Geen factuuradres"
+  },
+  "ProfileEmail": {
+    "email": "E-mail",
+    "label": "E-mail"
+  },
+  "ProfileName": {
+    "firstName": "Voornaam",
+    "label": "Naam",
+    "lastName": "Achternaam",
+    "noName": "Geen naam"
+  },
+  "ProfilePage": {
+    "description": "Bekijk en wijzig je naam, e-mailadres, telefoonnummer en factuuradres.",
+    "heading": "Profiel"
+  },
+  "ProfilePassword": {
+    "confirmPassword": "Bevestig wachtwoord",
+    "hidden": "Het wachtwoord wordt om veiligheidsredenen niet weergegeven",
+    "label": "Wachtwoord",
+    "newPassword": "Nieuw wachtwoord",
+    "oldPassword": "Oud wachtwoord"
+  },
+  "ProfilePhone": {
+    "label": "Telefoon",
+    "noPhone": "Geen telefoonnummer",
+    "phone": "Telefoon"
+  },
+  "PromoBanner": {
+    "close": "Sluiten",
+    "cta": "Probeer het",
+    "message": "Volledig uitgeruste, productieklare DTC starter."
+  },
+  "RegionSelect": {
+    "apply": "Toepassen",
+    "close": "Sluiten",
+    "placeholder": "Zoek land of taal",
+    "tabCountry": "Land",
+    "tabLanguage": "Taal",
+    "title": "Regio wijzigen"
+  },
+  "Register": {
+    "agreeText": "Door een {siteName}-account aan te maken, gaat u akkoord met",
+    "alreadyMember": "Al lid?",
+    "and": "en",
+    "description": "Maak een {siteName}-account om bestellingen en adressen op één plek te houden en sneller af te rekenen.",
+    "email": "E-mail",
+    "firstName": "Voornaam",
+    "heading": "Word lid van {siteName}",
+    "join": "Registreren",
+    "lastName": "Achternaam",
+    "password": "Wachtwoord",
+    "phone": "Telefoon",
+    "privacyPolicy": "Privacybeleid",
+    "signIn": "Inloggen",
+    "termsOfUse": "Gebruiksvoorwaarden"
+  },
+  "RelatedProducts": {
+    "title": "Dit vind je misschien ook leuk"
+  },
+  "ResetPassword": {
+    "confirmPassword": "Herhaal wachtwoord",
+    "description": "Kies een nieuw wachtwoord voor uw account.",
+    "descriptionWithEmail": "Kies een nieuw wachtwoord voor {email}.",
+    "done": "Uw wachtwoord is gewijzigd. U kunt er nu mee inloggen.",
+    "goToSignIn": "Inloggen",
+    "heading": "Nieuw wachtwoord",
+    "missingToken": "In deze link ontbreekt het token. Vraag een nieuwe aan op de inlogpagina.",
+    "password": "Nieuw wachtwoord",
+    "submit": "Wachtwoord opslaan"
+  },
+  "Review": {
+    "confirmText": "Door op de knop Betalen te klikken, bevestigt u dat u onze Gebruiksvoorwaarden, Verkoopvoorwaarden en Retourbeleid heeft gelezen, begrepen en accepteert, en dat u kennis heeft genomen van het Privacybeleid van {siteName}.",
+    "heading": "Controleren"
+  },
+  "Search": {
+    "empty": "Geen resultaten voor “{query}”",
+    "label": "Zoeken",
+    "loading": "Zoeken…",
+    "placeholder": "Zoek producten",
+    "popular": "Populaire producten"
+  },
+  "Shipping": {
+    "chooseStore": "Kies een winkel bij u in de buurt",
+    "continueToPayment": "Verder naar betaling",
+    "deliveryDescription": "Hoe wilt u uw bestelling laten bezorgen",
+    "edit": "Bewerken",
+    "heading": "Bezorging",
+    "method": "Methode",
+    "pickUpOrder": "Bestelling afhalen",
+    "shippingMethod": "Verzendmethode",
+    "store": "Winkel"
+  },
+  "ShippingDetails": {
+    "contact": "Contact",
+    "heading": "Bezorging",
+    "method": "Methode",
+    "shippingAddress": "Verzendadres"
+  },
+  "SideMenu": {
+    "copyright": "© {year} {siteName}. Alle rechten voorbehouden.",
+    "items": {
+      "account": "Account",
+      "cart": "Winkelwagen",
+      "home": "Home",
+      "store": "Winkel"
+    },
+    "menuButton": "Menu"
+  },
+  "SignInPrompt": {
+    "description": "Bij het afrekenen krijgt u uw opgeslagen adressen aangeboden, en de bestelling komt in uw account.",
+    "heading": "Meld u aan om sneller af te rekenen",
+    "signIn": "Inloggen"
+  },
+  "SortSelect": {
+    "latestArrivals": "Nieuwste producten",
+    "placeholder": "Sorteren op",
+    "priceHighLow": "Prijs: hoog → laag",
+    "priceLowHigh": "Prijs: laag → hoog"
+  },
+  "Store": {
+    "allProducts": "Alle producten"
+  },
+  "TransferActions": {
+    "acceptTransfer": "Overdracht accepteren",
+    "declineSuccess": "Overdracht van bestelling succesvol geweigerd!",
+    "declineTransfer": "Overdracht weigeren",
+    "transferSuccess": "Bestelling succesvol overgedragen!"
+  },
+  "TransferPage": {
+    "acceptError": "We konden de overdracht niet accepteren. De link is mogelijk ongeldig of al gebruikt.",
+    "acceptInfo": "Als u accepteert, neemt de nieuwe eigenaar alle verantwoordelijkheden en rechten van deze bestelling over.",
+    "acceptedBody": "Bestelling {id} is succesvol overgedragen aan de nieuwe eigenaar.",
+    "acceptedHeading": "Bestelling overgedragen!",
+    "declineError": "We konden de overdracht niet weigeren. De link is mogelijk ongeldig of al gebruikt.",
+    "declinedBody": "De overdracht van bestelling {id} is geweigerd.",
+    "declinedHeading": "Overdracht geweigerd",
+    "noAction": "Als u dit verzoek niet herkent of de eigendom wilt behouden, hoeft u niets te doen.",
+    "requestHeading": "Overdrachtsverzoek voor bestelling {id}",
+    "requestIntro": "U heeft een verzoek ontvangen om de eigendom van uw bestelling ({id}) over te dragen. Als u akkoord gaat, kunt u de overdracht goedkeuren met de knop hieronder."
+  },
+  "TransferRequest": {
+    "cantFindOrder": "Kunt u de bestelling die u zoekt niet vinden?",
+    "connectOrder": "Koppel een bestelling aan uw account.",
+    "heading": "Bestellingsoverdrachten",
+    "orderId": "Bestellink of ID",
+    "requestTransfer": "Overdracht aanvragen",
+    "transferEmailSent": "E-mail met overdrachtsverzoek verzonden naar {email}",
+    "transferRequested": "Overdracht voor bestelling {orderId} aangevraagd",
+    "whereToFind": "Open de bevestigingsmail van die bestelling en plak de link eruit hier."
+  }
+}

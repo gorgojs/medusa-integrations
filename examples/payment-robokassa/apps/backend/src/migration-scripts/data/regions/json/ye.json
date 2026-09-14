@@ -1,0 +1,29 @@
+{
+  "name": "Yemen",
+  "currency_code": "yer",
+  "countries": ["ye"],
+  "stock_location": {
+    "name": "Sana'a Warehouse",
+    "address": {
+      "address_1": "شارع الزبيري 30",
+      "country_code": "ye"
+    }
+  },
+  "shipping_prices": {
+    "courier": 1500,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 3750,
+    "sweatshirt": 7250,
+    "sweatpants": 6000,
+    "shorts": 4750,
+    "hoodie": 8750,
+    "chinoPants": 8250,
+    "pufferJacket": 17500,
+    "wirelessHeadphones": 23500,
+    "electricBike": 263000,
+    "servingPlate": 10250,
+    "espressoCup": 3750
+  }
+}

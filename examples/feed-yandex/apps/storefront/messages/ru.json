@@ -1,0 +1,698 @@
+{
+  "AccountInfo": {
+    "cancel": "Отмена",
+    "edit": "Изменить",
+    "errorDefault": "Произошла ошибка, попробуйте ещё раз",
+    "saveChanges": "Сохранить изменения",
+    "updatedSuccessfully": "{label} успешно обновлено"
+  },
+  "AccountLayout": {
+    "customerService": "Служба поддержки",
+    "faqDescription": "Ответы на часто задаваемые вопросы можно найти на странице службы поддержки.",
+    "gotQuestions": "Вопросы и ответы"
+  },
+  "AccountNav": {
+    "account": "Аккаунт",
+    "addresses": "Адреса",
+    "logOut": "Выйти",
+    "orders": "Заказы",
+    "overview": "Обзор",
+    "profile": "Профиль"
+  },
+  "AccountOverview": {
+    "addresses": "Адреса",
+    "completed": "Заполнено",
+    "hello": "Привет, {name}",
+    "noRecentOrders": "Нет последних заказов",
+    "profile": "Профиль",
+    "recentOrders": "Последние заказы",
+    "saved": "Сохранено",
+    "signedInAs": "Вы вошли как:"
+  },
+  "AddressCard": {
+    "addAddress": "Добавить адрес",
+    "default": "По умолчанию",
+    "editAddress": "Редактировать адрес",
+    "newAddress": "Новый адрес"
+  },
+  "AddressForm": {
+    "address": "Адрес",
+    "addressLine2": "Квартира, офис и т.д.",
+    "addressName": "Название",
+    "cancel": "Отмена",
+    "city": "Город",
+    "company": "Компания",
+    "country": "Страна",
+    "edit": "Изменить",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "phone": "Телефон",
+    "postalCode": "Почтовый индекс",
+    "province": "Область / Штат",
+    "remove": "Удалить",
+    "save": "Сохранить",
+    "stateProvince": "Штат / Область"
+  },
+  "AddressesPage": {
+    "description": "Просмотрите и обновите ваши адреса доставки. Вы можете добавить любое количество адресов. Сохранённые адреса будут доступны при оформлении заказа.",
+    "heading": "Адреса доставки"
+  },
+  "Breadcrumb": {
+    "home": "Главная",
+    "store": "Магазин"
+  },
+  "Cart": {
+    "emptyMessage": "В вашей корзине ничего нет. Воспользуйтесь ссылкой ниже, чтобы начать просматривать наши товары.",
+    "exploreProducts": "Смотреть товары",
+    "heading": "Корзина"
+  },
+  "CartDropdown": {
+    "bagEmpty": "Ваша корзина пуста.",
+    "exploreProducts": "Смотреть товары",
+    "goToCart": "Перейти в корзину",
+    "heading": "Корзина",
+    "subtotal": "Промежуточный итог",
+    "subtotalNote": "(без налогов)"
+  },
+  "CartMismatchBanner": {
+    "errorMessage": "Что-то пошло не так при попытке перенести вашу корзину",
+    "runTransferAgain": "Повторить перенос",
+    "transferring": "Перенос..."
+  },
+  "CartSummary": {
+    "goToCheckout": "Оформить заказ"
+  },
+  "CartTotals": {
+    "discount": "Скидка",
+    "shipping": "Доставка",
+    "subtotal": "Промежуточный итог (без доставки и налогов)",
+    "taxes": "Налоги",
+    "total": "Итого"
+  },
+  "CategoryMenu": {
+    "title": "Категории",
+    "viewAll": "Смотреть все"
+  },
+  "CheckoutPage": {
+    "addNewAddress": "Добавить новый адрес",
+    "addressHeading": "Адрес доставки",
+    "addressModalTitle": "Адрес доставки",
+    "addressNotNeededForPickup": "Не требуется при самовывозе",
+    "back": "Назад",
+    "backToCart": "В корзину",
+    "billingHeading": "Платежный адрес",
+    "billingSameAsShipping": "Платежный адрес совпадает с адресом доставки",
+    "close": "Закрыть",
+    "contactsHeading": "Контакты",
+    "contactsModalTitle": "Контакты",
+    "copyright": "© {year} {siteName}. Все права защищены.",
+    "deliveryDateFrom": "с {date}",
+    "deliveryDateUntil": "до {date}",
+    "deliveryToday": "Сегодня",
+    "discount": "Скидка",
+    "edit": "Изменить",
+    "fieldAddress": "Адрес",
+    "fieldCity": "Город",
+    "fieldCompany": "Компания",
+    "fieldEmail": "Email",
+    "fieldFirstName": "Имя",
+    "fieldLastName": "Фамилия",
+    "fieldPhone": "Телефон",
+    "fieldPostalCode": "Почтовый индекс",
+    "fieldProvince": "Область",
+    "freeShipping": "Бесплатно",
+    "giftCard": "Gift Card",
+    "itemsCount": "{count, plural, one {{count} товар} few {{count} товара} many {{count} товаров} other {{count} товаров}}",
+    "legal": "Нажимая «Оплатить», вы принимаете <terms>условия</terms>, <termsOfUse>условия использования</termsOfUse> и <returnPolicy>политику возврата</returnPolicy>, а также соглашаетесь с <privacyPolicy>политикой конфиденциальности</privacyPolicy>.",
+    "manualInput": "Ввести адрес вручную",
+    "orderComposition": "Состав заказа",
+    "paymentHeading": "Способ оплаты",
+    "recipientCheckbox": "Получать будет другой человек",
+    "recipientHeading": "Данные получателя",
+    "recipientLabel": "Получатель:",
+    "returnsLink": "Правила возврата",
+    "sameAsShipping": "Совпадает с адресом доставки",
+    "save": "Сохранить",
+    "saving": "Сохранение...",
+    "shippingCost": "Доставка",
+    "shippingDescription": "Выберите, как вы хотите получить заказ",
+    "shippingHeading": "Способ доставки",
+    "shippingLink": "Доставка",
+    "shippingUnavailable": "Методы доставки недоступны",
+    "signIn": "Войти",
+    "total": "Итого"
+  },
+  "Common": {
+    "clear": "Очистить",
+    "close": "Закрыть",
+    "hidePassword": "Скрыть пароль",
+    "orderNumber": "Заказ №{id}",
+    "poweredBy": "Powered by",
+    "remove": "Удалить",
+    "showPassword": "Показать пароль"
+  },
+  "ContentPages": {
+    "faq": [
+      {
+        "answer": "На странице доставки перечислены способы доставки и стоимость каждого из них.",
+        "question": "Когда придёт заказ?"
+      },
+      {
+        "answer": "На странице возврата описано, как отправить товар обратно или обменять его на другой.",
+        "question": "Как вернуть или обменять товар?"
+      },
+      {
+        "answer": "Напишите нам со страницы контактов, мы ответим как можно быстрее.",
+        "question": "Как с вами связаться?"
+      }
+    ],
+    "placeholder": "Это страница-заглушка из стартера. Замените текст своим до запуска магазина."
+  },
+  "DiscountCode": {
+    "addPromotionCode": "Добавить промокод",
+    "apply": "Применить",
+    "removeDiscount": "Удалить промокод из заказа"
+  },
+  "Errors": {
+    "emailExists": "Аккаунт с таким email уже существует.",
+    "generic": "Что-то пошло не так. Пожалуйста, попробуйте ещё раз.",
+    "insufficientInventory": "К сожалению, этого товара недостаточно на складе.",
+    "invalidCredentials": "Неверный email или пароль.",
+    "invalidDiscount": "Промокод недействителен или истёк.",
+    "invalidEmail": "Пожалуйста, введите корректный email.",
+    "invalidResetLink": "Ссылка больше не действует. Возможно, ей уже воспользовались или истёк срок. Запросите новую.",
+    "network": "Проблема с соединением. Проверьте интернет и попробуйте снова.",
+    "notFound": "Не удалось найти то, что вы искали.",
+    "passwordMismatch": "Пароли не совпадают.",
+    "passwordTooShort": "Пароль должен быть не короче 8 символов.",
+    "paymentFailed": "Не удалось обработать оплату. Попробуйте ещё раз или выберите другой способ.",
+    "unauthorized": "Пожалуйста, войдите, чтобы продолжить."
+  },
+  "Filters": {
+    "sort": "Сортировка",
+    "title": "Фильтры"
+  },
+  "Footer": {
+    "categoriesHeading": "Категории",
+    "collectionsHeading": "Коллекции",
+    "copyright": "© {year} {siteName}. Все права защищены.",
+    "infoHeading": "Информация",
+    "medusaDocs": "Документация Medusa",
+    "sourceCode": "Исходный код стартера",
+    "starterDocs": "Документация стартера"
+  },
+  "ForgotPassword": {
+    "backToSignIn": "Вернуться ко входу",
+    "description": "Укажите почту, на которую регистрировались, и мы пришлём ссылку для смены пароля.",
+    "email": "Почта",
+    "emailTitle": "Введите корректный адрес почты.",
+    "guestAction": "Зарегистрироваться",
+    "guestPrompt": "Оформляли заказ как гость и не регистрировались? Тогда пароля ещё нет. Создайте аккаунт на тот же адрес, и прошлые заказы можно будет привязать к нему.",
+    "heading": "Восстановление пароля",
+    "invalidEmail": "Введите корректный адрес почты.",
+    "requestFailed": "Не удалось отправить ссылку. Попробуйте ещё раз через минуту.",
+    "sent": "Если аккаунт с такой почтой существует, ссылка уже в пути. Проверьте входящие и папку со спамом.",
+    "submit": "Отправить ссылку"
+  },
+  "FreeShipping": {
+    "onlyAway": "Осталось {amount}",
+    "unlock": "Получить бесплатную доставку",
+    "unlocked": "Бесплатная доставка получена!",
+    "viewCart": "Корзина",
+    "viewProducts": "Смотреть товары"
+  },
+  "Help": {
+    "contact": "Связаться",
+    "needHelp": "Помощь",
+    "returnsExchanges": "Возврат и обмен"
+  },
+  "Hero": {
+    "eyebrow": "Под ключ · Open-source",
+    "features": [
+      {
+        "description": "улучшенный, без лишних шагов, с автозаполнением адреса",
+        "label": "Чекаут под конверсию"
+      },
+      {
+        "description": "поиск, каталог с фильтрами, многоуровневые категории и mobile-first",
+        "label": "Полноценная витрина"
+      },
+      {
+        "description": "meta-теги, карточки Open Graph и Twitter, JSON-LD, sitemap, robots, llms.txt и 100/100 в PageSpeed Insights",
+        "label": "Оптимизация под SEO и AI"
+      },
+      {
+        "description": "36 языков для витрины с поддержкой RTL и 241 страна для регионов продаж, определение страны, лишние легко убрать",
+        "label": "Полная локализация"
+      },
+      {
+        "description": "шаблоны на React Email через SMTP",
+        "label": "Транзакционные письма"
+      },
+      {
+        "description": "при изменениях в каталоге товаров",
+        "label": "Ревалидация кэша по запросу"
+      },
+      {
+        "badge": "New",
+        "description": "управление настройками провайдеров через Admin",
+        "href": "https://gorgojs.com/medusa-integration-module",
+        "label": "Модуль интеграций"
+      }
+    ],
+    "featuresHeading": "Возможности",
+    "readDocs": "Читать документацию",
+    "subtitle": "Всё, что не вошло в официальный Medusa DTC Starter.",
+    "title": "Готовый к продакшену Medusa DTC Starter",
+    "viewOnGitHub": "Смотреть на GitHub"
+  },
+  "ImageGallery": {
+    "goToImage": "Перейти к изображению {index}",
+    "openFullImage": "Открыть изображение целиком"
+  },
+  "LanguageSelect": {
+    "locales": {
+      "ar": "العربية",
+      "bg": "Български",
+      "bn": "বাংলা",
+      "cs": "Čeština",
+      "da": "Dansk",
+      "de": "Deutsch",
+      "el": "Ελληνικά",
+      "en": "English",
+      "es": "Español",
+      "fi": "Suomi",
+      "fr": "Français",
+      "he": "עברית",
+      "hi": "हिन्दी",
+      "hu": "Magyar",
+      "id": "Bahasa Indonesia",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ka": "ქართული",
+      "ko": "한국어",
+      "lt": "Lietuvių",
+      "mn": "Монгол",
+      "ms": "Bahasa Melayu",
+      "nb": "Norsk bokmål",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "ro": "Română",
+      "ru": "Русский",
+      "sk": "Slovenčina",
+      "sv": "Svenska",
+      "th": "ไทย",
+      "tl": "Tagalog",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "vi": "Tiếng Việt",
+      "zh": "中文"
+    }
+  },
+  "LineItemOptions": {
+    "variant": "Вариант:"
+  },
+  "Login": {
+    "description": "В аккаунте хранятся ваши заказы и адреса доставки, а оформление проходит быстрее.",
+    "email": "Электронная почта",
+    "emailTitle": "Введите действительный адрес электронной почты.",
+    "forgotPassword": "Забыли пароль?",
+    "heading": "Вход",
+    "joinUs": "Присоединиться",
+    "notMember": "Нет аккаунта?",
+    "password": "Пароль",
+    "signIn": "Войти"
+  },
+  "Metadata": {
+    "account": {
+      "description": "Обзор активности вашего аккаунта.",
+      "title": "Аккаунт"
+    },
+    "addresses": {
+      "description": "Посмотрите свои адреса",
+      "title": "Адреса"
+    },
+    "cart": {
+      "description": "Посмотрите свою корзину",
+      "title": "Корзина"
+    },
+    "category": {
+      "description": "Смотрите раздел «{category}» в {siteName}. Сравнивайте варианты, проверяйте цены и выбирайте подходящее."
+    },
+    "checkout": {
+      "description": "Проверьте заказ, укажите данные доставки и оплатите безопасно.",
+      "title": "Оформление заказа"
+    },
+    "collection": {
+      "description": "Откройте коллекцию «{collection}» в {siteName}. Посмотрите все вещи и выберите свою."
+    },
+    "contact": {
+      "description": "Напишите нам о заказе, товаре или чём-то ещё.",
+      "title": "Контакты"
+    },
+    "customerService": {
+      "description": "Ответы на самые частые вопросы и способы связаться с нами.",
+      "title": "Служба поддержки"
+    },
+    "home": {
+      "description": "Откройте для себя нашу коллекцию товаров. Покупайте новинки и находите что-то особенное."
+    },
+    "login": {
+      "description": "Войдите в свой аккаунт {siteName}.",
+      "title": "Войти"
+    },
+    "orderConfirmed": {
+      "description": "Покупка прошла успешно",
+      "title": "Заказ подтверждён"
+    },
+    "orderDetails": {
+      "description": "Посмотрите свой заказ"
+    },
+    "orderTransfer": {
+      "title": "Передача заказа"
+    },
+    "orders": {
+      "description": "Обзор ваших предыдущих заказов.",
+      "title": "Заказы"
+    },
+    "privacy": {
+      "description": "Узнайте, какие персональные данные собирает магазин и зачем.",
+      "title": "Политика конфиденциальности"
+    },
+    "profile": {
+      "description": "Посмотрите и измените свой профиль {siteName}.",
+      "title": "Профиль"
+    },
+    "resetPassword": {
+      "description": "Задайте новый пароль для аккаунта.",
+      "title": "Смена пароля"
+    },
+    "returns": {
+      "description": "Узнайте, как вернуть или обменять товар, в какой срок это можно сделать и когда придут деньги.",
+      "title": "Возврат и обмен"
+    },
+    "shipping": {
+      "description": "Узнайте, как доставляются заказы и сколько это стоит.",
+      "title": "Доставка"
+    },
+    "store": {
+      "description": "Смотрите весь каталог. Фильтруйте по категории и параметрам, сортируйте по цене и находите именно то, что нужно.",
+      "title": "Магазин"
+    },
+    "terms": {
+      "description": "Прочитайте правила, с которыми вы соглашаетесь при покупке.",
+      "title": "Условия использования"
+    }
+  },
+  "NativeSelect": {
+    "defaultPlaceholder": "Выбрать..."
+  },
+  "Nav": {
+    "account": "Профиль",
+    "cart": "Корзина ({count})"
+  },
+  "NotFound": {
+    "cartDescription": "Корзина, которую вы ищете, не существует. Очистите куки и попробуйте ещё раз.",
+    "description": "Страница, которую вы ищете, не существует.",
+    "goHome": "На главную",
+    "title": "Страница не найдена"
+  },
+  "OnboardingCta": {
+    "completeInAdmin": "Завершить настройку в панели",
+    "completeSetup": "Теперь вы можете завершить настройку магазина в панели администратора.",
+    "orderCreated": "Ваш тестовый заказ успешно создан!"
+  },
+  "OrderCard": {
+    "itemsCount": "{count, plural, one {{count} товар} few {{count} товара} many {{count} товаров} other {{count} товаров}}",
+    "more": "ещё",
+    "seeDetails": "Подробнее"
+  },
+  "OrderCompleted": {
+    "orderSuccess": "Ваш заказ успешно оформлен.",
+    "thankYou": "Спасибо!"
+  },
+  "OrderDetails": {
+    "backToOrders": "Назад к заказам",
+    "confirmationSentBefore": "Подтверждение заказа отправлено на",
+    "fulfillmentStatuses": {
+      "canceled": "Отменён",
+      "delivered": "Доставлен",
+      "fulfilled": "Собран",
+      "not_fulfilled": "Не собран",
+      "partially_delivered": "Доставлен частично",
+      "partially_fulfilled": "Собран частично",
+      "partially_shipped": "Отправлен частично",
+      "shipped": "Отправлен"
+    },
+    "items": "Товары",
+    "orderDate": "Дата заказа:",
+    "orderNumber": "Номер заказа:",
+    "paymentStatuses": {
+      "authorized": "Авторизован",
+      "awaiting": "Ожидает оплаты",
+      "canceled": "Отменён",
+      "captured": "Оплачен",
+      "not_paid": "Не оплачен",
+      "partially_authorized": "Авторизован частично",
+      "partially_captured": "Оплачен частично",
+      "partially_refunded": "Возвращён частично",
+      "refunded": "Возвращён",
+      "requires_action": "Требуется действие"
+    }
+  },
+  "OrderOverview": {
+    "continueShopping": "Продолжить покупки",
+    "noOrdersYet": "У вас пока нет заказов",
+    "nothingToSeeHere": "Здесь пока ничего нет"
+  },
+  "OrderSummary": {
+    "discount": "Скидка",
+    "giftCard": "Подарочная карта",
+    "heading": "Итог заказа",
+    "shipping": "Доставка",
+    "subtotal": "Промежуточный итог",
+    "taxes": "Налоги",
+    "total": "Итого"
+  },
+  "OrdersPage": {
+    "description": "Просматривайте свои предыдущие заказы и их статус.",
+    "heading": "Заказы"
+  },
+  "Payment": {
+    "anotherStep": "Появится дополнительный шаг",
+    "continueToReview": "Перейти к проверке",
+    "edit": "Изменить",
+    "enterPaymentDetails": "Ввести данные для оплаты",
+    "giftCard": "Подарочная карта",
+    "heading": "Оплата",
+    "paymentDetails": "Данные об оплате",
+    "paymentMethod": "Способ оплаты"
+  },
+  "PaymentButton": {
+    "placeOrder": "Оплатить",
+    "selectPaymentMethod": "Выберите способ оплаты"
+  },
+  "PaymentContainer": {
+    "enterPaymentDetails": "Введите данные для оплаты:",
+    "loadError": "Не удалось загрузить способы оплаты."
+  },
+  "PaymentDetails": {
+    "heading": "Оплата",
+    "paidAt": "оплачено",
+    "paymentDetails": "Детали оплаты",
+    "paymentMethod": "Способ оплаты"
+  },
+  "PaymentMethods": {
+    "pp_medusa-payments_default": "Банковская карта",
+    "pp_paypal_paypal": "PayPal",
+    "pp_stripe-bancontact_stripe": "Bancontact",
+    "pp_stripe-ideal_stripe": "iDeal",
+    "pp_stripe_stripe": "Банковская карта",
+    "pp_system_default": "Оплата вручную"
+  },
+  "PaymentTest": {
+    "attention": "Внимание:",
+    "testingOnly": "Только для тестирования."
+  },
+  "ProductActions": {
+    "addToCart": "В корзину",
+    "outOfStock": "Нет в наличии",
+    "selectOptions": "Выбрать опции",
+    "selectVariant": "Выбрать вариант"
+  },
+  "ProductOnboardingCta": {
+    "continueInAdmin": "Продолжить настройку в панели",
+    "continueSetup": "Теперь вы можете продолжить настройку магазина в панели администратора.",
+    "demoCreated": "Ваш демо-товар успешно создан!"
+  },
+  "ProductPrice": {
+    "from": "От ",
+    "original": "Цена: "
+  },
+  "ProductRail": {
+    "viewAll": "Смотреть все"
+  },
+  "ProductTabs": {
+    "easyReturns": "Лёгкий возврат",
+    "easyReturnsDesc": "Просто верните товар — мы вернём деньги. Без лишних вопросов, постараемся сделать возврат максимально простым.",
+    "fastDelivery": "Быстрая доставка",
+    "fastDeliveryDesc": "Ваш заказ прибудет через 3–5 рабочих дней в пункт выдачи или прямо к вам домой.",
+    "shippingReturns": "Доставка и возврат",
+    "simpleExchanges": "Простой обмен",
+    "simpleExchangesDesc": "Размер не подошёл? Без проблем — мы заменим товар на новый."
+  },
+  "ProfileBillingAddress": {
+    "billingAddress": "Платёжный адрес",
+    "noBillingAddress": "Нет платёжного адреса"
+  },
+  "ProfileEmail": {
+    "email": "Электронная почта",
+    "label": "Электронная почта"
+  },
+  "ProfileName": {
+    "firstName": "Имя",
+    "label": "Имя",
+    "lastName": "Фамилия",
+    "noName": "Нет имени"
+  },
+  "ProfilePage": {
+    "description": "Просматривайте и изменяйте имя, электронную почту, номер телефона и платёжный адрес.",
+    "heading": "Профиль"
+  },
+  "ProfilePassword": {
+    "confirmPassword": "Подтвердите пароль",
+    "hidden": "Пароль не отображается в целях безопасности",
+    "label": "Пароль",
+    "newPassword": "Новый пароль",
+    "oldPassword": "Старый пароль"
+  },
+  "ProfilePhone": {
+    "label": "Телефон",
+    "noPhone": "Нет номера телефона",
+    "phone": "Телефон"
+  },
+  "PromoBanner": {
+    "close": "Закрыть",
+    "cta": "Попробовать",
+    "message": "Полнофункциональный, готовый к продакшену DTC-стартер."
+  },
+  "RegionSelect": {
+    "apply": "Применить",
+    "close": "Закрыть",
+    "placeholder": "Поиск страны или языка",
+    "tabCountry": "Страна",
+    "tabLanguage": "Язык",
+    "title": "Смена региона"
+  },
+  "Register": {
+    "agreeText": "Создавая аккаунт {siteName}, вы соглашаетесь с",
+    "alreadyMember": "Уже участник?",
+    "and": "и",
+    "description": "Создайте аккаунт {siteName}, чтобы заказы и адреса были в одном месте, а оформление проходило быстрее.",
+    "email": "Электронная почта",
+    "firstName": "Имя",
+    "heading": "Стать участником {siteName}",
+    "join": "Присоединиться",
+    "lastName": "Фамилия",
+    "password": "Пароль",
+    "phone": "Телефон",
+    "privacyPolicy": "Политикой конфиденциальности",
+    "signIn": "Войти",
+    "termsOfUse": "Условиями использования"
+  },
+  "RelatedProducts": {
+    "title": "Вам может понравиться"
+  },
+  "ResetPassword": {
+    "confirmPassword": "Повторите пароль",
+    "description": "Придумайте новый пароль для аккаунта.",
+    "descriptionWithEmail": "Придумайте новый пароль для {email}.",
+    "done": "Пароль изменён. Теперь можно войти с новым паролем.",
+    "goToSignIn": "Войти",
+    "heading": "Новый пароль",
+    "missingToken": "В ссылке нет токена. Запросите новую на странице входа.",
+    "password": "Новый пароль",
+    "submit": "Сохранить пароль"
+  },
+  "Review": {
+    "confirmText": "Нажимая кнопку «Оплатить», вы подтверждаете, что прочитали, поняли и принимаете наши Условия использования, Условия продажи и Политику возврата, а также подтверждаете, что ознакомились с Политикой конфиденциальности {siteName}.",
+    "heading": "Проверка"
+  },
+  "Search": {
+    "empty": "Ничего не найдено по запросу «{query}»",
+    "label": "Поиск",
+    "loading": "Поиск…",
+    "placeholder": "Поиск товаров",
+    "popular": "Популярные товары"
+  },
+  "Shipping": {
+    "chooseStore": "Выберите ближайший магазин",
+    "continueToPayment": "Перейти к оплате",
+    "deliveryDescription": "Как вы хотите получить свой заказ",
+    "edit": "Изменить",
+    "heading": "Доставка",
+    "method": "Метод",
+    "pickUpOrder": "Самовывоз",
+    "shippingMethod": "Способ доставки",
+    "store": "Магазин"
+  },
+  "ShippingDetails": {
+    "contact": "Контакт",
+    "heading": "Доставка",
+    "method": "Метод",
+    "shippingAddress": "Адрес доставки"
+  },
+  "SideMenu": {
+    "copyright": "© {year} {siteName}. Все права защищены.",
+    "items": {
+      "account": "Профиль",
+      "cart": "Корзина",
+      "home": "Главная",
+      "store": "Магазин"
+    },
+    "menuButton": "Меню"
+  },
+  "SignInPrompt": {
+    "description": "При оформлении подставятся сохранённые адреса, а заказ попадёт в ваш аккаунт.",
+    "heading": "Войдите, чтобы оформить заказ быстрее",
+    "signIn": "Войти"
+  },
+  "SortSelect": {
+    "latestArrivals": "Новинки",
+    "placeholder": "Сортировка",
+    "priceHighLow": "Цена: по убыванию",
+    "priceLowHigh": "Цена: по возрастанию"
+  },
+  "Store": {
+    "allProducts": "Все товары"
+  },
+  "TransferActions": {
+    "acceptTransfer": "Принять перенос",
+    "declineSuccess": "Перенос заказа успешно отклонён!",
+    "declineTransfer": "Отклонить перенос",
+    "transferSuccess": "Заказ успешно перенесён!"
+  },
+  "TransferPage": {
+    "acceptError": "Не удалось принять перенос. Возможно, ссылка недействительна или уже использована.",
+    "acceptInfo": "Если вы примете запрос, новый владелец получит все права и ответственность по этому заказу.",
+    "acceptedBody": "Заказ {id} успешно перенесён новому владельцу.",
+    "acceptedHeading": "Заказ перенесён!",
+    "declineError": "Не удалось отклонить перенос. Возможно, ссылка недействительна или уже использована.",
+    "declinedBody": "Перенос заказа {id} отклонён.",
+    "declinedHeading": "Перенос отклонён",
+    "noAction": "Если вы не отправляли этот запрос или хотите оставить заказ за собой, ничего делать не нужно.",
+    "requestHeading": "Запрос на перенос заказа {id}",
+    "requestIntro": "Вам поступил запрос на передачу прав на заказ ({id}). Если вы согласны, подтвердите перенос кнопкой ниже."
+  },
+  "TransferRequest": {
+    "cantFindOrder": "Не можете найти свой заказ?",
+    "connectOrder": "Привяжите заказ к своему аккаунту.",
+    "heading": "Перенос заказа",
+    "orderId": "Ссылка на заказ или ID",
+    "requestTransfer": "Запросить перенос",
+    "transferEmailSent": "Письмо с запросом отправлено на {email}",
+    "transferRequested": "Перенос заказа {orderId} запрошен",
+    "whereToFind": "Откройте письмо с подтверждением того заказа и вставьте ссылку из него сюда."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "China",
+  "currency_code": "cny",
+  "countries": ["cn"],
+  "stock_location": {
+    "name": "Beijing Warehouse",
+    "address": {
+      "address_1": "长安街1号",
+      "country_code": "cn"
+    }
+  },
+  "shipping_prices": {
+    "courier": 43,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 108,
+    "sweatshirt": 209,
+    "sweatpants": 173,
+    "shorts": 137,
+    "hoodie": 252,
+    "chinoPants": 238,
+    "pufferJacket": 504,
+    "wirelessHeadphones": 677,
+    "electricBike": 7560,
+    "servingPlate": 295,
+    "espressoCup": 108
+  }
+}

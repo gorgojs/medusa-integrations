@@ -272,12 +272,6 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
 
 ## Полный пример кода интеграции в витрину
 
-Вы можете ознакомиться с изменениями, внесенными в стартовый шаблон [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa) в директории [`examples/payment-yookassa/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/medusa-storefront).
+Каждый шаг выше написан для стартового шаблона [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa) и ссылается на витрину, из которой он взят, зафиксированную в [`examples/payment-yookassa/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/medusa-storefront).
 
-Полный код интеграции можно посмотреть в разделе [comparison page](https://github.com/gorgojs/medusa-integrations/compare/%40gorgo/medusa-payment-yookassa%400.0.1...main), откройте вкладку `Files changed` и изучите различия в каталоге `examples/medusa-storefront`. Или запустите `diff` в терминале:
-
-```bash title="Terminal"
-git clone https://github.com/gorgojs/medusa-integrations
-cd medusa-integrations
-git diff @gorgo/medusa-payment-yookassa@0.0.1...main -- examples/payment-yookassa/medusa-storefront
-```
+[Пример в `main`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa) собран на [Medusa DTC Starter](https://github.com/gorgojs/medusa-dtc-starter), в котором уже есть точки расширения для этой интеграции. В его `README.md` перечислены восемь файлов, которые затрагивает плагин, а витрина лежит в [`apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/apps/storefront).

@@ -1,0 +1,699 @@
+{
+  "AccountInfo": {
+    "cancel": "Отказ",
+    "edit": "Редактирай",
+    "errorDefault": "Възникна грешка, моля опитайте отново",
+    "saveChanges": "Запази промените",
+    "updatedSuccessfully": "{label} беше успешно обновено"
+  },
+  "AccountLayout": {
+    "customerService": "Обслужване на клиенти",
+    "faqDescription": "Отговори на често задавани въпроси можете да намерите на страницата ни за обслужване на клиенти.",
+    "gotQuestions": "Въпроси и отговори"
+  },
+  "AccountNav": {
+    "account": "Профил",
+    "addresses": "Адреси",
+    "logOut": "Изход",
+    "orders": "Поръчки",
+    "overview": "Преглед",
+    "profile": "Профил"
+  },
+  "AccountOverview": {
+    "addresses": "Адреси",
+    "completed": "Завършен",
+    "hello": "Здравей, {name}",
+    "noRecentOrders": "Няма скорошни поръчки",
+    "profile": "Профил",
+    "recentOrders": "Скорошни поръчки",
+    "saved": "Запазени",
+    "signedInAs": "Влезли сте като:"
+  },
+  "AddressCard": {
+    "addAddress": "Добави адрес",
+    "default": "По подразбиране",
+    "editAddress": "Редактирай адрес",
+    "newAddress": "Нов адрес"
+  },
+  "AddressForm": {
+    "address": "Адрес",
+    "addressLine2": "Апартамент, офис и т.н.",
+    "addressName": "Име",
+    "cancel": "Отказ",
+    "city": "Град",
+    "company": "Фирма",
+    "country": "Държава",
+    "edit": "Редактирай",
+    "firstName": "Име",
+    "lastName": "Фамилия",
+    "phone": "Телефон",
+    "postalCode": "Пощенски код",
+    "province": "Област / Щат",
+    "remove": "Премахни",
+    "save": "Запази",
+    "stateProvince": "Щат / Област"
+  },
+  "AddressesPage": {
+    "description": "Преглеждайте и актуализирайте адресите си за доставка — можете да добавите колкото искате. Запазените адреси ще бъдат достъпни при поръчка.",
+    "heading": "Адреси за доставка"
+  },
+  "Breadcrumb": {
+    "home": "Начало",
+    "store": "Магазин"
+  },
+  "Cart": {
+    "emptyMessage": "Кошницата ви е празна. Използвайте връзката по-долу, за да разгледате нашите продукти.",
+    "exploreProducts": "Разгледай продуктите",
+    "heading": "Кошница"
+  },
+  "CartDropdown": {
+    "bagEmpty": "Кошницата ви е празна.",
+    "exploreProducts": "Разгледай продуктите",
+    "goToCart": "Към кошницата",
+    "heading": "Кошница",
+    "subtotal": "Междинна сума",
+    "subtotalNote": "(без данъци)"
+  },
+  "CartMismatchBanner": {
+    "errorMessage": "Нещо се обърка при опита за прехвърляне на кошницата ви",
+    "runTransferAgain": "Опитай прехвърлянето отново",
+    "transferring": "Прехвърляне..."
+  },
+  "CartSummary": {
+    "goToCheckout": "Към плащане"
+  },
+  "CartTotals": {
+    "discount": "Отстъпка",
+    "shipping": "Доставка",
+    "subtotal": "Междинна сума (без доставка и данъци)",
+    "taxes": "Данъци",
+    "total": "Общо"
+  },
+  "CategoryMenu": {
+    "title": "Категории",
+    "viewAll": "Виж всички"
+  },
+  "CheckoutPage": {
+    "addNewAddress": "Добави нов адрес",
+    "addressHeading": "Адрес за доставка",
+    "addressModalTitle": "Адрес за доставка",
+    "addressNotNeededForPickup": "Не е необходим при вземане от място",
+    "back": "Назад",
+    "backToCart": "Обратно към кошницата",
+    "billingHeading": "Адрес за фактуриране",
+    "billingSameAsShipping": "Адресът за фактуриране съвпада с адреса за доставка",
+    "close": "Затвори",
+    "contactsHeading": "Контакти",
+    "contactsModalTitle": "Контакти",
+    "copyright": "© {year} {siteName}. Всички права запазени.",
+    "deliveryDateFrom": "от {date}",
+    "deliveryDateUntil": "до {date}",
+    "deliveryToday": "Днес",
+    "discount": "Отстъпка",
+    "edit": "Редактирай",
+    "fieldAddress": "Адрес",
+    "fieldCity": "Град",
+    "fieldCompany": "Фирма",
+    "fieldEmail": "Имейл",
+    "fieldFirstName": "Име",
+    "fieldLastName": "Фамилия",
+    "fieldPhone": "Телефон",
+    "fieldPostalCode": "Пощенски код",
+    "fieldProvince": "Област",
+    "freeShipping": "Безплатно",
+    "giftCard": "Подаръчна карта",
+    "itemsCount": "{count, plural, one {{count} артикул} other {{count} артикула}}",
+    "legal": "С натискането на «Плати» приемате нашите <terms>условия</terms>, <termsOfUse>условия за ползване</termsOfUse> и <returnPolicy>политика за връщане</returnPolicy>, и се съгласявате с нашата <privacyPolicy>политика за поверителност</privacyPolicy>.",
+    "manualInput": "Въведи адрес ръчно",
+    "orderComposition": "Обобщение на поръчката",
+    "paymentHeading": "Начин на плащане",
+    "recipientCheckbox": "Получателят е друго лице",
+    "recipientHeading": "Данни на получателя",
+    "recipientLabel": "Получател:",
+    "returnsLink": "Политика за връщане",
+    "sameAsShipping": "Същият като адреса за доставка",
+    "save": "Запази",
+    "saving": "Запазване...",
+    "shippingCost": "Доставка",
+    "shippingDescription": "Изберете как да получите поръчката си",
+    "shippingHeading": "Метод на доставка",
+    "shippingLink": "Доставка",
+    "shippingUnavailable": "Няма налични методи за доставка",
+    "signIn": "Вход",
+    "total": "Общо"
+  },
+  "Common": {
+    "clear": "Изчистване",
+    "close": "Затвори",
+    "hidePassword": "Скриване на паролата",
+    "orderNumber": "Поръчка №{id}",
+    "poweredBy": "Powered by",
+    "remove": "Премахни",
+    "showPassword": "Показване на паролата"
+  },
+  "ContentPages": {
+    "faq": [
+      {
+        "answer": "Страницата за доставка изброява начините на доставка и цената на всеки от тях.",
+        "question": "Кога ще пристигне поръчката ми?"
+      },
+      {
+        "answer": "Страницата за връщане обяснява как да върнете артикул или да го замените с друг.",
+        "question": "Как да върна или заменя артикул?"
+      },
+      {
+        "answer": "Пишете ни от страницата за контакт и ще отговорим възможно най-скоро.",
+        "question": "Как да се свържа с вас?"
+      }
+    ],
+    "placeholder": "Тази страница идва със стартера като примерен текст. Заменете го със собствен преди старта."
+  },
+  "DiscountCode": {
+    "addPromotionCode": "Добавяне на промокод",
+    "apply": "Приложи",
+    "removeDiscount": "Премахни промокода от поръчката"
+  },
+  "Errors": {
+    "emailExists": "Вече съществува акаунт с този имейл.",
+    "generic": "Нещо се обърка. Моля, опитайте отново.",
+    "insufficientInventory": "За съжаление, наличността на този артикул е недостатъчна.",
+    "invalidCredentials": "Грешен имейл или парола.",
+    "invalidDiscount": "Този промокод е невалиден или е изтекъл.",
+    "invalidEmail": "Моля, въведете валиден имейл адрес.",
+    "invalidResetLink": "Тази връзка вече не е валидна. Може да е използвана или да е изтекла. Поискайте нова.",
+    "network": "Проблем с връзката. Проверете интернет връзката си и опитайте отново.",
+    "notFound": "Не открихме това, което търсите.",
+    "passwordMismatch": "Паролите не съвпадат.",
+    "passwordTooShort": "Паролата трябва да е поне 8 знака.",
+    "paymentFailed": "Не успяхме да обработим плащането ви. Моля, опитайте отново или изберете друг начин на плащане.",
+    "unauthorized": "Моля, влезте в акаунта си, за да продължите."
+  },
+  "Filters": {
+    "sort": "Подредба",
+    "title": "Филтри"
+  },
+  "Footer": {
+    "categoriesHeading": "Категории",
+    "collectionsHeading": "Колекции",
+    "copyright": "© {year} {siteName}. Всички права запазени.",
+    "infoHeading": "Информация",
+    "medusaDocs": "Документация на Medusa",
+    "sourceCode": "Изходен код на стартера",
+    "starterDocs": "Документация на стартера"
+  },
+  "ForgotPassword": {
+    "backToSignIn": "Обратно към входа",
+    "description": "Въведете имейла, с който се регистрирахте, и ще ви изпратим връзка за нова парола.",
+    "email": "Имейл",
+    "emailTitle": "Въведете валиден имейл адрес.",
+    "guestAction": "Регистрация",
+    "guestPrompt": "Поръчвали сте като гост и никога не сте се регистрирали? Тогава още няма парола. Създайте профил със същия адрес и ще можете да свържете онези поръчки с него.",
+    "heading": "Възстановяване на паролата",
+    "invalidEmail": "Въведете валиден имейл адрес.",
+    "requestFailed": "Връзката не можа да бъде изпратена. Опитайте отново след малко.",
+    "sent": "Ако има профил с този адрес, връзката вече пътува. Проверете входящата поща и папката със спам.",
+    "submit": "Изпрати връзка"
+  },
+  "FreeShipping": {
+    "onlyAway": "Остават само {amount}",
+    "unlock": "Отключи безплатна доставка",
+    "unlocked": "Безплатна доставка отключена!",
+    "viewCart": "Виж кошницата",
+    "viewProducts": "Виж продуктите"
+  },
+  "Help": {
+    "contact": "Контакт",
+    "needHelp": "Помощ",
+    "returnsExchanges": "Връщания и замени"
+  },
+  "Hero": {
+    "eyebrow": "Готово решение · Отворен код",
+    "features": [
+      {
+        "description": "подобрен, без излишни стъпки, с автоматично попълване на адрес",
+        "label": "Чекаут, оптимизиран за конверсия"
+      },
+      {
+        "description": "търсене, каталог с филтри, многостепенни категории и mobile-first дизайн",
+        "label": "Пълнофункционален онлайн магазин"
+      },
+      {
+        "description": "meta тагове, Open Graph и Twitter карти, JSON-LD, sitemap, robots, llms.txt и 100/100 в PageSpeed Insights",
+        "label": "Оптимизиран за SEO и AI"
+      },
+      {
+        "description": "36 езика за витрината с поддръжка на RTL и 241 държави за търговските региони, разпознаване на страната, ненужните се махат лесно",
+        "label": "Пълна локализация"
+      },
+      {
+        "description": "React Email шаблони през SMTP",
+        "label": "Транзакционни имейли"
+      },
+      {
+        "description": "при промени в каталога с продукти",
+        "label": "Ревалидиране на кеша при поискване"
+      },
+      {
+        "badge": "Ново",
+        "description": "управлявай настройките на доставчиците си през Admin",
+        "href": "https://gorgojs.com/medusa-integration-module",
+        "label": "Модул за интеграции"
+      }
+    ],
+    "featuresHeading": "Функции",
+    "readDocs": "Документация",
+    "subtitle": "Всичко, което официалният Medusa DTC starter пропуска.",
+    "title": "Готов за продукция Medusa DTC Starter",
+    "viewOnGitHub": "Виж в GitHub"
+  },
+  "ImageGallery": {
+    "goToImage": "Към изображение {index}",
+    "openFullImage": "Отваряне на цялото изображение"
+  },
+  "LanguageSelect": {
+    "locales": {
+      "ar": "العربية",
+      "bg": "Български",
+      "bn": "বাংলা",
+      "cs": "Čeština",
+      "da": "Dansk",
+      "de": "Deutsch",
+      "el": "Ελληνικά",
+      "en": "English",
+      "es": "Español",
+      "fi": "Suomi",
+      "fr": "Français",
+      "he": "עברית",
+      "hi": "हिन्दी",
+      "hu": "Magyar",
+      "id": "Bahasa Indonesia",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ka": "ქართული",
+      "ko": "한국어",
+      "lt": "Lietuvių",
+      "mn": "Монгол",
+      "ms": "Bahasa Melayu",
+      "nb": "Norsk bokmål",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "ro": "Română",
+      "ru": "Русский",
+      "sk": "Slovenčina",
+      "sv": "Svenska",
+      "th": "ไทย",
+      "tl": "Tagalog",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "vi": "Tiếng Việt",
+      "zh": "中文"
+    }
+  },
+  "LineItemOptions": {
+    "variant": "Вариант:"
+  },
+  "Login": {
+    "description": "Поръчките и адресите ви за доставка остават в профила, а плащането минава по-бързо.",
+    "email": "Имейл",
+    "emailTitle": "Въведете валиден имейл адрес.",
+    "forgotPassword": "Забравена парола?",
+    "heading": "Вход",
+    "joinUs": "Присъединете се",
+    "notMember": "Нямате акаунт?",
+    "password": "Парола",
+    "signIn": "Вход"
+  },
+  "Metadata": {
+    "account": {
+      "description": "Преглед на активността в акаунта ви.",
+      "title": "Профил"
+    },
+    "addresses": {
+      "description": "Вижте адресите си",
+      "title": "Адреси"
+    },
+    "cart": {
+      "description": "Вижте кошницата си",
+      "title": "Кошница"
+    },
+    "category": {
+      "description": "Разгледайте {category} в {siteName}. Сравнете опциите, вижте цените и открийте това, което ви подхожда."
+    },
+    "checkout": {
+      "description": "Прегледайте поръчката, въведете данните за доставка и платете сигурно.",
+      "title": "Плащане"
+    },
+    "collection": {
+      "description": "Разгледайте колекцията {collection} в {siteName}. Вижте всички продукти и открийте своя фаворит."
+    },
+    "contact": {
+      "description": "Пишете ни за поръчка, продукт или нещо друго.",
+      "title": "Контакти"
+    },
+    "customerService": {
+      "description": "Отговори на най-честите въпроси и начини да се свържете с нас.",
+      "title": "Обслужване на клиенти"
+    },
+    "home": {
+      "description": "Открийте нашата подбрана колекция от продукти. Разгледайте най-новите модели и намерете нещо специално."
+    },
+    "login": {
+      "description": "Влезте в акаунта си в {siteName}.",
+      "title": "Вход"
+    },
+    "orderConfirmed": {
+      "description": "Покупката ви беше успешна",
+      "title": "Поръчката е потвърдена"
+    },
+    "orderDetails": {
+      "description": "Вижте поръчката си"
+    },
+    "orderTransfer": {
+      "title": "Прехвърляне на поръчка"
+    },
+    "orders": {
+      "description": "Преглед на предишните ви поръчки.",
+      "title": "Поръчки"
+    },
+    "privacy": {
+      "description": "Вижте какви лични данни събира магазинът и защо.",
+      "title": "Политика за поверителност"
+    },
+    "profile": {
+      "description": "Вижте и редактирайте профила си в {siteName}.",
+      "title": "Профил"
+    },
+    "resetPassword": {
+      "description": "Задайте нова парола за профила си.",
+      "title": "Смяна на паролата"
+    },
+    "returns": {
+      "description": "Вижте как да върнете или замените продукт, в какъв срок и кога ще получите парите си обратно.",
+      "title": "Връщане и замяна"
+    },
+    "shipping": {
+      "description": "Вижте как се доставят поръчките и колко струва доставката.",
+      "title": "Доставка"
+    },
+    "store": {
+      "description": "Разгледайте целия каталог. Филтрирайте по категория и опция, подредете по цена и намерете точно каквото ви трябва.",
+      "title": "Магазин"
+    },
+    "terms": {
+      "description": "Прочетете правилата, с които се съгласявате при покупка.",
+      "title": "Условия за ползване"
+    }
+  },
+  "NativeSelect": {
+    "defaultPlaceholder": "Избери..."
+  },
+  "Nav": {
+    "account": "Профил",
+    "cart": "Кошница ({count})"
+  },
+  "NotFound": {
+    "cartDescription": "Кошницата, до която се опитвате да достъпите, не съществува. Изчистете бисквитките си и опитайте отново.",
+    "description": "Страницата, до която се опитвате да достъпите, не съществува.",
+    "goHome": "Към началната страница",
+    "title": "Страницата не е намерена"
+  },
+  "OnboardingCta": {
+    "completeInAdmin": "Завърши настройката в администрацията",
+    "completeSetup": "Сега можете да завършите настройката на магазина си в администрацията.",
+    "orderCreated": "Тестовата ви поръчка беше създадена успешно!"
+  },
+  "OrderCard": {
+    "itemsCount": "{count, plural, one {{count} артикул} other {{count} артикула}}",
+    "more": "още",
+    "seeDetails": "Виж детайли"
+  },
+  "OrderCompleted": {
+    "orderSuccess": "Поръчката ви беше направена успешно.",
+    "thankYou": "Благодарим ви!"
+  },
+  "OrderDetails": {
+    "backToOrders": "Назад към поръчките",
+    "confirmationSentBefore": "Изпратихме потвърждението на поръчката на",
+    "fulfillmentStatuses": {
+      "canceled": "Отказана",
+      "delivered": "Доставена",
+      "fulfilled": "Обработена",
+      "not_fulfilled": "Необработена",
+      "partially_delivered": "Частично доставена",
+      "partially_fulfilled": "Частично обработена",
+      "partially_shipped": "Частично изпратена",
+      "shipped": "Изпратена"
+    },
+    "items": "Артикули",
+    "orderDate": "Дата на поръчка:",
+    "orderNumber": "Номер на поръчка:",
+    "paymentStatuses": {
+      "authorized": "Авторизирана",
+      "awaiting": "Очаква плащане",
+      "canceled": "Отказана",
+      "captured": "Платена",
+      "not_paid": "Неплатена",
+      "partially_authorized": "Частично авторизирана",
+      "partially_captured": "Частично платена",
+      "partially_refunded": "Частично възстановена",
+      "refunded": "Възстановена",
+      "requires_action": "Изисква действие"
+    }
+  },
+  "OrderOverview": {
+    "continueShopping": "Продължи пазаруването",
+    "noOrdersYet": "Все още нямате поръчки",
+    "nothingToSeeHere": "Тук няма нищо"
+  },
+  "OrderSummary": {
+    "discount": "Отстъпка",
+    "giftCard": "Подаръчна карта",
+    "heading": "Обобщение на поръчката",
+    "shipping": "Доставка",
+    "subtotal": "Междинна сума",
+    "taxes": "Данъци",
+    "total": "Общо"
+  },
+  "OrdersPage": {
+    "description": "Преглеждайте предишните си поръчки и техния статус.",
+    "heading": "Поръчки"
+  },
+  "Payment": {
+    "anotherStep": "Ще се появи допълнителна стъпка",
+    "continueToReview": "Продължи към преглед",
+    "edit": "Редактирай",
+    "enterPaymentDetails": "Въведи данни за плащане",
+    "giftCard": "Подаръчна карта",
+    "heading": "Плащане",
+    "paymentDetails": "Данни за плащане",
+    "paymentMethod": "Начин на плащане"
+  },
+  "PaymentButton": {
+    "placeOrder": "Плати",
+    "selectPaymentMethod": "Изберете начин на плащане"
+  },
+  "PaymentContainer": {
+    "enterPaymentDetails": "Въведи данните за плащане:",
+    "loadError": "Методите за плащане не се заредиха."
+  },
+  "PaymentDetails": {
+    "heading": "Плащане",
+    "paidAt": "платено на",
+    "paymentDetails": "Данни за плащане",
+    "paymentMethod": "Начин на плащане"
+  },
+  "PaymentMethods": {
+    "pp_medusa-payments_default": "Кредитна карта",
+    "pp_paypal_paypal": "PayPal",
+    "pp_robokassa_robokassa": "Robokassa",
+    "pp_stripe-bancontact_stripe": "Bancontact",
+    "pp_stripe-ideal_stripe": "iDeal",
+    "pp_stripe_stripe": "Кредитна карта",
+    "pp_system_default": "Ръчно плащане"
+  },
+  "PaymentTest": {
+    "attention": "Внимание:",
+    "testingOnly": "Само за тестови цели."
+  },
+  "ProductActions": {
+    "addToCart": "Добави в кошницата",
+    "outOfStock": "Изчерпан",
+    "selectOptions": "Избери опции",
+    "selectVariant": "Избери вариант"
+  },
+  "ProductOnboardingCta": {
+    "continueInAdmin": "Продължи настройката в администрацията",
+    "continueSetup": "Сега можете да продължите настройката на магазина си в администрацията.",
+    "demoCreated": "Демо продуктът ви беше създаден успешно!"
+  },
+  "ProductPrice": {
+    "from": "От ",
+    "original": "Оригинална цена: "
+  },
+  "ProductRail": {
+    "viewAll": "Виж всички"
+  },
+  "ProductTabs": {
+    "easyReturns": "Лесно връщане",
+    "easyReturnsDesc": "Просто върнете продукта и ние ще възстановим парите ви. Без излишни въпроси — ще направим всичко възможно връщането да бъде без затруднения.",
+    "fastDelivery": "Бърза доставка",
+    "fastDeliveryDesc": "Пратката ви ще пристигне в рамките на 3-5 работни дни в избрания пункт за вземане или директно у дома.",
+    "shippingReturns": "Доставка и връщане",
+    "simpleExchanges": "Лесна замяна",
+    "simpleExchangesDesc": "Размерът не е съвсем подходящ? Няма проблем — ще заменим продукта ви с нов."
+  },
+  "ProfileBillingAddress": {
+    "billingAddress": "Адрес за фактуриране",
+    "noBillingAddress": "Няма адрес за фактуриране"
+  },
+  "ProfileEmail": {
+    "email": "Имейл",
+    "label": "Имейл"
+  },
+  "ProfileName": {
+    "firstName": "Име",
+    "label": "Име",
+    "lastName": "Фамилия",
+    "noName": "Няма име"
+  },
+  "ProfilePage": {
+    "description": "Преглеждайте и обновявайте името, имейла, телефона и адреса си за фактуриране.",
+    "heading": "Профил"
+  },
+  "ProfilePassword": {
+    "confirmPassword": "Потвърди парола",
+    "hidden": "Паролата не се показва от съображения за сигурност",
+    "label": "Парола",
+    "newPassword": "Нова парола",
+    "oldPassword": "Стара парола"
+  },
+  "ProfilePhone": {
+    "label": "Телефон",
+    "noPhone": "Няма телефонен номер",
+    "phone": "Телефон"
+  },
+  "PromoBanner": {
+    "close": "Затвори",
+    "cta": "Опитай",
+    "message": "Пълнофункционален, готов за продукция DTC starter."
+  },
+  "RegionSelect": {
+    "apply": "Приложи",
+    "close": "Затвори",
+    "placeholder": "Търси държава или език",
+    "tabCountry": "Държава",
+    "tabLanguage": "Език",
+    "title": "Смяна на регион"
+  },
+  "Register": {
+    "agreeText": "Създавайки акаунт в {siteName}, вие се съгласявате с",
+    "alreadyMember": "Вече имате акаунт?",
+    "and": "и",
+    "description": "Създайте профил в {siteName}, за да са поръчките и адресите на едно място и плащането да е по-бързо.",
+    "email": "Имейл",
+    "firstName": "Име",
+    "heading": "Станете член на {siteName}",
+    "join": "Присъедини се",
+    "lastName": "Фамилия",
+    "password": "Парола",
+    "phone": "Телефон",
+    "privacyPolicy": "Политика за поверителност",
+    "signIn": "Вход",
+    "termsOfUse": "Условия за ползване"
+  },
+  "RelatedProducts": {
+    "title": "Може да ви хареса"
+  },
+  "ResetPassword": {
+    "confirmPassword": "Повторете паролата",
+    "description": "Изберете нова парола за профила си.",
+    "descriptionWithEmail": "Изберете нова парола за {email}.",
+    "done": "Паролата е сменена. Вече можете да влезете с нея.",
+    "goToSignIn": "Вход",
+    "heading": "Нова парола",
+    "missingToken": "В тази връзка липсва токен. Поискайте нова от страницата за вход.",
+    "password": "Нова парола",
+    "submit": "Запази паролата"
+  },
+  "Review": {
+    "confirmText": "С натискането на бутона «Плати» потвърждавате, че сте прочели, разбирате и приемате нашите Условия за ползване, Условия за продажба и Политика за връщане, и потвърждавате, че сте се запознали с Политиката за поверителност на {siteName}.",
+    "heading": "Преглед"
+  },
+  "Search": {
+    "empty": "Няма резултати за „{query}“",
+    "label": "Търсене",
+    "loading": "Търсене…",
+    "placeholder": "Търси продукти",
+    "popular": "Популярни продукти"
+  },
+  "Shipping": {
+    "chooseStore": "Избери магазин близо до теб",
+    "continueToPayment": "Продължи към плащане",
+    "deliveryDescription": "Как искате да получите поръчката си",
+    "edit": "Редактирай",
+    "heading": "Доставка",
+    "method": "Метод",
+    "pickUpOrder": "Вземи поръчката си",
+    "shippingMethod": "Метод на доставка",
+    "store": "Магазин"
+  },
+  "ShippingDetails": {
+    "contact": "Контакт",
+    "heading": "Доставка",
+    "method": "Метод",
+    "shippingAddress": "Адрес за доставка"
+  },
+  "SideMenu": {
+    "copyright": "© {year} {siteName}. Всички права запазени.",
+    "items": {
+      "account": "Профил",
+      "cart": "Кошница",
+      "home": "Начало",
+      "store": "Магазин"
+    },
+    "menuButton": "Меню"
+  },
+  "SignInPrompt": {
+    "description": "При плащане се предлагат запазените ви адреси, а поръчката отива в профила ви.",
+    "heading": "Влезте, за да завършите поръчката по-бързо",
+    "signIn": "Вход"
+  },
+  "SortSelect": {
+    "latestArrivals": "Най-нови постъпления",
+    "placeholder": "Подреди по",
+    "priceHighLow": "Цена: висока → ниска",
+    "priceLowHigh": "Цена: ниска → висока"
+  },
+  "Store": {
+    "allProducts": "Всички продукти"
+  },
+  "TransferActions": {
+    "acceptTransfer": "Приеми прехвърлянето",
+    "declineSuccess": "Прехвърлянето на поръчката е отказано успешно!",
+    "declineTransfer": "Откажи прехвърлянето",
+    "transferSuccess": "Поръчката е прехвърлена успешно!"
+  },
+  "TransferPage": {
+    "acceptError": "Не успяхме да приемем прехвърлянето. Възможно е връзката да е невалидна или вече използвана.",
+    "acceptInfo": "Ако приемете, новият собственик ще поеме всички права и отговорности, свързани с тази поръчка.",
+    "acceptedBody": "Поръчка {id} беше успешно прехвърлена на новия собственик.",
+    "acceptedHeading": "Поръчката е прехвърлена!",
+    "declineError": "Не успяхме да откажем прехвърлянето. Възможно е връзката да е невалидна или вече използвана.",
+    "declinedBody": "Прехвърлянето на поръчка {id} беше отказано.",
+    "declinedHeading": "Прехвърлянето е отказано",
+    "noAction": "Ако не разпознавате тази заявка или искате да запазите собствеността, не е необходимо да предприемате нищо.",
+    "requestHeading": "Заявка за прехвърляне на поръчка {id}",
+    "requestIntro": "Получихте заявка за прехвърляне на собствеността на поръчка ({id}). Ако сте съгласни, можете да одобрите прехвърлянето с бутона по-долу."
+  },
+  "TransferRequest": {
+    "cantFindOrder": "Не можете да намерите поръчката, която търсите?",
+    "connectOrder": "Свържете поръчка с вашия акаунт.",
+    "heading": "Прехвърляне на поръчки",
+    "orderId": "Връзка към поръчката или ID",
+    "requestTransfer": "Заяви прехвърляне",
+    "transferEmailSent": "Имейл със заявка за прехвърляне е изпратен на {email}",
+    "transferRequested": "Заявено е прехвърляне на поръчка {orderId}",
+    "whereToFind": "Отворете имейла с потвърждение за онази поръчка и поставете тук връзката от него."
+  }
+}

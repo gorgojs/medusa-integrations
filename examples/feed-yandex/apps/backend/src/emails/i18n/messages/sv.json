@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Fortsätt handla",
+    "haveAccount": "Har du redan ett konto? Gå till",
+    "item": "Artikel",
+    "myOrders": "Mina beställningar",
+    "orCall": "eller ring",
+    "orderSummary": "Ordersammanfattning",
+    "questionsPrefix": "Om du har frågor, skriv till oss på",
+    "shipping": "Frakt",
+    "total": "Totalt",
+    "trackOrder": "Spåra beställning",
+    "viewOrder": "Visa order"
+  },
+  "Delivery": {
+    "bodyOrder": "Order <strong>#{id}</strong> har levererats. Vi hoppas att allt kom fram i gott skick.",
+    "headingAnon": "Din order har levererats",
+    "headingWithName": "{name}, din order har levererats",
+    "preview": "Order #{id} levererad",
+    "somethingWrong": "Om något inte stämmer, hör av dig inom 14 dagar så löser vi det.",
+    "subject": "Order #{id} levererad",
+    "textFallback": "Order #{id} har levererats."
+  },
+  "Fulfillment": {
+    "bodyOrder": "Order <strong>#{id}</strong> är packad och väntar på att lämnas till transportören.",
+    "deliveryCity": "Levereras till {city}.",
+    "headingAnon": "Vi förbereder din order",
+    "headingWithName": "{name}, vi förbereder din order",
+    "nextStep": "Vi skickar spårningsnumret så snart paketet är på väg.",
+    "preview": "Order #{id} förbereds",
+    "subject": "Order #{id} förbereds",
+    "textFallback": "Order #{id} är packad."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. Alla rättigheter förbehållna."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "Order <strong>#{id}</strong> har avbrutits.",
+    "headingAnon": "Din order har avbrutits",
+    "headingWithName": "{name}, din order har avbrutits",
+    "preview": "Order #{id} avbruten",
+    "refundNote": "Om ordern var betald går pengarna tillbaka till samma kort. Banker brukar behöva upp till 10 bankdagar.",
+    "subject": "Order #{id} avbruten",
+    "textFallback": "Order #{id} har avbrutits."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "Beställning <strong>#{id}</strong> är slutförd. Tack för att du valde oss!",
+    "bodyPromo": "Vi ser gärna att du kommer tillbaka. Kika på nyheterna i vår butik.",
+    "deliveryCity": "Levererad till {city}.",
+    "headingAnon": "Din beställning är slutförd!",
+    "headingWithName": "{name}, din beställning är slutförd!",
+    "preview": "Beställning #{id} slutförd. Tack för ditt köp!",
+    "subject": "Beställning #{id} slutförd",
+    "textFallback": "Beställning #{id} slutförd. Tack för ditt köp!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "Beställning <strong>#{id}</strong> har lagts.",
+    "deliveryCity": "Leverans till {city}.",
+    "headingAnon": "Din beställning är lagd!",
+    "headingWithName": "{name}, din beställning är lagd!",
+    "preview": "Beställning #{id} har lagts",
+    "subject": "Beställning #{id} lagd",
+    "textFallback": "Beställning #{id} har lagts.\n\nVi förbereder din beställning och skickar den inom kort.",
+    "watchStatus": "Du kan följa din beställnings status på ditt konto."
+  },
+  "OrderTransfer": {
+    "body": "En begäran har gjorts om att överföra beställning <strong>#{id}</strong> till ett annat konto. Om det var du, bekräfta överföringen med knappen nedan. Annars kan du ignorera det här mejlet.",
+    "button": "Granska begäran",
+    "heading": "Begäran om överföring av beställning",
+    "hint": "Beställningen överförs först efter din bekräftelse. Om du inte har begärt en överföring händer ingenting med din beställning.",
+    "preview": "Begäran om överföring av beställning #{id}",
+    "subject": "Begäran om överföring av beställning #{id}",
+    "textFallback": "Begäran om överföring av beställning #{id}\n\nFölj länken för att granska begäran:\n{url}\n\nOm du inte har begärt en överföring kan du ignorera det här mejlet."
+  },
+  "PasswordReset": {
+    "body": "Vi har fått en begäran om att återställa lösenordet för <strong>{email}</strong>. Klicka på knappen nedan för att ange ett nytt lösenord.",
+    "button": "Återställ lösenord",
+    "heading": "Återställ lösenord",
+    "hint": "Länken gäller i <strong>15 minuter</strong>. Om du inte har begärt en återställning kan du ignorera det här mejlet.",
+    "preview": "Återställ lösenord, länken gäller i 15 minuter",
+    "subject": "Återställ lösenord",
+    "textFallback": "Återställ lösenord\n\nFölj länken för att återställa ditt lösenord (gäller i 15 minuter):\n{url}\n\nOm du inte har begärt en återställning kan du ignorera det här mejlet."
+  },
+  "Payment": {
+    "bodyOrder": "Beställning <strong>#{id}</strong> har betalats. Vi förbereder den nu för leverans.",
+    "headingAnon": "Din beställning är betald!",
+    "headingWithName": "{name}, din beställning är betald!",
+    "preview": "Beställning #{id} har betalats",
+    "subject": "Beställning #{id} betald",
+    "textFallback": "Beställning #{id} har betalats.\n\nVi förbereder din beställning och skickar den inom kort.",
+    "watchStatus": "Du kan följa din beställnings status på ditt konto."
+  },
+  "Shipment": {
+    "bodyOrder": "Beställning <strong>#{id}</strong> har lämnats till transportören.",
+    "deliveryCity": "Leverans till {city}.",
+    "deliveryTime": "Normal leveranstid är 1-7 arbetsdagar beroende på din region.",
+    "headingAnon": "Din beställning är på väg!",
+    "headingWithName": "{name}, din beställning är på väg!",
+    "noTracking": "Spårningsnumret läggs till i din beställning på kontot så snart paketet lämnats till transportören.",
+    "preview": "Beställning #{id} har skickats",
+    "subject": "Beställning #{id} skickad",
+    "textDelivery": "Normal leveranstid är 1-7 arbetsdagar.",
+    "textFallback": "Beställning #{id} har skickats.",
+    "textTracking": "Spårningsnummer: {numbers}",
+    "trackLabel": "Spårningsnummer:",
+    "trackingTitle": "Spårningsinformation"
+  },
+  "Welcome": {
+    "body": "Tack för att du registrerade dig! Ditt konto är klart. Nu kan du handla snabbare, följa dina beställningar och spara leveransadresser på ditt konto.",
+    "button": "Börja handla",
+    "claimOrders": "Har du handlat tidigare utan konto? De ordrarna kan kopplas hit under",
+    "claimOrdersLink": "dina ordrar",
+    "headingAnon": "Välkommen!",
+    "headingWithName": "Välkommen, {name}!",
+    "preview": "Välkommen till {store}!",
+    "subject": "Välkommen!",
+    "textFallback": "Välkommen!\n\nTack för att du registrerade dig. Ditt konto är klart.\nBörja handla: {url}"
+  }
+}

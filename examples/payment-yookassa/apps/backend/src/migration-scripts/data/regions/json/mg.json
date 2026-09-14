@@ -1,0 +1,29 @@
+{
+  "name": "Madagascar",
+  "currency_code": "mga",
+  "countries": ["mg"],
+  "stock_location": {
+    "name": "Antananarivo Warehouse",
+    "address": {
+      "address_1": "Avenue de l'Indépendance 34",
+      "country_code": "mg"
+    }
+  },
+  "shipping_prices": {
+    "courier": 27000,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 67500,
+    "sweatshirt": 130500,
+    "sweatpants": 108000,
+    "shorts": 85500,
+    "hoodie": 157500,
+    "chinoPants": 148500,
+    "pufferJacket": 315000,
+    "wirelessHeadphones": 423000,
+    "electricBike": 4725000,
+    "servingPlate": 184500,
+    "espressoCup": 67500
+  }
+}
