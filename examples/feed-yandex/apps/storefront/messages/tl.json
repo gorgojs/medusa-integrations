@@ -1,0 +1,698 @@
+{
+  "AccountInfo": {
+    "cancel": "Kanselahin",
+    "edit": "I-edit",
+    "errorDefault": "May naganap na error, pakisubukang muli",
+    "saveChanges": "I-save ang mga pagbabago",
+    "updatedSuccessfully": "Matagumpay na na-update ang {label}"
+  },
+  "AccountLayout": {
+    "customerService": "Customer Service",
+    "faqDescription": "Makikita mo ang mga madalas itanong at ang mga sagot dito sa aming customer service page.",
+    "gotQuestions": "Mga tanong at sagot"
+  },
+  "AccountNav": {
+    "account": "Account",
+    "addresses": "Mga Address",
+    "logOut": "Mag-log out",
+    "orders": "Mga Order",
+    "overview": "Buod",
+    "profile": "Profile"
+  },
+  "AccountOverview": {
+    "addresses": "Mga Address",
+    "completed": "Kumpleto",
+    "hello": "Kumusta, {name}",
+    "noRecentOrders": "Walang kamakailang order",
+    "profile": "Profile",
+    "recentOrders": "Mga Kamakailang Order",
+    "saved": "Naka-save",
+    "signedInAs": "Naka-sign in bilang:"
+  },
+  "AddressCard": {
+    "addAddress": "Magdagdag ng address",
+    "default": "Default",
+    "editAddress": "I-edit ang address",
+    "newAddress": "Bagong address"
+  },
+  "AddressForm": {
+    "address": "Address",
+    "addressLine2": "Apartment, suite, atbp.",
+    "addressName": "Pangalan",
+    "cancel": "Kanselahin",
+    "city": "Lungsod",
+    "company": "Kumpanya",
+    "country": "Bansa",
+    "edit": "I-edit",
+    "firstName": "Pangalan",
+    "lastName": "Apelyido",
+    "phone": "Telepono",
+    "postalCode": "Zip Code",
+    "province": "Probinsya / State",
+    "remove": "Alisin",
+    "save": "I-save",
+    "stateProvince": "State / Probinsya"
+  },
+  "AddressesPage": {
+    "description": "Tingnan at i-update ang iyong mga address ng paghahatid, maaari kang magdagdag ng kahit ilan. Ang pag-save ng iyong mga address ay magpapadali sa checkout.",
+    "heading": "Mga Address ng Paghahatid"
+  },
+  "Breadcrumb": {
+    "home": "Home",
+    "store": "Tindahan"
+  },
+  "Cart": {
+    "emptyMessage": "Wala pang laman ang cart mo. Gamitin ang link sa ibaba para simulan ang pamimili.",
+    "exploreProducts": "Tuklasin ang mga produkto",
+    "heading": "Cart"
+  },
+  "CartDropdown": {
+    "bagEmpty": "Walang laman ang iyong shopping bag.",
+    "exploreProducts": "Tuklasin ang mga produkto",
+    "goToCart": "Pumunta sa cart",
+    "heading": "Cart",
+    "subtotal": "Subtotal",
+    "subtotalNote": "(hindi kasama ang buwis)"
+  },
+  "CartMismatchBanner": {
+    "errorMessage": "May nagkamali nang sinubukan naming ilipat ang iyong cart",
+    "runTransferAgain": "Subukang muli ang paglipat",
+    "transferring": "Nililipat..."
+  },
+  "CartSummary": {
+    "goToCheckout": "Pumunta sa Checkout"
+  },
+  "CartTotals": {
+    "discount": "Diskwento",
+    "shipping": "Paghahatid",
+    "subtotal": "Subtotal (hindi kasama ang paghahatid at buwis)",
+    "taxes": "Buwis",
+    "total": "Kabuuan"
+  },
+  "CategoryMenu": {
+    "title": "Mga Kategorya",
+    "viewAll": "Tingnan lahat"
+  },
+  "CheckoutPage": {
+    "addNewAddress": "Magdagdag ng bagong address",
+    "addressHeading": "Address ng Paghahatid",
+    "addressModalTitle": "Address ng Paghahatid",
+    "addressNotNeededForPickup": "Hindi kailangan para sa pickup",
+    "back": "Bumalik",
+    "backToCart": "Bumalik sa cart",
+    "billingHeading": "Billing Address",
+    "billingSameAsShipping": "Kapareho ng address ng paghahatid ang billing address",
+    "close": "Isara",
+    "contactsHeading": "Mga Contact",
+    "contactsModalTitle": "Mga Contact",
+    "copyright": "© {year} {siteName}. Lahat ng karapatan ay nakalaan.",
+    "deliveryDateFrom": "mula {date}",
+    "deliveryDateUntil": "hanggang {date}",
+    "deliveryToday": "Ngayon",
+    "discount": "Diskwento",
+    "edit": "I-edit",
+    "fieldAddress": "Address",
+    "fieldCity": "Lungsod",
+    "fieldCompany": "Kumpanya",
+    "fieldEmail": "Email",
+    "fieldFirstName": "Pangalan",
+    "fieldLastName": "Apelyido",
+    "fieldPhone": "Telepono",
+    "fieldPostalCode": "Zip Code",
+    "fieldProvince": "Probinsya",
+    "freeShipping": "Libre",
+    "giftCard": "Gift Card",
+    "itemsCount": "{count, plural, one {{count} item} other {{count} na item}}",
+    "legal": "Sa pag-click ng «Bayaran», tinatanggap mo ang aming <terms>mga tuntunin</terms>, <termsOfUse>mga tuntunin sa paggamit</termsOfUse>, at <returnPolicy>patakaran sa pagsauli</returnPolicy>, at sumasang-ayon ka sa aming <privacyPolicy>patakaran sa privacy</privacyPolicy>.",
+    "manualInput": "Ilagay ang address nang manu-mano",
+    "orderComposition": "Buod ng Order",
+    "paymentHeading": "Paraan ng bayad",
+    "recipientCheckbox": "Ibang tao ang tatanggap",
+    "recipientHeading": "Detalye ng tatanggap",
+    "recipientLabel": "Tatanggap:",
+    "returnsLink": "Patakaran sa Pagsauli",
+    "sameAsShipping": "Kapareho ng address ng paghahatid",
+    "save": "I-save",
+    "saving": "Sine-save...",
+    "shippingCost": "Paghahatid",
+    "shippingDescription": "Piliin kung paano ihahatid ang iyong order",
+    "shippingHeading": "Paraan ng paghahatid",
+    "shippingLink": "Paghahatid",
+    "shippingUnavailable": "Walang available na paraan ng paghahatid",
+    "signIn": "Mag-sign in",
+    "total": "Kabuuan"
+  },
+  "Common": {
+    "clear": "I-clear",
+    "close": "Isara",
+    "hidePassword": "Itago ang password",
+    "orderNumber": "Order #{id}",
+    "poweredBy": "Pinapagana ng",
+    "remove": "Alisin",
+    "showPassword": "Ipakita ang password"
+  },
+  "ContentPages": {
+    "faq": [
+      {
+        "answer": "Nakalista sa pahina ng pagpapadala ang mga opsyon sa paghahatid at ang halaga ng bawat isa.",
+        "question": "Kailan darating ang order ko?"
+      },
+      {
+        "answer": "Ipinapaliwanag ng pahina ng pagsasauli kung paano ibalik ang item o palitan ito ng iba.",
+        "question": "Paano magsauli o magpalit ng item?"
+      },
+      {
+        "answer": "Sumulat sa amin mula sa pahina ng kontak at sasagot kami sa lalong madaling panahon.",
+        "question": "Paano ko kayo makokontak?"
+      }
+    ],
+    "placeholder": "Kasama ang pahinang ito sa starter bilang halimbawang teksto. Palitan ito ng sarili mo bago mag-live."
+  },
+  "DiscountCode": {
+    "addPromotionCode": "Magdagdag ng promo code",
+    "apply": "I-apply",
+    "removeDiscount": "Alisin ang promo code sa order"
+  },
+  "Errors": {
+    "emailExists": "May account na gumagamit na ng email na ito.",
+    "generic": "May nagkamali. Pakisubukang muli.",
+    "insufficientInventory": "Paumanhin, hindi sapat ang stock para sa item na ito.",
+    "invalidCredentials": "Maling email o password.",
+    "invalidDiscount": "Hindi wasto o expired na ang promo code na ito.",
+    "invalidEmail": "Pakilagay ang wastong email address.",
+    "invalidResetLink": "Hindi na gumagana ang link na ito. Baka nagamit na o nag-expire. Humiling ng bago.",
+    "network": "Problema sa koneksyon. Paki-check ang iyong internet at subukang muli.",
+    "notFound": "Hindi namin nahanap ang hinahanap mo.",
+    "passwordMismatch": "Hindi magkatugma ang mga password.",
+    "passwordTooShort": "Dapat may hindi bababa sa 8 karakter ang password.",
+    "paymentFailed": "Hindi namin naiproseso ang iyong bayad. Pakisubukang muli o gumamit ng ibang paraan.",
+    "unauthorized": "Mag-sign in muna para magpatuloy."
+  },
+  "Filters": {
+    "sort": "Ayusin",
+    "title": "Mga Filter"
+  },
+  "Footer": {
+    "categoriesHeading": "Mga Kategorya",
+    "collectionsHeading": "Mga Koleksyon",
+    "copyright": "© {year} {siteName}. Lahat ng karapatan ay nakalaan.",
+    "infoHeading": "Impormasyon",
+    "medusaDocs": "Dokumentasyon ng Medusa",
+    "sourceCode": "Source code ng starter",
+    "starterDocs": "Dokumentasyon ng starter"
+  },
+  "ForgotPassword": {
+    "backToSignIn": "Bumalik sa pag-sign in",
+    "description": "Ilagay ang email na ginamit mo sa pag-sign up at padadalhan ka namin ng link para sa bagong password.",
+    "email": "Email",
+    "emailTitle": "Maglagay ng wastong email address.",
+    "guestAction": "Mag-register",
+    "guestPrompt": "Bumili ka ba bilang guest at hindi kailanman nag-sign up? Wala pang password kung gayon. Gumawa ng account gamit ang parehong address at maiuugnay mo roon ang mga dating order.",
+    "heading": "I-reset ang password",
+    "invalidEmail": "Maglagay ng wastong email address.",
+    "requestFailed": "Hindi naipadala ang link. Subukan ulit maya-maya.",
+    "sent": "Kung may account sa address na iyon, papunta na ang link. Tingnan ang inbox at ang spam folder.",
+    "submit": "Ipadala ang link"
+  },
+  "FreeShipping": {
+    "onlyAway": "{amount} na lang ang kulang",
+    "unlock": "Kunin ang Libreng Paghahatid",
+    "unlocked": "Nakuha mo na ang Libreng Paghahatid!",
+    "viewCart": "Tingnan ang cart",
+    "viewProducts": "Tingnan ang mga produkto"
+  },
+  "Help": {
+    "contact": "Makipag-ugnayan",
+    "needHelp": "Tulong",
+    "returnsExchanges": "Pagsauli at Palitan"
+  },
+  "Hero": {
+    "eyebrow": "Handang-gamitin · Open-source",
+    "features": [
+      {
+        "description": "pinahusay, walang sobrang hakbang, may autocomplete ng address",
+        "label": "Checkout na na-optimize para sa conversion"
+      },
+      {
+        "description": "search, catalog na may filter, multi-level na kategorya, at mobile-first",
+        "label": "Full-featured na storefront"
+      },
+      {
+        "description": "meta tags, Open Graph at Twitter cards, JSON-LD, sitemap, robots, llms.txt, at 100/100 sa PageSpeed Insights",
+        "label": "Optimized para sa SEO at AI"
+      },
+      {
+        "description": "36 wika para sa storefront na may suportang RTL at 241 bansa para sa mga rehiyon ng benta, pagtukoy ng bansa, madaling bawasan sa kailangan lang",
+        "label": "Kumpletong lokalisasyon"
+      },
+      {
+        "description": "Mga template ng React Email sa SMTP",
+        "label": "Transactional na Email"
+      },
+      {
+        "description": "kapag nagbago ang product catalog",
+        "label": "On-demand na Cache Revalidation"
+      },
+      {
+        "badge": "Bago",
+        "description": "pamahalaan ang settings ng iyong mga provider sa pamamagitan ng Admin",
+        "href": "https://gorgojs.com/medusa-integration-module",
+        "label": "Integration Module"
+      }
+    ],
+    "featuresHeading": "Mga Feature",
+    "readDocs": "Basahin ang dokumentasyon",
+    "subtitle": "Lahat ng nawawala sa opisyal na Medusa DTC starter.",
+    "title": "Production-ready na Medusa DTC Starter",
+    "viewOnGitHub": "Tingnan sa GitHub"
+  },
+  "ImageGallery": {
+    "goToImage": "Pumunta sa larawan {index}",
+    "openFullImage": "Buksan ang buong larawan"
+  },
+  "LanguageSelect": {
+    "locales": {
+      "ar": "العربية",
+      "bg": "Български",
+      "bn": "বাংলা",
+      "cs": "Čeština",
+      "da": "Dansk",
+      "de": "Deutsch",
+      "el": "Ελληνικά",
+      "en": "English",
+      "es": "Español",
+      "fi": "Suomi",
+      "fr": "Français",
+      "he": "עברית",
+      "hi": "हिन्दी",
+      "hu": "Magyar",
+      "id": "Bahasa Indonesia",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ka": "ქართული",
+      "ko": "한국어",
+      "lt": "Lietuvių",
+      "mn": "Монгол",
+      "ms": "Bahasa Melayu",
+      "nb": "Norsk bokmål",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "ro": "Română",
+      "ru": "Русский",
+      "sk": "Slovenčina",
+      "sv": "Svenska",
+      "th": "ไทย",
+      "tl": "Tagalog",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "vi": "Tiếng Việt",
+      "zh": "中文"
+    }
+  },
+  "LineItemOptions": {
+    "variant": "Variant:"
+  },
+  "Login": {
+    "description": "Nananatili sa account mo ang mga order at delivery address, at mas mabilis ang checkout.",
+    "email": "Email",
+    "emailTitle": "Ilagay ang wastong email address.",
+    "forgotPassword": "Nakalimutan ang password?",
+    "heading": "Mag-sign in",
+    "joinUs": "Sumali sa amin",
+    "notMember": "Hindi pa miyembro?",
+    "password": "Password",
+    "signIn": "Mag-sign in"
+  },
+  "Metadata": {
+    "account": {
+      "description": "Pangkalahatang-ideya ng aktibidad ng iyong account.",
+      "title": "Account"
+    },
+    "addresses": {
+      "description": "Tingnan ang iyong mga address",
+      "title": "Mga Address"
+    },
+    "cart": {
+      "description": "Tingnan ang iyong cart",
+      "title": "Cart"
+    },
+    "category": {
+      "description": "Tingnan ang {category} sa {siteName}. Ihambing ang mga opsyon, tingnan ang presyo, at hanapin ang bagay sa iyo."
+    },
+    "checkout": {
+      "description": "Suriin ang iyong order, ilagay ang detalye ng paghahatid, at magbayad nang ligtas.",
+      "title": "Checkout"
+    },
+    "collection": {
+      "description": "Tuklasin ang koleksyong {collection} sa {siteName}. Tingnan ang lahat ng produkto at hanapin ang para sa iyo."
+    },
+    "contact": {
+      "description": "Mag-message sa amin tungkol sa order, produkto o kahit ano pa.",
+      "title": "Kontak"
+    },
+    "customerService": {
+      "description": "Mga sagot sa pinakamadalas na tanong at kung paano kami makokontak.",
+      "title": "Serbisyo sa customer"
+    },
+    "home": {
+      "description": "Tuklasin ang aming pinili nang koleksyon ng mga produkto. Mamili ng pinakabagong estilo at makahanap ng iyong magugustuhan."
+    },
+    "login": {
+      "description": "Mag-sign in sa iyong {siteName} account.",
+      "title": "Mag-sign in"
+    },
+    "orderConfirmed": {
+      "description": "Matagumpay ang iyong pagbili",
+      "title": "Nakumpirma ang order"
+    },
+    "orderDetails": {
+      "description": "Tingnan ang iyong order"
+    },
+    "orderTransfer": {
+      "title": "Paglilipat ng order"
+    },
+    "orders": {
+      "description": "Pangkalahatang-ideya ng iyong mga nakaraang order.",
+      "title": "Mga Order"
+    },
+    "privacy": {
+      "description": "Tingnan kung anong personal na data ang kinokolekta ng tindahan at bakit.",
+      "title": "Patakaran sa privacy"
+    },
+    "profile": {
+      "description": "Tingnan at i-edit ang iyong {siteName} profile.",
+      "title": "Profile"
+    },
+    "resetPassword": {
+      "description": "Magtakda ng bagong password para sa iyong account.",
+      "title": "I-reset ang password"
+    },
+    "returns": {
+      "description": "Alamin kung paano magsauli o magpalit ng produkto, gaano katagal ang palugit, at kailan darating ang refund.",
+      "title": "Pagsasauli at palitan"
+    },
+    "shipping": {
+      "description": "Tingnan kung paano inihahatid ang mga order at magkano ang delivery.",
+      "title": "Pagpapadala"
+    },
+    "store": {
+      "description": "Tingnan ang buong katalogo. Mag-filter ayon sa kategorya at opsyon, ayusin ayon sa presyo, at hanapin ang eksaktong kailangan mo.",
+      "title": "Tindahan"
+    },
+    "terms": {
+      "description": "Basahin ang mga patakarang sinasang-ayunan mo kapag bumibili ka sa amin.",
+      "title": "Mga tuntunin ng paggamit"
+    }
+  },
+  "NativeSelect": {
+    "defaultPlaceholder": "Pumili..."
+  },
+  "Nav": {
+    "account": "Account",
+    "cart": "Cart ({count})"
+  },
+  "NotFound": {
+    "cartDescription": "Hindi umiiral ang cart na sinubukan mong buksan. I-clear ang iyong cookies at subukang muli.",
+    "description": "Hindi umiiral ang pahinang sinubukan mong buksan.",
+    "goHome": "Pumunta sa homepage",
+    "title": "Hindi Nahanap ang Pahina"
+  },
+  "OnboardingCta": {
+    "completeInAdmin": "Tapusin ang setup sa admin",
+    "completeSetup": "Maaari mo nang tapusin ang pag-set up ng iyong tindahan sa admin.",
+    "orderCreated": "Matagumpay na nagawa ang iyong test order!"
+  },
+  "OrderCard": {
+    "itemsCount": "{count, plural, one {{count} item} other {{count} na item}}",
+    "more": "pa",
+    "seeDetails": "Tingnan ang detalye"
+  },
+  "OrderCompleted": {
+    "orderSuccess": "Matagumpay na naisagawa ang iyong order.",
+    "thankYou": "Salamat!"
+  },
+  "OrderDetails": {
+    "backToOrders": "Bumalik sa mga order",
+    "confirmationSentBefore": "Ipinadala namin ang detalye ng kumpirmasyon ng order sa",
+    "fulfillmentStatuses": {
+      "canceled": "Kanselado",
+      "delivered": "Naihatid",
+      "fulfilled": "Naihanda",
+      "not_fulfilled": "Hindi pa naihanda",
+      "partially_delivered": "Bahagyang naihatid",
+      "partially_fulfilled": "Bahagyang naihanda",
+      "partially_shipped": "Bahagyang naipadala",
+      "shipped": "Naipadala"
+    },
+    "items": "Mga item",
+    "orderDate": "Petsa ng Order:",
+    "orderNumber": "Numero ng Order:",
+    "paymentStatuses": {
+      "authorized": "Awtorisado",
+      "awaiting": "Naghihintay ng bayad",
+      "canceled": "Kanselado",
+      "captured": "Bayad na",
+      "not_paid": "Hindi pa bayad",
+      "partially_authorized": "Bahagyang awtorisado",
+      "partially_captured": "Bahagyang bayad",
+      "partially_refunded": "Bahagyang na-refund",
+      "refunded": "Na-refund",
+      "requires_action": "Kailangan ng aksyon"
+    }
+  },
+  "OrderOverview": {
+    "continueShopping": "Magpatuloy sa pamimili",
+    "noOrdersYet": "Wala ka pang order",
+    "nothingToSeeHere": "Walang laman dito"
+  },
+  "OrderSummary": {
+    "discount": "Diskwento",
+    "giftCard": "Gift Card",
+    "heading": "Buod ng Order",
+    "shipping": "Paghahatid",
+    "subtotal": "Subtotal",
+    "taxes": "Buwis",
+    "total": "Kabuuan"
+  },
+  "OrdersPage": {
+    "description": "Tingnan ang iyong mga nakaraang order at ang kanilang status.",
+    "heading": "Mga Order"
+  },
+  "Payment": {
+    "anotherStep": "May lalabas na karagdagang hakbang",
+    "continueToReview": "Magpatuloy sa review",
+    "edit": "I-edit",
+    "enterPaymentDetails": "Ilagay ang detalye ng pagbabayad",
+    "giftCard": "Gift Card",
+    "heading": "Pagbabayad",
+    "paymentDetails": "Detalye ng bayad",
+    "paymentMethod": "Paraan ng bayad"
+  },
+  "PaymentButton": {
+    "placeOrder": "Bayaran",
+    "selectPaymentMethod": "Pumili ng paraan ng bayad"
+  },
+  "PaymentContainer": {
+    "enterPaymentDetails": "Ilagay ang detalye ng iyong pagbabayad:",
+    "loadError": "Hindi ma-load ang mga paraan ng pagbabayad."
+  },
+  "PaymentDetails": {
+    "heading": "Pagbabayad",
+    "paidAt": "binayaran noong",
+    "paymentDetails": "Detalye ng bayad",
+    "paymentMethod": "Paraan ng bayad"
+  },
+  "PaymentMethods": {
+    "pp_medusa-payments_default": "Credit card",
+    "pp_paypal_paypal": "PayPal",
+    "pp_stripe-bancontact_stripe": "Bancontact",
+    "pp_stripe-ideal_stripe": "iDeal",
+    "pp_stripe_stripe": "Credit card",
+    "pp_system_default": "Manual na bayad"
+  },
+  "PaymentTest": {
+    "attention": "Paalala:",
+    "testingOnly": "Para sa testing lamang."
+  },
+  "ProductActions": {
+    "addToCart": "Idagdag sa cart",
+    "outOfStock": "Wala nang stock",
+    "selectOptions": "Pumili ng Opsyon",
+    "selectVariant": "Pumili ng variant"
+  },
+  "ProductOnboardingCta": {
+    "continueInAdmin": "Ipagpatuloy ang setup sa admin",
+    "continueSetup": "Maaari mo nang ipagpatuloy ang pag-set up ng iyong tindahan sa admin.",
+    "demoCreated": "Matagumpay na nagawa ang iyong demo product!"
+  },
+  "ProductPrice": {
+    "from": "Mula ",
+    "original": "Orihinal: "
+  },
+  "ProductRail": {
+    "viewAll": "Tingnan lahat"
+  },
+  "ProductTabs": {
+    "easyReturns": "Madaling Pagsauli",
+    "easyReturnsDesc": "Isauli mo lang ang produkto at ire-refund namin ang iyong pera. Walang tanong-tanong – gagawin namin ang lahat para maging walang gulo ang iyong pagsauli.",
+    "fastDelivery": "Mabilis na Paghahatid",
+    "fastDeliveryDesc": "Darating ang iyong package sa loob ng 3-5 araw ng trabaho sa iyong pickup location o direkta sa iyong tahanan.",
+    "shippingReturns": "Paghahatid at Pagsauli",
+    "simpleExchanges": "Madaling Palitan",
+    "simpleExchangesDesc": "Hindi tama ang sukat? Huwag mag-alala - papalitan namin ito ng bago."
+  },
+  "ProfileBillingAddress": {
+    "billingAddress": "Billing Address",
+    "noBillingAddress": "Walang billing address"
+  },
+  "ProfileEmail": {
+    "email": "Email",
+    "label": "Email"
+  },
+  "ProfileName": {
+    "firstName": "Pangalan",
+    "label": "Pangalan",
+    "lastName": "Apelyido",
+    "noName": "Walang pangalan"
+  },
+  "ProfilePage": {
+    "description": "Tingnan at i-update ang iyong pangalan, email, numero ng telepono at billing address.",
+    "heading": "Profile"
+  },
+  "ProfilePassword": {
+    "confirmPassword": "Kumpirmahin ang password",
+    "hidden": "Hindi ipinapakita ang password para sa seguridad",
+    "label": "Password",
+    "newPassword": "Bagong password",
+    "oldPassword": "Lumang password"
+  },
+  "ProfilePhone": {
+    "label": "Telepono",
+    "noPhone": "Walang numero ng telepono",
+    "phone": "Telepono"
+  },
+  "PromoBanner": {
+    "close": "Isara",
+    "cta": "Subukan",
+    "message": "Full-featured at production-ready na DTC starter."
+  },
+  "RegionSelect": {
+    "apply": "I-apply",
+    "close": "Isara",
+    "placeholder": "Maghanap ng bansa o wika",
+    "tabCountry": "Bansa",
+    "tabLanguage": "Wika",
+    "title": "Baguhin ang Rehiyon"
+  },
+  "Register": {
+    "agreeText": "Sa paggawa ng {siteName} account, sumasang-ayon ka sa",
+    "alreadyMember": "Miyembro ka na?",
+    "and": "at",
+    "description": "Gumawa ng {siteName} account para nasa iisang lugar ang mga order at address at mas mabilis mag-checkout.",
+    "email": "Email",
+    "firstName": "Pangalan",
+    "heading": "Maging Miyembro ng {siteName}",
+    "join": "Sumali",
+    "lastName": "Apelyido",
+    "password": "Password",
+    "phone": "Telepono",
+    "privacyPolicy": "Patakaran sa Privacy",
+    "signIn": "Mag-sign in",
+    "termsOfUse": "Mga Tuntunin sa Paggamit"
+  },
+  "RelatedProducts": {
+    "title": "Maaaring magustuhan mo"
+  },
+  "ResetPassword": {
+    "confirmPassword": "Ulitin ang password",
+    "description": "Pumili ng bagong password para sa iyong account.",
+    "descriptionWithEmail": "Pumili ng bagong password para sa {email}.",
+    "done": "Napalitan na ang password mo. Puwede ka nang mag-sign in gamit ito.",
+    "goToSignIn": "Mag-sign in",
+    "heading": "Bagong password",
+    "missingToken": "Walang token ang link na ito. Humiling ng bago sa pahina ng pag-sign in.",
+    "password": "Bagong password",
+    "submit": "I-save ang password"
+  },
+  "Review": {
+    "confirmText": "Sa pag-click ng button na Bayaran, kinukumpirma mong nabasa, naunawaan, at tinatanggap mo ang aming Mga Tuntunin sa Paggamit, Mga Tuntunin sa Pagbebenta, at Patakaran sa Pagsauli, at kinikilala mong nabasa mo ang Patakaran sa Privacy ng {siteName}.",
+    "heading": "Pagsusuri"
+  },
+  "Search": {
+    "empty": "Walang resulta para sa “{query}”",
+    "label": "Maghanap",
+    "loading": "Naghahanap…",
+    "placeholder": "Maghanap ng produkto",
+    "popular": "Sikat na mga produkto"
+  },
+  "Shipping": {
+    "chooseStore": "Pumili ng tindahang malapit sa iyo",
+    "continueToPayment": "Magpatuloy sa bayad",
+    "deliveryDescription": "Paano mo gustong maihatid ang iyong order",
+    "edit": "I-edit",
+    "heading": "Paghahatid",
+    "method": "Paraan",
+    "pickUpOrder": "Kunin ang iyong order",
+    "shippingMethod": "Paraan ng paghahatid",
+    "store": "Tindahan"
+  },
+  "ShippingDetails": {
+    "contact": "Contact",
+    "heading": "Paghahatid",
+    "method": "Paraan",
+    "shippingAddress": "Address ng Paghahatid"
+  },
+  "SideMenu": {
+    "copyright": "© {year} {siteName}. Lahat ng karapatan ay nakalaan.",
+    "items": {
+      "account": "Account",
+      "cart": "Cart",
+      "home": "Home",
+      "store": "Tindahan"
+    },
+    "menuButton": "Menu"
+  },
+  "SignInPrompt": {
+    "description": "Sa checkout, iaalok ang mga naka-save mong address, at mapupunta sa account mo ang order.",
+    "heading": "Mag-sign in para mas mabilis ang checkout",
+    "signIn": "Mag-sign in"
+  },
+  "SortSelect": {
+    "latestArrivals": "Bagong Dating",
+    "placeholder": "Ayusin ayon sa",
+    "priceHighLow": "Presyo: Mataas → Mababa",
+    "priceLowHigh": "Presyo: Mababa → Mataas"
+  },
+  "Store": {
+    "allProducts": "Lahat ng produkto"
+  },
+  "TransferActions": {
+    "acceptTransfer": "Tanggapin ang paglipat",
+    "declineSuccess": "Matagumpay na tinanggihan ang paglipat ng order!",
+    "declineTransfer": "Tanggihan ang paglipat",
+    "transferSuccess": "Matagumpay na nailipat ang order!"
+  },
+  "TransferPage": {
+    "acceptError": "Hindi namin natanggap ang paglipat. Maaaring hindi wasto ang link o nagamit na ito.",
+    "acceptInfo": "Kung tatanggapin mo ito, kukunin ng bagong may-ari ang lahat ng responsibilidad at pahintulot na kaugnay ng order na ito.",
+    "acceptedBody": "Matagumpay na nailipat ang order {id} sa bagong may-ari.",
+    "acceptedHeading": "Nailipat na ang order!",
+    "declineError": "Hindi namin natanggihan ang paglipat. Maaaring hindi wasto ang link o nagamit na ito.",
+    "declinedBody": "Tinanggihan ang paglipat ng order {id}.",
+    "declinedHeading": "Tinanggihan ang paglipat",
+    "noAction": "Kung hindi mo kilala ang kahilingang ito o gusto mong panatilihin ang pagmamay-ari, hindi na kailangan ng karagdagang aksyon.",
+    "requestHeading": "Kahilingan sa paglipat ng order {id}",
+    "requestIntro": "Nakatanggap ka ng kahilingan para ilipat ang pagmamay-ari ng iyong order ({id}). Kung sang-ayon ka, maaari mong aprubahan ang paglipat gamit ang button sa ibaba."
+  },
+  "TransferRequest": {
+    "cantFindOrder": "Hindi mahanap ang order na hinahanap mo?",
+    "connectOrder": "Ikonekta ang isang order sa iyong account.",
+    "heading": "Paglipat ng Order",
+    "orderId": "Link o ID ng order",
+    "requestTransfer": "Humiling ng paglipat",
+    "transferEmailSent": "Naipadala ang email ng kahilingan sa {email}",
+    "transferRequested": "Hiniling na ang paglipat para sa order {orderId}",
+    "whereToFind": "Buksan ang confirmation email ng order na iyon at i-paste dito ang link mula roon."
+  }
+}

@@ -274,12 +274,6 @@ When the payment is successful, the route revalidates the cached cart and order 
 
 ## Full Storefront Integration Code Example
 
-You can refer to the modifications made in the [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa), which are located in the [`examples/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-tkassa/medusa-storefront) directory.
+Every step above is written against the [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa) and links to the storefront it was taken from, pinned at [`examples/payment-tkassa/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-tkassa/medusa-storefront).
 
-The complete integration diff can be viewed in the [comparison page](https://github.com/gorgojs/medusa-integrations/compare/%40gorgo/medusa-payment-tkassa%400.0.1...main), open the "Files changed" tab, and explore the differences under the `examples/payment-tkassa/medusa-storefront` directory. Or run diff in the terminal:
-
-```bash title="Terminal"
-git clone https://github.com/gorgojs/medusa-integrations
-cd medusa-integrations
-git diff @gorgo/medusa-payment-tkassa@0.0.1...main -- examples/payment-tkassa/medusa-storefront
-```
+The [example on `main`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-tkassa) builds on the [Medusa DTC Starter](https://github.com/gorgojs/medusa-dtc-starter), which ships the extension points this integration needs. Its `README.md` lists the eight files the plugin touches there, and its storefront lives in [`apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-tkassa/apps/storefront).

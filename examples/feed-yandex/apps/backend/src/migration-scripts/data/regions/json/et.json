@@ -1,0 +1,29 @@
+{
+  "name": "Ethiopia",
+  "currency_code": "etb",
+  "countries": ["et"],
+  "stock_location": {
+    "name": "Addis Ababa Warehouse",
+    "address": {
+      "address_1": "ቦሌ መንገድ 14",
+      "country_code": "et"
+    }
+  },
+  "shipping_prices": {
+    "courier": 740,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1845,
+    "sweatshirt": 3570,
+    "sweatpants": 2950,
+    "shorts": 2340,
+    "hoodie": 4310,
+    "chinoPants": 4060,
+    "pufferJacket": 8610,
+    "wirelessHeadphones": 11560,
+    "electricBike": 129200,
+    "servingPlate": 5040,
+    "espressoCup": 1845
+  }
+}

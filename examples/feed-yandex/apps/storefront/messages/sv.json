@@ -1,0 +1,698 @@
+{
+  "AccountInfo": {
+    "cancel": "Avbryt",
+    "edit": "Redigera",
+    "errorDefault": "Ett fel uppstod, försök igen",
+    "saveChanges": "Spara ändringar",
+    "updatedSuccessfully": "{label} har uppdaterats"
+  },
+  "AccountLayout": {
+    "customerService": "Kundtjänst",
+    "faqDescription": "Du hittar vanliga frågor och svar på vår kundtjänstsida.",
+    "gotQuestions": "Frågor och svar"
+  },
+  "AccountNav": {
+    "account": "Konto",
+    "addresses": "Adresser",
+    "logOut": "Logga ut",
+    "orders": "Ordrar",
+    "overview": "Översikt",
+    "profile": "Profil"
+  },
+  "AccountOverview": {
+    "addresses": "Adresser",
+    "completed": "Klar",
+    "hello": "Hej {name}",
+    "noRecentOrders": "Inga senaste ordrar",
+    "profile": "Profil",
+    "recentOrders": "Senaste ordrar",
+    "saved": "Sparade",
+    "signedInAs": "Inloggad som:"
+  },
+  "AddressCard": {
+    "addAddress": "Lägg till adress",
+    "default": "Standard",
+    "editAddress": "Redigera adress",
+    "newAddress": "Ny adress"
+  },
+  "AddressForm": {
+    "address": "Adress",
+    "addressLine2": "Lägenhet, suite, etc.",
+    "addressName": "Namn",
+    "cancel": "Avbryt",
+    "city": "Stad",
+    "company": "Företag",
+    "country": "Land",
+    "edit": "Redigera",
+    "firstName": "Förnamn",
+    "lastName": "Efternamn",
+    "phone": "Telefon",
+    "postalCode": "Postnummer",
+    "province": "Region / Delstat",
+    "remove": "Ta bort",
+    "save": "Spara",
+    "stateProvince": "Delstat / Region"
+  },
+  "AddressesPage": {
+    "description": "Visa och uppdatera dina leveransadresser, du kan lägga till så många du vill. Sparade adresser blir tillgängliga vid kassan.",
+    "heading": "Leveransadresser"
+  },
+  "Breadcrumb": {
+    "home": "Hem",
+    "store": "Butik"
+  },
+  "Cart": {
+    "emptyMessage": "Din varukorg är tom. Använd länken nedan för att börja utforska våra produkter.",
+    "exploreProducts": "Utforska produkter",
+    "heading": "Varukorg"
+  },
+  "CartDropdown": {
+    "bagEmpty": "Din varukorg är tom.",
+    "exploreProducts": "Utforska produkter",
+    "goToCart": "Gå till varukorgen",
+    "heading": "Varukorg",
+    "subtotal": "Delsumma",
+    "subtotalNote": "(exkl. moms)"
+  },
+  "CartMismatchBanner": {
+    "errorMessage": "Något gick fel när vi försökte överföra din varukorg",
+    "runTransferAgain": "Försök överföra igen",
+    "transferring": "Överför..."
+  },
+  "CartSummary": {
+    "goToCheckout": "Gå till kassan"
+  },
+  "CartTotals": {
+    "discount": "Rabatt",
+    "shipping": "Frakt",
+    "subtotal": "Delsumma (exkl. frakt och moms)",
+    "taxes": "Moms",
+    "total": "Totalt"
+  },
+  "CategoryMenu": {
+    "title": "Kategorier",
+    "viewAll": "Visa alla"
+  },
+  "CheckoutPage": {
+    "addNewAddress": "Lägg till ny adress",
+    "addressHeading": "Leveransadress",
+    "addressModalTitle": "Leveransadress",
+    "addressNotNeededForPickup": "Behövs inte vid upphämtning",
+    "back": "Tillbaka",
+    "backToCart": "Tillbaka till varukorgen",
+    "billingHeading": "Faktureringsadress",
+    "billingSameAsShipping": "Faktureringsadress samma som leverans",
+    "close": "Stäng",
+    "contactsHeading": "Kontaktuppgifter",
+    "contactsModalTitle": "Kontaktuppgifter",
+    "copyright": "© {year} {siteName}. Alla rättigheter förbehållna.",
+    "deliveryDateFrom": "från {date}",
+    "deliveryDateUntil": "senast {date}",
+    "deliveryToday": "Idag",
+    "discount": "Rabatt",
+    "edit": "Redigera",
+    "fieldAddress": "Adress",
+    "fieldCity": "Stad",
+    "fieldCompany": "Företag",
+    "fieldEmail": "E-post",
+    "fieldFirstName": "Förnamn",
+    "fieldLastName": "Efternamn",
+    "fieldPhone": "Telefon",
+    "fieldPostalCode": "Postnummer",
+    "fieldProvince": "Region",
+    "freeShipping": "Gratis",
+    "giftCard": "Presentkort",
+    "itemsCount": "{count, plural, one {{count} vara} other {{count} varor}}",
+    "legal": "Genom att klicka på ”Betala” godkänner du våra <terms>villkor</terms>, <termsOfUse>användarvillkor</termsOfUse> och <returnPolicy>returpolicy</returnPolicy>, samt godkänner vår <privacyPolicy>integritetspolicy</privacyPolicy>.",
+    "manualInput": "Ange adress manuellt",
+    "orderComposition": "Ordersammanfattning",
+    "paymentHeading": "Betalningsmetod",
+    "recipientCheckbox": "Mottagaren är en annan person",
+    "recipientHeading": "Mottagarens uppgifter",
+    "recipientLabel": "Mottagare:",
+    "returnsLink": "Returpolicy",
+    "sameAsShipping": "Samma som leveransadress",
+    "save": "Spara",
+    "saving": "Sparar...",
+    "shippingCost": "Frakt",
+    "shippingDescription": "Välj hur du vill få din order levererad",
+    "shippingHeading": "Fraktmetod",
+    "shippingLink": "Frakt",
+    "shippingUnavailable": "Inga fraktmetoder tillgängliga",
+    "signIn": "Logga in",
+    "total": "Totalt"
+  },
+  "Common": {
+    "clear": "Rensa",
+    "close": "Stäng",
+    "hidePassword": "Dölj lösenord",
+    "orderNumber": "Order #{id}",
+    "poweredBy": "Powered by",
+    "remove": "Ta bort",
+    "showPassword": "Visa lösenord"
+  },
+  "ContentPages": {
+    "faq": [
+      {
+        "answer": "Fraktsidan visar leveransalternativen och vad var och en kostar.",
+        "question": "När kommer min order?"
+      },
+      {
+        "answer": "Retursidan förklarar hur du skickar tillbaka en vara eller byter den mot en annan.",
+        "question": "Hur returnerar eller byter jag en vara?"
+      },
+      {
+        "answer": "Skriv till oss från kontaktsidan, så svarar vi så snart vi kan.",
+        "question": "Hur kontaktar jag er?"
+      }
+    ],
+    "placeholder": "Den här sidan följer med startern som exempeltext. Ersätt den med din egen innan du går live."
+  },
+  "DiscountCode": {
+    "addPromotionCode": "Lägg till rabattkod",
+    "apply": "Använd",
+    "removeDiscount": "Ta bort rabattkod från ordern"
+  },
+  "Errors": {
+    "emailExists": "Ett konto med denna e-postadress finns redan.",
+    "generic": "Något gick fel. Försök igen.",
+    "insufficientInventory": "Tyvärr räcker inte lagret till för denna vara.",
+    "invalidCredentials": "Felaktig e-postadress eller lösenord.",
+    "invalidDiscount": "Denna rabattkod är ogiltig eller har gått ut.",
+    "invalidEmail": "Ange en giltig e-postadress.",
+    "invalidResetLink": "Länken gäller inte längre. Den kan vara använd eller ha gått ut. Begär en ny.",
+    "network": "Anslutningsproblem. Kontrollera din internetanslutning och försök igen.",
+    "notFound": "Vi kunde inte hitta det du sökte efter.",
+    "passwordMismatch": "Lösenorden stämmer inte överens.",
+    "passwordTooShort": "Lösenordet måste vara minst 8 tecken.",
+    "paymentFailed": "Vi kunde inte genomföra din betalning. Försök igen eller välj en annan betalmetod.",
+    "unauthorized": "Logga in för att fortsätta."
+  },
+  "Filters": {
+    "sort": "Sortera",
+    "title": "Filter"
+  },
+  "Footer": {
+    "categoriesHeading": "Kategorier",
+    "collectionsHeading": "Kollektioner",
+    "copyright": "© {year} {siteName}. Alla rättigheter förbehållna.",
+    "infoHeading": "Information",
+    "medusaDocs": "Medusa-dokumentation",
+    "sourceCode": "Källkod för startern",
+    "starterDocs": "Dokumentation för startern"
+  },
+  "ForgotPassword": {
+    "backToSignIn": "Tillbaka till inloggningen",
+    "description": "Ange e-postadressen du registrerade dig med, så skickar vi en länk för ett nytt lösenord.",
+    "email": "E-post",
+    "emailTitle": "Ange en giltig e-postadress.",
+    "guestAction": "Skapa konto",
+    "guestPrompt": "Handlade du som gäst och registrerade dig aldrig? Då finns inget lösenord än. Skapa ett konto med samma adress, så kan du koppla de ordrarna till det.",
+    "heading": "Återställ lösenord",
+    "invalidEmail": "Ange en giltig e-postadress.",
+    "requestFailed": "Länken kunde inte skickas. Försök igen om en stund.",
+    "sent": "Finns det ett konto med den adressen är länken på väg. Titta i inkorgen och i skräpposten.",
+    "submit": "Skicka länk"
+  },
+  "FreeShipping": {
+    "onlyAway": "Endast {amount} kvar",
+    "unlock": "Lås upp fri frakt",
+    "unlocked": "Fri frakt uppnådd!",
+    "viewCart": "Visa varukorg",
+    "viewProducts": "Visa produkter"
+  },
+  "Help": {
+    "contact": "Kontakt",
+    "needHelp": "Hjälp",
+    "returnsExchanges": "Returer och byten"
+  },
+  "Hero": {
+    "eyebrow": "Nyckelfärdig · Öppen källkod",
+    "features": [
+      {
+        "description": "förbättrad, utan onödiga steg, med adressautofyll",
+        "label": "Kassa optimerad för konvertering"
+      },
+      {
+        "description": "sök, filtrerbar katalog, kategorier i flera nivåer & mobile-first",
+        "label": "Fullfjädrad butiksfront"
+      },
+      {
+        "description": "metataggar, Open Graph och Twitter cards, JSON-LD, sitemap, robots, llms.txt & 100/100 i PageSpeed Insights",
+        "label": "Optimerad för SEO och AI"
+      },
+      {
+        "description": "36 språk för butiken med RTL-stöd och 241 länder för försäljningsregioner, identifiering av land, lätta att skala ner till de du behöver",
+        "label": "Fullständig lokalisering"
+      },
+      {
+        "description": "React Email-mallar via SMTP",
+        "label": "Transaktionsmejl"
+      },
+      {
+        "description": "vid ändringar i produktkatalogen",
+        "label": "Cacherevalidering på begäran"
+      },
+      {
+        "badge": "Nytt",
+        "description": "hantera dina leverantörers inställningar via Admin",
+        "href": "https://gorgojs.com/medusa-integration-module",
+        "label": "Integrationsmodul"
+      }
+    ],
+    "featuresHeading": "Funktioner",
+    "readDocs": "Läs dokumentationen",
+    "subtitle": "Allt som den officiella Medusa DTC-startern saknar.",
+    "title": "Produktionsklar Medusa DTC Starter",
+    "viewOnGitHub": "Visa på GitHub"
+  },
+  "ImageGallery": {
+    "goToImage": "Gå till bild {index}",
+    "openFullImage": "Öppna bilden i full storlek"
+  },
+  "LanguageSelect": {
+    "locales": {
+      "ar": "العربية",
+      "bg": "Български",
+      "bn": "বাংলা",
+      "cs": "Čeština",
+      "da": "Dansk",
+      "de": "Deutsch",
+      "el": "Ελληνικά",
+      "en": "English",
+      "es": "Español",
+      "fi": "Suomi",
+      "fr": "Français",
+      "he": "עברית",
+      "hi": "हिन्दी",
+      "hu": "Magyar",
+      "id": "Bahasa Indonesia",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ka": "ქართული",
+      "ko": "한국어",
+      "lt": "Lietuvių",
+      "mn": "Монгол",
+      "ms": "Bahasa Melayu",
+      "nb": "Norsk bokmål",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "ro": "Română",
+      "ru": "Русский",
+      "sk": "Slovenčina",
+      "sv": "Svenska",
+      "th": "ไทย",
+      "tl": "Tagalog",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "vi": "Tiếng Việt",
+      "zh": "中文"
+    }
+  },
+  "LineItemOptions": {
+    "variant": "Variant:"
+  },
+  "Login": {
+    "description": "Dina ordrar och leveransadresser stannar i ditt konto, och kassan går snabbare.",
+    "email": "E-post",
+    "emailTitle": "Ange en giltig e-postadress.",
+    "forgotPassword": "Glömt lösenordet?",
+    "heading": "Logga in",
+    "joinUs": "Bli medlem",
+    "notMember": "Inte medlem än?",
+    "password": "Lösenord",
+    "signIn": "Logga in"
+  },
+  "Metadata": {
+    "account": {
+      "description": "Översikt över din kontoaktivitet.",
+      "title": "Konto"
+    },
+    "addresses": {
+      "description": "Se dina adresser",
+      "title": "Adresser"
+    },
+    "cart": {
+      "description": "Se din varukorg",
+      "title": "Varukorg"
+    },
+    "category": {
+      "description": "Utforska {category} hos {siteName}. Jämför alternativ, se priser och hitta det som passar dig."
+    },
+    "checkout": {
+      "description": "Gå igenom din beställning, fyll i leveransuppgifter och betala tryggt.",
+      "title": "Kassa"
+    },
+    "collection": {
+      "description": "Upptäck kollektionen {collection} hos {siteName}. Se alla plagg och hitta ditt."
+    },
+    "contact": {
+      "description": "Skriv till oss om en order, en produkt eller något annat.",
+      "title": "Kontakt"
+    },
+    "customerService": {
+      "description": "Svar på de vanligaste frågorna och hur du når oss.",
+      "title": "Kundservice"
+    },
+    "home": {
+      "description": "Upptäck vårt utvalda produktsortiment. Handla de senaste stilarna och hitta något du älskar."
+    },
+    "login": {
+      "description": "Logga in på ditt {siteName}-konto.",
+      "title": "Logga in"
+    },
+    "orderConfirmed": {
+      "description": "Ditt köp genomfördes",
+      "title": "Order bekräftad"
+    },
+    "orderDetails": {
+      "description": "Se din order"
+    },
+    "orderTransfer": {
+      "title": "Överföring av order"
+    },
+    "orders": {
+      "description": "Översikt över dina tidigare ordrar.",
+      "title": "Ordrar"
+    },
+    "privacy": {
+      "description": "Se vilka personuppgifter butiken samlar in och varför.",
+      "title": "Integritetspolicy"
+    },
+    "profile": {
+      "description": "Se och redigera din {siteName}-profil.",
+      "title": "Profil"
+    },
+    "resetPassword": {
+      "description": "Välj ett nytt lösenord till ditt konto.",
+      "title": "Återställ lösenord"
+    },
+    "returns": {
+      "description": "Se hur du skickar tillbaka eller byter en vara, hur lång tid du har och när du får pengarna tillbaka.",
+      "title": "Returer och byten"
+    },
+    "shipping": {
+      "description": "Se hur ordrar levereras och vad frakten kostar.",
+      "title": "Frakt"
+    },
+    "store": {
+      "description": "Bläddra i hela katalogen. Filtrera på kategori och variant, sortera på pris och hitta precis det du behöver.",
+      "title": "Butik"
+    },
+    "terms": {
+      "description": "Läs reglerna du godkänner när du handlar hos oss.",
+      "title": "Användarvillkor"
+    }
+  },
+  "NativeSelect": {
+    "defaultPlaceholder": "Välj..."
+  },
+  "Nav": {
+    "account": "Konto",
+    "cart": "Varukorg ({count})"
+  },
+  "NotFound": {
+    "cartDescription": "Varukorgen du försökte nå finns inte. Rensa dina cookies och försök igen.",
+    "description": "Sidan du försökte nå finns inte.",
+    "goHome": "Gå till startsidan",
+    "title": "Sidan hittades inte"
+  },
+  "OnboardingCta": {
+    "completeInAdmin": "Slutför inställningen i adminpanelen",
+    "completeSetup": "Du kan nu slutföra inställningen av din butik i adminpanelen.",
+    "orderCreated": "Din testorder har skapats!"
+  },
+  "OrderCard": {
+    "itemsCount": "{count, plural, one {{count} vara} other {{count} varor}}",
+    "more": "fler",
+    "seeDetails": "Visa detaljer"
+  },
+  "OrderCompleted": {
+    "orderSuccess": "Din order har lagts.",
+    "thankYou": "Tack!"
+  },
+  "OrderDetails": {
+    "backToOrders": "Tillbaka till beställningar",
+    "confirmationSentBefore": "Vi har skickat orderbekräftelsen till",
+    "fulfillmentStatuses": {
+      "canceled": "Avbruten",
+      "delivered": "Levererad",
+      "fulfilled": "Behandlad",
+      "not_fulfilled": "Ej behandlad",
+      "partially_delivered": "Delvis levererad",
+      "partially_fulfilled": "Delvis behandlad",
+      "partially_shipped": "Delvis skickad",
+      "shipped": "Skickad"
+    },
+    "items": "Artiklar",
+    "orderDate": "Orderdatum:",
+    "orderNumber": "Ordernummer:",
+    "paymentStatuses": {
+      "authorized": "Auktoriserad",
+      "awaiting": "Väntar på betalning",
+      "canceled": "Avbruten",
+      "captured": "Betald",
+      "not_paid": "Ej betald",
+      "partially_authorized": "Delvis auktoriserad",
+      "partially_captured": "Delvis betald",
+      "partially_refunded": "Delvis återbetald",
+      "refunded": "Återbetald",
+      "requires_action": "Åtgärd krävs"
+    }
+  },
+  "OrderOverview": {
+    "continueShopping": "Fortsätt handla",
+    "noOrdersYet": "Du har inga ordrar ännu",
+    "nothingToSeeHere": "Inget att visa här"
+  },
+  "OrderSummary": {
+    "discount": "Rabatt",
+    "giftCard": "Presentkort",
+    "heading": "Ordersammanfattning",
+    "shipping": "Frakt",
+    "subtotal": "Delsumma",
+    "taxes": "Moms",
+    "total": "Totalt"
+  },
+  "OrdersPage": {
+    "description": "Visa dina tidigare ordrar och deras status.",
+    "heading": "Ordrar"
+  },
+  "Payment": {
+    "anotherStep": "Ytterligare ett steg visas",
+    "continueToReview": "Fortsätt till granskning",
+    "edit": "Redigera",
+    "enterPaymentDetails": "Ange betaluppgifter",
+    "giftCard": "Presentkort",
+    "heading": "Betalning",
+    "paymentDetails": "Betalningsuppgifter",
+    "paymentMethod": "Betalningsmetod"
+  },
+  "PaymentButton": {
+    "placeOrder": "Betala",
+    "selectPaymentMethod": "Välj en betalningsmetod"
+  },
+  "PaymentContainer": {
+    "enterPaymentDetails": "Ange dina betaluppgifter:",
+    "loadError": "Betalningsmetoderna kunde inte laddas."
+  },
+  "PaymentDetails": {
+    "heading": "Betalning",
+    "paidAt": "betald",
+    "paymentDetails": "Betalningsuppgifter",
+    "paymentMethod": "Betalningsmetod"
+  },
+  "PaymentMethods": {
+    "pp_medusa-payments_default": "Betalkort",
+    "pp_paypal_paypal": "PayPal",
+    "pp_stripe-bancontact_stripe": "Bancontact",
+    "pp_stripe-ideal_stripe": "iDeal",
+    "pp_stripe_stripe": "Betalkort",
+    "pp_system_default": "Manuell betalning"
+  },
+  "PaymentTest": {
+    "attention": "Observera:",
+    "testingOnly": "Endast för teständamål."
+  },
+  "ProductActions": {
+    "addToCart": "Lägg i varukorgen",
+    "outOfStock": "Slut i lager",
+    "selectOptions": "Välj alternativ",
+    "selectVariant": "Välj variant"
+  },
+  "ProductOnboardingCta": {
+    "continueInAdmin": "Fortsätt konfigurationen i adminpanelen",
+    "continueSetup": "Du kan nu fortsätta konfigurera din butik i adminpanelen.",
+    "demoCreated": "Din demoprodukt har skapats!"
+  },
+  "ProductPrice": {
+    "from": "Från ",
+    "original": "Ordinarie: "
+  },
+  "ProductRail": {
+    "viewAll": "Visa alla"
+  },
+  "ProductTabs": {
+    "easyReturns": "Enkla returer",
+    "easyReturnsDesc": "Returnera bara din produkt så återbetalar vi pengarna. Inga frågor ställs – vi gör vårt bästa för att göra din retur så smidig som möjligt.",
+    "fastDelivery": "Snabb leverans",
+    "fastDeliveryDesc": "Ditt paket anländer inom 3–5 arbetsdagar till ditt utlämningsställe eller bekvämt hem till dig.",
+    "shippingReturns": "Frakt & returer",
+    "simpleExchanges": "Enkla byten",
+    "simpleExchangesDesc": "Passar det inte riktigt? Inga problem - vi byter din produkt mot en ny."
+  },
+  "ProfileBillingAddress": {
+    "billingAddress": "Faktureringsadress",
+    "noBillingAddress": "Ingen faktureringsadress"
+  },
+  "ProfileEmail": {
+    "email": "E-post",
+    "label": "E-post"
+  },
+  "ProfileName": {
+    "firstName": "Förnamn",
+    "label": "Namn",
+    "lastName": "Efternamn",
+    "noName": "Inget namn"
+  },
+  "ProfilePage": {
+    "description": "Se och uppdatera ditt namn, din e-post, ditt telefonnummer och din faktureringsadress.",
+    "heading": "Profil"
+  },
+  "ProfilePassword": {
+    "confirmPassword": "Bekräfta lösenord",
+    "hidden": "Lösenordet visas inte av säkerhetsskäl",
+    "label": "Lösenord",
+    "newPassword": "Nytt lösenord",
+    "oldPassword": "Gammalt lösenord"
+  },
+  "ProfilePhone": {
+    "label": "Telefon",
+    "noPhone": "Inget telefonnummer",
+    "phone": "Telefon"
+  },
+  "PromoBanner": {
+    "close": "Stäng",
+    "cta": "Prova",
+    "message": "Fullfjädrad produktionsklar DTC-starter."
+  },
+  "RegionSelect": {
+    "apply": "Tillämpa",
+    "close": "Stäng",
+    "placeholder": "Sök land eller språk",
+    "tabCountry": "Land",
+    "tabLanguage": "Språk",
+    "title": "Byt region"
+  },
+  "Register": {
+    "agreeText": "Genom att skapa ett konto hos {siteName} godkänner du",
+    "alreadyMember": "Redan medlem?",
+    "and": "och",
+    "description": "Skapa ett {siteName}-konto så samlas ordrar och adresser på ett ställe och kassan går snabbare.",
+    "email": "E-post",
+    "firstName": "Förnamn",
+    "heading": "Bli medlem hos {siteName}",
+    "join": "Bli medlem",
+    "lastName": "Efternamn",
+    "password": "Lösenord",
+    "phone": "Telefon",
+    "privacyPolicy": "Integritetspolicyn",
+    "signIn": "Logga in",
+    "termsOfUse": "Användarvillkoren"
+  },
+  "RelatedProducts": {
+    "title": "Du kanske gillar"
+  },
+  "ResetPassword": {
+    "confirmPassword": "Upprepa lösenordet",
+    "description": "Välj ett nytt lösenord till ditt konto.",
+    "descriptionWithEmail": "Välj ett nytt lösenord för {email}.",
+    "done": "Ditt lösenord är ändrat. Du kan logga in med det nu.",
+    "goToSignIn": "Logga in",
+    "heading": "Nytt lösenord",
+    "missingToken": "Länken saknar sin token. Begär en ny från inloggningssidan.",
+    "password": "Nytt lösenord",
+    "submit": "Spara lösenordet"
+  },
+  "Review": {
+    "confirmText": "Genom att klicka på knappen Betala bekräftar du att du har läst, förstått och accepterar våra användarvillkor, försäljningsvillkor och returpolicy, samt att du har tagit del av integritetspolicyn för {siteName}.",
+    "heading": "Granska"
+  },
+  "Search": {
+    "empty": "Inga resultat för ”{query}”",
+    "label": "Sök",
+    "loading": "Söker…",
+    "placeholder": "Sök produkter",
+    "popular": "Populära produkter"
+  },
+  "Shipping": {
+    "chooseStore": "Välj en butik nära dig",
+    "continueToPayment": "Fortsätt till betalning",
+    "deliveryDescription": "Hur vill du få din order levererad",
+    "edit": "Redigera",
+    "heading": "Leverans",
+    "method": "Metod",
+    "pickUpOrder": "Hämta din order",
+    "shippingMethod": "Fraktmetod",
+    "store": "Butik"
+  },
+  "ShippingDetails": {
+    "contact": "Kontakt",
+    "heading": "Leverans",
+    "method": "Metod",
+    "shippingAddress": "Leveransadress"
+  },
+  "SideMenu": {
+    "copyright": "© {year} {siteName}. Alla rättigheter förbehållna.",
+    "items": {
+      "account": "Konto",
+      "cart": "Varukorg",
+      "home": "Hem",
+      "store": "Butik"
+    },
+    "menuButton": "Meny"
+  },
+  "SignInPrompt": {
+    "description": "I kassan föreslås dina sparade adresser, och ordern hamnar i ditt konto.",
+    "heading": "Logga in för en snabbare kassa",
+    "signIn": "Logga in"
+  },
+  "SortSelect": {
+    "latestArrivals": "Nyheter",
+    "placeholder": "Sortera efter",
+    "priceHighLow": "Pris: Högt → Lågt",
+    "priceLowHigh": "Pris: Lågt → Högt"
+  },
+  "Store": {
+    "allProducts": "Alla produkter"
+  },
+  "TransferActions": {
+    "acceptTransfer": "Acceptera överföring",
+    "declineSuccess": "Orderöverföringen har avvisats!",
+    "declineTransfer": "Avvisa överföring",
+    "transferSuccess": "Ordern har överförts!"
+  },
+  "TransferPage": {
+    "acceptError": "Vi kunde inte godkänna överföringen. Länken kan vara ogiltig eller redan använd.",
+    "acceptInfo": "Om du accepterar tar den nya ägaren över alla rättigheter och skyldigheter kopplade till denna order.",
+    "acceptedBody": "Order {id} har överförts till den nya ägaren.",
+    "acceptedHeading": "Order överförd!",
+    "declineError": "Vi kunde inte avvisa överföringen. Länken kan vara ogiltig eller redan använd.",
+    "declinedBody": "Överföringen av order {id} har avvisats.",
+    "declinedHeading": "Överföring avvisad",
+    "noAction": "Om du inte känner igen denna förfrågan eller vill behålla ägarskapet behöver du inte göra något mer.",
+    "requestHeading": "Överföringsförfrågan för order {id}",
+    "requestIntro": "Du har fått en förfrågan om att överföra ägarskapet för din order ({id}). Om du godkänner det kan du bekräfta överföringen med knappen nedan."
+  },
+  "TransferRequest": {
+    "cantFindOrder": "Hittar du inte ordern du letar efter?",
+    "connectOrder": "Koppla en order till ditt konto.",
+    "heading": "Orderöverföringar",
+    "orderId": "Orderlänk eller ID",
+    "requestTransfer": "Begär överföring",
+    "transferEmailSent": "E-post med överföringsförfrågan skickad till {email}",
+    "transferRequested": "Överföring för order {orderId} begärd",
+    "whereToFind": "Öppna orderbekräftelsen för den ordern och klistra in länken därifrån här."
+  }
+}

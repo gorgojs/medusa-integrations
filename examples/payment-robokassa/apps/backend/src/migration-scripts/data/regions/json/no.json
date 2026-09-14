@@ -1,0 +1,29 @@
+{
+  "name": "Norway",
+  "currency_code": "nok",
+  "countries": ["no"],
+  "stock_location": {
+    "name": "Oslo Warehouse",
+    "address": {
+      "address_1": "Karl Johans gate 25",
+      "country_code": "no"
+    }
+  },
+  "shipping_prices": {
+    "courier": 64,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 159,
+    "sweatshirt": 305,
+    "sweatpants": 255,
+    "shorts": 200,
+    "hoodie": 370,
+    "chinoPants": 350,
+    "pufferJacket": 740,
+    "wirelessHeadphones": 995,
+    "electricBike": 11130,
+    "servingPlate": 435,
+    "espressoCup": 159
+  }
+}

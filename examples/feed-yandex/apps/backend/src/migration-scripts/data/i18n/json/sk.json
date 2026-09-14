@@ -1,0 +1,103 @@
+{
+  "name": "Slovenčina",
+  "translations": {
+    "categories": {
+      "clothing": "Oblečenie",
+      "coffee": "Káva",
+      "eTransport": "Elektrická doprava",
+      "electronics": "Elektronika",
+      "headphones": "Slúchadlá",
+      "home": "Domácnosť",
+      "outerwear": "Vrchné oblečenie",
+      "pants": "Nohavice",
+      "shirts": "Tričká",
+      "shorts": "Kraťasy",
+      "sweatshirts": "Mikiny",
+      "tableware": "Riad"
+    },
+    "collections": {
+      "new": "Novinky"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klasické čierne nohavice chino s presným strihom a minimalistickým dizajnom. Vyrobené z mäkkej, odolnej bavlnenej látky s prímesou elastanu pre pohodlie. Bočné vrecká, slučky na opasok a zapínanie na gombík. Ideálne na voľný čas aj na elegantnejšie príležitosti.",
+        "title": "Nohavice chino"
+      },
+      "electricBike": {
+        "description": "Matný čierny elektrický horský bicykel navrhnutý pre výkon a každodennú všestrannosť. Ľahký hliníkový rám, integrovaná batéria a výkonný motor zaisťujú plynulú asistovanú jazdu na akomkoľvek teréne. Vhodný na jazdu mestom aj mimo cesty.",
+        "title": "Elektrobicykel"
+      },
+      "espressoCup": {
+        "description": "Čierne keramické šálky na espresso určené na jednoduché aj dvojité dávky. Odolné, dobre udržia teplo a možno ich umývať v umývačke riadu.",
+        "title": "Šálka na espresso"
+      },
+      "hoodie": {
+        "description": "Klasická čierna mikina s kapucňou z mäkkej bavlnenej látky pre každodenné pohodlie. Voľný strih, nastaviteľná kapucňa so šnúrkou a predné vrecko kangura. Jednoduchá a univerzálna voľba na vrstvenie v každom ročnom období.",
+        "title": "Mikina s kapucňou"
+      },
+      "pufferJacket": {
+        "description": "Zateplená čierna prešívaná bunda navrhnutá pre teplo a pohodlie v chladnom počasí. Vysoký golier, predný zips s patentkou a viacero vreciek pre praktickosť. Ľahká, no odolná – vhodná na každodenné nosenie aj do prírody.",
+        "title": "Prešívaná bunda"
+      },
+      "servingPlate": {
+        "description": "Sochársky poňatý servírovací tanier z nehrdzavejúcej ocele s leštenou zrkadlovou povrchovou úpravou. Jeho plynulý, moderný tvar dodá noblesu každému prestretiu stola. Ideálny na ovocie, predjedlá alebo dekoratívnu expozíciu. Navrhnutý pre funkčnosť aj vizuálny dojem – krásne odráža svetlo a doplní akýkoľvek moderný domov či reštauráciu.",
+        "title": "Servírovací tanier"
+      },
+      "shorts": {
+        "description": "Objavte klasické kraťasy v novom poňatí. Vďaka našim bavlneným kraťasom už každodenné základy nie sú obyčajné.",
+        "title": "Kraťasy Medusa"
+      },
+      "sweatpants": {
+        "description": "Objavte klasické tepláky v novom poňatí. Vďaka našim bavlneným teplákom už každodenné základy nie sú obyčajné.",
+        "title": "Tepláky Medusa"
+      },
+      "sweatshirt": {
+        "description": "Objavte klasickú mikinu v novom poňatí. Vďaka našej bavlnenej mikine už každodenné základy nie sú obyčajné.",
+        "title": "Mikina Medusa"
+      },
+      "tShirt": {
+        "description": "Objavte klasické tričko v novom poňatí. Vďaka našim bavlneným tričkám už každodenné základy nie sú obyčajné.",
+        "title": "Tričko Medusa"
+      },
+      "wirelessHeadphones": {
+        "description": "Matné čierne bezdrôtové slúchadlá s pohodlnou konštrukciou cez uši pre pohlcujúci zážitok z počúvania. Čistý zvuk, silné basy a dlhá výdrž batérie. Navrhnuté na každodenné použitie doma, v kancelárii aj na cestách.",
+        "title": "Bezdrôtové slúchadlá cez uši"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Vrátenie peňazí poskytnuté ako gesto dobrej vôle alebo kompenzácia za nepríjemnosti",
+        "label": "Kompenzácia zákazníckej starostlivosti"
+      },
+      "pricingError": {
+        "description": "Vrátenie peňazí na opravu preplatku, chýbajúcej zľavy alebo nesprávnej ceny",
+        "label": "Chyba v cene"
+      },
+      "shippingIssue": {
+        "description": "Vrátenie peňazí z dôvodu stratenej, oneskorenej alebo nesprávne doručenej zásielky",
+        "label": "Problém s doručením"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Doručenie kuriérom",
+      "pickup": "Osobný odber"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Doručenie do 2–3 dní.",
+        "label": "Kuriér"
+      },
+      "pickup": {
+        "description": "Vyzdvihnutie na odbernom mieste.",
+        "label": "Osobný odber"
+      }
+    },
+    "terms": {
+      "black": "Čierna",
+      "color": "Farba",
+      "silver": "Strieborná",
+      "size": "Veľkosť",
+      "white": "Biela"
+    }
+  }
+}

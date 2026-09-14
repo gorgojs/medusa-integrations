@@ -1,0 +1,29 @@
+{
+  "name": "Serbia",
+  "currency_code": "rsd",
+  "countries": ["rs"],
+  "stock_location": {
+    "name": "Belgrade Warehouse",
+    "address": {
+      "address_1": "Кнез Михаилова 10",
+      "country_code": "rs"
+    }
+  },
+  "shipping_prices": {
+    "courier": 650,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1620,
+    "sweatshirt": 3130,
+    "sweatpants": 2590,
+    "shorts": 2050,
+    "hoodie": 3780,
+    "chinoPants": 3560,
+    "pufferJacket": 7560,
+    "wirelessHeadphones": 10150,
+    "electricBike": 113400,
+    "servingPlate": 4430,
+    "espressoCup": 1620
+  }
+}

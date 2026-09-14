@@ -1,0 +1,29 @@
+{
+  "name": "Singapore",
+  "currency_code": "sgd",
+  "countries": ["sg"],
+  "stock_location": {
+    "name": "Singapore Warehouse",
+    "address": {
+      "address_1": "Shenton Way 60",
+      "country_code": "sg"
+    }
+  },
+  "shipping_prices": {
+    "courier": 8,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 20,
+    "sweatshirt": 39,
+    "sweatpants": 32,
+    "shorts": 25,
+    "hoodie": 47,
+    "chinoPants": 44,
+    "pufferJacket": 94,
+    "wirelessHeadphones": 126,
+    "electricBike": 1405,
+    "servingPlate": 55,
+    "espressoCup": 20
+  }
+}

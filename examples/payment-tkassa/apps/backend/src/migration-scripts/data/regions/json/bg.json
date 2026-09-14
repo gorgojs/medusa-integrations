@@ -1,0 +1,29 @@
+{
+  "name": "Bulgaria",
+  "currency_code": "bgn",
+  "countries": ["bg"],
+  "stock_location": {
+    "name": "Sofia Warehouse",
+    "address": {
+      "address_1": "бул. Витоша 25",
+      "country_code": "bg"
+    }
+  },
+  "shipping_prices": {
+    "courier": 11,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 27,
+    "sweatshirt": 52,
+    "sweatpants": 43,
+    "shorts": 34,
+    "hoodie": 63,
+    "chinoPants": 59,
+    "pufferJacket": 126,
+    "wirelessHeadphones": 169,
+    "electricBike": 1890,
+    "servingPlate": 74,
+    "espressoCup": 27
+  }
+}

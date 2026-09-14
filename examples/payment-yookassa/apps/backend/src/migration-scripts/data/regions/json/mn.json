@@ -1,0 +1,29 @@
+{
+  "name": "Mongolia",
+  "currency_code": "mnt",
+  "countries": ["mn"],
+  "stock_location": {
+    "name": "Ulaanbaatar Warehouse",
+    "address": {
+      "address_1": "Энхтайвны өргөн чөлөө 15",
+      "country_code": "mn"
+    }
+  },
+  "shipping_prices": {
+    "courier": 20400,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 51000,
+    "sweatshirt": 98600,
+    "sweatpants": 81600,
+    "shorts": 64600,
+    "hoodie": 119000,
+    "chinoPants": 112200,
+    "pufferJacket": 238000,
+    "wirelessHeadphones": 320000,
+    "electricBike": 3570000,
+    "servingPlate": 139400,
+    "espressoCup": 51000
+  }
+}

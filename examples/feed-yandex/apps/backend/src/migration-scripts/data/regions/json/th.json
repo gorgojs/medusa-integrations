@@ -1,0 +1,29 @@
+{
+  "name": "Thailand",
+  "currency_code": "thb",
+  "countries": ["th"],
+  "stock_location": {
+    "name": "Bangkok Warehouse",
+    "address": {
+      "address_1": "ถนนราชดำเนิน 99",
+      "country_code": "th"
+    }
+  },
+  "shipping_prices": {
+    "courier": 205,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 510,
+    "sweatshirt": 985,
+    "sweatpants": 815,
+    "shorts": 645,
+    "hoodie": 1190,
+    "chinoPants": 1120,
+    "pufferJacket": 2380,
+    "wirelessHeadphones": 3200,
+    "electricBike": 35700,
+    "servingPlate": 1395,
+    "espressoCup": 510
+  }
+}

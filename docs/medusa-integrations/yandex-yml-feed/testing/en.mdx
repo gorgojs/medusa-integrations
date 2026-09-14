@@ -5,16 +5,16 @@ description: "Running tests for the Yandex Market YML Feed Generator"
 
 # {frontmatter.title}
 
-To run tests, navigate to the [`examples/feed-yandex/medusa`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/feed-yandex/medusa) directory:
+To run tests, navigate to the [`integration-tests/feed-yandex`](https://github.com/gorgojs/medusa-integrations/tree/main/integration-tests/feed-yandex) workspace:
 
 ```bash title="Terminal"
-cd examples/feed-yandex/medusa
+cd integration-tests/feed-yandex
 ```
 
 Make sure your `.env.test` file includes the following variables: `DB_USERNAME`, `DB_PASSWORD`:
 
 ```bash title="Terminal"
-cp .env.test.example .env.test
+cp .env.test.template .env.test
 ```
 
 Then, run tests:

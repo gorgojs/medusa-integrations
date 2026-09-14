@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Verder winkelen",
+    "haveAccount": "Hebt u al een account? Ga naar",
+    "item": "Artikel",
+    "myOrders": "Mijn bestellingen",
+    "orCall": "of bel",
+    "orderSummary": "Besteloverzicht",
+    "questionsPrefix": "Heeft u vragen, schrijf ons dan op",
+    "shipping": "Verzending",
+    "total": "Totaal",
+    "trackOrder": "Bestelling volgen",
+    "viewOrder": "Bestelling bekijken"
+  },
+  "Delivery": {
+    "bodyOrder": "Bestelling <strong>#{id}</strong> is bezorgd. We hopen dat alles goed is aangekomen.",
+    "headingAnon": "Uw bestelling is bezorgd",
+    "headingWithName": "{name}, uw bestelling is bezorgd",
+    "preview": "Bestelling #{id} bezorgd",
+    "somethingWrong": "Klopt er iets niet, laat het ons binnen 14 dagen weten en we lossen het op.",
+    "subject": "Bestelling #{id} bezorgd",
+    "textFallback": "Bestelling #{id} is bezorgd."
+  },
+  "Fulfillment": {
+    "bodyOrder": "Bestelling <strong>#{id}</strong> is ingepakt en wacht op de vervoerder.",
+    "deliveryCity": "Bezorging in {city}.",
+    "headingAnon": "We maken uw bestelling klaar",
+    "headingWithName": "{name}, we maken uw bestelling klaar",
+    "nextStep": "Zodra het pakket onderweg is, sturen we u het trackingnummer.",
+    "preview": "Bestelling #{id} wordt klaargemaakt",
+    "subject": "Bestelling #{id} wordt klaargemaakt",
+    "textFallback": "Bestelling #{id} is ingepakt."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. Alle rechten voorbehouden."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "Bestelling <strong>#{id}</strong> is geannuleerd.",
+    "headingAnon": "Uw bestelling is geannuleerd",
+    "headingWithName": "{name}, uw bestelling is geannuleerd",
+    "preview": "Bestelling #{id} geannuleerd",
+    "refundNote": "Was de bestelling betaald, dan gaat het bedrag terug naar dezelfde kaart. Banken doen daar meestal tot 10 werkdagen over.",
+    "subject": "Bestelling #{id} geannuleerd",
+    "textFallback": "Bestelling #{id} is geannuleerd."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "Bestelling <strong>#{id}</strong> is afgerond. Bedankt dat u voor ons hebt gekozen!",
+    "bodyPromo": "We zien u graag terug. Bekijk de nieuwe artikelen in onze winkel.",
+    "deliveryCity": "Bezorgd in {city}.",
+    "headingAnon": "Uw bestelling is afgerond!",
+    "headingWithName": "{name}, uw bestelling is afgerond!",
+    "preview": "Bestelling #{id} afgerond. Bedankt voor uw aankoop!",
+    "subject": "Bestelling #{id} afgerond",
+    "textFallback": "Bestelling #{id} afgerond. Bedankt voor uw aankoop!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "Bestelling <strong>#{id}</strong> is succesvol geplaatst.",
+    "deliveryCity": "Bezorging naar {city}.",
+    "headingAnon": "Uw bestelling is geplaatst!",
+    "headingWithName": "{name}, uw bestelling is geplaatst!",
+    "preview": "Bestelling #{id} succesvol geplaatst",
+    "subject": "Bestelling #{id} geplaatst",
+    "textFallback": "Bestelling #{id} is geplaatst.\n\nWe maken uw bestelling gereed en versturen deze binnenkort.",
+    "watchStatus": "U kunt de status van uw bestelling volgen in uw account."
+  },
+  "OrderTransfer": {
+    "body": "Er is een verzoek gedaan om bestelling <strong>#{id}</strong> naar een ander account over te dragen. Was u dat, bevestig de overdracht dan met de knop hieronder. Zo niet, negeer deze e-mail dan.",
+    "button": "Verzoek bekijken",
+    "heading": "Overdrachtsverzoek voor bestelling",
+    "hint": "De bestelling wordt pas na uw bevestiging overgedragen. Heeft u geen overdracht aangevraagd, dan gebeurt er niets met uw bestelling.",
+    "preview": "Overdrachtsverzoek voor bestelling #{id}",
+    "subject": "Overdrachtsverzoek voor bestelling #{id}",
+    "textFallback": "Overdrachtsverzoek voor bestelling #{id}\n\nOm het verzoek te bekijken, volgt u de link:\n{url}\n\nHeeft u geen overdracht aangevraagd, negeer dan deze e-mail."
+  },
+  "PasswordReset": {
+    "body": "We hebben een verzoek ontvangen om het wachtwoord van <strong>{email}</strong> te herstellen. Klik op de knop hieronder om een nieuw wachtwoord in te stellen.",
+    "button": "Wachtwoord herstellen",
+    "heading": "Wachtwoord herstellen",
+    "hint": "De link is <strong>15 minuten</strong> geldig. Heeft u geen herstel aangevraagd, negeer dan deze e-mail.",
+    "preview": "Wachtwoord herstellen, link 15 minuten geldig",
+    "subject": "Wachtwoord herstellen",
+    "textFallback": "Wachtwoord herstellen\n\nOm uw wachtwoord te herstellen, volgt u de link (15 minuten geldig):\n{url}\n\nHeeft u geen herstel aangevraagd, negeer dan deze e-mail."
+  },
+  "Payment": {
+    "bodyOrder": "Bestelling <strong>#{id}</strong> is succesvol betaald. We maken deze nu gereed voor verzending.",
+    "headingAnon": "Uw bestelling is betaald!",
+    "headingWithName": "{name}, uw bestelling is betaald!",
+    "preview": "Bestelling #{id} succesvol betaald",
+    "subject": "Bestelling #{id} betaald",
+    "textFallback": "Bestelling #{id} is betaald.\n\nWe maken uw bestelling gereed en versturen deze binnenkort.",
+    "watchStatus": "U kunt de status van uw bestelling volgen in uw account."
+  },
+  "Shipment": {
+    "bodyOrder": "Bestelling <strong>#{id}</strong> is overgedragen aan de bezorgdienst.",
+    "deliveryCity": "Bezorging naar {city}.",
+    "deliveryTime": "De gebruikelijke levertijd is 1-7 werkdagen, afhankelijk van uw regio.",
+    "headingAnon": "Uw bestelling is onderweg!",
+    "headingWithName": "{name}, uw bestelling is onderweg!",
+    "noTracking": "Het trackingnummer wordt aan uw bestelling in uw account toegevoegd zodra het pakket aan de vervoerder is overgedragen.",
+    "preview": "Bestelling #{id} verzonden",
+    "subject": "Bestelling #{id} verzonden",
+    "textDelivery": "De gebruikelijke levertijd is 1-7 werkdagen.",
+    "textFallback": "Bestelling #{id} is verzonden.",
+    "textTracking": "Trackingnummer: {numbers}",
+    "trackLabel": "Trackingnummer:",
+    "trackingTitle": "Trackinginformatie"
+  },
+  "Welcome": {
+    "body": "Bedankt voor uw registratie! Uw account is klaar. U kunt nu sneller afrekenen, uw bestellingen volgen en bezorgadressen in uw account bewaren.",
+    "button": "Beginnen met winkelen",
+    "claimOrders": "Eerder besteld zonder account? Die bestellingen kunt u eraan koppelen via",
+    "claimOrdersLink": "uw bestellingen",
+    "headingAnon": "Welkom!",
+    "headingWithName": "Welkom, {name}!",
+    "preview": "Welkom bij {store}!",
+    "subject": "Welkom!",
+    "textFallback": "Welkom!\n\nBedankt voor uw registratie. Uw account is klaar.\nBeginnen met winkelen: {url}"
+  }
+}

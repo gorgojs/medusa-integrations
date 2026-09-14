@@ -1,0 +1,29 @@
+{
+  "name": "Sweden",
+  "currency_code": "sek",
+  "countries": ["se"],
+  "stock_location": {
+    "name": "Stockholm Warehouse",
+    "address": {
+      "address_1": "Drottninggatan 45",
+      "country_code": "se"
+    }
+  },
+  "shipping_prices": {
+    "courier": 63,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 158,
+    "sweatshirt": 305,
+    "sweatpants": 250,
+    "shorts": 200,
+    "hoodie": 370,
+    "chinoPants": 345,
+    "pufferJacket": 735,
+    "wirelessHeadphones": 985,
+    "electricBike": 11030,
+    "servingPlate": 430,
+    "espressoCup": 158
+  }
+}

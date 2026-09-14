@@ -1,0 +1,29 @@
+{
+  "name": "Botswana",
+  "currency_code": "bwp",
+  "countries": ["bw"],
+  "stock_location": {
+    "name": "Gaborone Warehouse",
+    "address": {
+      "address_1": "Independence Avenue 33",
+      "country_code": "bw"
+    }
+  },
+  "shipping_prices": {
+    "courier": 81,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 205,
+    "sweatshirt": 390,
+    "sweatpants": 325,
+    "shorts": 255,
+    "hoodie": 475,
+    "chinoPants": 445,
+    "pufferJacket": 945,
+    "wirelessHeadphones": 1270,
+    "electricBike": 14180,
+    "servingPlate": 555,
+    "espressoCup": 205
+  }
+}

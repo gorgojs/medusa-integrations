@@ -1,0 +1,29 @@
+[
+  {
+    "handle": "clothing",
+    "name": "Clothing",
+    "children": [
+      { "handle": "shirts", "name": "T-Shirts" },
+      { "handle": "sweatshirts", "name": "Sweatshirts" },
+      { "handle": "pants", "name": "Pants" },
+      { "handle": "outerwear", "name": "Outerwear" },
+      { "handle": "shorts", "name": "Shorts" }
+    ]
+  },
+  {
+    "handle": "electronics",
+    "name": "Electronics",
+    "children": [
+      { "handle": "headphones", "name": "Headphones" },
+      { "handle": "e-transport", "name": "Electric Transport" }
+    ]
+  },
+  {
+    "handle": "home",
+    "name": "Home",
+    "children": [
+      { "handle": "tableware", "name": "Tableware" },
+      { "handle": "coffee", "name": "Coffee" }
+    ]
+  }
+]

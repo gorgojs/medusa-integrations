@@ -1,0 +1,103 @@
+{
+  "name": "Italiano",
+  "translations": {
+    "categories": {
+      "clothing": "Abbigliamento",
+      "coffee": "Caffè",
+      "eTransport": "Mobilità elettrica",
+      "electronics": "Elettronica",
+      "headphones": "Cuffie",
+      "home": "Casa",
+      "outerwear": "Capispalla",
+      "pants": "Pantaloni",
+      "shirts": "T-shirt",
+      "shorts": "Pantaloncini",
+      "sweatshirts": "Felpe",
+      "tableware": "Stoviglie"
+    },
+    "collections": {
+      "new": "Nuovi arrivi"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Classici pantaloni chino neri dal taglio sartoriale e dal design essenziale. Realizzati in morbido cotone resistente con un tocco di elastan per il massimo comfort. Con tasche laterali, passanti per cintura e chiusura a bottone. Ideali sia per un look casual sia per occasioni più curate.",
+        "title": "Pantaloni chino"
+      },
+      "electricBike": {
+        "description": "Mountain bike elettrica nero opaco, pensata per prestazioni e versatilità quotidiana. Telaio leggero in alluminio, batteria integrata e motore potente per una pedalata assistita fluida su ogni terreno. Ideale sia per gli spostamenti in città sia per i percorsi off-road.",
+        "title": "Bici elettrica"
+      },
+      "espressoCup": {
+        "description": "Tazzine da espresso in ceramica nera, pensate per un caffè singolo o doppio. Resistenti, mantengono il calore e sono lavabili in lavastoviglie.",
+        "title": "Tazzina da caffè"
+      },
+      "hoodie": {
+        "description": "Classica felpa con cappuccio nera in morbido cotone per il massimo comfort quotidiano. Vestibilità rilassata, cappuccio con coulisse regolabile e tasca marsupio frontale. Semplice e versatile, perfetta da abbinare in ogni stagione.",
+        "title": "Felpa con cappuccio"
+      },
+      "pufferJacket": {
+        "description": "Piumino nero imbottito, pensato per garantire calore e comfort nelle giornate più fredde. Colletto alto, zip frontale con chiusura a scatto e diverse tasche funzionali. Leggero ma resistente, perfetto per l'uso quotidiano o all'aperto.",
+        "title": "Piumino"
+      },
+      "servingPlate": {
+        "description": "Un piatto da portata scultoreo in acciaio inossidabile con finitura a specchio lucida. La sua forma fluida e moderna aggiunge un tocco raffinato a qualsiasi tavola. Perfetto per frutta, antipasti o composizioni decorative. Pensato per unire funzionalità e impatto visivo, riflette la luce in modo splendido e si abbina a qualsiasi casa o ristorante dallo stile contemporaneo.",
+        "title": "Piatto da portata"
+      },
+      "shorts": {
+        "description": "Reinventa la sensazione dei classici pantaloncini. Con i nostri pantaloncini in cotone, i must-have di ogni giorno non sono più scontati.",
+        "title": "Pantaloncini Medusa"
+      },
+      "sweatpants": {
+        "description": "Reinventa la sensazione dei classici pantaloni della tuta. Con i nostri pantaloni della tuta in cotone, i must-have di ogni giorno non sono più scontati.",
+        "title": "Pantaloni della tuta Medusa"
+      },
+      "sweatshirt": {
+        "description": "Reinventa la sensazione di una felpa classica. Con la nostra felpa in cotone, i must-have di ogni giorno non sono più scontati.",
+        "title": "Felpa Medusa"
+      },
+      "tShirt": {
+        "description": "Reinventa la sensazione di una t-shirt classica. Con le nostre t-shirt in cotone, i must-have di ogni giorno non sono più scontati.",
+        "title": "T-shirt Medusa"
+      },
+      "wirelessHeadphones": {
+        "description": "Cuffie wireless nero opaco con design over-ear avvolgente per un ascolto immersivo. Suono cristallino, bassi potenti e batteria di lunga durata. Pensate per l'uso quotidiano a casa, in ufficio o in movimento.",
+        "title": "Cuffie wireless over-ear"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Rimborso concesso come gesto di cortesia o compensazione per il disagio",
+        "label": "Rettifica servizio clienti"
+      },
+      "pricingError": {
+        "description": "Rimborso per correggere un addebito eccessivo, uno sconto mancante o un prezzo errato",
+        "label": "Errore di prezzo"
+      },
+      "shippingIssue": {
+        "description": "Rimborso per spedizione smarrita, in ritardo o consegnata per errore",
+        "label": "Problema di spedizione"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Consegna a domicilio",
+      "pickup": "Ritiro"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Consegna in 2-3 giorni.",
+        "label": "Corriere"
+      },
+      "pickup": {
+        "description": "Ritiro presso un punto di ritiro.",
+        "label": "Ritiro"
+      }
+    },
+    "terms": {
+      "black": "Nero",
+      "color": "Colore",
+      "silver": "Argento",
+      "size": "Taglia",
+      "white": "Bianco"
+    }
+  }
+}

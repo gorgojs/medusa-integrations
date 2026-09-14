@@ -1,0 +1,19 @@
+[
+  {
+    "title": "Size",
+    "values": [
+      { "value": "S" },
+      { "value": "M" },
+      { "value": "L" },
+      { "value": "XL" }
+    ]
+  },
+  {
+    "title": "Color",
+    "values": [
+      { "value": "Black", "metadata": { "hex": "#111111" } },
+      { "value": "White", "metadata": { "hex": "#ffffff" } },
+      { "value": "Silver", "metadata": { "hex": "#c0c0c0" } }
+    ]
+  }
+]

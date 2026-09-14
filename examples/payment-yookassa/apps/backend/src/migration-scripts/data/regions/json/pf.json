@@ -1,0 +1,29 @@
+{
+  "name": "French Polynesia",
+  "currency_code": "xpf",
+  "countries": ["pf"],
+  "stock_location": {
+    "name": "Papeete Warehouse",
+    "address": {
+      "address_1": "Boulevard Pomare 45",
+      "country_code": "pf"
+    }
+  },
+  "shipping_prices": {
+    "courier": 660,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1650,
+    "sweatshirt": 3190,
+    "sweatpants": 2640,
+    "shorts": 2090,
+    "hoodie": 3850,
+    "chinoPants": 3630,
+    "pufferJacket": 7700,
+    "wirelessHeadphones": 10340,
+    "electricBike": 115500,
+    "servingPlate": 4510,
+    "espressoCup": 1650
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Colombia",
+  "currency_code": "cop",
+  "countries": ["co"],
+  "stock_location": {
+    "name": "Bogota Warehouse",
+    "address": {
+      "address_1": "Carrera Séptima 100",
+      "country_code": "co"
+    }
+  },
+  "shipping_prices": {
+    "courier": 24000,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 60000,
+    "sweatshirt": 116000,
+    "sweatpants": 96000,
+    "shorts": 76000,
+    "hoodie": 140000,
+    "chinoPants": 132000,
+    "pufferJacket": 280000,
+    "wirelessHeadphones": 376000,
+    "electricBike": 4200000,
+    "servingPlate": 164000,
+    "espressoCup": 60000
+  }
+}

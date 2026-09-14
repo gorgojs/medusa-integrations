@@ -1,0 +1,29 @@
+{
+  "name": "Oman",
+  "currency_code": "omr",
+  "countries": ["om"],
+  "stock_location": {
+    "name": "Muscat Warehouse",
+    "address": {
+      "address_1": "شارع السلطان قابوس 40",
+      "country_code": "om"
+    }
+  },
+  "shipping_prices": {
+    "courier": 2,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 6,
+    "sweatshirt": 11,
+    "sweatpants": 9,
+    "shorts": 7,
+    "hoodie": 13,
+    "chinoPants": 13,
+    "pufferJacket": 27,
+    "wirelessHeadphones": 36,
+    "electricBike": 405,
+    "servingPlate": 16,
+    "espressoCup": 6
+  }
+}

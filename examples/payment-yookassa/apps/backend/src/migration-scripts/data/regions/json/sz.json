@@ -1,0 +1,29 @@
+{
+  "name": "Swaziland",
+  "currency_code": "zar",
+  "countries": ["sz"],
+  "stock_location": {
+    "name": "Mbabane Warehouse",
+    "address": {
+      "address_1": "Gwamile Street 14",
+      "country_code": "sz"
+    }
+  },
+  "shipping_prices": {
+    "courier": 111,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 280,
+    "sweatshirt": 535,
+    "sweatpants": 445,
+    "shorts": 350,
+    "hoodie": 650,
+    "chinoPants": 610,
+    "pufferJacket": 1295,
+    "wirelessHeadphones": 1740,
+    "electricBike": 19430,
+    "servingPlate": 760,
+    "espressoCup": 280
+  }
+}

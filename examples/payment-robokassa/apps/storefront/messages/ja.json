@@ -1,0 +1,699 @@
+{
+  "AccountInfo": {
+    "cancel": "キャンセル",
+    "edit": "編集",
+    "errorDefault": "エラーが発生しました。もう一度お試しください",
+    "saveChanges": "変更を保存",
+    "updatedSuccessfully": "{label}を更新しました"
+  },
+  "AccountLayout": {
+    "customerService": "カスタマーサービス",
+    "faqDescription": "よくある質問と回答はカスタマーサービスページでご確認いただけます。",
+    "gotQuestions": "よくある質問"
+  },
+  "AccountNav": {
+    "account": "アカウント",
+    "addresses": "住所",
+    "logOut": "ログアウト",
+    "orders": "注文履歴",
+    "overview": "概要",
+    "profile": "プロフィール"
+  },
+  "AccountOverview": {
+    "addresses": "住所",
+    "completed": "入力済み",
+    "hello": "こんにちは、{name}さん",
+    "noRecentOrders": "最近の注文はありません",
+    "profile": "プロフィール",
+    "recentOrders": "最近の注文",
+    "saved": "登録済み",
+    "signedInAs": "サインイン中："
+  },
+  "AddressCard": {
+    "addAddress": "住所を追加",
+    "default": "既定",
+    "editAddress": "住所を編集",
+    "newAddress": "新しい住所"
+  },
+  "AddressForm": {
+    "address": "住所",
+    "addressLine2": "建物名・部屋番号など",
+    "addressName": "名称",
+    "cancel": "キャンセル",
+    "city": "市区町村",
+    "company": "会社名",
+    "country": "国",
+    "edit": "編集",
+    "firstName": "名",
+    "lastName": "姓",
+    "phone": "電話番号",
+    "postalCode": "郵便番号",
+    "province": "都道府県 / 州",
+    "remove": "削除",
+    "save": "保存",
+    "stateProvince": "州 / 都道府県"
+  },
+  "AddressesPage": {
+    "description": "配送先住所の確認・更新ができ、いくつでも追加登録できます。登録した住所はチェックアウト時に利用できます。",
+    "heading": "配送先住所"
+  },
+  "Breadcrumb": {
+    "home": "ホーム",
+    "store": "ストア"
+  },
+  "Cart": {
+    "emptyMessage": "カートに商品がありません。下のリンクから商品を見てみましょう。",
+    "exploreProducts": "商品を見る",
+    "heading": "カート"
+  },
+  "CartDropdown": {
+    "bagEmpty": "カートは空です。",
+    "exploreProducts": "商品を見る",
+    "goToCart": "カートへ進む",
+    "heading": "カート",
+    "subtotal": "小計",
+    "subtotalNote": "（税別）"
+  },
+  "CartMismatchBanner": {
+    "errorMessage": "カートの移行中に問題が発生しました",
+    "runTransferAgain": "もう一度移行する",
+    "transferring": "移行中..."
+  },
+  "CartSummary": {
+    "goToCheckout": "レジに進む"
+  },
+  "CartTotals": {
+    "discount": "割引",
+    "shipping": "配送料",
+    "subtotal": "小計（送料・税抜き）",
+    "taxes": "税金",
+    "total": "合計"
+  },
+  "CategoryMenu": {
+    "title": "カテゴリー",
+    "viewAll": "すべて見る"
+  },
+  "CheckoutPage": {
+    "addNewAddress": "新しい住所を追加",
+    "addressHeading": "配送先住所",
+    "addressModalTitle": "配送先住所",
+    "addressNotNeededForPickup": "店舗受け取りの場合は不要です",
+    "back": "戻る",
+    "backToCart": "カートに戻る",
+    "billingHeading": "請求先住所",
+    "billingSameAsShipping": "請求先住所は配送先と同じ",
+    "close": "閉じる",
+    "contactsHeading": "連絡先",
+    "contactsModalTitle": "連絡先",
+    "copyright": "© {year} {siteName}. 無断転載を禁じます。",
+    "deliveryDateFrom": "{date}から",
+    "deliveryDateUntil": "{date}まで",
+    "deliveryToday": "本日",
+    "discount": "割引",
+    "edit": "編集",
+    "fieldAddress": "住所",
+    "fieldCity": "市区町村",
+    "fieldCompany": "会社名",
+    "fieldEmail": "メールアドレス",
+    "fieldFirstName": "名",
+    "fieldLastName": "姓",
+    "fieldPhone": "電話番号",
+    "fieldPostalCode": "郵便番号",
+    "fieldProvince": "都道府県",
+    "freeShipping": "無料",
+    "giftCard": "ギフトカード",
+    "itemsCount": "{count, plural, other {{count}点}}",
+    "legal": "「支払う」をクリックすることで、<terms>販売条件</terms>、<termsOfUse>利用規約</termsOfUse>、<returnPolicy>返品ポリシー</returnPolicy>に同意し、<privacyPolicy>プライバシーポリシー</privacyPolicy>に同意するものとします。",
+    "manualInput": "住所を手入力する",
+    "orderComposition": "注文内容",
+    "paymentHeading": "支払い方法",
+    "recipientCheckbox": "受取人が異なる場合",
+    "recipientHeading": "受取人情報",
+    "recipientLabel": "受取人：",
+    "returnsLink": "返品ポリシー",
+    "sameAsShipping": "配送先住所と同じ",
+    "save": "保存",
+    "saving": "保存中...",
+    "shippingCost": "配送料",
+    "shippingDescription": "ご注文の受け取り方法を選択してください",
+    "shippingHeading": "配送方法",
+    "shippingLink": "配送",
+    "shippingUnavailable": "利用可能な配送方法がありません",
+    "signIn": "サインイン",
+    "total": "合計"
+  },
+  "Common": {
+    "clear": "クリア",
+    "close": "閉じる",
+    "hidePassword": "パスワードを非表示",
+    "orderNumber": "注文 #{id}",
+    "poweredBy": "提供",
+    "remove": "削除",
+    "showPassword": "パスワードを表示"
+  },
+  "ContentPages": {
+    "faq": [
+      {
+        "answer": "配送ページで配送方法とそれぞれの料金をご確認いただけます。",
+        "question": "注文はいつ届きますか？"
+      },
+      {
+        "answer": "返品ページで商品の返送方法と交換の手順をご案内しています。",
+        "question": "返品や交換はどうすればよいですか？"
+      },
+      {
+        "answer": "お問い合わせページからご連絡ください。できるだけ早くご返信します。",
+        "question": "問い合わせ方法を教えてください。"
+      }
+    ],
+    "placeholder": "このページはスターターに付属するサンプルテキストです。公開前にご自身の内容に差し替えてください。"
+  },
+  "DiscountCode": {
+    "addPromotionCode": "プロモコードを追加",
+    "apply": "適用",
+    "removeDiscount": "注文からプロモコードを削除"
+  },
+  "Errors": {
+    "emailExists": "このメールアドレスのアカウントはすでに存在します。",
+    "generic": "問題が発生しました。もう一度お試しください。",
+    "insufficientInventory": "申し訳ございません。この商品の在庫が不足しています。",
+    "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。",
+    "invalidDiscount": "このプロモコードは無効か、有効期限が切れています。",
+    "invalidEmail": "有効なメールアドレスを入力してください。",
+    "invalidResetLink": "このリンクは無効です。すでに使用されたか、有効期限が切れています。もう一度お求めください。",
+    "network": "接続に問題があります。インターネット接続を確認して、もう一度お試しください。",
+    "notFound": "お探しのものが見つかりませんでした。",
+    "passwordMismatch": "パスワードが一致しません。",
+    "passwordTooShort": "パスワードは8文字以上で入力してください。",
+    "paymentFailed": "お支払いを処理できませんでした。もう一度お試しになるか、別の方法をお使いください。",
+    "unauthorized": "続行するにはサインインしてください。"
+  },
+  "Filters": {
+    "sort": "並び替え",
+    "title": "フィルター"
+  },
+  "Footer": {
+    "categoriesHeading": "カテゴリー",
+    "collectionsHeading": "コレクション",
+    "copyright": "© {year} {siteName}. 無断転載を禁じます。",
+    "infoHeading": "インフォメーション",
+    "medusaDocs": "Medusaドキュメント",
+    "sourceCode": "スターターのソースコード",
+    "starterDocs": "スターターのドキュメント"
+  },
+  "ForgotPassword": {
+    "backToSignIn": "ログインに戻る",
+    "description": "ご登録のメールアドレスを入力してください。新しいパスワードを設定するリンクをお送りします。",
+    "email": "メールアドレス",
+    "emailTitle": "有効なメールアドレスを入力してください。",
+    "guestAction": "登録する",
+    "guestPrompt": "アカウントを作らずゲストとして注文されましたか。その場合まだパスワードはありません。同じメールアドレスでアカウントを作成すると、過去の注文を紐づけられます。",
+    "heading": "パスワードの再設定",
+    "invalidEmail": "有効なメールアドレスを入力してください。",
+    "requestFailed": "リンクを送信できませんでした。少し時間をおいてお試しください。",
+    "sent": "そのアドレスのアカウントがあれば、リンクをお送りしました。受信トレイと迷惑メールをご確認ください。",
+    "submit": "リンクを送る"
+  },
+  "FreeShipping": {
+    "onlyAway": "残り{amount}",
+    "unlock": "送料無料まであと少し",
+    "unlocked": "送料無料になりました！",
+    "viewCart": "カートを見る",
+    "viewProducts": "商品を見る"
+  },
+  "Help": {
+    "contact": "お問い合わせ",
+    "needHelp": "ヘルプ",
+    "returnsExchanges": "返品・交換"
+  },
+  "Hero": {
+    "eyebrow": "すぐに使える · オープンソース",
+    "features": [
+      {
+        "description": "改良済み、余分なステップなし、住所オートコンプリート",
+        "label": "コンバージョンに最適化されたチェックアウト"
+      },
+      {
+        "description": "検索、フィルター可能なカタログ、多階層のカテゴリー、モバイルファースト",
+        "label": "フル機能のストアフロント"
+      },
+      {
+        "description": "meta タグ、Open Graph と Twitter カード、JSON-LD、sitemap、robots、llms.txt、PageSpeed Insights 100点",
+        "label": "SEO と AI に最適化"
+      },
+      {
+        "description": "ストアフロント向け36言語（RTL対応）と販売リージョン向け241か国、国の判定、不要な分は簡単に削れる",
+        "label": "完全なローカライズ"
+      },
+      {
+        "description": "SMTP経由のReact Emailテンプレート",
+        "label": "トランザクションメール"
+      },
+      {
+        "description": "商品カタログの変更時に実行",
+        "label": "オンデマンドのキャッシュ再検証"
+      },
+      {
+        "badge": "新機能",
+        "description": "管理画面からプロバイダー設定を管理",
+        "href": "https://gorgojs.com/medusa-integration-module",
+        "label": "連携モジュール"
+      }
+    ],
+    "featuresHeading": "機能",
+    "readDocs": "ドキュメントを読む",
+    "subtitle": "公式のMedusa DTC Starterに足りないものすべてを。",
+    "title": "本番環境対応のMedusa DTC Starter",
+    "viewOnGitHub": "GitHubで見る"
+  },
+  "ImageGallery": {
+    "goToImage": "画像 {index} へ移動",
+    "openFullImage": "画像を拡大表示"
+  },
+  "LanguageSelect": {
+    "locales": {
+      "ar": "العربية",
+      "bg": "Български",
+      "bn": "বাংলা",
+      "cs": "Čeština",
+      "da": "Dansk",
+      "de": "Deutsch",
+      "el": "Ελληνικά",
+      "en": "English",
+      "es": "Español",
+      "fi": "Suomi",
+      "fr": "Français",
+      "he": "עברית",
+      "hi": "हिन्दी",
+      "hu": "Magyar",
+      "id": "Bahasa Indonesia",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ka": "ქართული",
+      "ko": "한국어",
+      "lt": "Lietuvių",
+      "mn": "Монгол",
+      "ms": "Bahasa Melayu",
+      "nb": "Norsk bokmål",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "ro": "Română",
+      "ru": "Русский",
+      "sk": "Slovenčina",
+      "sv": "Svenska",
+      "th": "ไทย",
+      "tl": "Tagalog",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "vi": "Tiếng Việt",
+      "zh": "中文"
+    }
+  },
+  "LineItemOptions": {
+    "variant": "バリエーション："
+  },
+  "Login": {
+    "description": "ご注文とお届け先はアカウントに残り、お支払いも早く済みます。",
+    "email": "メールアドレス",
+    "emailTitle": "有効なメールアドレスを入力してください。",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "heading": "サインイン",
+    "joinUs": "新規登録",
+    "notMember": "アカウントをお持ちでない方",
+    "password": "パスワード",
+    "signIn": "サインイン"
+  },
+  "Metadata": {
+    "account": {
+      "description": "アカウントのアクティビティの概要。",
+      "title": "アカウント"
+    },
+    "addresses": {
+      "description": "登録住所を確認",
+      "title": "住所"
+    },
+    "cart": {
+      "description": "カートの中身を確認",
+      "title": "カート"
+    },
+    "category": {
+      "description": "{siteName}の{category}をご覧ください。仕様を比較し、価格を確認して、ぴったりの一点を見つけられます。"
+    },
+    "checkout": {
+      "description": "ご注文内容を確認し、お届け先を入力して、安全にお支払いいただけます。",
+      "title": "ご注文手続き"
+    },
+    "collection": {
+      "description": "{siteName}の{collection}コレクションをご覧ください。全アイテムを見て、ぴったりの一点を見つけられます。"
+    },
+    "contact": {
+      "description": "ご注文や商品など、どんなことでもご連絡ください。",
+      "title": "お問い合わせ"
+    },
+    "customerService": {
+      "description": "よくいただくご質問への回答と、お問い合わせ方法をご案内します。",
+      "title": "カスタマーサービス"
+    },
+    "home": {
+      "description": "厳選された商品コレクションをご覧ください。最新のスタイルの中からお気に入りを見つけましょう。"
+    },
+    "login": {
+      "description": "{siteName} のアカウントにサインインしてください。",
+      "title": "サインイン"
+    },
+    "orderConfirmed": {
+      "description": "お買い物が完了しました",
+      "title": "ご注文を承りました"
+    },
+    "orderDetails": {
+      "description": "ご注文内容を確認"
+    },
+    "orderTransfer": {
+      "title": "注文の譲渡"
+    },
+    "orders": {
+      "description": "過去のご注文の概要。",
+      "title": "注文履歴"
+    },
+    "privacy": {
+      "description": "ストアが収集する個人情報とその目的をご確認ください。",
+      "title": "プライバシーポリシー"
+    },
+    "profile": {
+      "description": "{siteName} のプロフィールを表示・編集します。",
+      "title": "プロフィール"
+    },
+    "resetPassword": {
+      "description": "アカウントの新しいパスワードを設定します。",
+      "title": "パスワードの再設定"
+    },
+    "returns": {
+      "description": "商品の返品や交換の方法、手続きできる期間、返金の時期をご確認いただけます。",
+      "title": "返品と交換"
+    },
+    "shipping": {
+      "description": "ご注文の配送方法と送料をご確認ください。",
+      "title": "配送"
+    },
+    "store": {
+      "description": "カタログ全体をご覧ください。カテゴリーやオプションで絞り込み、価格で並べ替えて、お探しの一点が見つかります。",
+      "title": "ストア"
+    },
+    "terms": {
+      "description": "ご購入時に同意いただく規約をお読みください。",
+      "title": "利用規約"
+    }
+  },
+  "NativeSelect": {
+    "defaultPlaceholder": "選択..."
+  },
+  "Nav": {
+    "account": "アカウント",
+    "cart": "カート（{count}）"
+  },
+  "NotFound": {
+    "cartDescription": "アクセスしようとしたカートは存在しません。Cookieを削除してもう一度お試しください。",
+    "description": "アクセスしようとしたページは存在しません。",
+    "goHome": "トップページへ戻る",
+    "title": "ページが見つかりません"
+  },
+  "OnboardingCta": {
+    "completeInAdmin": "管理画面で設定を完了する",
+    "completeSetup": "管理画面でストアの設定を完了できます。",
+    "orderCreated": "テスト注文が正常に作成されました！"
+  },
+  "OrderCard": {
+    "itemsCount": "{count, plural, other {{count}点}}",
+    "more": "ほか",
+    "seeDetails": "詳細を見る"
+  },
+  "OrderCompleted": {
+    "orderSuccess": "ご注文が完了しました。",
+    "thankYou": "ありがとうございます！"
+  },
+  "OrderDetails": {
+    "backToOrders": "注文一覧に戻る",
+    "confirmationSentBefore": "注文確認の詳細を以下の宛先にお送りしました：",
+    "fulfillmentStatuses": {
+      "canceled": "キャンセル済み",
+      "delivered": "配達済み",
+      "fulfilled": "処理済み",
+      "not_fulfilled": "未処理",
+      "partially_delivered": "一部配達済み",
+      "partially_fulfilled": "一部処理済み",
+      "partially_shipped": "一部発送済み",
+      "shipped": "発送済み"
+    },
+    "items": "商品",
+    "orderDate": "注文日：",
+    "orderNumber": "注文番号：",
+    "paymentStatuses": {
+      "authorized": "与信済み",
+      "awaiting": "支払い待ち",
+      "canceled": "キャンセル済み",
+      "captured": "支払い済み",
+      "not_paid": "未払い",
+      "partially_authorized": "一部与信済み",
+      "partially_captured": "一部支払い済み",
+      "partially_refunded": "一部返金済み",
+      "refunded": "返金済み",
+      "requires_action": "対応が必要"
+    }
+  },
+  "OrderOverview": {
+    "continueShopping": "買い物を続ける",
+    "noOrdersYet": "まだ注文がありません",
+    "nothingToSeeHere": "表示する内容がありません"
+  },
+  "OrderSummary": {
+    "discount": "割引",
+    "giftCard": "ギフトカード",
+    "heading": "注文内容",
+    "shipping": "配送料",
+    "subtotal": "小計",
+    "taxes": "税金",
+    "total": "合計"
+  },
+  "OrdersPage": {
+    "description": "過去の注文とその状況を確認できます。",
+    "heading": "注文履歴"
+  },
+  "Payment": {
+    "anotherStep": "この後、追加の手順が表示されます",
+    "continueToReview": "確認へ進む",
+    "edit": "編集",
+    "enterPaymentDetails": "お支払い情報を入力",
+    "giftCard": "ギフトカード",
+    "heading": "お支払い",
+    "paymentDetails": "支払い詳細",
+    "paymentMethod": "支払い方法"
+  },
+  "PaymentButton": {
+    "placeOrder": "支払う",
+    "selectPaymentMethod": "支払い方法を選択してください"
+  },
+  "PaymentContainer": {
+    "enterPaymentDetails": "お支払い情報を入力してください：",
+    "loadError": "お支払い方法を読み込めませんでした。"
+  },
+  "PaymentDetails": {
+    "heading": "お支払い",
+    "paidAt": "支払い日時",
+    "paymentDetails": "支払い詳細",
+    "paymentMethod": "支払い方法"
+  },
+  "PaymentMethods": {
+    "pp_medusa-payments_default": "クレジットカード",
+    "pp_paypal_paypal": "PayPal",
+    "pp_robokassa_robokassa": "Robokassa",
+    "pp_stripe-bancontact_stripe": "Bancontact",
+    "pp_stripe-ideal_stripe": "iDeal",
+    "pp_stripe_stripe": "クレジットカード",
+    "pp_system_default": "手動決済"
+  },
+  "PaymentTest": {
+    "attention": "注意：",
+    "testingOnly": "テスト目的のみでご使用ください。"
+  },
+  "ProductActions": {
+    "addToCart": "カートに追加",
+    "outOfStock": "在庫切れ",
+    "selectOptions": "オプションを選択",
+    "selectVariant": "バリエーションを選択"
+  },
+  "ProductOnboardingCta": {
+    "continueInAdmin": "管理画面で設定を続ける",
+    "continueSetup": "管理画面でストアの設定を続けることができます。",
+    "demoCreated": "デモ商品が正常に作成されました！"
+  },
+  "ProductPrice": {
+    "from": "最安値 ",
+    "original": "通常価格: "
+  },
+  "ProductRail": {
+    "viewAll": "すべて見る"
+  },
+  "ProductTabs": {
+    "easyReturns": "簡単な返品",
+    "easyReturnsDesc": "商品を返送いただくだけで、返金いたします。理由は問いません。返品ができるだけスムーズに完了するよう努めます。",
+    "fastDelivery": "スピード配送",
+    "fastDeliveryDesc": "ご注文の商品は3〜5営業日以内に、受け取り場所またはご自宅にお届けします。",
+    "shippingReturns": "配送・返品",
+    "simpleExchanges": "簡単な交換",
+    "simpleExchangesDesc": "サイズが合わない場合もご安心ください。新しい商品と交換いたします。"
+  },
+  "ProfileBillingAddress": {
+    "billingAddress": "請求先住所",
+    "noBillingAddress": "請求先住所が登録されていません"
+  },
+  "ProfileEmail": {
+    "email": "メールアドレス",
+    "label": "メールアドレス"
+  },
+  "ProfileName": {
+    "firstName": "名",
+    "label": "名前",
+    "lastName": "姓",
+    "noName": "名前が登録されていません"
+  },
+  "ProfilePage": {
+    "description": "お名前、メールアドレス、電話番号、請求先住所を確認・変更できます。",
+    "heading": "プロフィール"
+  },
+  "ProfilePassword": {
+    "confirmPassword": "パスワードの確認",
+    "hidden": "セキュリティ上の理由からパスワードは表示されません",
+    "label": "パスワード",
+    "newPassword": "新しいパスワード",
+    "oldPassword": "現在のパスワード"
+  },
+  "ProfilePhone": {
+    "label": "電話番号",
+    "noPhone": "電話番号が登録されていません",
+    "phone": "電話番号"
+  },
+  "PromoBanner": {
+    "close": "閉じる",
+    "cta": "試してみる",
+    "message": "本番環境対応のフル機能DTCスターター。"
+  },
+  "RegionSelect": {
+    "apply": "適用",
+    "close": "閉じる",
+    "placeholder": "国または言語を検索",
+    "tabCountry": "国",
+    "tabLanguage": "言語",
+    "title": "地域を変更"
+  },
+  "Register": {
+    "agreeText": "{siteName}のアカウントを作成すると、次の内容に同意したことになります：",
+    "alreadyMember": "すでに会員の方",
+    "and": "および",
+    "description": "{siteName}のアカウントを作成すると、注文とお届け先が一か所にまとまり、お支払いも早く済みます。",
+    "email": "メールアドレス",
+    "firstName": "名",
+    "heading": "{siteName}会員に登録",
+    "join": "登録",
+    "lastName": "姓",
+    "password": "パスワード",
+    "phone": "電話番号",
+    "privacyPolicy": "プライバシーポリシー",
+    "signIn": "サインイン",
+    "termsOfUse": "利用規約"
+  },
+  "RelatedProducts": {
+    "title": "おすすめの商品"
+  },
+  "ResetPassword": {
+    "confirmPassword": "パスワードの確認",
+    "description": "アカウントの新しいパスワードを設定してください。",
+    "descriptionWithEmail": "{email} の新しいパスワードを設定してください。",
+    "done": "パスワードを変更しました。新しいパスワードでログインできます。",
+    "goToSignIn": "ログイン",
+    "heading": "新しいパスワード",
+    "missingToken": "このリンクにトークンがありません。ログインページで再度お求めください。",
+    "password": "新しいパスワード",
+    "submit": "パスワードを保存"
+  },
+  "Review": {
+    "confirmText": "「支払う」ボタンをクリックすることで、当店の利用規約、販売条件、返品ポリシーを読み、理解し、同意したこと、および{siteName}のプライバシーポリシーを確認したことを承認するものとします。",
+    "heading": "確認"
+  },
+  "Search": {
+    "empty": "「{query}」に一致する商品が見つかりませんでした",
+    "label": "検索",
+    "loading": "検索中…",
+    "placeholder": "商品を検索",
+    "popular": "人気の商品"
+  },
+  "Shipping": {
+    "chooseStore": "近くの店舗を選択してください",
+    "continueToPayment": "支払いへ進む",
+    "deliveryDescription": "ご注文の受け取り方法を選択してください",
+    "edit": "編集",
+    "heading": "配送",
+    "method": "方法",
+    "pickUpOrder": "店舗で受け取る",
+    "shippingMethod": "配送方法",
+    "store": "店舗"
+  },
+  "ShippingDetails": {
+    "contact": "連絡先",
+    "heading": "配送",
+    "method": "方法",
+    "shippingAddress": "配送先住所"
+  },
+  "SideMenu": {
+    "copyright": "© {year} {siteName}. 無断転載を禁じます。",
+    "items": {
+      "account": "アカウント",
+      "cart": "カート",
+      "home": "ホーム",
+      "store": "ストア"
+    },
+    "menuButton": "メニュー"
+  },
+  "SignInPrompt": {
+    "description": "お支払い時に保存済みのお届け先が表示され、注文はアカウントに残ります。",
+    "heading": "サインインすると購入手続きがスムーズです",
+    "signIn": "サインイン"
+  },
+  "SortSelect": {
+    "latestArrivals": "新着順",
+    "placeholder": "並び替え",
+    "priceHighLow": "価格：高い順",
+    "priceLowHigh": "価格：安い順"
+  },
+  "Store": {
+    "allProducts": "すべての商品"
+  },
+  "TransferActions": {
+    "acceptTransfer": "譲渡を承認",
+    "declineSuccess": "注文の譲渡を拒否しました！",
+    "declineTransfer": "譲渡を拒否",
+    "transferSuccess": "注文の譲渡が完了しました！"
+  },
+  "TransferPage": {
+    "acceptError": "譲渡を承認できませんでした。リンクが無効か、すでに使用されている可能性があります。",
+    "acceptInfo": "承認すると、この注文に関するすべての権限と責任が新しい所有者に引き継がれます。",
+    "acceptedBody": "注文{id}は新しい所有者に正常に譲渡されました。",
+    "acceptedHeading": "注文が譲渡されました！",
+    "declineError": "譲渡を拒否できませんでした。リンクが無効か、すでに使用されている可能性があります。",
+    "declinedBody": "注文{id}の譲渡は拒否されました。",
+    "declinedHeading": "譲渡を拒否しました",
+    "noAction": "このリクエストに心当たりがない場合、または所有権を保持したい場合は、特に対応は必要ありません。",
+    "requestHeading": "注文{id}の譲渡リクエスト",
+    "requestIntro": "注文（{id}）の所有権譲渡リクエストが届いています。同意する場合は、下のボタンから譲渡を承認できます。"
+  },
+  "TransferRequest": {
+    "cantFindOrder": "お探しの注文が見つかりませんか？",
+    "connectOrder": "注文をアカウントに紐付けます。",
+    "heading": "注文の譲渡",
+    "orderId": "注文リンクまたはID",
+    "requestTransfer": "譲渡をリクエスト",
+    "transferEmailSent": "譲渡リクエストのメールを{email}に送信しました",
+    "transferRequested": "注文{orderId}の譲渡をリクエストしました",
+    "whereToFind": "その注文の確認メールを開き、そこにあるリンクをここに貼り付けてください。"
+  }
+}

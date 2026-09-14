@@ -1,0 +1,31 @@
+{
+  "name": "Armenia",
+  "currency_code": "amd",
+  "countries": [
+    "am"
+  ],
+  "stock_location": {
+    "name": "Yerevan Warehouse",
+    "address": {
+      "address_1": "Մաշտոցի պողոտա 40",
+      "country_code": "am"
+    }
+  },
+  "shipping_prices": {
+    "courier": 2340,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 5850,
+    "sweatshirt": 11310,
+    "sweatpants": 9360,
+    "shorts": 7410,
+    "hoodie": 13650,
+    "chinoPants": 12870,
+    "pufferJacket": 27300,
+    "wirelessHeadphones": 36700,
+    "electricBike": 410000,
+    "servingPlate": 15990,
+    "espressoCup": 5850
+  }
+}

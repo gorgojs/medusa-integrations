@@ -1,0 +1,29 @@
+{
+  "name": "Georgia",
+  "currency_code": "gel",
+  "countries": ["ge"],
+  "stock_location": {
+    "name": "Tbilisi Warehouse",
+    "address": {
+      "address_1": "რუსთაველის გამზირი 12",
+      "country_code": "ge"
+    }
+  },
+  "shipping_prices": {
+    "courier": 16,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 41,
+    "sweatshirt": 78,
+    "sweatpants": 65,
+    "shorts": 51,
+    "hoodie": 95,
+    "chinoPants": 89,
+    "pufferJacket": 189,
+    "wirelessHeadphones": 255,
+    "electricBike": 2840,
+    "servingPlate": 111,
+    "espressoCup": 41
+  }
+}

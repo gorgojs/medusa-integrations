@@ -1,0 +1,29 @@
+{
+  "name": "Guinea",
+  "currency_code": "gnf",
+  "countries": ["gn"],
+  "stock_location": {
+    "name": "Conakry Warehouse",
+    "address": {
+      "address_1": "Avenue de la République 25",
+      "country_code": "gn"
+    }
+  },
+  "shipping_prices": {
+    "courier": 51600,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 129000,
+    "sweatshirt": 249000,
+    "sweatpants": 206000,
+    "shorts": 163400,
+    "hoodie": 301000,
+    "chinoPants": 284000,
+    "pufferJacket": 602000,
+    "wirelessHeadphones": 808000,
+    "electricBike": 9030000,
+    "servingPlate": 353000,
+    "espressoCup": 129000
+  }
+}

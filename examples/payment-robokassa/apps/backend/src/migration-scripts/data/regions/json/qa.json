@@ -1,0 +1,29 @@
+{
+  "name": "Qatar",
+  "currency_code": "qar",
+  "countries": ["qa"],
+  "stock_location": {
+    "name": "Doha Warehouse",
+    "address": {
+      "address_1": "شارع الكورنيش 25",
+      "country_code": "qa"
+    }
+  },
+  "shipping_prices": {
+    "courier": 22,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 55,
+    "sweatshirt": 106,
+    "sweatpants": 87,
+    "shorts": 69,
+    "hoodie": 127,
+    "chinoPants": 120,
+    "pufferJacket": 255,
+    "wirelessHeadphones": 340,
+    "electricBike": 3820,
+    "servingPlate": 149,
+    "espressoCup": 55
+  }
+}

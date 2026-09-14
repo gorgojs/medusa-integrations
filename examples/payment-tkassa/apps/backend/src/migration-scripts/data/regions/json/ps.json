@@ -1,0 +1,29 @@
+{
+  "name": "Palestine",
+  "currency_code": "ils",
+  "countries": ["ps"],
+  "stock_location": {
+    "name": "Ramallah Warehouse",
+    "address": {
+      "address_1": "شارع الإرسال 45",
+      "country_code": "ps"
+    }
+  },
+  "shipping_prices": {
+    "courier": 22,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 56,
+    "sweatshirt": 107,
+    "sweatpants": 89,
+    "shorts": 70,
+    "hoodie": 130,
+    "chinoPants": 122,
+    "pufferJacket": 260,
+    "wirelessHeadphones": 350,
+    "electricBike": 3890,
+    "servingPlate": 152,
+    "espressoCup": 56
+  }
+}

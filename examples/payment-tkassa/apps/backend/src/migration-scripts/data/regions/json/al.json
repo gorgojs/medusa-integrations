@@ -1,0 +1,31 @@
+{
+  "name": "Albania",
+  "currency_code": "all",
+  "countries": [
+    "al"
+  ],
+  "stock_location": {
+    "name": "Tirana Warehouse",
+    "address": {
+      "address_1": "Bulevardi Dëshmorët e Kombit 45",
+      "country_code": "al"
+    }
+  },
+  "shipping_prices": {
+    "courier": 550,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1380,
+    "sweatshirt": 2670,
+    "sweatpants": 2210,
+    "shorts": 1750,
+    "hoodie": 3220,
+    "chinoPants": 3040,
+    "pufferJacket": 6440,
+    "wirelessHeadphones": 8650,
+    "electricBike": 96600,
+    "servingPlate": 3770,
+    "espressoCup": 1380
+  }
+}

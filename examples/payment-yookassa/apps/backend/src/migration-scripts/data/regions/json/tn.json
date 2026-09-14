@@ -1,0 +1,29 @@
+{
+  "name": "Tunisia",
+  "currency_code": "tnd",
+  "countries": ["tn"],
+  "stock_location": {
+    "name": "Tunis Warehouse",
+    "address": {
+      "address_1": "شارع الحبيب بورقيبة 20",
+      "country_code": "tn"
+    }
+  },
+  "shipping_prices": {
+    "courier": 19,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 47,
+    "sweatshirt": 90,
+    "sweatpants": 74,
+    "shorts": 59,
+    "hoodie": 109,
+    "chinoPants": 102,
+    "pufferJacket": 215,
+    "wirelessHeadphones": 290,
+    "electricBike": 3260,
+    "servingPlate": 127,
+    "espressoCup": 47
+  }
+}
