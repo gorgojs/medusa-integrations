@@ -1,5 +1,11 @@
 # @gorgo/medusa-integration
 
+## 0.2.2
+
+### Bug Fixes
+
+- add Swedish translations by [@gorgohead](https://github.com/gorgohead) in [`3c8676e`](https://github.com/gorgojs/medusa-integrations/commit/3c8676e6066901a61e4f3296e3e1b0e57bc81800)
+
 ## 0.2.1
 
 ### Chores
