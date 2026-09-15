@@ -25,9 +25,13 @@ stored encrypted rather than read from the environment at runtime. The backend o
 `INTEGRATION_ENCRYPTION_KEY`, which `.env.template` already sets to `supersecret` for development.
 
 If you already have a YooKassa shop, fill in `YOOKASSA_SHOP_ID` and `YOOKASSA_SECRET_KEY` in
-`apps/backend/.env` before the next step. The seed migration script reads them once and configures
-YooKassa through the Integration Module for you. Leave them blank to configure YooKassa from Medusa
-Admin instead, in [Connecting YooKassa](#connecting-yookassa) below.
+`apps/backend/.env` before the next step. The seed migration script reads them once and stores them
+through the Integration Module. Leave them blank to enter the credentials in Medusa Admin instead, in
+[Connecting YooKassa](#connecting-yookassa) below.
+
+The rest of the configuration the seed writes either way, auto-capture, the payment description and
+receipts with Atol Online FFD 1.2 on the general taxation system without VAT. They are demo values,
+so check them in Admin against what your own shop is registered for.
 
 ## Installation & Development
 
@@ -37,10 +41,10 @@ the password `supersecret`, seed the demo catalog and start both apps.
 
 ## Connecting YooKassa
 
-1. If the seed already configured YooKassa's credentials from your `.env`, skip to step 2. Otherwise
-   open the Admin at http://localhost:9000/app and go to **Settings → Integrations → YooKassa**. Fill
-   in the shop identifier and the secret key under **Credentials**, then set auto-capture and the
-   receipt parameters to match your shop. See
+1. Open the Admin at http://localhost:9000/app and go to **Settings → Integrations → YooKassa**. The
+   seed has filled every setting, and the credentials too when your `.env` carried them. Fill in the
+   shop identifier and the secret key under **Credentials** if they are still empty, then set
+   auto-capture and the receipt parameters to match your shop. See
    [Manage YooKassa Settings in Medusa Admin](https://docs.gorgojs.com/medusa-integrations/yookassa/settings).
 
 2. The seed already lists YooKassa among the payment providers of all 241 regions, so nothing to do
@@ -83,7 +87,7 @@ is nine files. Port them into your own storefront to get the same flow.
 | [`apps/backend/package.json`](./apps/backend/package.json) | Adds the plugin, the tunnel scripts and `dev:local` for a locally published copy of the plugin |
 | [`apps/backend/.env.template`](./apps/backend/.env.template) | Points `DB_NAME` at `medusa_payment_yookassa`, documents `COOKIE_SECURE`, and adds the optional `YOOKASSA_SHOP_ID`/`YOOKASSA_SECRET_KEY` pair the seed reads |
 | [`apps/backend/src/migration-scripts/lib/regions.ts`](./apps/backend/src/migration-scripts/lib/regions.ts) | Seeds YooKassa as a payment provider of every region, next to manual payment |
-| [`apps/backend/src/migration-scripts/lib/example-data.ts`](./apps/backend/src/migration-scripts/lib/example-data.ts) | Configures YooKassa's credentials through the Integration Module when `YOOKASSA_SHOP_ID`/`YOOKASSA_SECRET_KEY` are set, wired into the seed from `initial-data-seed.ts` |
+| [`apps/backend/src/migration-scripts/lib/example-data.ts`](./apps/backend/src/migration-scripts/lib/example-data.ts) | Configures YooKassa through the Integration Module, the auto-capture and receipt settings always and the credentials when `YOOKASSA_SHOP_ID`/`YOOKASSA_SECRET_KEY` are set, wired into the seed from `initial-data-seed.ts` |
 | [`apps/storefront/src/lib/constants.tsx`](./apps/storefront/src/lib/constants.tsx) | Names the provider at the checkout and builds the session data YooKassa needs (the return address, and the cart its receipt is generated from) |
 | [`apps/storefront/src/modules/checkout/components/payment-button/providers/yookassa.tsx`](./apps/storefront/src/modules/checkout/components/payment-button/providers/yookassa.tsx) | Sends the customer to the YooKassa payment page |
 | [`apps/storefront/src/app/api/payment-return/route.ts`](./apps/storefront/src/app/api/payment-return/route.ts) | Handles the return from the payment page and places the order unless the webhook got there first |
