@@ -25,6 +25,7 @@ import ptBR from "./json/ptBR.json" with { type: "json" }
 import ptPT from "./json/ptPT.json" with { type: "json" }
 import ro from "./json/ro.json" with { type: "json" }
 import ru from "./json/ru.json" with { type: "json" }
+import sv from "./json/sv.json" with { type: "json" }
 import th from "./json/th.json" with { type: "json" }
 import tr from "./json/tr.json" with { type: "json" }
 import uk from "./json/uk.json" with { type: "json" }
@@ -60,6 +61,7 @@ export default {
   ptPT: { translation: ptPT },
   ro: { translation: ro },
   ru: { translation: ru },
+  sv: { translation: sv },
   th: { translation: th },
   tr: { translation: tr },
   uk: { translation: uk },

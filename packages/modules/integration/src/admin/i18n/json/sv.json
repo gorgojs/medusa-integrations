@@ -1,0 +1,103 @@
+{
+  "integration": {
+    "list": {
+      "title": "Integrationer",
+      "subtitle": "Hantera inställningar för integrationer",
+      "browseIntegrations": "Bläddra bland integrationer",
+      "learnMore": "Lär dig bygga integrationer",
+      "searchPlaceholder": "Sök integrationer",
+      "empty": "Inga integrationer är registrerade. Deklarera providers under options.providers i integrationspluginet i medusa-config.",
+      "emptyFiltered": "Inga integrationer matchar dina filter.",
+      "tested": "testad",
+      "testFailed": "testet misslyckades",
+      "tabs": {
+        "all": "Alla"
+      }
+    },
+    "browse": {
+      "title": "Katalog",
+      "subtitle": "Hitta tillgängliga integrationer",
+      "publish": "Lägg till integration",
+      "learnMore": "Lär dig bygga och publicera din egen integration",
+      "searchPlaceholder": "Sök integrationer",
+      "by": "av {{author}}",
+      "installed": "Installerad",
+      "notInstalled": "Inte installerad",
+      "add": "Lägg till",
+      "settings": "Inställningar",
+      "install_docs": "Läs dokumentationen",
+      "install_empty": "Installationsanvisningar för den här integrationen finns inte ännu.",
+      "install_truncated": "Anvisningarna är för långa för att visas här — öppna dokumentationen."
+    },
+    "columns": {
+      "integration": "Integration",
+      "description": "Beskrivning",
+      "category": "Kategori",
+      "status": "Status"
+    },
+    "status": {
+      "notConfigured": "Inte konfigurerad",
+      "incomplete": "Ofullständig",
+      "enabled": "Aktiverad",
+      "disabled": "Inaktiverad",
+      "configured": "Konfigurerad",
+      "connected": "Ansluten",
+      "connectionFailed": "Anslutningen misslyckades"
+    },
+    "meta": {
+      "version": "v{{version}}",
+      "authorPrefix": "av"
+    },
+    "labels": {
+      "category": "Kategori"
+    },
+    "categories": {
+      "payment": "Betalningar",
+      "notification": "Notiser",
+      "fulfillment": "Leverans",
+      "search": "Sök",
+      "content": "Innehåll",
+      "analytics": "Analys",
+      "authentication": "Autentisering",
+      "erp": "ERP",
+      "crm": "CRM",
+      "pim": "PIM",
+      "marketplace": "Marknadsplats",
+      "feed": "Flöden",
+      "file_providers": "Filproviders",
+      "other": "Övrigt"
+    },
+    "actions": {
+      "test": "Testa anslutningen",
+      "enable": "Aktivera",
+      "disable": "Inaktivera",
+      "delete": "Ta bort",
+      "edit": "Redigera",
+      "save": "Spara",
+      "cancel": "Avbryt"
+    },
+    "delete": {
+      "title": "Ta bort konfigurationen",
+      "description": "Ta bort den sparade konfigurationen för {{name}}? Det går inte att ångra."
+    },
+    "form": {
+      "required": "{{field}} är obligatoriskt",
+      "invalidJson": "Ogiltig JSON",
+      "keepSecret": "•••••• – lämna tomt för att behålla",
+      "items": "{{count}} objekt"
+    },
+    "toast": {
+      "saved": "Sparat",
+      "saveFailed": "Kunde inte spara",
+      "connectionOk": "Anslutningen fungerar",
+      "testFailed": "Testet misslyckades",
+      "enabled": "Aktiverad",
+      "disabled": "Inaktiverad",
+      "deleted": "Konfigurationen har tagits bort",
+      "deleteFailed": "Kunde inte ta bort",
+      "updateFailed": "Kunde inte uppdatera"
+    },
+    "unknown": "Okänd integration \"{{id}}\".",
+    "back": "Tillbaka till integrationer"
+  }
+}
