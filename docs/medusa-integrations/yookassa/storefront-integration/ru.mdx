@@ -5,273 +5,307 @@ description: "Узнайте, как интегрировать платежны
 
 # {frontmatter.title}
 
-Для интеграции платёжного провайдера ЮKassa в storefront (витрину магазина) на Next.js начните с добавления необходимых UI-компонентов. Таким образом провайдер будет отображаться на странице оформления заказа наряду с другими доступными методами оплаты.
+Для интеграции платёжного провайдера ЮKassa в storefront [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter) начните с добавления необходимых UI-компонентов. Таким образом провайдер будет отображаться на странице оформления заказа наряду с другими доступными методами оплаты.
 
-Когда пользователь выбирает ЮKassa, витрина должна вызвать метод `initiatePayment` с нужными параметрами. Это создаст платёжную сессию через API ЮKassa и подготовит покупателя к перенаправлению. После этого кнопка *Place Order* должна отправить пользователя на страницу оплаты ЮKassa, где он сможет выбрать предпочтительный способ оплаты.
+Когда покупатель выбирает ЮKassa, оформление заказа инициализирует платёжную сессию, а провайдер создаёт её на стороне ЮKassa и возвращает адрес для оплаты. Кнопка оплаты отправляет покупателя на эту страницу, где он может выбрать удобный способ оплаты.
 
-После завершения оплаты ЮKassa одновременно отправит вебхук и перенаправит покупателя обратно в витрину. То событие, которое придёт первым, завершит корзину и создаст новый заказ в Medusa.
+После завершения оплаты ЮKassa одновременно отправляет вебхук и перенаправляет покупателя обратно в витрину.
 
 Для витрины на Next.js необходимо внести следующие изменения:
 
 ## Шаг 1: Настройте платёжный провайдер
 
-Чтобы сделать ЮKassa доступным в качестве способа оплаты на странице оформления заказа витрины магазина, необходимо добавить её конфигурацию в маппинг платёжных провайдеров в файле с константами вашей витрины. Этот маппинг определяет как каждый провайдер отображается в интерфейсе.
+Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L41-L44) и добавьте ЮKassa в маппинг платёжных провайдеров, а также вспомогательную функцию, распознающую её сессии:
 
-Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/lib/constants.tsx#L37-L40) и добавьте следующий код:
-
-![Структура проекта Medusa Storefront после обновления файла с константами](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-lib-constants.png)
+{/* TODO: screenshot */}
 
 ```ts title="src/lib/constants.tsx"
 export const paymentInfoMap: Record<
   string,
-  { title: string; icon: React.ReactNode }
+  { title: string; icon: React.JSX.Element }
 > = {
-  // ... другие провайдеры
+  // ...
   pp_yookassa_yookassa: {
     title: "YooKassa",
     icon: <CreditCard />,
-  }
+  },
+  // ...
 }
 
-// Вспомогательная функция для проверки, является ли провайдер ЮKassa
+// ...
+
 export const isYookassa = (providerId?: string) => {
   return providerId?.startsWith("pp_yookassa")
 }
 ```
 
-Вы расширяете объект `paymentInfoMap`, добавляя в него запись `pp_yookassa_yookassa`. Эта запись определяет заголовок и иконку, которые будут отображаться для ЮKassa на странице оформления заказа.
-
-Вспомогательная функция `isYookassa` проверяет, принадлежит ли переданный `providerId` к ЮKassa.
-Это используется при отрисовке UI-компонентов, специфичных для конкретного провайдера.
+`title` в `paymentInfoMap` служит резервным названием на странице оформления заказа, когда для локали нет перевода. `isYookassa` использует диспетчер ниже и построитель данных платёжной сессии из следующего шага.
 
 ---
 
-## Шаг 2: Обновите настройки cookies
+## Шаг 2: Инициализируйте платёжную сессию
 
-При подключении ЮKassa настройте политику cookie так, чтобы поддерживались междоменные редиректы. Это нужно для сохранения платёжной сессии при возврате пользователя в магазин.
+Откройте тот же файл [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L60-L90) и добавьте адрес возврата и построитель данных сессии:
 
-Откройте [`src/lib/data/cookies.ts`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/lib/data/cookies.ts#L79) и обновите конфигурацию файлов cookie следующим образом:
+{/* TODO: screenshot */}
 
-![Структура проекта Medusa Storefront после обновления файлов cookie](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-lib-data-cookies.png)
+```ts title="src/lib/constants.tsx"
+/**
+ * Адрес, на который покупатель возвращается после оплаты на стороне провайдера.
+ * `<html lang>` хранит локаль, в которой отображалось оформление заказа, поэтому
+ * покупатель возвращается на том языке, на котором ушёл из магазина.
+ */
+const paymentReturnUrl = (providerId: string, cartId: string) => {
+  const origin =
+    typeof window === "undefined" ? getBaseURL() : window.location.origin
+  const locale =
+    typeof document === "undefined"
+      ? defaultLocale
+      : document.documentElement.lang || defaultLocale
 
-```ts title="src/lib/data/cookies.ts"
-export const setCartId = async (cartId: string) => {
-  cookies.set("_medusa_cart_id", cartId, {
-    // ... другие настройки cookie
-    sameSite: "lax", // Переключено с режима «Strict» для междоменных редиректов
-  })
+  return `${origin}/api/payment-return?provider=${providerId}&cart_id=${cartId}&locale=${locale}`
 }
+
+const paymentSessionDataBuilders: Array<{
+  test: (providerId?: string) => boolean | undefined
+  isReady?: (cart: HttpTypes.StoreCart) => boolean
+  build: (cart: HttpTypes.StoreCart) => Record<string, unknown>
+}> = [
+  {
+    test: (providerId) => isYookassa(providerId),
+    // ЮKassa формирует чек из корзины, а чеку нужны имя, email и телефон
+    // покупателя. Инициализация сессии до того, как оформление заказа собрало
+    // эти данные, создаёт платёж без чека.
+    isReady: (cart) => Boolean(cart.email && cart.shipping_address),
+    build: (cart) => ({
+      confirmation: {
+        type: "redirect",
+        return_url: paymentReturnUrl("yookassa", cart.id),
+      },
+      cart,
+    }),
+  },
+]
 ```
 
-Эта вспомогательная функция сохраняет идентификатор корзины в cookie с именем `_medusa_cart_id`.
-
-Опция `sameSite` установлена в значение `lax` вместо `strict`. Это изменение гарантирует, что cookie будет отправляться при кросс-доменных запросах во время процесса редиректа через ЮKassa, предотвращая потерю платёжной сессии.
+При инициализации платежа для ЮKassa `build` передаёт объект `confirmation` с `type: "redirect"` и `return_url`, а также `cart` для формирования чека. `isReady` удерживает сессию, пока в корзине не появятся email и адрес доставки.
 
 ---
 
-## Шаг 3: Инициализируйте платёжную сессию
+## Шаг 3: Создайте кнопку оплаты
 
-Чтобы перенаправить покупателя в ЮKassa, платёжная сессия должна быть корректно инициализирована с необходимыми параметрами, включая return URL после оплаты и корзину для формирования онлайн-чеков.
+Создайте файл [`src/modules/checkout/components/payment-button/providers/yookassa.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/modules/checkout/components/payment-button/providers/yookassa.tsx):
 
-Откройте [`src/modules/checkout/components/payment/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/modules/checkout/components/payment/index.tsx#L83-L95) и обновите логику инициализации платежа, включив в нее данные корзины и URL возврата для ЮKassa:
+{/* TODO: screenshot */}
 
-![Структура проекта Medusa Storefront после обновления файла для компонента оплаты](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-modules-checkout-components-payment-index.png)
+```ts title="src/modules/checkout/components/payment-button/providers/yookassa.tsx"
+"use client"
 
-```ts title="src/modules/checkout/components/payment/index.tsx"
-import { getBaseURL } from "@lib/util/env"
+import type { HttpTypes } from "@medusajs/types"
+import { useTranslations } from "next-intl"
+import { useState } from "react"
+import { PaymentButtonShell, type PaymentProviderButtonProps } from "../shared"
 
-const Payment = ({
-  // ...
-}) => {
-  // ...
-  const handleSubmit = async () => {
-    setIsLoading(true)
-    try {
-      // ...
-      const countryCode = cart?.shipping_address?.country_code
-      if (!checkActiveSession) {
-        await initiatePaymentSession(cart, {
-          provider_id: selectedPaymentMethod,
-          data: {
-            confirmation: {
-              type: "redirect",
-              return_url: `${getBaseURL()}/api/capture-payment/${cart?.id}?country_code=${countryCode}`
-            },
-            cart: cart
-          }
-        })
-      }
-    }
-  }
-}
-```
+const confirmationUrl = (cart: HttpTypes.StoreCart) => {
+  const session = cart.payment_collection?.payment_sessions?.find((s) =>
+    s.provider_id.startsWith("pp_yookassa")
+  )
+  const confirmation = session?.data?.confirmation as
+    | { confirmation_url?: string }
+    | undefined
 
-При инициировании платёжной сессии для ЮKassa передайте объект `confirmation` с `type: "redirect"` и `return_url`. Позже ЮKassa предоставит `confirmation_url`, на которое клиент должен быть перенаправлен.
-
-Параметр `return_url` указывает на конечную точку захвата вашего магазина и используется как для успешных, так и для неудачных попыток оплаты.
-
-Объект `cart` включается в данные инициализации для формирования чека в соответствии с Федеральным законом № 54.
-
----
-
-## Шаг 4: Создайте кнопку оплаты
-
-В витрине для каждого платёжного провайдера необходим отдельный компонент кнопки оплаты. Он отвечает за обработку оформления заказа после подтверждения пользователем и, используя данные платёжного сеанса, перенаправляет его на страницу оплаты ЮKassa.
-
-Откройте [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/modules/checkout/components/payment-button/index.tsx#L163-L205) и добавьте следующий код:
-
-![Структура проекта Medusa Storefront после обновления файла для компонента кнопки оплаты](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-modules-checkout-components-payment-button-index.png)
-
-```ts title="src/modules/checkout/components/payment-button/index.tsx"
-import { 
-  // ...
-  isYookassa
-} from "@lib/constants"
-import { useRouter } from "next/navigation"
-
-const PaymentButton: React.FC<PaymentButtonProps> = ({
-  cart,
-  "data-testid": dataTestId,
-}) => {
-  // ...
-  switch (true) {
-    // ... другие проверки
-    case isYookassa(paymentSession?.provider_id):
-      return (
-        <YookassaPaymentButton
-          notReady={notReady}
-          cart={cart}
-          data-testid={dataTestId}
-        />
-      )
-    default:
-      return <Button disabled>Select a payment method</Button>
-  }
+  return confirmation?.confirmation_url
 }
 
-// ... другие компоненты кнопок оплаты
-
+/**
+ * ЮKassa принимает оплату на собственной странице. Сессия, созданная оформлением
+ * заказа, хранит адрес, куда отправить покупателя, а заказ оформляется, когда он
+ * вернётся через `/api/payment-return`, либо по вебхуку, если тот придёт раньше.
+ */
 const YookassaPaymentButton = ({
   cart,
-  notReady
-}: {
-  cart: HttpTypes.StoreCart
-  notReady: boolean
-  "data-testid"?: string
-}) => {
+  notReady,
+  label,
+  cartUpdating,
+  "data-testid": dataTestId,
+}: PaymentProviderButtonProps) => {
+  const t = useTranslations("Errors")
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const router = useRouter()
-
-  const paymentSession = cart.payment_collection?.payment_sessions?.find(
-    session => session.provider_id === "pp_yookassa_yookassa"
-  )
 
   const handlePayment = () => {
-    setSubmitting(true)
+    const url = confirmationUrl(cart)
 
-    const confirmation = paymentSession?.data?.confirmation as any
-    if (confirmation?.confirmation_url) {
-      router.push(confirmation.confirmation_url)
+    if (!url) {
+      setErrorMessage(t("paymentFailed"))
+      return
     }
+
+    setSubmitting(true)
+    window.location.assign(url)
   }
 
   return (
-    <>
-      <Button
-        disabled={notReady}
-        isLoading={submitting}
-        onClick={handlePayment}
-        size="large"
-        data-testid="submit-order-button"
-      >
-        Place an order and pay
-      </Button>
-      <ErrorMessage
-        error={errorMessage}
-        data-testid="manual-payment-error-message"
-      />
-    </>
+    <PaymentButtonShell
+      label={label}
+      onClick={handlePayment}
+      disabled={notReady}
+      loading={submitting || cartUpdating}
+      errorMessage={errorMessage}
+      errorTestId="yookassa-payment-error-message"
+      data-testid={dataTestId ?? "submit-order-button"}
+    />
   )
 }
+
+export default YookassaPaymentButton
 ```
 
-Этот компонент находит `payment_session` ЮKassa в активной корзине и извлекает значение `data.confirmation.confirmation_url`.  Когда пользователь нажимает кнопку *Place an order*, он перенаправляется на этот URL для завершения оплаты на странице ЮKassa.
+Этот компонент находит `payment_session` ЮKassa в активной корзине и извлекает `data.confirmation.confirmation_url`. При нажатии `handlePayment` отправляет покупателя туда напрямую через `window.location.assign`, поскольку страница ЮKassa не встраивается в витрину.
 
-Если `confirmation_url` отсутствует, компонент отображает сообщение об ошибке вместо продолжения процесса.   Состояние `isLoading` обеспечивает визуальную обратную связь во время подготовки перенаправления.
-
-Родительский компонент `PaymentButton` использует функцию `isYookassa`, чтобы определить, нужно ли отобразить `YookassaPaymentButton` для текущей сессии; в противном случае показывается неактивная кнопка *Select a payment method*.
+Если `confirmation_url` отсутствует, кнопка показывает сообщение об ошибке вместо перехода.
 
 ---
 
-## Шаг 5: Создайте API-роут для подтверждения платежа
+## Шаг 4: Зарегистрируйте кнопку оплаты
 
-После того как покупатель завершает оплату на странице ЮKassa, он перенаправляется обратно на витрину магазина. Необходимо создать API-роут, который обработает этот callback, проверит статус платежа и завершит корзину.
+Импортируйте кнопку и `isYookassa` в [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L3-L17), затем добавьте `case` для неё в `switch` диспетчера:
 
-Создайте файл [`src/app/api/capture-payment/[cartId]/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/app/api/capture-payment/%5BcartId%5D/route.ts)  со следующим содержимым:
+{/* TODO: screenshot */}
 
-![Структура проекта Medusa Storefront после создания файла для API route](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-app-api-capture-payment-cartid-route.png)
-
-```ts title="src/app/api/capture-payment/[cartId]/route.ts"
-import { NextRequest, NextResponse } from "next/server"
-import { revalidateTag } from "next/cache"
+```ts title="src/modules/checkout/components/payment-button/index.tsx"
 import {
-  getCacheTag,
-  getAuthHeaders,
-  removeCartId
-} from "@lib/data/cookies"
-import { sdk } from "@lib/config"
-import { placeOrder } from "@lib/data/cart"
+  isManual,
+  isPaymentSessionReady,
+  isStripeLike,
+  isYookassa,
+} from "@lib/constants"
+// ...
+import YookassaPaymentButton from "./providers/yookassa"
 
-type Params = Promise<{ cartId: string }>
+// ...
 
-export async function GET(req: NextRequest, { params }: { params: Params }) {
-  const { cartId } = await params
-  const { origin, searchParams } = req.nextUrl
-
-  const countryCode = searchParams.get("country_code") || ""
-  const headers = { ...(await getAuthHeaders()) }
-
-  // Retrieve fresh cart values
-  const cartCacheTag = await getCacheTag("carts")
-  revalidateTag(cartCacheTag)
-  const { cart } = await sdk.store.cart.retrieve(cartId, {
-    fields: "id, order_link.order_id, items.total"
-  },
-    headers
-  )
-  if (!cart) {
-    return NextResponse.redirect(`${origin}/${countryCode}`)
+  switch (true) {
+    // ...
+    case isYookassa(activePaymentMethod):
+      return <YookassaPaymentButton {...providerProps} />
+    default:
+      // ...
   }
+```
 
-  const orderId = (cart as unknown as Record<string, any>).order_link?.order_id
-  if (!orderId) {
-    await placeOrder(cartId)
-    // Fail when payment not authorized
+Родительский компонент `PaymentButton` использует `isYookassa`, чтобы определить, нужно ли отрисовать `YookassaPaymentButton` для активной сессии, иначе выполнение переходит к следующей ветке.
+
+---
+
+## Шаг 5: Обработайте возврат с оплаты
+
+ЮKassa сообщает статус платежа и через вебхук, и через этот редирект, поэтому общий роут проверяет, есть ли у корзины заказ, прежде чем оформлять его сам.
+
+Откройте [`src/app/api/payment-return/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/app/api/payment-return/route.ts#L29-L80) и добавьте следующую функцию:
+
+{/* TODO: screenshot */}
+
+```ts title="src/app/api/payment-return/route.ts"
+type ReturnContext = {
+  cartId: string
+  locale: string
+  origin: string
+}
+
+/**
+ * Обрабатывает возврат от провайдера, который принимает оплату на собственной
+ * странице и возвращает покупателя только с идентификатором корзины — ЮKassa
+ * в их числе.
+ *
+ * Вебхук провайдера и этот редирект соревнуются друг с другом, и какой из них
+ * ни пришёл бы первым, он оформляет заказ, поэтому перед оформлением
+ * проверяется, нет ли у корзины уже заказа.
+ */
+async function redirectProviderReturn({
+  cartId,
+  locale,
+  origin,
+}: ReturnContext) {
+  const cart = await sdk.client
+    .fetch<HttpTypes.StoreCartResponse>(`/store/carts/${cartId}`, {
+      method: "GET",
+      query: { fields: "id,order_link.order_id" },
+      headers: { ...(await getAuthHeaders()) },
+      cache: "no-store",
+    })
+    .then(({ cart }) => cart)
+    .catch(() => null)
+
+  if (!cart) {
     return NextResponse.redirect(
-      `${origin}/${countryCode}/checkout?step=review&error=payment_failed`
+      `${origin}/${locale}/cart?error=payment_failed`
     )
   }
 
-  const orderCacheTag = await getCacheTag("orders")
-  revalidateTag(orderCacheTag)
-  removeCartId()
+  const orderId = (cart as unknown as { order_link?: { order_id?: string } })
+    .order_link?.order_id
+
+  if (orderId) {
+    const orderCacheTag = await getCacheTag("orders")
+    revalidateTag(orderCacheTag)
+    await removeCartId()
+
+    return NextResponse.redirect(
+      `${origin}/${locale}/order/${orderId}/confirmed`
+    )
+  }
+
+  // Покупатель отменил оплату, либо она была отклонена, поэтому он возвращается
+  // на страницу оформления заказа с нетронутой корзиной и может выбрать способ
+  // оплаты заново.
+  await setCartId(cartId)
+
+  try {
+    await placeOrder(cartId)
+  } catch (error) {
+    unstable_rethrow(error)
+
+    return NextResponse.redirect(
+      `${origin}/${locale}/checkout?error=payment_failed`
+    )
+  }
+
   return NextResponse.redirect(
-    `${origin}/${countryCode}/order/${orderId}/confirmed`
+    `${origin}/${locale}/checkout?error=payment_failed`
   )
 }
 ```
 
-Этот API-роут обрабатывает редирект от ЮKassa после попытки оплаты. Он получает актуальное состояние корзины, чтобы убедиться, что все изменения, внесённые во время оплаты, были отражены.
+Затем направьте возврат ЮKassa в эту функцию прямо в `GET`:
 
-Если в корзине нет связанного идентификатора заказа, обработчик роута пытается оформить заказ. В случае успеха покупатель перенаправляется на страницу подтверждения заказа. Если же при обработке корзины возникла ошибка, покупатель возвращается на страницу оформления заказа с указанием ошибки и может повторить процесс оплаты заказа.
+```ts title="src/app/api/payment-return/route.ts"
+  if (provider === "yookassa") {
+    return redirectProviderReturn({ cartId, locale, origin })
+  }
+```
 
-Когда оплата проходит успешно, роут повторно валидирует кэшированные данные корзины и заказа, удаляет cookie корзины и перенаправляет покупателя на страницу подтверждения заказа. Это гарантирует корректное завершение платёжного процесса и сохранение актуальных данных в витрине.
+Если у корзины уже есть заказ, в гонке победил вебхук, и роут обновляет кэш заказа и отправляет покупателя на страницу подтверждения. Иначе он пытается оформить заказ сам, а при любой ошибке отправляет покупателя обратно на оформление заказа с `error=payment_failed`, чтобы он мог выбрать способ оплаты заново.
+
+---
+
+## Шаг 6: Добавьте название провайдера в локали витрины
+
+Добавьте `pp_yookassa_yookassa` в [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/messages/en.json#L513) и в каждую другую локаль под `messages/`:
+
+```json title="messages/en.json"
+{
+  "PaymentMethods": {
+    // ...
+    "pp_yookassa_yookassa": "YooKassa"
+  }
+}
+```
+
+Если для локали нет записи, используется английский `title` из `paymentInfoMap` в [Шаге 1](#шаг-1-настройте-платёжный-провайдер). Собственное название ЮKassa не меняется от локали к локали, за исключением русской, где это `ЮKassa`.
 
 ---
 
 ## Полный пример кода интеграции в витрину
 
-Каждый шаг выше написан для стартового шаблона [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa) и ссылается на витрину, из которой он взят, зафиксированную в [`examples/payment-yookassa/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/medusa-storefront).
-
-[Пример в `main`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa) собран на [Medusa DTC Starter](https://github.com/gorgojs/medusa-dtc-starter), в котором уже есть точки расширения для этой интеграции. В его `README.md` перечислены восемь файлов, которые затрагивает плагин, а витрина лежит в [`apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/apps/storefront).
+Полный код витрины лежит в [`examples/payment-yookassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/apps/storefront), собранной на основе [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter). В [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-yookassa/README.md#what-the-example-adds-to-the-starter) примера перечислены все девять файлов, из которых состоит интеграция, включая бэкенд.

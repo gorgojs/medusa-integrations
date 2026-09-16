@@ -5,272 +5,306 @@ description: "Learn how to integrate the YooKassa payment provider into a Next.j
 
 # {frontmatter.title}
 
-To integrate the YooKassa payment provider in a Next.js storefront, start by adding the required UI components. So, the provider is displayed on the checkout page alongside other available payment methods.
+To integrate the YooKassa payment provider into the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter) storefront, start by adding the required UI components, so the provider is displayed on the checkout page alongside other available payment methods.
 
-When YooKassa is selected, the storefront should call `initiatePayment` with the necessary parameters. This will create a payment session through the YooKassa API and prepare the customer for redirection. The Place Order button should then send the customer to the YooKassa payment page, where he can select his preferred payment method.
+When the customer selects YooKassa, the checkout initiates a payment session, and the provider creates it on YooKassa's side and returns the payment address. The payment button then sends the customer there, where they can choose a payment method.
 
-Once the payment is completed, YooKassa will concurrently send a webhook and redirect the customer back to the storefront. Whichever arrives first will complete the cart and create a new order in Medusa.
+Once the payment is completed, YooKassa concurrently sends a webhook and redirects the customer back to the storefront.
 
 For the storefront on Next.js, you need to make the following changes:
 
 ## Step 1: Configure Payment Provider
 
-To make YooKassa available as a payment method on the storefront checkout page, you must add its configuration to the payment provider mapping in your storefront's constants file. This mapping determines how each payment provider is displayed in the UI.
+Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L41-L44) and add YooKassa to the payment provider mapping, plus a helper to recognize its sessions:
 
-Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/lib/constants.tsx#L37-L40) and add the following:
-
-![Directory structure in the Medusa Storefront after updating the file for constants](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-lib-constants.png)
+{/* TODO: screenshot */}
 
 ```ts title="src/lib/constants.tsx"
 export const paymentInfoMap: Record<
   string,
-  { title: string; icon: React.ReactNode }
+  { title: string; icon: React.JSX.Element }
 > = {
-  // ... other providers
+  // ...
   pp_yookassa_yookassa: {
     title: "YooKassa",
     icon: <CreditCard />,
-  }
+  },
+  // ...
 }
 
-// Helper to check if a provider is YooKassa
+// ...
+
 export const isYookassa = (providerId?: string) => {
   return providerId?.startsWith("pp_yookassa")
 }
 ```
 
-You extend the `paymentInfoMap` object to include a `pp_yookassa_yookassa` entry. This entry defines the title and the icon that will be shown for YooKassa on the checkout page.
-
-The helper function `isYookassa` checks whether a given `providerId` belongs to YooKassa. This is useful when rendering provider-specific UI-components.
+`paymentInfoMap`'s `title` is the fallback name shown at checkout when a locale has no translation. `isYookassa` is used by the dispatcher below and by the session data builder in the next step.
 
 ---
 
-## Step 2: Update Cookie Settings
+## Step 2: Initialize Payment Session
 
-When integrating YooKassa, you need to adjust your cookie policy to allow cross-domain payment redirects. Some payment providers require more permissive cookie settings so the payment session can be preserved when the customer is redirected back to the storefront.
+Open the same [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L60-L90) and add the return address and the session data builder:
 
-Open [`src/lib/data/cookies.ts`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/lib/data/cookies.ts#L79) and update the cookie configuration as follows:
+{/* TODO: screenshot */}
 
-![Directory structure in the Medusa Storefront after updating the file for cookies](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-lib-data-cookies.png)
+```ts title="src/lib/constants.tsx"
+/**
+ * The address the customer comes back to after paying on the provider's own
+ * page. `<html lang>` carries the locale the checkout was rendered in, so the
+ * customer returns to the language they left the shop with.
+ */
+const paymentReturnUrl = (providerId: string, cartId: string) => {
+  const origin =
+    typeof window === "undefined" ? getBaseURL() : window.location.origin
+  const locale =
+    typeof document === "undefined"
+      ? defaultLocale
+      : document.documentElement.lang || defaultLocale
 
-```ts title="src/lib/data/cookies.ts"
-export const setCartId = async (cartId: string) => {
-  cookies.set("_medusa_cart_id", cartId, {
-    // ... other cookie settings
-    sameSite: "lax", // Changed from "strict" for payment redirects
-  })
+  return `${origin}/api/payment-return?provider=${providerId}&cart_id=${cartId}&locale=${locale}`
 }
+
+const paymentSessionDataBuilders: Array<{
+  test: (providerId?: string) => boolean | undefined
+  isReady?: (cart: HttpTypes.StoreCart) => boolean
+  build: (cart: HttpTypes.StoreCart) => Record<string, unknown>
+}> = [
+  {
+    test: (providerId) => isYookassa(providerId),
+    // YooKassa builds a receipt out of the cart, and the receipt needs the
+    // buyer's name, email and phone. Initiating the session before the checkout
+    // collected them creates a payment without one.
+    isReady: (cart) => Boolean(cart.email && cart.shipping_address),
+    build: (cart) => ({
+      confirmation: {
+        type: "redirect",
+        return_url: paymentReturnUrl("yookassa", cart.id),
+      },
+      cart,
+    }),
+  },
+]
 ```
 
-This helper function stores the cart ID in a cookie named `_medusa_cart_id`.
-
-The `sameSite` option is set to `lax` instead of `strict`. This change ensures the cookie is sent with cross-site requests during the YooKassa redirect flow, preventing the payment session from being lost.
+When initiating a payment for YooKassa, `build` passes a `confirmation` object with `type: "redirect"` and a `return_url`, plus the `cart` to build a compliant receipt. `isReady` holds the session back until the cart carries an email and a shipping address.
 
 ---
 
-## Step 3: Initialize Payment Session
+## Step 3: Create Payment Button
 
-To redirect a customer to YooKassa, the payment session must be properly initialized with the required parameters, including the return URL for the post-payment callback and the shopping cart for generating receipts.
+Create [`src/modules/checkout/components/payment-button/providers/yookassa.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/modules/checkout/components/payment-button/providers/yookassa.tsx):
 
-Open [`src/modules/checkout/components/payment/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/modules/checkout/components/payment/index.tsx#L83-L95) and update the payment initialization logic to include YooKassa's redirect URL and cart:
+{/* TODO: screenshot */}
 
-![Directory structure in the Medusa Storefront after updating the file for payment component](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-modules-checkout-components-payment-index.png)
+```ts title="src/modules/checkout/components/payment-button/providers/yookassa.tsx"
+"use client"
 
-```ts title="src/modules/checkout/components/payment/index.tsx"
-import { getBaseURL } from "@lib/util/env"
+import type { HttpTypes } from "@medusajs/types"
+import { useTranslations } from "next-intl"
+import { useState } from "react"
+import { PaymentButtonShell, type PaymentProviderButtonProps } from "../shared"
 
-const Payment = ({
-  // ...
-}) => {
-  // ...
-  const handleSubmit = async () => {
-    setIsLoading(true)
-    try {
-      // ...
-      const countryCode = cart?.shipping_address?.country_code
-      if (!checkActiveSession) {
-        await initiatePaymentSession(cart, {
-          provider_id: selectedPaymentMethod,
-          data: {
-            confirmation: {
-              type: "redirect",
-              return_url: `${getBaseURL()}/api/capture-payment/${cart?.id}?country_code=${countryCode}`
-            },
-            cart: cart
-          }
-        })
-      }
-    }
-  }
-}
-```
+const confirmationUrl = (cart: HttpTypes.StoreCart) => {
+  const session = cart.payment_collection?.payment_sessions?.find((s) =>
+    s.provider_id.startsWith("pp_yookassa")
+  )
+  const confirmation = session?.data?.confirmation as
+    | { confirmation_url?: string }
+    | undefined
 
-When initiating a payment for YooKassa, pass a `confirmation` object with `type: "redirect"` and a `return_url`. YooKassa will later provide a `confirmation_url` to which the customer should be redirected.
-
-The `return_url` points back to your storefront's capture endpoint and is used for both successful and failed payment attempts.
-
-The `cart` object is included to build a compliant receipt in accordance with Federal Law No. 54.
-
----
-
-## Step 4: Create Payment Button
-
-Medusa storefront requires a dedicated payment button component for each payment provider to handle the checkout flow after the customer confirms his order. This component leverages the payment session data and navigates the customer to the YooKassa payment page.
-
-Open [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/modules/checkout/components/payment-button/index.tsx#L163-L205) and add the following code:
-
-![Directory structure in the Medusa Storefront after updating the file for payment button component](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-modules-checkout-components-payment-button-index.png)
-
-```ts title="src/modules/checkout/components/payment-button/index.tsx"
-import { 
-  // ...
-  isYookassa
-} from "@lib/constants"
-import { useRouter } from "next/navigation"
-
-const PaymentButton: React.FC<PaymentButtonProps> = ({
-  cart,
-  "data-testid\": dataTestId,
-}) => {
-  // ...
-  switch (true) {
-    // ... other cases
-    case isYookassa(paymentSession?.provider_id):
-      return (
-        <YookassaPaymentButton
-          notReady={notReady}
-          cart={cart}
-          data-testid={dataTestId}
-        />
-      )
-    default:
-      return <Button disabled>Select a payment method</Button>
-  }
+  return confirmation?.confirmation_url
 }
 
-// ... other payment button's components
-
+/**
+ * YooKassa collects the payment on its own page. The session the checkout
+ * created carries the address to send the customer to, and the order is placed
+ * once they come back through `/api/payment-return` — or by the webhook, if
+ * that arrives first.
+ */
 const YookassaPaymentButton = ({
   cart,
-  notReady
-}: {
-  cart: HttpTypes.StoreCart
-  notReady: boolean
-  "data-testid"?: string
-}) => {
+  notReady,
+  label,
+  cartUpdating,
+  "data-testid": dataTestId,
+}: PaymentProviderButtonProps) => {
+  const t = useTranslations("Errors")
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const router = useRouter()
-
-  const paymentSession = cart.payment_collection?.payment_sessions?.find(
-    session => session.provider_id === "pp_yookassa_yookassa"
-  )
 
   const handlePayment = () => {
-    setSubmitting(true)
+    const url = confirmationUrl(cart)
 
-    const confirmation = paymentSession?.data?.confirmation as any
-    if (confirmation?.confirmation_url) {
-      router.push(confirmation.confirmation_url)
+    if (!url) {
+      setErrorMessage(t("paymentFailed"))
+      return
     }
+
+    setSubmitting(true)
+    window.location.assign(url)
   }
 
   return (
-    <>
-      <Button
-        disabled={notReady}
-        isLoading={submitting}
-        onClick={handlePayment}
-        size="large"
-        data-testid="submit-order-button"
-      >
-        Place an order and pay
-      </Button>
-      <ErrorMessage
-        error={errorMessage}
-        data-testid="manual-payment-error-message"
-      />
-    </>
+    <PaymentButtonShell
+      label={label}
+      onClick={handlePayment}
+      disabled={notReady}
+      loading={submitting || cartUpdating}
+      errorMessage={errorMessage}
+      errorTestId="yookassa-payment-error-message"
+      data-testid={dataTestId ?? "submit-order-button"}
+    />
   )
 }
+
+export default YookassaPaymentButton
 ```
 
-This component locates the YooKassa `payment_session` in the active cart and extracts `data.confirmation.confirmation_url`. When the Place an order and pay button is clicked, the customer is redirected to this URL to complete the payment on the YooKassa page.
+This component finds the YooKassa `payment_session` in the active cart and extracts `data.confirmation.confirmation_url`. When the customer clicks, `handlePayment` sends them there directly with `window.location.assign`, since YooKassa's page isn't embedded in the storefront.
 
-If the `confirmation_url` is missing, the component displays an error message instead of proceeding. The `isLoading` state provides visual feedback while the redirection is being prepared.
-
-The parent `PaymentButton` uses `isYookassa` to determine whether to render the `YookassaPaymentButton` for the current session; otherwise, it shows a disabled Select a payment method button.
+If the `confirmation_url` is missing, the button shows an error message instead of navigating anywhere.
 
 ---
 
-## Step 5: Create Payment Capture API Route
+## Step 4: Register Payment Button
 
-After the customer completes payment on the YooKassa page, he is redirected back to the storefront. You need an API route to handle this callback, verify the payment status, and complete the cart.
+Import the button and `isYookassa` in [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L3-L17), then add a `case` for it in the dispatcher's `switch`:
 
-Create the [`src/app/api/capture-payment/[cartId]/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/27f930a93653eb95edbea41d4da126e5e9e2ff02/examples/payment-yookassa/medusa-storefront/src/app/api/capture-payment/%5BcartId%5D/route.ts) file with the following content:
+{/* TODO: screenshot */}
 
-![Directory structure in the Medusa Storefront after creating the file for API route](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-app-api-capture-payment-cartid-route.png)
-
-```ts title="src/app/api/capture-payment/[cartId]/route.ts"
-import { NextRequest, NextResponse } from "next/server"
-import { revalidateTag } from "next/cache"
+```ts title="src/modules/checkout/components/payment-button/index.tsx"
 import {
-  getCacheTag,
-  getAuthHeaders,
-  removeCartId
-} from "@lib/data/cookies"
-import { sdk } from "@lib/config"
-import { placeOrder } from "@lib/data/cart"
+  isManual,
+  isPaymentSessionReady,
+  isStripeLike,
+  isYookassa,
+} from "@lib/constants"
+// ...
+import YookassaPaymentButton from "./providers/yookassa"
 
-type Params = Promise<{ cartId: string }>
+// ...
 
-export async function GET(req: NextRequest, { params }: { params: Params }) {
-  const { cartId } = await params
-  const { origin, searchParams } = req.nextUrl
-
-  const countryCode = searchParams.get("country_code") || ""
-  const headers = { ...(await getAuthHeaders()) }
-
-  // Retrieve fresh cart values
-  const cartCacheTag = await getCacheTag("carts")
-  revalidateTag(cartCacheTag)
-  const { cart } = await sdk.store.cart.retrieve(cartId, {
-    fields: "id, order_link.order_id, items.total"
-  },
-    headers
-  )
-  if (!cart) {
-    return NextResponse.redirect(`${origin}/${countryCode}`)
+  switch (true) {
+    // ...
+    case isYookassa(activePaymentMethod):
+      return <YookassaPaymentButton {...providerProps} />
+    default:
+      // ...
   }
+```
 
-  const orderId = (cart as unknown as Record<string, any>).order_link?.order_id
-  if (!orderId) {
-    await placeOrder(cartId)
-    // Fail when payment not authorized
+The parent `PaymentButton` uses `isYookassa` to determine whether to render `YookassaPaymentButton` for the active session; otherwise it falls through to the next case.
+
+---
+
+## Step 5: Handle Payment Return
+
+YooKassa reports the payment status through both a webhook and this redirect, so the shared route checks the cart for an order before placing one itself.
+
+Open [`src/app/api/payment-return/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/app/api/payment-return/route.ts#L29-L80) and add the following function:
+
+{/* TODO: screenshot */}
+
+```ts title="src/app/api/payment-return/route.ts"
+type ReturnContext = {
+  cartId: string
+  locale: string
+  origin: string
+}
+
+/**
+ * Comes back from a provider that takes the customer to its own payment page
+ * and returns them with nothing but the cart id — YooKassa among them.
+ *
+ * The provider's webhook and this redirect race each other, and whichever
+ * arrives first places the order, so the cart is checked for an order before
+ * one is placed.
+ */
+async function redirectProviderReturn({
+  cartId,
+  locale,
+  origin,
+}: ReturnContext) {
+  const cart = await sdk.client
+    .fetch<HttpTypes.StoreCartResponse>(`/store/carts/${cartId}`, {
+      method: "GET",
+      query: { fields: "id,order_link.order_id" },
+      headers: { ...(await getAuthHeaders()) },
+      cache: "no-store",
+    })
+    .then(({ cart }) => cart)
+    .catch(() => null)
+
+  if (!cart) {
     return NextResponse.redirect(
-      `${origin}/${countryCode}/checkout?step=review&error=payment_failed`
+      `${origin}/${locale}/cart?error=payment_failed`
     )
   }
 
-  const orderCacheTag = await getCacheTag("orders")
-  revalidateTag(orderCacheTag)
-  removeCartId()
+  const orderId = (cart as unknown as { order_link?: { order_id?: string } })
+    .order_link?.order_id
+
+  if (orderId) {
+    const orderCacheTag = await getCacheTag("orders")
+    revalidateTag(orderCacheTag)
+    await removeCartId()
+
+    return NextResponse.redirect(
+      `${origin}/${locale}/order/${orderId}/confirmed`
+    )
+  }
+
+  // The customer backed out or the payment was declined, so they land back on
+  // the checkout with their cart intact and can pick a method again.
+  await setCartId(cartId)
+
+  try {
+    await placeOrder(cartId)
+  } catch (error) {
+    unstable_rethrow(error)
+
+    return NextResponse.redirect(
+      `${origin}/${locale}/checkout?error=payment_failed`
+    )
+  }
+
   return NextResponse.redirect(
-    `${origin}/${countryCode}/order/${orderId}/confirmed`
+    `${origin}/${locale}/checkout?error=payment_failed`
   )
 }
 ```
 
-This API route handles the redirect from YooKassa after a payment attempt. It retrieves the latest state of the cart to ensure any updates made during payment are reflected.
+Then route YooKassa's return to it, in `GET` itself:
 
-If the cart does not contain an associated order ID, the route tries to place an order. If successful, the customer is redirected to the order confirmation page. If any error happens during cart completion, the customer is redirected back to the checkout page indicating an error, and he can proceed the checkout once again.
+```ts title="src/app/api/payment-return/route.ts"
+  if (provider === "yookassa") {
+    return redirectProviderReturn({ cartId, locale, origin })
+  }
+```
 
-When the payment is successful, the route revalidates the cached cart and order data, removes the cart cookie, and redirects the customer to the order confirmation page. This ensures a consistent post-payment experience while keeping storefront data up to date.
+If the cart already has an order, the webhook won the race, so the route revalidates the order cache and sends the customer to the confirmation page. Otherwise it tries `placeOrder` itself, and on any failure sends the customer back to the checkout with `error=payment_failed` so they can pick a method again.
+
+---
+
+## Step 6: Add Provider Name to Storefront Locales
+
+Add `pp_yookassa_yookassa` to [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/messages/en.json#L513) and to every other locale under `messages/`:
+
+```json title="messages/en.json"
+{
+  "PaymentMethods": {
+    // ...
+    "pp_yookassa_yookassa": "YooKassa"
+  }
+}
+```
+
+A locale missing an entry falls back to the English `title` from `paymentInfoMap` in [Step 1](#step-1-configure-payment-provider). YooKassa's own name stays the same across locales, except in Russian it's `ЮKassa`.
 
 ---
 
 ## Full Storefront Integration Code Example
 
-Every step above is written against the [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa) and links to the storefront it was taken from, pinned at [`examples/payment-yookassa/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/medusa-storefront).
-
-The [example on `main`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa) builds on the [Medusa DTC Starter](https://github.com/gorgojs/medusa-dtc-starter), which ships the extension points this integration needs. Its `README.md` lists the eight files the plugin touches there, and its storefront lives in [`apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/apps/storefront).
+The complete storefront lives at [`examples/payment-yookassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/apps/storefront), built on the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter). The example's own [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-yookassa/README.md#what-the-example-adds-to-the-starter) lists the full nine-file delta, backend included.
