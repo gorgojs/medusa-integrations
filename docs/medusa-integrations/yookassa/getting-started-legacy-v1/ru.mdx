@@ -40,9 +40,9 @@ description: "Узнайте, как установить и настроить 
 
 ## Настройка
 
-Добавьте конфигурацию провайдера в файл `medusa-config.js` в приложении Medusa Admin:
+Добавьте конфигурацию провайдера в файл `medusa-config.ts` в приложении Medusa Admin:
 
-```ts title="medusa-config.js"
+```ts title="medusa-config.ts"
 // ...
 module.exports = defineConfig({
   // ...
@@ -132,7 +132,7 @@ YOOKASSA_SECRET_KEY=live_secret_api_key
     {
       name: "useAtolOnlineFFD120",
       type: "boolean",
-      description: "Включается, если вы используете онлайн-кассу Атол Онлайн с ФФД 1.2.\nПрименимо только при `useReceipt` = `true`",
+      description: "Включается, если вы используете онлайн-кассу АТОЛ Онлайн с ФФД 1.2.\nПрименимо только при `useReceipt` = `true`",
       optional: true,
       defaultValue: "false",
       expandable: false,
@@ -141,7 +141,7 @@ YOOKASSA_SECRET_KEY=live_secret_api_key
     {
       name: "taxSystemCode",
       type: "enum",
-      description: "Система налогообложения:\n- `1` - общая СН\n- `2` - упрощенная СН (доходы)\n- `3` - упрощенная СН (доходы минус расходы)\n- `4` - единый налог на вмененный доход\n- `5` - единый сельскохозяйственный налог\n- `6` - патентная СН\nОбязателен при использовании онлайн-кассы Атол Онлайн с ФФД 1.2.\nПрименимо только при `useReceipt` = `true`",
+      description: "Система налогообложения:\n- `1` - общая СН\n- `2` - упрощенная СН (доходы)\n- `3` - упрощенная СН (доходы минус расходы)\n- `4` - единый налог на вмененный доход\n- `5` - единый сельскохозяйственный налог\n- `6` - патентная СН\nОбязателен при использовании онлайн-кассы АТОЛ Онлайн с ФФД 1.2.\nПрименимо только при `useReceipt` = `true`",
       optional: true,
       expandable: false,
       children: []

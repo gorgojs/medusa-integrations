@@ -40,9 +40,9 @@ This guide covers configuring the legacy 1.x version, where you set the plugin o
 
 ## Configuration
 
-Add the provider configuration in your `medusa-config.js` file of the Medusa Admin application:
+Add the provider configuration in your `medusa-config.ts` file of the Medusa Admin application:
 
-```ts title="medusa-config.js"
+```ts title="medusa-config.ts"
 // ...
 module.exports = defineConfig({
   // ...
@@ -132,7 +132,7 @@ YOOKASSA_SECRET_KEY=live_secret_api_key
     {
       name: "useAtolOnlineFFD120",
       type: "boolean",
-      description: "Enable when Atol Online FFD 1.2 sales register is used.\nApplicable only if `useReceipt` = `true`",
+      description: "Enable when ATOL Online FFD 1.2 sales register is used.\nApplicable only if `useReceipt` = `true`",
       optional: true,
       defaultValue: "false",
       expandable: false,
@@ -141,7 +141,7 @@ YOOKASSA_SECRET_KEY=live_secret_api_key
     {
       name: "taxSystemCode",
       type: "enum",
-      description: "Store tax system:\n- `1` - General taxation system\n- `2` - Simplified (income)\n- `3` - Simplified (income minus expenses)\n- `4` - Single tax on imputed income\n- `5` - Single agricultural tax\n- `6` - Patent taxation system\nRequired if you use the Atol Online FFD 1.2 sales register.\nApplicable only if `useReceipt` = `true`",
+      description: "Store tax system:\n- `1` - General taxation system\n- `2` - Simplified (income)\n- `3` - Simplified (income minus expenses)\n- `4` - Single tax on imputed income\n- `5` - Single agricultural tax\n- `6` - Patent taxation system\nRequired if you use the ATOL Online FFD 1.2 sales register.\nApplicable only if `useReceipt` = `true`",
       optional: true,
       expandable: false,
       children: []
