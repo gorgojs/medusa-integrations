@@ -194,7 +194,7 @@ ROBOKASSA_TEST_PASSWORD_2=supersecret
 
 Чтобы корректно обрабатывать платежные уведомления от Robokassa, настройте URL вебхука в вашем аккаунте Robokassa следующим образом:
 
-В настройках магазина Robokassa укажите **Метод отправки данных на Result URL** - `GET` или `POST`, и задайте **Result URL** в формате:
+В настройках магазина Robokassa укажите **Метод отправки данных на Result URL** - `POST`, единственный метод, который принимает роут вебхука, и задайте **Result URL** в формате:
 
 ``` title="Webhook URL"
 https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/robokassa_robokassa

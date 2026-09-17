@@ -113,7 +113,7 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
 
 To properly handle payment notifications from Robokassa, configure the webhook URL in your Robokassa account as following:
 
-Under shop settings in your Robokassa account, set the **Method of sending data to Result Url** to `GET` or `POST` and supply a **Result Url** in the following format:
+Under shop settings in your Robokassa account, set the **Method of sending data to Result Url** to `POST`, the only method the webhook route accepts, and supply a **Result Url** in the following format:
 
 ``` title="Webhook URL"
 https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/robokassa_robokassa
