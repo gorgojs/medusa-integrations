@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button, Drawer, Select, toast } from "@medusajs/ui"
+import { Button, Divider, Drawer, Select, toast } from "@medusajs/ui"
 import { useForm, useWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
@@ -299,6 +299,7 @@ export const EditApishipConnectionForm = ({
               )}
             />
 
+            <Divider />
             <SwitchBox
               control={form.control}
               name="is_enabled"

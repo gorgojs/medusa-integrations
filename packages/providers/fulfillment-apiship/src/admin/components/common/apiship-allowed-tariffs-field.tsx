@@ -1,6 +1,41 @@
-import { Button, Checkbox, Text } from "@medusajs/ui"
+import { Badge, Button, Text } from "@medusajs/ui"
+import { XMarkMini } from "@medusajs/icons"
 import { useMemo } from "react"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
+import { Combobox } from "./combobox"
+
+type TariffOption = { value: string; label: string }
+
+const SelectedTariffsList = ({
+  options,
+  value,
+  onChange,
+}: {
+  options: TariffOption[]
+  value: string[]
+  onChange: (value: string[]) => void
+}) => {
+  if (!value.length) {
+    return null
+  }
+
+  return (
+    <div className="flex flex-col gap-y-1">
+      {value.map((id) => (
+        <Badge key={id} size="2xsmall" rounded="full" className="flex w-fit items-center gap-x-1">
+          {options.find((option) => option.value === id)?.label ?? id}
+          <button
+            type="button"
+            onClick={() => onChange(value.filter((v) => v !== id))}
+            className="text-ui-fg-subtle hover:text-ui-fg-base"
+          >
+            <XMarkMini />
+          </button>
+        </Badge>
+      ))}
+    </div>
+  )
+}
 
 type ApishipAllowedTariffsFieldProps = {
   tariffs: ApishipHttpTypes.AdminApishipTariff[]
@@ -29,43 +64,19 @@ export const ApishipAllowedTariffsField = ({
 }: ApishipAllowedTariffsFieldProps) => {
   // ApiShip's own `deliveryType` is 1 (door only), 2 (point only), or unset (both) — a tariff
   // with no restriction shows up, and is toggled, independently in both groups below.
-  const courierTariffs = useMemo(
-    () => tariffs.filter((tariff) => tariff.deliveryType !== 2),
+  const courierOptions = useMemo(
+    () =>
+      tariffs
+        .filter((tariff) => tariff.deliveryType !== 2)
+        .map((tariff) => ({ value: String(tariff.id), label: `${tariff.name ?? tariff.id} (id: ${tariff.id})` })),
     [tariffs]
   )
-  const pointTariffs = useMemo(
-    () => tariffs.filter((tariff) => tariff.deliveryType !== 1),
+  const pointOptions = useMemo(
+    () =>
+      tariffs
+        .filter((tariff) => tariff.deliveryType !== 1)
+        .map((tariff) => ({ value: String(tariff.id), label: `${tariff.name ?? tariff.id} (id: ${tariff.id})` })),
     [tariffs]
-  )
-
-  const renderGroup = (
-    label: string,
-    group: ApishipHttpTypes.AdminApishipTariff[],
-    value: string[],
-    onChange: (value: string[]) => void
-  ) => (
-    <div className="flex flex-col gap-y-2" key={label}>
-      <Text size="small" weight="plus" className="text-ui-fg-subtle">
-        {label}
-      </Text>
-      <div className="flex max-h-[180px] flex-col gap-y-2 overflow-y-auto">
-        {group.map((tariff) => {
-          const id = String(tariff.id)
-          return (
-            <label key={id} className="flex items-center gap-x-2">
-              <Checkbox
-                checked={value.includes(id)}
-                disabled={disabled}
-                onCheckedChange={(checked) =>
-                  onChange(checked ? [...value, id] : value.filter((v) => v !== id))
-                }
-              />
-              <Text size="small">{tariff.name ?? id}</Text>
-            </label>
-          )
-        })}
-      </div>
-    </div>
   )
 
   if (disabled) {
@@ -107,20 +118,38 @@ export const ApishipAllowedTariffsField = ({
 
   return (
     <div className="flex flex-col gap-y-4">
-      {courierTariffs.length > 0 &&
-        renderGroup(
-          t("apiship.connections.form.fields.allowedTariffs.courier"),
-          courierTariffs,
-          doorValue,
-          onDoorChange
-        )}
-      {pointTariffs.length > 0 &&
-        renderGroup(
-          t("apiship.connections.form.fields.allowedTariffs.pvz"),
-          pointTariffs,
-          pointValue,
-          onPointChange
-        )}
+      {courierOptions.length > 0 && (
+        <div className="flex flex-col gap-y-2">
+          <Text size="small" weight="plus" className="text-ui-fg-subtle">
+            {t("apiship.connections.form.fields.allowedTariffs.courier")}
+          </Text>
+          <Combobox
+            value={doorValue}
+            onChange={(value) => onDoorChange(value ?? [])}
+            options={courierOptions}
+            placeholder={t("apiship.connections.fields.allTariffsAllowed")}
+            hideSelectedTag
+            allowClear
+          />
+          <SelectedTariffsList options={courierOptions} value={doorValue} onChange={onDoorChange} />
+        </div>
+      )}
+      {pointOptions.length > 0 && (
+        <div className="flex flex-col gap-y-2">
+          <Text size="small" weight="plus" className="text-ui-fg-subtle">
+            {t("apiship.connections.form.fields.allowedTariffs.pvz")}
+          </Text>
+          <Combobox
+            value={pointValue}
+            onChange={(value) => onPointChange(value ?? [])}
+            options={pointOptions}
+            placeholder={t("apiship.connections.fields.allTariffsAllowed")}
+            hideSelectedTag
+            allowClear
+          />
+          <SelectedTariffsList options={pointOptions} value={pointValue} onChange={onPointChange} />
+        </div>
+      )}
     </div>
   )
 }

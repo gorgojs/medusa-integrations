@@ -60,6 +60,7 @@ interface ComboboxProps<T extends Value = Value>
   noResultsPlaceholder?: ReactNode
   allowClear?: boolean
   forceHideInput?: boolean // always hide input -> used for singe value select that don't have query/filter
+  hideSelectedTag?: boolean // don't render the built-in "N selected" tag -> used when selected values are listed outside the combobox instead
 }
 
 const ComboboxImpl = <T extends Value = string>(
@@ -78,6 +79,7 @@ const ComboboxImpl = <T extends Value = string>(
     noResultsPlaceholder,
     allowClear,
     forceHideInput,
+    hideSelectedTag,
     ...inputProps
   }: ComboboxProps<T>,
   ref: ForwardedRef<HTMLInputElement>
@@ -203,7 +205,7 @@ const ComboboxImpl = <T extends Value = string>(
 
   const hasValue = selectedValues?.length > 0
 
-  const showTag = hasValue && isArrayValue
+  const showTag = hasValue && isArrayValue && !hideSelectedTag
   const showSelected = showTag && !searchValue && !open
 
   const hideInput = forceHideInput || (!isArrayValue && hasValue && !open)

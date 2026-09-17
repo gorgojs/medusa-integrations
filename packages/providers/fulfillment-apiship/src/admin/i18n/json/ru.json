@@ -68,7 +68,7 @@
         "deliveryService": "Служба доставки",
         "accountConnection": "Подключения службы доставки",
         "pickupPoint": "Пункт приёма",
-        "pointId": "ID точки",
+        "pointId": "id точки",
         "stockLocation": "Склад",
         "anyStockLocation": "Любой склад",
         "allowedTariffs": "Тарифы",
