@@ -1,5 +1,9 @@
 # @gorgo/medusa-1c
 
+## 2.0.0-beta.5
+
+- add beta info and update docs
+
 ## 2.0.0-beta.2
 
 - improve types
