@@ -68,7 +68,7 @@
         "deliveryService": "Delivery Service",
         "accountConnection": "Connection",
         "pickupPoint": "Drop-off Point",
-        "pointId": "Point ID",
+        "pointId": "Point id",
         "stockLocation": "Stock Location",
         "anyStockLocation": "Any location",
         "allowedTariffs": "Tariffs",

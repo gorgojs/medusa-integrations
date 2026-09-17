@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Button,
+  Divider,
   Heading,
   FocusModal,
   Text,
@@ -390,6 +391,7 @@ export const ApishipConnectionCreateForm = ({
               )}
             />
 
+            <Divider />
             <SwitchBox
               control={form.control}
               name="is_enabled"

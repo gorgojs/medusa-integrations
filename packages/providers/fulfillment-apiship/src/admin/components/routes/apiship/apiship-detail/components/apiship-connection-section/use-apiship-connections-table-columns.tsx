@@ -67,7 +67,7 @@ export const useApishipConnectionsTableColumns = (
           const pointId = row.original.point_in_id
 
           const value = address
-            ? `${address} (ID: ${pointId || "-"})`
+            ? `${address} (id: ${pointId || "-"})`
             : "-"
 
           if (value === "-") {
