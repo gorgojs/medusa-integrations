@@ -110,7 +110,7 @@
           },
           "stockLocation": {
             "label": "Stock location",
-            "hint": "Which orders this connection applies to — by the warehouse they ship from. Leave unset to use this connection as the fallback for any warehouse without a dedicated connection for this delivery service.",
+            "hint": "The warehouse orders must ship from for this connection to apply. Leave unset to use this connection as the fallback for any warehouse without a dedicated connection for this delivery service.",
             "placeholder": "Select a stock location",
             "any": "Any location"
           },
