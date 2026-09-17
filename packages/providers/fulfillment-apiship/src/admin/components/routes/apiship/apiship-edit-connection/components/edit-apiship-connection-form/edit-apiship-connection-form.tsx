@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button, Divider, Drawer, Select, toast } from "@medusajs/ui"
+import { Button, Divider, Drawer, IconButton, Select, toast, Tooltip } from "@medusajs/ui"
+import { ArrowPath } from "@medusajs/icons"
 import { useForm, useWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
@@ -255,14 +256,16 @@ export const EditApishipConnectionForm = ({
                         />
                       </div>
                       {isPointsError && (
-                        <Button
-                          size="small"
-                          variant="secondary"
-                          type="button"
-                          onClick={() => refetchPoints()}
-                        >
-                          {t("apiship.points.retry")}
-                        </Button>
+                        <Tooltip content={t("apiship.points.retry")}>
+                          <IconButton
+                            size="small"
+                            variant="transparent"
+                            type="button"
+                            onClick={() => refetchPoints()}
+                          >
+                            <ArrowPath />
+                          </IconButton>
+                        </Tooltip>
                       )}
                     </div>
                   </Form.Control>

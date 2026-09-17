@@ -1,5 +1,5 @@
-import { Badge, Button, Text } from "@medusajs/ui"
-import { XMarkMini } from "@medusajs/icons"
+import { Badge, IconButton, Text, Tooltip } from "@medusajs/ui"
+import { ArrowPath, XMarkMini } from "@medusajs/icons"
 import { useMemo } from "react"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
 import { Combobox } from "./combobox"
@@ -101,9 +101,11 @@ export const ApishipAllowedTariffsField = ({
         <Text size="small" className="text-ui-fg-subtle">
           {t("apiship.tariffs.loadError")}
         </Text>
-        <Button size="small" variant="secondary" type="button" onClick={onRetry}>
-          {t("apiship.tariffs.retry")}
-        </Button>
+        <Tooltip content={t("apiship.tariffs.retry")}>
+          <IconButton size="small" variant="transparent" type="button" onClick={onRetry}>
+            <ArrowPath />
+          </IconButton>
+        </Tooltip>
       </div>
     )
   }
