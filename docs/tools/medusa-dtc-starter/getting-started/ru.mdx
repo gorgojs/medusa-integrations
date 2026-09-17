@@ -79,14 +79,13 @@ description: "Установите Medusa DTC Starter инструментом M
    DATABASE_URL=postgres://postgres:@localhost:5432/medusa-dtc-starter
    ```
 
-3. Запустите миграции, создайте администратора, загрузите начальные данные и запустите бэкенд:
+3. Запустите миграции, загрузите начальные данные и запустите бэкенд:
 
    <CodeTabs>
      <CodeTab label="yarn" value="yarn">
        ```bash
        cd apps/backend
        yarn medusa db:migrate
-       yarn medusa user -e admin@medusajs.com -p supersecret
        yarn seed
        yarn dev
        ```
@@ -95,7 +94,6 @@ description: "Установите Medusa DTC Starter инструментом M
        ```bash
        cd apps/backend
        pnpm medusa db:migrate
-       pnpm medusa user -e admin@medusajs.com -p supersecret
        pnpm seed
        pnpm dev
        ```
@@ -104,14 +102,15 @@ description: "Установите Medusa DTC Starter инструментом M
        ```bash
        cd apps/backend
        npx medusa db:migrate
-       npx medusa user -e admin@medusajs.com -p supersecret
        npm run seed
        npm run dev
        ```
      </CodeTab>
    </CodeTabs>
 
-4. Откройте панель администратора по адресу `http://localhost:9000/app`, войдите и скопируйте публикуемый API-ключ в **Настройки → Публикуемые API-ключи**.
+4. Откройте панель администратора по адресу `http://localhost:9000/app`, войдите под `admin@medusajs.com` и `supersecret` и скопируйте публикуемый API-ключ в **Настройки → Публикуемые API-ключи**.
+
+   Эту учётную запись создаёт seed-скрипт. Измените оба значения в `apps/backend/src/migration-scripts/data/store/json/store.json`, прежде чем запускать seed-скрипт на базе, доступной кому-то ещё.
 
 5. Создайте файл переменных окружения витрины с этим ключом:
 
