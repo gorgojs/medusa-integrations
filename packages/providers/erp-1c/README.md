@@ -42,28 +42,28 @@
   </a>
 </p>
 
-## Status
+> **The paid version is running a closed beta right now.** Participants get a price below the release one for the first year, help with the edge cases of their own 1C configuration and a chat with the development team. To take part in the testing, [apply for the beta](https://gorgojs.com/beta/medusa-1c).
 
-> 🚧 Work in progress, see the [Roadmap](#roadmap).  
+## Free and Paid Version Features
+
+| Capabilities | Free | Paid |
+|---|---|---|
+| CommerceML exchange | ✓ | ✓ |
+| Products and categories from 1C into Medusa | ✓ | ✓ |
+| Offers from 1C, variants with SKUs and prices | ✓ | ✓ |
+| Plugin settings in the Medusa Admin through the [Integration module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> | ✓ | ✓ |
+| 1C price types as Medusa price lists | – | ✓ |
+| Per-warehouse stock levels | – | ✓ |
+| Two-way order exchange | – | ✓ |
+| Tuned for large catalogs | – | ✓ |
+
+> **[Integration module](https://gorgojs.com/medusa-integration-module)** lets any plugin declare its options as a schema, so a store administrator can configure them in the Medusa Admin, with no `medusa-config` edits and no redeploy. The module takes care of the UI, storage, encryption and validation.
 
 ## 💬  Support & Community
 
 Got questions or ideas about the plugin? Join the Telegram support chat — [@gorgojs_chat](https://t.me/gorgojs_chat)
 
 Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
-
-## Roadmap
-
-- [x] Import products from 1C into Medusa (`import.xml`)
-- [x] Import offers from 1C into Medusa (`offers.xml`)
-- [ ] Sync inventory levels and prices between 1C and Medusa
-- [ ] Import orders from 1C into Medusa (`orders.xml`)
-- [ ] Export orders from Medusa to 1C
-- [ ] Admin UI extension for synchronization status and controls
-- [ ] Admin UI extension for journaling and audit logs
-- [ ] Detailed documentation
-
-> **Integration Module:** This plugin supports the [Integration module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" />, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
 
 ## Requirements
 
