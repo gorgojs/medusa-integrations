@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button, Drawer, Select, Switch, toast } from "@medusajs/ui"
+import { Button, Drawer, Select, toast } from "@medusajs/ui"
 import { useForm, useWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
@@ -15,6 +15,7 @@ import {
 } from "../../../../../../hooks/api/apiship"
 import { useStockLocations } from "../../../../../../hooks/api/stock-locations"
 import { Combobox } from "../../../../../common/combobox"
+import { SwitchBox } from "../../../../../common/switch-box"
 import { ApishipAllowedTariffsField } from "../../../../../common/apiship-allowed-tariffs-field"
 import { translateConnectionError } from "../../../../../../lib/translate-connection-error"
 
@@ -298,30 +299,11 @@ export const EditApishipConnectionForm = ({
               )}
             />
 
-            <Form.Field
+            <SwitchBox
               control={form.control}
               name="is_enabled"
-              render={({ field: { value, onChange, ...field } }) => (
-                <Form.Item>
-                  <div className="flex items-center justify-between">
-                    <Form.Label>
-                      {t("apiship.connections.form.fields.enabled.label")}
-                    </Form.Label>
-                    <Form.Control>
-                      <Switch
-                        {...field}
-                        checked={!!value}
-                        className="rtl:rotate-180"
-                        onCheckedChange={onChange}
-                      />
-                    </Form.Control>
-                  </div>
-                  <Form.Hint>
-                    {t("apiship.connections.form.fields.enabled.hint")}
-                  </Form.Hint>
-                  <Form.ErrorMessage />
-                </Form.Item>
-              )}
+              label={t("apiship.connections.form.fields.enabled.label")}
+              description={t("apiship.connections.form.fields.enabled.hint")}
             />
           </div>
         </Drawer.Body>
