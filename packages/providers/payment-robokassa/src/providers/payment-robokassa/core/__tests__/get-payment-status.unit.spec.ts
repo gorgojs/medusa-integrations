@@ -82,6 +82,26 @@ describe("RobokassaBase.getPaymentStatus", () => {
         robokassa.getPaymentStatus({ data: { InvoiceID: "12345" } } as any)
       ).rejects.toThrow(/An error occurred in getPaymentStatus/)
     })
+
+    it("reports what Robokassa said when a refusal carries no State", async () => {
+      server.use(
+        http.post(RETRIEVE_URL, () =>
+          new HttpResponse(
+            `<?xml version="1.0" encoding="utf-8"?>
+<OperationStateResponse>
+  <Result><Code>3</Code><Description>Не удалось найти операцию</Description></Result>
+</OperationStateResponse>`,
+            { headers: { "Content-Type": "text/xml; charset=utf-8" } }
+          )
+        )
+      )
+
+      const robokassa = makeProvider(baseOptions)
+
+      await expect(
+        robokassa.getPaymentStatus({ data: { InvoiceID: "12345" } } as any)
+      ).rejects.toThrow(/Не удалось найти операцию/)
+    })
   })
 
   it("propagates input.data into output.data", async () => {

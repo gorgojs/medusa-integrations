@@ -51,7 +51,8 @@ the password `supersecret`, seed the demo catalog and start both apps.
 
    The tunnel runs alongside the backend on `https://medusa-robokassa.loca.lt`, and the storefront
    has its own `pnpm dev:tunnel`. Under the shop settings in your Robokassa account set the method
-   of sending data to the result URL to `GET` or `POST`, and supply the result URL in this format:
+   of sending data to the result URL to `POST`, the only method the webhook route accepts, and supply
+   the result URL in this format:
 
    ```text
    https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/robokassa_robokassa

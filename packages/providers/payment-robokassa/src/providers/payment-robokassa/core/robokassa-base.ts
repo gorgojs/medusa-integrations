@@ -150,7 +150,6 @@ abstract class RobokassaBase extends AbstractPaymentProvider {
     }
 
     const receiptJson = JSON.stringify(receipt)
-    const receiptEncoded = encodeURIComponent(receiptJson)
 
     const raw = [
       options.merchantLogin,
@@ -170,7 +169,7 @@ abstract class RobokassaBase extends AbstractPaymentProvider {
     const payment: Payment = {
       MerchantLogin: options.merchantLogin,
       OutSum: outSum,
-      ...(options.useReceipt ? { Receipt: receiptEncoded } : {}),
+      ...(options.useReceipt ? { Receipt: receiptJson } : {}),
       InvoiceID: invoiceId,
       SignatureValue: signature,
       Shp_SessionID: sessionId,
@@ -234,6 +233,16 @@ abstract class RobokassaBase extends AbstractPaymentProvider {
    */
   async authorizePayment(input: AuthorizePaymentInput): Promise<AuthorizePaymentOutput> {
     this.logger_.debug(`RobokassaBase.authorizePayment input:\n${JSON.stringify(input, null, 2)}`)
+
+    const options = await this.resolveOptions()
+    if (options.isTest) {
+      const output = {
+        status: PaymentSessionStatus.AUTHORIZED,
+        data: input.data ?? {},
+      }
+      this.logger_.debug("RobokassaBase.authorizePayment output (test mode):\n" + JSON.stringify(output, null, 2))
+      return output
+    }
 
     const output = await this.getPaymentStatus(input)
     this.logger_.debug("RobokassaBase.authorizePayment output:\n" + JSON.stringify(output, null, 2))
@@ -343,19 +352,22 @@ abstract class RobokassaBase extends AbstractPaymentProvider {
       `RobokassaBase.getPaymentStatus input:\n${JSON.stringify(input, null, 2)}`
     )
     try {
-      const response = (await this.retrievePayment(input)).data?.response as { Result: { Code: string, Description: string }, State: { Code: string } }
-      if (!response || !response.Result || !response.State) {
+      const response = (await this.retrievePayment(input)).data?.response as { Result: { Code: string, Description: string }, State?: { Code: string } }
+      if (!response || !response.Result) {
         throw new Error("Invalid response structure from Robokassa")
       }
 
       const result = response.Result as { Code: string, Description: string }
-      const state = response.State as { Code: string }
-
       const resultCode = parseInt(result.Code, 10)
       const resultDescription = result.Description
       if (resultCode !== 0) {
         throw new Error(`Robokassa error ${resultCode}: ${resultDescription}`)
       }
+      if (!response.State) {
+        throw new Error("Invalid response structure from Robokassa")
+      }
+
+      const state = response.State as { Code: string }
       const paymentState = parseInt(state.Code, 10)
 
       const status = PaymentStateCodesMap[paymentState] ?? PaymentSessionStatus.ERROR
@@ -403,12 +415,12 @@ abstract class RobokassaBase extends AbstractPaymentProvider {
     const raw = [
       data.OutSum,
       data.InvId,
-      options.password2,
+      options.isTest ? options.testPassword2 : options.password2,
       `Shp_SessionID=${data.Shp_SessionID}`
     ]
     const signature = createSignature(raw, options.hashAlgorithm)
 
-    return signature === incomingSignature
+    return signature.toLowerCase() === String(incomingSignature ?? "").toLowerCase()
   }
 
   /**

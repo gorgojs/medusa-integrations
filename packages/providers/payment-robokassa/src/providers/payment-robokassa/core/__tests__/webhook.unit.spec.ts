@@ -5,6 +5,7 @@ import { makeProvider } from "./test-utils"
 const MERCHANT_LOGIN = "test_login"
 const PASSWORD1 = "test_password1"
 const PASSWORD2 = "test_password2"
+const TEST_PASSWORD2 = "test_mode_password2"
 const HASH_ALGORITHM = "md5"
 
 const baseOptions = {
@@ -80,6 +81,43 @@ describe("RobokassaBase.getWebhookActionAndData", () => {
       expect(result.data?.session_id).toBe("sess_abc")
       expect(result.data?.amount).toBe(99.5) // Number("99.50")
     })
+  })
+
+  describe("in test mode", () => {
+    const testModeOptions = {
+      ...baseOptions,
+      isTest: true,
+      testPassword1: "test_mode_password1",
+      testPassword2: TEST_PASSWORD2,
+    } as any
+
+    it("accepts a payload signed with the test password", async () => {
+      const data = makeSignedEvent()
+      data.SignatureValue = signWebhookPayload(data, TEST_PASSWORD2, HASH_ALGORITHM)
+
+      const robokassa = makeProvider(testModeOptions)
+      const result = await robokassa.getWebhookActionAndData(wrap(data))
+
+      expect(result.action).toBe(PaymentActions.SUCCESSFUL)
+      expect((result as any).data.session_id).toBe(data.Shp_SessionID)
+    })
+
+    it("returns NOT_SUPPORTED for a payload signed with the production password", async () => {
+      const robokassa = makeProvider(testModeOptions)
+      const result = await robokassa.getWebhookActionAndData(wrap(makeSignedEvent()))
+
+      expect(result.action).toBe(PaymentActions.NOT_SUPPORTED)
+    })
+  })
+
+  it("accepts the upper-case signature Robokassa actually sends", async () => {
+    const data = makeSignedEvent()
+    data.SignatureValue = data.SignatureValue.toUpperCase()
+
+    const robokassa = makeProvider(baseOptions)
+    const result = await robokassa.getWebhookActionAndData(wrap(data))
+
+    expect(result.action).toBe(PaymentActions.SUCCESSFUL)
   })
 
   describe("rejection cases", () => {

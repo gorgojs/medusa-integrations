@@ -126,7 +126,7 @@ describe("RobokassaBase.initiatePayment", () => {
       ],
     }
 
-    it("useReceipt=true with cart → Receipt is URL-encoded JSON in the payment URL", async () => {
+    it("useReceipt=true with cart → Receipt is JSON encoded exactly once in the payment URL", async () => {
       const robokassa = makeProvider({
           ...baseOptions,
           useReceipt: true,
@@ -143,7 +143,7 @@ describe("RobokassaBase.initiatePayment", () => {
       const url = new URL((result.data as any).paymentUrl)
       const receiptRaw = url.searchParams.get("Receipt")
       expect(receiptRaw).not.toBeNull()
-      const receipt = JSON.parse(decodeURIComponent(receiptRaw!))
+      const receipt = JSON.parse(receiptRaw!)
       expect(receipt.sno).toBe("osn")
       expect(Array.isArray(receipt.items)).toBe(true)
       expect(receipt.items[0].name).toBe("Widget")
@@ -160,7 +160,7 @@ describe("RobokassaBase.initiatePayment", () => {
       expect(url.searchParams.get("Receipt")).toBeNull()
     })
 
-    it("useReceipt=true but no cart → Receipt is an encoded empty object, no crash", async () => {
+    it("useReceipt=true but no cart → Receipt is an empty object, no crash", async () => {
       const robokassa = makeProvider({
           ...baseOptions,
           useReceipt: true,
@@ -172,10 +172,11 @@ describe("RobokassaBase.initiatePayment", () => {
       const result = await robokassa.initiatePayment(baseInput) // no cart
       expect(result.id).toBeDefined()
       const url = new URL((result.data as any).paymentUrl)
-      // When useReceipt=true but no cart, the source encodes {} as Receipt — no crash is the key contract.
+      // When useReceipt=true but no cart, the source sends {} as Receipt. No crash is the key
+      // contract, and the parameter still has to arrive as JSON rather than as escaped text.
       const receiptParam = url.searchParams.get("Receipt")
       if (receiptParam !== null) {
-        const receipt = JSON.parse(decodeURIComponent(receiptParam))
+        const receipt = JSON.parse(receiptParam)
         expect(typeof receipt).toBe("object")
       }
     })
