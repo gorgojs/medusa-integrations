@@ -9,7 +9,7 @@ import {
   paymentInfoMap,
 } from "@lib/constants"
 import compareAddresses from "@lib/util/compare-addresses"
-import { paymentMethodName } from "@lib/util/payment"
+import { paymentMethodLabel } from "@lib/util/payment"
 import { CreditCard } from "@medusajs/icons"
 import type { HttpTypes } from "@medusajs/types"
 import PaymentButton from "@modules/checkout/components/payment-button"
@@ -138,6 +138,7 @@ export default function CheckoutPaymentSection({
           <div className="flex gap-x-2 overflow-x-auto no-scrollbar pb-1">
             {availablePaymentMethods.map((method) => {
               const info = paymentInfoMap[method.id]
+              const { title, subtitle } = paymentMethodLabel(tm, method.id)
               const isSelected = selectedPaymentMethod === method.id
 
               return (
@@ -153,20 +154,20 @@ export default function CheckoutPaymentSection({
                   )}
                 >
                   <div className="flex flex-col gap-y-2">
-                    <div className="w-6 h-6 rounded-full bg-ui-bg-component border border-ui-border-base flex items-center justify-center">
+                    {/* A provider mark carries its own colours and can fill
+                        the circle, so the frame clips whatever it is given. */}
+                    <div className="w-6 h-6 shrink-0 rounded-full bg-ui-bg-component border border-ui-border-base flex items-center justify-center overflow-hidden">
                       {info?.icon || <CreditCard className="w-3 h-3" />}
                     </div>
                     <div className="flex flex-col">
                       <span className="txt-compact-xsmall-plus text-ui-fg-base leading-tight">
-                        {paymentMethodName(tm, method.id)}
+                        {title}
                       </span>
-                      <span className="txt-compact-xsmall text-ui-fg-subtle">
-                        {method.id.includes("stripe")
-                          ? "Stripe"
-                          : method.id.includes("paypal")
-                          ? "PayPal"
-                          : ""}
-                      </span>
+                      {subtitle && (
+                        <span className="txt-compact-xsmall text-ui-fg-muted leading-tight">
+                          {subtitle}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </button>

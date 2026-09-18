@@ -504,13 +504,32 @@
     "paymentMethod": "Mode de paiement"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Carte bancaire",
-    "pp_paypal_paypal": "PayPal",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Carte bancaire",
-    "pp_system_default": "Paiement manuel",
-    "pp_tkassa_tkassa": "T-Kassa"
+    "pp_medusa-payments_default": {
+      "title": "Carte bancaire",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Carte bancaire",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Paiement manuel"
+    },
+    "pp_tkassa_tkassa": {
+      "title": "T-Kassa",
+      "subtitle": "Cartes, SBP"
+    }
   },
   "PaymentTest": {
     "attention": "Attention :",

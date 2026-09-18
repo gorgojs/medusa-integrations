@@ -504,13 +504,32 @@
     "paymentMethod": "Sposób płatności"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Karta płatnicza",
-    "pp_paypal_paypal": "PayPal",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Karta płatnicza",
-    "pp_system_default": "Płatność ręczna",
-    "pp_yookassa_yookassa": "YooKassa"
+    "pp_medusa-payments_default": {
+      "title": "Karta płatnicza",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Karta płatnicza",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Płatność ręczna"
+    },
+    "pp_yookassa_yookassa": {
+      "title": "YooKassa",
+      "subtitle": "Karty, SBP"
+    }
   },
   "PaymentTest": {
     "attention": "Uwaga:",

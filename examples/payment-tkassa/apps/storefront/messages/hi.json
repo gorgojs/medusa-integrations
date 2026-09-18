@@ -504,13 +504,32 @@
     "paymentMethod": "भुगतान विधि"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "क्रेडिट कार्ड",
-    "pp_paypal_paypal": "PayPal",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "क्रेडिट कार्ड",
-    "pp_system_default": "मैनुअल भुगतान",
-    "pp_tkassa_tkassa": "T-Kassa"
+    "pp_medusa-payments_default": {
+      "title": "क्रेडिट कार्ड",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "क्रेडिट कार्ड",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "मैनुअल भुगतान"
+    },
+    "pp_tkassa_tkassa": {
+      "title": "T-Kassa",
+      "subtitle": "कार्ड, SBP"
+    }
   },
   "PaymentTest": {
     "attention": "ध्यान दें:",

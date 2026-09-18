@@ -504,13 +504,32 @@
     "paymentMethod": "Спосіб оплати"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Банківська картка",
-    "pp_paypal_paypal": "PayPal",
-    "pp_robokassa_robokassa": "Robokassa",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Банківська картка",
-    "pp_system_default": "Оплата вручну"
+    "pp_medusa-payments_default": {
+      "title": "Банківська картка",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_robokassa_robokassa": {
+      "title": "Robokassa",
+      "subtitle": "Картки, СБП"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Банківська картка",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Оплата вручну"
+    }
   },
   "PaymentTest": {
     "attention": "Увага:",

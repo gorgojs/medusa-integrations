@@ -24,7 +24,7 @@ This example registers YooKassa through the
 stored encrypted rather than read from the environment at runtime. The backend only needs
 `INTEGRATION_ENCRYPTION_KEY`, which `.env.template` already sets to `supersecret` for development.
 
-If you already have a YooKassa shop, fill in `YOOKASSA_SHOP_ID` and `YOOKASSA_SECRET_KEY` in
+If you already have a YooKassa shop, fill in `SEED_YOOKASSA_SHOP_ID` and `SEED_YOOKASSA_SECRET_KEY` in
 `apps/backend/.env` before the next step. The seed migration script reads them once and stores them
 through the Integration Module. Leave them blank to enter the credentials in Medusa Admin instead, in
 [Connecting YooKassa](#connecting-yookassa) below.
@@ -79,19 +79,20 @@ the password `supersecret`, seed the demo catalog and start both apps.
 ## What the Example Adds to the Starter
 
 The starter ships the extension points and no payment provider of its own, so the whole integration
-is nine files. Port them into your own storefront to get the same flow.
+is ten files. Port them into your own storefront to get the same flow.
 
 | File | Change |
 |---|---|
 | [`apps/backend/medusa-config.ts`](./apps/backend/medusa-config.ts) | Registers the integration provider `yookassa-1`, the plugin itself so the Admin build picks up its i18n, and the payment provider bound to that integration id |
 | [`apps/backend/package.json`](./apps/backend/package.json) | Adds the plugin, the tunnel scripts and `dev:local` for a locally published copy of the plugin |
-| [`apps/backend/.env.template`](./apps/backend/.env.template) | Points `DB_NAME` at `medusa_payment_yookassa`, documents `COOKIE_SECURE`, and adds the optional `YOOKASSA_SHOP_ID`/`YOOKASSA_SECRET_KEY` pair the seed reads |
+| [`apps/backend/.env.template`](./apps/backend/.env.template) | Points `DB_NAME` at `medusa_payment_yookassa`, documents `COOKIE_SECURE`, and adds the optional `SEED_YOOKASSA_SHOP_ID`/`SEED_YOOKASSA_SECRET_KEY` pair the seed reads |
 | [`apps/backend/src/migration-scripts/lib/regions.ts`](./apps/backend/src/migration-scripts/lib/regions.ts) | Seeds YooKassa as a payment provider of every region, next to manual payment |
-| [`apps/backend/src/migration-scripts/lib/example-data.ts`](./apps/backend/src/migration-scripts/lib/example-data.ts) | Configures YooKassa through the Integration Module, the auto-capture and receipt settings always and the credentials when `YOOKASSA_SHOP_ID`/`YOOKASSA_SECRET_KEY` are set, wired into the seed from `initial-data-seed.ts` |
-| [`apps/storefront/src/lib/constants.tsx`](./apps/storefront/src/lib/constants.tsx) | Names the provider at the checkout and builds the session data YooKassa needs (the return address, and the cart its receipt is generated from) |
+| [`apps/backend/src/migration-scripts/lib/example-data.ts`](./apps/backend/src/migration-scripts/lib/example-data.ts) | Configures YooKassa through the Integration Module, the auto-capture and receipt settings always and the credentials when `SEED_YOOKASSA_SHOP_ID`/`SEED_YOOKASSA_SECRET_KEY` are set, wired into the seed from `initial-data-seed.ts` |
+| [`apps/storefront/src/lib/constants.tsx`](./apps/storefront/src/lib/constants.tsx) | Labels the provider at the checkout, points it at its icon, and builds the session data YooKassa needs (the return address, and the cart its receipt is generated from) |
+| [`apps/storefront/src/modules/common/icons/yookassa.tsx`](./apps/storefront/src/modules/common/icons/yookassa.tsx) | Draws the YooKassa mark shown on the checkout option |
 | [`apps/storefront/src/modules/checkout/components/payment-button/providers/yookassa.tsx`](./apps/storefront/src/modules/checkout/components/payment-button/providers/yookassa.tsx) | Sends the customer to the YooKassa payment page |
 | [`apps/storefront/src/app/api/payment-return/route.ts`](./apps/storefront/src/app/api/payment-return/route.ts) | Handles the return from the payment page and places the order unless the webhook got there first |
-| [`apps/storefront/messages/*.json`](./apps/storefront/messages) | Names YooKassa in all 36 storefront locales |
+| [`apps/storefront/messages/*.json`](./apps/storefront/messages) | Labels YooKassa in all 36 storefront locales, with the payment methods it accepts as the subtitle |
 
 ## How the Example Was Scaffolded
 
@@ -108,4 +109,4 @@ a browser and asks a human to type a password, and only that human ends up knowi
 user would also take `admin@medusajs.com` from the one the instructions above create. Migrations, the
 user and the seed all run after generation, from this example's own commands.
 
-To refresh the example against a newer starter, generate it again and re-apply the nine files.
+To refresh the example against a newer starter, generate it again and re-apply the ten files.

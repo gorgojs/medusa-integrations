@@ -504,13 +504,32 @@
     "paymentMethod": "Metode pembayaran"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Kartu kredit",
-    "pp_paypal_paypal": "PayPal",
-    "pp_robokassa_robokassa": "Robokassa",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Kartu kredit",
-    "pp_system_default": "Pembayaran manual"
+    "pp_medusa-payments_default": {
+      "title": "Kartu kredit",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_robokassa_robokassa": {
+      "title": "Robokassa",
+      "subtitle": "Kartu, SBP"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Kartu kredit",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Pembayaran manual"
+    }
   },
   "PaymentTest": {
     "attention": "Perhatian:",

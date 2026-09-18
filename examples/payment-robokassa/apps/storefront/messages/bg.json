@@ -504,13 +504,32 @@
     "paymentMethod": "Начин на плащане"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Кредитна карта",
-    "pp_paypal_paypal": "PayPal",
-    "pp_robokassa_robokassa": "Robokassa",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Кредитна карта",
-    "pp_system_default": "Ръчно плащане"
+    "pp_medusa-payments_default": {
+      "title": "Кредитна карта",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_robokassa_robokassa": {
+      "title": "Robokassa",
+      "subtitle": "Карти, СБП"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Кредитна карта",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Ръчно плащане"
+    }
   },
   "PaymentTest": {
     "attention": "Внимание:",
