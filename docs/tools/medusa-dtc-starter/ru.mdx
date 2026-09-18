@@ -57,7 +57,7 @@ description: "Стартер на Medusa для прямых продаж пот
 
 - **Сброс пароля:** Покупатель, забывший пароль, запрашивает ссылку на странице входа и задаёт новый на `/reset-password`. Ссылка одноразовая, а ответ на запрос одинаковый независимо от того, есть ли такой аккаунт, так что через форму нельзя узнать, какие адреса зарегистрированы.
 
-- **Транзакционные письма:** Собственный SMTP-провайдер уведомлений отправляет письма по шаблонам React Email с помощью пакета `nodemailer`. Десять подписчиков реагируют на события `customer.created`, `auth.password_reset`, `order.placed`, `order.completed`, `order.fulfillment_created`, `shipment.created`, `delivery.created`, `order.canceled`, `order.transfer_requested` и `payment.captured`, так что покупатель узнаёт о заказе, когда тот собран, когда отправлен вместе с трек-номером, когда доставлен и если отменён. Галочка «не уведомлять покупателя» в панели администратора учитывается. Письма переведены на 36 языков, и покупатель получает их на том языке, на котором делал заказ. Смотрите [шаблоны писем на GitHub](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/emails).
+- **Транзакционные письма:** Собственный SMTP-провайдер уведомлений отправляет письма по шаблонам React Email с помощью пакета `nodemailer`. Подписчики покрывают транзакции, которые совершает покупатель, регистрацию, сброс пароля, оформление заказа и все его статусы вплоть до доставки или отмены, получение оплаты и другие. Галочка «не уведомлять покупателя» в панели администратора учитывается. Письма переведены на 36 языков, и покупатель получает их на том языке, на котором делал заказ. Смотрите [шаблоны писем на GitHub](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/emails).
 
 - **Ревалидация кэша по запросу:** При изменении товара, категории, коллекции или перевода подписчик бэкенда отправляет вебхук на витрину, и витрина сбрасывает кэш именно тех страниц, которых это касается, смотрите [код подписчика на GitHub](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/subscribers/product-updated.ts#L36-L63).
 
@@ -69,7 +69,7 @@ description: "Стартер на Medusa для прямых продаж пот
 
   </Note>
 
-- **SEO и AI оптимизация:** [sitemap.xml](https://dtc-starter-demo.gorgojs.com/sitemap.xml), [robots.txt](https://dtc-starter-demo.gorgojs.com/robots.txt) и hreflang-альтернативы генерируются автоматически, Open Graph и Twitter Card мета-теги настраиваются для каждой страницы, а также есть эндпоинт [llms.txt](https://dtc-starter-demo.gorgojs.com/llms.txt) для AI-краулеров.
+- **SEO и AI оптимизация:** [sitemap.xml](https://dtc-starter-demo.gorgojs.com/sitemap.xml), [robots.txt](https://dtc-starter-demo.gorgojs.com/robots.txt) и hreflang-альтернативы генерируются автоматически, Open Graph и Twitter Card мета-теги настраиваются для каждой страницы, а также есть эндпоинт [llms.txt](https://dtc-starter-demo.gorgojs.com/llms.txt) для AI-краулеров. Демо-витрина набирает 100 баллов во всех категориях PageSpeed Insights на мобильных.
   ![Результаты PageSpeed](/static/dtc-starter/ru/pagespeed.png)
 
 

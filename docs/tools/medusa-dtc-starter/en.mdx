@@ -57,7 +57,7 @@ All the features of the official [Medusa DTC Starter](https://github.com/medusaj
 
 - **Password reset:** A customer who forgets their password requests a link from the sign-in page and sets a new one on `/reset-password`. The link works once, and the request answers the same way whether or not the address is registered, so the form cannot be used to find out which emails have accounts.
 
-- **Transactional emails:** A custom SMTP notification provider sends emails from React Email templates using the `nodemailer` package. Ten subscribers react to the `customer.created`, `auth.password_reset`, `order.placed`, `order.completed`, `order.fulfillment_created`, `shipment.created`, `delivery.created`, `order.canceled`, `order.transfer_requested`, and `payment.captured` events, so the buyer hears about the order when it is packed, when it ships with its tracking number, when it arrives, and if it is canceled. The Admin's "do not notify the customer" checkbox is respected. Every email ships in 36 languages and reaches the buyer in the one they shopped in. See [the email templates on GitHub](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/emails).
+- **Transactional emails:** A custom SMTP notification provider sends emails from React Email templates using the `nodemailer` package. Subscribers cover the transactions a buyer goes through, a new account, a password reset, a placed order and every status that follows it up to delivery or cancellation, a captured payment, and more. The Admin's "do not notify the customer" checkbox is respected. Every email ships in 36 languages and reaches the buyer in the one they shopped in. See [the email templates on GitHub](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/emails).
 
 - **On-demand cache revalidation:** Whenever a product, category, collection, or translation changes, a backend subscriber posts a webhook to the storefront, and the storefront revalidates exactly the pages that are affected. See [the subscriber's code on GitHub](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/subscribers/product-updated.ts#L36-L63).
 
@@ -69,7 +69,7 @@ All the features of the official [Medusa DTC Starter](https://github.com/medusaj
 
   </Note>
 
-- **SEO and AI optimization:** [sitemap.xml](https://dtc-starter-demo.gorgojs.com/sitemap.xml), [robots.txt](https://dtc-starter-demo.gorgojs.com/robots.txt), and hreflang alternates are generated automatically, Open Graph meta tags are set on product pages, and there's an [llms.txt](https://dtc-starter-demo.gorgojs.com/llms.txt) endpoint for AI crawlers.
+- **SEO and AI optimization:** [sitemap.xml](https://dtc-starter-demo.gorgojs.com/sitemap.xml), [robots.txt](https://dtc-starter-demo.gorgojs.com/robots.txt), and hreflang alternates are generated automatically, Open Graph meta tags are set on product pages, and there's an [llms.txt](https://dtc-starter-demo.gorgojs.com/llms.txt) endpoint for AI crawlers. The demo storefront scores 100 in every PageSpeed Insights category on mobile.
   ![PageSpeed results](/static/dtc-starter/en/pagespeed.png)
 
 ---
