@@ -1,9 +1,37 @@
-import { fetchShipmentDocuments } from "../shipment-documents"
+import { fetchShipmentDocuments, needsShipmentDocumentsSync } from "../shipment-documents"
 import { makeApishipClient } from "../../providers/fulfillment-apiship/core/__tests__/test-utils"
 
 function makeLogger() {
   return { debug: jest.fn(), error: jest.fn() }
 }
+
+describe("needsShipmentDocumentsSync", () => {
+  it("is false when there is no orderId — nothing to fetch", () => {
+    expect(needsShipmentDocumentsSync({ data: {}, labels: [] })).toBe(false)
+  })
+
+  it("is true when there is an orderId but no labels yet", () => {
+    expect(needsShipmentDocumentsSync({ data: { orderId: 1 }, labels: [] })).toBe(true)
+  })
+
+  it("is true when a label was saved (tracking only) but has no label_url yet", () => {
+    expect(
+      needsShipmentDocumentsSync({
+        data: { orderId: 1 },
+        labels: [{ label_url: "" }],
+      })
+    ).toBe(true)
+  })
+
+  it("is false once a label with a label_url exists", () => {
+    expect(
+      needsShipmentDocumentsSync({
+        data: { orderId: 1 },
+        labels: [{ label_url: "https://api.apiship.ru/labels/1.pdf" }],
+      })
+    ).toBe(false)
+  })
+})
 
 describe("fetchShipmentDocuments", () => {
   it("returns labels when ready on the first attempt", async () => {

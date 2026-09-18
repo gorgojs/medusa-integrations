@@ -96,17 +96,21 @@ describe("ApishipBase.getShipmentDocuments", () => {
     expect(apishipClient.ordersApi.getOrderInfo).toHaveBeenCalledTimes(10)
   })
 
-  it("throws after max attempts when getLabels never returns url", async () => {
+  it("returns the tracking number without a label when getLabels never returns url — the tracking number is still useful on its own", async () => {
     apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
       data: { order: { providerNumber: "X1", trackingUrl: "" } },
     })
     // Always returns no url
     apishipClient.orderDocsApi.getLabels.mockResolvedValue({ data: {} })
 
-    await expect(service.getShipmentDocuments({ orderId: 4 })).rejects.toThrow(
-      /getShipmentDocuments failed/
-    )
+    const result = await service.getShipmentDocuments({ orderId: 4 })
+
     expect(apishipClient.orderDocsApi.getLabels).toHaveBeenCalledTimes(10)
+    expect(result[0]).toEqual({
+      tracking_number: "X1",
+      tracking_url: "",
+      label_url: "",
+    })
   })
 
   it("handles empty trackingUrl gracefully (returns empty string)", async () => {
