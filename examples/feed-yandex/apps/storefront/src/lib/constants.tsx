@@ -5,27 +5,41 @@ import PayPal from "@modules/common/icons/paypal"
 import type { HttpTypes } from "@medusajs/types"
 import type React from "react"
 
+/**
+ * What the checkout shows for one payment provider. `title` names the method
+ * and `subtitle` is the smaller line under it, where the acquirer, the schemes
+ * a method accepts or the card an order was paid with go. `icon` is the mark
+ * in the option, and a provider without one falls back to a generic card.
+ */
+export type PaymentInfo = {
+  title: string
+  subtitle?: string
+  icon: React.JSX.Element
+}
+
 /* Map of payment provider_id to their icon and, as a fallback for a provider
-   with no entry in the `PaymentMethods` catalog, an English title. Add in any
-   payment providers you want to use, and their names to `messages/*.json`. */
-export const paymentInfoMap: Record<
-  string,
-  { title: string; icon: React.JSX.Element }
-> = {
+   with no entry in the `PaymentMethods` catalog, an English title and subtitle.
+   Add in any payment providers you want to use, and their labels to
+   `messages/*.json`. */
+export const paymentInfoMap: Record<string, PaymentInfo> = {
   pp_stripe_stripe: {
     title: "Credit card",
+    subtitle: "Stripe",
     icon: <CreditCard />,
   },
   "pp_medusa-payments_default": {
     title: "Credit card",
+    subtitle: "Medusa Payments",
     icon: <CreditCard />,
   },
   "pp_stripe-ideal_stripe": {
     title: "iDeal",
+    subtitle: "Stripe",
     icon: <Ideal />,
   },
   "pp_stripe-bancontact_stripe": {
     title: "Bancontact",
+    subtitle: "Stripe",
     icon: <Bancontact />,
   },
   pp_paypal_paypal: {

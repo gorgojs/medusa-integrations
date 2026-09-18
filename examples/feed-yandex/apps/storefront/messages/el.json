@@ -504,12 +504,28 @@
     "paymentMethod": "Τρόπος πληρωμής"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Πιστωτική κάρτα",
-    "pp_paypal_paypal": "PayPal",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Πιστωτική κάρτα",
-    "pp_system_default": "Χειροκίνητη πληρωμή"
+    "pp_medusa-payments_default": {
+      "title": "Πιστωτική κάρτα",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Πιστωτική κάρτα",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Χειροκίνητη πληρωμή"
+    }
   },
   "PaymentTest": {
     "attention": "Προσοχή:",

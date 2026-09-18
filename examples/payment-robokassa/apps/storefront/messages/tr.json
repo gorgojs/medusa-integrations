@@ -504,13 +504,32 @@
     "paymentMethod": "Ödeme yöntemi"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Kredi kartı",
-    "pp_paypal_paypal": "PayPal",
-    "pp_robokassa_robokassa": "Robokassa",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Kredi kartı",
-    "pp_system_default": "Manuel ödeme"
+    "pp_medusa-payments_default": {
+      "title": "Kredi kartı",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_robokassa_robokassa": {
+      "title": "Robokassa",
+      "subtitle": "Kartlar, SBP"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Kredi kartı",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Manuel ödeme"
+    }
   },
   "PaymentTest": {
     "attention": "Dikkat:",

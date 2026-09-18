@@ -504,12 +504,28 @@
     "paymentMethod": "אמצעי תשלום"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "כרטיס אשראי",
-    "pp_paypal_paypal": "PayPal",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "כרטיס אשראי",
-    "pp_system_default": "תשלום ידני"
+    "pp_medusa-payments_default": {
+      "title": "כרטיס אשראי",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "כרטיס אשראי",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "תשלום ידני"
+    }
   },
   "PaymentTest": {
     "attention": "שים לב:",

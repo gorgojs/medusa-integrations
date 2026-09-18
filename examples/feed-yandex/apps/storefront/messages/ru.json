@@ -504,12 +504,28 @@
     "paymentMethod": "Способ оплаты"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Банковская карта",
-    "pp_paypal_paypal": "PayPal",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Банковская карта",
-    "pp_system_default": "Оплата вручную"
+    "pp_medusa-payments_default": {
+      "title": "Банковская карта",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Банковская карта",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Оплата вручную"
+    }
   },
   "PaymentTest": {
     "attention": "Внимание:",

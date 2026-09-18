@@ -504,12 +504,28 @@
     "paymentMethod": "支払い方法"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "クレジットカード",
-    "pp_paypal_paypal": "PayPal",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "クレジットカード",
-    "pp_system_default": "手動決済"
+    "pp_medusa-payments_default": {
+      "title": "クレジットカード",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "クレジットカード",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "手動決済"
+    }
   },
   "PaymentTest": {
     "attention": "注意：",

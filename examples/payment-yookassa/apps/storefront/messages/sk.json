@@ -504,13 +504,32 @@
     "paymentMethod": "Spôsob platby"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Platobná karta",
-    "pp_paypal_paypal": "PayPal",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Platobná karta",
-    "pp_system_default": "Ručná platba",
-    "pp_yookassa_yookassa": "YooKassa"
+    "pp_medusa-payments_default": {
+      "title": "Platobná karta",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Platobná karta",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Ručná platba"
+    },
+    "pp_yookassa_yookassa": {
+      "title": "YooKassa",
+      "subtitle": "Karty, SBP"
+    }
   },
   "PaymentTest": {
     "attention": "Upozornenie:",

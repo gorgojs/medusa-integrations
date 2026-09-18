@@ -504,13 +504,32 @@
     "paymentMethod": "결제 방법"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "신용카드",
-    "pp_paypal_paypal": "PayPal",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "신용카드",
-    "pp_system_default": "수동 결제",
-    "pp_tkassa_tkassa": "T-Kassa"
+    "pp_medusa-payments_default": {
+      "title": "신용카드",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "신용카드",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "수동 결제"
+    },
+    "pp_tkassa_tkassa": {
+      "title": "T-Kassa",
+      "subtitle": "카드, SBP"
+    }
   },
   "PaymentTest": {
     "attention": "주의:",

@@ -504,13 +504,32 @@
     "paymentMethod": "Způsob platby"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Platební karta",
-    "pp_paypal_paypal": "PayPal",
-    "pp_robokassa_robokassa": "Robokassa",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Platební karta",
-    "pp_system_default": "Ruční platba"
+    "pp_medusa-payments_default": {
+      "title": "Platební karta",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_robokassa_robokassa": {
+      "title": "Robokassa",
+      "subtitle": "Karty, SBP"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Platební karta",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Ruční platba"
+    }
   },
   "PaymentTest": {
     "attention": "Upozornění:",

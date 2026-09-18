@@ -20,14 +20,18 @@ description: "Узнайте, как интегрировать платежны
 {/* TODO: screenshot */}
 
 ```ts title="src/lib/constants.tsx"
-export const paymentInfoMap: Record<
-  string,
-  { title: string; icon: React.JSX.Element }
-> = {
+export type PaymentInfo = {
+  title: string
+  subtitle?: string
+  icon: React.JSX.Element
+}
+
+export const paymentInfoMap: Record<string, PaymentInfo> = {
   // ...
   pp_yookassa_yookassa: {
     title: "YooKassa",
-    icon: <CreditCard />,
+    subtitle: "Cards, SBP",
+    icon: <YooKassa />,
   },
   // ...
 }
@@ -39,7 +43,43 @@ export const isYookassa = (providerId?: string) => {
 }
 ```
 
-`title` в `paymentInfoMap` служит резервным названием на странице оформления заказа, когда для локали нет перевода. `isYookassa` использует диспетчер ниже и построитель данных платёжной сессии из следующего шага.
+`title` называет способ оплаты на странице оформления заказа, а `subtitle` задаёт строку помельче под ним, куда попадают способы оплаты, которые ЮKassa собирает на своей странице. Оба служат резервными значениями, когда для локали нет перевода. `isYookassa` использует диспетчер ниже и построитель данных платёжной сессии из следующего шага.
+
+Компонент для `icon` вы добавляете сами. В примере знак ЮKassa нарисован фирменным синим, а `viewBox` обрезан по самому знаку, чтобы тот встал по центру круга 24px, который рисует вокруг него страница оформления заказа:
+
+```tsx title="src/modules/common/icons/yookassa.tsx"
+import type React from "react"
+
+import type { IconProps } from "types/icon"
+
+const YooKassa: React.FC<IconProps> = ({
+  size = "16",
+  color: _color,
+  ...attributes
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="73 129 366 254"
+      role="img"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...attributes}
+    >
+      <title>YooKassa icon</title>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M178.511 255.527C178.701 185.824 236.332 129 308.751 129C380.466 129 ..."
+        fill="#0070F0"
+      />
+    </svg>
+  )
+}
+
+export default YooKassa
+```
 
 ---
 
@@ -289,7 +329,7 @@ async function redirectProviderReturn({
 
 ---
 
-## Шаг 6: Добавьте название провайдера в локали витрины
+## Шаг 6: Добавьте подписи провайдера в локали витрины
 
 Добавьте `pp_yookassa_yookassa` в [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/messages/en.json#L513) и в каждую другую локаль под `messages/`:
 
@@ -297,15 +337,18 @@ async function redirectProviderReturn({
 {
   "PaymentMethods": {
     // ...
-    "pp_yookassa_yookassa": "YooKassa"
+    "pp_yookassa_yookassa": {
+      "title": "YooKassa",
+      "subtitle": "Cards, SBP"
+    }
   }
 }
 ```
 
-Если для локали нет записи, используется английский `title` из `paymentInfoMap` в [Шаге 1](#шаг-1-настройте-платёжный-провайдер). Собственное название ЮKassa не меняется от локали к локали, за исключением русской, где это `ЮKassa`.
+Если для локали нет записи, используются английские `title` и `subtitle` из `paymentInfoMap` в [Шаге 1](#шаг-1-настройте-платёжный-провайдер), а способ оплаты без подписи отрисовывается одним названием. Собственное название ЮKassa не меняется от локали к локали, за исключением русской, где это `ЮKassa`. Подпись переводится наравне с любой другой строкой, поэтому в русской локали она читается как `Карты, СБП`.
 
 ---
 
 ## Полный пример кода интеграции в витрину
 
-Полный код витрины лежит в [`examples/payment-yookassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/apps/storefront), собранной на основе [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter). В [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-yookassa/README.md#what-the-example-adds-to-the-starter) примера перечислены все девять файлов, из которых состоит интеграция, включая бэкенд.
+Полный код витрины лежит в [`examples/payment-yookassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/apps/storefront), собранной на основе [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter). В [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-yookassa/README.md#what-the-example-adds-to-the-starter) примера перечислены все десять файлов, из которых состоит интеграция, включая бэкенд.

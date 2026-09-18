@@ -504,13 +504,32 @@
     "paymentMethod": "Төлбөрийн арга"
   },
   "PaymentMethods": {
-    "pp_medusa-payments_default": "Кредит карт",
-    "pp_paypal_paypal": "PayPal",
-    "pp_stripe-bancontact_stripe": "Bancontact",
-    "pp_stripe-ideal_stripe": "iDeal",
-    "pp_stripe_stripe": "Кредит карт",
-    "pp_system_default": "Гар аргаар төлөх",
-    "pp_tkassa_tkassa": "T-Kassa"
+    "pp_medusa-payments_default": {
+      "title": "Кредит карт",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Кредит карт",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Гар аргаар төлөх"
+    },
+    "pp_tkassa_tkassa": {
+      "title": "T-Kassa",
+      "subtitle": "Карт, SBP"
+    }
   },
   "PaymentTest": {
     "attention": "Анхаар:",

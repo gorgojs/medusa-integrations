@@ -2,13 +2,13 @@
 
 import { Radio as RadioGroupOption } from "@headlessui/react"
 import { Text, clx } from "@medusajs/ui"
-import React, { useContext, type JSX } from "react"
+import React, { useContext } from "react"
 import { useTranslations } from "next-intl"
 
 import Radio from "@modules/common/components/radio"
 
-import { isManual } from "@lib/constants"
-import { paymentMethodName } from "@lib/util/payment"
+import { isManual, type PaymentInfo } from "@lib/constants"
+import { paymentMethodLabel } from "@lib/util/payment"
 import SkeletonCardDetails from "@modules/skeletons/components/skeleton-card-details"
 import { PaymentElement } from "@stripe/react-stripe-js"
 import PaymentTest from "../payment-test"
@@ -18,7 +18,7 @@ type PaymentContainerProps = {
   paymentProviderId: string
   selectedPaymentOptionId: string | null
   disabled?: boolean
-  paymentInfoMap: Record<string, { title: string; icon: JSX.Element }>
+  paymentInfoMap: Record<string, PaymentInfo>
   children?: React.ReactNode
 }
 
@@ -30,6 +30,7 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
   children,
 }) => {
   const tm = useTranslations("PaymentMethods")
+  const { title, subtitle } = paymentMethodLabel(tm, paymentProviderId)
   const isDevelopment = process.env.NODE_ENV === "development"
 
   return (
@@ -48,9 +49,14 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
       <div className="flex items-center justify-between ">
         <div className="flex items-center gap-x-4">
           <Radio checked={selectedPaymentOptionId === paymentProviderId} />
-          <Text className="text-base-regular">
-            {paymentMethodName(tm, paymentProviderId)}
-          </Text>
+          <div className="flex flex-col">
+            <Text className="text-base-regular">{title}</Text>
+            {subtitle && (
+              <Text className="txt-compact-xsmall text-ui-fg-muted">
+                {subtitle}
+              </Text>
+            )}
+          </div>
           {isManual(paymentProviderId) && isDevelopment && (
             <PaymentTest className="hidden small:block" />
           )}

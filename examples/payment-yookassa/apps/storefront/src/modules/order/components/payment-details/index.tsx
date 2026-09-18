@@ -1,7 +1,7 @@
 import { Container } from "@medusajs/ui"
 
 import { isStripeLike, paymentInfoMap } from "@lib/constants"
-import { paymentMethodName } from "@lib/util/payment"
+import { paymentMethodLabel } from "@lib/util/payment"
 import { formatDateTime } from "@lib/util/date"
 import { convertToLocale } from "@lib/util/money"
 import type { HttpTypes } from "@medusajs/types"
@@ -24,14 +24,21 @@ const PaymentDetails = async ({ order }: PaymentDetailsProps) => {
     return null
   }
 
+  const { title, subtitle } = paymentMethodLabel(tm, payment.provider_id)
   const card = isStripeLike(payment.provider_id) && payment.data?.card_last4
+  // The card the order was actually paid with says more than the schemes the
+  // method accepts, so it takes the subtitle when the payment carries one.
+  const methodSubtitle = card ? `•••• ${card}` : subtitle
 
   return (
     <div className="grid grid-cols-1 small:grid-cols-3 gap-6">
       <OrderDetailColumn label={t("paymentMethod")}>
-        <span data-testid="payment-method">
-          {paymentMethodName(tm, payment.provider_id)}
-        </span>
+        <span data-testid="payment-method">{title}</span>
+        {methodSubtitle && (
+          <span className="txt-compact-xsmall text-ui-fg-muted">
+            {methodSubtitle}
+          </span>
+        )}
       </OrderDetailColumn>
 
       <OrderDetailColumn label={t("paymentDetails")}>
@@ -40,16 +47,14 @@ const PaymentDetails = async ({ order }: PaymentDetailsProps) => {
             {paymentInfoMap[payment.provider_id]?.icon}
           </Container>
           <span data-testid="payment-amount">
-            {card
-              ? `**** **** **** ${payment.data?.card_last4}`
-              : `${convertToLocale({
-                  amount: payment.amount,
-                  currency_code: order.currency_code,
-                  locale,
-                })} ${t("paidAt")} ${formatDateTime({
-                  date: payment.created_at ?? "",
-                  locale,
-                })}`}
+            {`${convertToLocale({
+              amount: payment.amount,
+              currency_code: order.currency_code,
+              locale,
+            })} ${t("paidAt")} ${formatDateTime({
+              date: payment.created_at ?? "",
+              locale,
+            })}`}
           </span>
         </div>
       </OrderDetailColumn>

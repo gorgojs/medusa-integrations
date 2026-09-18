@@ -20,14 +20,18 @@ Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/bl
 {/* TODO: screenshot */}
 
 ```ts title="src/lib/constants.tsx"
-export const paymentInfoMap: Record<
-  string,
-  { title: string; icon: React.JSX.Element }
-> = {
+export type PaymentInfo = {
+  title: string
+  subtitle?: string
+  icon: React.JSX.Element
+}
+
+export const paymentInfoMap: Record<string, PaymentInfo> = {
   // ...
   pp_yookassa_yookassa: {
     title: "YooKassa",
-    icon: <CreditCard />,
+    subtitle: "Cards, SBP",
+    icon: <YooKassa />,
   },
   // ...
 }
@@ -39,7 +43,43 @@ export const isYookassa = (providerId?: string) => {
 }
 ```
 
-`paymentInfoMap`'s `title` is the fallback name shown at checkout when a locale has no translation. `isYookassa` is used by the dispatcher below and by the session data builder in the next step.
+`title` names the method at the checkout and `subtitle` is the smaller line under it, where the payment methods YooKassa collects on its own page go. Both act as fallbacks when a locale carries no translation. `isYookassa` is used by the dispatcher below and by the session data builder in the next step.
+
+The `icon` is a component you add yourself. The example draws YooKassa's mark in the brand blue and crops the `viewBox` to the glyph, so the mark centres in the 24px circle the checkout renders around it:
+
+```tsx title="src/modules/common/icons/yookassa.tsx"
+import type React from "react"
+
+import type { IconProps } from "types/icon"
+
+const YooKassa: React.FC<IconProps> = ({
+  size = "16",
+  color: _color,
+  ...attributes
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="73 129 366 254"
+      role="img"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...attributes}
+    >
+      <title>YooKassa icon</title>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M178.511 255.527C178.701 185.824 236.332 129 308.751 129C380.466 129 ..."
+        fill="#0070F0"
+      />
+    </svg>
+  )
+}
+
+export default YooKassa
+```
 
 ---
 
@@ -288,7 +328,7 @@ If the cart already has an order, the webhook won the race, so the route revalid
 
 ---
 
-## Step 6: Add Provider Name to Storefront Locales
+## Step 6: Add Provider Labels to Storefront Locales
 
 Add `pp_yookassa_yookassa` to [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/messages/en.json#L513) and to every other locale under `messages/`:
 
@@ -296,15 +336,18 @@ Add `pp_yookassa_yookassa` to [`messages/en.json`](https://github.com/gorgojs/me
 {
   "PaymentMethods": {
     // ...
-    "pp_yookassa_yookassa": "YooKassa"
+    "pp_yookassa_yookassa": {
+      "title": "YooKassa",
+      "subtitle": "Cards, SBP"
+    }
   }
 }
 ```
 
-A locale missing an entry falls back to the English `title` from `paymentInfoMap` in [Step 1](#step-1-configure-payment-provider). YooKassa's own name stays the same across locales, except in Russian it's `ЮKassa`.
+A locale missing an entry falls back to the English `title` and `subtitle` from `paymentInfoMap` in [Step 1](#step-1-configure-payment-provider), and a method with neither renders as a title alone. YooKassa's own name stays the same across locales, except in Russian it's `ЮKassa`. The subtitle is translated like any other string, so the Russian catalog reads `Карты, СБП`.
 
 ---
 
 ## Full Storefront Integration Code Example
 
-The complete storefront lives at [`examples/payment-yookassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/apps/storefront), built on the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter). The example's own [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-yookassa/README.md#what-the-example-adds-to-the-starter) lists the full nine-file delta, backend included.
+The complete storefront lives at [`examples/payment-yookassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-yookassa/apps/storefront), built on the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter). The example's own [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-yookassa/README.md#what-the-example-adds-to-the-starter) lists the full ten-file delta, backend included.
