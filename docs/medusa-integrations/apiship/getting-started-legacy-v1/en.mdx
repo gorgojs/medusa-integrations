@@ -1,0 +1,71 @@
+---
+title: "Getting Started with ApiShip for Medusa (legacy v1)"
+description: "In this document, you’ll learn how to install and configure the ApiShip plugin for Medusa"
+---
+
+# {frontmatter.title}
+
+In this document, you’ll learn how to install and configure the ApiShip plugin for Medusa.
+
+<Note type="warning">
+
+This guide covers configuring the legacy 1.x version, where you set the plugin options in `medusa-config.ts`. The current version 2 keeps these settings in the [Integration Module](/medusa-modules/integration), so a store admin edits them in Admin without changing configuration files or redeploying. For a new installation, follow [Getting Started with ApiShip for Medusa](/medusa-integrations/apiship/getting-started).
+
+</Note>
+
+## Requirements
+
+- Medusa v2.14.0 or later
+- Node.js v20 or later
+- An ApiShip account - [sign in or create one](https://a.apiship.ru)
+
+---
+
+## Installation
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-fulfillment-apiship
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-fulfillment-apiship
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Configuration
+
+Add the provider configuration in your `medusa-config.ts` file of the Medusa admin application:
+
+```ts title="medusa-config.ts"
+// ...
+module.exports = defineConfig({
+  // ...
+  modules: [
+    {
+      resolve: "@medusajs/medusa/fulfillment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
+            id: "apiship",
+            options: {},
+          },
+        ],
+      },
+    },
+  ],
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-fulfillment-apiship",
+      options: {},
+    },
+  ],
+})
+```

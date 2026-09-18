@@ -86,9 +86,9 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 ## Installation
 
 ```bash
-yarn add @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship@beta
+yarn add @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship
 # or
-npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship@beta
+npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship
 ```
 
 ## Documentation

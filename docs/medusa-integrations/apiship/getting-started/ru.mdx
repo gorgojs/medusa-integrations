@@ -9,9 +9,10 @@ description: "В этом документе вы узнаете, как уст�
 
 ## Требования
 
-- Medusa v2.14.0 или новее
+- Medusa v2.17.2 или новее
 - Node.js v20 или новее
 - Аккаунт ApiShip – [зарегистрируйтесь или войдите](https://a.apiship.ru)
+- [Модуль интеграций](/medusa-modules/integration)
 
 ---
 
@@ -20,12 +21,12 @@ description: "В этом документе вы узнаете, как уст�
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-fulfillment-apiship
+    yarn add @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-fulfillment-apiship
+    npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship
     ```
   </CodeTab>
 </CodeTabs>
@@ -38,9 +39,32 @@ description: "В этом документе вы узнаете, как уст�
 
 ```ts title="medusa-config.ts"
 // ...
+const APISHIP_INTEGRATION_ID = "apiship-1"
+
 module.exports = defineConfig({
   // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
+            id: APISHIP_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-fulfillment-apiship",
+      options: {},
+    },
+  ],
   modules: [
+    // ...
     {
       resolve: "@medusajs/medusa/fulfillment",
       options: {
@@ -48,18 +72,37 @@ module.exports = defineConfig({
           {
             resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
             id: "apiship",
-            options: {},
+            options: {
+              id: APISHIP_INTEGRATION_ID
+            },
           },
         ],
       },
     },
   ],
-  plugins: [
-    // ...
-    {
-      resolve: "@gorgo/medusa-fulfillment-apiship",
-      options: {},
-    },
-  ],
 })
 ```
+
+Добавьте переменную окружения с секретным ключом шифрования:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Параметры провайдера
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Суффикс итогового ключа `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>

@@ -86,9 +86,9 @@
 ## Установка
 
 ```bash
-yarn add @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship@beta
+yarn add @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship
 # или
-npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship@beta
+npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship
 ```
 
 ## Документация
