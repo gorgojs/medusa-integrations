@@ -38,6 +38,7 @@ export function makeApishipOptions(overrides: Record<string, any> = {}): any {
     sender_address_string: "Санкт-Петербург, Невский пр. 1",
     sender_contact_name: "Иван Иванов",
     sender_phone: "+79001234567",
+    sender_company: "",
     connections: [
       {
         id: "conn-1",
