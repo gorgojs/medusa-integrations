@@ -10,7 +10,7 @@ import { ProviderKeys } from "../types"
 import type { StoredApishipOptions } from "../types/apiship"
 import { assembleApishipOptions, assertApishipToken } from "../lib/apiship-options"
 import { createApishipClient } from "../lib/client"
-import { fetchShipmentDocuments } from "../lib/shipment-documents"
+import { fetchShipmentDocuments, needsShipmentDocumentsSync } from "../lib/shipment-documents"
 
 const SYNC_LIMIT = 50
 
@@ -32,10 +32,7 @@ export const syncApishipShipmentDocumentsStep = createStep(
       }
     )
 
-    const pending = fulfillments.filter(
-      (fulfillment) =>
-        !fulfillment.labels?.length && (fulfillment.data as any)?.orderId
-    )
+    const pending = fulfillments.filter(needsShipmentDocumentsSync)
 
     let updated = 0
     for (const fulfillment of pending) {
