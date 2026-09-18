@@ -60,7 +60,9 @@ export function mapToApishipOrderRequest(
     phone: stolstockLocationAddress.phone || apishipOptions.sender_phone,
     ...(stolstockLocationAddress.province ? { region: stolstockLocationAddress.province } : {}),
     ...(stolstockLocationAddress.city ? { city: stolstockLocationAddress.city } : {}),
-    ...(stolstockLocationAddress.company ? { companyName: stolstockLocationAddress.company } : {}),
+    ...((stolstockLocationAddress.company || apishipOptions.sender_company)
+      ? { companyName: stolstockLocationAddress.company || apishipOptions.sender_company }
+      : {}),
     ...(stolstockLocationAddress.postal_code ? { postIndex: stolstockLocationAddress.postal_code } : {}),
   }
 

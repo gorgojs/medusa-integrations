@@ -85,6 +85,11 @@ export interface ApishipOptionsDTO {
    */
   sender_phone: string
   /**
+   * Название компании отправителя. Некоторые службы доставки требуют его для юрлиц —
+   * без него ApiShip может принять заказ, но отклонить его при передаче перевозчику.
+   */
+  sender_company: string
+  /**
    * Подключённые службы доставки
    */
   connections: ApishipConnectionDTO[]
@@ -109,6 +114,7 @@ export interface StoredApishipOptions {
   sender_address_string?: string
   sender_contact_name?: string
   sender_phone?: string
+  sender_company?: string
   settings?: {
     connections?: DeepPartial<ApishipConnectionDTO>[]
   }

@@ -155,6 +155,7 @@ export function assembleApishipOptions(
     sender_address_string: options?.sender_address_string ?? "",
     sender_contact_name: options?.sender_contact_name ?? "",
     sender_phone: options?.sender_phone ?? "",
+    sender_company: options?.sender_company ?? "",
     connections: normalizeConnections(options?.settings?.connections),
   }
 }
