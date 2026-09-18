@@ -83,6 +83,33 @@ class ApishipBase extends AbstractFulfillmentProviderService {
   }
 
   /**
+   * Every ApiShip call goes through here, so each one leaves the request it sent and the
+   * payload it got back in the debug log under the same name. Only the body is logged — an
+   * axios response carries the request object with it and does not survive JSON.stringify.
+   */
+  private async callApishipApi_<T>(
+    name: string,
+    request: unknown,
+    apiCall: () => Promise<T>
+  ): Promise<T> {
+    this.logger_.debug(
+      `Apiship.${name} request: ${JSON.stringify(request, null, 2)}`
+    )
+    try {
+      const response = await apiCall()
+      this.logger_.debug(
+        `Apiship.${name} response: ${JSON.stringify((response as any)?.data ?? response, null, 2)}`
+      )
+      return response
+    } catch (e: any) {
+      this.logger_.debug(
+        `Apiship.${name} error: ${JSON.stringify(e?.response?.data ?? e?.message ?? e, null, 2)}`
+      )
+      throw e
+    }
+  }
+
+  /**
    * The sender fields are optional in the descriptor (a price quote doesn't need them), but
    * ApiShip rejects an order without them — so this is where they're enforced.
    */
@@ -151,9 +178,11 @@ class ApishipBase extends AbstractFulfillmentProviderService {
       tariffs = cache
     } else {
       try {
-        const { data: response } = await apishipClient.calculatorApi.getCalculator({
-          calculatorRequest
-        })
+        const { data: response } = await this.callApishipApi_(
+          "calculatorApi.getCalculator",
+          { calculatorRequest },
+          () => apishipClient.calculatorApi.getCalculator({ calculatorRequest })
+        )
         tariffs = response
 
         await saveCalculationWorkflow().run({
@@ -268,9 +297,11 @@ class ApishipBase extends AbstractFulfillmentProviderService {
         this.logger_.debug(`There is a record with a key: ${idempotencyKey} in cache`)
         orderId = (cachedOrder as any).orderId
       } else {
-        const response = await apishipClient.ordersApi.addOrder({
-          orderRequest: apishipOrder,
-        })
+        const response = await this.callApishipApi_(
+          "ordersApi.addOrder",
+          { orderRequest: apishipOrder },
+          () => apishipClient.ordersApi.addOrder({ orderRequest: apishipOrder })
+        )
         orderId = response.data.orderId
         await saveCalculationWorkflow().run({
           input: {
@@ -316,14 +347,18 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     const filter = `providerKey=${providerKey}`
     let rows: TariffObject[] | undefined
     try {
-      this.logger_.debug(`Apiship.getListTariffs try filter: ${filter}`)
       const apishipClient = await this.getApishipClient_()
-      const { data: response } = await apishipClient.listsApi.getListTariffs({
+      const tariffsRequest = {
         limit: 100,
         offset: 0,
         filter,
         fields
-      })
+      }
+      const { data: response } = await this.callApishipApi_(
+        "listsApi.getListTariffs",
+        tariffsRequest,
+        () => apishipClient.listsApi.getListTariffs(tariffsRequest)
+      )
       const r = response.rows || []
       if (r.length) {
         rows = r as TariffObject[]
@@ -351,8 +386,11 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     const orderId = data?.orderId as number
     try {
       const apishipClient = await this.getApishipClient_()
-      const response = await apishipClient.ordersApi.cancelOrder({ orderId })
-      this.logger_.debug(`Apiship.cancelFulfillment output: ${JSON.stringify(response, null, 2)}`)
+      const response = await this.callApishipApi_(
+        "ordersApi.cancelOrder",
+        { orderId },
+        () => apishipClient.ordersApi.cancelOrder({ orderId })
+      )
       return response
     } catch (e: any) {
       throw this.buildError("An error occurred in cancelFulfillment", e)
@@ -408,9 +446,11 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     }
     try {
       const apishipClient = await this.getApishipClient_()
-      const { data: response } = await apishipClient.orderDocsApi.getWaybills({
-        documentsRequest
-      })
+      const { data: response } = await this.callApishipApi_(
+        "orderDocsApi.getWaybills",
+        { documentsRequest },
+        () => apishipClient.orderDocsApi.getWaybills({ documentsRequest })
+      )
       const result = response?.waybillItems?.[0].file
       this.logger_.debug(`Apiship.getFulfillmentDocuments output: ${JSON.stringify(result, null, 2)}`)
       return result as unknown as never[]

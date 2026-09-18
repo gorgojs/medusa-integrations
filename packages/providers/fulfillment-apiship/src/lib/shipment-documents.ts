@@ -6,6 +6,7 @@ type MinimalLogger = {
 
 async function executeWithRetry<T>({
   apiCall,
+  request,
   isReady,
   maxAttempts = 10,
   baseDelay = 500,
@@ -14,6 +15,7 @@ async function executeWithRetry<T>({
   sleep,
 }: {
   apiCall: () => Promise<T>
+  request?: unknown
   isReady: (res: T) => boolean
   maxAttempts?: number
   baseDelay?: number
@@ -23,7 +25,15 @@ async function executeWithRetry<T>({
 }): Promise<T> {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
+      logger.debug(
+        `${label}: request (attempt ${attempt}/${maxAttempts}): ${JSON.stringify(request, null, 2)}`
+      )
       const response = await apiCall()
+      // Only the body is logged — an axios response carries the request object with it and
+      // does not survive JSON.stringify.
+      logger.debug(
+        `${label}: response: ${JSON.stringify((response as any)?.data ?? response, null, 2)}`
+      )
       if (isReady(response)) return response
       logger.debug(`${label}: not ready (attempt ${attempt}/${maxAttempts})`)
     } catch (err: any) {
@@ -59,6 +69,7 @@ export async function fetchShipmentDocuments({
   logger.debug(`Apiship.waitForOrderInfo input: ${orderId}`)
   const orderInfoResponse = await executeWithRetry({
     apiCall: () => apishipClient.ordersApi.getOrderInfo({ orderId }),
+    request: { orderId },
     isReady: (response: any) => Boolean(response?.data?.order?.providerNumber),
     label: `orderInfo:${orderId}`,
     maxAttempts,
@@ -82,6 +93,7 @@ export async function fetchShipmentDocuments({
       apiCall: () => apishipClient.orderDocsApi.getLabels({
         labelsRequest: { orderIds: [orderId], format: "pdf" },
       }),
+      request: { labelsRequest: { orderIds: [orderId], format: "pdf" } },
       isReady: (response: any) => Boolean(response?.data?.url),
       label: `labels:${orderId}`,
       maxAttempts,
