@@ -73,18 +73,26 @@ export async function fetchShipmentDocuments({
   )
 
   logger.debug(`Apiship.waitForLabelUrl input: ${orderId}`)
-  const labelResponse = await executeWithRetry({
-    apiCall: () => apishipClient.orderDocsApi.getLabels({
-      labelsRequest: { orderIds: [orderId], format: "pdf" },
-    }),
-    isReady: (response: any) => Boolean(response?.data?.url),
-    label: `labels:${orderId}`,
-    maxAttempts,
-    logger,
-    sleep,
-  })
-  const labelUrl = String((labelResponse as any).data.url)
-  logger.debug(`Apiship.waitForLabelUrl output: ${labelUrl}`)
+  // The tracking number above is already useful on its own — a slow label PDF shouldn't throw
+  // it away. If the label isn't ready yet, return what we have; a later call (the scheduled
+  // sync job) will fetch the label separately once the carrier produces it.
+  let labelUrl = ""
+  try {
+    const labelResponse = await executeWithRetry({
+      apiCall: () => apishipClient.orderDocsApi.getLabels({
+        labelsRequest: { orderIds: [orderId], format: "pdf" },
+      }),
+      isReady: (response: any) => Boolean(response?.data?.url),
+      label: `labels:${orderId}`,
+      maxAttempts,
+      logger,
+      sleep,
+    })
+    labelUrl = String((labelResponse as any).data.url)
+    logger.debug(`Apiship.waitForLabelUrl output: ${labelUrl}`)
+  } catch (e: any) {
+    logger.debug(`Apiship.waitForLabelUrl failed, keeping the tracking number without a label: ${e?.message ?? e}`)
+  }
 
   return [
     {
@@ -93,4 +101,16 @@ export async function fetchShipmentDocuments({
       label_url: labelUrl || "",
     },
   ]
+}
+
+/**
+ * True when a fulfillment still needs a document-sync pass: no order to check, no labels at
+ * all yet, or a label was saved (e.g. tracking number only) but never got its own PDF url.
+ */
+export function needsShipmentDocumentsSync(fulfillment: {
+  data?: Record<string, unknown> | null
+  labels?: Array<{ label_url?: string | null }> | null
+}): boolean {
+  if (!fulfillment.data?.orderId) return false
+  return !fulfillment.labels?.some((label) => label?.label_url)
 }
