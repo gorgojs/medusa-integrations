@@ -7,8 +7,8 @@ import {
 const YOOKASSA_PROVIDER_ID = integrationProviderKey("yookassa", "yookassa-1");
 
 export const seedExampleData = async (container: MedusaContainer) => {
-  const shopId = process.env.YOOKASSA_SHOP_ID;
-  const secretKey = process.env.YOOKASSA_SECRET_KEY;
+  const shopId = process.env.SEED_YOOKASSA_SHOP_ID;
+  const secretKey = process.env.SEED_YOOKASSA_SECRET_KEY;
 
   await upsertIntegrationWorkflow(container).run({
     input: {
