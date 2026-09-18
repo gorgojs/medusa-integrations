@@ -56,6 +56,11 @@ export type FetchShipmentDocumentsInput = {
   orderId: number
   logger: MinimalLogger
   maxAttempts?: number
+  /**
+   * Whether to poll for the label PDF. Right after an order is created the carrier hasn't
+   * produced one yet, so the caller can skip it and leave the label to the sync job.
+   */
+  waitForLabel?: boolean
   sleep?: (ms: number) => Promise<unknown>
 }
 
@@ -64,6 +69,7 @@ export async function fetchShipmentDocuments({
   orderId,
   logger,
   maxAttempts,
+  waitForLabel = true,
   sleep = (ms) => new Promise((r) => setTimeout(r, ms)),
 }: FetchShipmentDocumentsInput) {
   logger.debug(`Apiship.waitForOrderInfo input: ${orderId}`)
@@ -83,11 +89,24 @@ export async function fetchShipmentDocuments({
     `Apiship.waitForOrderInfo output: ${JSON.stringify({ trackingNumber, trackingUrl }, null, 2)}`
   )
 
-  logger.debug(`Apiship.waitForLabelUrl input: ${orderId}`)
   // The tracking number above is already useful on its own — a slow label PDF shouldn't throw
   // it away. If the label isn't ready yet, return what we have; a later call (the scheduled
   // sync job) will fetch the label separately once the carrier produces it.
   let labelUrl = ""
+  if (!waitForLabel) {
+    logger.debug(
+      `Apiship.waitForLabelUrl skipped for order ${orderId}, the sync job picks the label up`
+    )
+    return [
+      {
+        tracking_number: trackingNumber,
+        tracking_url: trackingUrl || "",
+        label_url: "",
+      },
+    ]
+  }
+
+  logger.debug(`Apiship.waitForLabelUrl input: ${orderId}`)
   try {
     const labelResponse = await executeWithRetry({
       apiCall: () => apishipClient.orderDocsApi.getLabels({
