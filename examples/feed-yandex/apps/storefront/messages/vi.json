@@ -590,8 +590,8 @@
   },
   "PromoBanner": {
     "close": "Đóng",
-    "cta": "Dùng thử",
-    "message": "DTC starter đầy đủ tính năng, sẵn sàng cho production."
+    "cta": "Triển khai của bạn",
+    "message": "Cửa hàng này chạy trên Medusa DTC Starter miễn phí của Gorgo."
   },
   "RegionSelect": {
     "apply": "Áp dụng",

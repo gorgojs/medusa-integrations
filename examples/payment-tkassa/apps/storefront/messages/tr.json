@@ -594,8 +594,8 @@
   },
   "PromoBanner": {
     "close": "Kapat",
-    "cta": "Dene",
-    "message": "Tam donanımlı, üretime hazır DTC starter."
+    "cta": "Kendi mağazanı kur",
+    "message": "Bu mağaza Gorgo'nun ücretsiz Medusa DTC Starter'ı üzerinde çalışıyor."
   },
   "RegionSelect": {
     "apply": "Uygula",

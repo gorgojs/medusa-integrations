@@ -36,7 +36,7 @@ function PromoBanner(props: { dismissed: boolean }) {
           </span>
 
           <a
-            href="https://gorgojs.com"
+            href="https://docs.gorgojs.com/tools/medusa-dtc-starter/getting-started"
             target="_blank"
             rel="noreferrer"
             className="bg-[linear-gradient(163deg,#deba92_20%,#9f724e_45%,#deba92_90%)] bg-clip-text text-transparent hover:opacity-80 transition-opacity"

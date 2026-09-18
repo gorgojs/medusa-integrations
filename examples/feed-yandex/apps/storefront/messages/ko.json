@@ -590,8 +590,8 @@
   },
   "PromoBanner": {
     "close": "닫기",
-    "cta": "사용해 보기",
-    "message": "모든 기능을 갖춘 프로덕션 준비 완료 DTC 스타터."
+    "cta": "내 스토어 만들기",
+    "message": "이 스토어는 Gorgo의 무료 Medusa DTC Starter로 운영됩니다."
   },
   "RegionSelect": {
     "apply": "적용",

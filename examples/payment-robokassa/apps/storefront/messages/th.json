@@ -594,8 +594,8 @@
   },
   "PromoBanner": {
     "close": "ปิด",
-    "cta": "ลองใช้เลย",
-    "message": "DTC Starter ครบฟีเจอร์ พร้อมใช้งานจริง"
+    "cta": "เปิดร้านของคุณเอง",
+    "message": "ร้านนี้ทำงานบน Medusa DTC Starter ฟรีจาก Gorgo"
   },
   "RegionSelect": {
     "apply": "นำไปใช้",

@@ -590,8 +590,8 @@
   },
   "PromoBanner": {
     "close": "Zavrieť",
-    "cta": "Vyskúšať",
-    "message": "Plnohodnotný, produkčne pripravený DTC starter."
+    "cta": "Spustiť vlastný",
+    "message": "Tento obchod beží na bezplatnom Medusa DTC Starter od Gorgo."
   },
   "RegionSelect": {
     "apply": "Použiť",
