@@ -61,6 +61,7 @@ describe("Apiship integration descriptor schema", () => {
           "sender_address_string",
           "sender_contact_name",
           "sender_phone",
+          "sender_company",
         ],
       })
       expect(section("sender")?.column).toBeUndefined()

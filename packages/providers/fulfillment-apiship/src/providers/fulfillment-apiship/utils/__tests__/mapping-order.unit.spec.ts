@@ -102,6 +102,31 @@ describe("mapToApishipOrderRequest", () => {
       const result = callMapping({ options, stockLocation })
       expect(result.sender!.countryCode).toBe("RU")
     })
+
+    it("falls back to sender_company when the stock location has no company", () => {
+      const options = makeApishipOptions({ sender_company: "ООО Рога и Копыта" })
+      const stockLocation = {
+        ...fullAddressStockLocation,
+        address: { ...fullAddressStockLocation.address, company: undefined },
+      }
+      const result = callMapping({ options, stockLocation })
+      expect((result.sender as any).companyName).toBe("ООО Рога и Копыта")
+    })
+
+    it("prefers the stock location's company over sender_company", () => {
+      const options = makeApishipOptions({ sender_company: "ООО Рога и Копыта" })
+      const result = callMapping({ options })
+      expect((result.sender as any).companyName).toBe("ООО Горго")
+    })
+
+    it("omits companyName when neither the stock location nor sender_company has one", () => {
+      const stockLocation = {
+        ...fullAddressStockLocation,
+        address: { ...fullAddressStockLocation.address, company: undefined },
+      }
+      const result = callMapping({ stockLocation })
+      expect((result.sender as any).companyName).toBeUndefined()
+    })
   })
 
   describe("recipient mapping", () => {
