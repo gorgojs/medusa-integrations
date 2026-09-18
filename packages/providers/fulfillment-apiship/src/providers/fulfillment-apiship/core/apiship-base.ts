@@ -317,7 +317,10 @@ class ApishipBase extends AbstractFulfillmentProviderService {
 
     let labels: any[] = []
     try {
-      labels = await this.getShipmentDocuments({ orderId })
+      // Only the tracking number is waited for here. The label PDF isn't ready this soon after
+      // the order is created, and polling for it holds the fulfillment up — the scheduled sync
+      // job fills it in once the carrier produces it.
+      labels = await this.getShipmentDocuments({ orderId, waitForLabel: false })
     } catch (e: any) {
       this.logger_.error(
         `Apiship.createFulfillment: order ${orderId} was created, but fetching shipment documents failed: ${e?.message ?? e}`
@@ -408,11 +411,13 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     this.logger_.debug(`Apiship.getShipmentDocuments input: ${JSON.stringify(data, null, 2)}`)
 
     const orderId = data?.orderId as number
+    const waitForLabel = data?.waitForLabel !== false
     try {
       const apishipClient = await this.getApishipClient_()
       const labels = await fetchShipmentDocuments({
         apishipClient,
         orderId,
+        waitForLabel,
         logger: this.logger_,
         sleep: (ms) => this.sleep(ms),
       })

@@ -59,6 +59,32 @@ describe("fetchShipmentDocuments", () => {
     ])
   })
 
+  it("skips the label lookup entirely when waitForLabel is false", async () => {
+    const apishipClient = makeApishipClient() as any
+    apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
+      data: { order: { providerNumber: "CDEK-123", trackingUrl: "https://track.cdek.ru/123" } },
+    })
+    const sleep = jest.fn().mockResolvedValue(undefined)
+
+    const labels = await fetchShipmentDocuments({
+      apishipClient,
+      orderId: 9999,
+      logger: makeLogger(),
+      waitForLabel: false,
+      sleep,
+    })
+
+    expect(apishipClient.orderDocsApi.getLabels).not.toHaveBeenCalled()
+    expect(sleep).not.toHaveBeenCalled()
+    expect(labels).toEqual([
+      {
+        tracking_number: "CDEK-123",
+        tracking_url: "https://track.cdek.ru/123",
+        label_url: "",
+      },
+    ])
+  })
+
   describe("maxAttempts override", () => {
     it("makes only one attempt when maxAttempts=1, without sleeping", async () => {
       const apishipClient = makeApishipClient() as any

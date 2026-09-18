@@ -81,7 +81,7 @@ describe("ApishipBase.createFulfillment", () => {
     expect(result.data).toMatchObject({ orderId: 9999 })
   })
 
-  it("result.labels contains tracking_number, tracking_url, label_url", async () => {
+  it("result.labels carries the tracking number, and no label_url — the sync job adds it later", async () => {
     setupWorkflowMocks()
     apishipClient.ordersApi.addOrder.mockResolvedValue({ data: { orderId: 9999 } })
     apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
@@ -97,8 +97,20 @@ describe("ApishipBase.createFulfillment", () => {
     expect(result.labels[0]).toMatchObject({
       tracking_number: "CDEK-123",
       tracking_url: "https://track.cdek.ru/123",
-      label_url: "https://api.apiship.ru/labels/9999.pdf",
+      label_url: "",
     })
+  })
+
+  it("does not poll for the label PDF — creating a fulfillment must not wait on it", async () => {
+    setupWorkflowMocks()
+    apishipClient.ordersApi.addOrder.mockResolvedValue({ data: { orderId: 9999 } })
+    apishipClient.ordersApi.getOrderInfo.mockResolvedValue({
+      data: { order: { providerNumber: "CDEK-123", trackingUrl: "" } },
+    })
+
+    await service.createFulfillment(baseData, [], makeOrder(), baseFulfillment)
+
+    expect(apishipClient.orderDocsApi.getLabels).not.toHaveBeenCalled()
   })
 
   it("passes deliveryType=2 option: includes pointOutId in order request", async () => {
