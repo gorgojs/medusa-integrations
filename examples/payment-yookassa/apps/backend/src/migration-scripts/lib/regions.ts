@@ -33,7 +33,7 @@ export const seedRegions = async (container: MedusaContainer) => {
         name: seedRegion.name,
         currency_code: seedRegion.currency_code,
         countries: seedRegion.countries,
-        payment_providers: ["pp_system_default", "pp_yookassa_yookassa"],
+        payment_providers: ["pp_system_default"],
       })),
     },
   });
