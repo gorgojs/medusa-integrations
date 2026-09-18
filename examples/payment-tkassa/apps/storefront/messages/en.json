@@ -594,8 +594,8 @@
   },
   "PromoBanner": {
     "close": "Close",
-    "cta": "Try it",
-    "message": "Full-featured production ready DTC starter."
+    "cta": "Deploy your own",
+    "message": "This store runs on the free Medusa DTC Starter by Gorgo."
   },
   "RegionSelect": {
     "apply": "Apply",

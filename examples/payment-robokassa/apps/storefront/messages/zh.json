@@ -594,8 +594,8 @@
   },
   "PromoBanner": {
     "close": "关闭",
-    "cta": "立即体验",
-    "message": "功能齐全、可用于生产环境的 DTC 启动模板。"
+    "cta": "部署你自己的",
+    "message": "本店基于 Gorgo 的免费 Medusa DTC Starter 搭建。"
   },
   "RegionSelect": {
     "apply": "应用",

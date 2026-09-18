@@ -590,8 +590,8 @@
   },
   "PromoBanner": {
     "close": "Schließen",
-    "cta": "Jetzt testen",
-    "message": "Voll ausgestatteter, produktionsreifer DTC Starter."
+    "cta": "Eigenen starten",
+    "message": "Dieser Shop läuft mit dem kostenlosen Medusa DTC Starter von Gorgo."
   },
   "RegionSelect": {
     "apply": "Anwenden",

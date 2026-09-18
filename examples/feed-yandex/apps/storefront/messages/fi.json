@@ -590,8 +590,8 @@
   },
   "PromoBanner": {
     "close": "Sulje",
-    "cta": "Kokeile",
-    "message": "Täysiverinen, tuotantovalmis DTC-starter."
+    "cta": "Ota oma käyttöön",
+    "message": "Tämä kauppa toimii Gorgon ilmaisella Medusa DTC Starterilla."
   },
   "RegionSelect": {
     "apply": "Käytä",

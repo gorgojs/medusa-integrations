@@ -590,8 +590,8 @@
   },
   "PromoBanner": {
     "close": "閉じる",
-    "cta": "試してみる",
-    "message": "本番環境対応のフル機能DTCスターター。"
+    "cta": "自分の店舗を立ち上げる",
+    "message": "このストアは Gorgo の無料 Medusa DTC Starter で動いています。"
   },
   "RegionSelect": {
     "apply": "適用",

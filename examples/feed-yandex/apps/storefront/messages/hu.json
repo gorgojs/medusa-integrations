@@ -590,8 +590,8 @@
   },
   "PromoBanner": {
     "close": "Bezárás",
-    "cta": "Kipróbálom",
-    "message": "Teljes funkciós, éles környezetre kész DTC starter."
+    "cta": "Indítsd el a sajátodat",
+    "message": "Ez a bolt a Gorgo ingyenes Medusa DTC Starterével működik."
   },
   "RegionSelect": {
     "apply": "Alkalmaz",
