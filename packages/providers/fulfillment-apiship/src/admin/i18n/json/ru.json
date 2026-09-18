@@ -40,7 +40,10 @@
       "senderContactName": "ФИО",
       "senderContactNamePlaceholder": "Иван Иванов",
       "senderPhone": "Телефон",
-      "senderPhonePlaceholder": "+79001234567"
+      "senderPhonePlaceholder": "+79001234567",
+      "senderCompany": "Компания",
+      "senderCompanyPlaceholder": "ООО «Компания»",
+      "senderCompanyHint": "Требуется некоторыми службами доставки для отправлений от юрлица. Используется, когда у склада не указана своя компания."
     },
     "vat": {
       "noVat": "Без НДС",

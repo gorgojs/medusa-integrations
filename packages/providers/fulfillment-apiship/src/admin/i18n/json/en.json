@@ -40,7 +40,10 @@
       "senderContactName": "Full Name",
       "senderContactNamePlaceholder": "Ivan Ivanov",
       "senderPhone": "Phone",
-      "senderPhonePlaceholder": "+79001234567"
+      "senderPhonePlaceholder": "+79001234567",
+      "senderCompany": "Company",
+      "senderCompanyPlaceholder": "Acme LLC",
+      "senderCompanyHint": "Required by some delivery services for legal-entity shipments. Used when the stock location has no company of its own."
     },
     "vat": {
       "noVat": "No VAT",

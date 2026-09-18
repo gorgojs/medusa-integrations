@@ -124,6 +124,15 @@ const descriptor = defineIntegration({
       label: "apiship.fields.senderPhone",
       placeholder: "apiship.fields.senderPhonePlaceholder",
     },
+    // Some delivery services reject a legal-entity shipment without a sender company name —
+    // ApiShip itself accepts the order either way, then fails to hand it off to the carrier.
+    sender_company: {
+      type: "string",
+      control: "text",
+      label: "apiship.fields.senderCompany",
+      placeholder: "apiship.fields.senderCompanyPlaceholder",
+      hint: "apiship.fields.senderCompanyHint",
+    },
 
     // Delivery-service connections — a list of records, for which the descriptor's option
     // catalog has no control, so their Admin UI stays a widget injected into this page
@@ -169,6 +178,7 @@ const descriptor = defineIntegration({
         "sender_address_string",
         "sender_contact_name",
         "sender_phone",
+        "sender_company",
       ],
     },
   ],
