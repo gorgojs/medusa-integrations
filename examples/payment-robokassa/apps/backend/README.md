@@ -30,40 +30,6 @@
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license" />
 </p>
 
-## What's in This App?
-
-On top of a stock Medusa 2 application, this backend ships:
-
-- **SMTP notification provider** – [`src/modules/smtp-notification`](src/modules/smtp-notification) sends [React Email](https://react.email/) templates through `nodemailer`. It is registered as the `email` channel of the Notification Module, alongside Medusa's local `feed` provider.
-- **Ten email templates** – [`src/emails`](src/emails) covers the welcome, password reset, order placed, order completed, payment captured, order packed, order shipped, order delivered, order canceled, and order transfer request emails, with copy in 36 languages under [`src/emails/i18n`](src/emails/i18n). They share one style sheet, [`src/emails/lib/styles.ts`](src/emails/lib/styles.ts), built from the same design tokens the storefront renders with. Every email reaches the buyer in the language they shopped in.
-- **Eleven subscribers** – [`src/subscribers`](src/subscribers) sends those emails on `customer.created`, `auth.password_reset`, `order.placed`, `order.completed`, `order.fulfillment_created`, `shipment.created`, `delivery.created`, `order.canceled`, `order.transfer_requested`, and `payment.captured`. Three of those events carry the Admin's "do not notify the customer" flag, and the subscribers honour it. [`product-updated.ts`](src/subscribers/product-updated.ts) posts a revalidation webhook to the storefront on 24 more events: create, update, and delete for products, variants, options, types, tags, categories, collections, and translations.
-- **Initial data seed** – [`src/migration-scripts/initial-data-seed.ts`](src/migration-scripts/initial-data-seed.ts) creates the store, 241 regions with their currencies and shipping options, 36 locales' translations, and a demo catalog. Every stage lives in [`src/migration-scripts/lib`](src/migration-scripts/lib) and reads its input from JSON under [`src/migration-scripts/data`](src/migration-scripts/data).
-- **Integration Module** – [`@gorgo/medusa-integration`](https://docs.gorgojs.com/medusa-modules/integration) is registered in [`medusa-config.ts`](medusa-config.ts), so payment, fulfillment, and ERP providers are configured under **Settings → Integrations** in the Admin instead of in config files.
-- **Translations feature flag** – Medusa's Translation Module is enabled, which is what the seeded locale data and the storefront's translated catalog rely on.
-- **Optional Redis and S3** – the cache, event bus, and workflow engine switch to Redis in production as soon as `REDIS_URL` is set, and in development once you also set `USE_REDIS=true`. File uploads move to S3-compatible storage once `S3_BUCKET` is set and `NODE_ENV` is `production`.
-
-## Requirements
-
-- Node.js v20.19+ (or v22.12+)
-- PostgreSQL v15 or later
-- Redis, optional in development. Development runs the in-memory cache, event bus, and workflow engine unless you set `USE_REDIS=true` alongside `REDIS_URL`.
-
-## Getting Started
-
-This is an ordinary npm package, so npm, yarn, and pnpm all work. Install dependencies first, either with `pnpm install` at the repository root or with `npm install` or `yarn install` in this directory, then run:
-
-```bash
-cp .env.template .env               # then set DATABASE_URL
-pnpm medusa db:migrate              # npx medusa db:migrate, yarn medusa db:migrate
-pnpm medusa user -e admin@medusajs.com -p supersecret
-pnpm seed                           # npm run seed, yarn seed
-pnpm dev                            # npm run dev, yarn dev
-```
-
-The application runs on `http://localhost:9000` and the Admin dashboard on `http://localhost:9000/app`. Copy the publishable API key from **Settings → Publishable API Keys** into the storefront's `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`.
-
-For the full walkthrough, see [Getting Started with Medusa DTC Starter](https://docs.gorgojs.com/tools/medusa-dtc-starter/getting-started).
-
 ## Commands
 
 | Task | pnpm | npm | yarn |
@@ -78,7 +44,7 @@ For the full walkthrough, see [Getting Started with Medusa DTC Starter](https://
 | HTTP integration tests | `pnpm test:integration:http` | `npm run test:integration:http` | `yarn test:integration:http` |
 | Module integration tests | `pnpm test:integration:modules` | `npm run test:integration:modules` | `yarn test:integration:modules` |
 
-Linting runs through `medusa lint`, which reads [`eslint.config.mjs`](eslint.config.mjs). `medusa develop` runs the same check before it starts and refuses to boot on a lint error, while `medusa build` reports problems and builds anyway. Pass `--lint false` to either one to skip it.
+`medusa develop` runs `medusa lint` before it starts and refuses to boot on a lint error, while `medusa build` reports problems and builds anyway. Pass `--lint false` to either one to skip it.
 
 ## Environment Variables
 
@@ -108,53 +74,4 @@ Copy [`.env.template`](.env.template) to `.env`. Only `DATABASE_URL` has to be s
 | `S3_BUCKET`, `S3_ENDPOINT`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_REGION` | S3-compatible file storage, used when `NODE_ENV=production` | — |
 | `MEDUSA_ADMIN_ONBOARDING_NEXTJS_DIRECTORY` | Storefront directory for Medusa's onboarding flow | `medusa-storefront` |
 
-## Project Structure
-
-```
-apps/backend/
-├── medusa-config.ts              # modules, plugins, feature flags
-├── scripts/
-│   └── copy-migration-data.js    # copies seed JSON into the build output
-└── src/
-    ├── admin/                    # scaffold for Admin extensions, with an empty i18n export
-    ├── api/                      # scaffold with Medusa's example store and admin routes
-    ├── emails/                   # React Email templates and email i18n
-    ├── jobs/                     # scheduled jobs, empty
-    ├── links/                    # module links, empty
-    ├── migration-scripts/        # initial-data-seed.ts, lib/ stages, data/ JSON
-    ├── modules/                  # smtp-notification provider
-    ├── subscribers/              # transactional emails and storefront revalidation
-    └── workflows/                # custom workflows, empty
-```
-
-The scaffold and empty directories carry no starter code. Each of them keeps its own README with the Medusa framework reference for the primitive it holds, so you can drop your own widget, route, job, link, or workflow in place.
-
-## Customizing the Seed Data
-
-The seed script reads every stage from JSON, so adapting it to your markets and catalog means editing data files, not TypeScript.
-
-Its only existence check is the sales channel named in `data/store/json/store.json`. While that sales channel exists, the script logs that the store is already seeded and does nothing, so edited data files take effect on a fresh database. If you delete the sales channel and run the script again, every other stage runs again without checking for duplicates, because the workflows it calls do not deduplicate by handle.
-
-See [Customize Seed Data](https://docs.gorgojs.com/tools/medusa-dtc-starter/customize-seed-data) for the file formats, currency rules, and the pre-launch checklist.
-
-## What is Medusa?
-
-Medusa is a set of commerce modules and tools for building commerce applications without reinventing core commerce logic. The modules are open source, published on npm, and can be composed into stores, marketplaces, or anything else that needs commerce primitives.
-
-Read about [Medusa's architecture](https://docs.medusajs.com/learn/introduction/architecture) and [commerce modules](https://docs.medusajs.com/learn/fundamentals/modules/commerce-modules) in the docs.
-
-## What is Gorgo?
-
-Gorgo builds and maintains open-source integrations, extensions, and starters for Medusa, so that adapting the platform to a local market costs less time and code. This starter is one of them. Gorgo also curates a catalog of community and official Medusa plugins and runs the Medusa developer community on Telegram.
-
-Learn more on the [Gorgo website](https://gorgojs.com), browse the [plugin catalog](https://gorgojs.com/medusa/plugins), or read the [DTC Starter documentation](https://docs.gorgojs.com/tools/medusa-dtc-starter).
-
-## Support and Community
-
-Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
-
-More Medusa channels: [GitHub Discussions](https://github.com/medusajs/medusa/discussions), [Discord](https://discord.com/invite/medusajs), [Medusa blog](https://medusajs.com/blog/), [Gorgo blog](https://gorgojs.com/blog/)
-
-## License
-
-MIT — see [LICENSE](../../LICENSE).
+Installation, seed data, deployment, and everything else that spans both apps live in the [root README](../../README.md).
