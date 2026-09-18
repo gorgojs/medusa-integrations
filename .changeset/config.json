@@ -9,7 +9,6 @@
   "updateInternalDependencies": "patch",
   "ignore": [
     "@gorgo/medusa-1c",
-    "@gorgo/medusa-fulfillment-apiship",
     "@gorgo/medusa-payment-robokassa",
     "@gorgo/medusa-payment-tkassa"
   ],
