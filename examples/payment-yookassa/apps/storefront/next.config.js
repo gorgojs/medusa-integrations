@@ -7,27 +7,6 @@ const withNextIntl = createNextIntlPlugin()
 checkEnvVariables()
 
 /**
- * The Medusa version shown in the hero, read from the backend's package.json at
- * build time so the two cannot drift: the daily Update Medusa workflow bumps
- * that dependency, and the next build picks the new number up on its own.
- *
- * Left unset when apps/backend is not part of the checkout, for a storefront
- * copied out of the monorepo. The hero then drops the version segment, and
- * MEDUSA_VERSION can be passed in as a real environment variable instead.
- */
-function readMedusaVersion() {
-  try {
-    const pkg = require(path.join(__dirname, "../backend/package.json"))
-    const range = pkg.dependencies?.["@medusajs/medusa"]
-    return range ? range.replace(/^[\^~]/, "") : undefined
-  } catch {
-    return undefined
-  }
-}
-
-const MEDUSA_VERSION = readMedusaVersion()
-
-/**
  * Medusa Cloud-related environment variables
  */
 const S3_HOSTNAME = process.env.MEDUSA_CLOUD_S3_HOSTNAME
@@ -45,12 +24,6 @@ const nextConfig = {
   // description. Matching every user agent turns metadata back into part of
   // the head that ships with the shell.
   htmlLimitedBots: /.*/,
-  // Inlined into the bundle at build time, so the hero never reads the
-  // backend's package.json at runtime, which output: "standalone" would not
-  // have traced into the deployed app anyway.
-  env: {
-    ...(MEDUSA_VERSION ? { MEDUSA_VERSION } : {}),
-  },
   // Emit .map files for the client bundles so production stack traces and
   // Lighthouse diagnostics resolve to real source.
   productionBrowserSourceMaps: true,

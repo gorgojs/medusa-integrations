@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircleMiniSolid } from "@medusajs/icons"
 import Github from "@modules/common/icons/github"
 import { Button } from "@medusajs/ui"
 import { getTranslations } from "next-intl/server"
+import { dependencies } from "../../../../../package.json"
 
 type HeroFeature = {
   label: string
@@ -19,21 +20,22 @@ const newBadgeStyle: CSSProperties = {
   borderWidth: "0.5px",
 }
 
+// Read from the storefront's own dependency so the number in the hero cannot
+// drift from the SDK we ship. The daily Medusa update bumps the pin, and the
+// next build picks it up. Not translatable, so it lives here rather than in
+// 36 message files.
+const medusaVersion = dependencies["@medusajs/js-sdk"]
+
 const Hero = async () => {
   const t = await getTranslations("Hero")
   const features = t.raw("features") as HeroFeature[]
-  // Set in next.config.js from the backend's Medusa dependency. The version is
-  // not translatable, so it lives here rather than in 36 message files.
-  const medusaVersion = process.env.MEDUSA_VERSION
 
   return (
     <div className="w-full border-b border-ui-border-base bg-ui-bg-subtle">
       <div className="content-container lg:max-w-7xl grid grid-cols-1 lg:grid-cols-2 items-center gap-12 lg:gap-0 py-12 lg:py-40">
         <div className="flex flex-col items-start gap-6">
           <span className="txt-xl text-ui-fg-muted">
-            {medusaVersion
-              ? `${t("eyebrow")} · Medusa v${medusaVersion}`
-              : t("eyebrow")}
+            {`${t("eyebrow")} · Medusa v${medusaVersion}`}
           </span>
           <h1 className="text-4xl lg:text-5xl text-ui-fg-base">
             {t("title")}
