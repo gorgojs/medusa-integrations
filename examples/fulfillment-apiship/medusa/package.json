@@ -15,7 +15,7 @@
   "scripts": {
     "build": "medusa build",
     "db:migrate": "medusa db:migrate",
-    "dev": "yarn predev && yarn && medusa develop",
+    "dev": "medusa develop",
     "dev:tunnel": "concurrently \"yarn dev\" \"yarn tunnel\"",
     "predev": "medusa plugin:add @gorgo/medusa-integration && medusa plugin:add @gorgo/medusa-fulfillment-apiship",
     "seed": "medusa exec ./src/scripts/seed.ts",
@@ -24,7 +24,7 @@
     "tunnel": "lt --port 9000 --subdomain medusa-apiship"
   },
   "dependencies": {
-    "@gorgo/medusa-fulfillment-apiship": "beta",
+    "@gorgo/medusa-fulfillment-apiship": "latest",
     "@gorgo/medusa-integration": "latest",
     "@medusajs/admin-sdk": "2.21.0",
     "@medusajs/cli": "2.21.0",
