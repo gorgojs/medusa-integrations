@@ -6,6 +6,12 @@ import {
 import { updateRegionsWorkflow } from "@medusajs/medusa/core-flows";
 import { getQuery } from "./utils";
 
+const TKASSA_PROVIDER_ID = integrationProviderKey("tkassa", "tkassa-1");
+const YOOKASSA_PROVIDER_ID = integrationProviderKey("yookassa", "yookassa-1");
+const ROBOKASSA_PROVIDER_ID = integrationProviderKey("robokassa", "robokassa-1");
+const APISHIP_PROVIDER_ID = integrationProviderKey("apiship", "apiship-1");
+const ONEC_PROVIDER_ID = integrationProviderKey("1c", "1c-1");
+
 const TKASSA_PAYMENT_PROVIDER_ID = "pp_tkassa_tkassa";
 const YOOKASSA_PAYMENT_PROVIDER_ID = "pp_yookassa_yookassa";
 const ROBOKASSA_PAYMENT_PROVIDER_ID = "pp_robokassa_robokassa";
@@ -21,7 +27,7 @@ const ROBOKASSA_PAYMENT_PROVIDER_ID = "pp_robokassa_robokassa";
 const seedIntegrations = async (container: MedusaContainer) => {
   await upsertIntegrationWorkflow(container).run({
     input: {
-      provider_id: integrationProviderKey("tkassa", "tkassa-1"),
+      provider_id: TKASSA_PROVIDER_ID,
       values: {
         ...(process.env.SEED_TKASSA_TERMINAL_KEY
           ? { terminalKey: process.env.SEED_TKASSA_TERMINAL_KEY }
@@ -41,7 +47,7 @@ const seedIntegrations = async (container: MedusaContainer) => {
 
   await upsertIntegrationWorkflow(container).run({
     input: {
-      provider_id: integrationProviderKey("yookassa", "yookassa-1"),
+      provider_id: YOOKASSA_PROVIDER_ID,
       values: {
         ...(process.env.SEED_YOOKASSA_SHOP_ID
           ? { shopId: process.env.SEED_YOOKASSA_SHOP_ID }
@@ -62,7 +68,7 @@ const seedIntegrations = async (container: MedusaContainer) => {
 
   await upsertIntegrationWorkflow(container).run({
     input: {
-      provider_id: integrationProviderKey("robokassa", "robokassa-1"),
+      provider_id: ROBOKASSA_PROVIDER_ID,
       values: {
         ...(process.env.SEED_ROBOKASSA_MERCHANT_LOGIN
           ? { merchantLogin: process.env.SEED_ROBOKASSA_MERCHANT_LOGIN }
@@ -85,7 +91,7 @@ const seedIntegrations = async (container: MedusaContainer) => {
 
   await upsertIntegrationWorkflow(container).run({
     input: {
-      provider_id: integrationProviderKey("apiship", "apiship-1"),
+      provider_id: APISHIP_PROVIDER_ID,
       values: {
         ...(process.env.SEED_APISHIP_TOKEN
           ? { token: process.env.SEED_APISHIP_TOKEN }
@@ -103,7 +109,7 @@ const seedIntegrations = async (container: MedusaContainer) => {
 
   await upsertIntegrationWorkflow(container).run({
     input: {
-      provider_id: integrationProviderKey("1c", "1c-1"),
+      provider_id: ONEC_PROVIDER_ID,
       values: {
         interval: 0,
         chunkSize: 10 * 1024 * 1024,
