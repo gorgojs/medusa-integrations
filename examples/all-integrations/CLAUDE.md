@@ -1,3 +1,4 @@
 # CLAUDE.md
 
-Read [AGENTS.md](./AGENTS.md) — it holds this project's directory structure, commands, conventions, and off-limits paths. Follow it for all work in this repository.
+Read [AGENTS.md](./AGENTS.md). It holds this repository's structure, commands, conventions, the
+checks that actually catch mistakes, and the things that break silently. Follow it for all work here.

@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "쇼핑 계속하기",
+    "haveAccount": "이미 계정이 있으신가요? 여기에서 확인하세요:",
+    "item": "상품",
+    "myOrders": "내 주문",
+    "orCall": "또는 전화 주세요:",
+    "orderSummary": "주문 내역",
+    "questionsPrefix": "문의 사항이 있으시면 다음 주소로 연락해 주세요:",
+    "shipping": "배송비",
+    "total": "합계",
+    "trackOrder": "배송 조회",
+    "viewOrder": "주문 보기"
+  },
+  "Delivery": {
+    "bodyOrder": "주문 <strong>#{id}</strong>이 배송되었습니다. 모두 이상 없이 도착했기를 바랍니다.",
+    "headingAnon": "주문이 배송되었습니다",
+    "headingWithName": "{name}님, 주문이 배송되었습니다",
+    "preview": "주문 #{id} 배송 완료",
+    "somethingWrong": "문제가 있으면 14일 이내에 알려주시면 처리해 드리겠습니다.",
+    "subject": "주문 #{id} 배송 완료",
+    "textFallback": "주문 #{id}이 배송되었습니다."
+  },
+  "Fulfillment": {
+    "bodyOrder": "주문 <strong>#{id}</strong>의 포장이 끝나 택배사 인계를 기다리고 있습니다.",
+    "deliveryCity": "{city}(으)로 배송됩니다.",
+    "headingAnon": "주문을 준비하고 있습니다",
+    "headingWithName": "{name}님, 주문을 준비하고 있습니다",
+    "nextStep": "상품이 출발하는 대로 운송장 번호를 보내드리겠습니다.",
+    "preview": "주문 #{id} 준비 중",
+    "subject": "주문 #{id} 준비 중",
+    "textFallback": "주문 #{id}의 포장이 완료되었습니다."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. All rights reserved."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "주문 <strong>#{id}</strong>이 취소되었습니다.",
+    "headingAnon": "주문이 취소되었습니다",
+    "headingWithName": "{name}님, 주문이 취소되었습니다",
+    "preview": "주문 #{id} 취소됨",
+    "refundNote": "결제가 완료된 주문이라면 같은 카드로 환불됩니다. 은행 반영까지 보통 영업일 기준 10일까지 걸립니다.",
+    "subject": "주문 #{id} 취소됨",
+    "textFallback": "주문 #{id}이 취소되었습니다."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "주문 <strong>#{id}</strong>이(가) 완료되었습니다. 저희를 선택해 주셔서 감사합니다!",
+    "bodyPromo": "다시 뵙기를 기대합니다. 스토어의 새로운 상품도 확인해 보세요.",
+    "deliveryCity": "배송 완료: {city}.",
+    "headingAnon": "주문이 완료되었습니다!",
+    "headingWithName": "{name}님, 주문이 완료되었습니다!",
+    "preview": "주문 #{id}이(가) 완료되었습니다. 구매해 주셔서 감사합니다!",
+    "subject": "주문 #{id} 완료",
+    "textFallback": "주문 #{id}이(가) 완료되었습니다. 구매해 주셔서 감사합니다!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "주문 <strong>#{id}</strong>이(가) 정상적으로 접수되었습니다.",
+    "deliveryCity": "배송지: {city}.",
+    "headingAnon": "주문이 접수되었습니다!",
+    "headingWithName": "{name}님, 주문이 접수되었습니다!",
+    "preview": "주문 #{id}이(가) 접수되었습니다",
+    "subject": "주문 #{id} 접수",
+    "textFallback": "주문 #{id}이(가) 접수되었습니다.\n\n주문을 준비하여 곧 발송해 드리겠습니다.",
+    "watchStatus": "주문 상태는 계정에서 확인하실 수 있습니다."
+  },
+  "OrderTransfer": {
+    "body": "주문 <strong>#{id}</strong>을(를) 다른 계정으로 이전해 달라는 요청이 접수되었습니다. 본인이 요청하셨다면 아래 버튼으로 이전을 승인해 주세요. 그렇지 않다면 이 메일을 무시하셔도 됩니다.",
+    "button": "요청 확인",
+    "heading": "주문 이전 요청",
+    "hint": "주문은 승인 후에만 이전됩니다. 이전을 요청하지 않으셨다면 주문에는 아무런 변경도 발생하지 않습니다.",
+    "preview": "주문 #{id} 이전 요청",
+    "subject": "주문 #{id} 이전 요청",
+    "textFallback": "주문 #{id} 이전 요청\n\n요청을 확인하려면 링크를 여세요:\n{url}\n\n이전을 요청하지 않으셨다면 이 메일을 무시하셔도 됩니다."
+  },
+  "PasswordReset": {
+    "body": "<strong>{email}</strong> 계정의 비밀번호 재설정 요청을 받았습니다. 아래 버튼을 눌러 새 비밀번호를 설정하세요.",
+    "button": "비밀번호 재설정",
+    "heading": "비밀번호 재설정",
+    "hint": "링크는 <strong>15분간</strong> 유효합니다. 비밀번호 재설정을 요청하지 않으셨다면 이 메일을 무시하셔도 됩니다.",
+    "preview": "비밀번호 재설정, 링크는 15분간 유효합니다",
+    "subject": "비밀번호 재설정",
+    "textFallback": "비밀번호 재설정\n\n비밀번호를 재설정하려면 링크를 여세요 (15분간 유효):\n{url}\n\n비밀번호 재설정을 요청하지 않으셨다면 이 메일을 무시하셔도 됩니다."
+  },
+  "Payment": {
+    "bodyOrder": "주문 <strong>#{id}</strong>의 결제가 정상적으로 완료되었습니다. 발송 준비를 진행하고 있습니다.",
+    "headingAnon": "결제가 완료되었습니다!",
+    "headingWithName": "{name}님, 결제가 완료되었습니다!",
+    "preview": "주문 #{id}의 결제가 완료되었습니다",
+    "subject": "주문 #{id} 결제 완료",
+    "textFallback": "주문 #{id}의 결제가 완료되었습니다.\n\n주문을 준비하여 곧 발송해 드리겠습니다.",
+    "watchStatus": "주문 상태는 계정에서 확인하실 수 있습니다."
+  },
+  "Shipment": {
+    "bodyOrder": "주문 <strong>#{id}</strong>이(가) 배송업체에 인계되었습니다.",
+    "deliveryCity": "배송지: {city}.",
+    "deliveryTime": "일반 배송 기간은 지역에 따라 영업일 기준 1~7일입니다.",
+    "headingAnon": "주문하신 상품이 배송 중입니다!",
+    "headingWithName": "{name}님, 주문하신 상품이 배송 중입니다!",
+    "noTracking": "운송장 번호는 상품이 배송업체에 인계된 후 계정의 주문 정보에 추가됩니다.",
+    "preview": "주문 #{id}이(가) 발송되었습니다",
+    "subject": "주문 #{id} 발송",
+    "textDelivery": "일반 배송 기간은 영업일 기준 1~7일입니다.",
+    "textFallback": "주문 #{id}이(가) 발송되었습니다.",
+    "textTracking": "운송장 번호: {numbers}",
+    "trackLabel": "운송장 번호:",
+    "trackingTitle": "배송 조회 정보"
+  },
+  "Welcome": {
+    "body": "가입해 주셔서 감사합니다! 계정이 준비되었습니다. 이제 더 빠르게 주문하고, 주문 상태를 확인하며, 배송지 주소를 계정에 저장하실 수 있습니다.",
+    "button": "쇼핑 시작하기",
+    "claimOrders": "계정 없이 이전에 주문하셨나요? 여기에서 연결할 수 있습니다:",
+    "claimOrdersLink": "내 주문",
+    "headingAnon": "환영합니다!",
+    "headingWithName": "{name}님, 환영합니다!",
+    "preview": "{store}에 오신 것을 환영합니다!",
+    "subject": "환영합니다!",
+    "textFallback": "환영합니다!\n\n가입해 주셔서 감사합니다. 계정이 준비되었습니다.\n쇼핑 시작하기: {url}"
+  }
+}

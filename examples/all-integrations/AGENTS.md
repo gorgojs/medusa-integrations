@@ -2,152 +2,296 @@
 
 ## Overview
 
-Medusa DTC Starter — a Turborepo workspace monorepo containing a Medusa backend (`@medusajs/medusa` latest, Node 20+, PostgreSQL 15+) and an optional storefront (Next.js, Tanstack, etc...).
+A production-ready Medusa starter for direct-to-consumer commerce, published by Gorgo as a fork of
+the official [medusajs/dtc-starter](https://github.com/medusajs/dtc-starter). The repository is a
+pnpm workspace holding two apps, a Medusa 2 backend (`@dtc/gorgo-medusa-backend`) and a Next.js 15
+storefront (`@dtc/gorgo-medusa-storefront`). Both ship in every clone, unlike upstream where the
+storefront is optional.
+
+People install this repository as a template through `create-medusa-app --repo-url`, so treat every
+file as something a shop owner will read and then edit. The demo catalog, the placeholder copy and
+the `supersecret` defaults are all deliberate.
+
+## Where the Documentation Lives
+
+The READMEs are the reference for installation, environment variables, commands and deployment. Read
+them before answering a question about any of those, and update them when you change what they
+describe.
+
+- [README.md](README.md) covers the repository, its features and the full getting-started walkthrough
+- [apps/backend/README.md](apps/backend/README.md) covers backend commands and every backend variable
+- [apps/storefront/README.md](apps/storefront/README.md) covers storefront commands and every
+  storefront variable
+
+Long-form guides live at
+[docs.gorgojs.com/tools/medusa-dtc-starter](https://docs.gorgojs.com/tools/medusa-dtc-starter) and
+are written in the `gorgojs/medusa-integrations` repository, not here.
 
 ## Directory Structure
 
 ```text
 .
 ├── apps/
-│   ├── backend/                  # Medusa application (@dtc/backend)
-│   │   ├── medusa-config.ts      # Medusa config: DB URL, CORS, secrets, modules
+│   ├── backend/                      # Medusa application, Admin and transactional emails
+│   │   ├── medusa-config.ts          # modules, plugins, feature flags, all env-driven
+│   │   ├── eslint.config.mjs         # read by medusa lint, develop and build
+│   │   ├── jest.config.js            # suites split by TEST_TYPE
+│   │   ├── integration-tests/        # setup.js, referenced by jest.config.js setupFiles
+│   │   ├── scripts/                  # copy-migration-data.js, runs after medusa build
 │   │   └── src/
-│   │       ├── admin/            # Admin dashboard extensions (widgets/, i18n/, routes)
-│   │       ├── api/              # API routes: api/store/*, api/admin/* (file-based)
-│   │       ├── jobs/             # Scheduled jobs
-│   │       ├── links/            # Module links between modules
-│   │       ├── migration-scripts/# Data migration scripts (e.g. initial-data-seed.ts)
-│   │       ├── modules/          # Custom modules (service + models + migrations)
-│   │       ├── subscribers/      # Event subscribers
-│   │       └── workflows/        # Workflows and workflow steps
-│   └── storefront/               # OPTIONAL storefront
-├── eslint.config.ts              # Root ESLint: @medusajs/eslint-plugin recommended
-├── turbo.json                    # Task graph: build, dev, start, lint, test, seed
+│   │       ├── admin/                # scaffold for Admin extensions and their i18n
+│   │       ├── api/                  # custom store and admin routes, file-based
+│   │       ├── emails/               # React Email templates, their i18n (36 locales) and lib/
+│   │       │                         # lib/styles.ts is the one style sheet for all of them
+│   │       ├── jobs/                 # scheduled jobs
+│   │       ├── links/                # module links
+│   │       ├── migration-scripts/    # initial-data-seed.ts, its stages under lib/, JSON under data/
+│   │       ├── modules/              # smtp-notification provider
+│   │       ├── subscribers/          # transactional emails and storefront revalidation
+│   │       └── workflows/            # workflows and steps
+│   └── storefront/                   # Next.js 15 storefront on the App Router
+│       ├── messages/                 # 36 next-intl UI catalogs
+│       ├── next.config.js            # standalone output, next-intl plugin, image hosts
+│       ├── tailwind.config.js        # Medusa UI preset plus a hand-kept content allowlist
+│       ├── public/flags/             # vendored country flags
+│       └── src/
+│           ├── app/                  # [locale] routes, api/, llms.txt, sitemap, robots
+│           ├── i18n/                 # locale list, routing, request config, navigation
+│           ├── lib/                  # data loaders, constants, hooks, utils, geolocation
+│           ├── middleware.ts         # locale and region resolution
+│           ├── modules/              # feature areas: store, products, cart, checkout, account…
+│           └── styles/globals.css    # Tailwind entry and the few global overrides
+├── pnpm-workspace.yaml
+├── turbo.json
+└── package.json
 ```
 
-**`apps/storefront` is optional and may not exist.** It is skipped when the user chooses not to install it. Before running any storefront command, referencing storefront files, or assuming a full-stack change is possible, check that `apps/storefront/` exists. If it doesn't, the project is backend-only — do not scaffold it or suggest it was deleted by mistake.
+The Medusa convention directories (`admin`, `api`, `jobs`, `links`, `modules`, `subscribers`,
+`workflows`) each keep a `README.md` from the framework describing the primitive they hold. Read the
+local one before adding a file there. `emails` and `migration-scripts` are this starter's own and
+carry no such README.
 
-Each app can have its own nested `AGENTS.md`; agents read the nearest one in the directory tree, so put app-specific context there rather than expanding this file.
+Those seven names belong to Medusa's loaders, and `subscribers` is walked recursively. Every `.ts`
+file under it is imported at boot and validated as a subscriber, so a helper parked anywhere inside
+warns on every start. Code that is not one of the seven primitives belongs in a sibling directory of
+its own, the way `emails` and `migration-scripts` already do.
 
 ## Package Manager
 
-**The package manager is chosen at install time and is not fixed.** Detect it before running anything, in this order:
+pnpm 10.11.1, pinned by `packageManager` in the root [package.json](package.json). Node 20.19 or
+later, or 22.12 or later. `engines` excludes v21.
 
-1. The `packageManager` field in the root `package.json` (e.g. `"pnpm@10.11.1"`) — authoritative when present.
-2. The lockfile at the repo root: `pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `package-lock.json` → npm.
+When the pnpm on `PATH` is a different major, run `corepack pnpm <command>`. A mismatched major asks
+to delete and reinstall every `node_modules` in the workspace.
 
-```bash
-node -p "require('./package.json').packageManager ?? 'unset'"
-ls pnpm-lock.yaml yarn.lock package-lock.json bun.lock bun.lockb 2>/dev/null
-```
-
-Use that manager for every command and never introduce a second lockfile. Below, `<pm>` means the detected manager. The `<pm> run <script>` and `<pm> exec <bin>` forms work across npm, pnpm, yarn, and bun; workspace-filter flags do not, so the per-app commands below `cd` into the app instead.
+The starter is meant to install under npm and yarn as well, so never put a pnpm-only construct into a
+package script, and never add a second lockfile.
 
 ## Commands
 
-Run from the repo root unless noted. Turbo skips missing apps automatically.
+Run these from the repository root.
 
-### Development
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Start both apps |
+| `pnpm backend:dev` | Backend only, on `http://localhost:9000`, Admin at `/app` |
+| `pnpm storefront:dev` | Storefront only, on `http://localhost:8000` |
+| `pnpm backend:seed` | Seed the store, 241 regions, 36 locales and the demo catalog |
+| `pnpm build` | Build both apps |
+| `pnpm lint` | Lint both apps |
 
-```bash
-<pm> run dev                # all apps
-<pm> run backend:dev        # backend only (http://localhost:9000, admin at /app)
-<pm> run storefront:dev     # storefront only (http://localhost:8000)
-```
+Two of these come with a catch. `pnpm lint` covers both apps, `medusa lint` in the backend and
+`next lint` in the storefront, and the storefront half loads `next.config.js` and exits when
+`NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` is absent from the environment. `pnpm test` executes nothing at
+all, because neither app defines a `test` task. The backend suites are `test:unit`,
+`test:integration:http` and `test:integration:modules`, run from `apps/backend` against a live
+Postgres.
 
-### Build
+## Verifying Your Work
 
-```bash
-<pm> run build              # all apps
-<pm> run start              # build (via turbo dependsOn) then start
-```
-
-### Lint
-
-```bash
-<pm> run lint                          # all apps via turbo
-cd apps/backend && <pm> run lint       # medusa lint
-cd apps/storefront && <pm> run lint    # next lint
-```
-
-### Test (backend only; the storefront has no test suite)
+The storefront typechecks and lints clean, and `next build` enforces both. Keep it that way, because
+a single new finding now fails the build rather than joining a backlog.
 
 ```bash
-<pm> run test                                              # all test tasks via turbo
-cd apps/backend && <pm> run test:unit                      # **/src/**/__tests__/**/*.unit.spec.ts
-cd apps/backend && <pm> run test:integration:modules       # **/src/modules/*/__tests__/**
-cd apps/backend && <pm> run test:integration:http          # **/integration-tests/http/*.spec.ts
+cd apps/storefront
+npx tsc --noEmit    # types
+npx next lint       # lint
+npx next build      # runs both, then builds
 ```
 
-Single test — pass a path/pattern through to Jest, keeping `TEST_TYPE`:
+[next.config.js](apps/storefront/next.config.js) used to carry `typescript.ignoreBuildErrors` and
+`eslint.ignoreDuringBuilds`. Both are gone. Do not add them back to get a change through, and do not
+reach for `eslint-disable` where the finding is real. The repository has seven deliberate
+`react-hooks/exhaustive-deps` suppressions, each on an effect whose dependency list is intentionally
+narrow. A new one needs the same kind of reason written next to it.
 
-```bash
-cd apps/backend && <pm> run test:unit -- src/modules/foo/__tests__/service.unit.spec.ts
-cd apps/backend && <pm> run test:unit -- -t "returns the cart"
-```
-
-### Database
+The backend lints clean too, through `medusa lint` and
+[eslint.config.mjs](apps/backend/eslint.config.mjs). Mind that `medusa develop` runs the same check
+before it starts and refuses to boot on a lint error, so a lint mistake there breaks `pnpm dev` and
+not just CI. `medusa build` runs it as well, but only reports and carries on.
 
 ```bash
 cd apps/backend
-<pm> exec medusa db:generate <module-name>   # generate migrations for a custom module
-<pm> exec medusa db:migrate                  # run migrations
-<pm> exec medusa user -e admin@test.com -p supersecret
-<pm> run backend:seed                        # from root; seeds initial data
+npx medusa lint    # or npx medusa lint --fix
+npx tsc --noEmit   # types
 ```
-
-## Medusa Skills & MCP Server
-
-These are optional but strongly recommended — they give documentation-backed answers instead of guesses about Medusa APIs. **Use them when available; if they are not, mention to the user that installing them meaningfully improves development on this project.**
-
-**Agentic skills** ([docs](https://docs.medusajs.com/learn/introduction/build-with-llms-ai/agentic-skills)) — if the `medusa-dev` skills are listed as available, load them *before* writing code, not after:
-
-- `building-with-medusa` — any backend work: modules, API routes, workflows, data models, module links
-- `building-admin-dashboard-customizations` — anything under `apps/backend/src/admin`
-- `building-storefronts` — anything under `apps/storefront`
-- `db-generate` / `db-migrate` / `new-user` — the DB and user commands above
-
-If they are not installed, suggest:
-
-```bash
-/plugin marketplace add medusajs/medusa-agent-skills
-/plugin install medusa-dev@medusa
-```
-
-**MCP server** ([docs](https://docs.medusajs.com/learn/introduction/build-with-llms-ai/mcp-server)) — a `medusa` MCP server exposing the official docs. Prefer it over web search or memory for any Medusa API, config, or upgrade question. If it is not connected, suggest:
-
-```bash
-claude mcp add --transport http medusa https://docs.medusajs.com/mcp # or agent equivalent
-```
-
-## Code Style
-
-- **The backend must satisfy `@medusajs/eslint-plugin`'s recommended config** (`eslint.config.ts`). Its rules encode Medusa framework requirements — correct route/workflow/module shapes, not just cosmetics — so a lint failure usually means the code is actually wrong, not just badly formatted. Never disable a `@medusajs/*` rule to make lint pass; fix the code.
-- No semicolons. Double quotes, 2-space indent.
-- Files: kebab-case. Types/classes: PascalCase. Functions/variables: camelCase. DB columns: snake_case.
-- No emojis in code, comments, or commit messages.
 
 ## Conventions
 
-- **Backend routing is file-based.** A store endpoint is `src/api/store/<path>/route.ts` exporting `GET`/`POST`/etc. Don't add a router or register routes manually.
-- **Business logic belongs in workflows**, not in route handlers. Routes resolve and run a workflow; workflows compose steps.
-- Adding a task to `turbo.json` requires declaring its `outputs`, or Turbo will cache nothing/the wrong thing.
+### Formatting Differs Between the Two Apps
 
-## Common Mistakes
+The storefront runs Prettier with `semi: false`
+([.prettierrc.json](apps/storefront/.prettierrc.json)). The backend keeps semicolons and has no
+Prettier config of its own. Match the file you are editing instead of reformatting it. There is no
+repo-wide formatter and no formatting gate, so a reformatting sweep is pure noise in a diff.
 
-- Running storefront commands without checking that `apps/storefront/` exists.
-- Assuming a package manager instead of detecting it, or running a command that creates a second lockfile.
-- Installing a dependency at the root instead of inside the app that needs it (`cd apps/backend && <pm> add <pkg>`).
-- Editing a custom module's model without running `<pm> exec medusa db:generate <module>` — the migration is missing and the change silently never applies.
-- Writing raw SQL or importing DB clients directly in the backend instead of going through module services / workflows.
-- Calling the Medusa API from the storefront without `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`; requests fail with a publishable-key error, not an obvious 401.
-- Running the test task without a reachable PostgreSQL — integration suites need a live DB.
-- Silencing `@medusajs/*` ESLint rules instead of fixing the underlying pattern.
+Lint rules for the storefront live in [.eslintrc.json](apps/storefront/.eslintrc.json), extending
+`next/core-web-vitals` and `next/typescript`. A binding that is unused on purpose takes a leading
+underscore.
 
-## Off-Limits
+### Storefront
 
-- `apps/backend/.medusa/`, `.next/`, `dist/`, `out/`, `.turbo/` — build output, excluded from the workspace and regenerated.
-- The lockfile (`pnpm-lock.yaml`, `yarn.lock`, `package-lock.json` — whichever this install produced) — never hand-edit or delete; change it only as a side effect of a package manager command.
-- `.env` / `.env.local` — never commit, print, or copy secret values out of them. Edit `.env.template` instead when documenting a new variable.
-- Existing migrations in `src/modules/*/migrations/` — add a new migration rather than rewriting one that may already have run.
-- Don't run destructive DB commands (drops, `db:migrate --help`-style flags that reset state) against the user's database without explicit confirmation.
+- Server components by default. Reach for `"use client"` only when you need state, effects, browser
+  APIs or Framer Motion.
+- Data loaders belong in [src/lib/data](apps/storefront/src/lib/data), as `"use server"` modules
+  calling the `sdk` from [lib/config.ts](apps/storefront/src/lib/config.ts). Put a new fetch there
+  rather than in a component.
+- Import through the `@lib/*`, `@modules/*` and `@i18n/*` aliases from
+  [tsconfig.json](apps/storefront/tsconfig.json).
+- Kebab-case directory names under `src/modules`, with the component itself as `index.tsx`.
+- Never hardcode a user-facing string. See Localization below.
+
+### Backend
+
+- Medusa resolves subscribers, jobs, links, modules and API routes from the filesystem, so a new file
+  in the right directory registers itself.
+- [medusa-config.ts](apps/backend/medusa-config.ts) turns optional infrastructure on from the
+  environment. Redis, SMTP and S3 each activate from their own variables, and development stays in
+  memory unless you set `USE_REDIS=true`. Keep anything new to that shape rather than making it
+  mandatory for a first run.
+- The Integration Module is registered with an empty `providers` array on purpose, so a shop owner
+  can add a provider without editing config. Leave the array empty.
+
+## Localization
+
+36 storefront locales, declared once in [src/i18n/config.ts](apps/storefront/src/i18n/config.ts).
+`ar` and `he` are right-to-left, and `rtlLocales` in that file is what every direction-aware consumer
+reads.
+
+Three sets of catalogs have to stay in step, each holding one file per locale.
+
+| Set | Path | Read by |
+|---|---|---|
+| Storefront UI | [apps/storefront/messages](apps/storefront/messages) | next-intl |
+| Emails | [apps/backend/src/emails/i18n/messages](apps/backend/src/emails/i18n/messages) | React Email templates |
+| Seed | [apps/backend/src/migration-scripts/data/i18n/json](apps/backend/src/migration-scripts/data/i18n/json) | the seed script, as catalog translations |
+
+Adding one key means adding it to all 36 files of that set, with a real translation rather than the
+English string copied across. A missing key fails at runtime, not at build time, and this repository
+has no parity gate. Check it yourself after touching a catalog:
+
+```bash
+node -e '
+const fs=require("fs"),p="apps/storefront/messages";
+const keys=f=>Object.entries(JSON.parse(fs.readFileSync(`${p}/${f}`,"utf8")))
+  .flatMap(([s,v])=>typeof v==="object"?Object.keys(v).map(k=>`${s}.${k}`):[s]).sort();
+const files=fs.readdirSync(p),ref=keys("en.json");
+for(const f of files){const d=keys(f).filter(k=>!ref.includes(k)),m=ref.filter(k=>!keys(f).includes(k));
+if(d.length||m.length)console.log(f,{missing:m,extra:d});}
+console.log("checked",files.length,"catalogs against",ref.length,"keys");'
+```
+
+Two pieces of locale plumbing are worth knowing before you touch either.
+
+Routing does not use next-intl's own prefixing. [routing.ts](apps/storefront/src/i18n/routing.ts)
+sets `localePrefix` to `never`, and [middleware.ts](apps/storefront/src/middleware.ts) does the work
+by hand. It resolves the locale from the URL, the `_medusa_locale` cookie or `Accept-Language`,
+redirects a prefix-less path to `/{locale}/…`, and passes the locale to next-intl through the
+`X-NEXT-INTL-LOCALE` header. [request.ts](apps/storefront/src/i18n/request.ts) falls back to the
+cookie when there is no locale in the request.
+
+Translated catalog content comes from an `x-medusa-locale` header that
+[lib/config.ts](apps/storefront/src/lib/config.ts) attaches to every SDK call. A route that is not
+locale-scoped has to use the `fetchWithoutLocale` export instead, otherwise whichever language
+happens to fill the cache first is served to every visitor. [llms.txt](apps/storefront/src/app/llms.txt/route.ts)
+is the worked example.
+
+## Things That Break Silently
+
+**The Tailwind content allowlist.** [tailwind.config.js](apps/storefront/tailwind.config.js) lists
+the `@medusajs/ui` components this storefront actually imports, one glob each, because scanning the
+whole kit cost about 19 KB of unused CSS. Importing a new primitive from `@medusajs/ui` means adding
+its glob there. Skip that and the component renders unstyled, with no error anywhere.
+
+**The middleware matcher.** `config.matcher` in [middleware.ts](apps/storefront/src/middleware.ts)
+excludes `/api`, so a route handler under `src/app/api` gets no locale prefix and no country cookie
+resolution. Take the locale from a query parameter or a cookie there, the way
+[api/payment-return](apps/storefront/src/app/api/payment-return/route.ts) does.
+
+**Cookie `sameSite` on the payment return.** `_medusa_jwt` and `_medusa_cart_id` are set `lax` in
+[lib/data/cookies.ts](apps/storefront/src/lib/data/cookies.ts). A redirect-based payment method
+brings the customer back through a cross-site top-level navigation, and a `strict` cookie is withheld
+on it, which turns the return into a logged-out visitor with no cart. Do not tighten these to
+`strict`.
+
+**The seed is all or nothing.** `initial_data_seed` returns early when the sales channel named in
+`data/store/json/store.json` already exists, so no stage runs on a database that has been seeded
+once. Edits to the JSON data take effect on a fresh database only.
+
+**Only JSON reaches the build.** [scripts/copy-migration-data.js](apps/backend/scripts/copy-migration-data.js)
+copies `src/migration-scripts/data` into the build output and filters everything that is not a
+directory or a `.json` file. Seed data in any other format is missing at runtime after `medusa build`.
+
+## Relationship to Upstream
+
+This repository tracks [medusajs/dtc-starter](https://github.com/medusajs/dtc-starter) by porting
+selected commits, not by merging. The differences that matter when you carry a change across:
+
+| Upstream | Here |
+|---|---|
+| `[countryCode]` route segment | `[locale]` segment, with the country in the `_medusa_country` cookie |
+| No i18n | next-intl, 36 locales, RTL support |
+| Local UI shims in `modules/common/components/ui` | `@medusajs/ui` directly |
+| Multi-step checkout behind `?step=` | one-screen checkout with sheets, in `modules/checkout/components/checkout-*` |
+| Root ESLint with `@medusajs/eslint-plugin` | storefront-only `next lint` |
+| `@dtc/backend`, `@dtc/storefront` | `@dtc/gorgo-medusa-backend`, `@dtc/gorgo-medusa-storefront` |
+| Storefront is optional | both apps always present |
+
+`modules/checkout/components/payment` and `modules/checkout/components/review` are the upstream
+step-based components and nothing imports them. They stay in the tree, and in sync with upstream, so
+that porting a checkout change stays cheap. Update them alongside the live components instead of
+deleting them.
+
+To pull in upstream work:
+
+```bash
+git remote add upstream https://github.com/medusajs/dtc-starter
+git fetch upstream
+git log --oneline --no-merges <last-ported-commit>..upstream/main
+```
+
+Read each commit and decide one at a time. Dependency bumps are usually already applied here, and
+anything touching routing, checkout or the UI shims needs adapting rather than cherry-picking.
+
+## Commits
+
+`<type>: <lowercase subject>` on one line, with `feat`, `fix`, `chore`, `docs` or `refactor` as the
+type. No body, no trailers, no trailing period. Branches are `<type>/<short-description>`.
+
+Split a formatting pass out of a substantive change, always.
+
+## Writing
+
+These rules cover the English prose in this repository, meaning the READMEs, the code comments, the
+`.env.template` annotations and the storefront's `en.json` strings.
+
+- Active voice and second person. "You set `DATABASE_URL`", not "`DATABASE_URL` is set".
+- No em dashes in prose, and no asides set off with a pair of them. Split the sentence instead.
+- A colon only before a list broken out onto its own lines, never inside a running sentence.
+- Drop "under the hood", "simply", "just", "easy" and "obviously" rather than rephrasing them.
+- Headings are statements in Title Case, never questions.
+- Never state a version, a path or a behavior you have not traced to the source in this repository.
+
+The UI strings carry one extra constraint, because they are translated 36 times over. Keep them
+short and free of concatenation, and give ICU placeholders names that survive a translator who cannot
+see the call site.

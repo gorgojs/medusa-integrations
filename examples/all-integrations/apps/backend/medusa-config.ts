@@ -1,60 +1,135 @@
-import { loadEnv, defineConfig } from '@medusajs/framework/utils'
+import { defineConfig, loadEnv } from "@medusajs/framework/utils";
 
-loadEnv(process.env.NODE_ENV || 'development', process.cwd())
+loadEnv(process.env.NODE_ENV || "development", process.cwd());
 
+const isProd = process.env.NODE_ENV === "production";
 const TKASSA_INTEGRATION_ID = "tkassa-1";
 const YOOKASSA_INTEGRATION_ID = "yookassa-1";
 const ROBOKASSA_INTEGRATION_ID = "robokassa-1";
-const ONEC_INTEGRATION_ID = "1c-1"
-const APISHIP_INTEGRATION_ID = "apiship-1"
+const ONEC_INTEGRATION_ID = "1c-1";
+const APISHIP_INTEGRATION_ID = "apiship-1";
+const redisUrl = process.env.REDIS_URL;
+
+// create-medusa-app writes REDIS_URL into every generated .env whether Redis runs
+// or not, so development requires an explicit opt-in.
+const useRedis = Boolean(redisUrl) && (isProd || process.env.USE_REDIS === "true");
+const useSmtp = Boolean(process.env.SMTP_HOST);
+const useS3 = isProd && Boolean(process.env.S3_BUCKET);
+
+const smtpProvider = {
+  resolve: "./src/modules/smtp-notification",
+  id: "smtp",
+  options: {
+    channels: ["email"],
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : undefined,
+    secure: process.env.SMTP_SECURE === "true",
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+    from: process.env.SMTP_FROM,
+    // Shown as the sender's name in the inbox, so the subject lines can stay
+    // about the order alone.
+    from_name: process.env.STORE_NAME,
+    reply_to: process.env.SMTP_REPLY_TO,
+  },
+};
+
+const redisModules = [
+  {
+    resolve: "@medusajs/medusa/cache-redis",
+    options: { redisUrl: process.env.CACHE_REDIS_URL || redisUrl },
+  },
+  {
+    resolve: "@medusajs/medusa/event-bus-redis",
+    options: { redisUrl },
+  },
+  {
+    resolve: "@medusajs/medusa/workflow-engine-redis",
+    options: { redis: { url: redisUrl } },
+  },
+];
+
+const s3Module = {
+  resolve: "@medusajs/medusa/file",
+  options: {
+    providers: [
+      {
+        resolve: "@medusajs/medusa/file-s3",
+        id: "s3",
+        options: {
+          file_url: `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET}`,
+          access_key_id: process.env.S3_ACCESS_KEY,
+          secret_access_key: process.env.S3_SECRET_KEY,
+          region: process.env.S3_REGION,
+          bucket: process.env.S3_BUCKET,
+          endpoint: process.env.S3_ENDPOINT,
+          additional_client_config: { forcePathStyle: true },
+        },
+      },
+    ],
+  },
+};
 
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
+    databaseDriverOptions: { connection: { ssl: false } },
+    redisUrl: useRedis ? redisUrl : undefined,
     http: {
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
       authCors: process.env.AUTH_CORS!,
-      jwtSecret: process.env.JWT_SECRET,
-      cookieSecret: process.env.COOKIE_SECRET,
+      jwtSecret: process.env.JWT_SECRET || "supersecret",
+      cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     },
     cookieOptions: {
       sameSite: "lax",
-      secure: false,
-    }
+      secure: process.env.COOKIE_SECURE === "true",
+    },
   },
   admin: {
     vite: () => {
       return {
+        // Used only during testing, do not enable in production
         server: {
           allowedHosts: true,
         },
-      }
+      };
     },
+  },
+  featureFlags: {
+    translation: true,
   },
   plugins: [
     {
       resolve: "@gorgo/medusa-integration",
       options: {
         encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        // Integration providers plug in here. Browse the catalog at
+        // https://gorgojs.com/medusa/plugins?integrationModule=true or read
+        // https://docs.gorgojs.com/medusa-modules/integration
         providers: [
           {
-            resolve: "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
+            resolve:
+              "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
             id: APISHIP_INTEGRATION_ID,
             options: {},
           },
           {
-            resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+            resolve:
+              "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
             id: TKASSA_INTEGRATION_ID,
             options: {},
           },
           {
-            resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
+            resolve:
+              "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
             id: YOOKASSA_INTEGRATION_ID,
             options: {},
           },
           {
-            resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
+            resolve:
+              "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
             id: ROBOKASSA_INTEGRATION_ID,
             options: {},
           },
@@ -67,9 +142,9 @@ module.exports = defineConfig({
       },
     },
     // Registered as its own plugins (not just referenced from `modules` below) so the
-    // admin build discovers its admin extensions — i18n bundle (src/admin/i18n).
-    // Without this entry the provider still works, but its admin UI never loads
-    // and translation keys render raw (e.g. "provider.name" instead of "My Provider").  
+    // admin build discovers their admin extensions — i18n bundle (src/admin/i18n).
+    // Without this entry a provider still works, but its admin UI never loads and
+    // translation keys render raw (e.g. "tkassa.name" instead of "T-Kassa").
     {
       resolve: "@gorgo/medusa-fulfillment-apiship",
       options: {},
@@ -83,10 +158,6 @@ module.exports = defineConfig({
       options: {},
     },
     {
-      resolve: "@gorgo/medusa-payment-tkassa",
-      options: {},
-    },
-    {
       resolve: "@gorgo/medusa-payment-robokassa",
       options: {},
     },
@@ -96,16 +167,28 @@ module.exports = defineConfig({
     },
   ],
   modules: [
+    { resolve: "@medusajs/medusa/translation" },
     {
       resolve: "@medusajs/medusa/fulfillment",
       options: {
         providers: [
+          // The starter registers this module with no explicit `providers`, which
+          // makes the framework fall back to `manual_manual` on its own. Configuring
+          // ApiShip here replaces that default outright, so the seed's own
+          // `manual_manual` shipping options need it listed explicitly too.
           {
-            resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
+            resolve: "@medusajs/medusa/fulfillment-manual",
+            id: "manual",
+            options: {},
+          },
+          {
+            resolve:
+              "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
             id: "apiship",
             options: {
-              id: APISHIP_INTEGRATION_ID, // must match the provider id used in the integration module above
-            }
+              // must match the provider id used in the integration module above
+              id: APISHIP_INTEGRATION_ID,
+            },
           },
         ],
       },
@@ -118,25 +201,48 @@ module.exports = defineConfig({
             resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
             id: "tkassa",
             options: {
-              id: TKASSA_INTEGRATION_ID // must match the provider id used in the integration module above
+              // must match the provider id used in the integration module above
+              id: TKASSA_INTEGRATION_ID,
             },
           },
           {
-            resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
+            resolve:
+              "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
             id: "yookassa",
             options: {
-              id: YOOKASSA_INTEGRATION_ID // must match the provider id used in the integration module above
+              // must match the provider id used in the integration module above
+              id: YOOKASSA_INTEGRATION_ID,
             },
           },
           {
-            resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
+            resolve:
+              "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
             id: "robokassa",
             options: {
-              id: ROBOKASSA_INTEGRATION_ID // must match the provider id used in the integration module above
+              // must match the provider id used in the integration module above
+              id: ROBOKASSA_INTEGRATION_ID,
             },
           },
         ],
       },
     },
+    {
+      resolve: "@medusajs/medusa/notification",
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/medusa/notification-local",
+            id: "local",
+            options: {
+              name: "Local Notification Provider",
+              channels: ["feed"],
+            },
+          },
+          ...(useSmtp ? [smtpProvider] : []),
+        ],
+      },
+    },
+    ...(useRedis ? redisModules : []),
+    ...(useS3 ? [s3Module] : []),
   ],
-})
+});

@@ -4,6 +4,10 @@ A module is a package of reusable functionalities. It can be integrated into you
 
 > Learn more about modules in [this documentation](https://docs.medusajs.com/learn/fundamentals/modules).
 
+## In this starter
+
+[`smtp-notification`](./smtp-notification) is a working example of a module in this directory: a notification module provider that renders [React Email](https://react.email/) templates and sends them over SMTP with `nodemailer`. It is registered as the `email` channel of the Notification Module in [`medusa-config.ts`](../../medusa-config.ts), and its templates and translations live in [`../emails`](../emails).
+
 To create a module:
 
 ## 1. Create a Data Model

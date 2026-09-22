@@ -1,0 +1,29 @@
+{
+  "name": "Libya",
+  "currency_code": "lyd",
+  "countries": ["ly"],
+  "stock_location": {
+    "name": "Tripoli Warehouse",
+    "address": {
+      "address_1": "شارع عمر المختار 56",
+      "country_code": "ly"
+    }
+  },
+  "shipping_prices": {
+    "courier": 29,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 72,
+    "sweatshirt": 139,
+    "sweatpants": 115,
+    "shorts": 91,
+    "hoodie": 168,
+    "chinoPants": 158,
+    "pufferJacket": 335,
+    "wirelessHeadphones": 450,
+    "electricBike": 5040,
+    "servingPlate": 197,
+    "espressoCup": 72
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "United Arab Emirates",
+  "currency_code": "aed",
+  "countries": ["ae"],
+  "stock_location": {
+    "name": "Abu Dhabi Warehouse",
+    "address": {
+      "address_1": "شارع الكورنيش 15",
+      "country_code": "ae"
+    }
+  },
+  "shipping_prices": {
+    "courier": 22,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 55,
+    "sweatshirt": 106,
+    "sweatpants": 88,
+    "shorts": 70,
+    "hoodie": 128,
+    "chinoPants": 121,
+    "pufferJacket": 255,
+    "wirelessHeadphones": 345,
+    "electricBike": 3850,
+    "servingPlate": 150,
+    "espressoCup": 55
+  }
+}

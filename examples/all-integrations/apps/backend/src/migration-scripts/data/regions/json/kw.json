@@ -1,0 +1,29 @@
+{
+  "name": "Kuwait",
+  "currency_code": "kwd",
+  "countries": ["kw"],
+  "stock_location": {
+    "name": "Kuwait City Warehouse",
+    "address": {
+      "address_1": "شارع الخليج العربي 8",
+      "country_code": "kw"
+    }
+  },
+  "shipping_prices": {
+    "courier": 2,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 5,
+    "sweatshirt": 9,
+    "sweatpants": 7,
+    "shorts": 6,
+    "hoodie": 11,
+    "chinoPants": 10,
+    "pufferJacket": 21,
+    "wirelessHeadphones": 29,
+    "electricBike": 320,
+    "servingPlate": 13,
+    "espressoCup": 5
+  }
+}

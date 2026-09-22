@@ -1,0 +1,103 @@
+{
+  "name": "Nederlands",
+  "translations": {
+    "categories": {
+      "clothing": "Kleding",
+      "coffee": "Koffie",
+      "eTransport": "Elektrisch vervoer",
+      "electronics": "Elektronica",
+      "headphones": "Koptelefoons",
+      "home": "Wonen",
+      "outerwear": "Buitenkleding",
+      "pants": "Broeken",
+      "shirts": "T-shirts",
+      "shorts": "Shorts",
+      "sweatshirts": "Sweaters",
+      "tableware": "Serviesgoed"
+    },
+    "collections": {
+      "new": "Nieuwe collectie"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klassieke zwarte chino met een getailleerde pasvorm en minimalistisch design. Gemaakt van zachte, duurzame katoenen stof met een vleugje stretch voor extra comfort. Met zakken aan de zijkant, riemlussen en een knoopsluiting. Ideaal voor zowel casual als nettere gelegenheden.",
+        "title": "Chino"
+      },
+      "electricBike": {
+        "description": "Matzwarte elektrische mountainbike, gebouwd voor prestaties en dagelijkse veelzijdigheid. Met een lichtgewicht aluminium frame, geïntegreerde accu en krachtige motor voor soepel getrapte ondersteuning op elk terrein. Geschikt voor zowel stadsritten als offroad trails.",
+        "title": "Elektrische fiets"
+      },
+      "espressoCup": {
+        "description": "Zwarte keramische espressokopjes, geschikt voor enkele of dubbele shots. Duurzaam, houdt warmte goed vast en vaatwasserbestendig.",
+        "title": "Espressokopje"
+      },
+      "hoodie": {
+        "description": "Klassieke zwarte hoodie van zachte katoenen stof voor dagelijks draagcomfort. Met een relaxte pasvorm, verstelbaar koord in de capuchon en een kangoeroezak aan de voorkant. Simpel en veelzijdig te combineren, in elk seizoen.",
+        "title": "Hoodie"
+      },
+      "pufferJacket": {
+        "description": "Zwarte gewatteerde jas ontworpen voor warmte en comfort bij koud weer. Met een hoge kraag, voorrits met drukknoopsluiting en meerdere praktische zakken. Licht van gewicht maar duurzaam, voor dagelijks gebruik of buitenactiviteiten.",
+        "title": "Gewatteerde jas"
+      },
+      "servingPlate": {
+        "description": "Een sculpturale serveerschaal van roestvrij staal met een gepolijste spiegelafwerking. De vloeiende, moderne vorm geeft elke tafel een verfijnde uitstraling. Perfect voor fruit, hapjes of decoratieve presentatie. Ontworpen met oog voor zowel functionaliteit als visuele impact, weerkaatst het licht prachtig en past bij elk eigentijds huis of restaurant.",
+        "title": "Serveerschaal"
+      },
+      "shorts": {
+        "description": "Herontdek het gevoel van een klassieke short. Met onze katoenen short zijn alledaagse basics niet langer gewoon.",
+        "title": "Medusa Short"
+      },
+      "sweatpants": {
+        "description": "Herontdek het gevoel van een klassieke joggingbroek. Met onze katoenen joggingbroek zijn alledaagse basics niet langer gewoon.",
+        "title": "Medusa Joggingbroek"
+      },
+      "sweatshirt": {
+        "description": "Herontdek het gevoel van een klassieke sweater. Met onze katoenen sweater zijn alledaagse basics niet langer gewoon.",
+        "title": "Medusa Sweater"
+      },
+      "tShirt": {
+        "description": "Herontdek het gevoel van een klassiek T-shirt. Met onze katoenen T-shirts zijn alledaagse basics niet langer gewoon.",
+        "title": "Medusa T-shirt"
+      },
+      "wirelessHeadphones": {
+        "description": "Matzwarte draadloze koptelefoon met comfortabel over-ear design voor een meeslepende luisterervaring. Zorgt voor helder geluid, stevige bas en een lange batterijduur. Gemaakt voor dagelijks gebruik thuis, op kantoor of onderweg.",
+        "title": "Draadloze over-ear koptelefoon"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Terugbetaling als goodwill of compensatie voor het ongemak",
+        "label": "Klantenservice-aanpassing"
+      },
+      "pricingError": {
+        "description": "Terugbetaling ter correctie van een te hoog bedrag, ontbrekende korting of onjuiste prijs",
+        "label": "Prijsfout"
+      },
+      "shippingIssue": {
+        "description": "Terugbetaling wegens een verloren, vertraagde of verkeerd bezorgde zending",
+        "label": "Verzendprobleem"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Bezorging per koerier",
+      "pickup": "Afhalen"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Levering binnen 2-3 dagen.",
+        "label": "Koerier"
+      },
+      "pickup": {
+        "description": "Afhalen bij een afhaalpunt.",
+        "label": "Afhalen"
+      }
+    },
+    "terms": {
+      "black": "Zwart",
+      "color": "Kleur",
+      "silver": "Zilver",
+      "size": "Maat",
+      "white": "Wit"
+    }
+  }
+}

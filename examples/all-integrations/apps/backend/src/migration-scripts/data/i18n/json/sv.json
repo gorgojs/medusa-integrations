@@ -1,0 +1,103 @@
+{
+  "name": "Svenska",
+  "translations": {
+    "categories": {
+      "clothing": "Kläder",
+      "coffee": "Kaffe",
+      "eTransport": "Elektrisk transport",
+      "electronics": "Elektronik",
+      "headphones": "Hörlurar",
+      "home": "Hem",
+      "outerwear": "Ytterkläder",
+      "pants": "Byxor",
+      "shirts": "T-shirts",
+      "shorts": "Shorts",
+      "sweatshirts": "Sweatshirts",
+      "tableware": "Servis"
+    },
+    "collections": {
+      "new": "Nyheter"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klassiska svarta chinos med skräddarsydd passform och minimalistisk design. Tillverkade i mjukt, slitstarkt bomullstyg med en aning stretch för extra komfort. Har sidfickor, skärphällor och knappstängning. Perfekta för både vardaglig och finare klädsel.",
+        "title": "Chinos"
+      },
+      "electricBike": {
+        "description": "Matt svart eldriven mountainbike byggd för prestanda och vardaglig mångsidighet. Har en lätt aluminiumram, inbyggt batteri och en kraftfull motor för smidig assisterad cykling på alla typer av underlag. Designad för både stadspendling och terrängkörning.",
+        "title": "Elcykel"
+      },
+      "espressoCup": {
+        "description": "Svarta espressokoppar i keramik, designade för enkel eller dubbel shot. Slitstarka, värmebeständiga och tål maskindisk.",
+        "title": "Espressokopp"
+      },
+      "hoodie": {
+        "description": "Klassisk svart luvtröja i mjukt bomullstyg för vardagskomfort. Har en avslappnad passform, justerbar luva med dragsko och en känguruficka fram. Enkel och mångsidig för lagring under alla årstider.",
+        "title": "Luvtröja"
+      },
+      "pufferJacket": {
+        "description": "Vadderad svart dunjacka designad för värme och komfort i kallt väder. Har hög krage, blixtlås fram med tryckknappsstängning och flera fickor för funktionalitet. Lätt men slitstark för vardagsbruk eller utomhusaktiviteter.",
+        "title": "Dunjacka"
+      },
+      "servingPlate": {
+        "description": "Ett skulpturalt serveringsfat i rostfritt stål med polerad spegelblank yta. Dess flytande, moderna form ger ett förfinat inslag till alla bordsdukningar. Perfekt för frukt, förrätter eller dekorativ presentation. Designat för både funktionalitet och visuell effekt, det reflekterar ljuset vackert och kompletterar alla moderna hem- eller restaurangstilar.",
+        "title": "Serveringsfat"
+      },
+      "shorts": {
+        "description": "Föreställ dig känslan av klassiska shorts på nytt. Med våra shorts i bomull är vardagens basplagg inte längre vanliga.",
+        "title": "Medusa shorts"
+      },
+      "sweatpants": {
+        "description": "Föreställ dig känslan av klassiska mjukisbyxor på nytt. Med våra mjukisbyxor i bomull är vardagens basplagg inte längre vanliga.",
+        "title": "Medusa mjukisbyxor"
+      },
+      "sweatshirt": {
+        "description": "Föreställ dig känslan av en klassisk sweatshirt på nytt. Med vår sweatshirt i bomull är vardagens basplagg inte längre vanliga.",
+        "title": "Medusa sweatshirt"
+      },
+      "tShirt": {
+        "description": "Föreställ dig känslan av en klassisk T-shirt på nytt. Med våra T-shirts i bomull är vardagens basplagg inte längre vanliga.",
+        "title": "Medusa T-shirt"
+      },
+      "wirelessHeadphones": {
+        "description": "Matt svarta trådlösa hörlurar med bekväm over-ear-design för en fördjupad lyssningsupplevelse. Ger tydligt ljud, kraftfull bas och lång batteritid. Byggda för vardagligt bruk hemma, på kontoret eller på språng.",
+        "title": "Trådlösa over-ear-hörlurar"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Återbetalning som ges som goodwill eller kompensation för besvär",
+        "label": "Kundtjänstjustering"
+      },
+      "pricingError": {
+        "description": "Återbetalning för att korrigera en överdebitering, utebliven rabatt eller felaktigt pris",
+        "label": "Prisfel"
+      },
+      "shippingIssue": {
+        "description": "Återbetalning på grund av förlorad, försenad eller felaktigt levererad försändelse",
+        "label": "Fraktproblem"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Budleverans",
+      "pickup": "Upphämtning"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Leverans inom 2–3 dagar.",
+        "label": "Bud"
+      },
+      "pickup": {
+        "description": "Hämta upp på ett utlämningsställe.",
+        "label": "Upphämtning"
+      }
+    },
+    "terms": {
+      "black": "Svart",
+      "color": "Färg",
+      "silver": "Silver",
+      "size": "Storlek",
+      "white": "Vit"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Afghanistan",
+  "currency_code": "afn",
+  "countries": [
+    "af"
+  ],
+  "stock_location": {
+    "name": "Kabul Warehouse",
+    "address": {
+      "address_1": "جاده دارالامان 350",
+      "country_code": "af"
+    }
+  },
+  "shipping_prices": {
+    "courier": 420,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1050,
+    "sweatshirt": 2030,
+    "sweatpants": 1680,
+    "shorts": 1330,
+    "hoodie": 2450,
+    "chinoPants": 2310,
+    "pufferJacket": 4900,
+    "wirelessHeadphones": 6580,
+    "electricBike": 73500,
+    "servingPlate": 2870,
+    "espressoCup": 1050
+  }
+}

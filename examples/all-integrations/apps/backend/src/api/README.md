@@ -17,7 +17,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
   });
 }
 ```
-
+ 
 ## Supported HTTP methods
 
 The file based routing supports the following HTTP methods:
