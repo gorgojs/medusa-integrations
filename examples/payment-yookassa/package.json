@@ -32,8 +32,7 @@
     "turbo": "^2.0.14"
   },
   "workspaces": [
-    "apps/**",
-    "!apps/backend/.medusa/**",
-    "!apps/storefront/.next/**"
+    "apps/backend/*",
+    "apps/storefront/*"
   ]
 }
