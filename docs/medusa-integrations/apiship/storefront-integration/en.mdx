@@ -1564,7 +1564,7 @@ This keeps imports clean and consistent, and makes the integration easier to mai
 
 To support ApiShip calculated delivery methods, the delivery step needs an extra UI flow where the customer chooses a specific tariff, and optionally a pickup point. This update adds ApiShip-specific state and modal windows, loads provider names for displaying, and saves the final selection in the cart so the checkout can proceed only after the customer has made a valid choice.
 
-Open [`src/modules/checkout/components/shipping/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
+Open [`src/modules/checkout/components/shipping/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) and add the following:
 
 ![Directory structure in the Medusa Storefront after updating the file for shipping component](/static/apiship/storefront/src-modules-checkout-components-shipping-index.webp)
 

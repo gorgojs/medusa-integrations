@@ -44,7 +44,7 @@ Integration Module for Medusa
 
 <p align="center">
   <a href="https://static.gorgojs.com/videos/integration-module/integration-module.mp4">
-    <img src="https://static.gorgojs.com/videos/integration-module/integration-module-preview-1776169330.webp" alt="Watch the Integration Module demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
+    <img src="https://static.gorgojs.com/videos/integration-module/integration-module-poster-play-1790070529.webp" alt="Watch the Integration Module demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 

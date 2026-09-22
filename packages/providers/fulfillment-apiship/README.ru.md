@@ -44,7 +44,7 @@
 
 <p align="center">
   <a href="https://static.gorgojs.com/videos/apiship/apiship-1776095804.mp4">
-    <img src="https://static.gorgojs.com/videos/apiship/apiship-play-button-1776166893.webp" alt="Смотреть демо-видео плагина ApiShip" width="100%" style="border-radius: 8px; max-width: 720px;">
+    <img src="https://static.gorgojs.com/videos/apiship/apiship-poster-play-1776166893.webp" alt="Смотреть демо-видео плагина ApiShip" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 

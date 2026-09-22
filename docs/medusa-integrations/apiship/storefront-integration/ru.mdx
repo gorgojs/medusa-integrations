@@ -1564,7 +1564,7 @@ export * from «./utils»
 
 Для поддержки рассчитанных способов доставки ApiShip этап доставки требует дополнительного пользовательского потока, где клиент выбирает конкретный тариф и, при необходимости, пункт самовывоза. Это обновление добавляет специфическое для ApiShip состояние и модальные окна, загружает названия провайдеров для отображения и сохраняет окончательный выбор в корзине, чтобы оформление заказа могло продолжиться только после того, как клиент сделал корректный выбор.
 
-Откройте [`src/modules/checkout/components/shipping/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
+Откройте [`src/modules/checkout/components/shipping/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
 
 ![Структура проекта Medusa Storefront после обновления файла для компонента доставки](/static/apiship/storefront/src-modules-checkout-components-shipping-index.webp)
 
