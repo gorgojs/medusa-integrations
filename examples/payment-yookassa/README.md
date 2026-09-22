@@ -1,13 +1,13 @@
 # `@gorgo/medusa-payment-yookassa` example
 
 Example for the [@gorgo/medusa-payment-yookassa](https://www.npmjs.com/package/@gorgo/medusa-payment-yookassa)
-plugin, scaffolded from the [Medusa DTC Starter](https://github.com/gorgojs/medusa-dtc-starter). The
+plugin, scaffolded from the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter). The
 backend lives in [`apps/backend`](./apps/backend) and the storefront in
-[`apps/storefront`](./apps/storefront), both installed from the workspace root with pnpm.
+[`apps/storefront`](./apps/storefront), both installed from the workspace root with yarn.
 
 ## Prerequisites
 
-- All the [common prerequisites](../README.md#prerequisites), pnpm v10+ included.
+- All the [common prerequisites](../README.md#prerequisites)
 - A YooKassa account – [sign in or create one](https://yookassa.ru/joinups/?source=ks), a shop identifier `shopId` and a key `secretKey`.
 
 ## Configuration
@@ -56,11 +56,11 @@ the password `supersecret`, seed the demo catalog and start both apps.
 
    ```bash
    cd apps/backend
-   pnpm dev:tunnel
+   yarn dev:tunnel
    ```
 
    The tunnel runs alongside the backend on `https://medusa-yookassa.loca.lt`, and the storefront has
-   its own `pnpm dev:tunnel`. Add the webhook at
+   its own `yarn dev:tunnel`. Add the webhook at
    [yookassa.ru/my/merchant/integration/http-notifications](https://yookassa.ru/my/merchant/integration/http-notifications)
    in this format:
 
@@ -93,20 +93,3 @@ is ten files. Port them into your own storefront to get the same flow.
 | [`apps/storefront/src/modules/checkout/components/payment-button/providers/yookassa.tsx`](./apps/storefront/src/modules/checkout/components/payment-button/providers/yookassa.tsx) | Sends the customer to the YooKassa payment page |
 | [`apps/storefront/src/app/api/payment-return/route.ts`](./apps/storefront/src/app/api/payment-return/route.ts) | Handles the return from the payment page and places the order unless the webhook got there first |
 | [`apps/storefront/messages/*.json`](./apps/storefront/messages) | Labels YooKassa in all 36 storefront locales, with the payment methods it accepts as the subtitle |
-
-## How the Example Was Scaffolded
-
-The tree comes from the starter at commit
-[`f3823d8`](https://github.com/gorgojs/medusa-dtc-starter/commit/f3823d806005da72eb6e91b3221eeabefd0e912c),
-generated with the Medusa CLI and then given the changes above:
-
-```bash
-pnpm dlx create-medusa-app@latest --repo-url https://github.com/gorgojs/medusa-dtc-starter --no-migrations
-```
-
-`--no-migrations` is deliberate. Without it the generator creates the admin user itself, which opens
-a browser and asks a human to type a password, and only that human ends up knowing it. The generated
-user would also take `admin@medusajs.com` from the one the instructions above create. Migrations, the
-user and the seed all run after generation, from this example's own commands.
-
-To refresh the example against a newer starter, generate it again and re-apply the ten files.
