@@ -54,7 +54,7 @@ const nextConfig = {
       },
     ]
   },
-  // Required so Next standalone traces files from the pnpm workspace root
+  // Required so Next standalone traces files from the yarn workspace root
   outputFileTracingRoot: path.join(__dirname, "../../"),
   reactStrictMode: true,
   logging: {

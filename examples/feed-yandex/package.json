@@ -1,6 +1,5 @@
 {
   "name": "gorgo-medusa-dtc-starter-monorepo",
-  "private": false,
   "description": "Medusa DTC Starter by Gorgo: a Medusa backend and a Next.js storefront for direct-to-consumer commerce. Production-ready.",
   "author": "Gorgo (https://gorgojs.com)",
   "license": "MIT",
@@ -10,13 +9,13 @@
     "url": "git+https://github.com/gorgojs/medusa-dtc-starter.git"
   },
   "bugs": "https://github.com/gorgojs/medusa-dtc-starter/issues",
-  "packageManager": "pnpm@10.11.1",
+  "packageManager": "yarn@4.9.2",
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "dev": "pnpm -r dev",
-    "build": "pnpm -r build",
+    "dev": "turbo dev",
+    "build": "turbo build",
     "start": "turbo start",
     "lint": "turbo lint",
     "test": "turbo test",
@@ -24,14 +23,16 @@
     "backend:dev": "turbo dev --filter=@dtc/gorgo-medusa-backend",
     "storefront:dev": "turbo dev --filter=@dtc/gorgo-medusa-storefront"
   },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.0.5",
-      "@types/react-dom": "19.0.5"
-    }
+  "resolutions": {
+    "@types/react": "19.0.5",
+    "@types/react-dom": "19.0.5"
   },
   "devDependencies": {
-    "turbo": "^2.0.14",
-    "prettier": "^3.2.5"
-  }
+    "prettier": "^3.2.5",
+    "turbo": "^2.0.14"
+  },
+  "workspaces": [
+    "apps/backend/*",
+    "apps/storefront/*"
+  ]
 }
