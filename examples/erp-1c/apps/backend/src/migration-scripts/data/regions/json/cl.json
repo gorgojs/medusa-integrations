@@ -1,0 +1,29 @@
+{
+  "name": "Chile",
+  "currency_code": "clp",
+  "countries": ["cl"],
+  "stock_location": {
+    "name": "Santiago Warehouse",
+    "address": {
+      "address_1": "Avenida Libertador Bernardo O'Higgins 1200",
+      "country_code": "cl"
+    }
+  },
+  "shipping_prices": {
+    "courier": 5700,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 14250,
+    "sweatshirt": 27600,
+    "sweatpants": 22800,
+    "shorts": 18050,
+    "hoodie": 33300,
+    "chinoPants": 31400,
+    "pufferJacket": 66500,
+    "wirelessHeadphones": 89300,
+    "electricBike": 998000,
+    "servingPlate": 39000,
+    "espressoCup": 14250
+  }
+}

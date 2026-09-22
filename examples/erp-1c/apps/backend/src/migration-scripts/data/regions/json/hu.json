@@ -1,0 +1,29 @@
+{
+  "name": "Hungary",
+  "currency_code": "huf",
+  "countries": ["hu"],
+  "stock_location": {
+    "name": "Budapest Warehouse",
+    "address": {
+      "address_1": "Andrássy Út 60",
+      "country_code": "hu"
+    }
+  },
+  "shipping_prices": {
+    "courier": 2280,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 5700,
+    "sweatshirt": 11020,
+    "sweatpants": 9120,
+    "shorts": 7220,
+    "hoodie": 13300,
+    "chinoPants": 12540,
+    "pufferJacket": 26600,
+    "wirelessHeadphones": 35700,
+    "electricBike": 399000,
+    "servingPlate": 15580,
+    "espressoCup": 5700
+  }
+}

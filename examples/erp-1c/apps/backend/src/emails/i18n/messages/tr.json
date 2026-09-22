@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Alışverişe devam et",
+    "haveAccount": "Zaten hesabınız var mı? Şuraya gidin:",
+    "item": "Ürün",
+    "myOrders": "Siparişlerim",
+    "orCall": "veya bizi arayın:",
+    "orderSummary": "Sipariş özeti",
+    "questionsPrefix": "Sorularınız varsa bize şu adresten yazın:",
+    "shipping": "Kargo",
+    "total": "Toplam",
+    "trackOrder": "Siparişi takip et",
+    "viewOrder": "Siparişi görüntüle"
+  },
+  "Delivery": {
+    "bodyOrder": "<strong>#{id}</strong> numaralı sipariş teslim edildi. Umarız her şey yolundadır.",
+    "headingAnon": "Siparişiniz teslim edildi",
+    "headingWithName": "{name}, siparişiniz teslim edildi",
+    "preview": "#{id} numaralı sipariş teslim edildi",
+    "somethingWrong": "Bir sorun varsa 14 gün içinde bize yazın, hallederiz.",
+    "subject": "#{id} numaralı sipariş teslim edildi",
+    "textFallback": "#{id} numaralı sipariş teslim edildi."
+  },
+  "Fulfillment": {
+    "bodyOrder": "<strong>#{id}</strong> numaralı sipariş paketlendi ve kargoya teslim edilmeyi bekliyor.",
+    "deliveryCity": "{city} adresine teslim edilecek.",
+    "headingAnon": "Siparişinizi hazırlıyoruz",
+    "headingWithName": "{name}, siparişinizi hazırlıyoruz",
+    "nextStep": "Paket yola çıkar çıkmaz takip numarasını göndereceğiz.",
+    "preview": "#{id} numaralı sipariş hazırlanıyor",
+    "subject": "#{id} numaralı sipariş hazırlanıyor",
+    "textFallback": "#{id} numaralı sipariş paketlendi."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. Tüm hakları saklıdır."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "<strong>#{id}</strong> numaralı sipariş iptal edildi.",
+    "headingAnon": "Siparişiniz iptal edildi",
+    "headingWithName": "{name}, siparişiniz iptal edildi",
+    "preview": "#{id} numaralı sipariş iptal edildi",
+    "refundNote": "Sipariş ödendiyse tutar aynı karta geri döner. Bankalar bunu genellikle 10 iş gününe kadar sürede yansıtır.",
+    "subject": "#{id} numaralı sipariş iptal edildi",
+    "textFallback": "#{id} numaralı sipariş iptal edildi."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "<strong>#{id}</strong> numaralı sipariş tamamlandı. Bizi tercih ettiğiniz için teşekkürler!",
+    "bodyPromo": "Sizi yeniden görmekten mutluluk duyarız. Mağazamızdaki yenilikleri inceleyin.",
+    "deliveryCity": "Teslim edildi: {city}.",
+    "headingAnon": "Siparişiniz tamamlandı!",
+    "headingWithName": "{name}, siparişiniz tamamlandı!",
+    "preview": "#{id} numaralı sipariş tamamlandı. Alışverişiniz için teşekkürler!",
+    "subject": "#{id} numaralı sipariş tamamlandı",
+    "textFallback": "#{id} numaralı sipariş tamamlandı. Alışverişiniz için teşekkürler!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "<strong>#{id}</strong> numaralı sipariş başarıyla oluşturuldu.",
+    "deliveryCity": "Teslimat yeri: {city}.",
+    "headingAnon": "Siparişiniz oluşturuldu!",
+    "headingWithName": "{name}, siparişiniz oluşturuldu!",
+    "preview": "#{id} numaralı sipariş başarıyla oluşturuldu",
+    "subject": "#{id} numaralı sipariş oluşturuldu",
+    "textFallback": "#{id} numaralı sipariş oluşturuldu.\n\nSiparişinizi hazırlıyoruz ve kısa süre içinde göndereceğiz.",
+    "watchStatus": "Siparişinizin durumunu hesabınızdan takip edebilirsiniz."
+  },
+  "OrderTransfer": {
+    "body": "<strong>#{id}</strong> numaralı siparişin başka bir hesaba devredilmesi talep edildi. Bu talep size aitse aşağıdaki düğmeyle devri onaylayın. Değilse bu e-postayı yok sayın.",
+    "button": "Talebi incele",
+    "heading": "Sipariş devir talebi",
+    "hint": "Sipariş yalnızca onayınızdan sonra devredilir. Devir talebinde bulunmadıysanız siparişinize hiçbir şey olmaz.",
+    "preview": "#{id} numaralı sipariş için devir talebi",
+    "subject": "#{id} numaralı sipariş için devir talebi",
+    "textFallback": "#{id} numaralı sipariş için devir talebi\n\nTalebi incelemek için bağlantıyı açın:\n{url}\n\nDevir talebinde bulunmadıysanız bu e-postayı yok sayın."
+  },
+  "PasswordReset": {
+    "body": "<strong>{email}</strong> hesabı için şifre sıfırlama talebi aldık. Yeni bir şifre belirlemek için aşağıdaki düğmeye tıklayın.",
+    "button": "Şifreyi sıfırla",
+    "heading": "Şifre sıfırlama",
+    "hint": "Bağlantı <strong>15 dakika</strong> geçerlidir. Şifre sıfırlama talebinde bulunmadıysanız bu e-postayı yok sayın.",
+    "preview": "Şifre sıfırlama, bağlantı 15 dakika geçerli",
+    "subject": "Şifre sıfırlama",
+    "textFallback": "Şifre sıfırlama\n\nŞifrenizi sıfırlamak için bağlantıyı açın (15 dakika geçerli):\n{url}\n\nŞifre sıfırlama talebinde bulunmadıysanız bu e-postayı yok sayın."
+  },
+  "Payment": {
+    "bodyOrder": "<strong>#{id}</strong> numaralı siparişin ödemesi başarıyla alındı. Siparişi göndermek üzere hazırlıyoruz.",
+    "headingAnon": "Siparişinizin ödemesi alındı!",
+    "headingWithName": "{name}, siparişinizin ödemesi alındı!",
+    "preview": "#{id} numaralı siparişin ödemesi alındı",
+    "subject": "#{id} numaralı siparişin ödemesi alındı",
+    "textFallback": "#{id} numaralı siparişin ödemesi alındı.\n\nSiparişinizi hazırlıyoruz ve kısa süre içinde göndereceğiz.",
+    "watchStatus": "Siparişinizin durumunu hesabınızdan takip edebilirsiniz."
+  },
+  "Shipment": {
+    "bodyOrder": "<strong>#{id}</strong> numaralı sipariş kargo firmasına teslim edildi.",
+    "deliveryCity": "Teslimat yeri: {city}.",
+    "deliveryTime": "Standart teslimat süresi bölgenize göre 1-7 iş günüdür.",
+    "headingAnon": "Siparişiniz yolda!",
+    "headingWithName": "{name}, siparişiniz yolda!",
+    "noTracking": "Takip numarası, paket kargo firmasına teslim edildikten sonra hesabınızdaki siparişinize eklenecektir.",
+    "preview": "#{id} numaralı sipariş kargoya verildi",
+    "subject": "#{id} numaralı sipariş kargoya verildi",
+    "textDelivery": "Standart teslimat süresi 1-7 iş günüdür.",
+    "textFallback": "#{id} numaralı sipariş kargoya verildi.",
+    "textTracking": "Takip numarası: {numbers}",
+    "trackLabel": "Takip numarası:",
+    "trackingTitle": "Takip bilgileri"
+  },
+  "Welcome": {
+    "body": "Kaydolduğunuz için teşekkürler! Hesabınız hazır. Artık daha hızlı sipariş verebilir, siparişlerinizi takip edebilir ve teslimat adreslerinizi hesabınızda saklayabilirsiniz.",
+    "button": "Alışverişe başla",
+    "claimOrders": "Daha önce hesapsız sipariş verdiniz mi? O siparişleri buradan bağlayabilirsiniz:",
+    "claimOrdersLink": "siparişleriniz",
+    "headingAnon": "Hoş geldiniz!",
+    "headingWithName": "Hoş geldiniz, {name}!",
+    "preview": "{store} mağazasına hoş geldiniz!",
+    "subject": "Hoş geldiniz!",
+    "textFallback": "Hoş geldiniz!\n\nKaydolduğunuz için teşekkürler. Hesabınız hazır.\nAlışverişe başlayın: {url}"
+  }
+}

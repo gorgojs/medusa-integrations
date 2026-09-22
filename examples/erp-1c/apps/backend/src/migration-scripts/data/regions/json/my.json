@@ -1,0 +1,29 @@
+{
+  "name": "Malaysia",
+  "currency_code": "myr",
+  "countries": ["my"],
+  "stock_location": {
+    "name": "Kuala Lumpur Warehouse",
+    "address": {
+      "address_1": "Jalan Tun Perak 15",
+      "country_code": "my"
+    }
+  },
+  "shipping_prices": {
+    "courier": 28,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 71,
+    "sweatshirt": 136,
+    "sweatpants": 113,
+    "shorts": 89,
+    "hoodie": 165,
+    "chinoPants": 155,
+    "pufferJacket": 330,
+    "wirelessHeadphones": 440,
+    "electricBike": 4940,
+    "servingPlate": 193,
+    "espressoCup": 71
+  }
+}

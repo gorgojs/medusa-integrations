@@ -1,0 +1,29 @@
+{
+  "name": "Somalia",
+  "currency_code": "sos",
+  "countries": ["so"],
+  "stock_location": {
+    "name": "Mogadishu Warehouse",
+    "address": {
+      "address_1": "Wadada Maka Al-Mukarama 12",
+      "country_code": "so"
+    }
+  },
+  "shipping_prices": {
+    "courier": 3420,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 8550,
+    "sweatshirt": 16530,
+    "sweatpants": 13680,
+    "shorts": 10830,
+    "hoodie": 19950,
+    "chinoPants": 18810,
+    "pufferJacket": 39900,
+    "wirelessHeadphones": 53600,
+    "electricBike": 599000,
+    "servingPlate": 23400,
+    "espressoCup": 8550
+  }
+}
