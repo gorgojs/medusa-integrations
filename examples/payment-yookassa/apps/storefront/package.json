@@ -21,8 +21,8 @@
   ],
   "scripts": {
     "dev": "next dev --turbopack -p 8000",
-    "dev:tunnel": "concurrently \"npm run dev\" \"npm run tunnel\"",
-    "start:tunnel": "concurrently \"npm run start\" \"npm run tunnel\"",
+    "dev:tunnel": "concurrently \"yarn dev\" \"yarn tunnel\"",
+    "start:tunnel": "concurrently \"yarn start\" \"yarn tunnel\"",
     "tunnel": "lt --port 8000 --subdomain medusa-yookassa-storefront",
     "build": "next build",
     "start": "next start -p 8000",

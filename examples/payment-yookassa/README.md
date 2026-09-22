@@ -30,14 +30,14 @@ through the Integration Module. Leave them blank to enter the credentials in Med
 [Connecting YooKassa](#connecting-yookassa) below.
 
 The rest of the configuration the seed writes either way, auto-capture, the payment description and
-receipts with Atol Online FFD 1.2 on the general taxation system without VAT. They are demo values,
+receipts with ATOL Online FFD 1.2 on the general taxation system without VAT. They are demo values,
 so check them in Admin against what your own shop is registered for.
 
 ## Installation & Development
 
-Follow the [common instructions](../README.md#medusa-dtc-starter-examples) for a Medusa DTC Starter
-example. They install the workspace, migrate the database, create the `admin@medusajs.com` user with
-the password `supersecret`, seed the demo catalog and start both apps.
+Follow the [common instructions](../README.md#installation--development). They install the workspace,
+migrate the database, create the `admin@medusajs.com` user with the password `supersecret`, seed the
+demo catalog and start both apps.
 
 ## Connecting YooKassa
 
@@ -84,7 +84,7 @@ is ten files. Port them into your own storefront to get the same flow.
 | File | Change |
 |---|---|
 | [`apps/backend/medusa-config.ts`](./apps/backend/medusa-config.ts) | Registers the integration provider `yookassa-1`, the plugin itself so the Admin build picks up its i18n, and the payment provider bound to that integration id |
-| [`apps/backend/package.json`](./apps/backend/package.json) | Adds the plugin, the tunnel scripts and `dev:local` for a locally published copy of the plugin |
+| [`apps/backend/package.json`](./apps/backend/package.json) | Adds the plugin, the tunnel scripts and `predev` to link a locally published copy of the plugin before `dev` starts |
 | [`apps/backend/.env.template`](./apps/backend/.env.template) | Points `DB_NAME` at `medusa_payment_yookassa`, documents `COOKIE_SECURE`, and adds the optional `SEED_YOOKASSA_SHOP_ID`/`SEED_YOOKASSA_SECRET_KEY` pair the seed reads |
 | [`apps/backend/src/migration-scripts/lib/regions.ts`](./apps/backend/src/migration-scripts/lib/regions.ts) | Seeds YooKassa as a payment provider of every region, next to manual payment |
 | [`apps/backend/src/migration-scripts/lib/example-data.ts`](./apps/backend/src/migration-scripts/lib/example-data.ts) | Configures YooKassa through the Integration Module, the auto-capture and receipt settings always and the credentials when `SEED_YOOKASSA_SHOP_ID`/`SEED_YOOKASSA_SECRET_KEY` are set, wired into the seed from `initial-data-seed.ts` |
