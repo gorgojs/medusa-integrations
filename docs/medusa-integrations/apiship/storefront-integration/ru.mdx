@@ -29,7 +29,7 @@ ApiShip требует номер телефона получателя для �
 
 Откройте [`src/modules/checkout/components/shipping-address/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и сделайте поле ввода телефона обязательным:
 
-![Структура проекта Medusa Storefront после обновления файла для компонента адреса доставки](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-address-index.png)
+![Структура проекта Medusa Storefront после обновления файла для компонента адреса доставки](/static/apiship/storefront/src-modules-checkout-components-shipping-address-index.webp)
 
 ```tsx title="src/modules/checkout/components/shipping-address/index.tsx"
 <Input
@@ -53,7 +53,7 @@ ApiShip требует номер телефона получателя для �
 
 Откройте [`src/lib/data/cart.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/lib/data/cart.ts#L217-L242) и измените следующее:
 
-![Структура проекта Medusa Storefront после обновления файла для корзины](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-lib-data-cart.png)
+![Структура проекта Medusa Storefront после обновления файла для корзины](/static/apiship/storefront/src-lib-data-cart.webp)
 
 ```ts title="src/lib/data/cart.ts"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
@@ -129,7 +129,7 @@ export async function removeShippingMethodFromCart(shippingMethodId: string) {
 
 Откройте [`src/lib/data/fulfillment.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/lib/data/fulfillment.ts#L70-L134) и добавьте следующие вспомогательные функции:
 
-![Структура проекта Medusa Storefront после обновления файла для фулфилмента](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-lib-data-fulfillment.png)
+![Структура проекта Medusa Storefront после обновления файла для фулфилмента](/static/apiship/storefront/src-lib-data-fulfillment.webp)
 
 ```ts title="src/lib/data/fulfillment.ts"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
@@ -333,7 +333,7 @@ export const retrieveProviders = async (): Promise<ApishipHttpTypes.StoreApiship
 
 Откройте [`src/modules/checkout/components/shipping/apiship/types/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующие типы:
 
-![Структура проекта Medusa Storefront после создания файла для типов ApiShip](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-types-index.png)
+![Структура проекта Medusa Storefront после создания файла для типов ApiShip](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-types-index.webp)
 
 ```ts title="src/modules/checkout/components/shipping/apiship/types/index.ts"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
@@ -384,7 +384,7 @@ export type Chosen = {
 
 Откройте [`src/modules/checkout/components/shipping/apiship/utils/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующие помощники:
 
-![Структура проекта Medusa Storefront после создания файла для утилит](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-utils-index.png)
+![Структура проекта Medusa Storefront после создания файла для утилит](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-utils-index.webp)
 
 ```ts title="src/modules/checkout/components/shipping/apiship/utils/index.ts"
 import {
@@ -484,7 +484,7 @@ export function extractPointIds(map: Record<string, ApishipTariff[]>) {
 
 Откройте [`src/modules/checkout/components/shipping/apiship/apiship-map.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
 
-![Структура проекта Medusa Storefront после создания файла карты пунктов самовывоза](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-apiship-map.png)
+![Структура проекта Medusa Storefront после создания файла карты пунктов самовывоза](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-apiship-map.webp)
 
 ```tsx title="src/modules/checkout/components/shipping/apiship/apiship-map.tsx"
 "use client"
@@ -925,7 +925,7 @@ export const ApishipMap: React.FC<ApishipMapProps> = ({
 
 Откройте [`src/modules/checkout/components/shipping/apiship/apiship-chosen.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
 
-![Структура проекта Medusa Storefront после создания файла для выбранного тарифа и пункта самовывоза](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-apiship-chosen.png)
+![Структура проекта Medusa Storefront после создания файла для выбранного тарифа и пункта самовывоза](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-apiship-chosen.webp)
 
 ```tsx title="src/modules/checkout/components/shipping/apiship/apiship-chosen.tsx"
 "use client"
@@ -1031,7 +1031,7 @@ export const ApishipChosen: React.FC<ApishipChosenProps> = ({
 
 Откройте [`src/modules/checkout/components/shipping/apiship/apiship-pickup-point-modal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
 
-![Структура проекта Medusa Storefront после создания файла для модального окна пункта самовывоза ApiShip](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-apiship-pickup-point-modal.png)
+![Структура проекта Medusa Storefront после создания файла для модального окна пункта самовывоза ApiShip](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-apiship-pickup-point-modal.webp)
 
 ```tsx title="src/modules/checkout/components/shipping/apiship/apiship-pickup-point-modal.tsx"
 "use client"
@@ -1259,7 +1259,7 @@ export const ApishipPickupPointModal: React.FC<ApishipPickupPointModalProps> = (
 
 Открыть [`src/modules/checkout/components/shipping/apiship/apiship-courier-modal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
 
-![Структура проекта Medusa Storefront после создания файла для модального окна курьера ApiShip](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-apiship-courier-modal.png)
+![Структура проекта Medusa Storefront после создания файла для модального окна курьера ApiShip](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-apiship-courier-modal.webp)
 
 ```tsx title="src/modules/checkout/components/shipping/apiship/apiship-courier-modal.tsx"
 "use client"
@@ -1545,7 +1545,7 @@ export const ApishipCourierModal: React.FC<ApishipCourierModalProps> = ({
 
 Откройте [`src/modules/checkout/components/shipping/apiship/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
 
-![Структура проекта Medusa Storefront после создания файла для единой точки входа для интеграции](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-apiship-index.png)
+![Структура проекта Medusa Storefront после создания файла для единой точки входа для интеграции](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-index.webp)
 
 ```ts title="src/modules/checkout/components/shipping/apiship/index.ts"
 export * from «./apiship-courier-modal»
@@ -1566,7 +1566,7 @@ export * from «./utils»
 
 Откройте [`src/modules/checkout/components/shipping/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
 
-![Структура проекта Medusa Storefront после обновления файла для компонента доставки](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/apiship/path-storefront-src-modules-checkout-components-shipping-index.png)
+![Структура проекта Medusa Storefront после обновления файла для компонента доставки](/static/apiship/storefront/src-modules-checkout-components-shipping-index.webp)
 
 ```tsx title="src/modules/checkout/components/shipping/index.tsx"
 // ... другие imports

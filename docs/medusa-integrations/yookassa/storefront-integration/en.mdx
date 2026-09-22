@@ -17,7 +17,7 @@ For the storefront on Next.js, you need to make the following changes:
 
 Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L41-L44) and add YooKassa to the payment provider mapping, plus a helper to recognize its sessions:
 
-{/* TODO: screenshot */}
+![Directory structure in the Medusa Storefront after updating the file for constants](/static/yookassa/storefront/src-lib-constants.webp)
 
 ```ts title="src/lib/constants.tsx"
 export type PaymentInfo = {
@@ -87,7 +87,7 @@ export default YooKassa
 
 Open the same [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L60-L90) and add the return address and the session data builder:
 
-{/* TODO: screenshot */}
+![Directory structure in the Medusa Storefront after updating the file for constants](/static/yookassa/storefront/src-lib-constants.webp)
 
 ```ts title="src/lib/constants.tsx"
 /**
@@ -136,7 +136,7 @@ When initiating a payment for YooKassa, `build` passes a `confirmation` object w
 
 Create [`src/modules/checkout/components/payment-button/providers/yookassa.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/modules/checkout/components/payment-button/providers/yookassa.tsx):
 
-{/* TODO: screenshot */}
+![Directory structure in the Medusa Storefront after creating the file for the YooKassa payment button](/static/yookassa/storefront/src-modules-checkout-components-payment-button-providers-yookassa.webp)
 
 ```ts title="src/modules/checkout/components/payment-button/providers/yookassa.tsx"
 "use client"
@@ -212,7 +212,7 @@ If the `confirmation_url` is missing, the button shows an error message instead 
 
 Import the button and `isYookassa` in [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L3-L17), then add a `case` for it in the dispatcher's `switch`:
 
-{/* TODO: screenshot */}
+![Directory structure in the Medusa Storefront after updating the file for payment button component](/static/yookassa/storefront/src-modules-checkout-components-payment-button-index.webp)
 
 ```ts title="src/modules/checkout/components/payment-button/index.tsx"
 import {
@@ -245,7 +245,7 @@ YooKassa reports the payment status through both a webhook and this redirect, so
 
 Open [`src/app/api/payment-return/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/app/api/payment-return/route.ts#L29-L80) and add the following function:
 
-{/* TODO: screenshot */}
+![Directory structure in the Medusa Storefront after creating the file for API route](/static/yookassa/storefront/src-app-api-payment-return-route.webp)
 
 ```ts title="src/app/api/payment-return/route.ts"
 type ReturnContext = {

@@ -17,7 +17,7 @@ description: "Узнайте, как интегрировать платежны
 
 Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L41-L44) и добавьте ЮKassa в маппинг платёжных провайдеров, а также вспомогательную функцию, распознающую её сессии:
 
-{/* TODO: screenshot */}
+![Структура проекта Medusa Storefront после обновления файла с константами](/static/yookassa/storefront/src-lib-constants.webp)
 
 ```ts title="src/lib/constants.tsx"
 export type PaymentInfo = {
@@ -87,7 +87,7 @@ export default YooKassa
 
 Откройте тот же файл [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L60-L90) и добавьте адрес возврата и построитель данных сессии:
 
-{/* TODO: screenshot */}
+![Структура проекта Medusa Storefront после обновления файла с константами](/static/yookassa/storefront/src-lib-constants.webp)
 
 ```ts title="src/lib/constants.tsx"
 /**
@@ -136,7 +136,7 @@ const paymentSessionDataBuilders: Array<{
 
 Создайте файл [`src/modules/checkout/components/payment-button/providers/yookassa.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/modules/checkout/components/payment-button/providers/yookassa.tsx):
 
-{/* TODO: screenshot */}
+![Структура проекта Medusa Storefront после создания файла для кнопки оплаты ЮKassa](/static/yookassa/storefront/src-modules-checkout-components-payment-button-providers-yookassa.webp)
 
 ```ts title="src/modules/checkout/components/payment-button/providers/yookassa.tsx"
 "use client"
@@ -211,7 +211,7 @@ export default YookassaPaymentButton
 
 Импортируйте кнопку и `isYookassa` в [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L3-L17), затем добавьте `case` для неё в `switch` диспетчера:
 
-{/* TODO: screenshot */}
+![Структура проекта Medusa Storefront после обновления файла для компонента кнопки оплаты](/static/yookassa/storefront/src-modules-checkout-components-payment-button-index.webp)
 
 ```ts title="src/modules/checkout/components/payment-button/index.tsx"
 import {
@@ -244,7 +244,7 @@ import YookassaPaymentButton from "./providers/yookassa"
 
 Откройте [`src/app/api/payment-return/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/app/api/payment-return/route.ts#L29-L80) и добавьте следующую функцию:
 
-{/* TODO: screenshot */}
+![Структура проекта Medusa Storefront после создания файла для API route](/static/yookassa/storefront/src-app-api-payment-return-route.webp)
 
 ```ts title="src/app/api/payment-return/route.ts"
 type ReturnContext = {

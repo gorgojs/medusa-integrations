@@ -19,7 +19,7 @@ To make T-Kassa available as a payment method on the storefront checkout page, y
 
 Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/lib/constants.tsx#L33-L36) and add the following:
 
-![Directory structure in the Medusa Storefront after updating the file for constants](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-lib-constants.png)
+![Directory structure in the Medusa Storefront after updating the file for constants](/static/tkassa/storefront/src-lib-constants.webp)
 
 ```ts title="src/lib/constants.tsx"
 export const paymentInfoMap: Record<
@@ -51,7 +51,7 @@ When integrating T-Kassa, you need to adjust your cookie policy to allow cross-d
 
 Open [`src/lib/data/cookies.ts`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/lib/data/cookies.ts#L79) and update the cookie configuration as follows:
 
-![Directory structure in the Medusa Storefront after updating the file for cookies](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-lib-data-cookies.png)
+![Directory structure in the Medusa Storefront after updating the file for cookies](/static/tkassa/storefront/src-lib-data-cookies.webp)
 
 ```ts title="src/lib/data/cookies.ts"
 export const setCartId = async (cartId: string) => {
@@ -74,7 +74,7 @@ To redirect a customer to T-Kassa, the payment session must be properly initiali
 
 Open [`src/modules/checkout/components/payment/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/modules/checkout/components/payment/index.tsx#L90-L91) and update the payment initialization logic to include T-Kassa's redirect URLs:
 
-![Directory structure in the Medusa Storefront after updating the file for payment component](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-modules-checkout-components-payment-index.png)
+![Directory structure in the Medusa Storefront after updating the file for payment component](/static/tkassa/storefront/src-modules-checkout-components-payment-index.webp)
 
 ```ts title="src/modules/checkout/components/payment/index.tsx"
 import { getBaseURL } from "@lib/util/env"
@@ -115,7 +115,7 @@ Medusa storefront requires a dedicated payment button component for each payment
 
 Open [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/modules/checkout/components/payment-button/index.tsx#L163-L211) and add the following code:
 
-![Directory structure in the Medusa Storefront after updating the file for payment button component](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-modules-checkout-components-payment-button-index.png)
+![Directory structure in the Medusa Storefront after updating the file for payment button component](/static/tkassa/storefront/src-modules-checkout-components-payment-button-index.webp)
 
 ```ts title="src/modules/checkout/components/payment-button/index.tsx"
 import { 
@@ -212,7 +212,7 @@ After the customer completes payment on the T-Kassa page, he is redirected back 
 
 Create the [`src/app/api/capture-payment/[cartId]/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/616703d5b2af2b3a9efc1a418632301585daac4b/examples/payment-tkassa/medusa-storefront/src/app/api/capture-payment/%5BcartId%5D/route.ts) file with the following content:
 
-![Directory structure in the Medusa Storefront after creating the file for API route](https://static.gorgojs.com/docs/medusa-integrations/storefront-integration/payment/path-storefront-src-app-api-capture-payment-cartid-route.png)
+![Directory structure in the Medusa Storefront after creating the file for API route](/static/tkassa/storefront/src-app-api-capture-payment-cartid-route.webp)
 
 ```ts title="src/app/api/capture-payment/[cartId]/route.ts"
 import { NextRequest, NextResponse } from "next/server"
