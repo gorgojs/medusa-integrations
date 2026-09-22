@@ -32,7 +32,7 @@
     "turbo": "^2.0.14"
   },
   "workspaces": [
-    "apps/backend/*",
-    "apps/storefront/*"
+    "apps/backend",
+    "apps/storefront"
   ]
 }

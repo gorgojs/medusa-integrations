@@ -25,11 +25,11 @@
     "tunnel": "lt --port 9000 --subdomain medusa-all"
   },
   "dependencies": {
-    "@gorgo/medusa-1c": "beta",
-    "@gorgo/medusa-fulfillment-apiship": "beta",
+    "@gorgo/medusa-1c": "latest",
+    "@gorgo/medusa-fulfillment-apiship": "latest",
     "@gorgo/medusa-integration": "latest",
-    "@gorgo/medusa-payment-robokassa": "beta",
-    "@gorgo/medusa-payment-tkassa": "beta",
+    "@gorgo/medusa-payment-robokassa": "latest",
+    "@gorgo/medusa-payment-tkassa": "latest",
     "@gorgo/medusa-payment-yookassa": "latest",
     "@medusajs/admin-sdk": "2.21.0",
     "@medusajs/admin-shared": "2.21.0",
