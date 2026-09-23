@@ -58,9 +58,9 @@ run everything from `apps/backend`.
    filled every provider's behavior settings, and the credentials too for whichever `SEED_*`
    variables your `.env` carried. Fill in what is still empty under each provider's **Credentials**
    section. See each provider's own settings guide:
-   [T-Kassa](https://docs.gorgojs.com/medusa-integrations/t-kassa/settings-beta),
+   [T-Kassa](https://docs.gorgojs.com/medusa-integrations/t-kassa/settings),
    [YooKassa](https://docs.gorgojs.com/medusa-integrations/yookassa/settings),
-   [Robokassa](https://docs.gorgojs.com/medusa-integrations/robokassa/settings-beta),
+   [Robokassa](https://docs.gorgojs.com/medusa-integrations/robokassa/settings),
    [ApiShip](https://docs.gorgojs.com/medusa-integrations/apiship/settings),
    [1C](https://docs.gorgojs.com/medusa-integrations/1c-enterprise/settings).
 

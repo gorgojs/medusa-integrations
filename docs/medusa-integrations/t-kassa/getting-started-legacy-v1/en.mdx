@@ -1,0 +1,174 @@
+---
+title: "Getting Started with T-Kassa Payment for Medusa (legacy v1)"
+description: "In this document, you’ll learn how to install and configure the T-Kassa payment provider by T-Bank for Medusa"
+---
+
+# {frontmatter.title}
+
+In this document, you’ll learn how to install and configure the T-Kassa payment provider by T-Bank for Medusa.
+
+<Note type="warning">
+
+This guide covers configuring the legacy 1.x version, where you set the plugin options in `medusa-config.js`. The current version 2 keeps these settings in the [Integration Module](/medusa-modules/integration), so a store admin edits them in Admin without changing configuration files or redeploying. For a new installation, follow [Getting Started with T-Kassa Payment for Medusa](/medusa-integrations/t-kassa/getting-started).
+
+</Note>
+
+## Requirements
+
+- Medusa v2.14.0 or later
+- Node.js v20 or later
+- A T-Business account with T-Kassa internet acquiring – [sign in or create one](https://www.tbank.ru/kassa/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
+
+---
+
+## Installation
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-payment-tkassa
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-payment-tkassa
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Configuration
+
+Add the provider configuration in your `medusa-config.js` file of the Medusa admin application:
+
+```ts title="medusa-config.js"
+# ...
+module.exports = defineConfig({
+  # ...
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
+            id: "tkassa",
+            options: {
+              terminalKey: process.env.TKASSA_TERMINAL_KEY,
+              password: process.env.TKASSA_PASSWORD,
+              capture: true,
+              useReceipt: true,
+              ffdVersion: "1.05",
+              taxation: "osn",
+              taxItemDefault: "none",
+              taxShippingDefault: "none"
+            },
+          }
+        ]
+      }
+    }
+  ]
+})
+```
+
+Add environment variables with your shop identifier `TerminalKey` and secret `Password` from your T-Business account:
+
+```text title=".env"
+TKASSA_TERMINAL_KEY=123456789
+TKASSA_PASSWORD=supersecret
+```
+
+---
+
+## Provider Options
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "terminalKey",
+      type: "string",
+      description: "Terminal key provided by T-Kassa (required for authentication)",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "password",
+      type: "string",
+      description: "Password for request signing (required for authentication)",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "capture",
+      type: "boolean",
+      description: "Automatic payment capture:\n- `true` for one-step payment, passes `O` to T-Kassa API\n- `false` for two-step payment, passes `T` to T-Kassa API",
+      optional: true,
+      defaultValue: "true",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "useReceipt",
+      type: "boolean",
+      description: "Enable receipt generation according to Russian fiscal data format (FFD)",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "ffdVersion",
+      type: "enum",
+      description: "Fiscal data format version.\nApplicable only if `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "taxation",
+      type: "enum",
+      description: "Tax system type:\n- `osn` - General\n- `usn_income` - Simplified (income)\n- `usn_income_outcome` - Simplified (income-expenses)\n- `esn` - Agricultural\n- `patent` - Patent\nApplicable only if `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "taxItemDefault",
+      type: "enum",
+      description: "Default VAT rate for products:\n- `none` - No VAT\n- `vat0` - 0%\n- `vat5` - 5%\n- `vat7` - 7%\n- `vat10` - 10%\n- `vat20` - 20%\n- `vat105` - 5/105\n- `vat107` - 7/107\n- `vat110` - 10/110\n- `vat120` - 20/120\nApplicable only if `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "taxShippingDefault",
+      type: "enum",
+      description: "Default VAT rate for shipping, same options as `taxItemDefault`.\nApplicable only if `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+---
+
+## Webhook Setup
+
+To properly handle payment notifications from T-Kassa, configure webhooks in your T-Business account as following:
+
+1. Navigate to `Internet acquiring` → `Shops` → Choose your shop → `Terminals` → Choose `Testing` or `Working` Terminal → Click `Settings` to open the setting window
+
+2. Choose to send Notifications `Via HTTP protocol`
+
+3. Add a URL like:
+    ```
+    https://$YOUR_MEDUSA_DOMAIN/hooks/payment/tkassa_tkassa
+    ```
+    Change `{YOUR_MEDUSA_DOMAIN}` with your medusa store domain.
+
+<Note type="warning">T-Kassa expects an `OK` response message to confirm successful webhook processing and to prevent duplicate notifications. Currently, Medusa does not natively support custom webhook response messages, but webhooks are still processed correctly without this. For more details, check out the [related discussion](https://github.com/medusajs/medusa/discussions/12887).</Note>

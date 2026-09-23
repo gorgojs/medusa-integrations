@@ -45,7 +45,7 @@ demo catalog and start both apps.
    The seed has filled every setting, and the credentials too when your `.env` carried them. Fill in
    the merchant login and the passwords under **Credentials** if they are still empty, then set test
    mode, auto-capture and the receipt parameters to match your shop. See
-   [Manage Robokassa Settings in Medusa Admin](https://docs.gorgojs.com/medusa-integrations/robokassa/settings-beta).
+   [Manage Robokassa Settings in Medusa Admin](https://docs.gorgojs.com/medusa-integrations/robokassa/settings).
 
 2. The seed already lists Robokassa among the payment providers of all 241 regions, so nothing to do
    here. A region you add by hand needs it too, under **Settings → Regions**, since a provider

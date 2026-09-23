@@ -9,9 +9,10 @@ In this document, you'll learn how to install and configure the Robokassa paymen
 
 ## Requirements
 
-- Medusa v2.14.0 or later
+- Medusa v2.17.2 or later
 - Node.js v20 or later
 - A Robokassa account – [sign in or create one](https://login.robokassa.ru/reg?promoCode=gorgo)
+- [Integration Module](/medusa-modules/integration)
 
 ---
 
@@ -20,12 +21,12 @@ In this document, you'll learn how to install and configure the Robokassa paymen
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-payment-robokassa
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-robokassa
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-payment-robokassa
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-robokassa
     ```
   </CodeTab>
 </CodeTabs>
@@ -38,9 +39,32 @@ Add the provider configuration in your `medusa-config.js` file of the Medusa adm
 
 ```ts title="medusa-config.js"
 // ...
+const ROBOKASSA_INTEGRATION_ID = "robokassa-1"
+
 module.exports = defineConfig({
   // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
+            id: ROBOKASSA_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-robokassa",
+      options: {},
+    },
+  ],
   modules: [
+    // ...
     {
       resolve: "@medusajs/medusa/payment",
       options: {
@@ -49,35 +73,21 @@ module.exports = defineConfig({
             resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
             id: "robokassa",
             options: {
-              merchantLogin: process.env.ROBOKASSA_MERCHANT_LOGIN,
-              hashAlgorithm: process.env.ROBOKASSA_HASH_ALGORITHM,
-              password1: process.env.ROBOKASSA_PASSWORD_1,
-              password2: process.env.ROBOKASSA_PASSWORD_2,
-              testPassword1: process.env.ROBOKASSA_TEST_PASSWORD_1,
-              testPassword2: process.env.ROBOKASSA_TEST_PASSWORD_2,
-              capture: false,  // default is true
-              isTest: true,  // default is false
-            },
-          }
-        ]
-      }
-    }
-  ]
+              id: ROBOKASSA_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
 })
 ```
 
-Add environment variables with your shop identifier `merchantLogin`, hash calculation algorithm `hashAlgorithm`, secret passwords `password1`, `password2`, and secret passwords for testing `testPassword1`, `testPassword2`:
+Add environment variables with your secret `Encryption Key`:
 
 ```text title=".env"
-ROBOKASSA_MERCHANT_LOGIN=test-shop
-ROBOKASSA_HASH_ALGORITHM=md5
-ROBOKASSA_PASSWORD_1=supersecret
-ROBOKASSA_PASSWORD_2=supersecret
-ROBOKASSA_TEST_PASSWORD_1=supersecret
-ROBOKASSA_TEST_PASSWORD_2=supersecret
+INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
-
-<Note type="warning">`ROBOKASSA_HASH_ALGORITHM` must be one of the following values corresponding to the value in the Robokassa account: `md5`, `sha1`, `sha256`, `sha384`, `sha512` or `ripemd160` (note, an error occurs for `ripemd160` on the provider's side)</Note>
 
 ---
 
@@ -87,104 +97,13 @@ ROBOKASSA_TEST_PASSWORD_2=supersecret
   sectionTitle="ProviderOptions"
   types={[
     {
-      name: "merchantLogin",
+      name: "id",
       type: "string",
-      description: "The Robokassa store ID that you created when creating the store.",
+      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
       optional: false,
       expandable: false,
       children: []
     },
-    {
-      name: "hashAlgorithm",
-      type: "enum",
-      description: "Signature algorithm used to compute and verify payment signatures:\n- `md5`\n- `sha1`\n- `sha256`\n- `sha384`\n- `sha512`",
-      optional: false,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "password1",
-      type: "string",
-      description: "Technical password #1 used to compute the signature when initiating a payment.",
-      optional: false,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "password2",
-      type: "string",
-      description: "Technical password #2 used to verify the signature in the payment notification.",
-      optional: false,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "testPassword1",
-      type: "string",
-      description: "Test password #1 (from store settings) used to compute signatures in test mode.\nApplicable only if `isTest` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "testPassword2",
-      type: "string",
-      description: "Test password #2 used to verify notifications in test mode.\nApplicable only if `isTest` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "capture",
-      type: "boolean",
-      description: "Automatic payment capture:\n- `true` for one-step payment\n- `false` for two-step payment (pre-authorization)",
-      optional: true,
-      defaultValue: "true",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "isTest",
-      type: "boolean",
-      description: "Enables test mode.",
-      optional: true,
-      defaultValue: "false",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "useReceipt",
-      type: "boolean",
-      description: "Enable receipt generation according to Russian fiscal data format (FFD).",
-      optional: true,
-      defaultValue: "false",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxation",
-      type: "enum",
-      description: "Tax system type:\n- `osn` - General\n- `usn_income` - Simplified (income)\n- `usn_income_outcome` - Simplified (income-expenses)\n- `esn` - Agricultural\n- `patent` - Patent\nApplicable only if `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxItemDefault",
-      type: "enum",
-      description: "Default VAT rate for products:\n- `none` - No VAT\n- `vat0` - 0%\n- `vat5` - 5%\n- `vat7` - 7%\n- `vat10` - 10%\n- `vat20` - 20%\n- `vat105` - 5/105\n- `vat107` - 7/107\n- `vat110` - 10/110\n- `vat120` - 20/120\nApplicable only if `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxShippingDefault",
-      type: "enum",
-      description: "Default VAT rate for shipping, same options as `taxItemDefault`.\nApplicable only if `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    }
   ]}
 />
 

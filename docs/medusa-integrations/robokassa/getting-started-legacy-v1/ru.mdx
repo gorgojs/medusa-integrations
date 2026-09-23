@@ -1,0 +1,209 @@
+---
+title: "Начало работы с Robokassa для Medusa (устаревшая v1)"
+description: "В этом документе вы узнаете, как установить и настроить платежный провайдер Robokassa для Medusa"
+---
+
+# {frontmatter.title}
+
+В этом документе вы узнаете, как установить и настроить платежный провайдер Robokassa для Medusa.
+
+<Note type="warning">
+
+Это руководство описывает настройку устаревшей версии 1.x, в которой вы задаёте параметры плагина в `medusa-config.js`. Текущая версия 2 хранит эти настройки в [Модуле интеграций](/medusa-modules/integration), поэтому администратор магазина меняет их в Admin без правок конфигурации и повторного развёртывания. Для новой установки используйте [Начало работы с Robokassa для Medusa](/medusa-integrations/robokassa/getting-started).
+
+</Note>
+
+## Требования
+
+- Medusa v2.14.0 или новее
+- Node.js v20 или новее
+- Аккаунт Robokassa – [зарегистрируйтесь или войдите](https://login.robokassa.ru/reg?promoCode=gorgo)
+
+---
+
+## Установка
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-payment-robokassa
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-payment-robokassa
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Добавьте конфигурацию провайдера в `medusa-config.js` вашего приложения Medusa:
+
+```ts title="medusa-config.js"
+// ...
+module.exports = defineConfig({
+  // ...
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
+            id: "robokassa",
+            options: {
+              merchantLogin: process.env.ROBOKASSA_MERCHANT_LOGIN,
+              hashAlgorithm: process.env.ROBOKASSA_HASH_ALGORITHM,
+              password1: process.env.ROBOKASSA_PASSWORD_1,
+              password2: process.env.ROBOKASSA_PASSWORD_2,
+              testPassword1: process.env.ROBOKASSA_TEST_PASSWORD_1,
+              testPassword2: process.env.ROBOKASSA_TEST_PASSWORD_2,
+              capture: false,  // по умолчанию true
+              isTest: true,    // по умолчанию false
+            },
+          }
+        ]
+      }
+    }
+  ]
+})
+```
+
+Добавьте следующие переменные окружения: идентификатор магазина `merchantLogin`, алгоритм подписи `hashAlgorithm`, секретные пароли `password1`, `password2`, а также тестовые пароли `testPassword1`, `testPassword2`:
+
+```text title=".env"
+ROBOKASSA_MERCHANT_LOGIN=test-shop
+ROBOKASSA_HASH_ALGORITHM=md5
+ROBOKASSA_PASSWORD_1=supersecret
+ROBOKASSA_PASSWORD_2=supersecret
+ROBOKASSA_TEST_PASSWORD_1=supersecret
+ROBOKASSA_TEST_PASSWORD_2=supersecret
+```
+
+<Note type="warning">Значение `ROBOKASSA_HASH_ALGORITHM` должно совпадать с настройкой в аккаунте Robokassa и быть одним из: `md5`, `sha1`, `sha256`, `sha384`, `sha512` или `ripemd160` (обратите внимание: для `ripemd160` возможны ошибки на стороне провайдера).</Note>
+
+---
+
+## Параметры провайдера
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "merchantLogin",
+      type: "string",
+      description: "Идентификатор магазина Robokassa.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "hashAlgorithm",
+      type: "enum",
+      description: "Алгоритм подписи, используемый для расчёта и проверки подписей платежей:\n- `md5`\n- `sha1`\n- `sha256`\n- `sha384`\n- `sha512`",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "password1",
+      type: "string",
+      description: "Технический пароль №1 для расчёта подписи при инициализации платежа.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "password2",
+      type: "string",
+      description: "Технический пароль №2 для проверки подписи в уведомлениях об оплате.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "testPassword1",
+      type: "string",
+      description: "Тестовый пароль №1 для расчёта подписей в тестовом режиме.\nПрименимо только при `isTest` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "testPassword2",
+      type: "string",
+      description: "Тестовый пароль №2 для проверки уведомлений в тестовом режиме.\nПрименимо только при `isTest` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "capture",
+      type: "boolean",
+      description: "Определяет тип проведения платежа:\n- `true` - одностадийная оплата\n- `false` - двухстадийная оплата (предавторизация)",
+      optional: true,
+      defaultValue: "true",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "isTest",
+      type: "boolean",
+      description: "Включает тестовый режим.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "useReceipt",
+      type: "boolean",
+      description: "Включает формирование онлайн-чеков по 54-ФЗ.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "taxation",
+      type: "enum",
+      description: "Система налогообложения:\n- `osn` - общая СН\n- `usn_income` - упрощенная СН (доходы)\n- `usn_income_outcome` - упрощенная СН (доходы минус расходы)\n- `esn` - единый сельскохозяйственный налог\n- `patent` - патентная СН\nПрименимо только при `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "taxItemDefault",
+      type: "enum",
+      description: "Ставка НДС по умолчанию для товаров:\n- `none` - без НДС\n- `vat0` - 0%\n- `vat5` - 5%\n- `vat7` - 7%\n- `vat10` - 10%\n- `vat20` - 20%\n- `vat105` - 5/105\n- `vat107` - 7/107\n- `vat110` - 10/110\n- `vat120` - 20/120\nПрименимо только при `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "taxShippingDefault",
+      type: "enum",
+      description: "Ставка НДС по умолчанию для доставки, аналогично `taxItemDefault`.\nПрименимо только при `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+---
+
+## Настройка вебхуков
+
+Чтобы корректно обрабатывать платежные уведомления от Robokassa, настройте URL вебхука в вашем аккаунте Robokassa следующим образом:
+
+В настройках магазина Robokassa укажите **Метод отправки данных на Result URL** - `POST`, единственный метод, который принимает роут вебхука, и задайте **Result URL** в формате:
+
+``` title="Webhook URL"
+https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/robokassa_robokassa
+```
+
+Robokassa будет отправлять обновления статуса платежей на этот URL, что позволяет Medusa обновлять статус платежа соответствующим образом.

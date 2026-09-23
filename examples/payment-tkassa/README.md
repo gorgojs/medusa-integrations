@@ -45,7 +45,7 @@ demo catalog and start both apps.
    seed has filled every setting, and the credentials too when your `.env` carried them. Fill in the
    terminal key and the password under **Credentials** if they are still empty, then set auto-capture
    and the receipt parameters to match your shop. See
-   [Manage T-Kassa Settings in Medusa Admin](https://docs.gorgojs.com/medusa-integrations/t-kassa/settings-beta).
+   [Manage T-Kassa Settings in Medusa Admin](https://docs.gorgojs.com/medusa-integrations/t-kassa/settings).
 
 2. The seed already lists T-Kassa among the payment providers of all 241 regions, so nothing to do
    here. A region you add by hand needs it too, under **Settings → Regions**, since a provider

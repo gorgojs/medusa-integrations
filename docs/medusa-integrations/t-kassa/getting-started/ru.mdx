@@ -9,9 +9,10 @@ description: "В этом документе вы узнаете, как уст�
 
 ## Требования
 
-- Medusa v2.14.0 или новее
+- Medusa v2.17.2 или новее
 - Node.js v20 или новее
 - Аккаунт Т-Бизнес с подключённым интернет-эквайрингом Т-Касса – [зарегистрируйтесь или войдите](https://www.tbank.ru/kassa/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
+- [Модуль интеграций](/medusa-modules/integration)
 
 ---
 
@@ -20,12 +21,12 @@ description: "В этом документе вы узнаете, как уст�
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-payment-tkassa
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-payment-tkassa
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
     ```
   </CodeTab>
 </CodeTabs>
@@ -37,10 +38,33 @@ description: "В этом документе вы узнаете, как уст�
 Добавьте конфигурацию провайдера в файл `medusa-config.js` в приложении Medusa Admin:
 
 ```ts title="medusa-config.js"
-// ...
+# ...
+const TKASSA_INTEGRATION_ID = "tkassa-1"
+
 module.exports = defineConfig({
-  // ...
+  # ...
+  plugins: [
+    # ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+            id: TKASSA_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-tkassa",
+      options: {},
+    },
+  ],
   modules: [
+    # ...
     {
       resolve: "@medusajs/medusa/payment",
       options: {
@@ -49,28 +73,20 @@ module.exports = defineConfig({
             resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
             id: "tkassa",
             options: {
-              terminalKey: process.env.TKASSA_TERMINAL_KEY,
-              password: process.env.TKASSA_PASSWORD,
-              capture: true,
-              useReceipt: true,
-              ffdVersion: "1.05",
-              taxation: "osn",
-              taxItemDefault: "none",
-              taxShippingDefault: "none"
-            },
-          }
-        ]
-      }
-    }
-  ]
+              id: TKASSA_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
 })
 ```
 
-Добавьте переменные окружения `TerminalKey` и `Password` из личного кабинета Т-Бизнес:
+Добавьте переменную окружения с секретным ключом шифрования:
 
 ```text title=".env"
-TKASSA_TERMINAL_KEY=123456789
-TKASSA_PASSWORD=supersecret
+INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
 ---
@@ -81,71 +97,13 @@ TKASSA_PASSWORD=supersecret
   sectionTitle="ProviderOptions"
   types={[
     {
-      name: "terminalKey",
+      name: "id",
       type: "string",
-      description: "Ключ терминала, предоставленный Т-Касса (обязателен для аутентификации)",
+      description: "Суффикс итогового ключа `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
       optional: false,
       expandable: false,
       children: []
     },
-    {
-      name: "password",
-      type: "string",
-      description: "Пароль для подписи запросов (обязателен для аутентификации)",
-      optional: false,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "capture",
-      type: "boolean",
-      description: "Определяет тип проведения платежа:\n- `true` - одностадийная оплата (`O` в API)\n- `false` - двухстадийная оплата (`T` в API)",
-      optional: true,
-      defaultValue: "true",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "useReceipt",
-      type: "boolean",
-      description: "Включает формирование онлайн-чеков по 54-ФЗ",
-      optional: true,
-      defaultValue: "false",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "ffdVersion",
-      type: "enum",
-      description: "Версия формата фискальных данных (ФФД).\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxation",
-      type: "enum",
-      description: "Система налогообложения:\n- `osn` - общая СН\n- `usn_income` - упрощенная СН (доходы)\n- `usn_income_outcome` - упрощенная СН (доходы минус расходы)\n- `esn` - единый сельскохозяйственный налог\n- `patent` - патентная СН\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxItemDefault",
-      type: "enum",
-      description: "Ставка НДС по умолчанию для товаров:\n- `none` - без НДС\n- `vat0` - 0%\n- `vat5` - 5%\n- `vat7` - 7%\n- `vat10` - 10%\n- `vat20` - 20%\n- `vat105` - 5/105\n- `vat107` - 7/107\n- `vat110` - 10/110\n- `vat120` - 20/120\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxShippingDefault",
-      type: "enum",
-      description: "Ставка НДС по умолчанию для доставки, аналогично `taxItemDefault`.\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    }
   ]}
 />
 

@@ -9,8 +9,9 @@ In this document, you'll learn how to install and configure the 1C:Enterprise in
 
 ## Prerequisites
 
-- Medusa server v2.14.0 or later
+- Medusa server v2.17.2 or later
 - Node.js v20 or later
+- [Integration Module](/medusa-modules/integration)
 
 ---
 
@@ -19,12 +20,12 @@ In this document, you'll learn how to install and configure the 1C:Enterprise in
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-1c
+    yarn add @gorgo/medusa-integration @gorgo/medusa-1c
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-1c
+    npm install @gorgo/medusa-integration @gorgo/medusa-1c
     ```
   </CodeTab>
 </CodeTabs>
@@ -37,16 +38,53 @@ Add the plugin configuration in your `medusa-config.js` file of the Medusa admin
 
 ```ts title="medusa-config.js"
 # ...
+const ONEC_INTEGRATION_ID = "1c-1"
+
 module.exports = defineConfig({
   # ...
   plugins: [
     # ...
     {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-1c/providers/integration-1c",
+            id: ONEC_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
       resolve: "@gorgo/medusa-1c",
       options: {}
-    }
+    },
   ],
 })
 ```
+
+Add environment variables with your secret `Encryption Key`:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+## Provider Options
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
 
 <Note>🚧 Integration is currently under development.</Note>

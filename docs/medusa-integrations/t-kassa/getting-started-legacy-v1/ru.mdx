@@ -1,0 +1,176 @@
+---
+title: "Начало работы с Т-Касса для Medusa (устаревшая v1)"
+description: "В этом документе вы узнаете, как установить и настроить платежный провайдер Т-Касса от Т-Банка для Medusa"
+---
+
+# {frontmatter.title}
+
+В этом документе вы узнаете, как установить и настроить платежный провайдер Т-Касса от Т-Банка для Medusa.
+
+<Note type="warning">
+
+Это руководство описывает настройку устаревшей версии 1.x, в которой вы задаёте параметры плагина в `medusa-config.js`. Текущая версия 2 хранит эти настройки в [Модуле интеграций](/medusa-modules/integration), поэтому администратор магазина меняет их в Admin без правок конфигурации и повторного развёртывания. Для новой установки используйте [Начало работы с Т-Касса для Medusa](/medusa-integrations/t-kassa/getting-started).
+
+</Note>
+
+## Требования
+
+- Medusa v2.14.0 или новее
+- Node.js v20 или новее
+- Аккаунт Т-Бизнес с подключённым интернет-эквайрингом Т-Касса – [зарегистрируйтесь или войдите](https://www.tbank.ru/kassa/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
+
+---
+
+## Установка
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-payment-tkassa
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-payment-tkassa
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Добавьте конфигурацию провайдера в файл `medusa-config.js` в приложении Medusa Admin:
+
+```ts title="medusa-config.js"
+// ...
+module.exports = defineConfig({
+  // ...
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
+            id: "tkassa",
+            options: {
+              terminalKey: process.env.TKASSA_TERMINAL_KEY,
+              password: process.env.TKASSA_PASSWORD,
+              capture: true,
+              useReceipt: true,
+              ffdVersion: "1.05",
+              taxation: "osn",
+              taxItemDefault: "none",
+              taxShippingDefault: "none"
+            },
+          }
+        ]
+      }
+    }
+  ]
+})
+```
+
+Добавьте переменные окружения `TerminalKey` и `Password` из личного кабинета Т-Бизнес:
+
+```text title=".env"
+TKASSA_TERMINAL_KEY=123456789
+TKASSA_PASSWORD=supersecret
+```
+
+---
+
+## Параметры провайдера
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "terminalKey",
+      type: "string",
+      description: "Ключ терминала, предоставленный Т-Касса (обязателен для аутентификации)",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "password",
+      type: "string",
+      description: "Пароль для подписи запросов (обязателен для аутентификации)",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "capture",
+      type: "boolean",
+      description: "Определяет тип проведения платежа:\n- `true` - одностадийная оплата (`O` в API)\n- `false` - двухстадийная оплата (`T` в API)",
+      optional: true,
+      defaultValue: "true",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "useReceipt",
+      type: "boolean",
+      description: "Включает формирование онлайн-чеков по 54-ФЗ",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "ffdVersion",
+      type: "enum",
+      description: "Версия формата фискальных данных (ФФД).\nПрименимо только при `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "taxation",
+      type: "enum",
+      description: "Система налогообложения:\n- `osn` - общая СН\n- `usn_income` - упрощенная СН (доходы)\n- `usn_income_outcome` - упрощенная СН (доходы минус расходы)\n- `esn` - единый сельскохозяйственный налог\n- `patent` - патентная СН\nПрименимо только при `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "taxItemDefault",
+      type: "enum",
+      description: "Ставка НДС по умолчанию для товаров:\n- `none` - без НДС\n- `vat0` - 0%\n- `vat5` - 5%\n- `vat7` - 7%\n- `vat10` - 10%\n- `vat20` - 20%\n- `vat105` - 5/105\n- `vat107` - 7/107\n- `vat110` - 10/110\n- `vat120` - 20/120\nПрименимо только при `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "taxShippingDefault",
+      type: "enum",
+      description: "Ставка НДС по умолчанию для доставки, аналогично `taxItemDefault`.\nПрименимо только при `useReceipt` = `true`",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+---
+
+## Настройка вебхуков
+
+Чтобы корректно обрабатывать платёжные уведомления от Т-Касса, настройте вебхуки в своём аккаунте T-Business следующим образом:
+
+1. Перейдите в раздел `Интернет-эквайринг` → `Магазины` → Выберите свой магазин → `Терминалы` → Выберите `Тестовый` или `Рабочий` терминал → Нажмите `Настройки`, чтобы открыть окно настроек.
+
+2. Установите отправку уведомлений `По протоколу HTTP`.
+
+3. Укажите URL вида:
+
+    ```
+    https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/tkassa_tkassa
+    ```
+
+    Замените `{YOUR_MEDUSA_DOMAIN}` на домен вашей витрины Medusa.
+
+<Note type="warning">Т-Касса ожидает сообщение `OK` в ответе, чтобы подтвердить успешную обработку вебхука и избежать повторных уведомлений. В настоящее время Medusa не поддерживает собственные ответные сообщения вебхуков по умолчанию, но сами вебхуки обрабатываются корректно и без этого. Подробнее см. [связанное обсуждение](https://github.com/medusajs/medusa/discussions/12887).</Note>

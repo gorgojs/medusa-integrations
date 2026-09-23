@@ -43,7 +43,7 @@ run everything from `apps/backend`.
    The seed has filled the sync defaults. Set the sync interval, whether the exchange is
    zip-compressed, and the product attribute mappings (height, width, length, weight, HS code, MID
    code, origin country) to match your own catalog's custom fields. See
-   [Manage 1C:Enterprise Settings in Medusa Admin](https://docs.gorgojs.com/medusa-integrations/1c-enterprise/settings-beta).
+   [Manage 1C:Enterprise Settings in Medusa Admin](https://docs.gorgojs.com/medusa-integrations/1c-enterprise/settings).
 
 2. Serve the backend over a public address, since 1C reaches the exchange endpoint over the public
    internet:

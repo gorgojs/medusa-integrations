@@ -9,9 +9,10 @@ In this document, you’ll learn how to install and configure the T-Kassa paymen
 
 ## Requirements
 
-- Medusa v2.14.0 or later
+- Medusa v2.17.2 or later
 - Node.js v20 or later
 - A T-Business account with T-Kassa internet acquiring – [sign in or create one](https://www.tbank.ru/kassa/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
+- [Integration Module](/medusa-modules/integration)
 
 ---
 
@@ -20,12 +21,12 @@ In this document, you’ll learn how to install and configure the T-Kassa paymen
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-payment-tkassa
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-payment-tkassa
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
     ```
   </CodeTab>
 </CodeTabs>
@@ -38,9 +39,32 @@ Add the provider configuration in your `medusa-config.js` file of the Medusa adm
 
 ```ts title="medusa-config.js"
 # ...
+const TKASSA_INTEGRATION_ID = "tkassa-1"
+
 module.exports = defineConfig({
   # ...
+  plugins: [
+    # ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+            id: TKASSA_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-tkassa",
+      options: {},
+    },
+  ],
   modules: [
+    # ...
     {
       resolve: "@medusajs/medusa/payment",
       options: {
@@ -49,28 +73,20 @@ module.exports = defineConfig({
             resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
             id: "tkassa",
             options: {
-              terminalKey: process.env.TKASSA_TERMINAL_KEY,
-              password: process.env.TKASSA_PASSWORD,
-              capture: true,
-              useReceipt: true,
-              ffdVersion: "1.05",
-              taxation: "osn",
-              taxItemDefault: "none",
-              taxShippingDefault: "none"
-            },
-          }
-        ]
-      }
-    }
-  ]
+              id: TKASSA_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
 })
 ```
 
-Add environment variables with your shop identifier `TerminalKey` and secret `Password` from your T-Business account:
+Add environment variables with your secret `Encryption Key`:
 
 ```text title=".env"
-TKASSA_TERMINAL_KEY=123456789
-TKASSA_PASSWORD=supersecret
+INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
 ---
@@ -81,71 +97,13 @@ TKASSA_PASSWORD=supersecret
   sectionTitle="ProviderOptions"
   types={[
     {
-      name: "terminalKey",
+      name: "id",
       type: "string",
-      description: "Terminal key provided by T-Kassa (required for authentication)",
+      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
       optional: false,
       expandable: false,
       children: []
     },
-    {
-      name: "password",
-      type: "string",
-      description: "Password for request signing (required for authentication)",
-      optional: false,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "capture",
-      type: "boolean",
-      description: "Automatic payment capture:\n- `true` for one-step payment, passes `O` to T-Kassa API\n- `false` for two-step payment, passes `T` to T-Kassa API",
-      optional: true,
-      defaultValue: "true",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "useReceipt",
-      type: "boolean",
-      description: "Enable receipt generation according to Russian fiscal data format (FFD)",
-      optional: true,
-      defaultValue: "false",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "ffdVersion",
-      type: "enum",
-      description: "Fiscal data format version.\nApplicable only if `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxation",
-      type: "enum",
-      description: "Tax system type:\n- `osn` - General\n- `usn_income` - Simplified (income)\n- `usn_income_outcome` - Simplified (income-expenses)\n- `esn` - Agricultural\n- `patent` - Patent\nApplicable only if `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxItemDefault",
-      type: "enum",
-      description: "Default VAT rate for products:\n- `none` - No VAT\n- `vat0` - 0%\n- `vat5` - 5%\n- `vat7` - 7%\n- `vat10` - 10%\n- `vat20` - 20%\n- `vat105` - 5/105\n- `vat107` - 7/107\n- `vat110` - 10/110\n- `vat120` - 20/120\nApplicable only if `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxShippingDefault",
-      type: "enum",
-      description: "Default VAT rate for shipping, same options as `taxItemDefault`.\nApplicable only if `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    }
   ]}
 />
 

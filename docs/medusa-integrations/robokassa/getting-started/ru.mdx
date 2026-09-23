@@ -9,9 +9,10 @@ description: "В этом документе вы узнаете, как уст�
 
 ## Требования
 
-- Medusa v2.14.0 или новее
+- Medusa v2.17.2 или новее
 - Node.js v20 или новее
 - Аккаунт Robokassa – [зарегистрируйтесь или войдите](https://login.robokassa.ru/reg?promoCode=gorgo)
+- [Модуль интеграций](/medusa-modules/integration)
 
 ---
 
@@ -20,12 +21,12 @@ description: "В этом документе вы узнаете, как уст�
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```bash
-    yarn add @gorgo/medusa-payment-robokassa
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-robokassa
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```bash
-    npm install @gorgo/medusa-payment-robokassa
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-robokassa
     ```
   </CodeTab>
 </CodeTabs>
@@ -38,9 +39,32 @@ description: "В этом документе вы узнаете, как уст�
 
 ```ts title="medusa-config.js"
 // ...
+const ROBOKASSA_INTEGRATION_ID = "robokassa-1"
+
 module.exports = defineConfig({
   // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
+            id: ROBOKASSA_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-robokassa",
+      options: {},
+    },
+  ],
   modules: [
+    // ...
     {
       resolve: "@medusajs/medusa/payment",
       options: {
@@ -49,35 +73,21 @@ module.exports = defineConfig({
             resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
             id: "robokassa",
             options: {
-              merchantLogin: process.env.ROBOKASSA_MERCHANT_LOGIN,
-              hashAlgorithm: process.env.ROBOKASSA_HASH_ALGORITHM,
-              password1: process.env.ROBOKASSA_PASSWORD_1,
-              password2: process.env.ROBOKASSA_PASSWORD_2,
-              testPassword1: process.env.ROBOKASSA_TEST_PASSWORD_1,
-              testPassword2: process.env.ROBOKASSA_TEST_PASSWORD_2,
-              capture: false,  // по умолчанию true
-              isTest: true,    // по умолчанию false
-            },
-          }
-        ]
-      }
-    }
-  ]
+              id: ROBOKASSA_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
 })
 ```
 
-Добавьте следующие переменные окружения: идентификатор магазина `merchantLogin`, алгоритм подписи `hashAlgorithm`, секретные пароли `password1`, `password2`, а также тестовые пароли `testPassword1`, `testPassword2`:
+Добавьте переменную окружения с секретным ключом шифрования:
 
 ```text title=".env"
-ROBOKASSA_MERCHANT_LOGIN=test-shop
-ROBOKASSA_HASH_ALGORITHM=md5
-ROBOKASSA_PASSWORD_1=supersecret
-ROBOKASSA_PASSWORD_2=supersecret
-ROBOKASSA_TEST_PASSWORD_1=supersecret
-ROBOKASSA_TEST_PASSWORD_2=supersecret
+INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
-
-<Note type="warning">Значение `ROBOKASSA_HASH_ALGORITHM` должно совпадать с настройкой в аккаунте Robokassa и быть одним из: `md5`, `sha1`, `sha256`, `sha384`, `sha512` или `ripemd160` (обратите внимание: для `ripemd160` возможны ошибки на стороне провайдера).</Note>
 
 ---
 
@@ -87,104 +97,13 @@ ROBOKASSA_TEST_PASSWORD_2=supersecret
   sectionTitle="ProviderOptions"
   types={[
     {
-      name: "merchantLogin",
+      name: "id",
       type: "string",
-      description: "Идентификатор магазина Robokassa.",
+      description: "Суффикс итогового ключа `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
       optional: false,
       expandable: false,
       children: []
     },
-    {
-      name: "hashAlgorithm",
-      type: "enum",
-      description: "Алгоритм подписи, используемый для расчёта и проверки подписей платежей:\n- `md5`\n- `sha1`\n- `sha256`\n- `sha384`\n- `sha512`",
-      optional: false,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "password1",
-      type: "string",
-      description: "Технический пароль №1 для расчёта подписи при инициализации платежа.",
-      optional: false,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "password2",
-      type: "string",
-      description: "Технический пароль №2 для проверки подписи в уведомлениях об оплате.",
-      optional: false,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "testPassword1",
-      type: "string",
-      description: "Тестовый пароль №1 для расчёта подписей в тестовом режиме.\nПрименимо только при `isTest` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "testPassword2",
-      type: "string",
-      description: "Тестовый пароль №2 для проверки уведомлений в тестовом режиме.\nПрименимо только при `isTest` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "capture",
-      type: "boolean",
-      description: "Определяет тип проведения платежа:\n- `true` - одностадийная оплата\n- `false` - двухстадийная оплата (предавторизация)",
-      optional: true,
-      defaultValue: "true",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "isTest",
-      type: "boolean",
-      description: "Включает тестовый режим.",
-      optional: true,
-      defaultValue: "false",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "useReceipt",
-      type: "boolean",
-      description: "Включает формирование онлайн-чеков по 54-ФЗ.",
-      optional: true,
-      defaultValue: "false",
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxation",
-      type: "enum",
-      description: "Система налогообложения:\n- `osn` - общая СН\n- `usn_income` - упрощенная СН (доходы)\n- `usn_income_outcome` - упрощенная СН (доходы минус расходы)\n- `esn` - единый сельскохозяйственный налог\n- `patent` - патентная СН\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxItemDefault",
-      type: "enum",
-      description: "Ставка НДС по умолчанию для товаров:\n- `none` - без НДС\n- `vat0` - 0%\n- `vat5` - 5%\n- `vat7` - 7%\n- `vat10` - 10%\n- `vat20` - 20%\n- `vat105` - 5/105\n- `vat107` - 7/107\n- `vat110` - 10/110\n- `vat120` - 20/120\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    },
-    {
-      name: "taxShippingDefault",
-      type: "enum",
-      description: "Ставка НДС по умолчанию для доставки, аналогично `taxItemDefault`.\nПрименимо только при `useReceipt` = `true`",
-      optional: true,
-      expandable: false,
-      children: []
-    }
   ]}
 />
 
