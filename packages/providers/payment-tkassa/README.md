@@ -90,9 +90,9 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 ## Installation
 
 ```bash
-yarn add @gorgo/medusa-integration @gorgo/medusa-payment-tkassa@beta
+yarn add @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
 # or
-npm install @gorgo/medusa-integration @gorgo/medusa-payment-tkassa@beta
+npm install @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
 ```
 
 ## Documentation

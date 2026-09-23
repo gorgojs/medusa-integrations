@@ -1,12 +1,6 @@
 # @gorgo/medusa-payment-tkassa
 
-## 2.0.0-beta.2
-
-- improve types
-- update deps
-- improve docs
-
-## 2.0.0-beta.1
+## 2.0.0
 
 ### Highlights
 

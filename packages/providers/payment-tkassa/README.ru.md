@@ -89,9 +89,9 @@
 ## Установка
 
 ```bash
-yarn add @gorgo/medusa-integration @gorgo/medusa-payment-tkassa@beta
+yarn add @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
 # или
-npm install @gorgo/medusa-integration @gorgo/medusa-payment-tkassa@beta
+npm install @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
 ```
 
 ## Документация
