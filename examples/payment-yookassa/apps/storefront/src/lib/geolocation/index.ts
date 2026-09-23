@@ -1,9 +1,8 @@
+import { COOKIE_NAMES, persistentCookieOpts } from "@lib/cookie-config"
 import { DEFAULT_REGION } from "@lib/util/env"
 import type { HttpTypes } from "@medusajs/types"
 import type { NextRequest, NextResponse } from "next/server"
 import { detectCountry } from "./detect"
-
-export const COUNTRY_COOKIE = "_medusa_country"
 
 const RESOLVED_MAX_AGE = 60 * 60 * 24 * 365
 const UNRESOLVED_MAX_AGE = 60 * 5
@@ -35,7 +34,7 @@ const resolve = async (
   request: NextRequest,
   regionMap: RegionMap
 ): Promise<Resolution> => {
-  const existing = request.cookies.get(COUNTRY_COOKIE)?.value
+  const existing = request.cookies.get(COOKIE_NAMES.country)?.value
 
   if (existing && regionMap.has(existing)) {
     return fromCookie(existing)
@@ -74,11 +73,9 @@ export const resolveCountry = async (
   const resolution = await resolve(request, regionMap)
 
   return (res) => {
-    res.cookies.set(COUNTRY_COOKIE, resolution.countryCode, {
+    res.cookies.set(COOKIE_NAMES.country, resolution.countryCode, {
+      ...persistentCookieOpts,
       maxAge: resolution.resolved ? RESOLVED_MAX_AGE : UNRESOLVED_MAX_AGE,
-      httpOnly: false,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
     })
 
     if (DEBUG) {

@@ -1,4 +1,9 @@
 import "server-only"
+import {
+  COOKIE_NAMES,
+  persistentCookieOpts,
+  privateCookieOpts,
+} from "@lib/cookie-config"
 import { cookies as nextCookies } from "next/headers"
 
 export const getAuthHeaders = async (): Promise<
@@ -6,7 +11,7 @@ export const getAuthHeaders = async (): Promise<
 > => {
   try {
     const cookies = await nextCookies()
-    const token = cookies.get("_medusa_jwt")?.value
+    const token = cookies.get(COOKIE_NAMES.authToken)?.value
 
     if (!token) {
       return {}
@@ -21,7 +26,7 @@ export const getAuthHeaders = async (): Promise<
 export const getCacheTag = async (tag: string): Promise<string> => {
   try {
     const cookies = await nextCookies()
-    const cacheId = cookies.get("_medusa_cache_id")?.value
+    const cacheId = cookies.get(COOKIE_NAMES.cacheId)?.value
 
     if (!cacheId) {
       return ""
@@ -51,47 +56,33 @@ export const getCacheOptions = async (
 
 export const setAuthToken = async (token: string) => {
   const cookies = await nextCookies()
-  cookies.set("_medusa_jwt", token, {
-    maxAge: 60 * 60 * 24 * 7,
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  })
+  cookies.set(COOKIE_NAMES.authToken, token, privateCookieOpts)
 }
 
 export const removeAuthToken = async () => {
   const cookies = await nextCookies()
-  cookies.set("_medusa_jwt", "", {
-    maxAge: -1,
-  })
+  cookies.set(COOKIE_NAMES.authToken, "", { ...privateCookieOpts, maxAge: -1 })
 }
 
 export const getCartId = async () => {
   const cookies = await nextCookies()
-  return cookies.get("_medusa_cart_id")?.value
+  return cookies.get(COOKIE_NAMES.cartId)?.value
 }
 
 export const setCartId = async (cartId: string) => {
   const cookies = await nextCookies()
-  cookies.set("_medusa_cart_id", cartId, {
-    maxAge: 60 * 60 * 24 * 7,
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  })
+  cookies.set(COOKIE_NAMES.cartId, cartId, privateCookieOpts)
 }
 
 export const removeCartId = async () => {
   const cookies = await nextCookies()
-  cookies.set("_medusa_cart_id", "", {
-    maxAge: -1,
-  })
+  cookies.set(COOKIE_NAMES.cartId, "", { ...privateCookieOpts, maxAge: -1 })
 }
 
 export const getPromoBannerDismissed = async (): Promise<boolean> => {
   try {
     const cookies = await nextCookies()
-    return cookies.get("_promo_banner_dismissed")?.value === "1"
+    return cookies.get(COOKIE_NAMES.promoBannerDismissed)?.value === "1"
   } catch {
     return false
   }
@@ -100,7 +91,7 @@ export const getPromoBannerDismissed = async (): Promise<boolean> => {
 export const getCountryCode = async (): Promise<string | null> => {
   try {
     const cookies = await nextCookies()
-    return cookies.get("_medusa_country")?.value ?? null
+    return cookies.get(COOKIE_NAMES.country)?.value ?? null
   } catch {
     return null
   }
@@ -108,12 +99,5 @@ export const getCountryCode = async (): Promise<string | null> => {
 
 export const setCountryCode = async (countryCode: string) => {
   const cookies = await nextCookies()
-  cookies.set("_medusa_country", countryCode, {
-    maxAge: 60 * 60 * 24 * 365,
-    httpOnly: false,
-    // "lax" so the cookie is still sent on top-level navigations coming from
-    // another site (payment provider redirects) — see middleware.ts.
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  })
+  cookies.set(COOKIE_NAMES.country, countryCode, persistentCookieOpts)
 }
