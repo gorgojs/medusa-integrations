@@ -15,7 +15,7 @@ For the storefront on Next.js, you need to make the following changes:
 
 ## Step 1: Configure Payment Provider
 
-Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L41-L44) and add YooKassa to the payment provider mapping, plus a helper to recognize its sessions:
+Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L56-L60) and add YooKassa to the payment provider mapping, plus a helper to recognize its sessions:
 
 ![Directory structure in the Medusa Storefront after updating the file for constants](/static/yookassa/storefront/src-lib-constants.webp)
 
@@ -330,7 +330,7 @@ If the cart already has an order, the webhook won the race, so the route revalid
 
 ## Step 6: Add Provider Labels to Storefront Locales
 
-Add `pp_yookassa_yookassa` to [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/messages/en.json#L513) and to every other locale under `messages/`:
+Add `pp_yookassa_yookassa` to [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/5c7c2f15ccfb90f15d5d94abe7d303137550a421/examples/payment-yookassa/apps/storefront/messages/en.json#L529) and to every other locale under `messages/`:
 
 ```json title="messages/en.json"
 {

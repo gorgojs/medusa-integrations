@@ -5,279 +5,351 @@ description: "Узнайте, как интегрировать платёжны
 
 # {frontmatter.title}
 
-Для интеграции платёжного провайдера Robokassa в storefront (витрину магазина) на Next.js начните с добавления необходимых UI-компонентов. Таким образом провайдер будет отображаться на странице оформления заказа наряду с другими доступными методами оплаты.
+Для интеграции платёжного провайдера Robokassa в storefront [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter) начните с добавления необходимых UI-компонентов. Таким образом провайдер будет отображаться на странице оформления заказа наряду с другими доступными методами оплаты.
 
-Когда пользователь выбирает Robokassa, витрина должна вызвать метод `initiatePayment` с нужными параметрами. Это создаст платёжную сессию через API Robokassa и подготовит покупателя к перенаправлению. После этого кнопка *Place Order* должна отправить пользователя на страницу оплаты Robokassa, где он сможет выбрать предпочтительный способ оплаты.
+Когда покупатель выбирает Robokassa, оформление заказа инициализирует платёжную сессию, а провайдер создаёт её на своей стороне и возвращает адрес для оплаты. Кнопка оплаты отправляет покупателя на эту страницу, где он может заплатить картой или через СБП.
 
-После завершения оплаты Robokassa одновременно отправит вебхук и перенаправит покупателя обратно в витрину. То событие, которое придёт первым, завершит корзину и создаст новый заказ в Medusa.
+После завершения оплаты Robokassa одновременно отправляет вебхук и перенаправляет покупателя обратно в витрину.
 
 Для витрины на Next.js необходимо внести следующие изменения:
 
 ## Шаг 1: Настройте платёжный провайдер
 
-Чтобы сделать Robokassa доступным в качестве способа оплаты на странице оформления заказа витрины магазина, необходимо добавить её конфигурацию в маппинг платёжных провайдеров в файле с константами вашей витрине. Этот маппинг определяет как каждый провайдер отображается в интерфейсе.
-
-Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/f2e1073275317a01f1447efe9a87d6bc135c5b61/examples/payment-robokassa/medusa-storefront/src/lib/constants.tsx#L33-L36) и добавьте следующий код:
+Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-robokassa/apps/storefront/src/lib/constants.tsx#L56-L60) и добавьте Robokassa в маппинг платёжных провайдеров, а также вспомогательную функцию, распознающую её сессии:
 
 ![Структура проекта Medusa Storefront после обновления файла с константами](/static/robokassa/storefront/src-lib-constants.webp)
 
 ```ts title="src/lib/constants.tsx"
-export const paymentInfoMap: Record<
-  string,
-  { title: string; icon: React.ReactNode }
-> = {
-  // ... другие провайдеры
-  pp_robokassa_robokassa: {
-    title: "Robokassa",
-    icon: <CreditCard />,
-  }
+export type PaymentInfo = {
+  title: string
+  subtitle?: string
+  icon: React.JSX.Element
 }
 
-// Вспомогательная функция для проверки, является ли провайдер Robokassa
+export const paymentInfoMap: Record<string, PaymentInfo> = {
+  // ...
+  pp_robokassa_robokassa: {
+    title: "Robokassa",
+    subtitle: "Cards, SBP",
+    icon: <Robokassa />,
+  },
+  // ...
+}
+
+// ...
+
 export const isRobokassa = (providerId?: string) => {
   return providerId?.startsWith("pp_robokassa")
 }
 ```
 
-Вы расширяете объект `paymentInfoMap`, добавляя запись `pp_robokassa_robokassa`. Эта запись определяет заголовок и иконку, которые будут отображаться для Robokassa на странице оформления заказа.
+`title` называет способ оплаты на странице оформления заказа, а `subtitle` задаёт строку помельче под ним, куда попадают способы оплаты, которые принимает Robokassa. Оба служат резервными значениями, когда для локали нет перевода. `isRobokassa` использует диспетчер ниже и построитель данных платёжной сессии из следующего шага.
 
-Вспомогательная функция `isRobokassa` проверяет, принадлежит ли переданный `providerId` к Robokassa.
-Это используется при отрисовке UI-компонентов, специфичных для конкретного провайдера.
+Компонент для `icon` вы добавляете сами. В примере стрелка Robokassa нарисована тёмно-серой, а не фирменным бело-на-тёмном-квадрате знаком, поскольку тёмный знак сам по себе лучше читается на светлой рамке, которую рисует вокруг него страница оформления заказа:
 
----
+```tsx title="src/modules/common/icons/robokassa.tsx"
+import type React from "react"
 
-## Шаг 2: Обновите настройки cookies
+import type { IconProps } from "types/icon"
 
-При подключении Robokassa настройте политику cookie так, чтобы поддерживались междоменные редиректы. Это нужно для сохранения платёжной сессии при возврате пользователя в магазин.
-
-Откройте [`src/lib/data/cookies.ts`](https://github.com/gorgojs/medusa-integrations/blob/f2e1073275317a01f1447efe9a87d6bc135c5b61/examples/payment-robokassa/medusa-storefront/src/lib/data/cookies.ts#L79) и обновите конфигурацию файлов cookie следующим образом:
-
-![Структура проекта Medusa Storefront после обновления файлов cookie](/static/robokassa/storefront/src-lib-data-cookies.webp)
-
-```ts title="src/lib/data/cookies.ts"
-export const setCartId = async (cartId: string) => {
-  cookies.set("_medusa_cart_id", cartId, {
-    // ... другие настройки cookie
-    sameSite: "lax", // Переключено с режима «Strict» для междоменных редиректов
-  })
-}
-```
-
-Эта вспомогательная функция сохраняет идентификатор корзины в cookie с именем `_medusa_cart_id`.
-
-Опция `sameSite` установлена в значение `lax` вместо `strict`. Это изменение гарантирует, что cookie будет отправляться при кросс-доменных запросах во время процесса редиректа через Robokassa, предотвращая потерю платёжной сессии.
-
----
-
-## Шаг 3: Инициализируйте платёжную сессию
-
-Чтобы перенаправить покупателя в Robokassa, платёжная сессия должна быть корректно инициализирована с обязательными параметрами, включая return URL для обоих случаев: успешной и неуспешной оплаты, язык, email покупателя, а также корзину для формирования онлайн-чеков.
-
-Откройте [`src/modules/checkout/components/payment/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/f2e1073275317a01f1447efe9a87d6bc135c5b61/examples/payment-robokassa/medusa-storefront/src/modules/checkout/components/payment/index.tsx#L89-L96) и обновите логику инициализации платежа, включив в нее данные корзины и URL возврата для Robokassa:
-
-![Структура проекта Medusa Storefront после обновления файла для компонента оплаты](/static/robokassa/storefront/src-modules-checkout-components-payment-index.webp)
-
-```ts title="src/modules/checkout/components/payment/index.tsx"
-import { getBaseURL } from "@lib/util/env"
-
-const Payment = ({
-  // ...
+const Robokassa: React.FC<IconProps> = ({
+  size = "16",
+  color: _color,
+  ...attributes
 }) => {
-  // ...
-  const handleSubmit = async () => {
-    setIsLoading(true)
-    try {
-      // ...
-      const countryCode = cart?.shipping_address?.country_code
-      if (!checkActiveSession) {
-        await initiatePaymentSession(cart, {
-          provider_id: selectedPaymentMethod,
-          data: {
-            SuccessUrl2: `${getBaseURL()}/api/capture-payment/${cart?.id}?country_code=${countryCode}`,
-            SuccessUrl2Method: "GET",
-            FailUrl2: `${getBaseURL()}/api/capture-payment/${cart?.id}?country_code=${countryCode}`,
-            FailUrl2Method: "GET",
-            EMail: cart?.email,
-            Culture: countryCode === "ru" ? "ru" : "en",
-            cart: cart
-          }
-        })
-      }
-    }
-  }
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="54 129 404 254"
+      role="img"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...attributes}
+    >
+      <title>Robokassa icon</title>
+      <path d="M239 129L54 383H274L458 129H239Z" fill="#333339" />
+    </svg>
+  )
 }
+
+export default Robokassa
 ```
-
-При инициализации платёжной сессии для Robokassa параметры `SuccessUrl2` и `FailUrl2` определяют, куда будет перенаправлен покупатель после попытки оплаты. Оба URL динамически формируются на основе базового URL витрины, идентификатора корзины и выбранного кода страны.
-
-Объект `cart` включается в данные инициализации для формирования чека в соответствии с Федеральным законом № 54.
 
 ---
 
-## Шаг 4: Создайте кнопку оплаты
+## Шаг 2: Инициализируйте платёжную сессию
 
-В витрине для каждого платёжного провайдера необходим отдельный компонент кнопки оплаты. Он отвечает за обработку оформления заказа после подтверждения пользователем и, используя данные платёжного сеанса, перенаправляет его на страницу оплаты Robokassa.
+Откройте тот же файл [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-robokassa/apps/storefront/src/lib/constants.tsx#L76-L114) и добавьте вспомогательную функцию активной локали, адрес возврата и построитель данных сессии:
 
-Откройте [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/f2e1073275317a01f1447efe9a87d6bc135c5b61/examples/payment-robokassa/medusa-storefront/src/modules/checkout/components/payment-button/index.tsx#L163-L211) и добавьте следующий код:
+![Структура проекта Medusa Storefront после обновления файла с константами](/static/robokassa/storefront/src-lib-constants.webp)
+
+```ts title="src/lib/constants.tsx"
+/**
+ * Локаль, в которой отображалось оформление заказа. `<html lang>` хранит её,
+ * поэтому страница оплаты и возврат с неё остаются на том языке, на котором
+ * покупатель ушёл из магазина.
+ */
+const activeLocale = () =>
+  typeof document === "undefined"
+    ? defaultLocale
+    : document.documentElement.lang || defaultLocale
+
+const paymentReturnUrl = (providerId: string, cartId: string) => {
+  const origin =
+    typeof window === "undefined" ? getBaseURL() : window.location.origin
+
+  return `${origin}/api/payment-return?provider=${providerId}&cart_id=${cartId}&locale=${activeLocale()}`
+}
+
+const paymentSessionDataBuilders: Array<{
+  test: (providerId?: string) => boolean | undefined
+  isReady?: (cart: HttpTypes.StoreCart) => boolean
+  build: (cart: HttpTypes.StoreCart) => Record<string, unknown>
+}> = [
+  {
+    test: (providerId) => isRobokassa(providerId),
+    // Robokassa формирует чек из корзины и берёт из неё адрес покупателя.
+    // Инициализация сессии до того, как оформление заказа собрало эти данные,
+    // создаёт платёж без чека.
+    isReady: (cart) => Boolean(cart.email && cart.shipping_address),
+    build: (cart) => {
+      const returnUrl = paymentReturnUrl("robokassa", cart.id)
+
+      return {
+        SuccessUrl2: returnUrl,
+        SuccessUrl2Method: "GET",
+        FailUrl2: returnUrl,
+        FailUrl2Method: "GET",
+        EMail: cart.email,
+        // Собственная страница оплаты Robokassa говорит по-русски или по-английски.
+        Culture: activeLocale() === "ru" ? "ru" : "en",
+        cart,
+      }
+    },
+  },
+]
+```
+
+Robokassa нужна активная локаль не только для адреса возврата, поэтому она вынесена в отдельную функцию `activeLocale`, а не встроена напрямую. `build` передаёт `SuccessUrl2` и `FailUrl2`, оба указывающие на один и тот же адрес возврата, их `Method`, email покупателя в `EMail`, `Culture` для языка, на котором откроется собственная страница оплаты Robokassa, и `cart` для формирования чека. `isReady` удерживает сессию, пока в корзине не появятся email и адрес доставки.
+
+---
+
+## Шаг 3: Создайте кнопку оплаты
+
+Создайте файл [`src/modules/checkout/components/payment-button/providers/robokassa.tsx`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-robokassa/apps/storefront/src/modules/checkout/components/payment-button/providers/robokassa.tsx):
+
+![Структура проекта Medusa Storefront после создания файла для кнопки оплаты Robokassa](/static/robokassa/storefront/src-modules-checkout-components-payment-button-providers-robokassa.webp)
+
+```ts title="src/modules/checkout/components/payment-button/providers/robokassa.tsx"
+"use client"
+
+import type { HttpTypes } from "@medusajs/types"
+import { useTranslations } from "next-intl"
+import { useState } from "react"
+import { PaymentButtonShell, type PaymentProviderButtonProps } from "../shared"
+
+const paymentUrl = (cart: HttpTypes.StoreCart) => {
+  const session = cart.payment_collection?.payment_sessions?.find((s) =>
+    s.provider_id.startsWith("pp_robokassa")
+  )
+
+  return (session?.data as { paymentUrl?: string } | undefined)?.paymentUrl
+}
+
+/**
+ * Robokassa принимает оплату на собственной странице. Сессия, созданная
+ * оформлением заказа, хранит подписанный адрес, куда отправить покупателя, а
+ * заказ оформляется, когда он вернётся через `/api/payment-return`, либо по
+ * вебхуку, если тот придёт раньше.
+ */
+const RobokassaPaymentButton = ({
+  cart,
+  notReady,
+  label,
+  cartUpdating,
+  "data-testid": dataTestId,
+}: PaymentProviderButtonProps) => {
+  const t = useTranslations("Errors")
+  const [submitting, setSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const handlePayment = () => {
+    const url = paymentUrl(cart)
+
+    if (!url) {
+      setErrorMessage(t("paymentFailed"))
+      return
+    }
+
+    setSubmitting(true)
+    window.location.assign(url)
+  }
+
+  return (
+    <PaymentButtonShell
+      label={label}
+      onClick={handlePayment}
+      disabled={notReady}
+      loading={submitting || cartUpdating}
+      errorMessage={errorMessage}
+      errorTestId="robokassa-payment-error-message"
+      data-testid={dataTestId ?? "submit-order-button"}
+    />
+  )
+}
+
+export default RobokassaPaymentButton
+```
+
+Этот компонент находит `payment_session` Robokassa в активной корзине и извлекает `data.paymentUrl`. При нажатии `handlePayment` отправляет покупателя туда напрямую через `window.location.assign`, поскольку страница Robokassa не встраивается в витрину.
+
+Если `paymentUrl` отсутствует, кнопка показывает сообщение об ошибке вместо перехода.
+
+---
+
+## Шаг 4: Зарегистрируйте кнопку оплаты
+
+Импортируйте кнопку и `isRobokassa` в [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-robokassa/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L3-L17), затем добавьте `case` для неё в `switch` диспетчера:
 
 ![Структура проекта Medusa Storefront после обновления файла для компонента кнопки оплаты](/static/robokassa/storefront/src-modules-checkout-components-payment-button-index.webp)
 
 ```ts title="src/modules/checkout/components/payment-button/index.tsx"
-import { 
-  // ...
-  isRobokassa
+import {
+  isManual,
+  isPaymentSessionReady,
+  isRobokassa,
+  isStripeLike,
 } from "@lib/constants"
-import { useRouter } from "next/navigation"
+// ...
+import RobokassaPaymentButton from "./providers/robokassa"
 
-const PaymentButton: React.FC<PaymentButtonProps> = ({
-  cart,
-  "data-testid": dataTestId,
-}) => {
-  // ...
+// ...
+
   switch (true) {
-    // ... другие проверки
-    case isRobokassa(paymentSession?.provider_id):
-      return (
-        <RobokassaPaymentButton
-          notReady={notReady}
-          cart={cart}
-          data-testid={dataTestId}
-        />
-      )
+    // ...
+    case isRobokassa(activePaymentMethod):
+      return <RobokassaPaymentButton {...providerProps} />
     default:
-      return <Button disabled>Select a payment method</Button>
+      // ...
   }
-}
-
-// ... другие компоненты кнопок оплаты
-
-type RobokassaPaymentProps = {
-  cart: HttpTypes.StoreCart
-  notReady: boolean
-  "data-testid"?: string
-}
-
-const RobokassaPaymentButton: React.FC<RobokassaPaymentProps> = ({
-  cart,
-  notReady,
-  "data-testid": dataTestId,
-}) => {
-  const [submitting, setSubmitting] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const router = useRouter()
-
-  const paymentSession = cart.payment_collection?.payment_sessions?.find(
-    session =>
-      session.provider_id === "pp_robokassa_robokassa"
-  )
-
-  const handlePayment = () => {
-    setSubmitting(true)
-    const paymentUrl = (paymentSession?.data as any).paymentUrl
-    if (paymentUrl) {
-      router.push(paymentUrl)
-    } else {
-      setErrorMessage("Payment URL отсутствует")
-      setSubmitting(false)
-    }
-  }
-
-  return (
-    <>
-      <Button
-        disabled={notReady}
-        isLoading={submitting}
-        onClick={handlePayment}
-        data-testid={dataTestId}
-        size="large"
-      >
-        Place order
-      </Button>
-      <ErrorMessage
-        error={errorMessage}
-        data-testid="robokassa-payment-error-message"
-      />
-    </>
-  )
-}
 ```
 
-Этот компонент находит в активной корзине платёжную сессию Robokassa и читает `data.paymentUrl`. При клике по *Place order* пользователь перенаправляется на этот URL, чтобы завершить оплату на странице Robokassa.
-
-Если `paymentUrl` отсутствует, компонент показывает сообщение об ошибке и не выполняет переход. Состояние `isLoading` даёт визуальную обратную связь, пока готовится редирект.
-
-Родительский `PaymentButton` использует `isRobokassa`, чтобы отрисовать `RobokassaPaymentButton` для текущей сессии; иначе показывается неактивная кнопка *Select a payment method*.
+Родительский компонент `PaymentButton` использует `isRobokassa`, чтобы определить, нужно ли отрисовать `RobokassaPaymentButton` для активной сессии, иначе выполнение переходит к следующей ветке.
 
 ---
 
-## Шаг 5: Создайте API-роут для подтверждения платежа
+## Шаг 5: Обработайте возврат с оплаты
 
-После того как покупатель завершает оплату на странице Robokassa, он перенаправляется обратно на витрину магазина. Необходимо создать API-роут, который обработает этот callback, проверит статус платежа и завершит корзину.
+Robokassa сообщает статус платежа и через вебхук, и через этот редирект, поэтому общий роут проверяет, есть ли у корзины заказ, прежде чем оформлять его сам.
 
-Создайте файл [`src/app/api/capture-payment/[cartId]/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-robokassa/medusa-storefront/src/app/api/capture-payment/%5BcartId%5D/route.ts) со следующим содержимым:
+Откройте [`src/app/api/payment-return/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-robokassa/apps/storefront/src/app/api/payment-return/route.ts#L29-L80) и добавьте следующую функцию:
 
-![Структура проекта Medusa Storefront после создания файла для API route](/static/robokassa/storefront/src-app-api-capture-payment-cartid-route.webp)
+![Структура проекта Medusa Storefront после создания файла для API route](/static/robokassa/storefront/src-app-api-payment-return-route.webp)
 
-```ts title="src/app/api/capture-payment/[cartId]/route.ts"
-import { NextRequest, NextResponse } from "next/server"
-import { revalidateTag } from "next/cache"
-import {
-  getCacheTag,
-  getAuthHeaders,
-  removeCartId
-} from "@lib/data/cookies"
-import { sdk } from "@lib/config"
-import { placeOrder } from "@lib/data/cart"
+```ts title="src/app/api/payment-return/route.ts"
+type ReturnContext = {
+  cartId: string
+  locale: string
+  origin: string
+}
 
-type Params = Promise<{ cartId: string }>
+/**
+ * Обрабатывает возврат от провайдера, который принимает оплату на собственной
+ * странице и возвращает покупателя только с идентификатором корзины —
+ * Robokassa в их числе.
+ *
+ * Вебхук провайдера и этот редирект соревнуются друг с другом, и какой из них
+ * ни пришёл бы первым, он оформляет заказ, поэтому перед оформлением
+ * проверяется, нет ли у корзины уже заказа.
+ */
+async function redirectProviderReturn({
+  cartId,
+  locale,
+  origin,
+}: ReturnContext) {
+  const cart = await sdk.client
+    .fetch<HttpTypes.StoreCartResponse>(`/store/carts/${cartId}`, {
+      method: "GET",
+      query: { fields: "id,order_link.order_id" },
+      headers: { ...(await getAuthHeaders()) },
+      cache: "no-store",
+    })
+    .then(({ cart }) => cart)
+    .catch(() => null)
 
-export async function GET(req: NextRequest, { params }: { params: Params }) {
-  const { cartId } = await params
-  const { origin, searchParams } = req.nextUrl
-
-  const countryCode = searchParams.get("country_code") || ""
-  const headers = { ...(await getAuthHeaders()) }
-
-  // Получить актуальные значения корзины
-  const cartCacheTag = await getCacheTag("carts")
-  revalidateTag(cartCacheTag)
-  const { cart } = await sdk.store.cart.retrieve(cartId, {
-    fields: "id, order_link.order_id, items.total"
-  },
-    headers
-  )
   if (!cart) {
-    return NextResponse.redirect(`${origin}/${countryCode}`)
-  }
-
-  const orderId = (cart as unknown as Record<string, any>).order_link?.order_id
-  if (!orderId) {
-    await placeOrder(cartId)
-    // Ошибка при неавторизованном платеже
     return NextResponse.redirect(
-      `${origin}/${countryCode}/checkout?step=review&error=payment_failed`
+      `${origin}/${locale}/cart?error=payment_failed`
     )
   }
 
-  const orderCacheTag = await getCacheTag("orders")
-  revalidateTag(orderCacheTag)
-  removeCartId()
+  const orderId = (cart as unknown as { order_link?: { order_id?: string } })
+    .order_link?.order_id
+
+  if (orderId) {
+    const orderCacheTag = await getCacheTag("orders")
+    revalidateTag(orderCacheTag)
+    await removeCartId()
+
+    return NextResponse.redirect(
+      `${origin}/${locale}/order/${orderId}/confirmed`
+    )
+  }
+
+  // Покупатель отменил оплату, либо она была отклонена, поэтому он возвращается
+  // на страницу оформления заказа с нетронутой корзиной и может выбрать способ
+  // оплаты заново.
+  await setCartId(cartId)
+
+  try {
+    await placeOrder(cartId)
+  } catch (error) {
+    unstable_rethrow(error)
+
+    return NextResponse.redirect(
+      `${origin}/${locale}/checkout?error=payment_failed`
+    )
+  }
+
   return NextResponse.redirect(
-    `${origin}/${countryCode}/order/${orderId}/confirmed`
+    `${origin}/${locale}/checkout?error=payment_failed`
   )
 }
 ```
 
-Этот API-роут обрабатывает редирект от Robokassa после попытки оплаты. Он получает актуальное состояние корзины, чтобы убедиться, что все изменения, внесённые во время оплаты, были отражены.
+Затем направьте возврат Robokassa в эту функцию прямо в `GET`:
 
-Если в корзине нет связанного идентификатора заказа, обработчик роута пытается оформить заказ. В случае успеха покупатель перенаправляется на страницу подтверждения заказа. Если же при обработке корзины возникла ошибка, покупатель возвращается на страницу оформления заказа с указанием ошибки и может повторить процесс оплаты заказа.
+```ts title="src/app/api/payment-return/route.ts"
+  if (provider === "robokassa") {
+    return redirectProviderReturn({ cartId, locale, origin })
+  }
+```
 
-Когда оплата проходит успешно, роут повторно валидирует кэшированные данные корзины и заказа, удаляет cookie корзины и перенаправляет покупателя на страницу подтверждения заказа. Это гарантирует корректное завершение платёжного процесса и сохранение актуальных данных в витрине.
+Если у корзины уже есть заказ, в гонке победил вебхук, и роут обновляет кэш заказа и отправляет покупателя на страницу подтверждения. Иначе он пытается оформить заказ сам, а при любой ошибке отправляет покупателя обратно на оформление заказа с `error=payment_failed`, чтобы он мог выбрать способ оплаты заново.
+
+---
+
+## Шаг 6: Добавьте подписи провайдера в локали витрины
+
+Добавьте `pp_robokassa_robokassa` в [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/5c7c2f15ccfb90f15d5d94abe7d303137550a421/examples/payment-robokassa/apps/storefront/messages/en.json#L514) и в каждую другую локаль под `messages/`:
+
+```json title="messages/en.json"
+{
+  "PaymentMethods": {
+    // ...
+    "pp_robokassa_robokassa": {
+      "title": "Robokassa",
+      "subtitle": "Cards, SBP"
+    }
+  }
+}
+```
+
+Если для локали нет записи, используются английские `title` и `subtitle` из `paymentInfoMap` в [Шаге 1](#шаг-1-настройте-платёжный-провайдер), а способ оплаты без подписи отрисовывается одним названием. Собственное название Robokassa не меняется от локали к локали, за исключением русской, где это `Робокасса`. Подпись переводится наравне с любой другой строкой, поэтому в русской локали она читается как `Карты, СБП`.
 
 ---
 
 ## Полный пример кода интеграции в витрину
 
-Каждый шаг выше написан для стартового шаблона [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa) и ссылается на витрину, из которой он взят, зафиксированную в [`examples/payment-robokassa/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-robokassa/medusa-storefront).
-
-[Пример в `main`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-robokassa) собран на [Medusa DTC Starter](https://github.com/gorgojs/medusa-dtc-starter), в котором уже есть точки расширения для этой интеграции. В его `README.md` перечислены восемь файлов, которые затрагивает плагин, а витрина лежит в [`apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-robokassa/apps/storefront).
+Полный код витрины лежит в [`examples/payment-robokassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-robokassa/apps/storefront), собранной на основе [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter). В [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-robokassa/README.md#what-the-example-adds-to-the-starter) примера перечислены все девять файлов, из которых состоит интеграция, включая бэкенд.

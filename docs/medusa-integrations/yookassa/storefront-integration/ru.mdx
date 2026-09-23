@@ -15,7 +15,7 @@ description: "Узнайте, как интегрировать платежны
 
 ## Шаг 1: Настройте платёжный провайдер
 
-Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L41-L44) и добавьте ЮKassa в маппинг платёжных провайдеров, а также вспомогательную функцию, распознающую её сессии:
+Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-yookassa/apps/storefront/src/lib/constants.tsx#L56-L60) и добавьте ЮKassa в маппинг платёжных провайдеров, а также вспомогательную функцию, распознающую её сессии:
 
 ![Структура проекта Medusa Storefront после обновления файла с константами](/static/yookassa/storefront/src-lib-constants.webp)
 
@@ -331,7 +331,7 @@ async function redirectProviderReturn({
 
 ## Шаг 6: Добавьте подписи провайдера в локали витрины
 
-Добавьте `pp_yookassa_yookassa` в [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/a9a6c9ca380bf9d7807d71bfcdf85da082fafa87/examples/payment-yookassa/apps/storefront/messages/en.json#L513) и в каждую другую локаль под `messages/`:
+Добавьте `pp_yookassa_yookassa` в [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/5c7c2f15ccfb90f15d5d94abe7d303137550a421/examples/payment-yookassa/apps/storefront/messages/en.json#L529) и в каждую другую локаль под `messages/`:
 
 ```json title="messages/en.json"
 {
