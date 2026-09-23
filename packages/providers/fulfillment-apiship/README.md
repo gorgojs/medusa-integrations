@@ -48,6 +48,10 @@ ApiShip Integration for Medusa
   </a>
 </p>
 
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/apiship/apiship-1776095804.mp4">▶ Watch the demo video</a>
+</p>
+
 ## Plugin Features
 
 - **Production-Ready:** Proven in live stores and ready for real-world deployment.
