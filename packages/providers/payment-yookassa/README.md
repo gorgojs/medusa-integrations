@@ -48,6 +48,10 @@ YooKassa Payments for Medusa
   </a>
 </p>
 
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/yookassa/yookassa-en.mp4">▶ Watch the demo video</a>
+</p>
+
 ## Plugin Features
 
 - **Production-Ready:** Proven in live stores and ready for real-world deployment.
