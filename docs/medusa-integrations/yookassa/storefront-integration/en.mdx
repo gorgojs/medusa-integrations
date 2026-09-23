@@ -140,7 +140,9 @@ When initiating a payment for YooKassa, `build` passes a `confirmation` object w
 
 The `return_url` points back to your storefront's `/api/payment-return` route and is used for both successful and failed payment attempts.
 
-The `cart` object is included to build a receipt compliant with Federal Law No. 54. `isReady` holds the session back until the cart carries an email and a shipping address, since the receipt needs the buyer's name, email and phone.
+The `cart` object is included to build a receipt compliant with Federal Law No. 54.
+
+`isReady` holds the session back until the cart carries an email and a shipping address, since the receipt needs the buyer's name, email and phone.
 
 ---
 

@@ -143,7 +143,9 @@ Robokassa needs the active locale for more than the return address, so it's fact
 
 Both addresses point to your storefront's `/api/payment-return` route and are used for both successful and failed payment attempts.
 
-The `cart` object is included to build a receipt compliant with Federal Law No. 54. `isReady` holds the session back until the cart carries an email and a shipping address, since the receipt needs the buyer's address.
+The `cart` object is included to build a receipt compliant with Federal Law No. 54.
+
+`isReady` holds the session back until the cart carries an email and a shipping address, since the receipt needs the buyer's address.
 
 ---
 
