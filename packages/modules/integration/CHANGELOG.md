@@ -1,5 +1,11 @@
 # @gorgo/medusa-integration
 
+## 0.2.3
+
+### Documentation
+
+- add a text link to the demo video in the readme by [@gorgohead](https://github.com/gorgohead) in [`65daddd`](https://github.com/gorgojs/medusa-integrations/commit/65daddd868ef0ac8b0f41813d2cc19ec8f21ebbc)
+
 ## 0.2.2
 
 ### Bug Fixes

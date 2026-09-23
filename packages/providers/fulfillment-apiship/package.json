@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-fulfillment-apiship",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Medusa plugin for ApiShip — delivery service aggregator",
   "files": [
     ".medusa/server",
@@ -62,7 +62,7 @@
     "axios": "^1.13.2"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.2.2",
+    "@gorgo/medusa-integration": "^0.2.3",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",
