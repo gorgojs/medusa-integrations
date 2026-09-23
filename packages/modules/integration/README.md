@@ -48,6 +48,10 @@ Integration Module for Medusa
   </a>
 </p>
 
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/integration-module/integration-module.mp4">▶ Watch the demo video</a>
+</p>
+
 ## What is the Integration Module?
 
 The Integration Module lets any plugin declare its options, and store admins configure them as **integrations** right in the Admin – no `medusa-config` edits, no redeploys. The module takes care of the UI, storage, encryption, and validation.
