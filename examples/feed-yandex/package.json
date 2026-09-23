@@ -20,8 +20,7 @@
     "lint": "turbo lint",
     "test": "turbo test",
     "backend:seed": "turbo seed --filter=@dtc/gorgo-medusa-backend",
-    "backend:dev": "turbo dev --filter=@dtc/gorgo-medusa-backend",
-    "storefront:dev": "turbo dev --filter=@dtc/gorgo-medusa-storefront"
+    "backend:dev": "turbo dev --filter=@dtc/gorgo-medusa-backend"
   },
   "resolutions": {
     "@types/react": "19.0.5",
@@ -32,7 +31,6 @@
     "turbo": "^2.0.14"
   },
   "workspaces": [
-    "apps/backend",
-    "apps/storefront"
+    "apps/backend"
   ]
 }
