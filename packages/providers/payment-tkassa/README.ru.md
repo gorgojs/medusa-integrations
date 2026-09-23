@@ -42,6 +42,16 @@
   </a>
 </p>
 
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/tkassa/tkassa-ru.mp4">
+    <img src="https://static.gorgojs.com/videos/tkassa/tkassa-ru-poster-play-1790196952.webp" alt="Смотреть демо-видео плагина Т-Касса" width="100%" style="border-radius: 8px; max-width: 720px;">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/tkassa/tkassa-ru.mp4">▶ Смотреть демо-видео</a>
+</p>
+
 ## Возможности плагина
 
 - **Готов к продакшену:** Проверен в боевых магазинах и готов к использованию в реальных проектах.

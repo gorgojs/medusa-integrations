@@ -43,6 +43,16 @@ T-Kassa Payments by T-Bank for Medusa
 </p>
 
 
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/tkassa/tkassa-en.mp4">
+    <img src="https://static.gorgojs.com/videos/tkassa/tkassa-en-poster-play-1790196953.webp" alt="Watch the T-Kassa plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/tkassa/tkassa-en.mp4">▶ Watch the demo video</a>
+</p>
+
 ## Plugin Features
 
 - **Production-Ready:** Proven in live stores and ready for real-world deployment.
