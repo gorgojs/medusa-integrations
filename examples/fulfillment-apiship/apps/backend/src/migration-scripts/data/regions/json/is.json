@@ -1,0 +1,29 @@
+{
+  "name": "Iceland",
+  "currency_code": "isk",
+  "countries": ["is"],
+  "stock_location": {
+    "name": "Reykjavik Warehouse",
+    "address": {
+      "address_1": "Laugavegur 11",
+      "country_code": "is"
+    }
+  },
+  "shipping_prices": {
+    "courier": 830,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 2070,
+    "sweatshirt": 4000,
+    "sweatpants": 3310,
+    "shorts": 2620,
+    "hoodie": 4830,
+    "chinoPants": 4550,
+    "pufferJacket": 9660,
+    "wirelessHeadphones": 12970,
+    "electricBike": 144900,
+    "servingPlate": 5660,
+    "espressoCup": 2070
+  }
+}

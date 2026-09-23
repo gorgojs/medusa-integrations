@@ -1,0 +1,29 @@
+{
+  "name": "Moldova",
+  "currency_code": "mdl",
+  "countries": ["md"],
+  "stock_location": {
+    "name": "Chisinau Warehouse",
+    "address": {
+      "address_1": "Bulevardul Ștefan cel Mare 73",
+      "country_code": "md"
+    }
+  },
+  "shipping_prices": {
+    "courier": 106,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 265,
+    "sweatshirt": 515,
+    "sweatpants": 425,
+    "shorts": 335,
+    "hoodie": 620,
+    "chinoPants": 585,
+    "pufferJacket": 1240,
+    "wirelessHeadphones": 1665,
+    "electricBike": 18590,
+    "servingPlate": 725,
+    "espressoCup": 265
+  }
+}

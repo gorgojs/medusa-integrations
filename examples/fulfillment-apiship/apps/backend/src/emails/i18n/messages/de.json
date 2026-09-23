@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Weiter einkaufen",
+    "haveAccount": "Sie haben bereits ein Konto? Öffnen Sie",
+    "item": "Artikel",
+    "myOrders": "Meine Bestellungen",
+    "orCall": "oder rufen Sie an",
+    "orderSummary": "Bestellübersicht",
+    "questionsPrefix": "Bei Fragen schreiben Sie uns an",
+    "shipping": "Versand",
+    "total": "Gesamt",
+    "trackOrder": "Bestellung verfolgen",
+    "viewOrder": "Bestellung ansehen"
+  },
+  "Delivery": {
+    "bodyOrder": "Bestellung <strong>#{id}</strong> wurde zugestellt. Wir hoffen, alles ist gut angekommen.",
+    "headingAnon": "Ihre Bestellung wurde zugestellt",
+    "headingWithName": "{name}, Ihre Bestellung wurde zugestellt",
+    "preview": "Bestellung #{id} zugestellt",
+    "somethingWrong": "Stimmt etwas mit der Bestellung nicht, melden Sie sich innerhalb von 14 Tagen bei uns.",
+    "subject": "Bestellung #{id} zugestellt",
+    "textFallback": "Bestellung #{id} wurde zugestellt."
+  },
+  "Fulfillment": {
+    "bodyOrder": "Bestellung <strong>#{id}</strong> ist verpackt und wartet auf die Übergabe an den Versanddienstleister.",
+    "deliveryCity": "Lieferung nach {city}.",
+    "headingAnon": "Ihre Bestellung wird vorbereitet",
+    "headingWithName": "{name}, Ihre Bestellung wird vorbereitet",
+    "nextStep": "Sobald das Paket unterwegs ist, senden wir Ihnen die Sendungsnummer.",
+    "preview": "Bestellung #{id} wird vorbereitet",
+    "subject": "Bestellung #{id} wird vorbereitet",
+    "textFallback": "Bestellung #{id} wurde verpackt."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. Alle Rechte vorbehalten."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "Bestellung <strong>#{id}</strong> wurde storniert.",
+    "headingAnon": "Ihre Bestellung wurde storniert",
+    "headingWithName": "{name}, Ihre Bestellung wurde storniert",
+    "preview": "Bestellung #{id} storniert",
+    "refundNote": "War die Bestellung bezahlt, geht das Geld auf dieselbe Karte zurück. Banken brauchen dafür meist bis zu 10 Werktage.",
+    "subject": "Bestellung #{id} storniert",
+    "textFallback": "Bestellung #{id} wurde storniert."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "Bestellung <strong>#{id}</strong> wurde abgeschlossen. Danke, dass Sie sich für uns entschieden haben!",
+    "bodyPromo": "Wir freuen uns auf Ihren nächsten Besuch. Entdecken Sie die Neuheiten in unserem Shop.",
+    "deliveryCity": "Geliefert nach {city}.",
+    "headingAnon": "Ihre Bestellung ist abgeschlossen!",
+    "headingWithName": "{name}, Ihre Bestellung ist abgeschlossen!",
+    "preview": "Bestellung #{id} abgeschlossen. Vielen Dank für Ihren Einkauf!",
+    "subject": "Bestellung #{id} abgeschlossen",
+    "textFallback": "Bestellung #{id} abgeschlossen. Vielen Dank für Ihren Einkauf!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "Bestellung <strong>#{id}</strong> wurde erfolgreich aufgegeben.",
+    "deliveryCity": "Lieferung nach {city}.",
+    "headingAnon": "Ihre Bestellung ist eingegangen!",
+    "headingWithName": "{name}, Ihre Bestellung ist eingegangen!",
+    "preview": "Bestellung #{id} erfolgreich aufgegeben",
+    "subject": "Bestellung #{id} aufgegeben",
+    "textFallback": "Bestellung #{id} wurde aufgegeben.\n\nWir bereiten Ihre Bestellung vor und versenden sie in Kürze.",
+    "watchStatus": "Den Status Ihrer Bestellung können Sie in Ihrem Konto verfolgen."
+  },
+  "OrderTransfer": {
+    "body": "Es wurde eine Anfrage gestellt, die Bestellung <strong>#{id}</strong> auf ein anderes Konto zu übertragen. Wenn Sie das waren, bestätigen Sie die Übertragung über die Schaltfläche unten. Andernfalls ignorieren Sie diese E-Mail einfach.",
+    "button": "Anfrage prüfen",
+    "heading": "Übertragungsanfrage für Bestellung",
+    "hint": "Die Bestellung wird erst nach Ihrer Bestätigung übertragen. Wenn Sie keine Übertragung angefordert haben, passiert mit Ihrer Bestellung nichts.",
+    "preview": "Übertragungsanfrage für Bestellung #{id}",
+    "subject": "Übertragungsanfrage für Bestellung #{id}",
+    "textFallback": "Übertragungsanfrage für Bestellung #{id}\n\nUm die Anfrage zu prüfen, folgen Sie dem Link:\n{url}\n\nWenn Sie keine Übertragung angefordert haben, ignorieren Sie diese E-Mail einfach."
+  },
+  "PasswordReset": {
+    "body": "Wir haben eine Anfrage erhalten, das Passwort für <strong>{email}</strong> zurückzusetzen. Klicken Sie auf die Schaltfläche unten, um ein neues Passwort festzulegen.",
+    "button": "Passwort zurücksetzen",
+    "heading": "Passwort zurücksetzen",
+    "hint": "Der Link ist <strong>15 Minuten</strong> gültig. Wenn Sie kein Zurücksetzen angefordert haben, ignorieren Sie diese E-Mail einfach.",
+    "preview": "Passwort zurücksetzen, Link 15 Minuten gültig",
+    "subject": "Passwort zurücksetzen",
+    "textFallback": "Passwort zurücksetzen\n\nUm Ihr Passwort zurückzusetzen, folgen Sie dem Link (15 Minuten gültig):\n{url}\n\nWenn Sie kein Zurücksetzen angefordert haben, ignorieren Sie diese E-Mail einfach."
+  },
+  "Payment": {
+    "bodyOrder": "Bestellung <strong>#{id}</strong> wurde erfolgreich bezahlt. Wir bereiten sie jetzt für den Versand vor.",
+    "headingAnon": "Ihre Bestellung ist bezahlt!",
+    "headingWithName": "{name}, Ihre Bestellung ist bezahlt!",
+    "preview": "Bestellung #{id} erfolgreich bezahlt",
+    "subject": "Bestellung #{id} bezahlt",
+    "textFallback": "Bestellung #{id} wurde bezahlt.\n\nWir bereiten Ihre Bestellung vor und versenden sie in Kürze.",
+    "watchStatus": "Den Status Ihrer Bestellung können Sie in Ihrem Konto verfolgen."
+  },
+  "Shipment": {
+    "bodyOrder": "Bestellung <strong>#{id}</strong> wurde an den Versanddienstleister übergeben.",
+    "deliveryCity": "Lieferung nach {city}.",
+    "deliveryTime": "Die übliche Lieferzeit beträgt je nach Region 1-7 Werktage.",
+    "headingAnon": "Ihre Bestellung ist unterwegs!",
+    "headingWithName": "{name}, Ihre Bestellung ist unterwegs!",
+    "noTracking": "Die Sendungsnummer wird Ihrer Bestellung im Konto hinzugefügt, sobald das Paket an den Versanddienstleister übergeben wurde.",
+    "preview": "Bestellung #{id} versandt",
+    "subject": "Bestellung #{id} versandt",
+    "textDelivery": "Die übliche Lieferzeit beträgt 1-7 Werktage.",
+    "textFallback": "Bestellung #{id} wurde versandt.",
+    "textTracking": "Sendungsnummer: {numbers}",
+    "trackLabel": "Sendungsnummer:",
+    "trackingTitle": "Sendungsverfolgung"
+  },
+  "Welcome": {
+    "body": "Danke für Ihre Registrierung! Ihr Konto ist bereit. Jetzt können Sie schneller bestellen, Ihre Bestellungen verfolgen und Lieferadressen in Ihrem Konto speichern.",
+    "button": "Jetzt einkaufen",
+    "claimOrders": "Schon einmal ohne Konto bestellt? Diese Bestellungen lassen sich hier damit verknüpfen:",
+    "claimOrdersLink": "Ihre Bestellungen",
+    "headingAnon": "Willkommen!",
+    "headingWithName": "Willkommen, {name}!",
+    "preview": "Willkommen bei {store}!",
+    "subject": "Willkommen!",
+    "textFallback": "Willkommen!\n\nDanke für Ihre Registrierung. Ihr Konto ist bereit.\nJetzt einkaufen: {url}"
+  }
+}

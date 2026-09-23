@@ -1,0 +1,29 @@
+{
+  "name": "Burundi",
+  "currency_code": "bif",
+  "countries": ["bi"],
+  "stock_location": {
+    "name": "Gitega Warehouse",
+    "address": {
+      "address_1": "Avenue de l'Indépendance 10",
+      "country_code": "bi"
+    }
+  },
+  "shipping_prices": {
+    "courier": 17400,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 43500,
+    "sweatshirt": 84100,
+    "sweatpants": 69600,
+    "shorts": 55100,
+    "hoodie": 101500,
+    "chinoPants": 95700,
+    "pufferJacket": 203000,
+    "wirelessHeadphones": 273000,
+    "electricBike": 3045000,
+    "servingPlate": 118900,
+    "espressoCup": 43500
+  }
+}

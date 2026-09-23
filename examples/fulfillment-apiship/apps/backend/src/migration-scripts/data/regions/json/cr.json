@@ -1,0 +1,29 @@
+{
+  "name": "Costa Rica",
+  "currency_code": "crc",
+  "countries": ["cr"],
+  "stock_location": {
+    "name": "San Jose Warehouse",
+    "address": {
+      "address_1": "Avenida Central 150",
+      "country_code": "cr"
+    }
+  },
+  "shipping_prices": {
+    "courier": 3120,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 7800,
+    "sweatshirt": 15080,
+    "sweatpants": 12480,
+    "shorts": 9880,
+    "hoodie": 18200,
+    "chinoPants": 17160,
+    "pufferJacket": 36400,
+    "wirelessHeadphones": 48900,
+    "electricBike": 546000,
+    "servingPlate": 21300,
+    "espressoCup": 7800
+  }
+}

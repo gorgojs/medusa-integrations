@@ -1,0 +1,29 @@
+{
+  "name": "France",
+  "currency_code": "eur",
+  "countries": ["fr"],
+  "stock_location": {
+    "name": "Paris Warehouse",
+    "address": {
+      "address_1": "Rue de Rivoli 10",
+      "country_code": "fr"
+    }
+  },
+  "shipping_prices": {
+    "courier": 5,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 14,
+    "sweatshirt": 27,
+    "sweatpants": 22,
+    "shorts": 17,
+    "hoodie": 32,
+    "chinoPants": 30,
+    "pufferJacket": 65,
+    "wirelessHeadphones": 86,
+    "electricBike": 970,
+    "servingPlate": 38,
+    "espressoCup": 14
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Vietnam",
+  "currency_code": "vnd",
+  "countries": ["vn"],
+  "stock_location": {
+    "name": "Hanoi Warehouse",
+    "address": {
+      "address_1": "Phố Điện Biên Phủ 10",
+      "country_code": "vn"
+    }
+  },
+  "shipping_prices": {
+    "courier": 152400,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 381000,
+    "sweatshirt": 737000,
+    "sweatpants": 610000,
+    "shorts": 483000,
+    "hoodie": 889000,
+    "chinoPants": 838000,
+    "pufferJacket": 1778000,
+    "wirelessHeadphones": 2388000,
+    "electricBike": 26670000,
+    "servingPlate": 1041000,
+    "espressoCup": 381000
+  }
+}

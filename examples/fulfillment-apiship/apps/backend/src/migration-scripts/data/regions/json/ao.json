@@ -1,0 +1,31 @@
+{
+  "name": "Angola",
+  "currency_code": "aoa",
+  "countries": [
+    "ao"
+  ],
+  "stock_location": {
+    "name": "Luanda Warehouse",
+    "address": {
+      "address_1": "Avenida Marginal 140",
+      "country_code": "ao"
+    }
+  },
+  "shipping_prices": {
+    "courier": 5100,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 12750,
+    "sweatshirt": 24700,
+    "sweatpants": 20400,
+    "shorts": 16150,
+    "hoodie": 29800,
+    "chinoPants": 28100,
+    "pufferJacket": 59500,
+    "wirelessHeadphones": 79900,
+    "electricBike": 893000,
+    "servingPlate": 34900,
+    "espressoCup": 12750
+  }
+}

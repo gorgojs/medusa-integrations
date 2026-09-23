@@ -1,0 +1,730 @@
+{
+  "AccountInfo": {
+    "cancel": "Цуцлах",
+    "edit": "Засах",
+    "errorDefault": "Алдаа гарлаа, дахин оролдоно уу",
+    "saveChanges": "Өөрчлөлтийг хадгалах",
+    "updatedSuccessfully": "{label} амжилттай шинэчлэгдлээ"
+  },
+  "AccountLayout": {
+    "customerService": "Харилцагчийн үйлчилгээ",
+    "faqDescription": "Түгээмэл асуулт, хариултыг манай харилцагчийн үйлчилгээний хуудаснаас олох боломжтой.",
+    "gotQuestions": "Асуулт хариулт"
+  },
+  "AccountNav": {
+    "account": "Бүртгэл",
+    "addresses": "Хаягууд",
+    "logOut": "Гарах",
+    "orders": "Захиалгууд",
+    "overview": "Тойм",
+    "profile": "Профайл"
+  },
+  "AccountOverview": {
+    "addresses": "Хаягууд",
+    "completed": "Бөглөсөн",
+    "hello": "Сайн байна уу, {name}",
+    "noRecentOrders": "Саяхны захиалга алга",
+    "profile": "Профайл",
+    "recentOrders": "Сүүлийн захиалгууд",
+    "saved": "Хадгалсан",
+    "signedInAs": "Нэвтэрсэн хэрэглэгч:"
+  },
+  "AddressCard": {
+    "addAddress": "Хаяг нэмэх",
+    "default": "Үндсэн",
+    "editAddress": "Хаяг засах",
+    "newAddress": "Шинэ хаяг"
+  },
+  "AddressForm": {
+    "address": "Хаяг",
+    "addressLine2": "Байр, тоот гэх мэт",
+    "addressName": "Нэр",
+    "cancel": "Цуцлах",
+    "city": "Хот",
+    "company": "Компани",
+    "country": "Улс",
+    "edit": "Засах",
+    "firstName": "Нэр",
+    "lastName": "Овог",
+    "phone": "Утас",
+    "postalCode": "Шуудангийн код",
+    "province": "Аймаг / Муж",
+    "remove": "Устгах",
+    "save": "Хадгалах",
+    "stateProvince": "Муж / Аймаг"
+  },
+  "AddressesPage": {
+    "description": "Хүргэлтийн хаягуудаа харах, шинэчлэх боломжтой бөгөөд хүссэн хэмжээгээрээ нэмж болно. Хадгалсан хаягууд захиалга хийх үед боломжтой байх болно.",
+    "heading": "Хүргэлтийн хаягууд"
+  },
+  "Apiship": {
+    "choose": "Сонгох",
+    "courierModalTitle": "Жолоочоор хүргэх",
+    "deliveryDays": "{count, plural, one {{count} хоног} other {{count} хоног}}",
+    "deliveryDaysRange": "{min}–{max} хоног",
+    "loadFailed": "Хүргэлтийн сонголтууд ачаалагдсангүй. Дахин оролдоно уу.",
+    "mapKeyMissing": "Газрын зурагт Yandex Maps API түлхүүр хэрэгтэй.",
+    "noPoints": "Энэ хаяганд авах цэг байхгүй.",
+    "noTariffs": "Энэ хаяг руу хүргэдэг тээвэрлэгч байхгүй.",
+    "photoAlt": "Авах цэгийн зураг {index}",
+    "pickupPointModalTitle": "Авах цэг",
+    "pointDetails": "Хэрхэн очих",
+    "priceFrom": "{price}-с эхлэн",
+    "schedule": "Ажиллах цаг",
+    "selectPointPrompt": "Газрын зураг дээрээс цэг сонгоно уу"
+  },
+  "Breadcrumb": {
+    "home": "Нүүр",
+    "store": "Дэлгүүр"
+  },
+  "Cart": {
+    "emptyMessage": "Таны сагс хоосон байна. Доорх холбоосыг ашиглан бүтээгдэхүүнүүдийг үзэж эхэлнэ үү.",
+    "exploreProducts": "Бүтээгдэхүүн үзэх",
+    "heading": "Сагс"
+  },
+  "CartDropdown": {
+    "bagEmpty": "Таны сагс хоосон байна.",
+    "exploreProducts": "Бүтээгдэхүүн үзэх",
+    "goToCart": "Сагс руу очих",
+    "heading": "Сагс",
+    "subtotal": "Дэд дүн",
+    "subtotalNote": "(татваргүй)"
+  },
+  "CartMismatchBanner": {
+    "errorMessage": "Таны сагсыг шилжүүлэх гэж оролдох үед ямар нэг зүйл буруу боллоо",
+    "runTransferAgain": "Шилжүүлгийг дахин эхлүүлэх",
+    "transferring": "Шилжүүлж байна..."
+  },
+  "CartSummary": {
+    "goToCheckout": "Захиалга хийх"
+  },
+  "CartTotals": {
+    "discount": "Хөнгөлөлт",
+    "shipping": "Хүргэлт",
+    "subtotal": "Дэд дүн (хүргэлт, татваргүй)",
+    "taxes": "Татвар",
+    "total": "Нийт"
+  },
+  "CategoryMenu": {
+    "title": "Ангилал",
+    "viewAll": "Бүгдийг харах"
+  },
+  "CheckoutPage": {
+    "addNewAddress": "Шинэ хаяг нэмэх",
+    "addressHeading": "Хүргэлтийн хаяг",
+    "addressModalTitle": "Хүргэлтийн хаяг",
+    "addressNotNeededForPickup": "Очиж авах тохиолдолд шаардлагагүй",
+    "back": "Буцах",
+    "backToCart": "Сагс руу буцах",
+    "billingHeading": "Төлбөрийн хаяг",
+    "billingSameAsShipping": "Төлбөрийн хаяг хүргэлтийн хаягтай ижил",
+    "close": "Хаах",
+    "contactsHeading": "Холбоо барих мэдээлэл",
+    "contactsModalTitle": "Холбоо барих мэдээлэл",
+    "copyright": "© {year} {siteName}. Бүх эрх хуулиар хамгаалагдсан.",
+    "deliveryDateFrom": "{date}-с эхлэн",
+    "deliveryDateUntil": "{date} хүртэл",
+    "deliveryToday": "Өнөөдөр",
+    "discount": "Хөнгөлөлт",
+    "edit": "Засах",
+    "fieldAddress": "Хаяг",
+    "fieldCity": "Хот",
+    "fieldCompany": "Компани",
+    "fieldEmail": "И-мэйл",
+    "fieldFirstName": "Нэр",
+    "fieldLastName": "Овог",
+    "fieldPhone": "Утас",
+    "fieldPostalCode": "Шуудангийн код",
+    "fieldProvince": "Аймаг",
+    "freeShipping": "Үнэгүй",
+    "giftCard": "Бэлгийн карт",
+    "itemsCount": "{count, plural, one {{count} бараа} other {{count} бараа}}",
+    "legal": "«Төлөх» товчийг дарснаар та манай <terms>нөхцөл</terms>, <termsOfUse>ашиглалтын нөхцөл</termsOfUse> болон <returnPolicy>буцаалтын бодлого</returnPolicy>-г хүлээн зөвшөөрч, <privacyPolicy>нууцлалын бодлого</privacyPolicy>-той санал нийлж байна.",
+    "manualInput": "Хаягийг гараар оруулах",
+    "orderComposition": "Захиалгын дэлгэрэнгүй",
+    "paymentHeading": "Төлбөрийн арга",
+    "recipientCheckbox": "Хүлээн авагч өөр хүн",
+    "recipientHeading": "Хүлээн авагчийн мэдээлэл",
+    "recipientLabel": "Хүлээн авагч:",
+    "returnsLink": "Буцаалтын бодлого",
+    "sameAsShipping": "Хүргэлтийн хаягтай ижил",
+    "save": "Хадгалах",
+    "saving": "Хадгалж байна...",
+    "shippingCost": "Хүргэлт",
+    "shippingDescription": "Захиалгаа хэрхэн хүлээн авахаа сонгоно уу",
+    "shippingHeading": "Хүргэлтийн арга",
+    "shippingLink": "Хүргэлт",
+    "shippingUnavailable": "Хүргэлтийн боломжит арга алга",
+    "signIn": "Нэвтрэх",
+    "total": "Нийт"
+  },
+  "Common": {
+    "clear": "Цэвэрлэх",
+    "close": "Хаах",
+    "hidePassword": "Нууц үг нуух",
+    "orderNumber": "Захиалга #{id}",
+    "poweredBy": "Powered by",
+    "remove": "Устгах",
+    "showPassword": "Нууц үг харуулах"
+  },
+  "ContentPages": {
+    "faq": [
+      {
+        "answer": "Хүргэлтийн хуудсанд хүргэлтийн сонголтууд болон тус бүрийн үнэ бичигдсэн байна.",
+        "question": "Захиалга хэзээ ирэх вэ?"
+      },
+      {
+        "answer": "Буцаалтын хуудсанд барааг буцаах болон солих журам тайлбарласан.",
+        "question": "Бараа буцаах, солих вэ?"
+      },
+      {
+        "answer": "Холбоо барих хуудаснаас бидэнд бичээрэй, бид аль болох хурдан хариулна.",
+        "question": "Тантай яаж холбогдох вэ?"
+      }
+    ],
+    "placeholder": "Энэ хуудас нь стартертай хамт ирсэн жишээ текст. Нээхээсээ өмнө өөрийн текстээр солино уу."
+  },
+  "DiscountCode": {
+    "addPromotionCode": "Промо код нэмэх",
+    "apply": "Ашиглах",
+    "removeDiscount": "Захиалгаас хөнгөлөлтийн кодыг хасах"
+  },
+  "Errors": {
+    "emailExists": "Энэ и-мэйл хаягтай бүртгэл аль хэдийн бий.",
+    "generic": "Ямар нэг зүйл буруу боллоо. Дахин оролдоно уу.",
+    "insufficientInventory": "Уучлаарай, энэ бараа хангалттай нөөцгүй байна.",
+    "invalidCredentials": "И-мэйл эсвэл нууц үг буруу байна.",
+    "invalidDiscount": "Энэ промо код хүчингүй эсвэл хугацаа нь дууссан байна.",
+    "invalidEmail": "Зөв и-мэйл хаяг оруулна уу.",
+    "invalidResetLink": "Энэ холбоос хүчингүй болсон. Аль хэдийн ашигласан эсвэл хугацаа нь дууссан байж магадгүй. Шинийг хүсээрэй.",
+    "network": "Холболтын алдаа гарлаа. Интернэт холболтоо шалгаад дахин оролдоно уу.",
+    "notFound": "Таны хайсан зүйлийг олсонгүй.",
+    "passwordMismatch": "Нууц үг таарахгүй байна.",
+    "passwordTooShort": "Нууц үг доод тал нь 8 тэмдэгт байх ёстой.",
+    "paymentFailed": "Төлбөрийг боловсруулж чадсангүй. Дахин оролдох эсвэл өөр аргаар төлнө үү.",
+    "unauthorized": "Үргэлжлүүлэхийн тулд нэвтэрнэ үү."
+  },
+  "Filters": {
+    "sort": "Эрэмбэлэх",
+    "title": "Шүүлтүүр"
+  },
+  "Footer": {
+    "categoriesHeading": "Ангилал",
+    "collectionsHeading": "Цуглуулга",
+    "copyright": "© {year} {siteName}. Бүх эрх хуулиар хамгаалагдсан.",
+    "infoHeading": "Мэдээлэл",
+    "medusaDocs": "Medusa-ийн баримт бичиг",
+    "sourceCode": "Стартерын эх код",
+    "starterDocs": "Стартерын баримт бичиг"
+  },
+  "ForgotPassword": {
+    "backToSignIn": "Нэвтрэх рүү буцах",
+    "description": "Бүртгүүлсэн шуудангаа оруулаарай, бид шинэ нууц үг тохируулах холбоос илгээнэ.",
+    "email": "Шуудан",
+    "emailTitle": "Зөв шуудангийн хаяг оруулна уу.",
+    "guestAction": "Бүртгүүлэх",
+    "guestPrompt": "Бүртгэлгүйгээр зочноор захиалга өгсөн үү? Тэгвэл нууц үг хараахан байхгүй. Мөн хаягаар бүртгэл үүсгэвэл өмнөх захиалгуудаа холбож болно.",
+    "heading": "Нууц үг сэргээх",
+    "invalidEmail": "Зөв шуудангийн хаяг оруулна уу.",
+    "requestFailed": "Холбоос илгээж чадсангүй. Хэсэг хугацааны дараа дахин оролдоно уу.",
+    "sent": "Тухайн хаягаар бүртгэл байгаа бол холбоос замдаа гарсан. Ирсэн захиа болон спам хавтсаа шалгаарай.",
+    "submit": "Холбоос илгээх"
+  },
+  "FreeShipping": {
+    "onlyAway": "Ердөө {amount} үлдлээ",
+    "unlock": "Үнэгүй хүргэлт авах",
+    "unlocked": "Үнэгүй хүргэлт нээгдлээ!",
+    "viewCart": "Сагс харах",
+    "viewProducts": "Бүтээгдэхүүн харах"
+  },
+  "Help": {
+    "contact": "Холбоо барих",
+    "needHelp": "Тусламж",
+    "returnsExchanges": "Буцаалт ба солилт"
+  },
+  "Hero": {
+    "eyebrow": "Бэлэн шийдэл · Нээлттэй эх код",
+    "features": [
+      {
+        "description": "сайжруулсан, илүү шатгүй, хаягийг автоматаар бөглөх",
+        "label": "Хөрвүүлэлтэд тохирсон захиалгын хуудас"
+      },
+      {
+        "description": "хайлт, шүүлттэй каталог, олон шатлалт категори, mobile-first",
+        "label": "Бүрэн эрхт дэлгүүр"
+      },
+      {
+        "description": "meta тэг, Open Graph ба Twitter карт, JSON-LD, sitemap, robots, llms.txt, PageSpeed Insights 100/100",
+        "label": "SEO ба AI-д оптимизацилагдсан"
+      },
+      {
+        "description": "Дэлгүүрийн 36 хэл (RTL дэмжлэгтэй), борлуулалтын бүсэд 241 улс, улсыг тодорхойлно, шаардлагагүйг хялбар хасна",
+        "label": "Бүрэн локалчлал"
+      },
+      {
+        "description": "SMTP-ээр дамжуулсан React Email загварууд",
+        "label": "Гүйлгээний имэйлүүд"
+      },
+      {
+        "description": "бүтээгдэхүүний каталогт өөрчлөлт орох үед",
+        "label": "Хэрэгцээт кэш шинэчлэлт"
+      },
+      {
+        "badge": "Шинэ",
+        "description": "нийлүүлэгчийн тохиргоог Admin-аар удирдах",
+        "href": "https://gorgojs.com/medusa-integration-module",
+        "label": "Интеграцийн модуль"
+      }
+    ],
+    "featuresHeading": "Онцлогууд",
+    "readDocs": "Баримтжуулалт унших",
+    "subtitle": "Албан ёсны Medusa DTC starter-т дутагдаж байсан бүх зүйл.",
+    "title": "Үйлдвэрлэлд бэлэн Medusa DTC Starter",
+    "viewOnGitHub": "GitHub дээр харах"
+  },
+  "ImageGallery": {
+    "goToImage": "{index}-р зураг руу очих",
+    "openFullImage": "Бүтэн зургийг нээх"
+  },
+  "LanguageSelect": {
+    "locales": {
+      "ar": "العربية",
+      "bg": "Български",
+      "bn": "বাংলা",
+      "cs": "Čeština",
+      "da": "Dansk",
+      "de": "Deutsch",
+      "el": "Ελληνικά",
+      "en": "English",
+      "es": "Español",
+      "fi": "Suomi",
+      "fr": "Français",
+      "he": "עברית",
+      "hi": "हिन्दी",
+      "hu": "Magyar",
+      "id": "Bahasa Indonesia",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ka": "ქართული",
+      "ko": "한국어",
+      "lt": "Lietuvių",
+      "mn": "Монгол",
+      "ms": "Bahasa Melayu",
+      "nb": "Norsk bokmål",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "ro": "Română",
+      "ru": "Русский",
+      "sk": "Slovenčina",
+      "sv": "Svenska",
+      "th": "ไทย",
+      "tl": "Tagalog",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "vi": "Tiếng Việt",
+      "zh": "中文"
+    }
+  },
+  "LineItemOptions": {
+    "variant": "Хувилбар:"
+  },
+  "Login": {
+    "description": "Таны захиалга, хүргэлтийн хаяг бүртгэлд хадгалагдаж, төлбөр хийхэд хурдан болно.",
+    "email": "И-мэйл",
+    "emailTitle": "Зөв и-мэйл хаяг оруулна уу.",
+    "forgotPassword": "Нууц үгээ мартсан уу?",
+    "heading": "Нэвтрэх",
+    "joinUs": "Бүртгүүлэх",
+    "notMember": "Гишүүн биш үү?",
+    "password": "Нууц үг",
+    "signIn": "Нэвтрэх"
+  },
+  "Metadata": {
+    "account": {
+      "description": "Бүртгэлийн үйл ажиллагааны тойм.",
+      "title": "Бүртгэл"
+    },
+    "addresses": {
+      "description": "Хаягуудаа харах",
+      "title": "Хаягууд"
+    },
+    "cart": {
+      "description": "Сагсаа харах",
+      "title": "Сагс"
+    },
+    "category": {
+      "description": "{siteName} дэлгүүрийн {category} хэсгийг үзээрэй. Сонголтуудыг харьцуулж, үнийг шалгаад тохирохоо олоорой."
+    },
+    "checkout": {
+      "description": "Захиалгаа шалгаж, хүргэлтийн мэдээллээ оруулаад аюулгүй төлбөрөө хийнэ үү.",
+      "title": "Төлбөр"
+    },
+    "collection": {
+      "description": "{siteName} дэлгүүрийн {collection} цуглуулгатай танилцаарай. Бүх бүтээгдэхүүнийг үзэж, тохирохоо сонгоорой."
+    },
+    "contact": {
+      "description": "Захиалга, бараа болон бусад асуудлаар бидэнд бичээрэй.",
+      "title": "Холбоо барих"
+    },
+    "customerService": {
+      "description": "Хамгийн түгээмэл асуултын хариулт болон бидэнтэй холбогдох арга замууд.",
+      "title": "Хэрэглэгчийн үйлчилгээ"
+    },
+    "home": {
+      "description": "Манай сонгомол бүтээгдэхүүний цуглуулгыг судлаарай. Хамгийн сүүлийн загваруудыг худалдан аваад өөрт таалагдах зүйлээ ол."
+    },
+    "login": {
+      "description": "{siteName} бүртгэлдээ нэвтэрнэ үү.",
+      "title": "Нэвтрэх"
+    },
+    "orderConfirmed": {
+      "description": "Худалдан авалт амжилттай болсон",
+      "title": "Захиалга батлагдлаа"
+    },
+    "orderDetails": {
+      "description": "Захиалгаа харах"
+    },
+    "orderTransfer": {
+      "title": "Захиалгын шилжүүлэг"
+    },
+    "orders": {
+      "description": "Өмнөх захиалгуудын тойм.",
+      "title": "Захиалгууд"
+    },
+    "privacy": {
+      "description": "Дэлгүүр ямар хувийн мэдээлэл цуглуулдаг, яагаад гэдгийг үзнэ үү.",
+      "title": "Нууцлалын бодлого"
+    },
+    "profile": {
+      "description": "{siteName} профайлаа харах, засах.",
+      "title": "Профайл"
+    },
+    "resetPassword": {
+      "description": "Бүртгэлдээ шинэ нууц үг тохируулна уу.",
+      "title": "Нууц үг сэргээх"
+    },
+    "returns": {
+      "description": "Барааг хэрхэн буцаах, солих, ямар хугацаанд боломжтой, мөнгө хэзээ буцаж ирэхийг үзээрэй.",
+      "title": "Буцаалт ба солилцоо"
+    },
+    "shipping": {
+      "description": "Захиалга хэрхэн хүргэгддэг, хүргэлт хэд болохыг үзнэ үү.",
+      "title": "Хүргэлт"
+    },
+    "store": {
+      "description": "Бүх каталогийг үзээрэй. Ангилал, сонголтоор шүүж, үнээр эрэмбэлээд яг хэрэгтэйгээ олоорой.",
+      "title": "Дэлгүүр"
+    },
+    "terms": {
+      "description": "Худалдан авахдаа зөвшөөрч буй дүрмээ уншина уу.",
+      "title": "Үйлчилгээний нөхцөл"
+    }
+  },
+  "NativeSelect": {
+    "defaultPlaceholder": "Сонгох..."
+  },
+  "Nav": {
+    "account": "Профайл",
+    "cart": "Сагс ({count})"
+  },
+  "NotFound": {
+    "cartDescription": "Таны хандах гэсэн сагс байхгүй байна. Күүкигээ цэвэрлээд дахин оролдоно уу.",
+    "description": "Таны хандах гэсэн хуудас байхгүй байна.",
+    "goHome": "Нүүр хуудас руу очих",
+    "title": "Хуудас олдсонгүй"
+  },
+  "OnboardingCta": {
+    "completeInAdmin": "Админ хэсэгт тохиргоог дуусгах",
+    "completeSetup": "Одоо та админ хэсэгт дэлгүүрийн тохиргоог дуусгаж болно.",
+    "orderCreated": "Таны туршилтын захиалга амжилттай үүслээ!"
+  },
+  "OrderCard": {
+    "itemsCount": "{count, plural, one {{count} бараа} other {{count} бараа}}",
+    "more": "нэмэлт",
+    "seeDetails": "Дэлгэрэнгүй харах"
+  },
+  "OrderCompleted": {
+    "orderSuccess": "Таны захиалга амжилттай баталгаажлаа.",
+    "thankYou": "Баярлалаа!"
+  },
+  "OrderDetails": {
+    "backToOrders": "Захиалга руу буцах",
+    "confirmationSentBefore": "Захиалгын баталгаажуулах дэлгэрэнгүй мэдээллийг дараах хаяг руу илгээсэн",
+    "fulfillmentStatuses": {
+      "canceled": "Цуцалсан",
+      "delivered": "Хүргэсэн",
+      "fulfilled": "Бэлдсэн",
+      "not_fulfilled": "Бэлдээгүй",
+      "partially_delivered": "Хэсэгчлэн хүргэсэн",
+      "partially_fulfilled": "Хэсэгчлэн бэлдсэн",
+      "partially_shipped": "Хэсэгчлэн илгээсэн",
+      "shipped": "Илгээсэн"
+    },
+    "items": "Бараа",
+    "orderDate": "Захиалгын огноо:",
+    "orderNumber": "Захиалгын дугаар:",
+    "paymentStatuses": {
+      "authorized": "Баталгаажсан",
+      "awaiting": "Төлбөр хүлээгдэж байна",
+      "canceled": "Цуцалсан",
+      "captured": "Төлсөн",
+      "not_paid": "Төлөөгүй",
+      "partially_authorized": "Хэсэгчлэн баталгаажсан",
+      "partially_captured": "Хэсэгчлэн төлсөн",
+      "partially_refunded": "Хэсэгчлэн буцаасан",
+      "refunded": "Буцаасан",
+      "requires_action": "Арга хэмжээ шаардлагатай"
+    }
+  },
+  "OrderOverview": {
+    "continueShopping": "Худалдан авалтаа үргэлжлүүлэх",
+    "noOrdersYet": "Танд одоогоор захиалга алга байна",
+    "nothingToSeeHere": "Энд харах зүйл алга"
+  },
+  "OrderSummary": {
+    "discount": "Хөнгөлөлт",
+    "giftCard": "Бэлгийн карт",
+    "heading": "Захиалгын дүн",
+    "shipping": "Хүргэлт",
+    "subtotal": "Дэд дүн",
+    "taxes": "Татвар",
+    "total": "Нийт"
+  },
+  "OrdersPage": {
+    "description": "Өмнөх захиалгууд болон тэдгээрийн төлвийг харах боломжтой.",
+    "heading": "Захиалгууд"
+  },
+  "Payment": {
+    "anotherStep": "Нэмэлт алхам гарч ирнэ",
+    "continueToReview": "Хяналт руу үргэлжлүүлэх",
+    "edit": "Засах",
+    "enterPaymentDetails": "Төлбөрийн мэдээлэл оруулах",
+    "giftCard": "Бэлгийн карт",
+    "heading": "Төлбөр",
+    "paymentDetails": "Төлбөрийн дэлгэрэнгүй",
+    "paymentMethod": "Төлбөрийн арга"
+  },
+  "PaymentButton": {
+    "placeOrder": "Төлөх",
+    "selectPaymentMethod": "Төлбөрийн аргаа сонгоно уу"
+  },
+  "PaymentContainer": {
+    "enterPaymentDetails": "Төлбөрийн мэдээллээ оруулна уу:",
+    "loadError": "Төлбөрийн аргуудыг ачаалж чадсангүй."
+  },
+  "PaymentDetails": {
+    "heading": "Төлбөр",
+    "paidAt": "төлсөн огноо",
+    "paymentDetails": "Төлбөрийн дэлгэрэнгүй",
+    "paymentMethod": "Төлбөрийн арга"
+  },
+  "PaymentMethods": {
+    "pp_medusa-payments_default": {
+      "title": "Кредит карт",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Кредит карт",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Гар аргаар төлөх"
+    }
+  },
+  "PaymentTest": {
+    "attention": "Анхаар:",
+    "testingOnly": "Зөвхөн туршилтын зорилгоор."
+  },
+  "ProductActions": {
+    "addToCart": "Сагслах",
+    "outOfStock": "Дууссан",
+    "selectOptions": "Сонголт хийх",
+    "selectVariant": "Хувилбар сонгох"
+  },
+  "ProductOnboardingCta": {
+    "continueInAdmin": "Админ хэсэгт тохиргоог үргэлжлүүлэх",
+    "continueSetup": "Одоо та админ хэсэгт дэлгүүрийн тохиргоог үргэлжлүүлж болно.",
+    "demoCreated": "Таны жишээ бүтээгдэхүүн амжилттай үүслээ!"
+  },
+  "ProductPrice": {
+    "from": "Эхлэх: ",
+    "original": "Анхны үнэ: "
+  },
+  "ProductRail": {
+    "viewAll": "Бүгдийг харах"
+  },
+  "ProductTabs": {
+    "easyReturns": "Хялбар буцаалт",
+    "easyReturnsDesc": "Бүтээгдэхүүнээ буцаахад л хангалттай, бид мөнгийг тань буцаана. Ямар ч асуулт байхгүй - буцаалтыг тань аль болох хялбар байлгахыг хичээх болно.",
+    "fastDelivery": "Түргэн хүргэлт",
+    "fastDeliveryDesc": "Таны бараа 3-5 ажлын өдрийн дотор очиж авах цэг рүү эсвэл гэр лүү тань хүрнэ.",
+    "shippingReturns": "Хүргэлт ба буцаалт",
+    "simpleExchanges": "Хялбар солилт",
+    "simpleExchangesDesc": "Хэмжээ тохирсонгүй юу? Санаа бүү зов - бид таны бүтээгдэхүүнийг шинээр солино."
+  },
+  "ProfileBillingAddress": {
+    "billingAddress": "Төлбөрийн хаяг",
+    "noBillingAddress": "Төлбөрийн хаяг алга"
+  },
+  "ProfileEmail": {
+    "email": "И-мэйл",
+    "label": "И-мэйл"
+  },
+  "ProfileName": {
+    "firstName": "Нэр",
+    "label": "Нэр",
+    "lastName": "Овог",
+    "noName": "Нэр алга"
+  },
+  "ProfilePage": {
+    "description": "Нэр, имэйл, утасны дугаар, төлбөрийн хаягаа харах, шинэчлэх.",
+    "heading": "Профайл"
+  },
+  "ProfilePassword": {
+    "confirmPassword": "Нууц үгээ баталгаажуулна уу",
+    "hidden": "Аюулгүй байдлын үүднээс нууц үг харагдахгүй",
+    "label": "Нууц үг",
+    "newPassword": "Шинэ нууц үг",
+    "oldPassword": "Хуучин нууц үг"
+  },
+  "ProfilePhone": {
+    "label": "Утас",
+    "noPhone": "Утасны дугаар алга",
+    "phone": "Утас"
+  },
+  "PromoBanner": {
+    "close": "Хаах",
+    "cta": "Өөрийн дэлгүүрээ нээх",
+    "message": "Энэ дэлгүүр Gorgo-ийн үнэгүй Medusa DTC Starter дээр ажилладаг."
+  },
+  "RegionSelect": {
+    "apply": "Хэрэгжүүлэх",
+    "close": "Хаах",
+    "placeholder": "Улс эсвэл хэл хайх",
+    "tabCountry": "Улс",
+    "tabLanguage": "Хэл",
+    "title": "Бүс нутаг солих"
+  },
+  "Register": {
+    "agreeText": "{siteName}-ийн бүртгэл үүсгэснээр та зөвшөөрч байна",
+    "alreadyMember": "Аль хэдийн гишүүн үү?",
+    "and": "болон",
+    "description": "{siteName}-ийн бүртгэл үүсгэвэл захиалга, хаяг нэг дор хадгалагдаж, төлбөр хурдан болно.",
+    "email": "И-мэйл",
+    "firstName": "Нэр",
+    "heading": "{siteName}-ийн гишүүн болох",
+    "join": "Бүртгүүлэх",
+    "lastName": "Овог",
+    "password": "Нууц үг",
+    "phone": "Утас",
+    "privacyPolicy": "Нууцлалын бодлого",
+    "signIn": "Нэвтрэх",
+    "termsOfUse": "Ашиглалтын нөхцөл"
+  },
+  "RelatedProducts": {
+    "title": "Танд таалагдаж магадгүй"
+  },
+  "ResetPassword": {
+    "confirmPassword": "Нууц үгээ давтана уу",
+    "description": "Бүртгэлдээ шинэ нууц үг сонгоно уу.",
+    "descriptionWithEmail": "{email} хаягт шинэ нууц үг сонгоно уу.",
+    "done": "Нууц үг солигдлоо. Одоо түүгээр нэвтэрч болно.",
+    "goToSignIn": "Нэвтрэх",
+    "heading": "Шинэ нууц үг",
+    "missingToken": "Энэ холбоост токен алга. Нэвтрэх хуудаснаас шинийг хүсээрэй.",
+    "password": "Шинэ нууц үг",
+    "submit": "Нууц үг хадгалах"
+  },
+  "Review": {
+    "confirmText": "«Төлөх» товчийг дарснаар та манай Ашиглалтын нөхцөл, Борлуулалтын нөхцөл, Буцаалтын бодлоготой танилцаж, ойлгож, зөвшөөрч байгаагаа, мөн {siteName}-ийн Нууцлалын бодлоготой танилцсанаа баталж байна.",
+    "heading": "Хянах"
+  },
+  "Search": {
+    "empty": "«{query}»-д тохирох үр дүн олдсонгүй",
+    "label": "Хайх",
+    "loading": "Хайж байна…",
+    "placeholder": "Бүтээгдэхүүн хайх",
+    "popular": "Түгээмэл бүтээгдэхүүн"
+  },
+  "Shipping": {
+    "chooseStore": "Ойролцоох дэлгүүрээ сонгоно уу",
+    "continueToPayment": "Төлбөр рүү үргэлжлүүлэх",
+    "deliveryDescription": "Захиалгаа хэрхэн хүлээн авахыг хүсэж байна вэ",
+    "edit": "Засах",
+    "heading": "Хүргэлт",
+    "method": "Арга",
+    "pickUpOrder": "Захиалгаа очиж авах",
+    "shippingMethod": "Хүргэлтийн арга",
+    "store": "Дэлгүүр"
+  },
+  "ShippingDetails": {
+    "contact": "Холбоо барих",
+    "heading": "Хүргэлт",
+    "method": "Арга",
+    "shippingAddress": "Хүргэлтийн хаяг"
+  },
+  "SideMenu": {
+    "copyright": "© {year} {siteName}. Бүх эрх хуулиар хамгаалагдсан.",
+    "items": {
+      "account": "Профайл",
+      "cart": "Сагс",
+      "home": "Нүүр",
+      "store": "Дэлгүүр"
+    },
+    "menuButton": "Цэс"
+  },
+  "SignInPrompt": {
+    "description": "Төлбөр хийхэд хадгалсан хаягуудыг санал болгож, захиалга таны бүртгэлд орно.",
+    "heading": "Нэвтэрвэл захиалга илүү хурдан",
+    "signIn": "Нэвтрэх"
+  },
+  "SortSelect": {
+    "latestArrivals": "Шинэ бараа",
+    "placeholder": "Эрэмбэлэх",
+    "priceHighLow": "Үнэ: Ихээс Бага руу",
+    "priceLowHigh": "Үнэ: Багаас Их рүү"
+  },
+  "Store": {
+    "allProducts": "Бүх бүтээгдэхүүн"
+  },
+  "TransferActions": {
+    "acceptTransfer": "Шилжүүлгийг зөвшөөрөх",
+    "declineSuccess": "Захиалгын шилжүүлгээс амжилттай татгалзлаа!",
+    "declineTransfer": "Шилжүүлгээс татгалзах",
+    "transferSuccess": "Захиалга амжилттай шилжлээ!"
+  },
+  "TransferPage": {
+    "acceptError": "Шилжүүлгийг баталгаажуулж чадсангүй. Холбоос буруу эсвэл аль хэдийн ашиглагдсан байж магадгүй.",
+    "acceptInfo": "Хэрэв та зөвшөөрвөл, шинэ эзэмшигч энэ захиалгатай холбоотой бүх эрх, үүргийг хүлээн авна.",
+    "acceptedBody": "Захиалга {id} шинэ эзэмшигчид амжилттай шилжлээ.",
+    "acceptedHeading": "Захиалга шилжлээ!",
+    "declineError": "Шилжүүлгээс татгалзаж чадсангүй. Холбоос буруу эсвэл аль хэдийн ашиглагдсан байж магадгүй.",
+    "declinedBody": "Захиалга {id}-ийн шилжүүлгээс татгалзлаа.",
+    "declinedHeading": "Шилжүүлгээс татгалзсан",
+    "noAction": "Хэрэв та энэ хүсэлтийг мэдэхгүй байгаа эсвэл захиалгыг өөртөө үлдээхийг хүсвэл ямар ч арга хэмжээ авах шаардлагагүй.",
+    "requestHeading": "Захиалга {id}-г шилжүүлэх хүсэлт",
+    "requestIntro": "Таны захиалгын ({id}) эзэмшигчийг шилжүүлэх хүсэлт ирлээ. Хэрэв зөвшөөрвөл доорх товчийг дарж баталгаажуулна уу."
+  },
+  "TransferRequest": {
+    "cantFindOrder": "Хайж буй захиалгаа олохгүй байна уу?",
+    "connectOrder": "Захиалгыг өөрийн бүртгэлд холбоно уу.",
+    "heading": "Захиалгын шилжүүлэг",
+    "orderId": "Захиалгын холбоос эсвэл ID",
+    "requestTransfer": "Шилжүүлэг хүсэх",
+    "transferEmailSent": "Шилжүүлгийн хүсэлтийн и-мэйлийг {email} хаяг руу илгээлээ",
+    "transferRequested": "Захиалга {orderId}-ийн шилжүүлгийг хүслээ",
+    "whereToFind": "Тухайн захиалгын баталгаажуулах захидлыг нээж, доторх холбоосыг энд буулгана уу."
+  }
+}

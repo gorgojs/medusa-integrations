@@ -1,0 +1,103 @@
+{
+  "name": "Bahasa Melayu",
+  "translations": {
+    "categories": {
+      "clothing": "Pakaian",
+      "coffee": "Kopi",
+      "eTransport": "Pengangkutan Elektrik",
+      "electronics": "Elektronik",
+      "headphones": "Fon Kepala",
+      "home": "Rumah",
+      "outerwear": "Pakaian Luar",
+      "pants": "Seluar",
+      "shirts": "Baju-T",
+      "shorts": "Seluar Pendek",
+      "sweatshirts": "Sweater",
+      "tableware": "Peralatan Meja"
+    },
+    "collections": {
+      "new": "Ketibaan Baharu"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Seluar chino hitam klasik dengan potongan kemas dan reka bentuk minimal. Diperbuat daripada fabrik kapas yang lembut dan tahan lasak dengan sedikit keanjalan untuk keselesaan. Mempunyai poket sisi, gelung tali pinggang dan penutup butang. Sesuai untuk gaya kasual mahupun kemas.",
+        "title": "Seluar Chino"
+      },
+      "electricBike": {
+        "description": "Basikal gunung elektrik hitam matte dibina untuk prestasi dan keserbagunaan harian. Mempunyai rangka aluminium yang ringan, bateri bersepadu dan motor berkuasa untuk perjalanan lancar berbantukan kuasa pada semua jenis medan. Direka untuk kegunaan bandar mahupun laluan luar bandar.",
+        "title": "Basikal Elektrik"
+      },
+      "espressoCup": {
+        "description": "Cawan espreso seramik hitam direka untuk single atau double shot. Tahan lasak, mengekalkan haba dan selamat dibasuh dalam mesin basuh pinggan mangkuk.",
+        "title": "Cawan Espreso"
+      },
+      "hoodie": {
+        "description": "Hoodie hitam klasik diperbuat daripada fabrik kapas lembut untuk keselesaan harian. Mempunyai potongan santai, tali penyesuai pada tudung dan poket kanggaru di bahagian depan. Ringkas dan serba boleh untuk berlapis pada mana-mana musim.",
+        "title": "Hoodie"
+      },
+      "pufferJacket": {
+        "description": "Jaket puffer hitam berlapik direka untuk kehangatan dan keselesaan dalam cuaca sejuk. Mempunyai kolar tinggi, zip depan dengan penutup butang tekan dan pelbagai poket untuk kefungsian. Ringan namun tahan lasak untuk pemakaian harian atau aktiviti luar.",
+        "title": "Jaket Puffer"
+      },
+      "servingPlate": {
+        "description": "Pinggan hidangan keluli tahan karat berbentuk artistik dengan kemasan cermin yang berkilau. Bentuknya yang mengalir dan moden menambah sentuhan elegan pada mana-mana persediaan meja. Sesuai untuk buah-buahan, aperitif atau paparan hiasan. Direka untuk kefungsian dan kesan visual, ia memantulkan cahaya dengan indah dan melengkapkan gaya rumah atau restoran kontemporari.",
+        "title": "Pinggan Hidangan"
+      },
+      "shorts": {
+        "description": "Alami semula keselesaan seluar pendek klasik. Dengan seluar pendek kapas kami, keperluan harian anda tidak lagi biasa-biasa sahaja.",
+        "title": "Seluar Pendek Medusa"
+      },
+      "sweatpants": {
+        "description": "Alami semula keselesaan seluar sweat klasik. Dengan seluar sweat kapas kami, keperluan harian anda tidak lagi biasa-biasa sahaja.",
+        "title": "Seluar Sweat Medusa"
+      },
+      "sweatshirt": {
+        "description": "Alami semula keselesaan sweater klasik. Dengan sweater kapas kami, keperluan harian anda tidak lagi biasa-biasa sahaja.",
+        "title": "Sweater Medusa"
+      },
+      "tShirt": {
+        "description": "Alami semula keselesaan baju-T klasik. Dengan baju-T kapas kami, keperluan harian anda tidak lagi biasa-biasa sahaja.",
+        "title": "Baju-T Medusa"
+      },
+      "wirelessHeadphones": {
+        "description": "Fon kepala wayarles hitam matte dengan reka bentuk over-ear yang selesa untuk pengalaman mendengar yang mengasyikkan. Menawarkan bunyi jernih, bes yang kuat dan jangka hayat bateri yang panjang. Direka untuk kegunaan harian di rumah, di pejabat atau semasa bergerak.",
+        "title": "Fon Kepala Wayarles Over-Ear"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Bayaran balik diberikan sebagai muhibah atau pampasan atas kesulitan",
+        "label": "Pelarasan Layanan Pelanggan"
+      },
+      "pricingError": {
+        "description": "Bayaran balik untuk membetulkan caj lebih, diskaun tertinggal atau harga yang salah",
+        "label": "Ralat Harga"
+      },
+      "shippingIssue": {
+        "description": "Bayaran balik disebabkan penghantaran hilang, lewat atau tersalah hantar",
+        "label": "Isu Penghantaran"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Penghantaran kurier",
+      "pickup": "Ambil sendiri"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Penghantaran dalam masa 2–3 hari.",
+        "label": "Kurier"
+      },
+      "pickup": {
+        "description": "Ambil di lokasi pengambilan.",
+        "label": "Ambil Sendiri"
+      }
+    },
+    "terms": {
+      "black": "Hitam",
+      "color": "Warna",
+      "silver": "Perak",
+      "size": "Saiz",
+      "white": "Putih"
+    }
+  }
+}

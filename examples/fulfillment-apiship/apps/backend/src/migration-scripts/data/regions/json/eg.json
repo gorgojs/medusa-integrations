@@ -1,0 +1,29 @@
+{
+  "name": "Egypt",
+  "currency_code": "egp",
+  "countries": ["eg"],
+  "stock_location": {
+    "name": "Cairo Warehouse",
+    "address": {
+      "address_1": "شارع التحرير 34",
+      "country_code": "eg"
+    }
+  },
+  "shipping_prices": {
+    "courier": 295,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 735,
+    "sweatshirt": 1420,
+    "sweatpants": 1175,
+    "shorts": 930,
+    "hoodie": 1715,
+    "chinoPants": 1615,
+    "pufferJacket": 3430,
+    "wirelessHeadphones": 4610,
+    "electricBike": 51500,
+    "servingPlate": 2010,
+    "espressoCup": 735
+  }
+}

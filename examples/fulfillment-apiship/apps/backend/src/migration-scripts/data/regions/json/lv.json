@@ -1,0 +1,29 @@
+{
+  "name": "Latvia",
+  "currency_code": "eur",
+  "countries": ["lv"],
+  "stock_location": {
+    "name": "Riga Warehouse",
+    "address": {
+      "address_1": "Brīvības bulvāris 11",
+      "country_code": "lv"
+    }
+  },
+  "shipping_prices": {
+    "courier": 6,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 14,
+    "sweatshirt": 27,
+    "sweatpants": 22,
+    "shorts": 18,
+    "hoodie": 33,
+    "chinoPants": 31,
+    "pufferJacket": 65,
+    "wirelessHeadphones": 87,
+    "electricBike": 975,
+    "servingPlate": 38,
+    "espressoCup": 14
+  }
+}

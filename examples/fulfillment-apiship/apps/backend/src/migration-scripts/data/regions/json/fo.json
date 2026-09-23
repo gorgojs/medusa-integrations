@@ -1,0 +1,29 @@
+{
+  "name": "Faroe Islands",
+  "currency_code": "dkk",
+  "countries": ["fo"],
+  "stock_location": {
+    "name": "Tórshavn Warehouse",
+    "address": {
+      "address_1": "Niels Finsens gøta 12",
+      "country_code": "fo"
+    }
+  },
+  "shipping_prices": {
+    "courier": 41,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 104,
+    "sweatshirt": 200,
+    "sweatpants": 166,
+    "shorts": 131,
+    "hoodie": 240,
+    "chinoPants": 230,
+    "pufferJacket": 485,
+    "wirelessHeadphones": 650,
+    "electricBike": 7250,
+    "servingPlate": 285,
+    "espressoCup": 104
+  }
+}

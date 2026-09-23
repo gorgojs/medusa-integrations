@@ -1,0 +1,29 @@
+{
+  "name": "Isle Of Man",
+  "currency_code": "gbp",
+  "countries": ["im"],
+  "stock_location": {
+    "name": "Douglas Warehouse",
+    "address": {
+      "address_1": "Athol Street 14",
+      "country_code": "im"
+    }
+  },
+  "shipping_prices": {
+    "courier": 5,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 12,
+    "sweatshirt": 23,
+    "sweatpants": 19,
+    "shorts": 15,
+    "hoodie": 28,
+    "chinoPants": 26,
+    "pufferJacket": 55,
+    "wirelessHeadphones": 74,
+    "electricBike": 830,
+    "servingPlate": 32,
+    "espressoCup": 12
+  }
+}

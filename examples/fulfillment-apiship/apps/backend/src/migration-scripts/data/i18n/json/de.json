@@ -1,0 +1,103 @@
+{
+  "name": "Deutsch",
+  "translations": {
+    "categories": {
+      "clothing": "Bekleidung",
+      "coffee": "Kaffee",
+      "eTransport": "Elektromobilität",
+      "electronics": "Elektronik",
+      "headphones": "Kopfhörer",
+      "home": "Wohnen",
+      "outerwear": "Oberbekleidung",
+      "pants": "Hosen",
+      "shirts": "T-Shirts",
+      "shorts": "Shorts",
+      "sweatshirts": "Sweatshirts",
+      "tableware": "Geschirr"
+    },
+    "collections": {
+      "new": "Neuheiten"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klassische schwarze Chinohose mit tailliertem Schnitt und minimalistischem Design. Aus weichem, strapazierfähigem Baumwollstoff mit einem Hauch Stretch für mehr Tragekomfort. Mit Seitentaschen, Gürtelschlaufen und Knopfverschluss. Ideal für Freizeit und stilvolle Anlässe gleichermaßen.",
+        "title": "Chinohose"
+      },
+      "electricBike": {
+        "description": "Mattschwarzes elektrisches Mountainbike für Leistung und vielseitigen Alltagseinsatz. Mit leichtem Aluminiumrahmen, integriertem Akku und starkem Motor für müheloses Fahren auf jedem Terrain. Konzipiert für Stadtfahrten ebenso wie für Offroad-Trails.",
+        "title": "E-Bike"
+      },
+      "espressoCup": {
+        "description": "Schwarze Espressotassen aus Keramik für einfache oder doppelte Shots. Robust, wärmespeichernd und spülmaschinenfest.",
+        "title": "Espressotasse"
+      },
+      "hoodie": {
+        "description": "Klassischer schwarzer Hoodie aus weicher Baumwolle für Komfort im Alltag. Mit lockerer Passform, verstellbarer Kordelzug-Kapuze und aufgesetzter Kängurutasche. Schlicht und vielseitig kombinierbar für jede Jahreszeit.",
+        "title": "Hoodie"
+      },
+      "pufferJacket": {
+        "description": "Gefütterte schwarze Steppjacke für Wärme und Komfort bei kaltem Wetter. Mit hohem Kragen, Frontreißverschluss mit Druckknopfverschluss und mehreren funktionalen Taschen. Leicht und dennoch robust – perfekt für den Alltag oder draußen.",
+        "title": "Steppjacke"
+      },
+      "servingPlate": {
+        "description": "Eine skulpturale Servierplatte aus Edelstahl mit poliertem Spiegelglanz. Ihre fließende, moderne Form verleiht jedem gedeckten Tisch einen edlen Akzent. Perfekt für Obst, Vorspeisen oder als dekoratives Element. Funktional und optisch beeindruckend zugleich – sie reflektiert das Licht wunderschön und passt zu jedem modernen Zuhause oder Restaurant.",
+        "title": "Servierplatte"
+      },
+      "shorts": {
+        "description": "Neu gedacht: das Gefühl klassischer Shorts. Mit unseren Baumwoll-Shorts werden Alltagsbasics zu etwas Besonderem.",
+        "title": "Medusa Shorts"
+      },
+      "sweatpants": {
+        "description": "Neu gedacht: das Gefühl einer klassischen Jogginghose. Mit unserer Baumwoll-Jogginghose wird der Alltag alles andere als gewöhnlich.",
+        "title": "Medusa Jogginghose"
+      },
+      "sweatshirt": {
+        "description": "Neu gedacht: das Gefühl eines klassischen Sweatshirts. Mit unserem Baumwoll-Sweatshirt werden Alltagsbasics zu etwas Besonderem.",
+        "title": "Medusa Sweatshirt"
+      },
+      "tShirt": {
+        "description": "Neu gedacht: das Gefühl eines klassischen T-Shirts. Mit unseren Baumwoll-T-Shirts werden Alltagsbasics zu etwas Besonderem.",
+        "title": "Medusa T-Shirt"
+      },
+      "wirelessHeadphones": {
+        "description": "Mattschwarze kabellose Kopfhörer mit komfortablem Over-Ear-Design für ein intensives Hörerlebnis. Klarer Klang, kräftiger Bass und lange Akkulaufzeit. Ideal für den täglichen Einsatz zu Hause, im Büro oder unterwegs.",
+        "title": "Kabellose Over-Ear-Kopfhörer"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Rückerstattung als Kulanz oder Entschädigung für Unannehmlichkeiten",
+        "label": "Kundenservice-Anpassung"
+      },
+      "pricingError": {
+        "description": "Rückerstattung zur Korrektur einer Überzahlung, eines fehlenden Rabatts oder eines falschen Preises",
+        "label": "Preisfehler"
+      },
+      "shippingIssue": {
+        "description": "Rückerstattung aufgrund von verlorener, verspäteter oder falsch zugestellter Sendung",
+        "label": "Versandproblem"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Kurierlieferung",
+      "pickup": "Abholung"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Lieferung innerhalb von 2–3 Tagen.",
+        "label": "Kurier"
+      },
+      "pickup": {
+        "description": "Abholung an einer Abholstation.",
+        "label": "Abholung"
+      }
+    },
+    "terms": {
+      "black": "Schwarz",
+      "color": "Farbe",
+      "silver": "Silber",
+      "size": "Größe",
+      "white": "Weiß"
+    }
+  }
+}

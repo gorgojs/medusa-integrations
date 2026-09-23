@@ -1,0 +1,29 @@
+{
+  "name": "Comoros",
+  "currency_code": "kmf",
+  "countries": ["km"],
+  "stock_location": {
+    "name": "Moroni Warehouse",
+    "address": {
+      "address_1": "Avenue de la Corniche 12",
+      "country_code": "km"
+    }
+  },
+  "shipping_prices": {
+    "courier": 2760,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 6900,
+    "sweatshirt": 13340,
+    "sweatpants": 11040,
+    "shorts": 8740,
+    "hoodie": 16100,
+    "chinoPants": 15180,
+    "pufferJacket": 32200,
+    "wirelessHeadphones": 43200,
+    "electricBike": 483000,
+    "servingPlate": 18860,
+    "espressoCup": 6900
+  }
+}

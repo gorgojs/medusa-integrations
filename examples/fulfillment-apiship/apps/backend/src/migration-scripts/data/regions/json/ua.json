@@ -1,0 +1,29 @@
+{
+  "name": "Ukraine",
+  "currency_code": "uah",
+  "countries": ["ua"],
+  "stock_location": {
+    "name": "Kyiv Warehouse",
+    "address": {
+      "address_1": "Хрещатик 22",
+      "country_code": "ua"
+    }
+  },
+  "shipping_prices": {
+    "courier": 245,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 615,
+    "sweatshirt": 1190,
+    "sweatpants": 985,
+    "shorts": 780,
+    "hoodie": 1435,
+    "chinoPants": 1355,
+    "pufferJacket": 2870,
+    "wirelessHeadphones": 3850,
+    "electricBike": 43100,
+    "servingPlate": 1680,
+    "espressoCup": 615
+  }
+}

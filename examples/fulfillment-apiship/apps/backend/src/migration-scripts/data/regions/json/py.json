@@ -1,0 +1,29 @@
+{
+  "name": "Paraguay",
+  "currency_code": "pyg",
+  "countries": ["py"],
+  "stock_location": {
+    "name": "Asuncion Warehouse",
+    "address": {
+      "address_1": "Avenida Mariscal Lopez 350",
+      "country_code": "py"
+    }
+  },
+  "shipping_prices": {
+    "courier": 43800,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 109500,
+    "sweatshirt": 212000,
+    "sweatpants": 175200,
+    "shorts": 138700,
+    "hoodie": 256000,
+    "chinoPants": 241000,
+    "pufferJacket": 511000,
+    "wirelessHeadphones": 686000,
+    "electricBike": 7665000,
+    "servingPlate": 299000,
+    "espressoCup": 109500
+  }
+}

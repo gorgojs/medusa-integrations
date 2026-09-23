@@ -1,0 +1,31 @@
+{
+  "name": "Azerbaijan",
+  "currency_code": "azn",
+  "countries": [
+    "az"
+  ],
+  "stock_location": {
+    "name": "Baku Warehouse",
+    "address": {
+      "address_1": "Nizami küçəsi 203",
+      "country_code": "az"
+    }
+  },
+  "shipping_prices": {
+    "courier": 10,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 26,
+    "sweatshirt": 49,
+    "sweatpants": 41,
+    "shorts": 32,
+    "hoodie": 60,
+    "chinoPants": 56,
+    "pufferJacket": 119,
+    "wirelessHeadphones": 160,
+    "electricBike": 1785,
+    "servingPlate": 70,
+    "espressoCup": 26
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "South Korea",
+  "currency_code": "krw",
+  "countries": ["kr"],
+  "stock_location": {
+    "name": "Seoul Warehouse",
+    "address": {
+      "address_1": "세종대로 100",
+      "country_code": "kr"
+    }
+  },
+  "shipping_prices": {
+    "courier": 8100,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 20300,
+    "sweatshirt": 39200,
+    "sweatpants": 32400,
+    "shorts": 25700,
+    "hoodie": 47300,
+    "chinoPants": 44600,
+    "pufferJacket": 94500,
+    "wirelessHeadphones": 126900,
+    "electricBike": 1418000,
+    "servingPlate": 55400,
+    "espressoCup": 20300
+  }
+}

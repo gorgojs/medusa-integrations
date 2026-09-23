@@ -1,0 +1,29 @@
+{
+  "name": "Romania",
+  "currency_code": "ron",
+  "countries": ["ro"],
+  "stock_location": {
+    "name": "Bucharest Warehouse",
+    "address": {
+      "address_1": "Calea Victoriei 100",
+      "country_code": "ro"
+    }
+  },
+  "shipping_prices": {
+    "courier": 28,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 69,
+    "sweatshirt": 133,
+    "sweatpants": 110,
+    "shorts": 87,
+    "hoodie": 161,
+    "chinoPants": 152,
+    "pufferJacket": 320,
+    "wirelessHeadphones": 430,
+    "electricBike": 4830,
+    "servingPlate": 189,
+    "espressoCup": 69
+  }
+}

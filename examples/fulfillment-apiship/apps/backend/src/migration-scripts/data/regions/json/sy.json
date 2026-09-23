@@ -1,0 +1,29 @@
+{
+  "name": "Syria",
+  "currency_code": "syp",
+  "countries": ["sy"],
+  "stock_location": {
+    "name": "Damascus Warehouse",
+    "address": {
+      "address_1": "الشارع المستقيم 8",
+      "country_code": "sy"
+    }
+  },
+  "shipping_prices": {
+    "courier": 78000,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 195000,
+    "sweatshirt": 377000,
+    "sweatpants": 312000,
+    "shorts": 247000,
+    "hoodie": 455000,
+    "chinoPants": 429000,
+    "pufferJacket": 910000,
+    "wirelessHeadphones": 1222000,
+    "electricBike": 13650000,
+    "servingPlate": 533000,
+    "espressoCup": 195000
+  }
+}

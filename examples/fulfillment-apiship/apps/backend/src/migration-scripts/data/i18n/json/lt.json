@@ -1,0 +1,103 @@
+{
+  "name": "Lietuvių",
+  "translations": {
+    "categories": {
+      "clothing": "Drabužiai",
+      "coffee": "Kava",
+      "eTransport": "Elektrinis transportas",
+      "electronics": "Elektronika",
+      "headphones": "Ausinės",
+      "home": "Namai",
+      "outerwear": "Viršutiniai drabužiai",
+      "pants": "Kelnės",
+      "shirts": "Marškinėliai",
+      "shorts": "Šortai",
+      "sweatshirts": "Džemperiai",
+      "tableware": "Stalo reikmenys"
+    },
+    "collections": {
+      "new": "Naujienos"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klasikinės juodos chino kelnės su tiksliu pritaikymu ir minimalistišku dizainu. Pagamintos iš minkšto, ilgaamžio medvilninio audinio su nedidele tampria priemaiša komfortui. Šoninės kišenės, kilpelės diržui ir sagos užsegimas. Puikiai tinka tiek kasdienai, tiek elegantiškesniam stiliui.",
+        "title": "Chino kelnės"
+      },
+      "electricBike": {
+        "description": "Matinis juodas elektrinis kalnų dviratis, sukurtas našumui ir kasdieniam universalumui. Lengvas aliuminio rėmas, integruota baterija ir galingas variklis užtikrina sklandų važiavimą su pagalba bet kokiu reljefu. Tinka tiek važinėjimui mieste, tiek bekelėje.",
+        "title": "Elektrinis dviratis"
+      },
+      "espressoCup": {
+        "description": "Juodi keramikiniai espreso puodeliai, skirti vienam ar dvigubam gėrimui. Ilgaamžiai, gerai išlaiko šilumą ir tinka plauti indaplovėje.",
+        "title": "Espreso puodelis"
+      },
+      "hoodie": {
+        "description": "Klasikinis juodas džemperis su gobtuvu, pagamintas iš minkšto medvilninio audinio kasdieniam komfortui. Laisvas kirpimas, reguliuojamas gobtuvas su virvute ir priekinė kengūros formos kišenė. Paprastas ir universalus, tinkantis sluoksniuoti bet kuriuo metų laiku.",
+        "title": "Džemperis su gobtuvu"
+      },
+      "pufferJacket": {
+        "description": "Šilta juoda pūkinė striukė, sukurta šilumai ir komfortui šaltuoju metų laiku. Aukšta apykaklė, priekinis užtrauktukas su spaustuku ir keletas kišenių funkcionalumui. Lengva, bet tvirta – tinka tiek kasdienai, tiek lauko veiklai.",
+        "title": "Pūkinė striukė"
+      },
+      "servingPlate": {
+        "description": "Skulptūrinė nerūdijančio plieno patiekimo lėkštė su poliruotu veidrodiniu paviršiumi. Jos sklandi, moderni forma suteikia rafinuotumo bet kokiam stalo serviravimui. Puikiai tinka vaisiams, užkandžiams ar dekoratyviai ekspozicijai. Sukurta tiek funkcionalumui, tiek vizualiam įspūdžiui – ji gražiai atspindi šviesą ir dera prie bet kokio modernaus namų ar restorano stiliaus.",
+        "title": "Patiekimo lėkštė"
+      },
+      "shorts": {
+        "description": "Iš naujo atraskite klasikinių šortų pojūtį. Su mūsų medvilniniais šortais kasdieniai būtiniausi daiktai nebėra paprasti.",
+        "title": "Medusa šortai"
+      },
+      "sweatpants": {
+        "description": "Iš naujo atraskite klasikinių sportinių kelnių pojūtį. Su mūsų medvilninėmis sportinėmis kelnėmis kasdieniai būtiniausi daiktai nebėra paprasti.",
+        "title": "Medusa sportinės kelnės"
+      },
+      "sweatshirt": {
+        "description": "Iš naujo atraskite klasikinio džemperio pojūtį. Su mūsų medvilniniu džemperiu kasdieniai būtiniausi daiktai nebėra paprasti.",
+        "title": "Medusa džemperis"
+      },
+      "tShirt": {
+        "description": "Iš naujo atraskite klasikinių marškinėlių pojūtį. Su mūsų medvilniniais marškinėliais kasdieniai būtiniausi daiktai nebėra paprasti.",
+        "title": "Medusa marškinėliai"
+      },
+      "wirelessHeadphones": {
+        "description": "Matinės juodos belaidės ausinės su patogia ant ausų dedama konstrukcija, užtikrinančia įtraukiantį garsą. Aiškus garsas, stiprūs žemi dažniai ir ilgai veikianti baterija. Sukurtos kasdieniam naudojimui namuose, biure ar kelionėje.",
+        "title": "Belaidės ant ausų dedamos ausinės"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Pinigų grąžinimas suteiktas kaip geros valios gestas ar kompensacija už nepatogumus",
+        "label": "Klientų aptarnavimo kompensacija"
+      },
+      "pricingError": {
+        "description": "Pinigų grąžinimas siekiant ištaisyti permoką, trūkstamą nuolaidą ar neteisingą kainą",
+        "label": "Kainos klaida"
+      },
+      "shippingIssue": {
+        "description": "Pinigų grąžinimas dėl prarastos, vėluojančios ar neteisingai pristatytos siuntos",
+        "label": "Pristatymo problema"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Pristatymas kurjeriu",
+      "pickup": "Atsiėmimas"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Pristatymas per 2–3 dienas.",
+        "label": "Kurjeris"
+      },
+      "pickup": {
+        "description": "Atsiėmimas atsiėmimo punkte.",
+        "label": "Atsiėmimas"
+      }
+    },
+    "terms": {
+      "black": "Juoda",
+      "color": "Spalva",
+      "silver": "Sidabrinė",
+      "size": "Dydis",
+      "white": "Balta"
+    }
+  }
+}

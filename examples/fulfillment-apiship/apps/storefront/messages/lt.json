@@ -1,0 +1,730 @@
+{
+  "AccountInfo": {
+    "cancel": "Atšaukti",
+    "edit": "Redaguoti",
+    "errorDefault": "Įvyko klaida, bandykite dar kartą",
+    "saveChanges": "Išsaugoti pakeitimus",
+    "updatedSuccessfully": "{label} sėkmingai atnaujinta"
+  },
+  "AccountLayout": {
+    "customerService": "Klientų aptarnavimas",
+    "faqDescription": "Dažniausiai užduodamus klausimus ir atsakymus rasite mūsų klientų aptarnavimo puslapyje.",
+    "gotQuestions": "Klausimai ir atsakymai"
+  },
+  "AccountNav": {
+    "account": "Paskyra",
+    "addresses": "Adresai",
+    "logOut": "Atsijungti",
+    "orders": "Užsakymai",
+    "overview": "Apžvalga",
+    "profile": "Profilis"
+  },
+  "AccountOverview": {
+    "addresses": "Adresai",
+    "completed": "Užpildyta",
+    "hello": "Sveiki, {name}",
+    "noRecentOrders": "Naujausių užsakymų nėra",
+    "profile": "Profilis",
+    "recentOrders": "Naujausi užsakymai",
+    "saved": "Išsaugota",
+    "signedInAs": "Prisijungę kaip:"
+  },
+  "AddressCard": {
+    "addAddress": "Pridėti adresą",
+    "default": "Numatytasis",
+    "editAddress": "Redaguoti adresą",
+    "newAddress": "Naujas adresas"
+  },
+  "AddressForm": {
+    "address": "Adresas",
+    "addressLine2": "Butas, biuras ir kt.",
+    "addressName": "Pavadinimas",
+    "cancel": "Atšaukti",
+    "city": "Miestas",
+    "company": "Įmonė",
+    "country": "Šalis",
+    "edit": "Redaguoti",
+    "firstName": "Vardas",
+    "lastName": "Pavardė",
+    "phone": "Telefonas",
+    "postalCode": "Pašto kodas",
+    "province": "Regionas / valstija",
+    "remove": "Pašalinti",
+    "save": "Išsaugoti",
+    "stateProvince": "Valstija / regionas"
+  },
+  "AddressesPage": {
+    "description": "Peržiūrėkite ir atnaujinkite savo pristatymo adresus — galite pridėti jų tiek, kiek norite. Išsaugoti adresai bus prieinami atsiskaitymo metu.",
+    "heading": "Pristatymo adresai"
+  },
+  "Apiship": {
+    "choose": "Pasirinkti",
+    "courierModalTitle": "Pristatymas kurjeriu",
+    "deliveryDays": "{count, plural, one {{count} diena} few {{count} dienos} other {{count} dienų}}",
+    "deliveryDaysRange": "{min}–{max} dienų",
+    "loadFailed": "Nepavyko įkelti pristatymo parinkčių. Bandykite dar kartą.",
+    "mapKeyMissing": "Žemėlapiui reikia Yandex Maps API rakto.",
+    "noPoints": "Šiuo adresu atsiėmimo punktų nėra.",
+    "noTariffs": "Šiuo adresu nepristato nė vienas vežėjas.",
+    "photoAlt": "Atsiėmimo punkto nuotrauka {index}",
+    "pickupPointModalTitle": "Atsiėmimo punktas",
+    "pointDetails": "Kaip rasti",
+    "priceFrom": "nuo {price}",
+    "schedule": "Darbo laikas",
+    "selectPointPrompt": "Pasirinkite punktą žemėlapyje"
+  },
+  "Breadcrumb": {
+    "home": "Pradžia",
+    "store": "Parduotuvė"
+  },
+  "Cart": {
+    "emptyMessage": "Jūsų krepšelis tuščias. Naudokite nuorodą žemiau ir pradėkite naršyti mūsų produktus.",
+    "exploreProducts": "Peržiūrėti produktus",
+    "heading": "Krepšelis"
+  },
+  "CartDropdown": {
+    "bagEmpty": "Jūsų krepšelis tuščias.",
+    "exploreProducts": "Peržiūrėti produktus",
+    "goToCart": "Eiti į krepšelį",
+    "heading": "Krepšelis",
+    "subtotal": "Tarpinė suma",
+    "subtotalNote": "(be mokesčių)"
+  },
+  "CartMismatchBanner": {
+    "errorMessage": "Kažkas nutiko ne taip bandant perkelti jūsų krepšelį",
+    "runTransferAgain": "Bandyti perkelti dar kartą",
+    "transferring": "Perkeliama..."
+  },
+  "CartSummary": {
+    "goToCheckout": "Pereiti prie apmokėjimo"
+  },
+  "CartTotals": {
+    "discount": "Nuolaida",
+    "shipping": "Pristatymas",
+    "subtotal": "Tarpinė suma (be pristatymo ir mokesčių)",
+    "taxes": "Mokesčiai",
+    "total": "Iš viso"
+  },
+  "CategoryMenu": {
+    "title": "Kategorijos",
+    "viewAll": "Žiūrėti visus"
+  },
+  "CheckoutPage": {
+    "addNewAddress": "Pridėti naują adresą",
+    "addressHeading": "Pristatymo adresas",
+    "addressModalTitle": "Pristatymo adresas",
+    "addressNotNeededForPickup": "Nereikalingas atsiimant",
+    "back": "Atgal",
+    "backToCart": "Grįžti į krepšelį",
+    "billingHeading": "Atsiskaitymo adresas",
+    "billingSameAsShipping": "Atsiskaitymo adresas toks pat kaip pristatymo",
+    "close": "Uždaryti",
+    "contactsHeading": "Kontaktai",
+    "contactsModalTitle": "Kontaktai",
+    "copyright": "© {year} {siteName}. Visos teisės saugomos.",
+    "deliveryDateFrom": "nuo {date}",
+    "deliveryDateUntil": "iki {date}",
+    "deliveryToday": "Šiandien",
+    "discount": "Nuolaida",
+    "edit": "Redaguoti",
+    "fieldAddress": "Adresas",
+    "fieldCity": "Miestas",
+    "fieldCompany": "Įmonė",
+    "fieldEmail": "El. paštas",
+    "fieldFirstName": "Vardas",
+    "fieldLastName": "Pavardė",
+    "fieldPhone": "Telefonas",
+    "fieldPostalCode": "Pašto kodas",
+    "fieldProvince": "Regionas",
+    "freeShipping": "Nemokamas",
+    "giftCard": "Dovanų kortelė",
+    "itemsCount": "{count, plural, one {{count} prekė} few {{count} prekės} many {{count} prekės} other {{count} prekių}}",
+    "legal": "Spausdami „Mokėti“, jūs sutinkate su mūsų <terms>sąlygomis</terms>, <termsOfUse>naudojimo sąlygomis</termsOfUse> ir <returnPolicy>grąžinimo politika</returnPolicy> bei sutinkate su <privacyPolicy>privatumo politika</privacyPolicy>.",
+    "manualInput": "Įvesti adresą rankiniu būdu",
+    "orderComposition": "Užsakymo santrauka",
+    "paymentHeading": "Mokėjimo būdas",
+    "recipientCheckbox": "Gavėjas yra kitas asmuo",
+    "recipientHeading": "Gavėjo duomenys",
+    "recipientLabel": "Gavėjas:",
+    "returnsLink": "Grąžinimo taisyklės",
+    "sameAsShipping": "Toks pat kaip pristatymo adresas",
+    "save": "Išsaugoti",
+    "saving": "Saugoma...",
+    "shippingCost": "Pristatymas",
+    "shippingDescription": "Pasirinkite, kaip norite gauti užsakymą",
+    "shippingHeading": "Pristatymo būdas",
+    "shippingLink": "Pristatymas",
+    "shippingUnavailable": "Nėra galimų pristatymo būdų",
+    "signIn": "Prisijungti",
+    "total": "Iš viso"
+  },
+  "Common": {
+    "clear": "Išvalyti",
+    "close": "Uždaryti",
+    "hidePassword": "Slėpti slaptažodį",
+    "orderNumber": "Užsakymas Nr. {id}",
+    "poweredBy": "Powered by",
+    "remove": "Pašalinti",
+    "showPassword": "Rodyti slaptažodį"
+  },
+  "ContentPages": {
+    "faq": [
+      {
+        "answer": "Pristatymo puslapyje nurodyti pristatymo būdai ir kiekvieno jų kaina.",
+        "question": "Kada gausiu užsakymą?"
+      },
+      {
+        "answer": "Grąžinimo puslapyje aprašyta, kaip grąžinti prekę arba pakeisti ją kita.",
+        "question": "Kaip grąžinti ar pakeisti prekę?"
+      },
+      {
+        "answer": "Parašykite mums iš kontaktų puslapio ir atsakysime kuo greičiau.",
+        "question": "Kaip su jumis susisiekti?"
+      }
+    ],
+    "placeholder": "Šis puslapis pateikiamas su starteriu kaip pavyzdinis tekstas. Prieš startą pakeiskite jį savu."
+  },
+  "DiscountCode": {
+    "addPromotionCode": "Pridėti nuolaidos kodą",
+    "apply": "Taikyti",
+    "removeDiscount": "Pašalinti nuolaidos kodą iš užsakymo"
+  },
+  "Errors": {
+    "emailExists": "Paskyra su šiuo el. paštu jau egzistuoja.",
+    "generic": "Kažkas nutiko ne taip. Bandykite dar kartą.",
+    "insufficientInventory": "Deja, šios prekės sandėlyje nepakanka.",
+    "invalidCredentials": "Neteisingas el. paštas arba slaptažodis.",
+    "invalidDiscount": "Šis nuolaidos kodas negalioja arba jo galiojimas baigėsi.",
+    "invalidEmail": "Įveskite galiojantį el. pašto adresą.",
+    "invalidResetLink": "Ši nuoroda nebegalioja. Ji galėjo būti panaudota arba baigėsi jos galiojimas. Užsisakykite naują.",
+    "network": "Ryšio problema. Patikrinkite interneto ryšį ir bandykite dar kartą.",
+    "notFound": "Nepavyko rasti to, ko ieškojote.",
+    "passwordMismatch": "Slaptažodžiai nesutampa.",
+    "passwordTooShort": "Slaptažodį turi sudaryti bent 8 simboliai.",
+    "paymentFailed": "Nepavyko apdoroti mokėjimo. Bandykite dar kartą arba pasirinkite kitą būdą.",
+    "unauthorized": "Prisijunkite, kad galėtumėte tęsti."
+  },
+  "Filters": {
+    "sort": "Rūšiuoti",
+    "title": "Filtrai"
+  },
+  "Footer": {
+    "categoriesHeading": "Kategorijos",
+    "collectionsHeading": "Kolekcijos",
+    "copyright": "© {year} {siteName}. Visos teisės saugomos.",
+    "infoHeading": "Informacija",
+    "medusaDocs": "Medusa dokumentacija",
+    "sourceCode": "Starterio išeities kodas",
+    "starterDocs": "Starterio dokumentacija"
+  },
+  "ForgotPassword": {
+    "backToSignIn": "Grįžti prie prisijungimo",
+    "description": "Nurodykite el. paštą, kuriuo registravotės, ir atsiųsime nuorodą naujam slaptažodžiui nustatyti.",
+    "email": "El. paštas",
+    "emailTitle": "Įveskite tinkamą el. pašto adresą.",
+    "guestAction": "Registruotis",
+    "guestPrompt": "Užsakėte kaip svečias ir niekada neužsiregistravote? Slaptažodžio dar nėra. Susikurkite paskyrą tuo pačiu adresu ir galėsite prie jos prijungti tuos užsakymus.",
+    "heading": "Slaptažodžio atkūrimas",
+    "invalidEmail": "Įveskite tinkamą el. pašto adresą.",
+    "requestFailed": "Nuorodos išsiųsti nepavyko. Pabandykite dar kartą po akimirkos.",
+    "sent": "Jei paskyra su tuo adresu yra, nuoroda jau pakeliui. Patikrinkite gautuosius ir šlamšto aplanką.",
+    "submit": "Siųsti nuorodą"
+  },
+  "FreeShipping": {
+    "onlyAway": "Liko tik {amount}",
+    "unlock": "Atrakinti nemokamą pristatymą",
+    "unlocked": "Nemokamas pristatymas atrakintas!",
+    "viewCart": "Peržiūrėti krepšelį",
+    "viewProducts": "Peržiūrėti produktus"
+  },
+  "Help": {
+    "contact": "Susisiekti",
+    "needHelp": "Pagalba",
+    "returnsExchanges": "Grąžinimai ir keitimai"
+  },
+  "Hero": {
+    "eyebrow": "Paruošta naudoti · Atviro kodo",
+    "features": [
+      {
+        "description": "patobulintas, be nereikalingų žingsnių, su automatiniu adreso užpildymu",
+        "label": "Konversijoms pritaikytas atsiskaitymas"
+      },
+      {
+        "description": "paieška, filtruojamas katalogas, kelių lygių kategorijos ir mobile-first",
+        "label": "Pilnavertė parduotuvės sąsaja"
+      },
+      {
+        "description": "meta žymos, Open Graph ir Twitter cards, JSON-LD, sitemap, robots, llms.txt ir 100/100 „PageSpeed Insights“",
+        "label": "Optimizuota SEO ir AI"
+      },
+      {
+        "description": "36 parduotuvės kalbos su RTL palaikymu ir 241 šalis pardavimo regionams, šalies nustatymas, nereikalingas lengva pašalinti",
+        "label": "Visiška lokalizacija"
+      },
+      {
+        "description": "React Email šablonai per SMTP",
+        "label": "Tranzakciniai el. laiškai"
+      },
+      {
+        "description": "keičiantis produktų katalogui",
+        "label": "Talpyklos atnaujinimas pagal poreikį"
+      },
+      {
+        "badge": "Naujiena",
+        "description": "valdykite savo tiekėjų nustatymus per Admin",
+        "href": "https://gorgojs.com/medusa-integration-module",
+        "label": "Integracijų modulis"
+      }
+    ],
+    "featuresHeading": "Funkcijos",
+    "readDocs": "Skaityti dokumentaciją",
+    "subtitle": "Viskas, ko trūksta oficialiame Medusa DTC starteryje.",
+    "title": "Gamybai paruoštas Medusa DTC Starter",
+    "viewOnGitHub": "Žiūrėti GitHub"
+  },
+  "ImageGallery": {
+    "goToImage": "Pereiti prie vaizdo {index}",
+    "openFullImage": "Atverti visą vaizdą"
+  },
+  "LanguageSelect": {
+    "locales": {
+      "ar": "العربية",
+      "bg": "Български",
+      "bn": "বাংলা",
+      "cs": "Čeština",
+      "da": "Dansk",
+      "de": "Deutsch",
+      "el": "Ελληνικά",
+      "en": "English",
+      "es": "Español",
+      "fi": "Suomi",
+      "fr": "Français",
+      "he": "עברית",
+      "hi": "हिन्दी",
+      "hu": "Magyar",
+      "id": "Bahasa Indonesia",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ka": "ქართული",
+      "ko": "한국어",
+      "lt": "Lietuvių",
+      "mn": "Монгол",
+      "ms": "Bahasa Melayu",
+      "nb": "Norsk bokmål",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "ro": "Română",
+      "ru": "Русский",
+      "sk": "Slovenčina",
+      "sv": "Svenska",
+      "th": "ไทย",
+      "tl": "Tagalog",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "vi": "Tiếng Việt",
+      "zh": "中文"
+    }
+  },
+  "LineItemOptions": {
+    "variant": "Variantas:"
+  },
+  "Login": {
+    "description": "Jūsų užsakymai ir pristatymo adresai lieka paskyroje, o apmokėjimas vyksta greičiau.",
+    "email": "El. paštas",
+    "emailTitle": "Įveskite galiojantį el. pašto adresą.",
+    "forgotPassword": "Pamiršote slaptažodį?",
+    "heading": "Prisijungimas",
+    "joinUs": "Tapkite nariu",
+    "notMember": "Dar nesate narys?",
+    "password": "Slaptažodis",
+    "signIn": "Prisijungti"
+  },
+  "Metadata": {
+    "account": {
+      "description": "Jūsų paskyros veiklos apžvalga.",
+      "title": "Paskyra"
+    },
+    "addresses": {
+      "description": "Peržiūrėkite savo adresus",
+      "title": "Adresai"
+    },
+    "cart": {
+      "description": "Peržiūrėkite savo krepšelį",
+      "title": "Krepšelis"
+    },
+    "category": {
+      "description": "Naršykite {category} parduotuvėje {siteName}. Palyginkite variantus, patikrinkite kainas ir raskite jums tinkantį."
+    },
+    "checkout": {
+      "description": "Peržiūrėkite užsakymą, įveskite pristatymo duomenis ir saugiai sumokėkite.",
+      "title": "Apmokėjimas"
+    },
+    "collection": {
+      "description": "Atraskite kolekciją {collection} parduotuvėje {siteName}. Peržiūrėkite visus gaminius ir raskite savąjį."
+    },
+    "contact": {
+      "description": "Parašykite mums dėl užsakymo, prekės ar bet ko kito.",
+      "title": "Kontaktai"
+    },
+    "customerService": {
+      "description": "Atsakymai į dažniausiai užduodamus klausimus ir būdai su mumis susisiekti.",
+      "title": "Klientų aptarnavimas"
+    },
+    "home": {
+      "description": "Atraskite mūsų atrinktą produktų kolekciją. Apsipirkite naujausiais stiliais ir raskite tai, kas jums patiks."
+    },
+    "login": {
+      "description": "Prisijunkite prie savo {siteName} paskyros.",
+      "title": "Prisijungti"
+    },
+    "orderConfirmed": {
+      "description": "Jūsų pirkimas atliktas sėkmingai",
+      "title": "Užsakymas patvirtintas"
+    },
+    "orderDetails": {
+      "description": "Peržiūrėkite savo užsakymą"
+    },
+    "orderTransfer": {
+      "title": "Užsakymo perdavimas"
+    },
+    "orders": {
+      "description": "Ankstesnių jūsų užsakymų apžvalga.",
+      "title": "Užsakymai"
+    },
+    "privacy": {
+      "description": "Sužinokite, kokius asmens duomenis renka parduotuvė ir kodėl.",
+      "title": "Privatumo politika"
+    },
+    "profile": {
+      "description": "Peržiūrėkite ir redaguokite savo {siteName} profilį.",
+      "title": "Profilis"
+    },
+    "resetPassword": {
+      "description": "Nustatykite naują paskyros slaptažodį.",
+      "title": "Slaptažodžio atkūrimas"
+    },
+    "returns": {
+      "description": "Sužinokite, kaip grąžinti ar pakeisti prekę, kiek turite laiko ir kada gausite pinigus atgal.",
+      "title": "Grąžinimas ir keitimas"
+    },
+    "shipping": {
+      "description": "Sužinokite, kaip pristatomi užsakymai ir kiek kainuoja pristatymas.",
+      "title": "Pristatymas"
+    },
+    "store": {
+      "description": "Naršykite visą katalogą. Filtruokite pagal kategoriją ir parinktį, rikiuokite pagal kainą ir raskite tiksliai tai, ko reikia.",
+      "title": "Parduotuvė"
+    },
+    "terms": {
+      "description": "Perskaitykite taisykles, su kuriomis sutinkate pirkdami.",
+      "title": "Naudojimo sąlygos"
+    }
+  },
+  "NativeSelect": {
+    "defaultPlaceholder": "Pasirinkti..."
+  },
+  "Nav": {
+    "account": "Paskyra",
+    "cart": "Krepšelis ({count})"
+  },
+  "NotFound": {
+    "cartDescription": "Krepšelio, kurį bandėte pasiekti, nėra. Išvalykite slapukus ir bandykite dar kartą.",
+    "description": "Puslapio, kurį bandėte pasiekti, nėra.",
+    "goHome": "Grįžti į pradžią",
+    "title": "Puslapis nerastas"
+  },
+  "OnboardingCta": {
+    "completeInAdmin": "Užbaigti nustatymą administravimo skydelyje",
+    "completeSetup": "Dabar galite užbaigti savo parduotuvės nustatymą administravimo skydelyje.",
+    "orderCreated": "Jūsų testinis užsakymas sėkmingai sukurtas!"
+  },
+  "OrderCard": {
+    "itemsCount": "{count, plural, one {{count} prekė} few {{count} prekės} many {{count} prekės} other {{count} prekių}}",
+    "more": "daugiau",
+    "seeDetails": "Peržiūrėti detales"
+  },
+  "OrderCompleted": {
+    "orderSuccess": "Jūsų užsakymas sėkmingai pateiktas.",
+    "thankYou": "Ačiū!"
+  },
+  "OrderDetails": {
+    "backToOrders": "Atgal į užsakymus",
+    "confirmationSentBefore": "Užsakymo patvirtinimą išsiuntėme adresu",
+    "fulfillmentStatuses": {
+      "canceled": "Atšauktas",
+      "delivered": "Pristatytas",
+      "fulfilled": "Įvykdytas",
+      "not_fulfilled": "Neįvykdytas",
+      "partially_delivered": "Pristatytas iš dalies",
+      "partially_fulfilled": "Įvykdytas iš dalies",
+      "partially_shipped": "Išsiųstas iš dalies",
+      "shipped": "Išsiųstas"
+    },
+    "items": "Prekės",
+    "orderDate": "Užsakymo data:",
+    "orderNumber": "Užsakymo numeris:",
+    "paymentStatuses": {
+      "authorized": "Patvirtintas",
+      "awaiting": "Laukiama mokėjimo",
+      "canceled": "Atšauktas",
+      "captured": "Apmokėtas",
+      "not_paid": "Neapmokėtas",
+      "partially_authorized": "Patvirtintas iš dalies",
+      "partially_captured": "Apmokėtas iš dalies",
+      "partially_refunded": "Grąžintas iš dalies",
+      "refunded": "Grąžintas",
+      "requires_action": "Reikia veiksmo"
+    }
+  },
+  "OrderOverview": {
+    "continueShopping": "Tęsti apsipirkimą",
+    "noOrdersYet": "Kol kas neturite jokių užsakymų",
+    "nothingToSeeHere": "Čia kol kas nieko nėra"
+  },
+  "OrderSummary": {
+    "discount": "Nuolaida",
+    "giftCard": "Dovanų kortelė",
+    "heading": "Užsakymo santrauka",
+    "shipping": "Pristatymas",
+    "subtotal": "Tarpinė suma",
+    "taxes": "Mokesčiai",
+    "total": "Iš viso"
+  },
+  "OrdersPage": {
+    "description": "Peržiūrėkite savo ankstesnius užsakymus ir jų būseną.",
+    "heading": "Užsakymai"
+  },
+  "Payment": {
+    "anotherStep": "Bus rodomas papildomas žingsnis",
+    "continueToReview": "Tęsti į peržiūrą",
+    "edit": "Redaguoti",
+    "enterPaymentDetails": "Įveskite mokėjimo duomenis",
+    "giftCard": "Dovanų kortelė",
+    "heading": "Mokėjimas",
+    "paymentDetails": "Mokėjimo duomenys",
+    "paymentMethod": "Mokėjimo būdas"
+  },
+  "PaymentButton": {
+    "placeOrder": "Mokėti",
+    "selectPaymentMethod": "Pasirinkite mokėjimo būdą"
+  },
+  "PaymentContainer": {
+    "enterPaymentDetails": "Įveskite savo mokėjimo duomenis:",
+    "loadError": "Nepavyko įkelti mokėjimo būdų."
+  },
+  "PaymentDetails": {
+    "heading": "Mokėjimas",
+    "paidAt": "apmokėta",
+    "paymentDetails": "Mokėjimo duomenys",
+    "paymentMethod": "Mokėjimo būdas"
+  },
+  "PaymentMethods": {
+    "pp_medusa-payments_default": {
+      "title": "Kredito kortelė",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Kredito kortelė",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Rankinis mokėjimas"
+    }
+  },
+  "PaymentTest": {
+    "attention": "Dėmesio:",
+    "testingOnly": "Tik testavimo tikslais."
+  },
+  "ProductActions": {
+    "addToCart": "Į krepšelį",
+    "outOfStock": "Nėra sandėlyje",
+    "selectOptions": "Pasirinkti parinktis",
+    "selectVariant": "Pasirinkite variantą"
+  },
+  "ProductOnboardingCta": {
+    "continueInAdmin": "Tęsti nustatymą administravimo skydelyje",
+    "continueSetup": "Dabar galite tęsti savo parduotuvės nustatymą administravimo skydelyje.",
+    "demoCreated": "Jūsų demonstracinis produktas sėkmingai sukurtas!"
+  },
+  "ProductPrice": {
+    "from": "Nuo ",
+    "original": "Originali kaina: "
+  },
+  "ProductRail": {
+    "viewAll": "Žiūrėti visus"
+  },
+  "ProductTabs": {
+    "easyReturns": "Lengvas grąžinimas",
+    "easyReturnsDesc": "Tiesiog grąžinkite prekę, o mes grąžinsime jūsų pinigus. Jokių papildomų klausimų — pasistengsime, kad grąžinimas būtų kuo paprastesnis.",
+    "fastDelivery": "Greitas pristatymas",
+    "fastDeliveryDesc": "Jūsų siunta atkeliaus per 3–5 darbo dienas į atsiėmimo punktą arba tiesiai į jūsų namus.",
+    "shippingReturns": "Pristatymas ir grąžinimas",
+    "simpleExchanges": "Paprastas keitimas",
+    "simpleExchangesDesc": "Netiko dydis? Jokių problemų — pakeisime jūsų prekę nauja."
+  },
+  "ProfileBillingAddress": {
+    "billingAddress": "Atsiskaitymo adresas",
+    "noBillingAddress": "Atsiskaitymo adreso nėra"
+  },
+  "ProfileEmail": {
+    "email": "El. paštas",
+    "label": "El. paštas"
+  },
+  "ProfileName": {
+    "firstName": "Vardas",
+    "label": "Vardas",
+    "lastName": "Pavardė",
+    "noName": "Vardo nėra"
+  },
+  "ProfilePage": {
+    "description": "Peržiūrėkite ir atnaujinkite savo vardą, el. paštą, telefono numerį ir atsiskaitymo adresą.",
+    "heading": "Profilis"
+  },
+  "ProfilePassword": {
+    "confirmPassword": "Patvirtinkite slaptažodį",
+    "hidden": "Slaptažodis nerodomas saugumo sumetimais",
+    "label": "Slaptažodis",
+    "newPassword": "Naujas slaptažodis",
+    "oldPassword": "Senas slaptažodis"
+  },
+  "ProfilePhone": {
+    "label": "Telefonas",
+    "noPhone": "Telefono numerio nėra",
+    "phone": "Telefonas"
+  },
+  "PromoBanner": {
+    "close": "Uždaryti",
+    "cta": "Paleiskite savo",
+    "message": "Ši parduotuvė veikia su nemokamu Gorgo Medusa DTC Starter."
+  },
+  "RegionSelect": {
+    "apply": "Taikyti",
+    "close": "Uždaryti",
+    "placeholder": "Ieškoti šalies ar kalbos",
+    "tabCountry": "Šalis",
+    "tabLanguage": "Kalba",
+    "title": "Keisti regioną"
+  },
+  "Register": {
+    "agreeText": "Kurdami {siteName} paskyrą, jūs sutinkate su",
+    "alreadyMember": "Jau esate narys?",
+    "and": "ir",
+    "description": "Susikurkite {siteName} paskyrą, kad užsakymai ir adresai būtų vienoje vietoje, o apmokėjimas vyktų greičiau.",
+    "email": "El. paštas",
+    "firstName": "Vardas",
+    "heading": "Tapkite {siteName} nariu",
+    "join": "Registruotis",
+    "lastName": "Pavardė",
+    "password": "Slaptažodis",
+    "phone": "Telefonas",
+    "privacyPolicy": "Privatumo politika",
+    "signIn": "Prisijungti",
+    "termsOfUse": "Naudojimo sąlygomis"
+  },
+  "RelatedProducts": {
+    "title": "Jums gali patikti"
+  },
+  "ResetPassword": {
+    "confirmPassword": "Pakartokite slaptažodį",
+    "description": "Pasirinkite naują paskyros slaptažodį.",
+    "descriptionWithEmail": "Pasirinkite naują slaptažodį paskyrai {email}.",
+    "done": "Slaptažodis pakeistas. Dabar galite su juo prisijungti.",
+    "goToSignIn": "Prisijungti",
+    "heading": "Naujas slaptažodis",
+    "missingToken": "Šioje nuorodoje trūksta prieigos rakto. Užsisakykite naują prisijungimo puslapyje.",
+    "password": "Naujas slaptažodis",
+    "submit": "Išsaugoti slaptažodį"
+  },
+  "Review": {
+    "confirmText": "Spausdami mygtuką „Mokėti“, patvirtinate, kad perskaitėte, supratote ir sutinkate su mūsų Naudojimo sąlygomis, Pardavimo sąlygomis ir Grąžinimo politika bei patvirtinate, kad susipažinote su {siteName} Privatumo politika.",
+    "heading": "Peržiūra"
+  },
+  "Search": {
+    "empty": "Nerasta rezultatų pagal „{query}“",
+    "label": "Paieška",
+    "loading": "Ieškoma…",
+    "placeholder": "Ieškoti produktų",
+    "popular": "Populiarūs produktai"
+  },
+  "Shipping": {
+    "chooseStore": "Pasirinkite jums patogią parduotuvę",
+    "continueToPayment": "Tęsti į mokėjimą",
+    "deliveryDescription": "Kaip norėtumėte gauti savo užsakymą",
+    "edit": "Redaguoti",
+    "heading": "Pristatymas",
+    "method": "Būdas",
+    "pickUpOrder": "Atsiimkite savo užsakymą",
+    "shippingMethod": "Pristatymo būdas",
+    "store": "Parduotuvė"
+  },
+  "ShippingDetails": {
+    "contact": "Kontaktas",
+    "heading": "Pristatymas",
+    "method": "Būdas",
+    "shippingAddress": "Pristatymo adresas"
+  },
+  "SideMenu": {
+    "copyright": "© {year} {siteName}. Visos teisės saugomos.",
+    "items": {
+      "account": "Paskyra",
+      "cart": "Krepšelis",
+      "home": "Pradžia",
+      "store": "Parduotuvė"
+    },
+    "menuButton": "Meniu"
+  },
+  "SignInPrompt": {
+    "description": "Apmokant pasiūlomi išsaugoti adresai, o užsakymas atsiduria jūsų paskyroje.",
+    "heading": "Prisijunkite ir atsiskaitykite greičiau",
+    "signIn": "Prisijungti"
+  },
+  "SortSelect": {
+    "latestArrivals": "Naujausi",
+    "placeholder": "Rūšiuoti pagal",
+    "priceHighLow": "Kaina: nuo didžiausios",
+    "priceLowHigh": "Kaina: nuo mažiausios"
+  },
+  "Store": {
+    "allProducts": "Visi produktai"
+  },
+  "TransferActions": {
+    "acceptTransfer": "Patvirtinti perdavimą",
+    "declineSuccess": "Užsakymo perdavimas sėkmingai atmestas!",
+    "declineTransfer": "Atmesti perdavimą",
+    "transferSuccess": "Užsakymas sėkmingai perduotas!"
+  },
+  "TransferPage": {
+    "acceptError": "Nepavyko patvirtinti perdavimo. Nuoroda gali būti negaliojanti arba jau panaudota.",
+    "acceptInfo": "Jei sutiksite, naujasis savininkas perims visas su šiuo užsakymu susijusias teises ir pareigas.",
+    "acceptedBody": "Užsakymas {id} sėkmingai perduotas naujam savininkui.",
+    "acceptedHeading": "Užsakymas perduotas!",
+    "declineError": "Nepavyko atmesti perdavimo. Nuoroda gali būti negaliojanti arba jau panaudota.",
+    "declinedBody": "Užsakymo {id} perdavimas buvo atmestas.",
+    "declinedHeading": "Perdavimas atmestas",
+    "noAction": "Jei neatpažįstate šios užklausos arba norite išlaikyti nuosavybę, jokių papildomų veiksmų atlikti nereikia.",
+    "requestHeading": "Užsakymo {id} perdavimo užklausa",
+    "requestIntro": "Gavote užklausą perduoti nuosavybės teises į savo užsakymą ({id}). Jei sutinkate, galite patvirtinti perdavimą paspaudę mygtuką žemiau."
+  },
+  "TransferRequest": {
+    "cantFindOrder": "Nerandate ieškomo užsakymo?",
+    "connectOrder": "Susiekite užsakymą su savo paskyra.",
+    "heading": "Užsakymų perdavimai",
+    "orderId": "Užsakymo nuoroda arba ID",
+    "requestTransfer": "Prašyti perdavimo",
+    "transferEmailSent": "Perdavimo užklausos el. laiškas išsiųstas adresu {email}",
+    "transferRequested": "Užsakymo {orderId} perdavimas užklaustas",
+    "whereToFind": "Atidarykite to užsakymo patvirtinimo laišką ir čia įklijuokite iš jo nuorodą."
+  }
+}

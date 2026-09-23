@@ -1,0 +1,29 @@
+{
+  "name": "Taiwan",
+  "currency_code": "twd",
+  "countries": ["tw"],
+  "stock_location": {
+    "name": "Taipei Warehouse",
+    "address": {
+      "address_1": "忠孝東路100號",
+      "country_code": "tw"
+    }
+  },
+  "shipping_prices": {
+    "courier": 192,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 480,
+    "sweatshirt": 930,
+    "sweatpants": 770,
+    "shorts": 610,
+    "hoodie": 1120,
+    "chinoPants": 1055,
+    "pufferJacket": 2240,
+    "wirelessHeadphones": 3010,
+    "electricBike": 33600,
+    "servingPlate": 1310,
+    "espressoCup": 480
+  }
+}

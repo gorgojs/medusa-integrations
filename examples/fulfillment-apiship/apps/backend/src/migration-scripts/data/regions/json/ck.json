@@ -1,0 +1,29 @@
+{
+  "name": "Cook Islands",
+  "currency_code": "nzd",
+  "countries": ["ck"],
+  "stock_location": {
+    "name": "Avarua Warehouse",
+    "address": {
+      "address_1": "Ara Tapu 22",
+      "country_code": "ck"
+    }
+  },
+  "shipping_prices": {
+    "courier": 10,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 25,
+    "sweatshirt": 48,
+    "sweatpants": 40,
+    "shorts": 31,
+    "hoodie": 58,
+    "chinoPants": 54,
+    "pufferJacket": 116,
+    "wirelessHeadphones": 155,
+    "electricBike": 1735,
+    "servingPlate": 68,
+    "espressoCup": 25
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Macao",
+  "currency_code": "mop",
+  "countries": ["mo"],
+  "stock_location": {
+    "name": "Macau Warehouse",
+    "address": {
+      "address_1": "Avenida da Praia Grande 761",
+      "country_code": "mo"
+    }
+  },
+  "shipping_prices": {
+    "courier": 48,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 120,
+    "sweatshirt": 230,
+    "sweatpants": 192,
+    "shorts": 152,
+    "hoodie": 280,
+    "chinoPants": 265,
+    "pufferJacket": 560,
+    "wirelessHeadphones": 750,
+    "electricBike": 8400,
+    "servingPlate": 330,
+    "espressoCup": 120
+  }
+}

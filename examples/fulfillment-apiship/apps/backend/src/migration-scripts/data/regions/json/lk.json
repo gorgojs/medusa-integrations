@@ -1,0 +1,29 @@
+{
+  "name": "Sri Lanka",
+  "currency_code": "lkr",
+  "countries": ["lk"],
+  "stock_location": {
+    "name": "Sri Jayawardenepura Kotte Warehouse",
+    "address": {
+      "address_1": "පාර්ලිමේන්තු මාවත 15",
+      "country_code": "lk"
+    }
+  },
+  "shipping_prices": {
+    "courier": 1800,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 4500,
+    "sweatshirt": 8700,
+    "sweatpants": 7200,
+    "shorts": 5700,
+    "hoodie": 10500,
+    "chinoPants": 9900,
+    "pufferJacket": 21000,
+    "wirelessHeadphones": 28200,
+    "electricBike": 315000,
+    "servingPlate": 12300,
+    "espressoCup": 4500
+  }
+}

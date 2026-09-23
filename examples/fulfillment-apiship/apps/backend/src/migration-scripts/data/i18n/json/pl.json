@@ -1,0 +1,103 @@
+{
+  "name": "Polski",
+  "translations": {
+    "categories": {
+      "clothing": "Odzież",
+      "coffee": "Kawa",
+      "eTransport": "Transport elektryczny",
+      "electronics": "Elektronika",
+      "headphones": "Słuchawki",
+      "home": "Dom",
+      "outerwear": "Odzież wierzchnia",
+      "pants": "Spodnie",
+      "shirts": "Koszulki",
+      "shorts": "Szorty",
+      "sweatshirts": "Bluzy",
+      "tableware": "Zastawa stołowa"
+    },
+    "collections": {
+      "new": "Nowości"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klasyczne czarne spodnie chino o dopasowanym kroju i minimalistycznym designie. Wykonane z miękkiej, wytrzymałej bawełny z domieszką elastanu dla większego komfortu. Boczne kieszenie, szlufki na pasek i zapinane na guzik. Idealne zarówno na co dzień, jak i do stylizacji smart casual.",
+        "title": "Spodnie chino"
+      },
+      "electricBike": {
+        "description": "Matowy czarny elektryczny rower górski stworzony z myślą o wydajności i codziennej wszechstronności. Lekka aluminiowa rama, zintegrowana bateria i mocny silnik zapewniają płynną jazdę wspomaganą na każdej nawierzchni. Idealny zarówno do jazdy po mieście, jak i w terenie.",
+        "title": "Rower elektryczny"
+      },
+      "espressoCup": {
+        "description": "Czarne ceramiczne filiżanki do espresso zaprojektowane na pojedynczą lub podwójną porcję. Trwałe, dobrze zatrzymują ciepło i można je myć w zmywarce.",
+        "title": "Filiżanka do espresso"
+      },
+      "hoodie": {
+        "description": "Klasyczna czarna bluza z kapturem wykonana z miękkiej bawełnianej tkaniny zapewniającej codzienny komfort. Luźny krój, regulowany kaptur ze sznurkiem i kieszeń typu kangur z przodu. Prosta i wszechstronna, idealna do warstwowego ubioru w każdej porze roku.",
+        "title": "Bluza z kapturem"
+      },
+      "pufferJacket": {
+        "description": "Ocieplana czarna kurtka puchowa zaprojektowana z myślą o cieple i komforcie w chłodne dni. Wysoki kołnierz, zamek błyskawiczny z zatrzaskiem oraz liczne kieszenie zwiększające funkcjonalność. Lekka, a zarazem trwała – sprawdzi się na co dzień i na zewnątrz.",
+        "title": "Kurtka puchowa"
+      },
+      "servingPlate": {
+        "description": "Rzeźbiarski półmisek ze stali nierdzewnej o lustrzanym, polerowanym wykończeniu. Płynny, nowoczesny kształt dodaje wyrafinowania każdej aranżacji stołu. Idealny na owoce, przekąski lub dekoracyjną ekspozycję. Zaprojektowany zarówno z myślą o funkcjonalności, jak i efekcie wizualnym – pięknie odbija światło i pasuje do każdego nowoczesnego wnętrza domowego czy restauracyjnego.",
+        "title": "Półmisek"
+      },
+      "shorts": {
+        "description": "Odkryj na nowo klasyczne szorty. Dzięki naszym bawełnianym szortom codzienne podstawy przestają być zwyczajne.",
+        "title": "Szorty Medusa"
+      },
+      "sweatpants": {
+        "description": "Odkryj na nowo klasyczne spodnie dresowe. Dzięki naszym bawełnianym spodniom dresowym codzienne podstawy przestają być zwyczajne.",
+        "title": "Spodnie dresowe Medusa"
+      },
+      "sweatshirt": {
+        "description": "Odkryj na nowo klasyczną bluzę. Dzięki naszej bawełnianej bluzie codzienne podstawy przestają być zwyczajne.",
+        "title": "Bluza Medusa"
+      },
+      "tShirt": {
+        "description": "Odkryj na nowo klasyczny t-shirt. Dzięki naszym bawełnianym koszulkom codzienne podstawy przestają być zwyczajne.",
+        "title": "Koszulka Medusa"
+      },
+      "wirelessHeadphones": {
+        "description": "Matowe czarne słuchawki bezprzewodowe o wygodnej, nausznej konstrukcji zapewniającej pełne zanurzenie w dźwięku. Czyste brzmienie, mocny bas i długi czas pracy na baterii. Stworzone do codziennego użytku w domu, biurze czy w podróży.",
+        "title": "Bezprzewodowe słuchawki nauszne"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Zwrot środków przyznany jako gest dobrej woli lub rekompensata za niedogodności",
+        "label": "Rekompensata obsługi klienta"
+      },
+      "pricingError": {
+        "description": "Zwrot środków w celu skorygowania zawyżonej opłaty, brakującego rabatu lub błędnej ceny",
+        "label": "Błąd cenowy"
+      },
+      "shippingIssue": {
+        "description": "Zwrot środków z powodu zagubionej, opóźnionej lub błędnie doręczonej przesyłki",
+        "label": "Problem z dostawą"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Dostawa kurierem",
+      "pickup": "Odbiór osobisty"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Dostawa w ciągu 2–3 dni.",
+        "label": "Kurier"
+      },
+      "pickup": {
+        "description": "Odbiór w punkcie odbioru.",
+        "label": "Odbiór osobisty"
+      }
+    },
+    "terms": {
+      "black": "Czarny",
+      "color": "Kolor",
+      "silver": "Srebrny",
+      "size": "Rozmiar",
+      "white": "Biały"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Iran",
+  "currency_code": "irr",
+  "countries": ["ir"],
+  "stock_location": {
+    "name": "Tehran Warehouse",
+    "address": {
+      "address_1": "خیابان ولیعصر ۱۲۰",
+      "country_code": "ir"
+    }
+  },
+  "shipping_prices": {
+    "courier": 252000,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 630000,
+    "sweatshirt": 1218000,
+    "sweatpants": 1008000,
+    "shorts": 798000,
+    "hoodie": 1470000,
+    "chinoPants": 1386000,
+    "pufferJacket": 2940000,
+    "wirelessHeadphones": 3948000,
+    "electricBike": 44100000,
+    "servingPlate": 1722000,
+    "espressoCup": 630000
+  }
+}

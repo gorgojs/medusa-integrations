@@ -1,0 +1,29 @@
+{
+  "name": "Tuvalu",
+  "currency_code": "aud",
+  "countries": ["tv"],
+  "stock_location": {
+    "name": "Funafuti Warehouse",
+    "address": {
+      "address_1": "Vaiaku Road 7",
+      "country_code": "tv"
+    }
+  },
+  "shipping_prices": {
+    "courier": 9,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 23,
+    "sweatshirt": 44,
+    "sweatpants": 36,
+    "shorts": 29,
+    "hoodie": 53,
+    "chinoPants": 50,
+    "pufferJacket": 105,
+    "wirelessHeadphones": 141,
+    "electricBike": 1575,
+    "servingPlate": 62,
+    "espressoCup": 23
+  }
+}

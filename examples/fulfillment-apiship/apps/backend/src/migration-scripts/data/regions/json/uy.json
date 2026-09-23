@@ -1,0 +1,29 @@
+{
+  "name": "Uruguay",
+  "currency_code": "uyu",
+  "countries": ["uy"],
+  "stock_location": {
+    "name": "Montevideo Warehouse",
+    "address": {
+      "address_1": "Avenida 18 de Julio 1234",
+      "country_code": "uy"
+    }
+  },
+  "shipping_prices": {
+    "courier": 240,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 600,
+    "sweatshirt": 1160,
+    "sweatpants": 960,
+    "shorts": 760,
+    "hoodie": 1400,
+    "chinoPants": 1320,
+    "pufferJacket": 2800,
+    "wirelessHeadphones": 3760,
+    "electricBike": 42000,
+    "servingPlate": 1640,
+    "espressoCup": 600
+  }
+}
