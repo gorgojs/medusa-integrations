@@ -7,15 +7,17 @@ description: "Learn how to integrate the T-Kassa payment provider by T-Bank into
 
 To integrate the T-Kassa payment provider by T-Bank into the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter) storefront, start by adding the required UI components, so the provider is displayed on the checkout page alongside other available payment methods.
 
-When the customer selects T-Kassa, the checkout initiates a payment session, and the provider creates it on T-Kassa's side and returns the payment address. The payment button then sends the customer there, where they can pay by card or through SBP.
+When the customer selects T-Kassa, the checkout initiates a payment session, and the provider creates it on T-Kassa's side and returns the payment address. The payment button then sends the customer there, where they can choose a payment method.
 
-Once the payment is completed, T-Kassa concurrently sends a webhook and redirects the customer back to the storefront.
+Once the payment is completed, T-Kassa concurrently sends a webhook and redirects the customer back to the storefront. Whichever event arrives first completes the cart and creates a new order in Medusa.
 
 For the storefront on Next.js, you need to make the following changes:
 
 ## Step 1: Configure Payment Provider
 
-Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-tkassa/apps/storefront/src/lib/constants.tsx#L56-L60) and add T-Kassa to the payment provider mapping, plus a helper to recognize its sessions:
+To make T-Kassa available as a payment method on the storefront checkout page, you must add its configuration to the payment provider mapping in your storefront's constants file. This mapping determines how each payment provider is displayed in the UI.
+
+Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-tkassa/apps/storefront/src/lib/constants.tsx#L56-L60) and add the following code:
 
 ![Directory structure in the Medusa Storefront after updating the file for constants](/static/tkassa/storefront/src-lib-constants.webp)
 
@@ -43,9 +45,11 @@ export const isTkassa = (providerId?: string) => {
 }
 ```
 
-`title` names the method at the checkout and `subtitle` is the smaller line under it, where the payment methods T-Kassa accepts go. Both act as fallbacks when a locale carries no translation. `isTkassa` is used by the dispatcher below and by the session data builder in the next step.
+You extend the `paymentInfoMap` object to include a `pp_tkassa_tkassa` entry. This entry defines the title, the subtitle, and the icon that will be shown for T-Kassa on the checkout page, and also serves as the fallback when a locale carries no translation.
 
-The `icon` is a component you add yourself. The example draws the T-Kassa shield in the brand yellow with the dark T, and crops the `viewBox` to the glyph, so the mark centres in the 24px circle the checkout renders around it:
+The helper function `isTkassa` checks whether a given `providerId` belongs to T-Kassa. It's used by the dispatcher below and by the session data builder in the next step.
+
+Add the `icon` component for T-Kassa:
 
 ```tsx title="src/modules/common/icons/tkassa.tsx"
 import type React from "react"
@@ -85,9 +89,13 @@ const TKassa: React.FC<IconProps> = ({
 export default TKassa
 ```
 
+This component is passed as `icon: <TKassa />` in the `paymentInfoMap` entry. It displays the icon for the T-Kassa payment method on the checkout page.
+
 ---
 
 ## Step 2: Initialize Payment Session
+
+To redirect a customer to T-Kassa, the payment session must be properly initialized with the required parameters, including the return address for the post-payment callback and the shopping cart for generating receipts.
 
 Open the same [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-tkassa/apps/storefront/src/lib/constants.tsx#L76-L108) and add the return address and the session data builder:
 
@@ -134,13 +142,19 @@ const paymentSessionDataBuilders: Array<{
 ]
 ```
 
-When initiating a payment for T-Kassa, `build` passes `SuccessURL` and `FailURL`, both pointing at the same return address, plus the `cart` to build a compliant receipt. `isReady` holds the session back until the cart carries an email and a shipping address, since the receipt needs the buyer's email and phone.
+When initiating a payment for T-Kassa, `build` passes `SuccessURL` and `FailURL`, both pointing at the same return address.
+
+Both addresses point to your storefront's `/api/payment-return` route and are used for both successful and failed payment attempts.
+
+The `cart` object is included to build a receipt compliant with Federal Law No. 54. `isReady` holds the session back until the cart carries an email and a shipping address, since the receipt needs the buyer's email and phone.
 
 ---
 
 ## Step 3: Create Payment Button
 
-Create [`src/modules/checkout/components/payment-button/providers/tkassa.tsx`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-tkassa/apps/storefront/src/modules/checkout/components/payment-button/providers/tkassa.tsx):
+The storefront needs a dedicated payment button component for each payment provider. Using the payment session data, it sends the customer to the T-Kassa payment page. The order itself is placed later, when the customer comes back through `/api/payment-return`, or earlier through the webhook if that arrives first.
+
+Create [`src/modules/checkout/components/payment-button/providers/tkassa.tsx`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-tkassa/apps/storefront/src/modules/checkout/components/payment-button/providers/tkassa.tsx) and add the following code:
 
 ![Directory structure in the Medusa Storefront after creating the file for the T-Kassa payment button](/static/tkassa/storefront/src-modules-checkout-components-payment-button-providers-tkassa.webp)
 
@@ -205,7 +219,7 @@ const TkassaPaymentButton = ({
 export default TkassaPaymentButton
 ```
 
-This component finds the T-Kassa `payment_session` in the active cart and extracts `data.PaymentURL`. When the customer clicks, `handlePayment` sends them there directly with `window.location.assign`, since T-Kassa's page isn't embedded in the storefront.
+This component finds the T-Kassa `payment_session` in the active cart and extracts the value of `data.PaymentURL`. When the customer clicks the payment button, they're redirected to this URL to complete the payment on the T-Kassa page.
 
 If the `PaymentURL` is missing, the button shows an error message instead of navigating anywhere.
 
@@ -238,15 +252,15 @@ import TkassaPaymentButton from "./providers/tkassa"
   }
 ```
 
-The parent `PaymentButton` uses `isTkassa` to determine whether to render `TkassaPaymentButton` for the active session; otherwise it falls through to the next case.
+The parent `PaymentButton` uses `isTkassa` to determine whether to display `TkassaPaymentButton` for the current session; otherwise it falls through to the next case.
 
 ---
 
 ## Step 5: Handle Payment Return
 
-T-Kassa reports the payment status through both a webhook and this redirect, so the shared route checks the cart for an order before placing one itself.
+After the customer completes payment on the T-Kassa page, they're redirected back to the storefront. T-Kassa reports the payment status through both this redirect and a webhook, so the shared route checks the cart for an order before placing one itself.
 
-Open [`src/app/api/payment-return/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-tkassa/apps/storefront/src/app/api/payment-return/route.ts#L29-L80) and add the following function:
+Open [`src/app/api/payment-return/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-tkassa/apps/storefront/src/app/api/payment-return/route.ts#L29-L80) with the following content:
 
 ![Directory structure in the Medusa Storefront after creating the file for API route](/static/tkassa/storefront/src-app-api-payment-return-route.webp)
 
@@ -319,7 +333,7 @@ async function redirectProviderReturn({
 }
 ```
 
-Then route T-Kassa's return to it, in `GET` itself:
+Then route T-Kassa's return to `redirectProviderReturn`, in `GET`:
 
 ```ts title="src/app/api/payment-return/route.ts"
   if (provider === "tkassa") {
@@ -327,7 +341,11 @@ Then route T-Kassa's return to it, in `GET` itself:
   }
 ```
 
-If the cart already has an order, the webhook won the race, so the route revalidates the order cache and sends the customer to the confirmation page. Otherwise it tries `placeOrder` itself, and on any failure sends the customer back to the checkout with `error=payment_failed` so they can pick a method again.
+This route handles the return from T-Kassa after a payment attempt. It always fetches the cart's latest state, uncached, so it doesn't miss changes made during payment.
+
+If the cart already has an order, the confirmation already arrived through the webhook. The route revalidates the order cache, removes the cart cookie, and sends the customer to the confirmation page. This ensures a consistent post-payment experience while keeping storefront data up to date.
+
+Otherwise the route tries to place the order itself. If successful, the customer ends up on the order confirmation page. If an error happens, the customer is sent back to the checkout with `error=payment_failed` so they can pick a method again.
 
 ---
 
@@ -347,10 +365,10 @@ Add `pp_tkassa_tkassa` to [`messages/en.json`](https://github.com/gorgojs/medusa
 }
 ```
 
-A locale missing an entry falls back to the English `title` and `subtitle` from `paymentInfoMap` in [Step 1](#step-1-configure-payment-provider), and a method with neither renders as a title alone. T-Kassa's own name stays the same across locales, except in Russian it's `Т-Касса`. The subtitle is translated like any other string, so the Russian catalog reads `Карты, СБП`.
+A locale missing an entry falls back to the English `title` and `subtitle` from `paymentInfoMap` in [Step 1](#step-1-configure-payment-provider).
 
 ---
 
 ## Full Storefront Integration Code Example
 
-The complete storefront lives at [`examples/payment-tkassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-tkassa/apps/storefront), built on the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter). The example's own [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-tkassa/README.md#what-the-example-adds-to-the-starter) lists the full nine-file delta, backend included.
+The complete storefront is located at [`examples/payment-tkassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-tkassa/apps/storefront), built on the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter). The example's own [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-tkassa/README.md#what-the-example-adds-to-the-starter) lists every file the integration consists of, backend included.

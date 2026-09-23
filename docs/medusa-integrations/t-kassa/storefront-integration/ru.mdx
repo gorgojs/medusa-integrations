@@ -7,15 +7,17 @@ description: "Узнайте, как интегрировать платёжны
 
 Для интеграции платёжного провайдера Т-Касса от Т-Банка в storefront [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter) начните с добавления необходимых UI-компонентов. Таким образом провайдер будет отображаться на странице оформления заказа наряду с другими доступными методами оплаты.
 
-Когда покупатель выбирает Т-Касса, оформление заказа инициализирует платёжную сессию, а провайдер создаёт её на своей стороне и возвращает адрес для оплаты. Кнопка оплаты отправляет покупателя на эту страницу, где он может заплатить картой или через СБП.
+Когда покупатель выбирает Т-Касса, оформление заказа инициализирует платёжную сессию, а провайдер создаёт её на стороне Т-Касса и возвращает адрес для оплаты. Кнопка оплаты отправляет покупателя на эту страницу, где он сможет выбрать предпочтительный способ оплаты.
 
-После завершения оплаты Т-Касса одновременно отправляет вебхук и перенаправляет покупателя обратно в витрину.
+После завершения оплаты Т-Касса одновременно отправляет вебхук и перенаправляет покупателя обратно в витрину. То событие, которое придёт первым, завершит корзину и создаст новый заказ в Medusa.
 
 Для витрины на Next.js необходимо внести следующие изменения:
 
 ## Шаг 1: Настройте платёжный провайдер
 
-Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-tkassa/apps/storefront/src/lib/constants.tsx#L56-L60) и добавьте Т-Касса в маппинг платёжных провайдеров, а также вспомогательную функцию, распознающую её сессии:
+Чтобы сделать Т-Касса доступным в качестве способа оплаты на странице оформления заказа витрины магазина, необходимо добавить её конфигурацию в маппинг платёжных провайдеров в файле с константами вашей витрины. Этот маппинг определяет, как каждый провайдер отображается в интерфейсе.
+
+Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-tkassa/apps/storefront/src/lib/constants.tsx#L56-L60) и добавьте следующий код:
 
 ![Структура проекта Medusa Storefront после обновления файла с константами](/static/tkassa/storefront/src-lib-constants.webp)
 
@@ -43,9 +45,11 @@ export const isTkassa = (providerId?: string) => {
 }
 ```
 
-`title` называет способ оплаты на странице оформления заказа, а `subtitle` задаёт строку помельче под ним, куда попадают способы оплаты, которые принимает Т-Касса. Оба служат резервными значениями, когда для локали нет перевода. `isTkassa` использует диспетчер ниже и построитель данных платёжной сессии из следующего шага.
+Вы расширяете объект `paymentInfoMap`, добавляя в него запись `pp_tkassa_tkassa`. Эта запись определяет заголовок, подпись и иконку, которые будут отображаться для Т-Касса на странице оформления заказа, а также служит резервным значением, когда для локали нет перевода.
 
-Компонент для `icon` вы добавляете сами. В примере щит Т-Касса нарисован фирменным жёлтым с тёмной буквой Т, а `viewBox` обрезан по самому знаку, чтобы тот встал по центру круга 24px, который рисует вокруг него страница оформления заказа:
+Вспомогательная функция `isTkassa` проверяет, принадлежит ли переданный `providerId` к Т-Касса. Она используется диспетчером ниже и функцией сборки данных платёжной сессии из следующего шага.
+
+Добавьте компонент `icon` для Т-Кассы:
 
 ```tsx title="src/modules/common/icons/tkassa.tsx"
 import type React from "react"
@@ -85,11 +89,15 @@ const TKassa: React.FC<IconProps> = ({
 export default TKassa
 ```
 
+Этот компонент передаётся как `icon: <TKassa />` в записи `paymentInfoMap`. Он отображает иконку способа оплаты Т-Касса на странице оформления заказа.
+
 ---
 
 ## Шаг 2: Инициализируйте платёжную сессию
 
-Откройте тот же файл [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-tkassa/apps/storefront/src/lib/constants.tsx#L76-L108) и добавьте адрес возврата и построитель данных сессии:
+Чтобы перенаправить покупателя в Т-Касса, платёжная сессия должна быть корректно инициализирована с необходимыми параметрами, включая адрес возврата после оплаты и корзину для формирования онлайн-чеков.
+
+Откройте тот же файл [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/4db4c78b5af5a75285b9ed658192b6c6c818eeb6/examples/payment-tkassa/apps/storefront/src/lib/constants.tsx#L76-L108) и добавьте адрес возврата и функцию сборки данных сессии:
 
 ![Структура проекта Medusa Storefront после обновления файла с константами](/static/tkassa/storefront/src-lib-constants.webp)
 
@@ -134,13 +142,19 @@ const paymentSessionDataBuilders: Array<{
 ]
 ```
 
-При инициализации платежа для Т-Касса `build` передаёт `SuccessURL` и `FailURL`, оба указывающие на один и тот же адрес возврата, а также `cart` для формирования чека. `isReady` удерживает сессию, пока в корзине не появятся email и адрес доставки, поскольку для чека нужны email и телефон покупателя.
+При инициализации платежа для Т-Касса `build` передаёт `SuccessURL` и `FailURL`, оба указывающие на один и тот же адрес возврата.
+
+Оба адреса указывают на API-роут `/api/payment-return` вашей витрины и используются как для успешных, так и для неудачных попыток оплаты.
+
+Объект `cart` включается в данные инициализации для формирования чека в соответствии с Федеральным законом № 54. `isReady` удерживает сессию, пока в корзине не появятся email и адрес доставки, поскольку для чека нужны email и телефон покупателя.
 
 ---
 
 ## Шаг 3: Создайте кнопку оплаты
 
-Создайте файл [`src/modules/checkout/components/payment-button/providers/tkassa.tsx`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-tkassa/apps/storefront/src/modules/checkout/components/payment-button/providers/tkassa.tsx):
+В витрине для каждого платёжного провайдера необходим отдельный компонент кнопки оплаты. Используя данные платёжной сессии, он перенаправляет покупателя на страницу оплаты Т-Касса. Сам заказ оформляется позже, когда покупатель вернётся через `/api/payment-return`, либо раньше по вебхуку, если тот придёт первым.
+
+Создайте файл [`src/modules/checkout/components/payment-button/providers/tkassa.tsx`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-tkassa/apps/storefront/src/modules/checkout/components/payment-button/providers/tkassa.tsx) и добавьте следующий код:
 
 ![Структура проекта Medusa Storefront после создания файла для кнопки оплаты Т-Касса](/static/tkassa/storefront/src-modules-checkout-components-payment-button-providers-tkassa.webp)
 
@@ -204,7 +218,7 @@ const TkassaPaymentButton = ({
 export default TkassaPaymentButton
 ```
 
-Этот компонент находит `payment_session` Т-Касса в активной корзине и извлекает `data.PaymentURL`. При нажатии `handlePayment` отправляет покупателя туда напрямую через `window.location.assign`, поскольку страница Т-Касса не встраивается в витрину.
+Этот компонент находит `payment_session` Т-Касса в активной корзине и извлекает значение `data.PaymentURL`. Когда покупатель нажимает кнопку оплаты, он перенаправляется на этот URL для завершения оплаты на странице Т-Касса.
 
 Если `PaymentURL` отсутствует, кнопка показывает сообщение об ошибке вместо перехода.
 
@@ -212,7 +226,7 @@ export default TkassaPaymentButton
 
 ## Шаг 4: Зарегистрируйте кнопку оплаты
 
-Импортируйте кнопку и `isTkassa` в [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-tkassa/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L3-L17), затем добавьте `case` для неё в `switch` диспетчера:
+Импортируйте кнопку и `isTkassa` в [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-tkassa/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L3-L17), затем добавьте `case` для неё в `switch`:
 
 ![Структура проекта Medusa Storefront после обновления файла для компонента кнопки оплаты](/static/tkassa/storefront/src-modules-checkout-components-payment-button-index.webp)
 
@@ -237,15 +251,15 @@ import TkassaPaymentButton from "./providers/tkassa"
   }
 ```
 
-Родительский компонент `PaymentButton` использует `isTkassa`, чтобы определить, нужно ли отрисовать `TkassaPaymentButton` для активной сессии, иначе выполнение переходит к следующей ветке.
+Родительский компонент `PaymentButton` использует `isTkassa`, чтобы определить, нужно ли отобразить `TkassaPaymentButton` для текущей сессии, иначе выполнение переходит к следующей ветке.
 
 ---
 
 ## Шаг 5: Обработайте возврат с оплаты
 
-Т-Касса сообщает статус платежа и через вебхук, и через этот редирект, поэтому общий роут проверяет, есть ли у корзины заказ, прежде чем оформлять его сам.
+После того как покупатель завершает оплату на странице Т-Касса, он перенаправляется обратно на витрину магазина. Т-Касса сообщает статус платежа и через это перенаправление, и через вебхук, поэтому общий API-роут проверяет, есть ли у корзины заказ, прежде чем оформлять его самому.
 
-Откройте [`src/app/api/payment-return/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-tkassa/apps/storefront/src/app/api/payment-return/route.ts#L29-L80) и добавьте следующую функцию:
+Откройте [`src/app/api/payment-return/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/350802b8704d370bd65f634f1934bd1b642e7ab3/examples/payment-tkassa/apps/storefront/src/app/api/payment-return/route.ts#L29-L80) со следующим содержимым:
 
 ![Структура проекта Medusa Storefront после создания файла для API route](/static/tkassa/storefront/src-app-api-payment-return-route.webp)
 
@@ -320,7 +334,7 @@ async function redirectProviderReturn({
 }
 ```
 
-Затем направьте возврат Т-Касса в эту функцию прямо в `GET`:
+Затем в функции `GET` направьте возврат Т-Касса в `redirectProviderReturn`:
 
 ```ts title="src/app/api/payment-return/route.ts"
   if (provider === "tkassa") {
@@ -328,30 +342,34 @@ async function redirectProviderReturn({
   }
 ```
 
-Если у корзины уже есть заказ, в гонке победил вебхук, и роут обновляет кэш заказа и отправляет покупателя на страницу подтверждения. Иначе он пытается оформить заказ сам, а при любой ошибке отправляет покупателя обратно на оформление заказа с `error=payment_failed`, чтобы он мог выбрать способ оплаты заново.
+Этот API-роут обрабатывает возврат от Т-Касса после попытки оплаты. Он всегда получает актуальное состояние корзины без кэша, чтобы не пропустить изменения, внесённые во время оплаты.
+
+Если у корзины уже есть заказ, значит подтверждение уже пришло по вебхуку. API-роут обновляет кэш заказа, удаляет cookie корзины и отправляет покупателя на страницу подтверждения. Это гарантирует корректное завершение платёжного процесса и сохранение актуальных данных в витрине.
+
+Иначе API-роут пытается оформить заказ сам. В случае успеха покупатель оказывается на странице подтверждения заказа. Если же возникает ошибка, покупатель возвращается на оформление заказа с `error=payment_failed` и может выбрать способ оплаты заново.
 
 ---
 
 ## Шаг 6: Добавьте подписи провайдера в локали витрины
 
-Добавьте `pp_tkassa_tkassa` в [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/5c7c2f15ccfb90f15d5d94abe7d303137550a421/examples/payment-tkassa/apps/storefront/messages/en.json#L529) и в каждую другую локаль под `messages/`:
+Добавьте `pp_tkassa_tkassa` в [`messages/ru.json`](https://github.com/gorgojs/medusa-integrations/blob/5c7c2f15ccfb90f15d5d94abe7d303137550a421/examples/payment-tkassa/apps/storefront/messages/ru.json#L529) и в каждую другую локаль под `messages/`:
 
-```json title="messages/en.json"
+```json title="messages/ru.json"
 {
   "PaymentMethods": {
     // ...
     "pp_tkassa_tkassa": {
-      "title": "T-Kassa",
-      "subtitle": "Cards, SBP"
+      "title": "Т-Касса",
+      "subtitle": "Карты, СБП"
     }
   }
 }
 ```
 
-Если для локали нет записи, используются английские `title` и `subtitle` из `paymentInfoMap` в [Шаге 1](#шаг-1-настройте-платёжный-провайдер), а способ оплаты без подписи отрисовывается одним названием. Собственное название Т-Касса не меняется от локали к локали, за исключением русской, где это `Т-Касса`. Подпись переводится наравне с любой другой строкой, поэтому в русской локали она читается как `Карты, СБП`.
+Если для локали нет записи, используются английские `title` и `subtitle` из `paymentInfoMap` в [Шаге 1](#шаг-1-настройте-платёжный-провайдер).
 
 ---
 
 ## Полный пример кода интеграции в витрину
 
-Полный код витрины лежит в [`examples/payment-tkassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-tkassa/apps/storefront), собранной на основе [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter). В [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-tkassa/README.md#what-the-example-adds-to-the-starter) примера перечислены все девять файлов, из которых состоит интеграция, включая бэкенд.
+Полный код витрины находится в [`examples/payment-tkassa/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-tkassa/apps/storefront), собранной на основе [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter). В [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-tkassa/README.md#what-the-example-adds-to-the-starter) примера перечислены все файлы, из которых состоит интеграция, включая бэкенд.
