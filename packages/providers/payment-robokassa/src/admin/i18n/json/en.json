@@ -8,7 +8,7 @@
       "receipt": "Receipt"
     },
     "fields": {
-      "merchantLogin": "Merchant login",
+      "merchantLogin": "Store ID",
       "hashAlgorithm": "Hash algorithm",
       "password1": "Password #1",
       "password2": "Password #2",
@@ -17,16 +17,42 @@
       "testPassword1": "Test password #1",
       "testPassword2": "Test password #2",
       "useReceipt": "Send receipts",
-      "taxation": "Taxation",
-      "taxItemDefault": "Default item tax",
-      "taxShippingDefault": "Default shipping tax"
+      "taxation": "Tax system",
+      "taxItemDefault": "Default item VAT rate",
+      "taxShippingDefault": "Default shipping VAT rate"
+    },
+    "hints": {
+      "merchantLogin": "Set when you created the store in your Robokassa account.",
+      "hashAlgorithm": "Computes and verifies payment signatures. Must match the algorithm in the store's technical settings in Robokassa.",
+      "password1": "Signs the payment and capture requests. From the store's technical settings in Robokassa.",
+      "password2": "Verifies payment notifications and signs payment status requests. From the store's technical settings in Robokassa.",
+      "capture": "When on, the payment is one-stage and the money is debited right away. When off, it is two-stage and the amount is held until you capture it.",
+      "isTest": "Sends payments in the Robokassa test mode and signs them with the test passwords.",
+      "testPassword1": "Used instead of password #1 while test mode is on.",
+      "testPassword2": "Used instead of password #2 while test mode is on.",
+      "useReceipt": "Sends receipt data with every payment for registration under 54-FZ.",
+      "taxation": "Applies to the whole receipt. Items under different tax systems must be sent in separate receipts.",
+      "taxItemDefault": "Applied to every product line of the receipt.",
+      "taxShippingDefault": "Applied to the shipping line of the receipt."
     },
     "taxation": {
-      "osn": "General (OSN)",
-      "usn_income": "Simplified — income",
-      "usn_income_outcome": "Simplified — income minus expenses",
-      "esn": "Unified agricultural (ESN)",
-      "patent": "Patent"
+      "osn": "General taxation regime (OSN)",
+      "usn_income": "Simplified taxation system (STS), income",
+      "usn_income_outcome": "Simplified taxation system (STS), income minus expenses",
+      "esn": "Unified agricultural tax (UAT)",
+      "patent": "Patent taxation system (PTS)"
+    },
+    "vatCodes": {
+      "none": "No VAT",
+      "vat0": "0%",
+      "vat5": "5%",
+      "vat7": "7%",
+      "vat10": "10%",
+      "vat20": "20%",
+      "vat105": "5/105",
+      "vat107": "7/107",
+      "vat110": "10/110",
+      "vat120": "20/120"
     }
   }
 }

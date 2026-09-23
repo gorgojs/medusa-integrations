@@ -7,6 +7,19 @@ import { requiredWhenReceipt } from "../utils"
 import { createSignature } from "../../payment-robokassa/utils"
 import { ProviderKeys } from "../../../types"
 
+const VAT_CODE_LABELS = {
+  none: "robokassa.vatCodes.none",
+  vat0: "robokassa.vatCodes.vat0",
+  vat5: "robokassa.vatCodes.vat5",
+  vat7: "robokassa.vatCodes.vat7",
+  vat10: "robokassa.vatCodes.vat10",
+  vat20: "robokassa.vatCodes.vat20",
+  vat105: "robokassa.vatCodes.vat105",
+  vat107: "robokassa.vatCodes.vat107",
+  vat110: "robokassa.vatCodes.vat110",
+  vat120: "robokassa.vatCodes.vat120",
+}
+
 const descriptor = defineIntegration({
   category: "payment",
   displayName: "robokassa.name",
@@ -22,6 +35,7 @@ const descriptor = defineIntegration({
       minLength: 1,
       control: "text",
       label: "robokassa.fields.merchantLogin",
+      hint: "robokassa.hints.merchantLogin",
     },
     hashAlgorithm: {
       type: "enum",
@@ -29,6 +43,7 @@ const descriptor = defineIntegration({
       required: true,
       control: "select",
       label: "robokassa.fields.hashAlgorithm",
+      hint: "robokassa.hints.hashAlgorithm",
     },
     password1: {
       type: "string",
@@ -37,6 +52,7 @@ const descriptor = defineIntegration({
       secret: true,
       control: "secret",
       label: "robokassa.fields.password1",
+      hint: "robokassa.hints.password1",
     },
     password2: {
       type: "string",
@@ -45,24 +61,28 @@ const descriptor = defineIntegration({
       secret: true,
       control: "secret",
       label: "robokassa.fields.password2",
+      hint: "robokassa.hints.password2",
     },
     capture: {
       type: "boolean",
       default: true,
       control: "switch",
       label: "robokassa.fields.capture",
+      hint: "robokassa.hints.capture",
     },
     isTest: {
       type: "boolean",
       default: false,
       control: "switch",
       label: "robokassa.fields.isTest",
+      hint: "robokassa.hints.isTest",
     },
     testPassword1: {
       type: "string",
       secret: true,
       control: "secret",
       label: "robokassa.fields.testPassword1",
+      hint: "robokassa.hints.testPassword1",
       visibleWhen: { field: "isTest", equals: true },
     },
     testPassword2: {
@@ -70,6 +90,7 @@ const descriptor = defineIntegration({
       secret: true,
       control: "secret",
       label: "robokassa.fields.testPassword2",
+      hint: "robokassa.hints.testPassword2",
       visibleWhen: { field: "isTest", equals: true },
     },
     useReceipt: {
@@ -77,12 +98,14 @@ const descriptor = defineIntegration({
       default: false,
       control: "switch",
       label: "robokassa.fields.useReceipt",
+      hint: "robokassa.hints.useReceipt",
     },
     taxation: {
       type: "enum",
       values: ["osn", "usn_income", "usn_income_outcome", "esn", "patent"],
       control: "select",
       label: "robokassa.fields.taxation",
+      hint: "robokassa.hints.taxation",
       visibleWhen: { field: "useReceipt", equals: true },
       valueLabels: {
         osn: "robokassa.taxation.osn",
@@ -98,6 +121,8 @@ const descriptor = defineIntegration({
       values: ["none", "vat0", "vat10", "vat110", "vat20", "vat120", "vat5", "vat7", "vat105", "vat107"],
       control: "select",
       label: "robokassa.fields.taxItemDefault",
+      hint: "robokassa.hints.taxItemDefault",
+      valueLabels: VAT_CODE_LABELS,
       visibleWhen: { field: "useReceipt", equals: true },
       validate: requiredWhenReceipt,
     },
@@ -106,6 +131,8 @@ const descriptor = defineIntegration({
       values: ["none", "vat0", "vat10", "vat110", "vat20", "vat120", "vat5", "vat7", "vat105", "vat107"],
       control: "select",
       label: "robokassa.fields.taxShippingDefault",
+      hint: "robokassa.hints.taxShippingDefault",
+      valueLabels: VAT_CODE_LABELS,
       visibleWhen: { field: "useReceipt", equals: true },
       validate: requiredWhenReceipt,
     },

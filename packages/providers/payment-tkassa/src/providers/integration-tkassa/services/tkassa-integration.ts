@@ -5,6 +5,19 @@ import { TKASSA_ICON } from "../icon"
 import { TAX, requiredWhenReceipt } from "../utils"
 import { ProviderKeys } from "../../../types"
 
+const VAT_CODE_LABELS = {
+  none: "tkassa.vatCodes.none",
+  vat0: "tkassa.vatCodes.vat0",
+  vat5: "tkassa.vatCodes.vat5",
+  vat7: "tkassa.vatCodes.vat7",
+  vat10: "tkassa.vatCodes.vat10",
+  vat20: "tkassa.vatCodes.vat20",
+  vat105: "tkassa.vatCodes.vat105",
+  vat107: "tkassa.vatCodes.vat107",
+  vat110: "tkassa.vatCodes.vat110",
+  vat120: "tkassa.vatCodes.vat120",
+}
+
 const descriptor = defineIntegration({
   category: "payment",
   displayName: "tkassa.name",
@@ -21,6 +34,7 @@ const descriptor = defineIntegration({
       minLength: 1,
       control: "text",
       label: "tkassa.fields.terminalKey",
+      hint: "tkassa.hints.terminalKey",
     },
     password: {
       type: "string",
@@ -29,18 +43,21 @@ const descriptor = defineIntegration({
       secret: true,
       control: "secret",
       label: "tkassa.fields.password",
+      hint: "tkassa.hints.password",
     },
     capture: {
       type: "boolean",
       default: true,
       control: "switch",
       label: "tkassa.fields.capture",
+      hint: "tkassa.hints.capture",
     },
     useReceipt: {
       type: "boolean",
       default: false,
       control: "switch",
       label: "tkassa.fields.useReceipt",
+      hint: "tkassa.hints.useReceipt",
     },
     ffdVersion: {
       type: "enum",
@@ -48,6 +65,7 @@ const descriptor = defineIntegration({
       default: "1.2",
       control: "select",
       label: "tkassa.fields.ffdVersion",
+      hint: "tkassa.hints.ffdVersion",
       visibleWhen: { field: "useReceipt", equals: true },
       validate: requiredWhenReceipt,
     },
@@ -56,6 +74,7 @@ const descriptor = defineIntegration({
       values: ["osn", "usn_income", "usn_income_outcome", "esn", "patent"],
       control: "select",
       label: "tkassa.fields.taxation",
+      hint: "tkassa.hints.taxation",
       visibleWhen: {
         field: "useReceipt",
         equals: true
@@ -74,6 +93,8 @@ const descriptor = defineIntegration({
       values: TAX,
       control: "select",
       label: "tkassa.fields.taxItemDefault",
+      hint: "tkassa.hints.taxItemDefault",
+      valueLabels: VAT_CODE_LABELS,
       visibleWhen: { field: "useReceipt", equals: true },
       validate: requiredWhenReceipt,
     },
@@ -82,6 +103,8 @@ const descriptor = defineIntegration({
       values: TAX,
       control: "select",
       label: "tkassa.fields.taxShippingDefault",
+      hint: "tkassa.hints.taxShippingDefault",
+      valueLabels: VAT_CODE_LABELS,
       visibleWhen: { field: "useReceipt", equals: true },
       validate: requiredWhenReceipt,
     },

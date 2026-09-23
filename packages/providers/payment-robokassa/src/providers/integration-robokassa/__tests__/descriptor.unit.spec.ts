@@ -83,5 +83,13 @@ describe("Robokassa integration descriptor schema", () => {
     ])("rejects when %s (structural enum)", (_name, input) => {
       expect(schema.safeParse(input).success).toBe(false)
     })
+
+    it.each<[string]>([["taxation"], ["taxItemDefault"], ["taxShippingDefault"]])(
+      "%s labels every value it declares",
+      (field) => {
+        const opt = (descriptor.options as any)[field]
+        for (const value of opt.values) expect(opt.valueLabels[value]).toBeDefined()
+      },
+    )
   })
 })
