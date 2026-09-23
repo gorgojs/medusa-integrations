@@ -7,11 +7,7 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": [
-    "@gorgo/medusa-1c",
-    "@gorgo/medusa-payment-robokassa",
-    "@gorgo/medusa-payment-tkassa"
-  ],
+  "ignore": [],
   "privatePackages": false,
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true
