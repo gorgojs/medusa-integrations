@@ -1,0 +1,29 @@
+{
+  "name": "Zambia",
+  "currency_code": "usd",
+  "countries": ["zm"],
+  "stock_location": {
+    "name": "Lusaka Warehouse",
+    "address": {
+      "address_1": "Cairo Road 100",
+      "country_code": "zm"
+    }
+  },
+  "shipping_prices": {
+    "courier": 6,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 15,
+    "sweatshirt": 29,
+    "sweatpants": 24,
+    "shorts": 19,
+    "hoodie": 35,
+    "chinoPants": 33,
+    "pufferJacket": 70,
+    "wirelessHeadphones": 94,
+    "electricBike": 1050,
+    "servingPlate": 41,
+    "espressoCup": 15
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Rwanda",
+  "currency_code": "rwf",
+  "countries": ["rw"],
+  "stock_location": {
+    "name": "Kigali Warehouse",
+    "address": {
+      "address_1": "KN 4 Avenue 12",
+      "country_code": "rw"
+    }
+  },
+  "shipping_prices": {
+    "courier": 7800,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 19500,
+    "sweatshirt": 37700,
+    "sweatpants": 31200,
+    "shorts": 24700,
+    "hoodie": 45500,
+    "chinoPants": 42900,
+    "pufferJacket": 91000,
+    "wirelessHeadphones": 122200,
+    "electricBike": 1365000,
+    "servingPlate": 53300,
+    "espressoCup": 19500
+  }
+}

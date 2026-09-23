@@ -1,0 +1,29 @@
+{
+  "name": "Lesotho",
+  "currency_code": "zar",
+  "countries": ["ls"],
+  "stock_location": {
+    "name": "Maseru Warehouse",
+    "address": {
+      "address_1": "Kingsway 7",
+      "country_code": "ls"
+    }
+  },
+  "shipping_prices": {
+    "courier": 111,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 280,
+    "sweatshirt": 535,
+    "sweatpants": 445,
+    "shorts": 350,
+    "hoodie": 650,
+    "chinoPants": 610,
+    "pufferJacket": 1295,
+    "wirelessHeadphones": 1740,
+    "electricBike": 19430,
+    "servingPlate": 760,
+    "espressoCup": 280
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Czech Republic",
+  "currency_code": "czk",
+  "countries": ["cz"],
+  "stock_location": {
+    "name": "Prague Warehouse",
+    "address": {
+      "address_1": "Václavské náměstí 25",
+      "country_code": "cz"
+    }
+  },
+  "shipping_prices": {
+    "courier": 138,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 345,
+    "sweatshirt": 665,
+    "sweatpants": 550,
+    "shorts": 435,
+    "hoodie": 805,
+    "chinoPants": 760,
+    "pufferJacket": 1610,
+    "wirelessHeadphones": 2160,
+    "electricBike": 24200,
+    "servingPlate": 945,
+    "espressoCup": 345
+  }
+}

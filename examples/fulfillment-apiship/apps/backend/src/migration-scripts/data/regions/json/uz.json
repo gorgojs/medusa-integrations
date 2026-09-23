@@ -1,0 +1,29 @@
+{
+  "name": "Uzbekistan",
+  "currency_code": "uzs",
+  "countries": ["uz"],
+  "stock_location": {
+    "name": "Tashkent Warehouse",
+    "address": {
+      "address_1": "Amir Temur shoh ko'chasi 1",
+      "country_code": "uz"
+    }
+  },
+  "shipping_prices": {
+    "courier": 76200,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 190500,
+    "sweatshirt": 368000,
+    "sweatpants": 305000,
+    "shorts": 241000,
+    "hoodie": 445000,
+    "chinoPants": 419000,
+    "pufferJacket": 889000,
+    "wirelessHeadphones": 1194000,
+    "electricBike": 13335000,
+    "servingPlate": 521000,
+    "espressoCup": 190500
+  }
+}

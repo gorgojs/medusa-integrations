@@ -1,0 +1,29 @@
+{
+  "name": "Namibia",
+  "currency_code": "nad",
+  "countries": ["na"],
+  "stock_location": {
+    "name": "Windhoek Warehouse",
+    "address": {
+      "address_1": "Independence Avenue 145",
+      "country_code": "na"
+    }
+  },
+  "shipping_prices": {
+    "courier": 108,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 270,
+    "sweatshirt": 520,
+    "sweatpants": 430,
+    "shorts": 340,
+    "hoodie": 630,
+    "chinoPants": 595,
+    "pufferJacket": 1260,
+    "wirelessHeadphones": 1690,
+    "electricBike": 18900,
+    "servingPlate": 740,
+    "espressoCup": 270
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Seguir comprando",
+    "haveAccount": "¿Ya tienes cuenta? Abre",
+    "item": "Artículo",
+    "myOrders": "Mis pedidos",
+    "orCall": "o llame al",
+    "orderSummary": "Resumen del pedido",
+    "questionsPrefix": "Si tiene alguna pregunta, escríbanos a",
+    "shipping": "Envío",
+    "total": "Total",
+    "trackOrder": "Seguir pedido",
+    "viewOrder": "Ver pedido"
+  },
+  "Delivery": {
+    "bodyOrder": "El pedido <strong>n.º {id}</strong> ha sido entregado. Esperamos que todo haya llegado bien.",
+    "headingAnon": "Tu pedido ha sido entregado",
+    "headingWithName": "{name}, tu pedido ha sido entregado",
+    "preview": "Pedido n.º {id} entregado",
+    "somethingWrong": "Si algo no está bien, escríbenos en un plazo de 14 días y lo resolvemos.",
+    "subject": "Pedido n.º {id} entregado",
+    "textFallback": "El pedido n.º {id} ha sido entregado."
+  },
+  "Fulfillment": {
+    "bodyOrder": "El pedido <strong>n.º {id}</strong> está embalado y espera a que lo recoja el transportista.",
+    "deliveryCity": "Enviamos a {city}.",
+    "headingAnon": "Estamos preparando tu pedido",
+    "headingWithName": "{name}, estamos preparando tu pedido",
+    "nextStep": "Te enviaremos el número de seguimiento en cuanto el paquete salga.",
+    "preview": "Pedido n.º {id} en preparación",
+    "subject": "Pedido n.º {id} en preparación",
+    "textFallback": "El pedido n.º {id} está embalado."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. Todos los derechos reservados."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "El pedido <strong>n.º {id}</strong> ha sido cancelado.",
+    "headingAnon": "Tu pedido ha sido cancelado",
+    "headingWithName": "{name}, tu pedido ha sido cancelado",
+    "preview": "Pedido n.º {id} cancelado",
+    "refundNote": "Si el pedido estaba pagado, el dinero vuelve a la misma tarjeta. Los bancos suelen tardar hasta 10 días hábiles.",
+    "subject": "Pedido n.º {id} cancelado",
+    "textFallback": "El pedido n.º {id} ha sido cancelado."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "El pedido <strong>n.º {id}</strong> se ha completado. ¡Gracias por elegirnos!",
+    "bodyPromo": "Nos encantaría volver a verle. Descubra las novedades de nuestra tienda.",
+    "deliveryCity": "Entregado en {city}.",
+    "headingAnon": "¡Su pedido está completado!",
+    "headingWithName": "{name}, ¡su pedido está completado!",
+    "preview": "Pedido n.º {id} completado. ¡Gracias por su compra!",
+    "subject": "Pedido n.º {id} completado",
+    "textFallback": "Pedido n.º {id} completado. ¡Gracias por su compra!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "El pedido <strong>n.º {id}</strong> se ha realizado correctamente.",
+    "deliveryCity": "Enviamos a {city}.",
+    "headingAnon": "¡Su pedido está realizado!",
+    "headingWithName": "{name}, ¡su pedido está realizado!",
+    "preview": "Pedido n.º {id} realizado correctamente",
+    "subject": "Pedido n.º {id} realizado",
+    "textFallback": "El pedido n.º {id} se ha realizado.\n\nEstamos preparando su pedido y lo enviaremos en breve.",
+    "watchStatus": "Puede seguir el estado de su pedido en su cuenta."
+  },
+  "OrderTransfer": {
+    "body": "Se ha solicitado transferir el pedido <strong>n.º {id}</strong> a otra cuenta. Si ha sido usted, confirme la transferencia con el botón de abajo. Si no, simplemente ignore este mensaje.",
+    "button": "Revisar solicitud",
+    "heading": "Solicitud de transferencia del pedido",
+    "hint": "El pedido solo se transferirá tras su confirmación. Si no ha solicitado la transferencia, no ocurrirá nada con su pedido.",
+    "preview": "Solicitud de transferencia del pedido n.º {id}",
+    "subject": "Solicitud de transferencia del pedido n.º {id}",
+    "textFallback": "Solicitud de transferencia del pedido n.º {id}\n\nPara revisar la solicitud, siga el enlace:\n{url}\n\nSi no ha solicitado la transferencia, simplemente ignore este mensaje."
+  },
+  "PasswordReset": {
+    "body": "Hemos recibido una solicitud para restablecer la contraseña de <strong>{email}</strong>. Pulse el botón de abajo para establecer una nueva contraseña.",
+    "button": "Restablecer contraseña",
+    "heading": "Restablecer contraseña",
+    "hint": "El enlace es válido durante <strong>15 minutos</strong>. Si no ha solicitado restablecer la contraseña, simplemente ignore este mensaje.",
+    "preview": "Restablecer contraseña, el enlace caduca en 15 minutos",
+    "subject": "Restablecer contraseña",
+    "textFallback": "Restablecer contraseña\n\nPara restablecer su contraseña, siga el enlace (válido 15 minutos):\n{url}\n\nSi no ha solicitado restablecer la contraseña, simplemente ignore este mensaje."
+  },
+  "Payment": {
+    "bodyOrder": "El pedido <strong>n.º {id}</strong> se ha pagado correctamente. Ya lo estamos preparando para el envío.",
+    "headingAnon": "¡Su pedido está pagado!",
+    "headingWithName": "{name}, ¡su pedido está pagado!",
+    "preview": "Pedido n.º {id} pagado correctamente",
+    "subject": "Pedido n.º {id} pagado",
+    "textFallback": "El pedido n.º {id} ha sido pagado.\n\nEstamos preparando su pedido y lo enviaremos en breve.",
+    "watchStatus": "Puede seguir el estado de su pedido en su cuenta."
+  },
+  "Shipment": {
+    "bodyOrder": "El pedido <strong>n.º {id}</strong> se ha entregado al servicio de reparto.",
+    "deliveryCity": "Enviamos a {city}.",
+    "deliveryTime": "El plazo de entrega habitual es de 1-7 días laborables según su región.",
+    "headingAnon": "¡Su pedido está en camino!",
+    "headingWithName": "{name}, ¡su pedido está en camino!",
+    "noTracking": "El número de seguimiento se añadirá a su pedido en su cuenta en cuanto el paquete se entregue al transportista.",
+    "preview": "Pedido n.º {id} enviado",
+    "subject": "Pedido n.º {id} enviado",
+    "textDelivery": "El plazo de entrega habitual es de 1-7 días laborables.",
+    "textFallback": "El pedido n.º {id} ha sido enviado.",
+    "textTracking": "Número de seguimiento: {numbers}",
+    "trackLabel": "Número de seguimiento:",
+    "trackingTitle": "Información de seguimiento"
+  },
+  "Welcome": {
+    "body": "¡Gracias por registrarse! Su cuenta está lista: ahora puede comprar más rápido, seguir sus pedidos y guardar direcciones de entrega en su cuenta.",
+    "button": "Empezar a comprar",
+    "claimOrders": "¿Compraste antes sin cuenta? Puedes vincular esos pedidos desde",
+    "claimOrdersLink": "tus pedidos",
+    "headingAnon": "¡Bienvenido!",
+    "headingWithName": "¡Bienvenido, {name}!",
+    "preview": "¡Bienvenido a {store}!",
+    "subject": "¡Bienvenido!",
+    "textFallback": "¡Bienvenido!\n\nGracias por registrarse. Su cuenta está lista.\nEmpezar a comprar: {url}"
+  }
+}

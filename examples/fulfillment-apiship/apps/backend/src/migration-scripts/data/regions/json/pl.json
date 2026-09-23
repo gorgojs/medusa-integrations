@@ -1,0 +1,29 @@
+{
+  "name": "Poland",
+  "currency_code": "pln",
+  "countries": ["pl"],
+  "stock_location": {
+    "name": "Warsaw Warehouse",
+    "address": {
+      "address_1": "Krakowskie Przedmiescie 20",
+      "country_code": "pl"
+    }
+  },
+  "shipping_prices": {
+    "courier": 24,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 60,
+    "sweatshirt": 116,
+    "sweatpants": 96,
+    "shorts": 76,
+    "hoodie": 140,
+    "chinoPants": 132,
+    "pufferJacket": 280,
+    "wirelessHeadphones": 375,
+    "electricBike": 4200,
+    "servingPlate": 164,
+    "espressoCup": 60
+  }
+}

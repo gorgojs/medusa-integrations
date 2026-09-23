@@ -1,0 +1,29 @@
+{
+  "name": "Hong Kong",
+  "currency_code": "hkd",
+  "countries": ["hk"],
+  "stock_location": {
+    "name": "Hong Kong Warehouse",
+    "address": {
+      "address_1": "Queen's Road Central 88",
+      "country_code": "hk"
+    }
+  },
+  "shipping_prices": {
+    "courier": 47,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 117,
+    "sweatshirt": 225,
+    "sweatpants": 187,
+    "shorts": 148,
+    "hoodie": 275,
+    "chinoPants": 255,
+    "pufferJacket": 545,
+    "wirelessHeadphones": 735,
+    "electricBike": 8190,
+    "servingPlate": 320,
+    "espressoCup": 117
+  }
+}

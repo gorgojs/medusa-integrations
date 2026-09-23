@@ -1,0 +1,103 @@
+{
+  "name": "Magyar",
+  "translations": {
+    "categories": {
+      "clothing": "Ruházat",
+      "coffee": "Kávé",
+      "eTransport": "Elektromos közlekedés",
+      "electronics": "Elektronika",
+      "headphones": "Fejhallgatók",
+      "home": "Otthon",
+      "outerwear": "Kabátok",
+      "pants": "Nadrágok",
+      "shirts": "Pólók",
+      "shorts": "Rövidnadrágok",
+      "sweatshirts": "Pulóverek",
+      "tableware": "Étkészlet"
+    },
+    "collections": {
+      "new": "Új érkezések"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klasszikus fekete chino nadrág, szabott fazonnal és letisztult dizájnnal. Puha, tartós pamutanyagból készült, kényelmes rugalmassággal. Oldalzsebekkel, övtartókkal és gombos záródással. Ideális hétköznapi és elegáns viseletre egyaránt.",
+        "title": "Chino nadrág"
+      },
+      "electricBike": {
+        "description": "Matt fekete elektromos hegyikerékpár, mely teljesítményt és mindennapi sokoldalúságot kínál. Könnyű alumíniumváz, beépített akkumulátor és erőteljes motor jellemzi, a sima, segített kerekezésért minden terepen. Ideális városi közlekedésre és terepes túrákra egyaránt.",
+        "title": "Elektromos kerékpár"
+      },
+      "espressoCup": {
+        "description": "Fekete kerámia eszpresszós csészék, egyszeres vagy dupla adaghoz tervezve. Tartós, hőmegtartó és mosogatógépben mosható.",
+        "title": "Eszpresszós csésze"
+      },
+      "hoodie": {
+        "description": "Klasszikus fekete kapucnis pulóver puha pamut anyagból, mindennapi kényelemért. Laza szabású, állítható zsinóros kapucnival és elülső kenguruzsebbel. Egyszerű és sokoldalú réteges viseletre bármely évszakban.",
+        "title": "Kapucnis pulóver"
+      },
+      "pufferJacket": {
+        "description": "Bélelt fekete steppelt dzseki, mely meleget és kényelmet nyújt hideg időben. Magas gallér, cipzáras elülső záródás patentos rögzítéssel, és több zseb a praktikus használatért. Könnyű, mégis tartós, mindennapi vagy szabadtéri viseletre.",
+        "title": "Steppelt dzseki"
+      },
+      "servingPlate": {
+        "description": "Szobrászi hatású, rozsdamentes acél tálalótál, polírozott, tükörfényes felülettel. Dinamikus, modern formája elegáns kiegészítője bármely asztali terítéknek. Tökéletes gyümölcsök, előételek vagy dekoratív tálalás bemutatására. Funkcionalitásra és vizuális hatásra egyaránt tervezve, gyönyörűen veri vissza a fényt, és illik bármely modern otthon vagy étterem stílusához.",
+        "title": "Tálalótál"
+      },
+      "shorts": {
+        "description": "Fedezd fel újra a klasszikus rövidnadrág érzését. Pamut rövidnadrágunkkal a mindennapi alapdarabok többé nem hétköznapiak.",
+        "title": "Medusa rövidnadrág"
+      },
+      "sweatpants": {
+        "description": "Fedezd fel újra a klasszikus jogging nadrág érzését. Pamut jogging nadrágunkkal a mindennapi alapdarabok többé nem hétköznapiak.",
+        "title": "Medusa jogging nadrág"
+      },
+      "sweatshirt": {
+        "description": "Fedezd fel újra a klasszikus pulóver érzését. Pamut pulóverünkkel a mindennapi alapdarabok többé nem hétköznapiak.",
+        "title": "Medusa pulóver"
+      },
+      "tShirt": {
+        "description": "Fedezd fel újra a klasszikus póló érzését. Pamut pólóinkkal a mindennapi alapdarabok többé nem hétköznapiak.",
+        "title": "Medusa póló"
+      },
+      "wirelessHeadphones": {
+        "description": "Matt fekete, vezeték nélküli fejhallgató kényelmes, fülre simuló kialakítással a magával ragadó hallgatási élményért. Tiszta hangzást, erőteljes mélyeket és hosszú akkumulátor-üzemidőt biztosít. Mindennapi használatra otthon, az irodában vagy útközben.",
+        "title": "Vezeték nélküli fejhallgató"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Jóvátételként vagy kellemetlenségért járó kompenzációként adott visszatérítés",
+        "label": "Ügyfélszolgálati kompenzáció"
+      },
+      "pricingError": {
+        "description": "Visszatérítés túlszámlázás, hiányzó kedvezmény vagy helytelen ár korrigálására",
+        "label": "Árazási hiba"
+      },
+      "shippingIssue": {
+        "description": "Visszatérítés elveszett, késett vagy tévesen kézbesített szállítmány miatt",
+        "label": "Szállítási probléma"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Futárszolgálat",
+      "pickup": "Átvételi pont"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Kiszállítás 2–3 napon belül.",
+        "label": "Futár"
+      },
+      "pickup": {
+        "description": "Átvétel egy átvételi ponton.",
+        "label": "Átvétel"
+      }
+    },
+    "terms": {
+      "black": "Fekete",
+      "color": "Szín",
+      "silver": "Ezüst",
+      "size": "Méret",
+      "white": "Fehér"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Cameroon",
+  "currency_code": "xaf",
+  "countries": ["cm"],
+  "stock_location": {
+    "name": "Yaounde Warehouse",
+    "address": {
+      "address_1": "Avenue Kennedy 18",
+      "country_code": "cm"
+    }
+  },
+  "shipping_prices": {
+    "courier": 3660,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 9150,
+    "sweatshirt": 17690,
+    "sweatpants": 14640,
+    "shorts": 11590,
+    "hoodie": 21400,
+    "chinoPants": 20100,
+    "pufferJacket": 42700,
+    "wirelessHeadphones": 57300,
+    "electricBike": 641000,
+    "servingPlate": 25000,
+    "espressoCup": 9150
+  }
+}

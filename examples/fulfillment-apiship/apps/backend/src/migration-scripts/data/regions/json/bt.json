@@ -1,0 +1,29 @@
+{
+  "name": "Bhutan",
+  "currency_code": "inr",
+  "countries": ["bt"],
+  "stock_location": {
+    "name": "Thimphu Warehouse",
+    "address": {
+      "address_1": "Norzin Lam 18",
+      "country_code": "bt"
+    }
+  },
+  "shipping_prices": {
+    "courier": 505,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1260,
+    "sweatshirt": 2440,
+    "sweatpants": 2020,
+    "shorts": 1595,
+    "hoodie": 2940,
+    "chinoPants": 2770,
+    "pufferJacket": 5880,
+    "wirelessHeadphones": 7900,
+    "electricBike": 88200,
+    "servingPlate": 3440,
+    "espressoCup": 1260
+  }
+}

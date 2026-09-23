@@ -1,0 +1,29 @@
+{
+  "name": "Liechtenstein",
+  "currency_code": "chf",
+  "countries": ["li"],
+  "stock_location": {
+    "name": "Vaduz Warehouse",
+    "address": {
+      "address_1": "Städtle 49",
+      "country_code": "li"
+    }
+  },
+  "shipping_prices": {
+    "courier": 5,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 13,
+    "sweatshirt": 26,
+    "sweatpants": 21,
+    "shorts": 17,
+    "hoodie": 31,
+    "chinoPants": 29,
+    "pufferJacket": 62,
+    "wirelessHeadphones": 83,
+    "electricBike": 925,
+    "servingPlate": 36,
+    "espressoCup": 13
+  }
+}

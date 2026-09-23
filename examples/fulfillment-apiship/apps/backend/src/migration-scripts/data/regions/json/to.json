@@ -1,0 +1,29 @@
+{
+  "name": "Tonga",
+  "currency_code": "top",
+  "countries": ["to"],
+  "stock_location": {
+    "name": "Nuku'alofa Warehouse",
+    "address": {
+      "address_1": "Taufa'ahau Road 8",
+      "country_code": "to"
+    }
+  },
+  "shipping_prices": {
+    "courier": 14,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 35,
+    "sweatshirt": 68,
+    "sweatpants": 56,
+    "shorts": 45,
+    "hoodie": 82,
+    "chinoPants": 78,
+    "pufferJacket": 165,
+    "wirelessHeadphones": 220,
+    "electricBike": 2470,
+    "servingPlate": 96,
+    "espressoCup": 35
+  }
+}

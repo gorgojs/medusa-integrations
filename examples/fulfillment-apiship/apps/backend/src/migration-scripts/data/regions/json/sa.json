@@ -1,0 +1,29 @@
+{
+  "name": "Saudi Arabia",
+  "currency_code": "sar",
+  "countries": ["sa"],
+  "stock_location": {
+    "name": "Riyadh Warehouse",
+    "address": {
+      "address_1": "طريق الملك فهد 100",
+      "country_code": "sa"
+    }
+  },
+  "shipping_prices": {
+    "courier": 23,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 56,
+    "sweatshirt": 109,
+    "sweatpants": 90,
+    "shorts": 71,
+    "hoodie": 131,
+    "chinoPants": 124,
+    "pufferJacket": 265,
+    "wirelessHeadphones": 355,
+    "electricBike": 3940,
+    "servingPlate": 154,
+    "espressoCup": 56
+  }
+}

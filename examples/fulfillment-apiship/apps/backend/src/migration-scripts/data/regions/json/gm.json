@@ -1,0 +1,29 @@
+{
+  "name": "Gambia",
+  "currency_code": "gmd",
+  "countries": ["gm"],
+  "stock_location": {
+    "name": "Banjul Warehouse",
+    "address": {
+      "address_1": "Independence Drive 7",
+      "country_code": "gm"
+    }
+  },
+  "shipping_prices": {
+    "courier": 410,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1020,
+    "sweatshirt": 1970,
+    "sweatpants": 1630,
+    "shorts": 1290,
+    "hoodie": 2380,
+    "chinoPants": 2240,
+    "pufferJacket": 4760,
+    "wirelessHeadphones": 6390,
+    "electricBike": 71400,
+    "servingPlate": 2790,
+    "espressoCup": 1020
+  }
+}

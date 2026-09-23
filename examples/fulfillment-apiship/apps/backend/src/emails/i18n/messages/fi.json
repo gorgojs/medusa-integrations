@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Jatka ostoksia",
+    "haveAccount": "Onko sinulla jo tili? Avaa",
+    "item": "Tuote",
+    "myOrders": "Omat tilaukset",
+    "orCall": "tai soita numeroon",
+    "orderSummary": "Tilauksen yhteenveto",
+    "questionsPrefix": "Jos sinulla on kysyttävää, kirjoita meille osoitteeseen",
+    "shipping": "Toimitus",
+    "total": "Yhteensä",
+    "trackOrder": "Seuraa tilausta",
+    "viewOrder": "Näytä tilaus"
+  },
+  "Delivery": {
+    "bodyOrder": "Tilaus <strong>#{id}</strong> on toimitettu. Toivottavasti kaikki saapui hyvässä kunnossa.",
+    "headingAnon": "Tilauksesi on toimitettu",
+    "headingWithName": "{name}, tilauksesi on toimitettu",
+    "preview": "Tilaus #{id} toimitettu",
+    "somethingWrong": "Jos jokin on pielessä, kerro meille 14 päivän kuluessa, niin hoidamme asian.",
+    "subject": "Tilaus #{id} toimitettu",
+    "textFallback": "Tilaus #{id} on toimitettu."
+  },
+  "Fulfillment": {
+    "bodyOrder": "Tilaus <strong>#{id}</strong> on pakattu ja odottaa luovutusta kuljetusliikkeelle.",
+    "deliveryCity": "Toimitetaan kaupunkiin {city}.",
+    "headingAnon": "Valmistelemme tilaustasi",
+    "headingWithName": "{name}, valmistelemme tilaustasi",
+    "nextStep": "Lähetämme seurantanumeron heti, kun paketti on matkalla.",
+    "preview": "Tilausta #{id} valmistellaan",
+    "subject": "Tilausta #{id} valmistellaan",
+    "textFallback": "Tilaus #{id} on pakattu."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. Kaikki oikeudet pidätetään."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "Tilaus <strong>#{id}</strong> on peruutettu.",
+    "headingAnon": "Tilauksesi on peruutettu",
+    "headingWithName": "{name}, tilauksesi on peruutettu",
+    "preview": "Tilaus #{id} peruutettu",
+    "refundNote": "Jos tilaus oli maksettu, rahat palautuvat samalle kortille. Pankeilla kestää yleensä enintään 10 arkipäivää.",
+    "subject": "Tilaus #{id} peruutettu",
+    "textFallback": "Tilaus #{id} on peruutettu."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "Tilaus <strong>#{id}</strong> on valmis. Kiitos, että valitsit meidät!",
+    "bodyPromo": "Näemme sinut mielellämme uudelleen. Tutustu kauppamme uutuuksiin.",
+    "deliveryCity": "Toimitettu kaupunkiin {city}.",
+    "headingAnon": "Tilauksesi on valmis!",
+    "headingWithName": "{name}, tilauksesi on valmis!",
+    "preview": "Tilaus #{id} on valmis. Kiitos ostoksestasi!",
+    "subject": "Tilaus #{id} valmis",
+    "textFallback": "Tilaus #{id} on valmis. Kiitos ostoksestasi!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "Tilaus <strong>#{id}</strong> on tehty onnistuneesti.",
+    "deliveryCity": "Toimitus kaupunkiin {city}.",
+    "headingAnon": "Tilauksesi on tehty!",
+    "headingWithName": "{name}, tilauksesi on tehty!",
+    "preview": "Tilaus #{id} on tehty",
+    "subject": "Tilaus #{id} tehty",
+    "textFallback": "Tilaus #{id} on tehty.\n\nValmistelemme tilaustasi ja lähetämme sen pian.",
+    "watchStatus": "Voit seurata tilauksesi tilaa omalla tililläsi."
+  },
+  "OrderTransfer": {
+    "body": "Tilauksen <strong>#{id}</strong> siirtämistä toiselle tilille on pyydetty. Jos pyyntö on sinun, vahvista siirto alla olevalla painikkeella. Jos ei, voit jättää tämän viestin huomiotta.",
+    "button": "Tarkastele pyyntöä",
+    "heading": "Tilauksen siirtopyyntö",
+    "hint": "Tilaus siirretään vasta vahvistuksesi jälkeen. Jos et pyytänyt siirtoa, tilauksellesi ei tapahdu mitään.",
+    "preview": "Tilauksen #{id} siirtopyyntö",
+    "subject": "Tilauksen #{id} siirtopyyntö",
+    "textFallback": "Tilauksen #{id} siirtopyyntö\n\nTarkastele pyyntöä seuraavan linkin kautta:\n{url}\n\nJos et pyytänyt siirtoa, voit jättää tämän viestin huomiotta."
+  },
+  "PasswordReset": {
+    "body": "Saimme pyynnön palauttaa tunnuksen <strong>{email}</strong> salasana. Aseta uusi salasana napsauttamalla alla olevaa painiketta.",
+    "button": "Palauta salasana",
+    "heading": "Salasanan palautus",
+    "hint": "Linkki on voimassa <strong>15 minuuttia</strong>. Jos et pyytänyt salasanan palautusta, voit jättää tämän viestin huomiotta.",
+    "preview": "Salasanan palautus, linkki on voimassa 15 minuuttia",
+    "subject": "Salasanan palautus",
+    "textFallback": "Salasanan palautus\n\nPalauta salasanasi seuraavan linkin kautta (voimassa 15 minuuttia):\n{url}\n\nJos et pyytänyt salasanan palautusta, voit jättää tämän viestin huomiotta."
+  },
+  "Payment": {
+    "bodyOrder": "Tilaus <strong>#{id}</strong> on maksettu onnistuneesti. Valmistelemme sitä nyt lähetettäväksi.",
+    "headingAnon": "Tilauksesi on maksettu!",
+    "headingWithName": "{name}, tilauksesi on maksettu!",
+    "preview": "Tilaus #{id} on maksettu",
+    "subject": "Tilaus #{id} maksettu",
+    "textFallback": "Tilaus #{id} on maksettu.\n\nValmistelemme tilaustasi ja lähetämme sen pian.",
+    "watchStatus": "Voit seurata tilauksesi tilaa omalla tililläsi."
+  },
+  "Shipment": {
+    "bodyOrder": "Tilaus <strong>#{id}</strong> on luovutettu kuljetusliikkeelle.",
+    "deliveryCity": "Toimitus kaupunkiin {city}.",
+    "deliveryTime": "Tavallinen toimitusaika on 1-7 arkipäivää alueesta riippuen.",
+    "headingAnon": "Tilauksesi on matkalla!",
+    "headingWithName": "{name}, tilauksesi on matkalla!",
+    "noTracking": "Seurantanumero lisätään tilaukseesi tilillesi heti, kun paketti on luovutettu kuljetusliikkeelle.",
+    "preview": "Tilaus #{id} on lähetetty",
+    "subject": "Tilaus #{id} lähetetty",
+    "textDelivery": "Tavallinen toimitusaika on 1-7 arkipäivää.",
+    "textFallback": "Tilaus #{id} on lähetetty.",
+    "textTracking": "Seurantanumero: {numbers}",
+    "trackLabel": "Seurantanumero:",
+    "trackingTitle": "Seurantatiedot"
+  },
+  "Welcome": {
+    "body": "Kiitos rekisteröitymisestä! Tilisi on valmis. Nyt voit tehdä tilauksia nopeammin, seurata niitä ja tallentaa toimitusosoitteita tilillesi.",
+    "button": "Aloita ostokset",
+    "claimOrders": "Tilasitko aiemmin ilman tiliä? Ne tilaukset voi liittää siihen kohdasta",
+    "claimOrdersLink": "tilauksesi",
+    "headingAnon": "Tervetuloa!",
+    "headingWithName": "Tervetuloa, {name}!",
+    "preview": "Tervetuloa {store}-verkkokauppaan!",
+    "subject": "Tervetuloa!",
+    "textFallback": "Tervetuloa!\n\nKiitos rekisteröitymisestä. Tilisi on valmis.\nAloita ostokset: {url}"
+  }
+}

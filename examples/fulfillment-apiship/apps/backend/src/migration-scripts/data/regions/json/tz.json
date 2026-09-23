@@ -1,0 +1,29 @@
+{
+  "name": "Tanzania",
+  "currency_code": "tzs",
+  "countries": ["tz"],
+  "stock_location": {
+    "name": "Dodoma Warehouse",
+    "address": {
+      "address_1": "Barabara ya Uhuru 5",
+      "country_code": "tz"
+    }
+  },
+  "shipping_prices": {
+    "courier": 15600,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 39000,
+    "sweatshirt": 75400,
+    "sweatpants": 62400,
+    "shorts": 49400,
+    "hoodie": 91000,
+    "chinoPants": 85800,
+    "pufferJacket": 182000,
+    "wirelessHeadphones": 244000,
+    "electricBike": 2730000,
+    "servingPlate": 106600,
+    "espressoCup": 39000
+  }
+}

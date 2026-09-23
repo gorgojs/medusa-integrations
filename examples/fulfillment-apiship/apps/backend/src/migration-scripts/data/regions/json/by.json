@@ -1,0 +1,31 @@
+{
+  "name": "Belarus",
+  "currency_code": "byn",
+  "countries": [
+    "by"
+  ],
+  "stock_location": {
+    "name": "Minsk Warehouse",
+    "address": {
+      "address_1": "праспект Незалежнасці 95",
+      "country_code": "by"
+    }
+  },
+  "shipping_prices": {
+    "courier": 20,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 50,
+    "sweatshirt": 96,
+    "sweatpants": 79,
+    "shorts": 63,
+    "hoodie": 116,
+    "chinoPants": 109,
+    "pufferJacket": 230,
+    "wirelessHeadphones": 310,
+    "electricBike": 3470,
+    "servingPlate": 135,
+    "espressoCup": 50
+  }
+}

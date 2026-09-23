@@ -1,0 +1,29 @@
+{
+  "name": "Mauritius",
+  "currency_code": "mur",
+  "countries": ["mu"],
+  "stock_location": {
+    "name": "Port Louis Warehouse",
+    "address": {
+      "address_1": "Sir William Newton Street 8",
+      "country_code": "mu"
+    }
+  },
+  "shipping_prices": {
+    "courier": 275,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 690,
+    "sweatshirt": 1335,
+    "sweatpants": 1105,
+    "shorts": 875,
+    "hoodie": 1610,
+    "chinoPants": 1520,
+    "pufferJacket": 3220,
+    "wirelessHeadphones": 4320,
+    "electricBike": 48300,
+    "servingPlate": 1885,
+    "espressoCup": 690
+  }
+}

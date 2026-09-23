@@ -1,0 +1,29 @@
+{
+  "name": "Honduras",
+  "currency_code": "hnl",
+  "countries": ["hn"],
+  "stock_location": {
+    "name": "Tegucigalpa Warehouse",
+    "address": {
+      "address_1": "Boulevard Morazán 22",
+      "country_code": "hn"
+    }
+  },
+  "shipping_prices": {
+    "courier": 150,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 375,
+    "sweatshirt": 725,
+    "sweatpants": 600,
+    "shorts": 475,
+    "hoodie": 875,
+    "chinoPants": 825,
+    "pufferJacket": 1750,
+    "wirelessHeadphones": 2350,
+    "electricBike": 26300,
+    "servingPlate": 1025,
+    "espressoCup": 375
+  }
+}

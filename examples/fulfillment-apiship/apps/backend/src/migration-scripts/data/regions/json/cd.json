@@ -1,0 +1,29 @@
+{
+  "name": "DR Congo",
+  "currency_code": "cdf",
+  "countries": ["cd"],
+  "stock_location": {
+    "name": "Kinshasa Warehouse",
+    "address": {
+      "address_1": "Boulevard du 30 Juin 145",
+      "country_code": "cd"
+    }
+  },
+  "shipping_prices": {
+    "courier": 16800,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 42000,
+    "sweatshirt": 81200,
+    "sweatpants": 67200,
+    "shorts": 53200,
+    "hoodie": 98000,
+    "chinoPants": 92400,
+    "pufferJacket": 196000,
+    "wirelessHeadphones": 263000,
+    "electricBike": 2940000,
+    "servingPlate": 114800,
+    "espressoCup": 42000
+  }
+}

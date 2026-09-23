@@ -1,0 +1,29 @@
+{
+  "name": "Uganda",
+  "currency_code": "ugx",
+  "countries": ["ug"],
+  "stock_location": {
+    "name": "Kampala Warehouse",
+    "address": {
+      "address_1": "Kampala Road 25",
+      "country_code": "ug"
+    }
+  },
+  "shipping_prices": {
+    "courier": 22200,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 55500,
+    "sweatshirt": 107300,
+    "sweatpants": 88800,
+    "shorts": 70300,
+    "hoodie": 129500,
+    "chinoPants": 122100,
+    "pufferJacket": 259000,
+    "wirelessHeadphones": 348000,
+    "electricBike": 3885000,
+    "servingPlate": 151700,
+    "espressoCup": 55500
+  }
+}

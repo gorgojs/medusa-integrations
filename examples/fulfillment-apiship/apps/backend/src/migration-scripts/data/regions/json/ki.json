@@ -1,0 +1,29 @@
+{
+  "name": "Kiribati",
+  "currency_code": "aud",
+  "countries": ["ki"],
+  "stock_location": {
+    "name": "South Tarawa Warehouse",
+    "address": {
+      "address_1": "Bairiki Road 5",
+      "country_code": "ki"
+    }
+  },
+  "shipping_prices": {
+    "courier": 9,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 23,
+    "sweatshirt": 44,
+    "sweatpants": 36,
+    "shorts": 29,
+    "hoodie": 53,
+    "chinoPants": 50,
+    "pufferJacket": 105,
+    "wirelessHeadphones": 141,
+    "electricBike": 1575,
+    "servingPlate": 62,
+    "espressoCup": 23
+  }
+}

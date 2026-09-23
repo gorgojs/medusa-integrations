@@ -1,0 +1,29 @@
+{
+  "name": "Indonesia",
+  "currency_code": "idr",
+  "countries": ["id"],
+  "stock_location": {
+    "name": "Jakarta Warehouse",
+    "address": {
+      "address_1": "Jalan Jenderal Sudirman 45",
+      "country_code": "id"
+    }
+  },
+  "shipping_prices": {
+    "courier": 94800,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 237000,
+    "sweatshirt": 458000,
+    "sweatpants": 379000,
+    "shorts": 300000,
+    "hoodie": 553000,
+    "chinoPants": 521000,
+    "pufferJacket": 1106000,
+    "wirelessHeadphones": 1485000,
+    "electricBike": 16590000,
+    "servingPlate": 648000,
+    "espressoCup": 237000
+  }
+}

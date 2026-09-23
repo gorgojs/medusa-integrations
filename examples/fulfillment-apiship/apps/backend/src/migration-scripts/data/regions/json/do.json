@@ -1,0 +1,29 @@
+{
+  "name": "Dominican Republic",
+  "currency_code": "dop",
+  "countries": ["do"],
+  "stock_location": {
+    "name": "Santo Domingo Warehouse",
+    "address": {
+      "address_1": "Calle El Conde 55",
+      "country_code": "do"
+    }
+  },
+  "shipping_prices": {
+    "courier": 355,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 885,
+    "sweatshirt": 1710,
+    "sweatpants": 1415,
+    "shorts": 1120,
+    "hoodie": 2070,
+    "chinoPants": 1945,
+    "pufferJacket": 4130,
+    "wirelessHeadphones": 5550,
+    "electricBike": 62000,
+    "servingPlate": 2420,
+    "espressoCup": 885
+  }
+}

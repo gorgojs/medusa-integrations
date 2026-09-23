@@ -1,0 +1,29 @@
+{
+  "name": "South Africa",
+  "currency_code": "zar",
+  "countries": ["za"],
+  "stock_location": {
+    "name": "Pretoria Warehouse",
+    "address": {
+      "address_1": "Church Street 200",
+      "country_code": "za"
+    }
+  },
+  "shipping_prices": {
+    "courier": 111,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 280,
+    "sweatshirt": 535,
+    "sweatpants": 445,
+    "shorts": 350,
+    "hoodie": 650,
+    "chinoPants": 610,
+    "pufferJacket": 1295,
+    "wirelessHeadphones": 1740,
+    "electricBike": 19430,
+    "servingPlate": 760,
+    "espressoCup": 280
+  }
+}

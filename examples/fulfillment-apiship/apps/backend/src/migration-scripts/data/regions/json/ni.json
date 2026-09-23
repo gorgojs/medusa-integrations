@@ -1,0 +1,29 @@
+{
+  "name": "Nicaragua",
+  "currency_code": "nio",
+  "countries": ["ni"],
+  "stock_location": {
+    "name": "Managua Warehouse",
+    "address": {
+      "address_1": "Avenida Bolívar 245",
+      "country_code": "ni"
+    }
+  },
+  "shipping_prices": {
+    "courier": 220,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 550,
+    "sweatshirt": 1060,
+    "sweatpants": 880,
+    "shorts": 695,
+    "hoodie": 1280,
+    "chinoPants": 1210,
+    "pufferJacket": 2560,
+    "wirelessHeadphones": 3440,
+    "electricBike": 38400,
+    "servingPlate": 1500,
+    "espressoCup": 550
+  }
+}

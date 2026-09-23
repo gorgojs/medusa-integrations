@@ -1,0 +1,29 @@
+{
+  "name": "Cape Verde",
+  "currency_code": "cve",
+  "countries": ["cv"],
+  "stock_location": {
+    "name": "Praia Warehouse",
+    "address": {
+      "address_1": "Avenida Amílcar Cabral 77",
+      "country_code": "cv"
+    }
+  },
+  "shipping_prices": {
+    "courier": 600,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1500,
+    "sweatshirt": 2900,
+    "sweatpants": 2400,
+    "shorts": 1900,
+    "hoodie": 3500,
+    "chinoPants": 3300,
+    "pufferJacket": 7000,
+    "wirelessHeadphones": 9400,
+    "electricBike": 105000,
+    "servingPlate": 4100,
+    "espressoCup": 1500
+  }
+}

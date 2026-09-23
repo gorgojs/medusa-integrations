@@ -1,0 +1,29 @@
+{
+  "name": "Wallis and Futuna",
+  "currency_code": "xpf",
+  "countries": ["wf"],
+  "stock_location": {
+    "name": "Mata-Utu Warehouse",
+    "address": {
+      "address_1": "Rue de la Mission 8",
+      "country_code": "wf"
+    }
+  },
+  "shipping_prices": {
+    "courier": 660,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1650,
+    "sweatshirt": 3190,
+    "sweatpants": 2640,
+    "shorts": 2090,
+    "hoodie": 3850,
+    "chinoPants": 3630,
+    "pufferJacket": 7700,
+    "wirelessHeadphones": 10340,
+    "electricBike": 115500,
+    "servingPlate": 4510,
+    "espressoCup": 1650
+  }
+}
