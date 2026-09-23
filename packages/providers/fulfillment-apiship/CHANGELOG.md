@@ -1,5 +1,11 @@
 # @gorgo/medusa-fulfillment-apiship
 
+## 2.0.1
+
+### Documentation
+
+- add a text link to the demo video in the readme by [@gorgohead](https://github.com/gorgohead) in [`ed90bed`](https://github.com/gorgojs/medusa-integrations/commit/ed90bedcaa2fcf777b6bc5c91df06e8cc9e04440)
+
 ## 2.0.0
 
 ### Highlights

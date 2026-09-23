@@ -1,5 +1,11 @@
 # @gorgo/medusa-feed-yandex
 
+## 0.2.37
+
+### Chores
+
+- change starter by [@ttokyose](https://github.com/ttokyose) in [`350802b`](https://github.com/gorgojs/medusa-integrations/commit/350802b8704d370bd65f634f1934bd1b642e7ab3)
+
 ## 0.2.36
 
 ### Chores

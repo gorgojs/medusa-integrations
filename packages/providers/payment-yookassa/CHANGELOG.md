@@ -1,5 +1,27 @@
 # @gorgo/medusa-payment-yookassa
 
+## 2.0.3
+
+### Bug Fixes
+
+- use the official tax system names by [@gorgohead](https://github.com/gorgohead) in [`9d18607`](https://github.com/gorgojs/medusa-integrations/commit/9d1860792345f09eba3f48a77c8c2899d7663474)
+
+### Refactoring
+
+- seed the yookassa payment provider from example data by [@gorgohead](https://github.com/gorgohead) in [`704d7ef`](https://github.com/gorgojs/medusa-integrations/commit/704d7ef699093a7eeb92c23123472f84d5b9ef10)
+
+### Documentation
+
+- add a text link to the demo video in the readme by [@gorgohead](https://github.com/gorgohead) in [`a498ddd`](https://github.com/gorgojs/medusa-integrations/commit/a498dddf66446288641982ab76e599792143ec5d)
+
+- change promo video by [@ttokyose](https://github.com/ttokyose) in [`c3378b7`](https://github.com/gorgojs/medusa-integrations/commit/c3378b7ffe7889bd5685e6c40855c2e6cc36089b)
+
+### Chores
+
+- rename environment variables for seeding credentials by [@gorgohead](https://github.com/gorgohead) in [`364c16d`](https://github.com/gorgojs/medusa-integrations/commit/364c16d446b684ef0601d5b55ede1047656a7228)
+
+- change starter by [@ttokyose](https://github.com/ttokyose) in [`350802b`](https://github.com/gorgojs/medusa-integrations/commit/350802b8704d370bd65f634f1934bd1b642e7ab3)
+
 ## 2.0.2
 
 ### Chores
