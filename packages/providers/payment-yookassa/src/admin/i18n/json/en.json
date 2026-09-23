@@ -30,12 +30,12 @@
       "taxShippingDefault": "Applied to the shipping line of the receipt."
     },
     "taxSystems": {
-      "general": "General",
-      "simplifiedIncome": "Simplified (income)",
-      "simplifiedIncomeMinusExpenses": "Simplified (income minus expenses)",
-      "imputedIncome": "Imputed income",
-      "agricultural": "Agricultural",
-      "patent": "Patent"
+      "general": "General taxation regime (OSN)",
+      "simplifiedIncome": "Simplified taxation system (STS), income",
+      "simplifiedIncomeMinusExpenses": "Simplified taxation system (STS), income minus expenses",
+      "imputedIncome": "Unified tax on imputed income (UTII)",
+      "agricultural": "Unified agricultural tax (UAT)",
+      "patent": "Patent taxation system (PTS)"
     },
     "vatCodes": {
       "noVat": "No VAT",

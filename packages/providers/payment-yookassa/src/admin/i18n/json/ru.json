@@ -30,12 +30,12 @@
       "taxShippingDefault": "Подставляется в позицию доставки."
     },
     "taxSystems": {
-      "general": "Общая",
-      "simplifiedIncome": "УСН доход",
-      "simplifiedIncomeMinusExpenses": "УСН доход минус расход",
-      "imputedIncome": "ЕНВД",
-      "agricultural": "ЕСХН",
-      "patent": "Патент"
+      "general": "Общая система налогообложения (ОСН)",
+      "simplifiedIncome": "Упрощённая система налогообложения (УСН), доходы",
+      "simplifiedIncomeMinusExpenses": "Упрощённая система налогообложения (УСН), доходы минус расходы",
+      "imputedIncome": "Единый налог на вменённый доход (ЕНВД)",
+      "agricultural": "Единый сельскохозяйственный налог (ЕСХН)",
+      "patent": "Патентная система налогообложения (ПСН)"
     },
     "vatCodes": {
       "noVat": "Без НДС",
