@@ -50,8 +50,8 @@ function stripFrontmatter(src) {
     : src;
 }
 
-/** Everything we compare, extracted from one page. */
-function shape(src) {
+/** Everything we compare, extracted from one page written in `lang`. */
+function shape(src, lang) {
   const body = stripFrontmatter(src);
 
   // Split on fences so heading extraction never reads a comment inside a code block.
@@ -71,7 +71,7 @@ function shape(src) {
       .map((l) => l.match(/^(#{1,6})\s+\S/))
       .filter(Boolean)
       .map((m) => m[1].length),
-    fences: fences.map(normalizeFence),
+    fences: fences.map((info) => normalizeFence(info, lang)),
     // MedusaTypeList field names, in order
     fieldNames: [...body.matchAll(/^\s*name:\s*"?([\w.[\]-]+)"?/gm)].map(
       (m) => m[1],
@@ -86,7 +86,7 @@ function shape(src) {
 }
 
 /**
- * Three kinds of difference between en.mdx and ru.mdx are legitimate and must not be reported.
+ * Four kinds of difference between en.mdx and ru.mdx are legitimate and must not be reported.
  * Each was found by running this gate against the existing docs, not predicted.
  */
 
@@ -99,13 +99,19 @@ function normalizeHref(href) {
  * A fence's `title=` is a file path when it names one, and reader-facing prose when it is a label
  * ("Terminal" / "Терминал"). Compare the language tag and whether a title exists; compare the title
  * itself only when it looks like a path.
+ *
+ * A path to the page's own `messages/<lang>.json` is the same file in both languages: each page shows
+ * the catalog change on its reader's locale. Only the page's own locale counts, so an en.mdx that
+ * shows `messages/ru.json` is still reported.
  */
-function normalizeFence(info) {
+function normalizeFence(info, pageLang) {
   const lang = (info.match(/^\S+/) || [''])[0];
   const title = (info.match(/title="([^"]*)"/) || [])[1];
   if (title === undefined) return lang;
   const isPath = /[/.]/.test(title) && !/\s/.test(title);
-  return isPath ? `${lang} title="${title}"` : `${lang} title=<label>`;
+  if (!isPath) return `${lang} title=<label>`;
+  const own = new RegExp(`(^|/)messages/${pageLang}\\.json$`);
+  return `${lang} title="${title.replace(own, '$1messages/<lang>.json')}"`;
 }
 
 /**
@@ -133,8 +139,8 @@ function compare(dir) {
     return;
   }
 
-  const a = shape(fs.readFileSync(en, 'utf8'));
-  const b = shape(fs.readFileSync(ru, 'utf8'));
+  const a = shape(fs.readFileSync(en, 'utf8'), 'en');
+  const b = shape(fs.readFileSync(ru, 'utf8'), 'ru');
 
   const checks = [
     ['headings', 'heading levels and nesting'],
