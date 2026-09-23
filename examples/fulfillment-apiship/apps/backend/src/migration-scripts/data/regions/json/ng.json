@@ -1,0 +1,29 @@
+{
+  "name": "Nigeria",
+  "currency_code": "ngn",
+  "countries": ["ng"],
+  "stock_location": {
+    "name": "Abuja Warehouse",
+    "address": {
+      "address_1": "Constitution Avenue 27",
+      "country_code": "ng"
+    }
+  },
+  "shipping_prices": {
+    "courier": 9300,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 23300,
+    "sweatshirt": 45000,
+    "sweatpants": 37200,
+    "shorts": 29500,
+    "hoodie": 54300,
+    "chinoPants": 51200,
+    "pufferJacket": 108500,
+    "wirelessHeadphones": 145700,
+    "electricBike": 1628000,
+    "servingPlate": 63600,
+    "espressoCup": 23300
+  }
+}

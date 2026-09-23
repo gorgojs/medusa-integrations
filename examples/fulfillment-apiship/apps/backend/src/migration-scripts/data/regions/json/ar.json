@@ -1,0 +1,31 @@
+{
+  "name": "Argentina",
+  "currency_code": "ars",
+  "countries": [
+    "ar"
+  ],
+  "stock_location": {
+    "name": "Buenos Aires Warehouse",
+    "address": {
+      "address_1": "Avenida de Mayo 825",
+      "country_code": "ar"
+    }
+  },
+  "shipping_prices": {
+    "courier": 6000,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 15000,
+    "sweatshirt": 29000,
+    "sweatpants": 24000,
+    "shorts": 19000,
+    "hoodie": 35000,
+    "chinoPants": 33000,
+    "pufferJacket": 70000,
+    "wirelessHeadphones": 94000,
+    "electricBike": 1050000,
+    "servingPlate": 41000,
+    "espressoCup": 15000
+  }
+}

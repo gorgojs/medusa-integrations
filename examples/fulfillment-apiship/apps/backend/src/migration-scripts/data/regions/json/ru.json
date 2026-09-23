@@ -1,0 +1,29 @@
+{
+  "name": "Russia",
+  "currency_code": "rub",
+  "countries": ["ru"],
+  "stock_location": {
+    "name": "Moscow Warehouse",
+    "address": {
+      "address_1": "Пресненская набережная, 12",
+      "country_code": "ru"
+    }
+  },
+  "shipping_prices": {
+    "courier": 499,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 1299,
+    "sweatshirt": 2499,
+    "sweatpants": 1999,
+    "shorts": 1599,
+    "hoodie": 2999,
+    "chinoPants": 2799,
+    "pufferJacket": 5999,
+    "wirelessHeadphones": 7999,
+    "electricBike": 89999,
+    "servingPlate": 3499,
+    "espressoCup": 1299
+  }
+}

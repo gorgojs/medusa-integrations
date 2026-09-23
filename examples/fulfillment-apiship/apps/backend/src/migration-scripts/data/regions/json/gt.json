@@ -1,0 +1,29 @@
+{
+  "name": "Guatemala",
+  "currency_code": "gtq",
+  "countries": ["gt"],
+  "stock_location": {
+    "name": "Guatemala City Warehouse",
+    "address": {
+      "address_1": "6a Avenida 9-21",
+      "country_code": "gt"
+    }
+  },
+  "shipping_prices": {
+    "courier": 46,
+    "pickup": 0
+  },
+  "product_prices": {
+    "tShirt": 116,
+    "sweatshirt": 225,
+    "sweatpants": 185,
+    "shorts": 146,
+    "hoodie": 270,
+    "chinoPants": 255,
+    "pufferJacket": 540,
+    "wirelessHeadphones": 725,
+    "electricBike": 8090,
+    "servingPlate": 315,
+    "espressoCup": 116
+  }
+}

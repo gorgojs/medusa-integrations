@@ -1,0 +1,730 @@
+{
+  "AccountInfo": {
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "errorDefault": "We could not save the change. Please try again.",
+    "saveChanges": "Save changes",
+    "updatedSuccessfully": "{label} updated successfully"
+  },
+  "AccountLayout": {
+    "customerService": "Customer Service",
+    "faqDescription": "You can find frequently asked questions and answers on our customer service page.",
+    "gotQuestions": "Questions and answers"
+  },
+  "AccountNav": {
+    "account": "Account",
+    "addresses": "Addresses",
+    "logOut": "Log out",
+    "orders": "Orders",
+    "overview": "Overview",
+    "profile": "Profile"
+  },
+  "AccountOverview": {
+    "addresses": "Addresses",
+    "completed": "Completed",
+    "hello": "Hello {name}",
+    "noRecentOrders": "No recent orders",
+    "profile": "Profile",
+    "recentOrders": "Recent orders",
+    "saved": "Saved",
+    "signedInAs": "Signed in as:"
+  },
+  "AddressCard": {
+    "addAddress": "Add address",
+    "default": "Default",
+    "editAddress": "Edit address",
+    "newAddress": "New address"
+  },
+  "AddressForm": {
+    "address": "Address",
+    "addressLine2": "Apartment, suite, etc.",
+    "addressName": "Name",
+    "cancel": "Cancel",
+    "city": "City",
+    "company": "Company",
+    "country": "Country",
+    "edit": "Edit",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone",
+    "postalCode": "Postal code",
+    "province": "Province / State",
+    "remove": "Remove",
+    "save": "Save",
+    "stateProvince": "State / Province"
+  },
+  "AddressesPage": {
+    "description": "View and update your shipping addresses, and add as many as you like. Saved addresses are offered during checkout.",
+    "heading": "Shipping addresses"
+  },
+  "Apiship": {
+    "choose": "Choose",
+    "courierModalTitle": "Courier delivery",
+    "deliveryDays": "{count, plural, one {{count} day} other {{count} days}}",
+    "deliveryDaysRange": "{min}–{max} days",
+    "loadFailed": "We couldn't load the delivery options. Please try again.",
+    "mapKeyMissing": "The map needs a Yandex Maps API key.",
+    "noPoints": "No pickup points serve this address.",
+    "noTariffs": "No carrier delivers to this address.",
+    "photoAlt": "Pickup point photo {index}",
+    "pickupPointModalTitle": "Pickup point",
+    "pointDetails": "Details",
+    "priceFrom": "from {price}",
+    "schedule": "Opening hours",
+    "selectPointPrompt": "Pick a point on the map"
+  },
+  "Breadcrumb": {
+    "home": "Home",
+    "store": "Store"
+  },
+  "Cart": {
+    "emptyMessage": "Your cart is empty. Use the link below to start browsing our products.",
+    "exploreProducts": "Explore products",
+    "heading": "Cart"
+  },
+  "CartDropdown": {
+    "bagEmpty": "Your shopping bag is empty.",
+    "exploreProducts": "Explore products",
+    "goToCart": "Go to cart",
+    "heading": "Cart",
+    "subtotal": "Subtotal",
+    "subtotalNote": "(excl. taxes)"
+  },
+  "CartMismatchBanner": {
+    "errorMessage": "Something went wrong when we tried to transfer your cart",
+    "runTransferAgain": "Run transfer again",
+    "transferring": "Transferring..."
+  },
+  "CartSummary": {
+    "goToCheckout": "Go to checkout"
+  },
+  "CartTotals": {
+    "discount": "Discount",
+    "shipping": "Shipping",
+    "subtotal": "Subtotal (excl. shipping and taxes)",
+    "taxes": "Taxes",
+    "total": "Total"
+  },
+  "CategoryMenu": {
+    "title": "Categories",
+    "viewAll": "View all"
+  },
+  "CheckoutPage": {
+    "addNewAddress": "Add new address",
+    "addressHeading": "Shipping address",
+    "addressModalTitle": "Shipping address",
+    "addressNotNeededForPickup": "Not needed for pickup",
+    "back": "Back",
+    "backToCart": "Back to cart",
+    "billingHeading": "Billing address",
+    "billingSameAsShipping": "Billing address same as shipping",
+    "close": "Close",
+    "contactsHeading": "Contacts",
+    "contactsModalTitle": "Contacts",
+    "copyright": "© {year} {siteName}. All rights reserved.",
+    "deliveryDateFrom": "from {date}",
+    "deliveryDateUntil": "by {date}",
+    "deliveryToday": "Today",
+    "discount": "Discount",
+    "edit": "Edit",
+    "fieldAddress": "Address",
+    "fieldCity": "City",
+    "fieldCompany": "Company",
+    "fieldEmail": "Email",
+    "fieldFirstName": "First name",
+    "fieldLastName": "Last name",
+    "fieldPhone": "Phone",
+    "fieldPostalCode": "Postal code",
+    "fieldProvince": "Province",
+    "freeShipping": "Free",
+    "giftCard": "Gift card",
+    "itemsCount": "{count, plural, one {{count} item} other {{count} items}}",
+    "legal": "By clicking «Pay», you accept our <terms>terms</terms>, <termsOfUse>terms of use</termsOfUse> and <returnPolicy>return policy</returnPolicy>, and agree to our <privacyPolicy>privacy policy</privacyPolicy>.",
+    "manualInput": "Enter address manually",
+    "orderComposition": "Order summary",
+    "paymentHeading": "Payment method",
+    "recipientCheckbox": "Recipient is a different person",
+    "recipientHeading": "Recipient details",
+    "recipientLabel": "Recipient:",
+    "returnsLink": "Return Policy",
+    "sameAsShipping": "Same as shipping address",
+    "save": "Save",
+    "saving": "Saving...",
+    "shippingCost": "Shipping",
+    "shippingDescription": "Choose how you want your order delivered",
+    "shippingHeading": "Shipping method",
+    "shippingLink": "Shipping",
+    "shippingUnavailable": "No shipping methods available",
+    "signIn": "Sign in",
+    "total": "Total"
+  },
+  "Common": {
+    "clear": "Clear",
+    "close": "Close",
+    "hidePassword": "Hide password",
+    "orderNumber": "Order #{id}",
+    "poweredBy": "Powered by",
+    "remove": "Remove",
+    "showPassword": "Show password"
+  },
+  "ContentPages": {
+    "faq": [
+      {
+        "answer": "The shipping page lists the delivery options and what each one costs.",
+        "question": "When will my order arrive?"
+      },
+      {
+        "answer": "The returns page walks through sending an item back or swapping it for another one.",
+        "question": "How do I return or exchange an item?"
+      },
+      {
+        "answer": "Write to us from the contact page and we answer as soon as we can.",
+        "question": "How do I reach you?"
+      }
+    ],
+    "placeholder": "This page ships with the starter as placeholder text. Replace it with your own before you go live."
+  },
+  "DiscountCode": {
+    "addPromotionCode": "Add a promotion code",
+    "apply": "Apply",
+    "removeDiscount": "Remove discount code from order"
+  },
+  "Errors": {
+    "emailExists": "An account with this email already exists.",
+    "generic": "Something went wrong. Please try again.",
+    "insufficientInventory": "Sorry, there isn't enough stock for this item.",
+    "invalidCredentials": "Incorrect email or password.",
+    "invalidDiscount": "This promo code is invalid or has expired.",
+    "invalidEmail": "Please enter a valid email address.",
+    "invalidResetLink": "This link is no longer valid. It may have been used already or expired. Request a new one.",
+    "network": "Connection problem. Please check your internet and try again.",
+    "notFound": "We couldn't find what you were looking for.",
+    "passwordMismatch": "The passwords do not match.",
+    "passwordTooShort": "The password must be at least 8 characters.",
+    "paymentFailed": "We couldn't process your payment. Please try again or use another method.",
+    "unauthorized": "Please sign in to continue."
+  },
+  "Filters": {
+    "sort": "Sort",
+    "title": "Filters"
+  },
+  "Footer": {
+    "categoriesHeading": "Categories",
+    "collectionsHeading": "Collections",
+    "copyright": "© {year} {siteName}. All rights reserved.",
+    "infoHeading": "Information",
+    "medusaDocs": "Medusa documentation",
+    "sourceCode": "Starter source code",
+    "starterDocs": "Starter documentation"
+  },
+  "ForgotPassword": {
+    "backToSignIn": "Back to sign in",
+    "description": "Enter the email you signed up with and we will send you a link to set a new password.",
+    "email": "Email",
+    "emailTitle": "Enter a valid email address.",
+    "guestAction": "Register",
+    "guestPrompt": "Ordered as a guest and never signed up? There is no password to reset yet. Create an account with the same address and you can link those orders to it.",
+    "heading": "Reset password",
+    "invalidEmail": "Please enter a valid email address.",
+    "requestFailed": "We could not send the link. Please try again in a moment.",
+    "sent": "If an account exists for that address, the link is on its way. Check your inbox and the spam folder.",
+    "submit": "Send link"
+  },
+  "FreeShipping": {
+    "onlyAway": "Only {amount} away",
+    "unlock": "Unlock free shipping",
+    "unlocked": "Free shipping unlocked!",
+    "viewCart": "View cart",
+    "viewProducts": "View products"
+  },
+  "Help": {
+    "contact": "Contact",
+    "needHelp": "Help",
+    "returnsExchanges": "Returns and exchanges"
+  },
+  "Hero": {
+    "eyebrow": "Turnkey · Open-source",
+    "features": [
+      {
+        "description": "improved, no extra steps, address autocomplete",
+        "label": "Checkout tuned for conversion"
+      },
+      {
+        "description": "search, filterable catalog, multi-level categories & mobile-first",
+        "label": "Full-featured storefront"
+      },
+      {
+        "description": "meta tags, Open Graph and Twitter cards, JSON-LD, sitemap, robots, llms.txt & 100/100 PageSpeed Insights",
+        "label": "SEO and AI optimized"
+      },
+      {
+        "description": "36 storefront languages with RTL support and 241 countries for sales regions, country detection, easy to trim to the ones you need",
+        "label": "Full localization"
+      },
+      {
+        "description": "React Email templates over SMTP",
+        "label": "Transactional emails"
+      },
+      {
+        "description": "on product catalog changes",
+        "label": "On-demand cache revalidation"
+      },
+      {
+        "badge": "New",
+        "description": "manage your providers' settings via Admin",
+        "href": "https://gorgojs.com/medusa-integration-module",
+        "label": "Integration Module"
+      }
+    ],
+    "featuresHeading": "Features",
+    "readDocs": "Read docs",
+    "subtitle": "Everything the official Medusa DTC starter leaves out.",
+    "title": "Production-ready Medusa DTC Starter",
+    "viewOnGitHub": "View on GitHub"
+  },
+  "ImageGallery": {
+    "goToImage": "Go to image {index}",
+    "openFullImage": "Open full image"
+  },
+  "LanguageSelect": {
+    "locales": {
+      "ar": "العربية",
+      "bg": "Български",
+      "bn": "বাংলা",
+      "cs": "Čeština",
+      "da": "Dansk",
+      "de": "Deutsch",
+      "el": "Ελληνικά",
+      "en": "English",
+      "es": "Español",
+      "fi": "Suomi",
+      "fr": "Français",
+      "he": "עברית",
+      "hi": "हिन्दी",
+      "hu": "Magyar",
+      "id": "Bahasa Indonesia",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ka": "ქართული",
+      "ko": "한국어",
+      "lt": "Lietuvių",
+      "mn": "Монгол",
+      "ms": "Bahasa Melayu",
+      "nb": "Norsk bokmål",
+      "nl": "Nederlands",
+      "pl": "Polski",
+      "pt": "Português",
+      "ro": "Română",
+      "ru": "Русский",
+      "sk": "Slovenčina",
+      "sv": "Svenska",
+      "th": "ไทย",
+      "tl": "Tagalog",
+      "tr": "Türkçe",
+      "uk": "Українська",
+      "vi": "Tiếng Việt",
+      "zh": "中文"
+    }
+  },
+  "LineItemOptions": {
+    "variant": "Variant:"
+  },
+  "Login": {
+    "description": "Your orders and delivery addresses stay in your account, and checkout goes faster.",
+    "email": "Email",
+    "emailTitle": "Enter a valid email address.",
+    "forgotPassword": "Forgot your password?",
+    "heading": "Sign in",
+    "joinUs": "Join us",
+    "notMember": "Not a member?",
+    "password": "Password",
+    "signIn": "Sign in"
+  },
+  "Metadata": {
+    "account": {
+      "description": "Overview of your account activity.",
+      "title": "Account"
+    },
+    "addresses": {
+      "description": "View your addresses",
+      "title": "Addresses"
+    },
+    "cart": {
+      "description": "View your cart",
+      "title": "Cart"
+    },
+    "category": {
+      "description": "Browse {category} at {siteName}. Compare options, check prices and find what suits you best."
+    },
+    "checkout": {
+      "description": "Review your order, enter your delivery details and pay securely.",
+      "title": "Checkout"
+    },
+    "collection": {
+      "description": "Explore the {collection} collection at {siteName}. See every item in the range and find what suits you."
+    },
+    "contact": {
+      "description": "Get in touch about an order, a product or anything else.",
+      "title": "Contact"
+    },
+    "customerService": {
+      "description": "Answers to the questions we get most often, and how to reach us.",
+      "title": "Customer service"
+    },
+    "home": {
+      "description": "Discover our curated collection of products. Shop the latest styles and find something you love."
+    },
+    "login": {
+      "description": "Sign in to your {siteName} account.",
+      "title": "Sign in"
+    },
+    "orderConfirmed": {
+      "description": "Your purchase was successful",
+      "title": "Order confirmed"
+    },
+    "orderDetails": {
+      "description": "View your order"
+    },
+    "orderTransfer": {
+      "title": "Order transfer"
+    },
+    "orders": {
+      "description": "Overview of your previous orders.",
+      "title": "Orders"
+    },
+    "privacy": {
+      "description": "See what personal data the store collects and why.",
+      "title": "Privacy policy"
+    },
+    "profile": {
+      "description": "View and edit your {siteName} profile.",
+      "title": "Profile"
+    },
+    "resetPassword": {
+      "description": "Set a new password for your account.",
+      "title": "Reset password"
+    },
+    "returns": {
+      "description": "See how to send an item back or exchange it, how long you have, and when your refund arrives.",
+      "title": "Returns and exchanges"
+    },
+    "shipping": {
+      "description": "See how orders are delivered and what delivery costs.",
+      "title": "Shipping"
+    },
+    "store": {
+      "description": "Browse the full catalog. Filter by category and option, sort by price, and find exactly what you need.",
+      "title": "Store"
+    },
+    "terms": {
+      "description": "Read the rules you agree to when you shop with us.",
+      "title": "Terms of use"
+    }
+  },
+  "NativeSelect": {
+    "defaultPlaceholder": "Select..."
+  },
+  "Nav": {
+    "account": "Account",
+    "cart": "Cart ({count})"
+  },
+  "NotFound": {
+    "cartDescription": "The cart you tried to access does not exist. Clear your cookies and try again.",
+    "description": "The page you tried to access does not exist.",
+    "goHome": "Go to frontpage",
+    "title": "Page not found"
+  },
+  "OnboardingCta": {
+    "completeInAdmin": "Complete setup in admin",
+    "completeSetup": "You can now complete setting up your store in the admin.",
+    "orderCreated": "Your test order was successfully created!"
+  },
+  "OrderCard": {
+    "itemsCount": "{count, plural, one {{count} item} other {{count} items}}",
+    "more": "more",
+    "seeDetails": "See details"
+  },
+  "OrderCompleted": {
+    "orderSuccess": "Your order was placed successfully.",
+    "thankYou": "Thank you!"
+  },
+  "OrderDetails": {
+    "backToOrders": "Back to orders",
+    "confirmationSentBefore": "We have sent the order confirmation details to",
+    "fulfillmentStatuses": {
+      "canceled": "Canceled",
+      "delivered": "Delivered",
+      "fulfilled": "Fulfilled",
+      "not_fulfilled": "Not fulfilled",
+      "partially_delivered": "Partially delivered",
+      "partially_fulfilled": "Partially fulfilled",
+      "partially_shipped": "Partially shipped",
+      "shipped": "Shipped"
+    },
+    "items": "Items",
+    "orderDate": "Order date:",
+    "orderNumber": "Order number:",
+    "paymentStatuses": {
+      "authorized": "Authorized",
+      "awaiting": "Awaiting payment",
+      "canceled": "Canceled",
+      "captured": "Paid",
+      "not_paid": "Not paid",
+      "partially_authorized": "Partially authorized",
+      "partially_captured": "Partially paid",
+      "partially_refunded": "Partially refunded",
+      "refunded": "Refunded",
+      "requires_action": "Action required"
+    }
+  },
+  "OrderOverview": {
+    "continueShopping": "Continue shopping",
+    "noOrdersYet": "You have not placed any orders yet",
+    "nothingToSeeHere": "Nothing to see here"
+  },
+  "OrderSummary": {
+    "discount": "Discount",
+    "giftCard": "Gift card",
+    "heading": "Order summary",
+    "shipping": "Shipping",
+    "subtotal": "Subtotal",
+    "taxes": "Taxes",
+    "total": "Total"
+  },
+  "OrdersPage": {
+    "description": "View your previous orders and their status.",
+    "heading": "Orders"
+  },
+  "Payment": {
+    "anotherStep": "Another step will appear",
+    "continueToReview": "Continue to review",
+    "edit": "Edit",
+    "enterPaymentDetails": "Enter payment details",
+    "giftCard": "Gift card",
+    "heading": "Payment",
+    "paymentDetails": "Payment details",
+    "paymentMethod": "Payment method"
+  },
+  "PaymentButton": {
+    "placeOrder": "Pay",
+    "selectPaymentMethod": "Select a payment method"
+  },
+  "PaymentContainer": {
+    "enterPaymentDetails": "Enter your payment details:",
+    "loadError": "Could not load the payment methods."
+  },
+  "PaymentDetails": {
+    "heading": "Payment",
+    "paidAt": "paid at",
+    "paymentDetails": "Payment details",
+    "paymentMethod": "Payment method"
+  },
+  "PaymentMethods": {
+    "pp_medusa-payments_default": {
+      "title": "Credit card",
+      "subtitle": "Medusa Payments"
+    },
+    "pp_paypal_paypal": {
+      "title": "PayPal"
+    },
+    "pp_stripe-bancontact_stripe": {
+      "title": "Bancontact",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe-ideal_stripe": {
+      "title": "iDeal",
+      "subtitle": "Stripe"
+    },
+    "pp_stripe_stripe": {
+      "title": "Credit card",
+      "subtitle": "Stripe"
+    },
+    "pp_system_default": {
+      "title": "Manual payment"
+    }
+  },
+  "PaymentTest": {
+    "attention": "Attention:",
+    "testingOnly": "For testing purposes only."
+  },
+  "ProductActions": {
+    "addToCart": "Add to cart",
+    "outOfStock": "Out of stock",
+    "selectOptions": "Select options",
+    "selectVariant": "Select variant"
+  },
+  "ProductOnboardingCta": {
+    "continueInAdmin": "Continue setup in admin",
+    "continueSetup": "You can now continue setting up your store in the admin.",
+    "demoCreated": "Your demo product was successfully created!"
+  },
+  "ProductPrice": {
+    "from": "From ",
+    "original": "Original: "
+  },
+  "ProductRail": {
+    "viewAll": "View all"
+  },
+  "ProductTabs": {
+    "easyReturns": "Straightforward returns",
+    "easyReturnsDesc": "Send your product back and we refund your money. We do our best to keep the return straightforward.",
+    "fastDelivery": "Fast delivery",
+    "fastDeliveryDesc": "Your package arrives in 3 to 5 business days, at your pickup location or at your home.",
+    "shippingReturns": "Shipping and returns",
+    "simpleExchanges": "Simple exchanges",
+    "simpleExchangesDesc": "Not the right fit? We exchange your product for a new one."
+  },
+  "ProfileBillingAddress": {
+    "billingAddress": "Billing address",
+    "noBillingAddress": "No billing address"
+  },
+  "ProfileEmail": {
+    "email": "Email",
+    "label": "Email"
+  },
+  "ProfileName": {
+    "firstName": "First name",
+    "label": "Name",
+    "lastName": "Last name",
+    "noName": "No name"
+  },
+  "ProfilePage": {
+    "description": "View and update your name, email, phone number and billing address.",
+    "heading": "Profile"
+  },
+  "ProfilePassword": {
+    "confirmPassword": "Confirm password",
+    "hidden": "The password is not shown for security reasons",
+    "label": "Password",
+    "newPassword": "New password",
+    "oldPassword": "Old password"
+  },
+  "ProfilePhone": {
+    "label": "Phone",
+    "noPhone": "No phone number",
+    "phone": "Phone"
+  },
+  "PromoBanner": {
+    "close": "Close",
+    "cta": "Deploy your own",
+    "message": "This store runs on the free Medusa DTC Starter by Gorgo."
+  },
+  "RegionSelect": {
+    "apply": "Apply",
+    "close": "Close",
+    "placeholder": "Search country or language",
+    "tabCountry": "Country",
+    "tabLanguage": "Language",
+    "title": "Change region"
+  },
+  "Register": {
+    "agreeText": "By creating a {siteName} account, you agree to",
+    "alreadyMember": "Already a member?",
+    "and": "and",
+    "description": "Create a {siteName} account to keep your orders and addresses in one place and check out faster.",
+    "email": "Email",
+    "firstName": "First name",
+    "heading": "Become a {siteName} member",
+    "join": "Join",
+    "lastName": "Last name",
+    "password": "Password",
+    "phone": "Phone",
+    "privacyPolicy": "Privacy Policy",
+    "signIn": "Sign in",
+    "termsOfUse": "Terms of Use"
+  },
+  "RelatedProducts": {
+    "title": "You might like"
+  },
+  "ResetPassword": {
+    "confirmPassword": "Repeat password",
+    "description": "Choose a new password for your account.",
+    "descriptionWithEmail": "Choose a new password for {email}.",
+    "done": "Your password has been changed. You can sign in with it now.",
+    "goToSignIn": "Sign in",
+    "heading": "New password",
+    "missingToken": "This link is missing its token. Request a new one from the sign-in page.",
+    "password": "New password",
+    "submit": "Save password"
+  },
+  "Review": {
+    "confirmText": "By clicking the Pay button, you confirm that you have read, understand and accept our Terms of Use, Terms of Sale and Returns Policy and acknowledge that you have read {siteName}'s Privacy Policy.",
+    "heading": "Review"
+  },
+  "Search": {
+    "empty": "No results for “{query}”",
+    "label": "Search",
+    "loading": "Searching…",
+    "placeholder": "Search products",
+    "popular": "Popular products"
+  },
+  "Shipping": {
+    "chooseStore": "Choose a store near you",
+    "continueToPayment": "Continue to payment",
+    "deliveryDescription": "How would you like your order delivered",
+    "edit": "Edit",
+    "heading": "Delivery",
+    "method": "Method",
+    "pickUpOrder": "Pick up your order",
+    "shippingMethod": "Shipping method",
+    "store": "Store"
+  },
+  "ShippingDetails": {
+    "contact": "Contact",
+    "heading": "Delivery",
+    "method": "Method",
+    "shippingAddress": "Shipping address"
+  },
+  "SideMenu": {
+    "copyright": "© {year} {siteName}. All rights reserved.",
+    "items": {
+      "account": "Account",
+      "cart": "Cart",
+      "home": "Home",
+      "store": "Store"
+    },
+    "menuButton": "Menu"
+  },
+  "SignInPrompt": {
+    "description": "Your saved addresses are offered at checkout, and the order lands in your account.",
+    "heading": "Sign in for a faster checkout",
+    "signIn": "Sign in"
+  },
+  "SortSelect": {
+    "latestArrivals": "Latest arrivals",
+    "placeholder": "Sort by",
+    "priceHighLow": "Price: High → Low",
+    "priceLowHigh": "Price: Low → High"
+  },
+  "Store": {
+    "allProducts": "All products"
+  },
+  "TransferActions": {
+    "acceptTransfer": "Accept transfer",
+    "declineSuccess": "Order transfer declined successfully!",
+    "declineTransfer": "Decline transfer",
+    "transferSuccess": "Order transferred successfully!"
+  },
+  "TransferPage": {
+    "acceptError": "We couldn't accept the transfer. The link may be invalid or has already been used.",
+    "acceptInfo": "If you accept, the new owner will take over all responsibilities and permissions associated with this order.",
+    "acceptedBody": "Order {id} has been successfully transferred to the new owner.",
+    "acceptedHeading": "Order transferred!",
+    "declineError": "We couldn't decline the transfer. The link may be invalid or has already been used.",
+    "declinedBody": "The transfer of order {id} has been declined.",
+    "declinedHeading": "Transfer declined",
+    "noAction": "If you don't recognize this request or wish to keep ownership, no further action is required.",
+    "requestHeading": "Transfer request for order {id}",
+    "requestIntro": "You've received a request to transfer ownership of your order ({id}). If you agree, you can approve the transfer using the button below."
+  },
+  "TransferRequest": {
+    "cantFindOrder": "Can't find the order you are looking for?",
+    "connectOrder": "Connect an order to your account.",
+    "heading": "Order transfers",
+    "orderId": "Order link or ID",
+    "requestTransfer": "Request transfer",
+    "transferEmailSent": "Transfer request email sent to {email}",
+    "transferRequested": "Transfer for order {orderId} requested",
+    "whereToFind": "Open the confirmation email for that order and paste the link from it here."
+  }
+}
