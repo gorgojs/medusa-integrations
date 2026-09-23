@@ -4,9 +4,11 @@
 
 A production-ready Medusa starter for direct-to-consumer commerce, published by Gorgo as a fork of
 the official [medusajs/dtc-starter](https://github.com/medusajs/dtc-starter). The repository is a
-pnpm workspace holding two apps, a Medusa 2 backend (`@dtc/gorgo-medusa-backend`) and a Next.js 15
-storefront (`@dtc/gorgo-medusa-storefront`). Both ship in every clone, unlike upstream where the
-storefront is optional.
+yarn workspace holding a Medusa 2 backend (`@dtc/gorgo-medusa-backend`) and, in most examples, a
+Next.js 15 storefront (`@dtc/gorgo-medusa-storefront`). Unlike upstream, where a user opts out of the
+storefront at install time, here it is a per-example choice made when the example was built: a
+payment or feed example ships both apps; a backend-only integration example ships the backend alone.
+Check that `apps/storefront/` exists before assuming it does.
 
 People install this repository as a template through `create-medusa-app --repo-url`, so treat every
 file as something a shop owner will read and then edit. The demo catalog, the placeholder copy and
@@ -49,7 +51,7 @@ are written in the `gorgojs/medusa-integrations` repository, not here.
 │   │       ├── modules/              # smtp-notification provider
 │   │       ├── subscribers/          # transactional emails and storefront revalidation
 │   │       └── workflows/            # workflows and steps
-│   └── storefront/                   # Next.js 15 storefront on the App Router
+│   └── storefront/                   # OPTIONAL Next.js 15 storefront
 │       ├── messages/                 # 36 next-intl UI catalogs
 │       ├── next.config.js            # standalone output, next-intl plugin, image hosts
 │       ├── tailwind.config.js        # Medusa UI preset plus a hand-kept content allowlist
@@ -61,10 +63,17 @@ are written in the `gorgojs/medusa-integrations` repository, not here.
 │           ├── middleware.ts         # locale and region resolution
 │           ├── modules/              # feature areas: store, products, cart, checkout, account…
 │           └── styles/globals.css    # Tailwind entry and the few global overrides
-├── pnpm-workspace.yaml
+├── yarn.lock
 ├── turbo.json
 └── package.json
 ```
+
+**`apps/storefront` may not exist.** It ships alongside the backend in a single-provider payment or
+feed example, but a backend-only integration example — one that demonstrates several providers or a
+plugin a shop's storefront never touches — omits it. Before running any storefront command,
+referencing storefront files, or assuming a full-stack change is possible, check that
+`apps/storefront/` exists. If it doesn't, the example is backend-only — do not scaffold it or suggest
+it was deleted by mistake.
 
 The Medusa convention directories (`admin`, `api`, `jobs`, `links`, `modules`, `subscribers`,
 `workflows`) each keep a `README.md` from the framework describing the primitive they hold. Read the
@@ -78,14 +87,13 @@ its own, the way `emails` and `migration-scripts` already do.
 
 ## Package Manager
 
-pnpm 10.11.1, pinned by `packageManager` in the root [package.json](package.json). Node 20.19 or
+yarn 4.9.2, pinned by `packageManager` in the root [package.json](package.json). Node 20.19 or
 later, or 22.12 or later. `engines` excludes v21.
 
-When the pnpm on `PATH` is a different major, run `corepack pnpm <command>`. A mismatched major asks
-to delete and reinstall every `node_modules` in the workspace.
+When the yarn on `PATH` is a different major, run `corepack yarn <command>`. A mismatched major can
+leave a broken install; delete `node_modules` in the workspace and reinstall if so.
 
-The starter is meant to install under npm and yarn as well, so never put a pnpm-only construct into a
-package script, and never add a second lockfile.
+Never put a yarn-only construct into a package script, and never add a second lockfile.
 
 ## Commands
 
@@ -93,16 +101,16 @@ Run these from the repository root.
 
 | Command | What it does |
 |---|---|
-| `pnpm dev` | Start both apps |
-| `pnpm backend:dev` | Backend only, on `http://localhost:9000`, Admin at `/app` |
-| `pnpm storefront:dev` | Storefront only, on `http://localhost:8000` |
-| `pnpm backend:seed` | Seed the store, 241 regions, 36 locales and the demo catalog |
-| `pnpm build` | Build both apps |
-| `pnpm lint` | Lint both apps |
+| `yarn dev` | Start both apps |
+| `yarn backend:dev` | Backend only, on `http://localhost:9000`, Admin at `/app` |
+| `yarn storefront:dev` | Storefront only, on `http://localhost:8000` |
+| `yarn backend:seed` | Seed the store, 241 regions, 36 locales and the demo catalog |
+| `yarn build` | Build both apps |
+| `yarn lint` | Lint both apps |
 
-Two of these come with a catch. `pnpm lint` covers both apps, `medusa lint` in the backend and
+Two of these come with a catch. `yarn lint` covers both apps, `medusa lint` in the backend and
 `next lint` in the storefront, and the storefront half loads `next.config.js` and exits when
-`NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` is absent from the environment. `pnpm test` executes nothing at
+`NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` is absent from the environment. `yarn test` executes nothing at
 all, because neither app defines a `test` task. The backend suites are `test:unit`,
 `test:integration:http` and `test:integration:modules`, run from `apps/backend` against a live
 Postgres.
@@ -127,7 +135,7 @@ narrow. A new one needs the same kind of reason written next to it.
 
 The backend lints clean too, through `medusa lint` and
 [eslint.config.mjs](apps/backend/eslint.config.mjs). Mind that `medusa develop` runs the same check
-before it starts and refuses to boot on a lint error, so a lint mistake there breaks `pnpm dev` and
+before it starts and refuses to boot on a lint error, so a lint mistake there breaks `yarn dev` and
 not just CI. `medusa build` runs it as well, but only reports and carries on.
 
 ```bash
@@ -255,7 +263,7 @@ selected commits, not by merging. The differences that matter when you carry a c
 | Multi-step checkout behind `?step=` | one-screen checkout with sheets, in `modules/checkout/components/checkout-*` |
 | Root ESLint with `@medusajs/eslint-plugin` | storefront-only `next lint` |
 | `@dtc/backend`, `@dtc/storefront` | `@dtc/gorgo-medusa-backend`, `@dtc/gorgo-medusa-storefront` |
-| Storefront is optional | both apps always present |
+| Storefront skipped only when the installer opts out | storefront ships per example — a backend-only integration example omits it |
 
 `modules/checkout/components/payment` and `modules/checkout/components/review` are the upstream
 step-based components and nothing imports them. They stay in the tree, and in sync with upstream, so
