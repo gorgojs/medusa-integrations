@@ -241,7 +241,7 @@ process_directory() {
         if [ "$skip_migrations" = false ]; then
             log "$app_dir" "Running database migrations"
             echo -e "\n${YELLOW}[$app_dir] Running: npx medusa db:migrate${NC}\n"
-            npx medusa db:migrate || handle_error "$app_dir" "$LAST_SUCCESSFUL_DIR"
+            npx medusa db:migrate --execute-all-links || handle_error "$app_dir" "$LAST_SUCCESSFUL_DIR"
         fi
 
         # Build the project
