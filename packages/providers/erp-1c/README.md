@@ -74,9 +74,9 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 ## Installation
 
 ```bash
-yarn add @gorgo/medusa-integration @gorgo/medusa-1c@beta
+yarn add @gorgo/medusa-integration @gorgo/medusa-1c
 # or
-npm install @gorgo/medusa-integration @gorgo/medusa-1c@beta
+npm install @gorgo/medusa-integration @gorgo/medusa-1c
 ```
 
 ## Documentation

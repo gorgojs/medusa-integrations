@@ -74,9 +74,9 @@
 ## Установка
 
 ```bash
-yarn add @gorgo/medusa-integration @gorgo/medusa-1c@beta
+yarn add @gorgo/medusa-integration @gorgo/medusa-1c
 # или
-npm install @gorgo/medusa-integration @gorgo/medusa-1c@beta
+npm install @gorgo/medusa-integration @gorgo/medusa-1c
 ```
 
 ## Документация
