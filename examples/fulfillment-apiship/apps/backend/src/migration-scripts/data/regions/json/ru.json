@@ -6,6 +6,7 @@
     "name": "Moscow Warehouse",
     "address": {
       "address_1": "Пресненская набережная, 12",
+      "city": "Москва",
       "country_code": "ru"
     }
   },

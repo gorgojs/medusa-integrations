@@ -5,6 +5,7 @@ export type SeedStockLocation = {
   name: string;
   address: {
     address_1: string;
+    city?: string;
     country_code: string;
   };
 };
