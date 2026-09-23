@@ -1,14 +1,6 @@
 # @gorgo/medusa-payment-robokassa
 
-## 2.0.0-beta.2
-
-- improve types
-- update deps
-- improve docs
-
-## 2.0.0-beta.1
-
-### Highlights
+## 2.0.0
 
 - **Migrated to the Integration Module.** Robokassa is now configured in the Admin under **Settings → Integrations**, powered by the new [`@gorgo/medusa-integration`](https://www.npmjs.com/package/@gorgo/medusa-integration) module. Credentials are no longer read from `medusa-config` and env — a store admin fills in the settings form, secrets are encrypted at rest (AES-256-GCM), and the provider resolves the validated, decrypted config at runtime. No code edits and no redeploys to change settings.
 
