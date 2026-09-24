@@ -43,13 +43,13 @@ YooKassa Payments for Medusa
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/yookassa/yookassa-en.mp4">
-    <img src="https://static.gorgojs.com/videos/yookassa/yookassa-en-poster-play-1790066160.webp" alt="Watch the YooKassa plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
+  <a href="https://static.gorgojs.com/videos/payment-yookassa/demo/payment-yookassa-demo-en.mp4">
+    <img src="https://static.gorgojs.com/videos/payment-yookassa/demo/payment-yookassa-demo-en-poster-play.34b67264.webp" alt="Watch the YooKassa plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/yookassa/yookassa-en.mp4">▶ Watch the demo video</a>
+  <a href="https://static.gorgojs.com/videos/payment-yookassa/demo/payment-yookassa-demo-en.mp4">▶ Watch the demo video</a>
 </p>
 
 ## Plugin Features

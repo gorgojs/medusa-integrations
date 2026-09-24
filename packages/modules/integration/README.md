@@ -43,13 +43,13 @@ Integration Module for Medusa
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/integration-module/integration-module.mp4">
-    <img src="https://static.gorgojs.com/videos/integration-module/integration-module-poster-play-1790070529.webp" alt="Watch the Integration Module demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
+  <a href="https://static.gorgojs.com/videos/integration/demo/integration-demo.mp4">
+    <img src="https://static.gorgojs.com/videos/integration/demo/integration-demo-poster-play.2635e78b.webp" alt="Watch the Integration Module demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/integration-module/integration-module.mp4">▶ Watch the demo video</a>
+  <a href="https://static.gorgojs.com/videos/integration/demo/integration-demo.mp4">▶ Watch the demo video</a>
 </p>
 
 ## What is the Integration Module?
