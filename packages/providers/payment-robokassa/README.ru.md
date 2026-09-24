@@ -42,6 +42,16 @@
   </a>
 </p>
 
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-ru.mp4">
+    <img src="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-ru-poster-play.817dc29e.webp" alt="Смотреть демо-видео плагина Robokassa" width="100%" style="border-radius: 8px; max-width: 720px;">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-ru.mp4">▶ Смотреть демо-видео</a>
+</p>
+
 ## Возможности плагина
 
 - **Готов к продакшену:** Проверен в боевых магазинах и готов к использованию в реальных проектах.
