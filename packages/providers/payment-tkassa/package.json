@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-tkassa",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "T-Kassa payment provider for Medusa",
   "files": [
     ".medusa/server",
@@ -54,7 +54,7 @@
     "t-kassa-api": "^1.0.6"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.2.3",
+    "@gorgo/medusa-integration": "^0.2.4",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",

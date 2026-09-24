@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-integration",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Integration module for Medusa",
   "author": {
     "name": "Gorgo",

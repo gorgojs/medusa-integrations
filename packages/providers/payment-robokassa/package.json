@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-robokassa",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Robokassa payment provider for Medusa",
   "files": [
     ".medusa/server",
@@ -49,7 +49,7 @@
     "fast-xml-parser": "^5.2.5"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.2.3",
+    "@gorgo/medusa-integration": "^0.2.4",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",
