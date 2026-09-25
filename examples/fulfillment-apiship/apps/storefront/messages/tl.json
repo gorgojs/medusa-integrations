@@ -57,6 +57,23 @@
     "description": "Tingnan at i-update ang iyong mga address ng paghahatid, maaari kang magdagdag ng kahit ilan. Ang pag-save ng iyong mga address ay magpapadali sa checkout.",
     "heading": "Mga Address ng Paghahatid"
   },
+  "Apiship": {
+    "choose": "Piliin",
+    "courierModalTitle": "Paghahatid ng courier",
+    "deliveryDays": "{count, plural, one {{count} araw} other {{count} araw}}",
+    "deliveryDaysRange": "{min}–{max} araw",
+    "loadFailed": "Hindi ma-load ang mga opsyon sa paghahatid. Subukan ulit.",
+    "mapKeyMissing": "Kailangan ng mapa ng Yandex Maps API key.",
+    "next": "Susunod",
+    "noPoints": "Walang pickup point para sa address na ito.",
+    "noTariffs": "Walang courier na naghahatid sa address na ito.",
+    "photoAlt": "Larawan ng pickup point {index}",
+    "pickupPointHeading": "Pickup point",
+    "pickupPointModalTitle": "Pickup point",
+    "pointDetails": "Paano pumunta",
+    "schedule": "Oras ng bukas",
+    "selectPointPrompt": "Pumili ng point sa mapa"
+  },
   "Breadcrumb": {
     "home": "Home",
     "store": "Tindahan"

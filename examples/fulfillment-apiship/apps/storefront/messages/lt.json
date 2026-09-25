@@ -57,6 +57,23 @@
     "description": "Peržiūrėkite ir atnaujinkite savo pristatymo adresus — galite pridėti jų tiek, kiek norite. Išsaugoti adresai bus prieinami atsiskaitymo metu.",
     "heading": "Pristatymo adresai"
   },
+  "Apiship": {
+    "choose": "Pasirinkti",
+    "courierModalTitle": "Pristatymas kurjeriu",
+    "deliveryDays": "{count, plural, one {{count} diena} few {{count} dienos} other {{count} dienų}}",
+    "deliveryDaysRange": "{min}–{max} dienų",
+    "loadFailed": "Nepavyko įkelti pristatymo parinkčių. Bandykite dar kartą.",
+    "mapKeyMissing": "Žemėlapiui reikia Yandex Maps API rakto.",
+    "next": "Toliau",
+    "noPoints": "Šiuo adresu atsiėmimo punktų nėra.",
+    "noTariffs": "Šiuo adresu nepristato nė vienas vežėjas.",
+    "photoAlt": "Atsiėmimo punkto nuotrauka {index}",
+    "pickupPointHeading": "Atsiėmimo punktas",
+    "pickupPointModalTitle": "Atsiėmimo punktas",
+    "pointDetails": "Kaip rasti",
+    "schedule": "Darbo laikas",
+    "selectPointPrompt": "Pasirinkite punktą žemėlapyje"
+  },
   "Breadcrumb": {
     "home": "Pradžia",
     "store": "Parduotuvė"

@@ -57,6 +57,23 @@
     "description": "Przeglądaj i aktualizuj swoje adresy dostawy — możesz dodać ich dowolną liczbę. Zapisane adresy będą dostępne podczas składania zamówienia.",
     "heading": "Adresy dostawy"
   },
+  "Apiship": {
+    "choose": "Wybierz",
+    "courierModalTitle": "Dostawa kurierem",
+    "deliveryDays": "{count, plural, one {{count} dzień} few {{count} dni} many {{count} dni} other {{count} dnia}}",
+    "deliveryDaysRange": "{min}–{max} dni",
+    "loadFailed": "Nie udało się wczytać opcji dostawy. Spróbuj ponownie.",
+    "mapKeyMissing": "Mapa wymaga klucza API Yandex Maps.",
+    "next": "Dalej",
+    "noPoints": "Pod tym adresem nie ma punktów odbioru.",
+    "noTariffs": "Żaden przewoźnik nie dostarcza pod ten adres.",
+    "photoAlt": "Zdjęcie punktu odbioru {index}",
+    "pickupPointHeading": "Punkt odbioru",
+    "pickupPointModalTitle": "Punkt odbioru",
+    "pointDetails": "Jak trafić",
+    "schedule": "Godziny otwarcia",
+    "selectPointPrompt": "Wybierz punkt na mapie"
+  },
   "Breadcrumb": {
     "home": "Strona główna",
     "store": "Sklep"

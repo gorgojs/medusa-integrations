@@ -3,8 +3,10 @@
 import { useState } from "react"
 import { isPickupShippingOption } from "@lib/util/fulfillment"
 import CheckoutAddressSheet from "@modules/checkout/components/checkout-address-sheet"
+import { isApishipOption } from "@modules/checkout/components/apiship"
 import { useTranslations } from "next-intl"
 import type React from "react"
+import ApishipDeliveryRow from "./providers/apiship"
 import { DeliveryRowShell, type DeliveryRowProps } from "./shared"
 
 /**
@@ -56,6 +58,8 @@ const AddressDeliveryRow: React.FC<DeliveryRowProps> = ({
  */
 const DeliveryRow: React.FC<DeliveryRowProps> = (props) => {
   switch (true) {
+    case isApishipOption(props.option):
+      return <ApishipDeliveryRow {...props} />
     default:
       return <AddressDeliveryRow {...props} />
   }

@@ -57,6 +57,23 @@
     "description": "צפה בכתובות המשלוח שלך ועדכן אותן, ניתן להוסיף כמה שתרצה. שמירת הכתובות תהפוך אותן לזמינות בתהליך התשלום.",
     "heading": "כתובות למשלוח"
   },
+  "Apiship": {
+    "choose": "בחירה",
+    "courierModalTitle": "משלוח עם שליח",
+    "deliveryDays": "{count, plural, one {יום {count}} two {יומיים} other {{count} ימים}}",
+    "deliveryDaysRange": "{min}–{max} ימים",
+    "loadFailed": "לא הצלחנו לטעון את אפשרויות המשלוח. נסו שוב.",
+    "mapKeyMissing": "המפה זקוקה למפתח API של Yandex Maps.",
+    "next": "הבא",
+    "noPoints": "אין נקודות איסוף לכתובת הזו.",
+    "noTariffs": "אף חברת שליחויות לא מגיעה לכתובת הזו.",
+    "photoAlt": "תמונה של נקודת האיסוף {index}",
+    "pickupPointHeading": "נקודת איסוף",
+    "pickupPointModalTitle": "נקודת איסוף",
+    "pointDetails": "איך מגיעים",
+    "schedule": "שעות פעילות",
+    "selectPointPrompt": "בחרו נקודה במפה"
+  },
   "Breadcrumb": {
     "home": "בית",
     "store": "חנות"

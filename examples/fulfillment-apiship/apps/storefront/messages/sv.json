@@ -57,6 +57,23 @@
     "description": "Visa och uppdatera dina leveransadresser, du kan lägga till så många du vill. Sparade adresser blir tillgängliga vid kassan.",
     "heading": "Leveransadresser"
   },
+  "Apiship": {
+    "choose": "Välj",
+    "courierModalTitle": "Leverans med bud",
+    "deliveryDays": "{count, plural, one {{count} dag} other {{count} dagar}}",
+    "deliveryDaysRange": "{min}–{max} dagar",
+    "loadFailed": "Vi kunde inte läsa in leveransalternativen. Försök igen.",
+    "mapKeyMissing": "Kartan behöver en API-nyckel för Yandex Maps.",
+    "next": "Nästa",
+    "noPoints": "Det finns inga utlämningsställen för den här adressen.",
+    "noTariffs": "Ingen transportör levererar till den här adressen.",
+    "photoAlt": "Foto av utlämningsstället {index}",
+    "pickupPointHeading": "Utlämningsställe",
+    "pickupPointModalTitle": "Utlämningsställe",
+    "pointDetails": "Hitta hit",
+    "schedule": "Öppettider",
+    "selectPointPrompt": "Välj ett ställe på kartan"
+  },
   "Breadcrumb": {
     "home": "Hem",
     "store": "Butik"

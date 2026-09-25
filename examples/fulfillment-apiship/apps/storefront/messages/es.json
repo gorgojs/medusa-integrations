@@ -57,6 +57,23 @@
     "description": "Consulta y actualiza tus direcciones de envío, puedes añadir tantas como quieras. Guardar tus direcciones las hará disponibles durante el pago.",
     "heading": "Direcciones de envío"
   },
+  "Apiship": {
+    "choose": "Elegir",
+    "courierModalTitle": "Entrega por mensajero",
+    "deliveryDays": "{count, plural, one {{count} día} other {{count} días}}",
+    "deliveryDaysRange": "{min}–{max} días",
+    "loadFailed": "No pudimos cargar las opciones de envío. Inténtalo de nuevo.",
+    "mapKeyMissing": "El mapa necesita una clave de API de Yandex Maps.",
+    "next": "Siguiente",
+    "noPoints": "No hay puntos de recogida para esta dirección.",
+    "noTariffs": "Ningún transportista entrega en esta dirección.",
+    "photoAlt": "Foto del punto de recogida {index}",
+    "pickupPointHeading": "Punto de recogida",
+    "pickupPointModalTitle": "Punto de recogida",
+    "pointDetails": "Cómo llegar",
+    "schedule": "Horario",
+    "selectPointPrompt": "Elige un punto en el mapa"
+  },
   "Breadcrumb": {
     "home": "Inicio",
     "store": "Tienda"
