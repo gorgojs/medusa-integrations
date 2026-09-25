@@ -1,13 +1,12 @@
 "use client"
 
+import { COOKIE_NAMES } from "@lib/cookie-config"
 import {
   ExclamationCircleSolid,
   XMark,
 } from "@medusajs/icons"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
-
-const PROMO_BANNER_COOKIE = "_promo_banner_dismissed"
 
 function PromoBanner(props: { dismissed: boolean }) {
   const t = useTranslations("PromoBanner")
@@ -19,7 +18,7 @@ function PromoBanner(props: { dismissed: boolean }) {
 
   const handleClose = () => {
     setIsVisible(false)
-    document.cookie = `${PROMO_BANNER_COOKIE}=1; path=/; max-age=${60 * 60 * 24 * 365}`
+    document.cookie = `${COOKIE_NAMES.promoBannerDismissed}=1; path=/; max-age=${60 * 60 * 24 * 365}`
   }
 
   return (

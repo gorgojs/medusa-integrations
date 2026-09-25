@@ -6,6 +6,7 @@
     "description": "Delivery within 2–3 days.",
     "provider_id": "manual_manual",
     "metadata": {
+      "rank": 1,
       "delivery_days_min": 2,
       "delivery_days_max": 3
     }
@@ -17,6 +18,7 @@
     "description": "Pick up at a pickup point.",
     "provider_id": "manual_manual",
     "metadata": {
+      "rank": 2,
       "delivery_days_min": 0,
       "delivery_days_max": 0
     }

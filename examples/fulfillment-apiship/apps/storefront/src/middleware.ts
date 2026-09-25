@@ -1,11 +1,11 @@
 import { isAppLocale, defaultLocale, matchBrowserLocale } from "@i18n/config"
+import { COOKIE_NAMES, persistentCookieOpts } from "@lib/cookie-config"
 import { resolveCountry, type RegionMap } from "@lib/geolocation"
 import type { HttpTypes } from "@medusajs/types"
 import { type NextRequest, NextResponse } from "next/server"
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
-const LOCALE_COOKIE = "_medusa_locale"
 
 const INTL_LOCALE_HEADER = "X-NEXT-INTL-LOCALE"
 
@@ -66,7 +66,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  const cacheIdCookie = request.cookies.get("_medusa_cache_id")
+  const cacheIdCookie = request.cookies.get(COOKIE_NAMES.cacheId)
   const cacheId = cacheIdCookie?.value || crypto.randomUUID()
   const regionMap: RegionMap = await getRegionMap(cacheId)
 
@@ -80,18 +80,11 @@ export async function middleware(request: NextRequest) {
   const firstSegment = segments[0]
   const hasLocaleInUrl = firstSegment && isAppLocale(firstSegment)
 
-  const persistentCookieOpts = {
-    maxAge: 60 * 60 * 24 * 365,
-    httpOnly: false,
-    sameSite: "lax" as const,
-    secure: process.env.NODE_ENV === "production",
-  }
-
   function withCookies(res: NextResponse, locale: string): NextResponse {
     if (!cacheIdCookie) {
-      res.cookies.set("_medusa_cache_id", cacheId, { maxAge: 60 * 60 * 24 })
+      res.cookies.set(COOKIE_NAMES.cacheId, cacheId, { maxAge: 60 * 60 * 24 })
     }
-    res.cookies.set(LOCALE_COOKIE, locale, persistentCookieOpts)
+    res.cookies.set(COOKIE_NAMES.locale, locale, persistentCookieOpts)
     return applyCountry(res)
   }
 
@@ -105,7 +98,7 @@ export async function middleware(request: NextRequest) {
     if (
       segments[1] === "account" &&
       segments.length > 2 &&
-      !request.cookies.get("_medusa_jwt")
+      !request.cookies.get(COOKIE_NAMES.authToken)
     ) {
       const res = NextResponse.redirect(
         new URL(`/${locale}/account`, request.url)
@@ -119,7 +112,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // No locale in URL — detect and redirect 302
-  const cookieLocale = request.cookies.get(LOCALE_COOKIE)?.value
+  const cookieLocale = request.cookies.get(COOKIE_NAMES.locale)?.value
 
   const locale =
     cookieLocale && isAppLocale(cookieLocale)

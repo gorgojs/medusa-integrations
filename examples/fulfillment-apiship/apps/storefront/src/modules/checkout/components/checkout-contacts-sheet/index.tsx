@@ -133,9 +133,6 @@ export default function CheckoutContactsSheet({
             autoComplete="tel"
             value={formData.phone}
             onChange={handleChange}
-            // ApiShip quotes and books against a recipient phone number, so the
-            // checkout collects one before it reaches the shipping step.
-            required
             data-testid="shipping-phone-input"
           />
 
@@ -179,7 +176,6 @@ export default function CheckoutContactsSheet({
                 autoComplete="tel"
                 value={formData.recipient_phone}
                 onChange={handleChange}
-                required
               />
             </div>
           )}

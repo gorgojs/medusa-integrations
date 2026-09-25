@@ -1,11 +1,10 @@
 "use server"
 
 import { sdk } from "@lib/config"
+import { COOKIE_NAMES, persistentCookieOpts } from "@lib/cookie-config"
 import { revalidateTag } from "next/cache"
 import { cookies as nextCookies } from "next/headers"
 import { getAuthHeaders, getCacheTag, getCartId } from "./cookies"
-
-const LOCALE_COOKIE_NAME = "_medusa_locale"
 
 /**
  * Gets the current locale from cookies
@@ -13,7 +12,7 @@ const LOCALE_COOKIE_NAME = "_medusa_locale"
 export const getLocale = async (): Promise<string | null> => {
   try {
     const cookies = await nextCookies()
-    return cookies.get(LOCALE_COOKIE_NAME)?.value ?? null
+    return cookies.get(COOKIE_NAMES.locale)?.value ?? null
   } catch {
     return null
   }
@@ -24,12 +23,7 @@ export const getLocale = async (): Promise<string | null> => {
  */
 export const setLocaleCookie = async (locale: string) => {
   const cookies = await nextCookies()
-  cookies.set(LOCALE_COOKIE_NAME, locale, {
-    maxAge: 60 * 60 * 24 * 365, // 1 year
-    httpOnly: false, // Allow client-side access
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
-  })
+  cookies.set(COOKIE_NAMES.locale, locale, persistentCookieOpts)
 }
 
 /**

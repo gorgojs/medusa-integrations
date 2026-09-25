@@ -57,22 +57,6 @@
     "description": "배송 주소를 확인하고 수정할 수 있으며, 원하는 만큼 추가할 수 있습니다. 저장된 주소는 결제 시 사용할 수 있습니다.",
     "heading": "배송 주소"
   },
-  "Apiship": {
-    "choose": "선택",
-    "courierModalTitle": "택배 배송",
-    "deliveryDays": "{count, plural, other {{count}일}}",
-    "deliveryDaysRange": "{min}~{max}일",
-    "loadFailed": "배송 방법을 불러오지 못했습니다. 다시 시도해 주세요.",
-    "mapKeyMissing": "지도를 보려면 Yandex Maps API 키가 필요합니다.",
-    "noPoints": "이 주소에 이용할 수 있는 픽업 장소가 없습니다.",
-    "noTariffs": "이 주소로 배송하는 업체가 없습니다.",
-    "photoAlt": "픽업 장소 사진 {index}",
-    "pickupPointModalTitle": "픽업 장소",
-    "pointDetails": "찾아가는 길",
-    "priceFrom": "{price}부터",
-    "schedule": "운영 시간",
-    "selectPointPrompt": "지도에서 장소를 선택하세요"
-  },
   "Breadcrumb": {
     "home": "홈",
     "store": "스토어"
@@ -145,7 +129,6 @@
     "paymentHeading": "결제 방법",
     "recipientCheckbox": "수령인이 다른 사람입니다",
     "recipientHeading": "수령인 정보",
-    "recipientLabel": "수령인:",
     "returnsLink": "반품 정책",
     "sameAsShipping": "배송지와 동일",
     "save": "저장",

@@ -57,22 +57,6 @@
     "description": "Veja e atualize as suas moradas de entrega, pode adicionar quantas quiser. Guardar as suas moradas torna-as disponíveis durante a finalização da compra.",
     "heading": "Moradas de Entrega"
   },
-  "Apiship": {
-    "choose": "Escolher",
-    "courierModalTitle": "Entrega por estafeta",
-    "deliveryDays": "{count, plural, one {{count} dia} other {{count} dias}}",
-    "deliveryDaysRange": "{min}–{max} dias",
-    "loadFailed": "Não foi possível carregar as opções de entrega. Tente novamente.",
-    "mapKeyMissing": "O mapa precisa de uma chave de API do Yandex Maps.",
-    "noPoints": "Não há pontos de recolha para esta morada.",
-    "noTariffs": "Nenhuma transportadora entrega nesta morada.",
-    "photoAlt": "Fotografia do ponto de recolha {index}",
-    "pickupPointModalTitle": "Ponto de recolha",
-    "pointDetails": "Como chegar",
-    "priceFrom": "desde {price}",
-    "schedule": "Horário",
-    "selectPointPrompt": "Escolha um ponto no mapa"
-  },
   "Breadcrumb": {
     "home": "Início",
     "store": "Loja"
@@ -145,7 +129,6 @@
     "paymentHeading": "Método de pagamento",
     "recipientCheckbox": "O destinatário é outra pessoa",
     "recipientHeading": "Dados do destinatário",
-    "recipientLabel": "Destinatário:",
     "returnsLink": "Política de Devolução",
     "sameAsShipping": "Igual à morada de entrega",
     "save": "Guardar",

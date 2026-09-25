@@ -57,22 +57,6 @@
     "description": "Просмотрите и обновите ваши адреса доставки. Вы можете добавить любое количество адресов. Сохранённые адреса будут доступны при оформлении заказа.",
     "heading": "Адреса доставки"
   },
-  "Apiship": {
-    "choose": "Выбрать",
-    "courierModalTitle": "Доставка курьером",
-    "deliveryDays": "{count, plural, one {{count} день} few {{count} дня} many {{count} дней} other {{count} дней}}",
-    "deliveryDaysRange": "{min}–{max} дней",
-    "loadFailed": "Не удалось загрузить варианты доставки. Попробуйте ещё раз.",
-    "mapKeyMissing": "Для карты нужен ключ API Яндекс Карт.",
-    "noPoints": "По этому адресу нет пунктов выдачи.",
-    "noTariffs": "По этому адресу нет доставки.",
-    "photoAlt": "Фотография пункта выдачи {index}",
-    "pickupPointModalTitle": "Пункт выдачи",
-    "pointDetails": "Как найти",
-    "priceFrom": "от {price}",
-    "schedule": "Часы работы",
-    "selectPointPrompt": "Выберите пункт на карте"
-  },
   "Breadcrumb": {
     "home": "Главная",
     "store": "Магазин"
@@ -145,7 +129,6 @@
     "paymentHeading": "Способ оплаты",
     "recipientCheckbox": "Получать будет другой человек",
     "recipientHeading": "Данные получателя",
-    "recipientLabel": "Получатель:",
     "returnsLink": "Правила возврата",
     "sameAsShipping": "Совпадает с адресом доставки",
     "save": "Сохранить",

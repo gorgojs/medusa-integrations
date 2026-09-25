@@ -3,7 +3,6 @@ import {
   isAlreadySeeded,
   seedCategories,
   seedCollections,
-  seedExampleData,
   seedFulfillment,
   seedInventoryLevels,
   seedProductOptionMetadata,
@@ -36,6 +35,4 @@ export default async function initial_data_seed({
   await step(seedCollections(container), "product collections");
   await step(seedTranslations(container), "translations");
   await step(seedInventoryLevels(container), "inventory levels");
-  // Seed example related data
-  await step(seedExampleData(container), "example data");
 }

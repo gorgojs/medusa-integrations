@@ -57,22 +57,6 @@
     "description": "Visualizza e aggiorna i tuoi indirizzi di spedizione, puoi aggiungerne quanti ne desideri. Salvando i tuoi indirizzi, saranno disponibili durante il checkout.",
     "heading": "Indirizzi di spedizione"
   },
-  "Apiship": {
-    "choose": "Scegli",
-    "courierModalTitle": "Consegna con corriere",
-    "deliveryDays": "{count, plural, one {{count} giorno} other {{count} giorni}}",
-    "deliveryDaysRange": "{min}–{max} giorni",
-    "loadFailed": "Non siamo riusciti a caricare le opzioni di consegna. Riprova.",
-    "mapKeyMissing": "La mappa richiede una chiave API di Yandex Maps.",
-    "noPoints": "Nessun punto di ritiro serve questo indirizzo.",
-    "noTariffs": "Nessun corriere consegna a questo indirizzo.",
-    "photoAlt": "Foto del punto di ritiro {index}",
-    "pickupPointModalTitle": "Punto di ritiro",
-    "pointDetails": "Come arrivare",
-    "priceFrom": "da {price}",
-    "schedule": "Orari di apertura",
-    "selectPointPrompt": "Scegli un punto sulla mappa"
-  },
   "Breadcrumb": {
     "home": "Home",
     "store": "Negozio"
@@ -145,7 +129,6 @@
     "paymentHeading": "Metodo di pagamento",
     "recipientCheckbox": "Il destinatario è una persona diversa",
     "recipientHeading": "Dati del destinatario",
-    "recipientLabel": "Destinatario:",
     "returnsLink": "Politica di reso",
     "sameAsShipping": "Uguale all'indirizzo di spedizione",
     "save": "Salva",

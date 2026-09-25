@@ -57,22 +57,6 @@
     "description": "Lihat dan kemas kini alamat penghantaran anda, anda boleh menambah seberapa banyak yang anda mahu. Menyimpan alamat anda akan menjadikannya tersedia semasa pembayaran.",
     "heading": "Alamat Penghantaran"
   },
-  "Apiship": {
-    "choose": "Pilih",
-    "courierModalTitle": "Penghantaran kurier",
-    "deliveryDays": "{count, plural, other {{count} hari}}",
-    "deliveryDaysRange": "{min}–{max} hari",
-    "loadFailed": "Pilihan penghantaran gagal dimuatkan. Cuba lagi.",
-    "mapKeyMissing": "Peta memerlukan kunci API Yandex Maps.",
-    "noPoints": "Tiada titik ambilan untuk alamat ini.",
-    "noTariffs": "Tiada kurier menghantar ke alamat ini.",
-    "photoAlt": "Foto titik ambilan {index}",
-    "pickupPointModalTitle": "Titik ambilan",
-    "pointDetails": "Cara ke sana",
-    "priceFrom": "dari {price}",
-    "schedule": "Waktu operasi",
-    "selectPointPrompt": "Pilih titik pada peta"
-  },
   "Breadcrumb": {
     "home": "Utama",
     "store": "Kedai"
@@ -145,7 +129,6 @@
     "paymentHeading": "Kaedah pembayaran",
     "recipientCheckbox": "Penerima ialah orang lain",
     "recipientHeading": "Butiran penerima",
-    "recipientLabel": "Penerima:",
     "returnsLink": "Dasar Pemulangan",
     "sameAsShipping": "Sama seperti alamat penghantaran",
     "save": "Simpan",

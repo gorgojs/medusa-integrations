@@ -57,22 +57,6 @@
     "description": "Zobrazte a upravte své doručovací adresy, můžete jich přidat libovolné množství. Uložené adresy budou dostupné při dokončování objednávky.",
     "heading": "Doručovací adresy"
   },
-  "Apiship": {
-    "choose": "Vybrat",
-    "courierModalTitle": "Doručení kurýrem",
-    "deliveryDays": "{count, plural, one {{count} den} few {{count} dny} many {{count} dne} other {{count} dnů}}",
-    "deliveryDaysRange": "{min}–{max} dnů",
-    "loadFailed": "Možnosti doručení se nepodařilo načíst. Zkuste to znovu.",
-    "mapKeyMissing": "Mapa potřebuje API klíč Yandex Maps.",
-    "noPoints": "Pro tuto adresu nejsou žádná výdejní místa.",
-    "noTariffs": "Na tuto adresu nedoručuje žádný dopravce.",
-    "photoAlt": "Fotografie výdejního místa {index}",
-    "pickupPointModalTitle": "Výdejní místo",
-    "pointDetails": "Jak se tam dostat",
-    "priceFrom": "od {price}",
-    "schedule": "Otevírací doba",
-    "selectPointPrompt": "Vyberte místo na mapě"
-  },
   "Breadcrumb": {
     "home": "Domů",
     "store": "Obchod"
@@ -145,7 +129,6 @@
     "paymentHeading": "Způsob platby",
     "recipientCheckbox": "Příjemce je jiná osoba",
     "recipientHeading": "Údaje příjemce",
-    "recipientLabel": "Příjemce:",
     "returnsLink": "Zásady vracení zboží",
     "sameAsShipping": "Stejná jako doručovací adresa",
     "save": "Uložit",

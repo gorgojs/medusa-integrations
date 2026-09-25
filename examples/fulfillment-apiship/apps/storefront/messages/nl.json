@@ -57,22 +57,6 @@
     "description": "Bekijk en werk uw verzendadressen bij, u kunt er zoveel toevoegen als u wilt. Opgeslagen adressen zijn beschikbaar tijdens het afrekenen.",
     "heading": "Verzendadressen"
   },
-  "Apiship": {
-    "choose": "Kiezen",
-    "courierModalTitle": "Bezorging per koerier",
-    "deliveryDays": "{count, plural, one {{count} dag} other {{count} dagen}}",
-    "deliveryDaysRange": "{min}–{max} dagen",
-    "loadFailed": "We konden de bezorgopties niet laden. Probeer het opnieuw.",
-    "mapKeyMissing": "De kaart heeft een Yandex Maps API-sleutel nodig.",
-    "noPoints": "Er zijn geen afhaalpunten voor dit adres.",
-    "noTariffs": "Geen vervoerder bezorgt op dit adres.",
-    "photoAlt": "Foto van afhaalpunt {index}",
-    "pickupPointModalTitle": "Afhaalpunt",
-    "pointDetails": "Zo vind je het",
-    "priceFrom": "vanaf {price}",
-    "schedule": "Openingstijden",
-    "selectPointPrompt": "Kies een punt op de kaart"
-  },
   "Breadcrumb": {
     "home": "Home",
     "store": "Winkel"
@@ -145,7 +129,6 @@
     "paymentHeading": "Betaalmethode",
     "recipientCheckbox": "Ontvanger is een andere persoon",
     "recipientHeading": "Gegevens ontvanger",
-    "recipientLabel": "Ontvanger:",
     "returnsLink": "Retourbeleid",
     "sameAsShipping": "Zelfde als verzendadres",
     "save": "Opslaan",

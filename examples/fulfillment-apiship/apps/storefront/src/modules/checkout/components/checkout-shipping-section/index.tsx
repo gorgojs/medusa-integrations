@@ -1,18 +1,18 @@
 "use client"
 
-import { useState, useEffect, useTransition, useMemo } from "react"
+import { useState, useEffect, useRef, useTransition, useMemo } from "react"
+import { setShippingMethod, updateCart, updateRegion } from "@lib/data/cart"
+import { calculatePriceForShippingOption } from "@lib/data/fulfillment"
 import {
-  removeShippingMethodFromCart,
-  setShippingMethod,
-  updateCart,
-  updateRegion,
-} from "@lib/data/cart"
-import {
-  calculatePriceForShippingOption,
-  retrieveApishipProviders,
-} from "@lib/data/fulfillment"
+  compareShippingOptions,
+  findShippingOptionDescriptor,
+} from "@lib/constants"
 import { convertToLocale } from "@lib/util/money"
-import { getDeliveryDays, isPickupShippingOption } from "@lib/util/fulfillment"
+import {
+  getDeliveryDays,
+  isPickupShippingOption,
+  type DeliveryDays,
+} from "@lib/util/fulfillment"
 import { useCartUpdate } from "@modules/checkout/context/cart-update-context"
 import { Loader, CursorDefault } from "@medusajs/icons"
 import { DropdownMenu, RadioGroup, clx } from "@medusajs/ui"
@@ -21,14 +21,11 @@ import { usePathname } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
 import { useErrorMessage } from "@lib/util/use-error-message"
 import { useLocaleDirection } from "@lib/hooks/use-locale-direction"
+import ShippingOptionCard from "@modules/checkout/components/shipping-option"
 import {
-  ApishipCourierModal,
-  ApishipPickupPointModal,
-  ApishipSelectionSummary,
-  getApishipDeliveryType,
-  isApishipOption,
-  type ApishipSelection,
-} from "@modules/checkout/components/apiship"
+  useSelectedShippingOptionId,
+  useShippingSelection,
+} from "@modules/checkout/context/shipping-selection-context"
 
 type CountryOption = {
   country: string
@@ -43,18 +40,6 @@ interface CheckoutShippingSectionProps {
   | null
   regions: HttpTypes.StoreRegion[]
   currentCountry: string
-}
-
-/**
- * The tariff and pickup point the customer already settled on. It rides along on the
- * shipping method, so a reload or a step back into the checkout finds it again.
- */
-function readApishipSelection(cart: HttpTypes.StoreCart) {
-  const data = cart.shipping_methods?.at(-1)?.data as {
-    apishipData?: ApishipSelection
-  } | null
-
-  return data?.apishipData ?? null
 }
 
 function getLocalizedCountryName(
@@ -80,7 +65,6 @@ export default function CheckoutShippingSection({
   currentCountry,
 }: CheckoutShippingSectionProps) {
   const t = useTranslations("CheckoutPage")
-  const tApiship = useTranslations("Apiship")
   const dir = useLocaleDirection()
   const getErrorMessage = useErrorMessage()
   const locale = useLocale()
@@ -93,18 +77,9 @@ export default function CheckoutShippingSection({
     Record<string, number>
   >({})
   const [shippingError, setShippingError] = useState<string | null>(null)
-  const [shippingMethodId, setShippingMethodId] = useState<string | null>(
-    cart.shipping_methods?.at(-1)?.shipping_option_id || null
-  )
-
-  const [apishipSelection, setApishipSelection] =
-    useState<ApishipSelection | null>(readApishipSelection(cart))
-  const [apishipProviderNames, setApishipProviderNames] = useState<
-    Record<string, string>
-  >({})
-  const [openApishipModal, setOpenApishipModal] = useState<
-    "courier" | "point" | null
-  >(null)
+  const { setPendingOptionId, getOptionData, clearOptionData } =
+    useShippingSelection()
+  const shippingMethodId = useSelectedShippingOptionId(cart)
 
   const [now, setNow] = useState<Date | null>(null)
   useEffect(() => {
@@ -145,6 +120,27 @@ export default function CheckoutShippingSection({
     }).format(startDate) + ` – ${formatDeliveryDate(maxDaysFromNow)}`
   }
 
+  const formatDeliveryDays = (days: DeliveryDays | null) =>
+    !days
+      ? null
+      : days.max === 0
+        ? t("deliveryToday")
+        : !now
+          ? null
+          : days.min !== undefined && days.max !== undefined
+            ? days.min === days.max
+              ? formatDeliveryDate(days.min)
+              : formatDeliveryRange(days.min, days.max)
+            : days.max !== undefined
+              ? t("deliveryDateUntil", {
+                date: formatDeliveryDate(days.max),
+              })
+              : days.min !== undefined
+                ? t("deliveryDateFrom", {
+                  date: formatDeliveryDate(days.min),
+                })
+                : null
+
   const countryOptions = useMemo<CountryOption[]>(() => {
     return regions
       .flatMap((r) =>
@@ -177,55 +173,21 @@ export default function CheckoutShippingSection({
     })
   }
 
-  const shippingOptions = availableShippingOptions
-
-  const activeShippingOption = useMemo(
-    () => shippingOptions?.find((option) => option.id === shippingMethodId) ?? null,
-    [shippingOptions, shippingMethodId]
+  const shippingOptions = useMemo(
+    () =>
+      availableShippingOptions
+        ? [...availableShippingOptions].sort(compareShippingOptions)
+        : null,
+    [availableShippingOptions]
   )
 
-  const apishipDeliveryType = getApishipDeliveryType(activeShippingOption)
-
-  // Any ApiShip option resolves the same provider instance, so one is enough to ask
-  // which carriers it is connected to.
-  const apishipOptionId = useMemo(
-    () => shippingOptions?.find(isApishipOption)?.id,
-    [shippingOptions]
-  )
-
-  const apishipSelectionKey = JSON.stringify(readApishipSelection(cart))
-
-  useEffect(() => {
-    setApishipSelection(JSON.parse(apishipSelectionKey) as ApishipSelection | null)
-  }, [apishipSelectionKey])
-
-  useEffect(() => {
-    if (!apishipOptionId) return
-
-    let cancelled = false
-
-    retrieveApishipProviders(apishipOptionId).then((providers) => {
-      if (cancelled || !providers) return
-
-      setApishipProviderNames(
-        Object.fromEntries(
-          providers.flatMap((provider) =>
-            provider.key && provider.name ? [[provider.key, provider.name]] : []
-          )
-        )
-      )
-    })
-
-    return () => {
-      cancelled = true
-    }
-  }, [apishipOptionId])
+  const quotedUpFront = (option: HttpTypes.StoreCartShippingOption) =>
+    option.price_type === "calculated" &&
+    !findShippingOptionDescriptor(option)?.pricedByChoice
 
   const calculatedPriceKey = JSON.stringify({
     options:
-      shippingOptions
-        ?.filter((option) => option.price_type === "calculated")
-        .map((option) => option.id) ?? [],
+      shippingOptions?.filter(quotedUpFront).map((option) => option.id) ?? [],
     cart: cart.id,
     updatedAt: cart.updated_at,
   })
@@ -237,9 +199,7 @@ export default function CheckoutShippingSection({
       return
     }
 
-    const calculatedMethods = shippingOptions.filter(
-      (sm) => sm.price_type === "calculated"
-    )
+    const calculatedMethods = shippingOptions.filter(quotedUpFront)
 
     if (!calculatedMethods.length) {
       setIsLoadingPrices(false)
@@ -267,32 +227,128 @@ export default function CheckoutShippingSection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [calculatedPriceKey])
 
+  const optionOrderKey = (shippingOptions ?? []).map((o) => o.id).join(",")
+  const autoSelectedForCart = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (shippingMethodId || !shippingOptions?.length) return
+    if (autoSelectedForCart.current === cart.id) return
+    autoSelectedForCart.current = cart.id
+
+    let cancelled = false
+
+    void (async () => {
+      for (const option of shippingOptions) {
+        if (cancelled) return
+
+        if (findShippingOptionDescriptor(option)?.pricedByChoice) {
+          setPendingOptionId(option.id)
+          return
+        }
+
+        const err = await setShippingMethod({
+          cartId: cart.id,
+          shippingMethodId: option.id,
+        })
+          .then(() => null)
+          .catch((e: Error) => e.message)
+
+        if (cancelled) return
+        if (!err) {
+          setPendingOptionId(option.id)
+          return
+        }
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [optionOrderKey, cart.id, shippingMethodId])
+
+  const addressKey = [
+    cart.shipping_address?.country_code,
+    cart.shipping_address?.province,
+    cart.shipping_address?.city,
+    cart.shipping_address?.postal_code,
+    cart.shipping_address?.address_1,
+    cart.shipping_address?.address_2,
+  ].join("|")
+  const currentMethod = cart.shipping_methods?.at(-1)
+  const currentMethodId = currentMethod?.id ?? null
+  const currentDescriptor = findShippingOptionDescriptor(
+    shippingOptions?.find(
+      (option) => option.id === currentMethod?.shipping_option_id
+    )
+  )
+  const removeStaleMethod = currentDescriptor?.pricedByChoice
+    ? currentDescriptor.removeShippingMethod
+    : undefined
+  const previousAddressKey = useRef(addressKey)
+
+  useEffect(() => {
+    if (previousAddressKey.current === addressKey) return
+    previousAddressKey.current = addressKey
+
+    clearOptionData()
+
+    if (!currentMethodId || !removeStaleMethod) return
+
+    trackCartUpdate(() => removeStaleMethod(currentMethodId)).catch(
+      (e: Error) => setShippingError(e.message)
+    )
+  }, [
+    addressKey,
+    currentMethodId,
+    removeStaleMethod,
+    clearOptionData,
+    trackCartUpdate,
+  ])
+
   const handleSelectShipping = async (id: string) => {
     setShippingError(null)
     const prev = shippingMethodId
-    setShippingMethodId(id)
-    // Picking an option writes a fresh shipping method, so whatever the customer chose
-    // under the previous one is gone and the modal has to ask again.
-    setApishipSelection(null)
+    setPendingOptionId(id)
+
+    const selectedOption = shippingOptions?.find((option) => option.id === id)
+    const descriptor = findShippingOptionDescriptor(selectedOption)
+    const pricedByChoice = Boolean(descriptor?.pricedByChoice)
+    const data = getOptionData(id)
+
+    const clearCartMethod = async () => {
+      const currentMethodOnCart = cart.shipping_methods?.at(-1)
+      if (!currentMethodOnCart || !descriptor?.removeShippingMethod) return
+
+      const remove = descriptor.removeShippingMethod
+      await trackCartUpdate(() => remove(currentMethodOnCart.id)).catch(
+        (e: Error) => setShippingError(e.message)
+      )
+    }
+
+    if (pricedByChoice && !data) {
+      await clearCartMethod()
+      return
+    }
+
     const err = await trackCartUpdate(() =>
       setShippingMethod({
         cartId: cart.id,
         shippingMethodId: id,
+        data,
       })
     ).catch((e: Error) => e.message)
+
     if (err) {
-      setShippingMethodId(prev)
+      if (pricedByChoice) {
+        await clearCartMethod()
+        return
+      }
+
+      setPendingOptionId(prev)
       setShippingError(err as string)
       return
     }
-
-    const selectedOption = shippingOptions?.find((option) => option.id === id)
-
-    const deliveryType = getApishipDeliveryType(selectedOption)
-    if (deliveryType) {
-      setOpenApishipModal(deliveryType === 2 ? "point" : "courier")
-    }
-
     const addr = cart.shipping_address
     const hasDeliveryFields = !!(
       addr?.address_1 ||
@@ -321,35 +377,6 @@ export default function CheckoutShippingSection({
         } as HttpTypes.StoreUpdateCart)
       ).catch((e: Error) => setShippingError(e.message))
     }
-  }
-
-  // Closing the modal without choosing leaves a shipping method ApiShip cannot act on,
-  // so the method goes with it and the checkout is back to having none.
-  const handleClearApishipSelection = async () => {
-    const shippingMethod = cart.shipping_methods?.at(-1)
-    setOpenApishipModal(null)
-    setApishipSelection(null)
-    setShippingMethodId(null)
-
-    if (!shippingMethod) return
-
-    await trackCartUpdate(() =>
-      removeShippingMethodFromCart(shippingMethod.id)
-    ).catch((e: Error) => setShippingError(e.message))
-  }
-
-  const apishipModalProps = {
-    cart,
-    shippingOptionId: shippingMethodId,
-    selection: apishipSelection,
-    providerNames: apishipProviderNames,
-    onSelectionChange: setApishipSelection,
-    onPriceUpdate: (optionId: string, amount: number) =>
-      setCalculatedPricesMap((prev) => ({ ...prev, [optionId]: amount })),
-    onClose: (cancelled?: boolean) => {
-      setOpenApishipModal(null)
-      if (cancelled) void handleClearApishipSelection()
-    },
   }
 
   return (
@@ -407,35 +434,14 @@ export default function CheckoutShippingSection({
         {shippingOptions && shippingOptions.length > 0 ? (
           <RadioGroup
             dir={dir}
-            // An empty string rather than undefined, so clearing the choice after a
-            // dismissed ApiShip modal also clears the group's own checked state.
-            value={shippingMethodId ?? ""}
+            value={shippingMethodId ?? undefined}
             onValueChange={handleSelectShipping}
             className="flex items-stretch gap-x-2"
           >
             {shippingOptions.map((option) => {
               const isSelected = option.id === shippingMethodId
 
-              const days = getDeliveryDays(option)
-              const deliveryLabel = !days
-                ? null
-                : days.max === 0
-                  ? t("deliveryToday")
-                  : !now
-                    ? null
-                    : days.min !== undefined && days.max !== undefined
-                      ? days.min === days.max
-                        ? formatDeliveryDate(days.min)
-                        : formatDeliveryRange(days.min, days.max)
-                      : days.max !== undefined
-                        ? t("deliveryDateUntil", {
-                          date: formatDeliveryDate(days.max),
-                        })
-                        : days.min !== undefined
-                          ? t("deliveryDateFrom", {
-                            date: formatDeliveryDate(days.min),
-                          })
-                          : null
+              const deliveryLabel = formatDeliveryDays(getDeliveryDays(option))
 
               const priceAmount =
                 option.price_type === "flat"
@@ -446,95 +452,34 @@ export default function CheckoutShippingSection({
               const isUnavailable =
                 option.price_type === "calculated" &&
                 !isLoadingPrices &&
-                priceAmount === null
+                priceAmount === null &&
+                !findShippingOptionDescriptor(option)?.pricedByChoice
               const isFreeShipping = priceAmount === 0
-              // Until the customer picks a tariff, ApiShip prices the cart with the
-              // cheapest carrier it found, so the card says what it is, a starting price.
-              const isApishipEstimate =
-                isApishipOption(option) && !(isSelected && apishipSelection)
-              const formattedPrice =
-                priceAmount === null
-                  ? null
-                  : convertToLocale({
+              const price = isFreeShipping
+                ? t("freeShipping")
+                : priceAmount !== null
+                  ? convertToLocale({
                     amount: priceAmount,
                     currency_code: cart.currency_code,
                     locale,
                   })
-              const price = isFreeShipping
-                ? t("freeShipping")
-                : formattedPrice !== null
-                  ? isApishipEstimate
-                    ? tApiship("priceFrom", { price: formattedPrice })
-                    : formattedPrice
                   : isLoadingPrices
                     ? null
                     : "—"
 
               return (
-                <div
+                <ShippingOptionCard
                   key={option.id}
-                  className={clx(
-                    "relative flex w-[180px] shrink-0 flex-col gap-2 justify-between rounded-md border bg-ui-bg-base p-3 text-start transition-colors",
-                    isUnavailable
-                      ? "border-ui-border-base opacity-60"
-                      : "hover:bg-ui-bg-base-hover",
-                    !isUnavailable &&
-                    (isSelected
-                      ? "border-ui-border-interactive"
-                      : "border-ui-border-base hover:border-ui-border-interactive/50")
-                  )}
-                  data-testid="delivery-option-radio"
-                >
-                  <RadioGroup.Item
-                    value={option.id}
-                    aria-label={option.name}
-                    disabled={isUnavailable}
-                    className="absolute inset-0 z-10 h-full w-full cursor-pointer rounded-md bg-transparent outline-none [&>div]:hidden focus-visible:shadow-borders-interactive-with-focus disabled:cursor-not-allowed"
-                  />
-                  <span className="txt-compact-medium-plus text-ui-fg-base">
-                    {option.name}
-                  </span>
-                  <div className="flex flex-col gap-y-0">
-                    <div className="min-h-[20px]">
-                      {deliveryLabel && (
-                        <span className="txt-compact-small text-ui-fg-subtle">
-                          {deliveryLabel}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-end justify-between gap-x-3">
-                      <div
-                        className={clx(
-                          "txt-compact-small-plus flex min-h-[20px] items-end",
-                          isFreeShipping
-                            ? "text-ui-tag-green-icon"
-                            : "text-ui-fg-subtle"
-                        )}
-                      >
-                        {price === null ? (
-                          <Loader className="h-3 w-3 animate-spin" />
-                        ) : (
-                          price
-                        )}
-                      </div>
-
-                      <div className="flex h-5 w-5 shrink-0 items-center justify-center">
-                        <div
-                          className={clx(
-                            "flex h-3.5 w-3.5 items-center justify-center rounded-full border bg-ui-bg-base shadow-borders-base",
-                            isSelected
-                              ? "border-ui-border-interactive bg-ui-bg-interactive shadow-borders-interactive-with-shadow"
-                              : "border-ui-border-base"
-                          )}
-                        >
-                          {isSelected && (
-                            <div className="h-1.5 w-1.5 rounded-full bg-ui-bg-base shadow-details-contrast-on-bg-interactive" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  cart={cart}
+                  option={option}
+                  isSelected={isSelected}
+                  isUnavailable={isUnavailable}
+                  price={price}
+                  isLoadingPrice={price === null}
+                  isFreeShipping={isFreeShipping}
+                  deliveryLabel={deliveryLabel}
+                  formatDeliveryDays={formatDeliveryDays}
+                />
               )
             })}
           </RadioGroup>
@@ -544,27 +489,6 @@ export default function CheckoutShippingSection({
           </p>
         )}
       </div>
-
-      {apishipSelection && apishipDeliveryType && (
-        <ApishipSelectionSummary
-          selection={apishipSelection}
-          currencyCode={cart.currency_code}
-          providerNames={apishipProviderNames}
-          onEdit={() =>
-            setOpenApishipModal(apishipDeliveryType === 2 ? "point" : "courier")
-          }
-          onRemove={handleClearApishipSelection}
-        />
-      )}
-
-      <ApishipCourierModal
-        {...apishipModalProps}
-        open={openApishipModal === "courier"}
-      />
-      <ApishipPickupPointModal
-        {...apishipModalProps}
-        open={openApishipModal === "point"}
-      />
 
       {shippingError && (
         <p className="txt-compact-small text-rose-500">

@@ -57,22 +57,6 @@
     "description": "Преглеждайте и актуализирайте адресите си за доставка — можете да добавите колкото искате. Запазените адреси ще бъдат достъпни при поръчка.",
     "heading": "Адреси за доставка"
   },
-  "Apiship": {
-    "choose": "Избери",
-    "courierModalTitle": "Доставка с куриер",
-    "deliveryDays": "{count, plural, one {{count} ден} other {{count} дни}}",
-    "deliveryDaysRange": "{min}–{max} дни",
-    "loadFailed": "Вариантите за доставка не се заредиха. Опитайте отново.",
-    "mapKeyMissing": "За картата е нужен API ключ за Yandex Maps.",
-    "noPoints": "Няма пунктове за получаване на този адрес.",
-    "noTariffs": "Няма куриер, който доставя на този адрес.",
-    "photoAlt": "Снимка на пункта за получаване {index}",
-    "pickupPointModalTitle": "Пункт за получаване",
-    "pointDetails": "Как да намерите",
-    "priceFrom": "от {price}",
-    "schedule": "Работно време",
-    "selectPointPrompt": "Изберете пункт на картата"
-  },
   "Breadcrumb": {
     "home": "Начало",
     "store": "Магазин"
@@ -145,7 +129,6 @@
     "paymentHeading": "Начин на плащане",
     "recipientCheckbox": "Получателят е друго лице",
     "recipientHeading": "Данни на получателя",
-    "recipientLabel": "Получател:",
     "returnsLink": "Политика за връщане",
     "sameAsShipping": "Същият като адреса за доставка",
     "save": "Запази",

@@ -57,22 +57,6 @@
     "description": "Δείτε και ενημερώστε τις διευθύνσεις αποστολής σας — μπορείτε να προσθέσετε όσες θέλετε. Οι αποθηκευμένες διευθύνσεις θα είναι διαθέσιμες κατά την ολοκλήρωση αγοράς.",
     "heading": "Διευθύνσεις αποστολής"
   },
-  "Apiship": {
-    "choose": "Επιλογή",
-    "courierModalTitle": "Παράδοση με κούριερ",
-    "deliveryDays": "{count, plural, one {{count} ημέρα} other {{count} ημέρες}}",
-    "deliveryDaysRange": "{min}–{max} ημέρες",
-    "loadFailed": "Δεν φορτώθηκαν οι επιλογές παράδοσης. Δοκιμάστε ξανά.",
-    "mapKeyMissing": "Ο χάρτης χρειάζεται κλειδί API του Yandex Maps.",
-    "noPoints": "Δεν υπάρχουν σημεία παραλαβής για αυτή τη διεύθυνση.",
-    "noTariffs": "Καμία εταιρεία δεν παραδίδει σε αυτή τη διεύθυνση.",
-    "photoAlt": "Φωτογραφία σημείου παραλαβής {index}",
-    "pickupPointModalTitle": "Σημείο παραλαβής",
-    "pointDetails": "Πώς θα το βρείτε",
-    "priceFrom": "από {price}",
-    "schedule": "Ώρες λειτουργίας",
-    "selectPointPrompt": "Επιλέξτε σημείο στον χάρτη"
-  },
   "Breadcrumb": {
     "home": "Αρχική",
     "store": "Κατάστημα"
@@ -145,7 +129,6 @@
     "paymentHeading": "Τρόπος πληρωμής",
     "recipientCheckbox": "Ο παραλήπτης είναι διαφορετικό άτομο",
     "recipientHeading": "Στοιχεία παραλήπτη",
-    "recipientLabel": "Παραλήπτης:",
     "returnsLink": "Πολιτική επιστροφών",
     "sameAsShipping": "Ίδια με τη διεύθυνση αποστολής",
     "save": "Αποθήκευση",

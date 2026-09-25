@@ -57,22 +57,6 @@
     "description": "配送先住所の確認・更新ができ、いくつでも追加登録できます。登録した住所はチェックアウト時に利用できます。",
     "heading": "配送先住所"
   },
-  "Apiship": {
-    "choose": "選択",
-    "courierModalTitle": "宅配便でお届け",
-    "deliveryDays": "{count, plural, other {{count}日}}",
-    "deliveryDaysRange": "{min}〜{max}日",
-    "loadFailed": "配送方法を読み込めませんでした。もう一度お試しください。",
-    "mapKeyMissing": "地図には Yandex Maps の API キーが必要です。",
-    "noPoints": "この住所に対応する受取場所はありません。",
-    "noTariffs": "この住所に配送できる業者がありません。",
-    "photoAlt": "受取場所の写真 {index}",
-    "pickupPointModalTitle": "受取場所",
-    "pointDetails": "行き方",
-    "priceFrom": "{price}〜",
-    "schedule": "営業時間",
-    "selectPointPrompt": "地図上で受取場所を選んでください"
-  },
   "Breadcrumb": {
     "home": "ホーム",
     "store": "ストア"
@@ -145,7 +129,6 @@
     "paymentHeading": "支払い方法",
     "recipientCheckbox": "受取人が異なる場合",
     "recipientHeading": "受取人情報",
-    "recipientLabel": "受取人：",
     "returnsLink": "返品ポリシー",
     "sameAsShipping": "配送先住所と同じ",
     "save": "保存",
