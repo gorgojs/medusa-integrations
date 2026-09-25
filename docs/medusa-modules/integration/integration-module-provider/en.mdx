@@ -24,7 +24,7 @@ An Integration Module Provider is a module whose service extends `AbstractIntegr
 | Member | Description |
 | --- | --- |
 | `static identifier: string` | Required. The provider's stable identifier, shared by every instance of it. |
-| `get descriptor()` | Required, abstract. Returns the descriptor built with `defineIntegration`: the options, sections, validation, and optional connection test. |
+| `get descriptor()` | Required, abstract. Returns the [descriptor](/medusa-modules/integration/descriptor) built with `defineIntegration`: the options, sections, validation, and optional connection test. |
 | `static validateOptions(options)` | Optional. A fail-fast check of the provider's `medusa-config.ts` configuration at load time. No-op by default. |
 | `getIdentifier()` | Implemented by the base class. Returns the constructor's `static identifier`. |
 | `getInstanceId()` | Implemented by the base class. Returns this instance's registration `id`, or `null` for the default instance. |
@@ -49,7 +49,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 export default MyIntegrationProvider
 ```
 
-`descriptor` here is whatever `defineIntegration` returns, covered in [General Concepts](/medusa-modules/integration/concepts#descriptor). `getIdentifier()` and `getInstanceId()` aren't shown: `AbstractIntegrationProvider` already implements both from the constructor's `instanceId` argument, so a subclass only adds `static identifier`, `descriptor`, and, optionally, `static validateOptions`.
+`descriptor` here is whatever `defineIntegration` returns. For every field it accepts, see [Integration Provider Descriptor](/medusa-modules/integration/descriptor). `getIdentifier()` and `getInstanceId()` aren't shown: `AbstractIntegrationProvider` already implements both from the constructor's `instanceId` argument, so a subclass only adds `static identifier`, `descriptor`, and, optionally, `static validateOptions`.
 
 <Note type="default" title="">
 
@@ -104,6 +104,10 @@ To stop a provider from being used while keeping its configuration intact and ea
   {
     title: "General Concepts",
     href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "Integration Provider Descriptor",
+    href: "/medusa-modules/integration/descriptor"
   },
   {
     title: "How to Create an Integration Module Provider",

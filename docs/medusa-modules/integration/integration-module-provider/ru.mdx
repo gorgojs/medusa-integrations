@@ -24,7 +24,7 @@ description: "Что такое провайдер Модуля интеграц
 | Член класса | Описание |
 | --- | --- |
 | `static identifier: string` | Обязательное поле. Стабильный идентификатор провайдера, общий для всех его инстансов. |
-| `get descriptor()` | Обязательное абстрактное свойство. Возвращает дескриптор, созданный через `defineIntegration`: параметры, секции, валидацию и необязательную проверку соединения. |
+| `get descriptor()` | Обязательное абстрактное свойство. Возвращает [дескриптор](/medusa-modules/integration/descriptor), созданный через `defineIntegration`: параметры, секции, валидацию и необязательную проверку соединения. |
 | `static validateOptions(options)` | Необязательный метод. Fail-fast проверка конфигурации провайдера из `medusa-config.ts` при загрузке приложения. По умолчанию ничего не делает. |
 | `getIdentifier()` | Реализован в базовом классе. Возвращает `static identifier` конструктора. |
 | `getInstanceId()` | Реализован в базовом классе. Возвращает `id` регистрации этого инстанса или `null` для инстанса по умолчанию. |
@@ -49,7 +49,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 export default MyIntegrationProvider
 ```
 
-`descriptor` здесь представляет собой результат `defineIntegration`, подробнее об этом в разделе [Основные концепции](/medusa-modules/integration/concepts#дескриптор). `getIdentifier()` и `getInstanceId()` в примере не показаны: `AbstractIntegrationProvider` уже реализует оба метода через аргумент `instanceId` конструктора, поэтому подкласс добавляет только `static identifier`, `descriptor` и, опционально, `static validateOptions`.
+`descriptor` здесь представляет собой результат `defineIntegration`. Все поля, которые он принимает, смотрите на странице [Дескриптор провайдера интеграций](/medusa-modules/integration/descriptor). `getIdentifier()` и `getInstanceId()` в примере не показаны: `AbstractIntegrationProvider` уже реализует оба метода через аргумент `instanceId` конструктора, поэтому подкласс добавляет только `static identifier`, `descriptor` и, опционально, `static validateOptions`.
 
 <Note type="default" title="">
 
@@ -104,6 +104,10 @@ export default MyIntegrationProvider
   {
     title: "Основные концепции",
     href: "/medusa-modules/integration/concepts"
+  },
+  {
+    title: "Дескриптор провайдера интеграций",
+    href: "/medusa-modules/integration/descriptor"
   },
   {
     title: "Как создать провайдер Модуля интеграций",
