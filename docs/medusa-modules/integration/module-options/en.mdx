@@ -7,6 +7,15 @@ description: "The options you can pass when you register the Integration Module 
 
 In this document, you'll learn about the options of the Integration Module. You can pass these options when you register the module as a plugin in `medusa-config.ts`.
 
+## All Module Options
+
+| Option | Description | Required | Default |
+| --- | --- | --- | --- |
+| [`encryptionKey`](#encryptionkey) | A passphrase the module turns into the key that encrypts `secret: true` options. | When a provider has a `secret: true` option | – |
+| [`providers`](#providers) | The Integration Module providers to register. | No | `[]` |
+
+---
+
 ## encryptionKey
 
 The `encryptionKey` option is the passphrase the module derives its encryption key from. It encrypts every option marked `secret: true` (AES-256-GCM) before saving it, and decrypts those values back at runtime.
