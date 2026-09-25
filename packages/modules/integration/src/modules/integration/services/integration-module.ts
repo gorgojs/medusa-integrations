@@ -239,8 +239,9 @@ export default class IntegrationModuleService extends MedusaService({
     const key = this.options_.encryptionKey
     if (key && key.length > 0) return key
     throw new Error(
-      "[integration] encryptionKey is required. Set GORGO_INTEGRATION_ENCRYPTION_KEY to any " +
-        "non-empty secret (high-entropy recommended, e.g. `openssl rand -hex 32`)."
+      "[integration] encryptionKey is required. Pass it in the integration plugin's options in " +
+        "medusa-config, for example `encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY`, set " +
+        "to any non-empty secret (high-entropy recommended, for example `openssl rand -hex 32`)."
     )
   }
 
