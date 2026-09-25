@@ -57,22 +57,6 @@
     "description": "اطّلع على عناوين الشحن الخاصة بك وحدّثها، ويمكنك إضافة أي عدد تريده. سيؤدي حفظ عناوينك إلى إتاحتها أثناء إتمام الطلب.",
     "heading": "عناوين الشحن"
   },
-  "Apiship": {
-    "choose": "اختيار",
-    "courierModalTitle": "التوصيل بمندوب",
-    "deliveryDays": "{count, plural, zero {{count} يوم} one {يوم واحد} two {يومان} few {{count} أيام} many {{count} يومًا} other {{count} يوم}}",
-    "deliveryDaysRange": "{min}–{max} يوم",
-    "loadFailed": "تعذّر تحميل خيارات التوصيل. حاول مرة أخرى.",
-    "mapKeyMissing": "تحتاج الخريطة إلى مفتاح API لخرائط Yandex.",
-    "noPoints": "لا توجد نقاط استلام لهذا العنوان.",
-    "noTariffs": "لا توجد شركة شحن توصّل إلى هذا العنوان.",
-    "photoAlt": "صورة نقطة الاستلام {index}",
-    "pickupPointModalTitle": "نقطة استلام",
-    "pointDetails": "كيفية الوصول",
-    "priceFrom": "ابتداءً من {price}",
-    "schedule": "ساعات العمل",
-    "selectPointPrompt": "اختر نقطة على الخريطة"
-  },
   "Breadcrumb": {
     "home": "الرئيسية",
     "store": "المتجر"
@@ -145,7 +129,6 @@
     "paymentHeading": "طريقة الدفع",
     "recipientCheckbox": "المستلم شخص آخر",
     "recipientHeading": "بيانات المستلم",
-    "recipientLabel": "المستلم:",
     "returnsLink": "سياسة الإرجاع",
     "sameAsShipping": "نفس عنوان الشحن",
     "save": "حفظ",

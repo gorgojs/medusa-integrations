@@ -57,22 +57,6 @@
     "description": "Переглядайте та оновлюйте свої адреси доставки, ви можете додати їх скільки завгодно. Збережені адреси будуть доступні під час оформлення замовлення.",
     "heading": "Адреси доставки"
   },
-  "Apiship": {
-    "choose": "Вибрати",
-    "courierModalTitle": "Доставка кур'єром",
-    "deliveryDays": "{count, plural, one {{count} день} few {{count} дні} many {{count} днів} other {{count} днів}}",
-    "deliveryDaysRange": "{min}–{max} днів",
-    "loadFailed": "Не вдалося завантажити варіанти доставки. Спробуйте ще раз.",
-    "mapKeyMissing": "Для карти потрібен ключ API Яндекс Карт.",
-    "noPoints": "За цією адресою немає пунктів видачі.",
-    "noTariffs": "За цією адресою немає доставки.",
-    "photoAlt": "Фотографія пункту видачі {index}",
-    "pickupPointModalTitle": "Пункт видачі",
-    "pointDetails": "Як знайти",
-    "priceFrom": "від {price}",
-    "schedule": "Години роботи",
-    "selectPointPrompt": "Виберіть пункт на карті"
-  },
   "Breadcrumb": {
     "home": "Головна",
     "store": "Магазин"
@@ -145,7 +129,6 @@
     "paymentHeading": "Спосіб оплати",
     "recipientCheckbox": "Отримувач — інша особа",
     "recipientHeading": "Дані отримувача",
-    "recipientLabel": "Отримувач:",
     "returnsLink": "Умови повернення",
     "sameAsShipping": "Збігається з адресою доставки",
     "save": "Зберегти",

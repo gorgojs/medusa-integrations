@@ -57,22 +57,6 @@
     "description": "Teslimat adreslerinizi görüntüleyin ve güncelleyin, istediğiniz kadar adres ekleyebilirsiniz. Adreslerinizi kaydetmek, ödeme sırasında bunları kullanılabilir hale getirir.",
     "heading": "Teslimat Adresleri"
   },
-  "Apiship": {
-    "choose": "Seç",
-    "courierModalTitle": "Kuryeyle teslimat",
-    "deliveryDays": "{count, plural, one {{count} gün} other {{count} gün}}",
-    "deliveryDaysRange": "{min}–{max} gün",
-    "loadFailed": "Teslimat seçenekleri yüklenemedi. Tekrar deneyin.",
-    "mapKeyMissing": "Harita için Yandex Maps API anahtarı gerekiyor.",
-    "noPoints": "Bu adres için teslim noktası yok.",
-    "noTariffs": "Bu adrese teslimat yapan kargo firması yok.",
-    "photoAlt": "Teslim noktası fotoğrafı {index}",
-    "pickupPointModalTitle": "Teslim noktası",
-    "pointDetails": "Nasıl gidilir",
-    "priceFrom": "{price} üzeri",
-    "schedule": "Çalışma saatleri",
-    "selectPointPrompt": "Haritadan bir nokta seçin"
-  },
   "Breadcrumb": {
     "home": "Ana Sayfa",
     "store": "Mağaza"
@@ -145,7 +129,6 @@
     "paymentHeading": "Ödeme yöntemi",
     "recipientCheckbox": "Alıcı farklı bir kişi",
     "recipientHeading": "Alıcı bilgileri",
-    "recipientLabel": "Alıcı:",
     "returnsLink": "İade Politikası",
     "sameAsShipping": "Teslimat adresiyle aynı",
     "save": "Kaydet",

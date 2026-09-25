@@ -57,22 +57,6 @@
     "description": "Sehen Sie sich Ihre Lieferadressen an und aktualisieren Sie sie, Sie können beliebig viele hinzufügen. Gespeicherte Adressen stehen Ihnen beim Checkout zur Verfügung.",
     "heading": "Lieferadressen"
   },
-  "Apiship": {
-    "choose": "Auswählen",
-    "courierModalTitle": "Kurierlieferung",
-    "deliveryDays": "{count, plural, one {{count} Tag} other {{count} Tage}}",
-    "deliveryDaysRange": "{min}–{max} Tage",
-    "loadFailed": "Die Lieferoptionen konnten nicht geladen werden. Bitte erneut versuchen.",
-    "mapKeyMissing": "Für die Karte wird ein Yandex-Maps-API-Schlüssel benötigt.",
-    "noPoints": "Zu dieser Adresse gibt es keine Abholstationen.",
-    "noTariffs": "Kein Dienstleister liefert an diese Adresse.",
-    "photoAlt": "Foto der Abholstation {index}",
-    "pickupPointModalTitle": "Abholstation",
-    "pointDetails": "So finden Sie hin",
-    "priceFrom": "ab {price}",
-    "schedule": "Öffnungszeiten",
-    "selectPointPrompt": "Wählen Sie eine Station auf der Karte"
-  },
   "Breadcrumb": {
     "home": "Startseite",
     "store": "Shop"
@@ -145,7 +129,6 @@
     "paymentHeading": "Zahlungsart",
     "recipientCheckbox": "Empfänger ist eine andere Person",
     "recipientHeading": "Empfängerdaten",
-    "recipientLabel": "Empfänger:",
     "returnsLink": "Rückgaberecht",
     "sameAsShipping": "Identisch mit Lieferadresse",
     "save": "Speichern",

@@ -27,8 +27,8 @@ import { DEFAULT_REGION } from "@lib/util/env"
  */
 export async function retrieveCart(cartId?: string, fields?: string) {
   const id = cartId || (await getCartId())
-  // +shipping_methods.data carries the ApiShip selection, so a reload restores the
-  // pickup point and the tariff the customer already picked instead of asking again.
+  // +shipping_methods.data carries whatever a calculated provider collected, so a reload
+  // finds the choice the customer already made instead of asking for it again.
   fields ??=
     "*items, *region, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name, +shipping_methods.data"
 
@@ -231,8 +231,9 @@ export async function setShippingMethod({
 }: {
   cartId: string
   shippingMethodId: string
-  // A calculated provider can need a choice the customer makes at the checkout.
-  // ApiShip reads its tariff and pickup point back out of here.
+  // A calculated provider can need a choice the customer makes at the checkout, such as
+  // a carrier tariff or a pickup point. It rides along here and comes back on the
+  // shipping method.
   data?: Record<string, unknown>
 }) {
   const headers = {
@@ -241,31 +242,6 @@ export async function setShippingMethod({
 
   return sdk.store.cart
     .addShippingMethod(cartId, { option_id: shippingMethodId, data }, {}, headers)
-    .then(async () => {
-      const cartCacheTag = await getCacheTag("carts")
-      revalidateTag(cartCacheTag)
-    })
-    .catch(medusaError)
-}
-
-/**
- * Drops the shipping method from the cart entirely, which is what clearing an ApiShip
- * selection means. Setting the method again would keep the old `data` around, so the
- * customer would be left with a pickup point they had just removed.
- */
-export async function removeShippingMethodFromCart(shippingMethodId: string) {
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
-
-  return sdk.client
-    .fetch<{ id: string; object: string; deleted: boolean }>(
-      `/store/shipping-methods/${shippingMethodId}`,
-      {
-        method: "DELETE",
-        headers,
-      }
-    )
     .then(async () => {
       const cartCacheTag = await getCacheTag("carts")
       revalidateTag(cartCacheTag)

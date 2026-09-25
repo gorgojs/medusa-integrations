@@ -57,22 +57,6 @@
     "description": "View and update your shipping addresses, and add as many as you like. Saved addresses are offered during checkout.",
     "heading": "Shipping addresses"
   },
-  "Apiship": {
-    "choose": "Choose",
-    "courierModalTitle": "Courier delivery",
-    "deliveryDays": "{count, plural, one {{count} day} other {{count} days}}",
-    "deliveryDaysRange": "{min}–{max} days",
-    "loadFailed": "We couldn't load the delivery options. Please try again.",
-    "mapKeyMissing": "The map needs a Yandex Maps API key.",
-    "noPoints": "No pickup points serve this address.",
-    "noTariffs": "No carrier delivers to this address.",
-    "photoAlt": "Pickup point photo {index}",
-    "pickupPointModalTitle": "Pickup point",
-    "pointDetails": "Details",
-    "priceFrom": "from {price}",
-    "schedule": "Opening hours",
-    "selectPointPrompt": "Pick a point on the map"
-  },
   "Breadcrumb": {
     "home": "Home",
     "store": "Store"
@@ -145,7 +129,6 @@
     "paymentHeading": "Payment method",
     "recipientCheckbox": "Recipient is a different person",
     "recipientHeading": "Recipient details",
-    "recipientLabel": "Recipient:",
     "returnsLink": "Return Policy",
     "sameAsShipping": "Same as shipping address",
     "save": "Save",

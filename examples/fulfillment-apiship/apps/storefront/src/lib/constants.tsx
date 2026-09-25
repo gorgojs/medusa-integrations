@@ -81,6 +81,80 @@ export const isPaymentSessionReady = (
   return entry?.isReady ? entry.isReady(cart) : true
 }
 
+/**
+ * Shipping providers plug in here the way payment providers plug into
+ * `paymentSessionDataBuilders` above. A calculated provider often needs a choice the
+ * customer makes after picking the method, a carrier tariff or a pickup point, so the
+ * cart can carry a shipping method that is not yet enough to place an order.
+ */
+export type ShippingOptionDescriptor = {
+  test: (option?: HttpTypes.StoreCartShippingOption | null) => boolean
+  /**
+   * False while the method still owes the customer a choice. The starter's own flat-rate
+   * options are ready the moment they are attached, so a provider without this is ready.
+   */
+  isReady?: (
+    cart: HttpTypes.StoreCart,
+    option: HttpTypes.StoreCartShippingOption
+  ) => boolean
+  /**
+   * The method has no price until the customer picks what the provider asks for, such as
+   * a tariff or a pickup point. Until then the checkout does not quote it, lets it be
+   * selected without a price, keeps it off the cart, and takes it off again when the
+   * address changes. Which row collects the choice is up to the delivery row dispatcher.
+   */
+  pricedByChoice?: boolean
+  /**
+   * Takes a shipping method off the cart. Medusa's store API has no route for it, so a
+   * provider priced by choice brings its own. The checkout uses it to leave the cart
+   * without a price while the customer has not finished choosing, and to drop a choice
+   * made for an address the customer has since changed.
+   */
+  removeShippingMethod?: (shippingMethodId: string) => Promise<unknown>
+}
+
+const shippingOptionDescriptors: ShippingOptionDescriptor[] = []
+
+export const findShippingOptionDescriptor = (
+  option?: HttpTypes.StoreCartShippingOption | null
+) => (option ? (shippingOptionDescriptors.find((d) => d.test(option)) ?? null) : null)
+
+export const isShippingMethodReady = (
+  cart: HttpTypes.StoreCart,
+  option?: HttpTypes.StoreCartShippingOption | null
+) => {
+  if ((cart.shipping_methods?.length ?? 0) < 1) return false
+  if (!option) return true
+
+  const descriptor = findShippingOptionDescriptor(option)
+  return descriptor?.isReady ? descriptor.isReady(cart, option) : true
+}
+
+/**
+ * The order the checkout offers the methods in, and so which one it selects on arrival.
+ * A shop ranks them through `metadata.rank`; anything unranked sorts after the ranked
+ * ones, cheapest first, so the order never depends on what the API happened to return.
+ */
+export const compareShippingOptions = (
+  a: HttpTypes.StoreCartShippingOption,
+  b: HttpTypes.StoreCartShippingOption
+) => {
+  const rank = (option: HttpTypes.StoreCartShippingOption) => {
+    const value = (option as { metadata?: Record<string, unknown> | null }).metadata
+      ?.rank
+    const parsed = Number(value)
+    return Number.isFinite(parsed) ? parsed : Number.POSITIVE_INFINITY
+  }
+
+  const byRank = rank(a) - rank(b)
+  if (byRank !== 0) return byRank
+
+  const byPrice = (a.amount ?? Number.POSITIVE_INFINITY) - (b.amount ?? Number.POSITIVE_INFINITY)
+  if (byPrice !== 0) return byPrice
+
+  return a.name.localeCompare(b.name)
+}
+
 export const isPaypal = (providerId?: string) => {
   return providerId?.startsWith("pp_paypal")
 }

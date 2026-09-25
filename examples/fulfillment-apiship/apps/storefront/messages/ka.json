@@ -57,22 +57,6 @@
     "description": "იხილეთ და განაახლეთ თქვენი მიწოდების მისამართები — შეგიძლიათ დაამატოთ სასურველი რაოდენობა. შენახული მისამართები ხელმისაწვდომი იქნება შეკვეთის გაფორმებისას.",
     "heading": "მიწოდების მისამართები"
   },
-  "Apiship": {
-    "choose": "არჩევა",
-    "courierModalTitle": "მიწოდება კურიერით",
-    "deliveryDays": "{count, plural, one {{count} დღე} other {{count} დღე}}",
-    "deliveryDaysRange": "{min}–{max} დღე",
-    "loadFailed": "მიწოდების ვარიანტები ვერ ჩაიტვირთა. სცადეთ თავიდან.",
-    "mapKeyMissing": "რუკას სჭირდება Yandex Maps-ის API გასაღები.",
-    "noPoints": "ამ მისამართზე გატანის პუნქტები არ არის.",
-    "noTariffs": "ამ მისამართზე არცერთი კურიერი არ ამარაგებს.",
-    "photoAlt": "გატანის პუნქტის ფოტო {index}",
-    "pickupPointModalTitle": "გატანის პუნქტი",
-    "pointDetails": "როგორ მივიდეთ",
-    "priceFrom": "{price}-დან",
-    "schedule": "სამუშაო საათები",
-    "selectPointPrompt": "აირჩიეთ პუნქტი რუკაზე"
-  },
   "Breadcrumb": {
     "home": "მთავარი",
     "store": "მაღაზია"
@@ -145,7 +129,6 @@
     "paymentHeading": "გადახდის მეთოდი",
     "recipientCheckbox": "მიმღები სხვა პირია",
     "recipientHeading": "მიმღების მონაცემები",
-    "recipientLabel": "მიმღები:",
     "returnsLink": "დაბრუნების პოლიტიკა",
     "sameAsShipping": "იგივეა, რაც მიწოდების მისამართი",
     "save": "შენახვა",

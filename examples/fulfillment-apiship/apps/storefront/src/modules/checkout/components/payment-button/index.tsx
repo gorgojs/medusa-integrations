@@ -1,10 +1,16 @@
 "use client"
 
-import { isManual, isPaymentSessionReady, isStripeLike } from "@lib/constants"
+import {
+  isManual,
+  isPaymentSessionReady,
+  isShippingMethodReady,
+  isStripeLike,
+} from "@lib/constants"
 import { convertToLocale } from "@lib/util/money"
 import type { HttpTypes } from "@medusajs/types"
 import { Button } from "@medusajs/ui"
 import { useCartUpdate } from "@modules/checkout/context/cart-update-context"
+import { useSelectedShippingOptionId } from "@modules/checkout/context/shipping-selection-context"
 import { useLocale, useTranslations } from "next-intl"
 import type React from "react"
 import ManualPaymentButton from "./providers/manual"
@@ -13,6 +19,9 @@ import StripePaymentButton from "./providers/stripe"
 type PaymentButtonProps = {
   cart: HttpTypes.StoreCart
   selectedPaymentMethod?: string
+  availableShippingOptions?:
+  | HttpTypes.StoreCartShippingOptionWithServiceZone[]
+  | null
   "data-testid": string
 }
 
@@ -24,6 +33,7 @@ type PaymentButtonProps = {
 const PaymentButton: React.FC<PaymentButtonProps> = ({
   cart,
   selectedPaymentMethod,
+  availableShippingOptions,
   "data-testid": dataTestId,
 }) => {
   const t = useTranslations("PaymentButton")
@@ -35,12 +45,20 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     cart.payment_collection?.payment_sessions?.[0]?.provider_id ??
     ""
 
+  const selectedShippingOptionId = useSelectedShippingOptionId(cart)
+  const selectedShippingOption = availableShippingOptions?.find(
+    (option) => option.id === selectedShippingOptionId
+  )
+  const cartShippingOptionId =
+    cart.shipping_methods?.at(-1)?.shipping_option_id ?? null
+
   const notReady =
     !cart ||
     !cart.shipping_address ||
     !cart.billing_address ||
     !cart.email ||
-    (cart.shipping_methods?.length ?? 0) < 1 ||
+    cartShippingOptionId !== selectedShippingOptionId ||
+    !isShippingMethodReady(cart, selectedShippingOption) ||
     !activePaymentMethod ||
     !isPaymentSessionReady(activePaymentMethod, cart)
 

@@ -1,4 +1,3 @@
-export { seedExampleData } from "./example-data";
 export { seedFulfillment } from "./fulfillment";
 export { seedInventoryLevels } from "./inventory";
 export {

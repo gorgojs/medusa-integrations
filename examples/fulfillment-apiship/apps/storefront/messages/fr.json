@@ -57,22 +57,6 @@
     "description": "Consultez et mettez à jour vos adresses de livraison, vous pouvez en ajouter autant que vous le souhaitez. Enregistrer vos adresses les rendra disponibles lors du paiement.",
     "heading": "Adresses de livraison"
   },
-  "Apiship": {
-    "choose": "Choisir",
-    "courierModalTitle": "Livraison par coursier",
-    "deliveryDays": "{count, plural, one {{count} jour} other {{count} jours}}",
-    "deliveryDaysRange": "{min} à {max} jours",
-    "loadFailed": "Impossible de charger les options de livraison. Réessayez.",
-    "mapKeyMissing": "La carte nécessite une clé API Yandex Maps.",
-    "noPoints": "Aucun point de retrait ne dessert cette adresse.",
-    "noTariffs": "Aucun transporteur ne livre à cette adresse.",
-    "photoAlt": "Photo du point de retrait {index}",
-    "pickupPointModalTitle": "Point de retrait",
-    "pointDetails": "Comment s'y rendre",
-    "priceFrom": "à partir de {price}",
-    "schedule": "Horaires",
-    "selectPointPrompt": "Choisissez un point sur la carte"
-  },
   "Breadcrumb": {
     "home": "Accueil",
     "store": "Boutique"
@@ -145,7 +129,6 @@
     "paymentHeading": "Mode de paiement",
     "recipientCheckbox": "Le destinataire est une autre personne",
     "recipientHeading": "Détails du destinataire",
-    "recipientLabel": "Destinataire :",
     "returnsLink": "Politique de retour",
     "sameAsShipping": "Identique à l'adresse de livraison",
     "save": "Enregistrer",

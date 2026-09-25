@@ -57,22 +57,6 @@
     "description": "Xem và cập nhật các địa chỉ giao hàng của bạn, bạn có thể thêm bao nhiêu tùy thích. Các địa chỉ đã lưu sẽ có sẵn khi thanh toán.",
     "heading": "Địa chỉ giao hàng"
   },
-  "Apiship": {
-    "choose": "Chọn",
-    "courierModalTitle": "Giao bằng người giao hàng",
-    "deliveryDays": "{count, plural, other {{count} ngày}}",
-    "deliveryDaysRange": "{min}–{max} ngày",
-    "loadFailed": "Không tải được các lựa chọn giao hàng. Hãy thử lại.",
-    "mapKeyMissing": "Bản đồ cần khóa API của Yandex Maps.",
-    "noPoints": "Không có điểm nhận hàng cho địa chỉ này.",
-    "noTariffs": "Không có đơn vị nào giao đến địa chỉ này.",
-    "photoAlt": "Ảnh điểm nhận hàng {index}",
-    "pickupPointModalTitle": "Điểm nhận hàng",
-    "pointDetails": "Cách đến",
-    "priceFrom": "từ {price}",
-    "schedule": "Giờ mở cửa",
-    "selectPointPrompt": "Chọn một điểm trên bản đồ"
-  },
   "Breadcrumb": {
     "home": "Trang chủ",
     "store": "Cửa hàng"
@@ -145,7 +129,6 @@
     "paymentHeading": "Phương thức thanh toán",
     "recipientCheckbox": "Người nhận là người khác",
     "recipientHeading": "Thông tin người nhận",
-    "recipientLabel": "Người nhận:",
     "returnsLink": "Chính sách đổi trả",
     "sameAsShipping": "Giống địa chỉ giao hàng",
     "save": "Lưu",
