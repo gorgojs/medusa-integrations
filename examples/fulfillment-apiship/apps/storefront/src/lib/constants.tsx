@@ -1,3 +1,4 @@
+import { removeShippingMethodFromCart } from "@lib/data/cart"
 import { CreditCard } from "@medusajs/icons"
 import Bancontact from "@modules/common/icons/bancontact"
 import Ideal from "@modules/common/icons/ideal"
@@ -113,7 +114,30 @@ export type ShippingOptionDescriptor = {
   removeShippingMethod?: (shippingMethodId: string) => Promise<unknown>
 }
 
-const shippingOptionDescriptors: ShippingOptionDescriptor[] = []
+const shippingOptionDescriptors: ShippingOptionDescriptor[] = [
+  {
+    test: (option) => option?.provider_id === "apiship_apiship",
+    // ApiShip attaches with the cheapest tariff it found, which is enough to price the
+    // cart but not to ship it: the order needs the tariff the customer actually picked,
+    // and a pickup point where the option delivers to one.
+    isReady: (cart, option) => {
+      const selection = (
+        cart.shipping_methods?.at(-1)?.data as {
+          apishipData?: { tariff?: unknown; point?: unknown }
+        } | null
+      )?.apishipData
+
+      if (!selection?.tariff) return false
+
+      const deliveryType = (option.data as { deliveryType?: unknown } | null)
+        ?.deliveryType
+
+      return deliveryType === 2 ? Boolean(selection.point) : true
+    },
+    pricedByChoice: true,
+    removeShippingMethod: removeShippingMethodFromCart,
+  },
+]
 
 export const findShippingOptionDescriptor = (
   option?: HttpTypes.StoreCartShippingOption | null

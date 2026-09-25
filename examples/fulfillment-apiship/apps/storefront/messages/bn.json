@@ -57,6 +57,23 @@
     "description": "আপনার শিপিং ঠিকানাগুলো দেখুন ও আপডেট করুন, আপনি যত খুশি ততগুলো যোগ করতে পারেন। ঠিকানা সংরক্ষণ করলে চেকআউটের সময় তা ব্যবহার করা যাবে।",
     "heading": "শিপিং ঠিকানাসমূহ"
   },
+  "Apiship": {
+    "choose": "নির্বাচন করুন",
+    "courierModalTitle": "কুরিয়ারে ডেলিভারি",
+    "deliveryDays": "{count, plural, one {{count} দিন} other {{count} দিন}}",
+    "deliveryDaysRange": "{min}–{max} দিন",
+    "loadFailed": "ডেলিভারির বিকল্পগুলি লোড করা যায়নি। আবার চেষ্টা করুন।",
+    "mapKeyMissing": "মানচিত্রের জন্য Yandex Maps API কী দরকার।",
+    "next": "পরবর্তী",
+    "noPoints": "এই ঠিকানার জন্য কোনো পিকআপ পয়েন্ট নেই।",
+    "noTariffs": "এই ঠিকানায় কোনো কুরিয়ার ডেলিভারি দেয় না।",
+    "photoAlt": "পিকআপ পয়েন্টের ছবি {index}",
+    "pickupPointHeading": "পিকআপ পয়েন্ট",
+    "pickupPointModalTitle": "পিকআপ পয়েন্ট",
+    "pointDetails": "কীভাবে পৌঁছাবেন",
+    "schedule": "খোলার সময়",
+    "selectPointPrompt": "মানচিত্রে একটি পয়েন্ট বাছুন"
+  },
   "Breadcrumb": {
     "home": "হোম",
     "store": "স্টোর"

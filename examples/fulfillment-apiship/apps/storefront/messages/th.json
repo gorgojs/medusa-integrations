@@ -57,6 +57,23 @@
     "description": "ดูและอัปเดตที่อยู่จัดส่งของคุณ คุณสามารถเพิ่มได้มากเท่าที่ต้องการ การบันทึกที่อยู่จะช่วยให้เลือกใช้ได้สะดวกตอนชำระเงิน",
     "heading": "ที่อยู่จัดส่ง"
   },
+  "Apiship": {
+    "choose": "เลือก",
+    "courierModalTitle": "จัดส่งโดยพนักงานส่ง",
+    "deliveryDays": "{count, plural, other {{count} วัน}}",
+    "deliveryDaysRange": "{min}–{max} วัน",
+    "loadFailed": "โหลดตัวเลือกการจัดส่งไม่สำเร็จ กรุณาลองใหม่",
+    "mapKeyMissing": "แผนที่ต้องใช้คีย์ API ของ Yandex Maps",
+    "next": "ถัดไป",
+    "noPoints": "ไม่มีจุดรับสินค้าสำหรับที่อยู่นี้",
+    "noTariffs": "ไม่มีผู้ให้บริการจัดส่งไปยังที่อยู่นี้",
+    "photoAlt": "ภาพจุดรับสินค้า {index}",
+    "pickupPointHeading": "จุดรับสินค้า",
+    "pickupPointModalTitle": "จุดรับสินค้า",
+    "pointDetails": "วิธีเดินทางไป",
+    "schedule": "เวลาทำการ",
+    "selectPointPrompt": "เลือกจุดบนแผนที่"
+  },
   "Breadcrumb": {
     "home": "หน้าแรก",
     "store": "ร้านค้า"

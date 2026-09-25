@@ -57,6 +57,23 @@
     "description": "Tekintse meg és frissítse szállítási címeit, tetszőleges számút hozzáadhat. A mentett címek elérhetők lesznek a fizetés során.",
     "heading": "Szállítási címek"
   },
+  "Apiship": {
+    "choose": "Kiválasztom",
+    "courierModalTitle": "Futárszolgálat",
+    "deliveryDays": "{count, plural, one {{count} nap} other {{count} nap}}",
+    "deliveryDaysRange": "{min}–{max} nap",
+    "loadFailed": "Nem sikerült betölteni a szállítási lehetőségeket. Próbálja újra.",
+    "mapKeyMissing": "A térképhez Yandex Maps API-kulcs szükséges.",
+    "next": "Tovább",
+    "noPoints": "Ehhez a címhez nincs átvételi pont.",
+    "noTariffs": "Erre a címre egyik futárszolgálat sem szállít.",
+    "photoAlt": "Fénykép az átvételi pontról {index}",
+    "pickupPointHeading": "Átvételi pont",
+    "pickupPointModalTitle": "Átvételi pont",
+    "pointDetails": "Megközelítés",
+    "schedule": "Nyitvatartás",
+    "selectPointPrompt": "Válasszon pontot a térképen"
+  },
   "Breadcrumb": {
     "home": "Főoldal",
     "store": "Bolt"

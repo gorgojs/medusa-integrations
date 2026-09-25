@@ -57,6 +57,23 @@
     "description": "Хүргэлтийн хаягуудаа харах, шинэчлэх боломжтой бөгөөд хүссэн хэмжээгээрээ нэмж болно. Хадгалсан хаягууд захиалга хийх үед боломжтой байх болно.",
     "heading": "Хүргэлтийн хаягууд"
   },
+  "Apiship": {
+    "choose": "Сонгох",
+    "courierModalTitle": "Жолоочоор хүргэх",
+    "deliveryDays": "{count, plural, one {{count} хоног} other {{count} хоног}}",
+    "deliveryDaysRange": "{min}–{max} хоног",
+    "loadFailed": "Хүргэлтийн сонголтууд ачаалагдсангүй. Дахин оролдоно уу.",
+    "mapKeyMissing": "Газрын зурагт Yandex Maps API түлхүүр хэрэгтэй.",
+    "next": "Цааш",
+    "noPoints": "Энэ хаяганд авах цэг байхгүй.",
+    "noTariffs": "Энэ хаяг руу хүргэдэг тээвэрлэгч байхгүй.",
+    "photoAlt": "Авах цэгийн зураг {index}",
+    "pickupPointHeading": "Авах цэг",
+    "pickupPointModalTitle": "Авах цэг",
+    "pointDetails": "Хэрхэн очих",
+    "schedule": "Ажиллах цаг",
+    "selectPointPrompt": "Газрын зураг дээрээс цэг сонгоно уу"
+  },
   "Breadcrumb": {
     "home": "Нүүр",
     "store": "Дэлгүүр"

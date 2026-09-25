@@ -57,6 +57,23 @@
     "description": "Se og opdater dine leveringsadresser – du kan tilføje lige så mange, du vil. Gemte adresser bliver tilgængelige under checkout.",
     "heading": "Leveringsadresser"
   },
+  "Apiship": {
+    "choose": "Vælg",
+    "courierModalTitle": "Levering med kurer",
+    "deliveryDays": "{count, plural, one {{count} dag} other {{count} dage}}",
+    "deliveryDaysRange": "{min}–{max} dage",
+    "loadFailed": "Vi kunne ikke hente leveringsmulighederne. Prøv igen.",
+    "mapKeyMissing": "Kortet kræver en API-nøgle til Yandex Maps.",
+    "next": "Videre",
+    "noPoints": "Der er ingen afhentningssteder til denne adresse.",
+    "noTariffs": "Ingen transportør leverer til denne adresse.",
+    "photoAlt": "Foto af afhentningsstedet {index}",
+    "pickupPointHeading": "Afhentningssted",
+    "pickupPointModalTitle": "Afhentningssted",
+    "pointDetails": "Sådan finder du det",
+    "schedule": "Åbningstider",
+    "selectPointPrompt": "Vælg et sted på kortet"
+  },
   "Breadcrumb": {
     "home": "Forside",
     "store": "Butik"

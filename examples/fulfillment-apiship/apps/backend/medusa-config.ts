@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from "@medusajs/framework/utils";
 loadEnv(process.env.NODE_ENV || "development", process.cwd());
 
 const isProd = process.env.NODE_ENV === "production";
+const APISHIP_INTEGRATION_ID = "apiship-1";
 const redisUrl = process.env.REDIS_URL;
 
 // create-medusa-app writes REDIS_URL into every generated .env whether Redis runs
@@ -82,6 +83,16 @@ module.exports = defineConfig({
       secure: process.env.COOKIE_SECURE === "true",
     },
   },
+  admin: {
+    vite: () => {
+      return {
+        // Used only during testing, do not enable in production
+        server: {
+          allowedHosts: true,
+        },
+      };
+    },
+  },
   featureFlags: {
     translation: true,
   },
@@ -93,12 +104,51 @@ module.exports = defineConfig({
         // Integration providers plug in here. Browse the catalog at
         // https://gorgojs.com/medusa/plugins?integrationModule=true or read
         // https://docs.gorgojs.com/medusa-modules/integration
-        providers: [],
+        providers: [
+          {
+            resolve:
+              "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
+            id: APISHIP_INTEGRATION_ID,
+            options: {},
+          },
+        ],
       },
+    },
+    // Registered as its own plugin (not just referenced from `modules` below) so the
+    // admin build discovers its admin extensions, meaning the settings page, the
+    // connections widget and the i18n bundle. Without this entry the provider still
+    // works, but its admin UI never loads and translation keys render raw, for example
+    // "apiship.name" instead of "ApiShip".
+    {
+      resolve: "@gorgo/medusa-fulfillment-apiship",
+      options: {},
     },
   ],
   modules: [
     { resolve: "@medusajs/medusa/translation" },
+    {
+      resolve: "@medusajs/medusa/fulfillment",
+      options: {
+        providers: [
+          // Naming the fulfillment module replaces Medusa's default provider list, and
+          // the starter's own flat-rate shipping options are all `manual_manual`, so the
+          // manual provider has to be listed again next to ApiShip.
+          {
+            resolve: "@medusajs/medusa/fulfillment-manual",
+            id: "manual",
+          },
+          {
+            resolve:
+              "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
+            id: "apiship",
+            options: {
+              // must match the provider id used in the integration module above
+              id: APISHIP_INTEGRATION_ID,
+            },
+          },
+        ],
+      },
+    },
     {
       resolve: "@medusajs/medusa/notification",
       options: {

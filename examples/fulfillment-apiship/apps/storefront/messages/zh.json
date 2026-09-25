@@ -57,6 +57,23 @@
     "description": "查看并更新您的收货地址，您可以添加任意数量的地址。保存地址后，结账时即可直接选用。",
     "heading": "收货地址"
   },
+  "Apiship": {
+    "choose": "选择",
+    "courierModalTitle": "快递配送",
+    "deliveryDays": "{count, plural, other {{count} 天}}",
+    "deliveryDaysRange": "{min}–{max} 天",
+    "loadFailed": "配送方式加载失败，请重试。",
+    "mapKeyMissing": "地图需要 Yandex Maps 的 API 密钥。",
+    "next": "下一步",
+    "noPoints": "该地址没有可用的自提点。",
+    "noTariffs": "没有承运商配送到该地址。",
+    "photoAlt": "自提点照片 {index}",
+    "pickupPointHeading": "自提点",
+    "pickupPointModalTitle": "自提点",
+    "pointDetails": "如何前往",
+    "schedule": "营业时间",
+    "selectPointPrompt": "在地图上选择自提点"
+  },
   "Breadcrumb": {
     "home": "首页",
     "store": "商店"

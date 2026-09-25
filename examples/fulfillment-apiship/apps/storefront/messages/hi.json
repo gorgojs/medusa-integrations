@@ -57,6 +57,23 @@
     "description": "अपने शिपिंग पते देखें और अपडेट करें, आप जितने चाहें उतने जोड़ सकते हैं। पते सहेजने पर वे चेकआउट के दौरान उपलब्ध हो जाएंगे।",
     "heading": "शिपिंग पते"
   },
+  "Apiship": {
+    "choose": "चुनें",
+    "courierModalTitle": "कूरियर से डिलीवरी",
+    "deliveryDays": "{count, plural, one {{count} दिन} other {{count} दिन}}",
+    "deliveryDaysRange": "{min}–{max} दिन",
+    "loadFailed": "डिलीवरी विकल्प लोड नहीं हो सके। फिर से कोशिश करें।",
+    "mapKeyMissing": "नक्शे के लिए Yandex Maps API कुंजी चाहिए।",
+    "next": "आगे",
+    "noPoints": "इस पते के लिए कोई पिकअप पॉइंट नहीं है।",
+    "noTariffs": "इस पते पर कोई कूरियर डिलीवरी नहीं करता।",
+    "photoAlt": "पिकअप पॉइंट की तस्वीर {index}",
+    "pickupPointHeading": "पिकअप पॉइंट",
+    "pickupPointModalTitle": "पिकअप पॉइंट",
+    "pointDetails": "कैसे पहुँचें",
+    "schedule": "खुलने का समय",
+    "selectPointPrompt": "नक्शे पर एक पॉइंट चुनें"
+  },
   "Breadcrumb": {
     "home": "होम",
     "store": "स्टोर"

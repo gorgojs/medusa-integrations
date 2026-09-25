@@ -57,6 +57,23 @@
     "description": "Vizualizați și actualizați adresele dvs. de livrare, puteți adăuga oricâte doriți. Salvarea adreselor le va face disponibile la finalizarea comenzii.",
     "heading": "Adrese de livrare"
   },
+  "Apiship": {
+    "choose": "Alege",
+    "courierModalTitle": "Livrare prin curier",
+    "deliveryDays": "{count, plural, one {{count} zi} few {{count} zile} other {{count} de zile}}",
+    "deliveryDaysRange": "{min}–{max} zile",
+    "loadFailed": "Nu am putut încărca opțiunile de livrare. Încearcă din nou.",
+    "mapKeyMissing": "Harta are nevoie de o cheie API Yandex Maps.",
+    "next": "Continuă",
+    "noPoints": "Nu există puncte de ridicare pentru această adresă.",
+    "noTariffs": "Niciun curier nu livrează la această adresă.",
+    "photoAlt": "Fotografie a punctului de ridicare {index}",
+    "pickupPointHeading": "Punct de ridicare",
+    "pickupPointModalTitle": "Punct de ridicare",
+    "pointDetails": "Cum ajungi",
+    "schedule": "Program",
+    "selectPointPrompt": "Alege un punct pe hartă"
+  },
   "Breadcrumb": {
     "home": "Acasă",
     "store": "Magazin"

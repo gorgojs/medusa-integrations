@@ -57,6 +57,23 @@
     "description": "Tarkastele ja päivitä toimitusosoitteitasi – voit lisätä niitä niin monta kuin haluat. Tallennetut osoitteet ovat käytettävissä kassalla.",
     "heading": "Toimitusosoitteet"
   },
+  "Apiship": {
+    "choose": "Valitse",
+    "courierModalTitle": "Kuriiritoimitus",
+    "deliveryDays": "{count, plural, one {{count} päivä} other {{count} päivää}}",
+    "deliveryDaysRange": "{min}–{max} päivää",
+    "loadFailed": "Toimitusvaihtoehtoja ei voitu ladata. Yritä uudelleen.",
+    "mapKeyMissing": "Kartta tarvitsee Yandex Maps -API-avaimen.",
+    "next": "Seuraava",
+    "noPoints": "Tähän osoitteeseen ei ole noutopisteitä.",
+    "noTariffs": "Mikään kuljetusliike ei toimita tähän osoitteeseen.",
+    "photoAlt": "Noutopisteen kuva {index}",
+    "pickupPointHeading": "Noutopiste",
+    "pickupPointModalTitle": "Noutopiste",
+    "pointDetails": "Miten perille",
+    "schedule": "Aukioloajat",
+    "selectPointPrompt": "Valitse piste kartalta"
+  },
   "Breadcrumb": {
     "home": "Etusivu",
     "store": "Kauppa"

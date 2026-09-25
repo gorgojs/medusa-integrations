@@ -57,6 +57,23 @@
     "description": "Se og oppdater leveringsadressene dine, du kan legge til så mange du vil. Lagrede adresser vil være tilgjengelige ved utsjekking.",
     "heading": "Leveringsadresser"
   },
+  "Apiship": {
+    "choose": "Velg",
+    "courierModalTitle": "Levering med bud",
+    "deliveryDays": "{count, plural, one {{count} dag} other {{count} dager}}",
+    "deliveryDaysRange": "{min}–{max} dager",
+    "loadFailed": "Vi klarte ikke å laste leveringsalternativene. Prøv igjen.",
+    "mapKeyMissing": "Kartet trenger en API-nøkkel for Yandex Maps.",
+    "next": "Videre",
+    "noPoints": "Det finnes ingen hentesteder for denne adressen.",
+    "noTariffs": "Ingen transportør leverer til denne adressen.",
+    "photoAlt": "Bilde av hentestedet {index}",
+    "pickupPointHeading": "Hentested",
+    "pickupPointModalTitle": "Hentested",
+    "pointDetails": "Slik finner du fram",
+    "schedule": "Åpningstider",
+    "selectPointPrompt": "Velg et sted på kartet"
+  },
   "Breadcrumb": {
     "home": "Hjem",
     "store": "Butikk"

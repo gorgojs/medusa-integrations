@@ -57,6 +57,23 @@
     "description": "Zobrazte a upravte svoje doručovacie adresy, môžete ich pridať toľko, koľko chcete. Uložené adresy budú dostupné pri pokladni.",
     "heading": "Doručovacie adresy"
   },
+  "Apiship": {
+    "choose": "Vybrať",
+    "courierModalTitle": "Doručenie kuriérom",
+    "deliveryDays": "{count, plural, one {{count} deň} few {{count} dni} many {{count} dňa} other {{count} dní}}",
+    "deliveryDaysRange": "{min}–{max} dní",
+    "loadFailed": "Možnosti doručenia sa nepodarilo načítať. Skúste to znova.",
+    "mapKeyMissing": "Mapa potrebuje API kľúč Yandex Maps.",
+    "next": "Ďalej",
+    "noPoints": "Pre túto adresu nie sú žiadne výdajné miesta.",
+    "noTariffs": "Na túto adresu nedoručuje žiadny dopravca.",
+    "photoAlt": "Fotografia výdajného miesta {index}",
+    "pickupPointHeading": "Výdajné miesto",
+    "pickupPointModalTitle": "Výdajné miesto",
+    "pointDetails": "Ako sa tam dostať",
+    "schedule": "Otváracie hodiny",
+    "selectPointPrompt": "Vyberte miesto na mape"
+  },
   "Breadcrumb": {
     "home": "Domov",
     "store": "Obchod"

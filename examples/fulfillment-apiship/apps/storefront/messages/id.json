@@ -57,6 +57,23 @@
     "description": "Lihat dan perbarui alamat pengiriman Anda, Anda dapat menambahkan sebanyak yang Anda mau. Alamat yang tersimpan akan tersedia saat checkout.",
     "heading": "Alamat Pengiriman"
   },
+  "Apiship": {
+    "choose": "Pilih",
+    "courierModalTitle": "Pengiriman kurir",
+    "deliveryDays": "{count, plural, other {{count} hari}}",
+    "deliveryDaysRange": "{min}–{max} hari",
+    "loadFailed": "Pilihan pengiriman gagal dimuat. Coba lagi.",
+    "mapKeyMissing": "Peta memerlukan kunci API Yandex Maps.",
+    "next": "Lanjut",
+    "noPoints": "Tidak ada titik ambil untuk alamat ini.",
+    "noTariffs": "Tidak ada kurir yang mengantar ke alamat ini.",
+    "photoAlt": "Foto titik ambil {index}",
+    "pickupPointHeading": "Titik ambil",
+    "pickupPointModalTitle": "Titik ambil",
+    "pointDetails": "Cara ke sana",
+    "schedule": "Jam buka",
+    "selectPointPrompt": "Pilih titik di peta"
+  },
   "Breadcrumb": {
     "home": "Beranda",
     "store": "Toko"

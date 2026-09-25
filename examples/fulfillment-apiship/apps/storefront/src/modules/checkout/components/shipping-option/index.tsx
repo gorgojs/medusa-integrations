@@ -1,6 +1,8 @@
 "use client"
 
 import type React from "react"
+import { isApishipOption } from "@modules/checkout/components/apiship"
+import ApishipShippingOptionCard from "./providers/apiship"
 import {
   ShippingOptionCardShell,
   type ShippingOptionCardProps,
@@ -13,6 +15,8 @@ import {
  */
 const ShippingOptionCard: React.FC<ShippingOptionCardProps> = (props) => {
   switch (true) {
+    case isApishipOption(props.option):
+      return <ApishipShippingOptionCard {...props} />
     default:
       return (
         <ShippingOptionCardShell
