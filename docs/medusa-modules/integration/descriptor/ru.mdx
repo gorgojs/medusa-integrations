@@ -296,7 +296,7 @@ const descriptor = defineIntegration({
 
 Параметры с пометкой `secret` шифруются при хранении алгоритмом AES-256-GCM и никогда не попадают в браузер. CRUD API маскирует их и сообщает лишь, задано значение или нет. Сохранение секрета пустым оставляет прежнее хранимое значение, а не стирает его.
 
-Для шифрования модулю нужен ключ, задайте его как `encryptionKey` при регистрации модуля. О том, как задать его и что происходит без него, смотрите в разделе [Параметры Модуля интеграций](/medusa-modules/integration/integration-module-options#encryptionkey).
+Для шифрования модулю нужен ключ, задайте его как `encryptionKey` при регистрации модуля. О том, как задать его и что происходит без него, смотрите в разделе [Параметры Модуля интеграций](/medusa-modules/integration/module-options#encryptionkey).
 
 ## Проверка соединения
 
@@ -340,7 +340,7 @@ const descriptor = defineIntegration({
   },
   {
     title: "Параметры Модуля интеграций",
-    href: "/medusa-modules/integration/integration-module-options"
+    href: "/medusa-modules/integration/module-options"
   },
   {
     title: "Чтение параметров",

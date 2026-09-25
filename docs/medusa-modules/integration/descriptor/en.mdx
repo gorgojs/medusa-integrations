@@ -296,7 +296,7 @@ Options become live only when the integration is both enabled and complete, mean
 
 Options marked `secret` are encrypted at rest with AES-256-GCM and never reach the browser. The CRUD API masks them and reports only whether each one is set. Saving a secret as blank keeps its stored value instead of clearing it.
 
-Encryption needs a key, set as `encryptionKey` when you register the module. See [Integration Module Options](/medusa-modules/integration/integration-module-options#encryptionkey) for how to set it and what happens without one.
+Encryption needs a key, set as `encryptionKey` when you register the module. See [Integration Module Options](/medusa-modules/integration/module-options#encryptionkey) for how to set it and what happens without one.
 
 ## Connection Test
 
@@ -340,7 +340,7 @@ Consumers read typed, validated, and decrypted options, with descriptor defaults
   },
   {
     title: "Integration Module Options",
-    href: "/medusa-modules/integration/integration-module-options"
+    href: "/medusa-modules/integration/module-options"
   },
   {
     title: "Reading Options",
