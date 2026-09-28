@@ -48,4 +48,5 @@ export interface BaseApishipProvider {
   key?: string
   name?: string
   description?: string
+  icon: string
 }
