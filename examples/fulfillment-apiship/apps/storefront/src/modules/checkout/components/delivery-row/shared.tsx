@@ -22,6 +22,7 @@ type DeliveryRowShellProps = {
   heading: string
   onClick: () => void
   value?: ReactNode
+  trailing?: ReactNode
   hidden?: boolean
   disabled?: boolean
   "data-testid"?: string
@@ -35,6 +36,7 @@ export const DeliveryRowShell = ({
   heading,
   onClick,
   value,
+  trailing,
   hidden,
   disabled,
   "data-testid": dataTestId,
@@ -43,6 +45,7 @@ export const DeliveryRowShell = ({
     icon={<MapPin size={24} />}
     heading={heading}
     value={value}
+    trailing={trailing}
     onClick={onClick}
     hidden={hidden}
     disabled={disabled}

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Loader } from "@medusajs/icons"
 import { Text } from "@medusajs/ui"
 import { useTranslations } from "next-intl"
-import type { ApishipPoint } from "./types"
+import type { ApishipPoint, ApishipProvider } from "./types"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {
@@ -17,6 +17,8 @@ declare global {
 /** Moscow, where the demo warehouse is, so an empty map still opens somewhere useful. */
 const DEFAULT_CENTER: [number, number] = [37.618423, 55.751244]
 const DEFAULT_ZOOM = 10
+const LOGO_MARKER_SIZE = 36
+const LOGO_MARKER_SIZE_SELECTED = 48
 
 /**
  * Yandex Maps takes a full locale and rejects a bare language tag with a 400, so the
@@ -72,6 +74,7 @@ type PickupPointMapProps = {
   points: ApishipPoint[]
   isLoading: boolean
   selectedPointId: string | null
+  providers?: Record<string, ApishipProvider>
   onSelectPoint: (pointId: string) => void
   /** BCP 47 tag, passed through to the map's own labels. */
   lang: string
@@ -81,6 +84,7 @@ export default function PickupPointMap({
   points,
   isLoading,
   selectedPointId,
+  providers,
   onSelectPoint,
   lang,
 }: PickupPointMapProps) {
@@ -93,6 +97,7 @@ export default function PickupPointMap({
     new Map()
   )
   const readyRef = useRef<Promise<void> | null>(null)
+  const centeredPointsRef = useRef<ApishipPoint[] | null>(null)
   const [scriptFailed, setScriptFailed] = useState(false)
   // The click handler outlives the effect that created the marker, so it reads the
   // current callback rather than the one captured when the marker was drawn.
@@ -122,9 +127,20 @@ export default function PickupPointMap({
     for (const [id, { el }] of Array.from(markersRef.current.entries())) {
       const selected = id === selectedPointId
       el.dataset.selected = selected ? "true" : "false"
+      el.style.zIndex = selected ? "2" : "1"
+
+      if (el.dataset.kind === "logo") {
+        const size = selected ? LOGO_MARKER_SIZE_SELECTED : LOGO_MARKER_SIZE
+        el.style.width = `${size}px`
+        el.style.height = `${size}px`
+        el.style.boxShadow = selected
+          ? "0 4px 12px rgba(0,0,0,0.28)"
+          : "0 2px 6px rgba(0,0,0,0.22)"
+        continue
+      }
+
       el.style.background = selected ? "rgb(59 130 246)" : "white"
       el.style.borderColor = selected ? "rgb(29 78 216)" : "rgba(0,0,0,0.25)"
-      el.style.zIndex = selected ? "2" : "1"
     }
   }, [selectedPointId])
 
@@ -166,6 +182,7 @@ export default function PickupPointMap({
       }
       mapRef.current = null
       readyRef.current = null
+      centeredPointsRef.current = null
     }
   }, [apiKey, lang, clearMarkers])
 
@@ -185,31 +202,9 @@ export default function PickupPointMap({
       clearMarkers()
 
       for (const point of points) {
-        const el = document.createElement("div")
-        el.style.width = "18px"
-        el.style.height = "18px"
-        el.style.background = "white"
-        el.style.border = "2px solid rgba(0,0,0,0.25)"
-        el.style.borderRadius = "50% 50% 50% 0"
-        el.style.transform = "rotate(-45deg)"
-        el.style.transformOrigin = "50% 50%"
-        el.style.boxShadow = "0 2px 2px rgba(0,0,0,0.18)"
-        el.style.cursor = "pointer"
-        el.style.position = "relative"
+        const icon = providers?.[point.providerKey ?? ""]?.icon
+        const el = icon ? createLogoMarker(icon) : createPinMarker()
         el.title = point.name ?? point.address ?? ""
-
-        const dot = document.createElement("div")
-        dot.style.width = "8px"
-        dot.style.height = "8px"
-        dot.style.boxSizing = "border-box"
-        dot.style.background = "white"
-        dot.style.border = "2px solid rgba(0,0,0,0.25)"
-        dot.style.borderRadius = "9999px"
-        dot.style.position = "absolute"
-        dot.style.left = "50%"
-        dot.style.top = "50%"
-        dot.style.transform = "translate(-50%, -50%) rotate(45deg)"
-        el.appendChild(dot)
 
         el.addEventListener("click", (event) => {
           event.preventDefault()
@@ -225,10 +220,13 @@ export default function PickupPointMap({
         markersRef.current.set(point.id, { marker, el })
       }
 
-      try {
-        map.setLocation({ center, zoom: DEFAULT_ZOOM })
-      } catch {
-        // A map torn down mid-update has nothing left to centre.
+      if (centeredPointsRef.current !== points) {
+        try {
+          map.setLocation({ center, zoom: DEFAULT_ZOOM })
+          centeredPointsRef.current = points
+        } catch {
+          // A map torn down mid-update has nothing left to centre.
+        }
       }
 
       paintSelection()
@@ -237,7 +235,7 @@ export default function PickupPointMap({
     return () => {
       cancelled = true
     }
-  }, [points, center, clearMarkers, paintSelection])
+  }, [points, providers, center, clearMarkers, paintSelection])
 
   useEffect(() => {
     paintSelection()
@@ -270,4 +268,63 @@ export default function PickupPointMap({
       )}
     </div>
   )
+}
+
+function createLogoMarker(icon: string) {
+  const el = document.createElement("div")
+  el.dataset.kind = "logo"
+  el.style.width = `${LOGO_MARKER_SIZE}px`
+  el.style.height = `${LOGO_MARKER_SIZE}px`
+  el.style.boxSizing = "border-box"
+  el.style.padding = "4px"
+  el.style.background = "white"
+  el.style.borderRadius = "9999px"
+  el.style.boxShadow = "0 2px 6px rgba(0,0,0,0.22)"
+  el.style.transform = "translate(-50%, -50%)"
+  el.style.transition = "width 150ms ease, height 150ms ease, box-shadow 150ms ease"
+  el.style.cursor = "pointer"
+  el.style.position = "relative"
+
+  const img = document.createElement("img")
+  img.src = icon
+  img.alt = ""
+  img.draggable = false
+  img.style.display = "block"
+  img.style.width = "100%"
+  img.style.height = "100%"
+  img.style.borderRadius = "9999px"
+  img.style.pointerEvents = "none"
+  el.appendChild(img)
+
+  return el
+}
+
+function createPinMarker() {
+  const el = document.createElement("div")
+  el.dataset.kind = "pin"
+  el.style.width = "18px"
+  el.style.height = "18px"
+  el.style.background = "white"
+  el.style.border = "2px solid rgba(0,0,0,0.25)"
+  el.style.borderRadius = "50% 50% 50% 0"
+  el.style.transform = "rotate(-45deg)"
+  el.style.transformOrigin = "50% 50%"
+  el.style.boxShadow = "0 2px 2px rgba(0,0,0,0.18)"
+  el.style.cursor = "pointer"
+  el.style.position = "relative"
+
+  const dot = document.createElement("div")
+  dot.style.width = "8px"
+  dot.style.height = "8px"
+  dot.style.boxSizing = "border-box"
+  dot.style.background = "white"
+  dot.style.border = "2px solid rgba(0,0,0,0.25)"
+  dot.style.borderRadius = "9999px"
+  dot.style.position = "absolute"
+  dot.style.left = "50%"
+  dot.style.top = "50%"
+  dot.style.transform = "translate(-50%, -50%) rotate(45deg)"
+  el.appendChild(dot)
+
+  return el
 }

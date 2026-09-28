@@ -5,7 +5,6 @@ import { setShippingMethod } from "@lib/data/cart"
 import {
   retrieveApishipCalculation,
   retrieveApishipPoints,
-  retrieveApishipProviders,
 } from "@lib/data/fulfillment"
 import { Loader } from "@medusajs/icons"
 import type { HttpTypes } from "@medusajs/types"
@@ -23,6 +22,7 @@ import TariffList from "./tariff-list"
 import type {
   ApishipCalculation,
   ApishipPoint,
+  ApishipProvider,
   ApishipSelection,
   ApishipTariff,
 } from "./types"
@@ -40,6 +40,7 @@ type ApishipDeliveryModalProps = {
   cart: HttpTypes.StoreCart
   addresses: HttpTypes.StoreCustomerAddress[] | null
   option: HttpTypes.StoreCartShippingOptionWithServiceZone
+  providers: Record<string, ApishipProvider>
 }
 
 /**
@@ -54,6 +55,7 @@ export default function ApishipDeliveryModal({
   cart,
   addresses,
   option,
+  providers,
 }: ApishipDeliveryModalProps) {
   const t = useTranslations("Apiship")
   const tCheckout = useTranslations("CheckoutPage")
@@ -68,7 +70,6 @@ export default function ApishipDeliveryModal({
   const [tariffsByPointId, setTariffsByPointId] = useState<
     Record<string, ApishipTariff[]>
   >({})
-  const [providerNames, setProviderNames] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [loadFailed, setLoadFailed] = useState(false)
@@ -103,27 +104,6 @@ export default function ApishipDeliveryModal({
     setSelectedPointId(savedPointId)
     setSelectedTariffKey(savedTariffKey)
   }, [open, savedPointId, savedTariffKey])
-
-  useEffect(() => {
-    if (!open) return
-
-    let cancelled = false
-
-    retrieveApishipProviders(option.id).then((providers) => {
-      if (cancelled || !providers) return
-      setProviderNames(
-        Object.fromEntries(
-          providers.flatMap((provider) =>
-            provider.key && provider.name ? [[provider.key, provider.name]] : []
-          )
-        )
-      )
-    })
-
-    return () => {
-      cancelled = true
-    }
-  }, [open, option.id])
 
   useEffect(() => {
     if (!open || step !== "choice") return
@@ -183,6 +163,10 @@ export default function ApishipDeliveryModal({
     () => points.find((point) => point.id === selectedPointId) ?? null,
     [points, selectedPointId]
   )
+
+  const activeProvider = activePoint
+    ? providers[activePoint.providerKey ?? ""]
+    : undefined
 
   const activeTariffs = useMemo(
     () => (selectedPointId ? (tariffsByPointId[selectedPointId] ?? []) : []),
@@ -258,8 +242,7 @@ export default function ApishipDeliveryModal({
                 />
                 <div className="flex flex-col gap-y-1 pe-8">
                   <Text className="txt-compact-medium-plus text-ui-fg-base">
-                    {providerNames[activePoint.providerKey ?? ""] ??
-                      t("pickupPointModalTitle")}
+                    {activeProvider?.name ?? t("pickupPointModalTitle")}
                   </Text>
                   <Text className="txt-compact-small text-ui-fg-subtle">
                     {activePoint.address}
@@ -274,7 +257,7 @@ export default function ApishipDeliveryModal({
                     },
                   ]}
                   currencyCode={cart.currency_code}
-                  providerNames={providerNames}
+                  providers={providers}
                   selectedKey={selectedTariffKey}
                   onSelect={setSelectedTariffKey}
                   showGroupNames={false}
@@ -352,6 +335,7 @@ export default function ApishipDeliveryModal({
               points={points}
               isLoading={isLoading}
               selectedPointId={selectedPointId}
+              providers={providers}
               onSelectPoint={(pointId) => {
                 setSelectedPointId(pointId)
                 setSelectedTariffKey(
@@ -389,7 +373,7 @@ export default function ApishipDeliveryModal({
             <TariffList
               groups={doorGroups}
               currencyCode={cart.currency_code}
-              providerNames={providerNames}
+              providers={providers}
               selectedKey={selectedTariffKey}
               onSelect={setSelectedTariffKey}
             />

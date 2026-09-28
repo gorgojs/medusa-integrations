@@ -56,6 +56,7 @@ export type ApishipProvider = {
   key?: string
   name?: string
   description?: string
+  icon?: string
 }
 
 /** A pickup point, before the storefront has checked it can be drawn. */

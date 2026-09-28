@@ -4,7 +4,8 @@ import { convertToLocale } from "@lib/util/money"
 import { useLocaleDirection } from "@lib/hooks/use-locale-direction"
 import { RadioGroup, Text } from "@medusajs/ui"
 import { useLocale, useTranslations } from "next-intl"
-import type { ApishipTariff } from "./types"
+import ProviderLogo from "./provider-logo"
+import type { ApishipProvider, ApishipTariff } from "./types"
 import { getTariffCost, getTariffDays } from "./utils"
 
 type TariffGroup = {
@@ -15,7 +16,7 @@ type TariffGroup = {
 type TariffListProps = {
   groups: TariffGroup[]
   currencyCode: string
-  providerNames: Record<string, string>
+  providers: Record<string, ApishipProvider>
   selectedKey: string | null
   onSelect: (key: string) => void
   /** Carrier headings only help when more than one carrier is on offer. */
@@ -29,7 +30,7 @@ type TariffListProps = {
 export default function TariffList({
   groups,
   currencyCode,
-  providerNames,
+  providers,
   selectedKey,
   onSelect,
   showGroupNames = true,
@@ -57,9 +58,12 @@ export default function TariffList({
       {groups.map((group) => (
         <div key={group.providerKey} className="flex flex-col gap-[10px]">
           {showGroupNames && (
-            <Text className="txt-compact-small-plus text-ui-fg-subtle">
-              {providerNames[group.providerKey] ?? group.providerKey}
-            </Text>
+            <div className="flex items-center gap-x-2">
+              <ProviderLogo src={providers[group.providerKey]?.icon} />
+              <Text className="txt-compact-small-plus text-ui-fg-subtle">
+                {providers[group.providerKey]?.name ?? group.providerKey}
+              </Text>
+            </div>
           )}
 
           {group.tariffs.map((tariff) => {
