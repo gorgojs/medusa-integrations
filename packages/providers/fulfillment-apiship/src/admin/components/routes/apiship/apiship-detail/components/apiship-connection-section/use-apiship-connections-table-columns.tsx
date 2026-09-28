@@ -3,6 +3,7 @@ import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import type { HttpTypes } from "@medusajs/framework/types"
 import { DataTableStatusCell } from "../../../../../common/data-table-status-cell"
+import { ApishipProviderLogo } from "../../../../../common/apiship-provider-logo"
 import { ApishipConnectionActions } from "./apiship-connection-actions"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
 
@@ -22,13 +23,16 @@ export const useApishipConnectionsTableColumns = (
         header: t("apiship.connections.fields.deliveryService"),
         cell: ({ getValue }) => {
           const value = getValue()
-          const providerName =
-            providers.find((provider) => provider.key === value)?.name ?? value
+          const provider = providers.find((provider) => provider.key === value)
+          const providerName = provider?.name ?? value
 
           return (
-            <span className="text-ui-fg-subtle text-small truncate">
-              {providerName || "-"}
-            </span>
+            <div className="flex items-center gap-x-2 overflow-hidden">
+              <ApishipProviderLogo src={provider?.icon} />
+              <span className="text-ui-fg-subtle text-small truncate">
+                {providerName || "-"}
+              </span>
+            </div>
           )
         },
       }),

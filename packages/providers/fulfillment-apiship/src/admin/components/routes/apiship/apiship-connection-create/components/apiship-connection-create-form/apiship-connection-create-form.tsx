@@ -29,6 +29,7 @@ import { useStockLocations } from "../../../../../../hooks/api/stock-locations"
 import { Combobox } from "../../../../../common/combobox"
 import { SwitchBox } from "../../../../../common/switch-box"
 import { ApishipAllowedTariffsField } from "../../../../../common/apiship-allowed-tariffs-field"
+import { ApishipProviderLogo } from "../../../../../common/apiship-provider-logo"
 import { translateConnectionError } from "../../../../../../lib/translate-connection-error"
 
 type ApishipConnectionCreateFormProps = {
@@ -130,13 +131,15 @@ export const ApishipConnectionCreateForm = ({
 
   const accountConnectionOptions = useMemo(() => {
     return accountConnections.map((connection) => {
-      const providerName =
-        providers.find((provider) => provider.key === connection.provider_key)
-          ?.name ?? connection.provider_key
+      const provider = providers.find(
+        (provider) => provider.key === connection.provider_key
+      )
+      const providerName = provider?.name ?? connection.provider_key
 
       return {
         value: connection.id,
         label: connection.name ? `${providerName} — ${connection.name}` : providerName,
+        icon: provider?.icon,
       }
     })
   }, [accountConnections, providers])
@@ -244,7 +247,10 @@ export const ApishipConnectionCreateForm = ({
                       <Select.Content>
                         {accountConnectionOptions.map((option) => (
                           <Select.Item key={option.value} value={option.value}>
-                            {option.label}
+                            <span className="flex items-center gap-x-2">
+                              <ApishipProviderLogo src={option.icon} size="small" />
+                              <span className="truncate">{option.label}</span>
+                            </span>
                           </Select.Item>
                         ))}
                       </Select.Content>
