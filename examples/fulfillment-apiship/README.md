@@ -35,6 +35,10 @@ Leave it blank to enter the token in Medusa Admin instead, in [Connecting ApiShi
 below. `SEED_APISHIP_IS_TEST` stays on, which points the plugin at ApiShip's test environment where
 the calculator answers with demo tariffs and nothing is charged.
 
+To have a connection seeded as well, put the ID of a CDEK connection from your ApiShip account into
+`SEED_APISHIP_PROVIDER_CONNECT_ID`. The seed adds it as an enabled connection named `TEST`. Leave it
+blank and the seed adds no connection.
+
 Put your Yandex Maps key into `NEXT_PUBLIC_YANDEX_MAPS_API_KEY` in `apps/storefront/.env.local`.
 Without it the courier options still work and the pickup point map says the key is missing.
 
@@ -57,9 +61,10 @@ demo catalog and start both apps.
    [Manage ApiShip Settings in Medusa Admin](https://docs.gorgojs.com/medusa-integrations/apiship/settings).
 
 2. Add a connection in the **Connections** section for each delivery service you have an ApiShip
-   contract with, and enable it. A tariff only reaches the checkout through an enabled connection,
-   so until there is one the calculator answers with nothing and the checkout shows no ApiShip
-   options.
+   contract with, and enable it. The seed has already added the CDEK connection from
+   `SEED_APISHIP_PROVIDER_CONNECT_ID`, when your `.env` carried it. A tariff only reaches the
+   checkout through an enabled connection, so until there is one the calculator answers with nothing
+   and the checkout shows no ApiShip options.
 
 3. The seed replaced the starter's flat-rate options in the Russian region with two ApiShip ones, so
    the Moscow warehouse ships through ApiShip only:
@@ -89,8 +94,8 @@ integration is the files below. Port them into your own storefront to get the sa
 |---|---|
 | [`apps/backend/medusa-config.ts`](./apps/backend/medusa-config.ts) | Registers the integration provider `apiship-1`, the plugin itself so the Admin build picks up its settings page and i18n, and the fulfillment provider bound to that integration id |
 | [`apps/backend/package.json`](./apps/backend/package.json) | Adds the plugin, the tunnel scripts and `predev` to link a locally published copy of the plugin before `dev` starts |
-| [`apps/backend/.env.template`](./apps/backend/.env.template) | Points `DB_NAME` at `medusa_fulfillment_apiship` and adds the `SEED_APISHIP_TOKEN` and `SEED_APISHIP_IS_TEST` pair the seed reads |
-| [`apps/backend/src/migration-scripts/lib/example-data.ts`](./apps/backend/src/migration-scripts/lib/example-data.ts) | Configures ApiShip through the Integration Module, links the fulfillment provider to the Moscow warehouse, replaces the starter's shipping options in the Russian region with the two ApiShip ones and translates their names, wired into the seed from `initial-data-seed.ts` |
+| [`apps/backend/.env.template`](./apps/backend/.env.template) | Points `DB_NAME` at `medusa_fulfillment_apiship` and adds `SEED_APISHIP_TOKEN`, `SEED_APISHIP_IS_TEST` and `SEED_APISHIP_PROVIDER_CONNECT_ID`, which the seed reads |
+| [`apps/backend/src/migration-scripts/lib/example-data.ts`](./apps/backend/src/migration-scripts/lib/example-data.ts) | Configures ApiShip through the Integration Module, adds the CDEK connection from `SEED_APISHIP_PROVIDER_CONNECT_ID`, links the fulfillment provider to the Moscow warehouse, replaces the starter's shipping options in the Russian region with the two ApiShip ones and translates their names, wired into the seed from `initial-data-seed.ts` |
 | [`apps/storefront/src/lib/data/fulfillment.ts`](./apps/storefront/src/lib/data/fulfillment.ts) | Calls the plugin's store routes, the calculator, the pickup points and the carrier names |
 | [`apps/storefront/src/lib/data/cart.ts`](./apps/storefront/src/lib/data/cart.ts) | Adds `removeShippingMethodFromCart`, which takes the shipping method off the cart through the plugin's store route |
 | [`apps/storefront/src/lib/constants.tsx`](./apps/storefront/src/lib/constants.tsx) | Registers ApiShip with the starter's shipping options: priced by the customer's choice, ready once the tariff and, for a pickup point, the point are picked, and taken off the cart through `removeShippingMethodFromCart` |
