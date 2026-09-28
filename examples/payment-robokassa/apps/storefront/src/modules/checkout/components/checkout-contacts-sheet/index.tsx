@@ -62,29 +62,33 @@ export default function CheckoutContactsSheet({
         phone: formData.phone,
       }
 
-    const result = await setAddresses({
-      shipping_address: contact,
-      email: formData.email,
-      same_as_billing: true,
-    })
-    if (result) {
-      setError(result)
+    try {
+      const result = await setAddresses({
+        shipping_address: contact,
+        email: formData.email,
+        same_as_billing: true,
+      })
+      if (result) {
+        setError(result)
+        return
+      }
+
+      await updateCart({
+        metadata: {
+          contact_first_name: formData.first_name,
+          contact_last_name: formData.last_name,
+          contact_phone: formData.phone,
+          has_different_recipient: isDifferentRecipient ? "true" : "false",
+        },
+      } as HttpTypes.StoreUpdateCart)
+
+      onClose()
+      router.refresh()
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : String(e))
+    } finally {
       setIsSubmitting(false)
-      return
     }
-
-    await updateCart({
-      metadata: {
-        contact_first_name: formData.first_name,
-        contact_last_name: formData.last_name,
-        contact_phone: formData.phone,
-        has_different_recipient: isDifferentRecipient ? "true" : "false",
-      },
-    } as HttpTypes.StoreUpdateCart)
-
-    setIsSubmitting(false)
-    onClose()
-    router.refresh()
   }
 
   return (

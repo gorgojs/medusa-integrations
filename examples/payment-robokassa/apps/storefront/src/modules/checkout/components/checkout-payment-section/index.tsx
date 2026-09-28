@@ -23,11 +23,15 @@ import { clx } from "@medusajs/ui"
 interface CheckoutPaymentSectionProps {
   cart: HttpTypes.StoreCart
   availablePaymentMethods: { id: string }[]
+  availableShippingOptions:
+  | HttpTypes.StoreCartShippingOptionWithServiceZone[]
+  | null
 }
 
 export default function CheckoutPaymentSection({
   cart,
   availablePaymentMethods,
+  availableShippingOptions,
 }: CheckoutPaymentSectionProps) {
   const t = useTranslations("CheckoutPage")
   const tm = useTranslations("PaymentMethods")
@@ -245,6 +249,7 @@ export default function CheckoutPaymentSection({
       <div className="flex flex-col gap-y-3">
         <PaymentButton
           cart={cart}
+          availableShippingOptions={availableShippingOptions}
           selectedPaymentMethod={selectedPaymentMethod}
           data-testid="submit-order-button"
         />

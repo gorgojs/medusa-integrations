@@ -40,8 +40,8 @@ export default function CheckoutInfoRow({
       <div className="flex items-center gap-x-2">
         <span className="flex-shrink-0 text-ui-fg-base">{icon}</span>
         <div className="flex flex-col">
-          <span className="txt-small text-ui-fg-muted">{heading}</span>
-          {value && <span className="txt-small text-ui-fg-base">{value}</span>}
+          <span className="txt-compact-medium text-ui-fg-muted">{heading}</span>
+          {value && <span className="txt-compact-medium text-ui-fg-base">{value}</span>}
         </div>
       </div>
       {(trailing || !disabled) && (
