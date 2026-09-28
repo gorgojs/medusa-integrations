@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Выбрать",
     "courierModalTitle": "Доставка курьером",
-    "deliveryDays": "{count, plural, one {{count} день} few {{count} дня} many {{count} дней} other {{count} дней}}",
-    "deliveryDaysRange": "{min}–{max} дней",
     "loadFailed": "Не удалось загрузить варианты доставки. Попробуйте ещё раз.",
     "mapKeyMissing": "Для карты нужен ключ API Яндекс Карт.",
     "next": "Далее",

@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Seç",
     "courierModalTitle": "Kuryeyle teslimat",
-    "deliveryDays": "{count, plural, one {{count} gün} other {{count} gün}}",
-    "deliveryDaysRange": "{min}–{max} gün",
     "loadFailed": "Teslimat seçenekleri yüklenemedi. Tekrar deneyin.",
     "mapKeyMissing": "Harita için Yandex Maps API anahtarı gerekiyor.",
     "next": "İleri",

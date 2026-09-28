@@ -77,9 +77,9 @@ export const ShippingOptionCardShell = ({
         {option.name}
       </span>
       <div className="flex flex-col gap-y-0">
-        <div className="min-h-[20px]">
+        <div className="flex min-h-[20px] items-center">
           {caption && (
-            <span className="txt-compact-small text-ui-fg-subtle">
+            <span className="txt-compact-small leading-4 text-ui-fg-subtle">
               {caption}
             </span>
           )}

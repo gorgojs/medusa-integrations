@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Piliin",
     "courierModalTitle": "Paghahatid ng courier",
-    "deliveryDays": "{count, plural, one {{count} araw} other {{count} araw}}",
-    "deliveryDaysRange": "{min}–{max} araw",
     "loadFailed": "Hindi ma-load ang mga opsyon sa paghahatid. Subukan ulit.",
     "mapKeyMissing": "Kailangan ng mapa ng Yandex Maps API key.",
     "next": "Susunod",

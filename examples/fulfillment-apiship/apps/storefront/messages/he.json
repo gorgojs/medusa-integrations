@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "בחירה",
     "courierModalTitle": "משלוח עם שליח",
-    "deliveryDays": "{count, plural, one {יום {count}} two {יומיים} other {{count} ימים}}",
-    "deliveryDaysRange": "{min}–{max} ימים",
     "loadFailed": "לא הצלחנו לטעון את אפשרויות המשלוח. נסו שוב.",
     "mapKeyMissing": "המפה זקוקה למפתח API של Yandex Maps.",
     "next": "הבא",

@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Välj",
     "courierModalTitle": "Leverans med bud",
-    "deliveryDays": "{count, plural, one {{count} dag} other {{count} dagar}}",
-    "deliveryDaysRange": "{min}–{max} dagar",
     "loadFailed": "Vi kunde inte läsa in leveransalternativen. Försök igen.",
     "mapKeyMissing": "Kartan behöver en API-nyckel för Yandex Maps.",
     "next": "Nästa",

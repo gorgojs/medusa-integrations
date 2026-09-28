@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Valitse",
     "courierModalTitle": "Kuriiritoimitus",
-    "deliveryDays": "{count, plural, one {{count} päivä} other {{count} päivää}}",
-    "deliveryDaysRange": "{min}–{max} päivää",
     "loadFailed": "Toimitusvaihtoehtoja ei voitu ladata. Yritä uudelleen.",
     "mapKeyMissing": "Kartta tarvitsee Yandex Maps -API-avaimen.",
     "next": "Seuraava",

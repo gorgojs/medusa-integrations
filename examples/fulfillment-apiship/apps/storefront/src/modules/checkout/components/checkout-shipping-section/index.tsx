@@ -11,7 +11,6 @@ import { convertToLocale } from "@lib/util/money"
 import {
   getDeliveryDays,
   isPickupShippingOption,
-  type DeliveryDays,
 } from "@lib/util/fulfillment"
 import { useCartUpdate } from "@modules/checkout/context/cart-update-context"
 import { Loader, CursorDefault } from "@medusajs/icons"
@@ -21,6 +20,7 @@ import { usePathname } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
 import { useErrorMessage } from "@lib/util/use-error-message"
 import { useLocaleDirection } from "@lib/hooks/use-locale-direction"
+import { useFormatDeliveryDays } from "@lib/hooks/use-format-delivery-days"
 import ShippingOptionCard from "@modules/checkout/components/shipping-option"
 import {
   useSelectedShippingOptionId,
@@ -81,65 +81,7 @@ export default function CheckoutShippingSection({
     useShippingSelection()
   const shippingMethodId = useSelectedShippingOptionId(cart)
 
-  const [now, setNow] = useState<Date | null>(null)
-  useEffect(() => {
-    setNow(new Date())
-  }, [])
-
-  const getDeliveryDate = (daysFromNow: number) => {
-    const date = new Date(now!)
-    date.setHours(0, 0, 0, 0)
-    date.setDate(date.getDate() + daysFromNow)
-    return date
-  }
-
-  const deliveryDateFormatter = useMemo(
-    () =>
-      new Intl.DateTimeFormat(locale, {
-        day: "numeric",
-        month: "long",
-      }),
-    [locale]
-  )
-
-  const formatDeliveryDate = (daysFromNow: number) => {
-    return deliveryDateFormatter.format(getDeliveryDate(daysFromNow))
-  }
-
-  const formatDeliveryRange = (minDaysFromNow: number, maxDaysFromNow: number) => {
-    const startDate = getDeliveryDate(minDaysFromNow)
-    const endDate = getDeliveryDate(maxDaysFromNow)
-
-    if (typeof deliveryDateFormatter.formatRange === "function") {
-      return deliveryDateFormatter.formatRange(startDate, endDate)
-    }
-
-    return new Intl.DateTimeFormat(locale, {
-      day: "numeric",
-      month: "long",
-    }).format(startDate) + ` – ${formatDeliveryDate(maxDaysFromNow)}`
-  }
-
-  const formatDeliveryDays = (days: DeliveryDays | null) =>
-    !days
-      ? null
-      : days.max === 0
-        ? t("deliveryToday")
-        : !now
-          ? null
-          : days.min !== undefined && days.max !== undefined
-            ? days.min === days.max
-              ? formatDeliveryDate(days.min)
-              : formatDeliveryRange(days.min, days.max)
-            : days.max !== undefined
-              ? t("deliveryDateUntil", {
-                date: formatDeliveryDate(days.max),
-              })
-              : days.min !== undefined
-                ? t("deliveryDateFrom", {
-                  date: formatDeliveryDate(days.min),
-                })
-                : null
+  const formatDeliveryDays = useFormatDeliveryDays()
 
   const countryOptions = useMemo<CountryOption[]>(() => {
     return regions

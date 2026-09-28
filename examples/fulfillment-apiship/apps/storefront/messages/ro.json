@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Alege",
     "courierModalTitle": "Livrare prin curier",
-    "deliveryDays": "{count, plural, one {{count} zi} few {{count} zile} other {{count} de zile}}",
-    "deliveryDaysRange": "{min}–{max} zile",
     "loadFailed": "Nu am putut încărca opțiunile de livrare. Încearcă din nou.",
     "mapKeyMissing": "Harta are nevoie de o cheie API Yandex Maps.",
     "next": "Continuă",

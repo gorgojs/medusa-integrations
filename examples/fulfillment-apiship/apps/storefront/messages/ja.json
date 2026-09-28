@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "選択",
     "courierModalTitle": "宅配便でお届け",
-    "deliveryDays": "{count, plural, other {{count}日}}",
-    "deliveryDaysRange": "{min}〜{max}日",
     "loadFailed": "配送方法を読み込めませんでした。もう一度お試しください。",
     "mapKeyMissing": "地図には Yandex Maps の API キーが必要です。",
     "next": "次へ",

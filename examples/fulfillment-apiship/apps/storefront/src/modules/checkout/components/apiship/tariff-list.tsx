@@ -1,9 +1,10 @@
 "use client"
 
 import { convertToLocale } from "@lib/util/money"
+import { useFormatDeliveryDays } from "@lib/hooks/use-format-delivery-days"
 import { useLocaleDirection } from "@lib/hooks/use-locale-direction"
 import { RadioGroup, Text } from "@medusajs/ui"
-import { useLocale, useTranslations } from "next-intl"
+import { useLocale } from "next-intl"
 import ProviderLogo from "./provider-logo"
 import type { ApishipProvider, ApishipTariff } from "./types"
 import { getTariffCost, getTariffDays } from "./utils"
@@ -35,18 +36,9 @@ export default function TariffList({
   onSelect,
   showGroupNames = true,
 }: TariffListProps) {
-  const t = useTranslations("Apiship")
   const dir = useLocaleDirection()
   const locale = useLocale()
-
-  const formatDays = (tariff: ApishipTariff) => {
-    const days = getTariffDays(tariff)
-    if (!days) return null
-
-    return days.min === days.max
-      ? t("deliveryDays", { count: days.max })
-      : t("deliveryDaysRange", { min: days.min, max: days.max })
-  }
+  const formatDeliveryDays = useFormatDeliveryDays()
 
   return (
     <RadioGroup
@@ -68,7 +60,7 @@ export default function TariffList({
 
           {group.tariffs.map((tariff) => {
             const cost = getTariffCost(tariff)
-            const days = formatDays(tariff)
+            const days = formatDeliveryDays(getTariffDays(tariff))
 
             return (
               <RadioGroup.ChoiceBox

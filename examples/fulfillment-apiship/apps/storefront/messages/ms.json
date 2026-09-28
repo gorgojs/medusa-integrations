@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Pilih",
     "courierModalTitle": "Penghantaran kurier",
-    "deliveryDays": "{count, plural, other {{count} hari}}",
-    "deliveryDaysRange": "{min}–{max} hari",
     "loadFailed": "Pilihan penghantaran gagal dimuatkan. Cuba lagi.",
     "mapKeyMissing": "Peta memerlukan kunci API Yandex Maps.",
     "next": "Seterusnya",
