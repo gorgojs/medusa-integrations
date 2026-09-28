@@ -169,6 +169,27 @@ medusaIntegrationTestRunner({
         expect(keys).toContain("boxberry")
       })
 
+      it("each provider carries its logo as an SVG data URI", async () => {
+        const res = await api.get(`/admin/apiship/providers?provider_id=${PROVIDER_ID}`, { headers: adminHeaders })
+
+        for (const provider of res.data.providers) {
+          expect(provider.icon).toMatch(/^data:image\/svg\+xml,/)
+          expect(decodeURIComponent(provider.icon.slice("data:image/svg+xml,".length))).toMatch(/^<svg[\s>]/)
+        }
+      })
+
+      it("a provider with no logo of its own gets the ApiShip default icon", async () => {
+        const res = await api.get(`/admin/apiship/providers?provider_id=${PROVIDER_ID}`, { headers: adminHeaders })
+        const icons = Object.fromEntries(
+          res.data.providers.map((p: any) => [p.key, p.icon])
+        )
+
+        expect(icons.dhl).toBeDefined()
+        expect(icons.dhl).not.toBe(icons.cdek)
+        expect(icons.dhl).not.toBe(icons.boxberry)
+        expect(icons.cdek).not.toBe(icons.boxberry)
+      })
+
       it("returns 401 without authorization header", async () => {
         const res = await api
           .get(`/admin/apiship/providers?provider_id=${PROVIDER_ID}`)

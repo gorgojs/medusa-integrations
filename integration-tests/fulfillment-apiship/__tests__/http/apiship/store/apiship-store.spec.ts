@@ -272,6 +272,20 @@ medusaIntegrationTestRunner({
         expect(keys).toContain("cdek")
         expect(keys).toContain("boxberry")
       })
+
+      it("each provider carries its logo as an SVG data URI", async () => {
+        const res = await api.get(`/store/apiship/providers?shipping_option_id=${shippingOptionId}`, { headers: storeHeaders })
+
+        for (const provider of res.data.providers) {
+          expect(provider.icon).toMatch(/^data:image\/svg\+xml,/)
+          expect(decodeURIComponent(provider.icon.slice("data:image/svg+xml,".length))).toMatch(/^<svg[\s>]/)
+        }
+
+        const [cdek, boxberry] = ["cdek", "boxberry"].map(
+          (key) => res.data.providers.find((p: any) => p.key === key).icon
+        )
+        expect(cdek).not.toBe(boxberry)
+      })
     })
 
     // -------------------------------------------------------------------------

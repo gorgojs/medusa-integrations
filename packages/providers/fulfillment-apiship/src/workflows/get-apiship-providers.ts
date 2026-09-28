@@ -8,11 +8,13 @@ import {
 } from "@medusajs/framework/workflows-sdk"
 import { MedusaError, Modules } from "@medusajs/framework/utils"
 import { AdminApishipProvider } from "../types/http"
+import type { ProviderObject } from "../lib/apiship-client"
 import { validateApishipOptionsStep } from "./steps/validate-apiship-options"
 import { getApishipOptionsStep } from "./steps/get-apiship-options"
 import type { GetApishipOptionsMode } from "./steps/get-apiship-options"
 import { resolveApishipProviderIdStep } from "./steps/resolve-apiship-provider-id"
 import { createApishipClient } from "../lib/client"
+import { getApishipProviderIcon } from "../lib/provider-icons"
 
 export type GetApishipProvidersFromCacheStepInput = {
   key: string
@@ -27,7 +29,7 @@ export const getApishipProvidersFromCacheStep = createStep(
     const cachingModuleService = container.resolve(Modules.CACHE)
 
     const providers =
-      (await cachingModuleService.get(key)) as AdminApishipProvider[] | null
+      (await cachingModuleService.get(key)) as ProviderObject[] | null
 
     return new StepResponse(providers)
   }
@@ -53,7 +55,7 @@ export const fetchApishipProvidersStep = createStep(
       )
     }
 
-    const providers: AdminApishipProvider[] = data.rows
+    const providers: ProviderObject[] = data.rows
 
     return new StepResponse(providers)
   }
@@ -61,7 +63,7 @@ export const fetchApishipProvidersStep = createStep(
 
 export type SaveProvidersToCacheStepInput = {
   key: string
-  data: AdminApishipProvider[]
+  data: ProviderObject[]
 }
 
 export const saveProvidersToCacheStep = createStep(
@@ -74,8 +76,8 @@ export const saveProvidersToCacheStep = createStep(
 )
 
 export type SelectProvidersResultStepInput = {
-  cached: AdminApishipProvider[] | null
-  fetched?: AdminApishipProvider[] | null
+  cached: ProviderObject[] | null
+  fetched?: ProviderObject[] | null
 }
 
 export const selectProvidersResultStep = createStep(
@@ -136,6 +138,15 @@ export const getApishipProvidersWorkflow = createWorkflow(
       fetched: fetchedProviders,
     })
 
-    return new WorkflowResponse(output)
+    const providers = transform(
+      { output },
+      (data): AdminApishipProvider[] =>
+        data.output.map((provider) => ({
+          ...provider,
+          icon: getApishipProviderIcon(provider.key),
+        }))
+    )
+
+    return new WorkflowResponse(providers)
   }
 )
