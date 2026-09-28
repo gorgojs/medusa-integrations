@@ -363,21 +363,23 @@ export default function ApishipDeliveryModal({
         </div>
       ) : (
         <div className="flex flex-col">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-10">
-              <Loader className="h-5 w-5 animate-spin text-ui-fg-muted" />
-            </div>
-          ) : doorGroups.length === 0 ? (
-            <Text className="text-ui-fg-muted">{t("noTariffs")}</Text>
-          ) : (
-            <TariffList
-              groups={doorGroups}
-              currencyCode={cart.currency_code}
-              providers={providers}
-              selectedKey={selectedTariffKey}
-              onSelect={setSelectedTariffKey}
-            />
-          )}
+          <div className="pb-2">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-10">
+                <Loader className="h-5 w-5 animate-spin text-ui-fg-muted" />
+              </div>
+            ) : doorGroups.length === 0 ? (
+              <Text className="text-ui-fg-muted">{t("noTariffs")}</Text>
+            ) : (
+              <TariffList
+                groups={doorGroups}
+                currencyCode={cart.currency_code}
+                providers={providers}
+                selectedKey={selectedTariffKey}
+                onSelect={setSelectedTariffKey}
+              />
+            )}
+          </div>
 
           <div className="sticky bottom-0 -mx-6 -mb-4 flex flex-col gap-y-4 bg-ui-bg-base px-6 pb-4 pt-4">
             <ErrorMessage
