@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "اختيار",
     "courierModalTitle": "التوصيل بمندوب",
-    "deliveryDays": "{count, plural, zero {{count} يوم} one {يوم واحد} two {يومان} few {{count} أيام} many {{count} يومًا} other {{count} يوم}}",
-    "deliveryDaysRange": "{min}–{max} يوم",
     "loadFailed": "تعذّر تحميل خيارات التوصيل. حاول مرة أخرى.",
     "mapKeyMissing": "تحتاج الخريطة إلى مفتاح API لخرائط Yandex.",
     "next": "التالي",

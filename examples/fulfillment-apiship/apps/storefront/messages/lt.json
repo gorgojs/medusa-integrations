@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Pasirinkti",
     "courierModalTitle": "Pristatymas kurjeriu",
-    "deliveryDays": "{count, plural, one {{count} diena} few {{count} dienos} other {{count} dienų}}",
-    "deliveryDaysRange": "{min}–{max} dienų",
     "loadFailed": "Nepavyko įkelti pristatymo parinkčių. Bandykite dar kartą.",
     "mapKeyMissing": "Žemėlapiui reikia Yandex Maps API rakto.",
     "next": "Toliau",

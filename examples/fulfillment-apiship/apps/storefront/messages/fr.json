@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Choisir",
     "courierModalTitle": "Livraison par coursier",
-    "deliveryDays": "{count, plural, one {{count} jour} other {{count} jours}}",
-    "deliveryDaysRange": "{min} à {max} jours",
     "loadFailed": "Impossible de charger les options de livraison. Réessayez.",
     "mapKeyMissing": "La carte nécessite une clé API Yandex Maps.",
     "next": "Suivant",

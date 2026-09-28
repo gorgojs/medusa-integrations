@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Chọn",
     "courierModalTitle": "Giao bằng người giao hàng",
-    "deliveryDays": "{count, plural, other {{count} ngày}}",
-    "deliveryDaysRange": "{min}–{max} ngày",
     "loadFailed": "Không tải được các lựa chọn giao hàng. Hãy thử lại.",
     "mapKeyMissing": "Bản đồ cần khóa API của Yandex Maps.",
     "next": "Tiếp tục",

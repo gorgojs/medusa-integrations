@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "चुनें",
     "courierModalTitle": "कूरियर से डिलीवरी",
-    "deliveryDays": "{count, plural, one {{count} दिन} other {{count} दिन}}",
-    "deliveryDaysRange": "{min}–{max} दिन",
     "loadFailed": "डिलीवरी विकल्प लोड नहीं हो सके। फिर से कोशिश करें।",
     "mapKeyMissing": "नक्शे के लिए Yandex Maps API कुंजी चाहिए।",
     "next": "आगे",

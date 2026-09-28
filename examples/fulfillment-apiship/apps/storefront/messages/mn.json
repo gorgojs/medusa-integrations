@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Сонгох",
     "courierModalTitle": "Жолоочоор хүргэх",
-    "deliveryDays": "{count, plural, one {{count} хоног} other {{count} хоног}}",
-    "deliveryDaysRange": "{min}–{max} хоног",
     "loadFailed": "Хүргэлтийн сонголтууд ачаалагдсангүй. Дахин оролдоно уу.",
     "mapKeyMissing": "Газрын зурагт Yandex Maps API түлхүүр хэрэгтэй.",
     "next": "Цааш",

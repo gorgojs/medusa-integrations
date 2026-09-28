@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Επιλογή",
     "courierModalTitle": "Παράδοση με κούριερ",
-    "deliveryDays": "{count, plural, one {{count} ημέρα} other {{count} ημέρες}}",
-    "deliveryDaysRange": "{min}–{max} ημέρες",
     "loadFailed": "Δεν φορτώθηκαν οι επιλογές παράδοσης. Δοκιμάστε ξανά.",
     "mapKeyMissing": "Ο χάρτης χρειάζεται κλειδί API του Yandex Maps.",
     "next": "Επόμενο",

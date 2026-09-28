@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "არჩევა",
     "courierModalTitle": "მიწოდება კურიერით",
-    "deliveryDays": "{count, plural, one {{count} დღე} other {{count} დღე}}",
-    "deliveryDaysRange": "{min}–{max} დღე",
     "loadFailed": "მიწოდების ვარიანტები ვერ ჩაიტვირთა. სცადეთ თავიდან.",
     "mapKeyMissing": "რუკას სჭირდება Yandex Maps-ის API გასაღები.",
     "next": "შემდეგი",

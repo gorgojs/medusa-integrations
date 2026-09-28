@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Vybrať",
     "courierModalTitle": "Doručenie kuriérom",
-    "deliveryDays": "{count, plural, one {{count} deň} few {{count} dni} many {{count} dňa} other {{count} dní}}",
-    "deliveryDaysRange": "{min}–{max} dní",
     "loadFailed": "Možnosti doručenia sa nepodarilo načítať. Skúste to znova.",
     "mapKeyMissing": "Mapa potrebuje API kľúč Yandex Maps.",
     "next": "Ďalej",

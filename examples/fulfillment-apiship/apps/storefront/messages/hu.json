@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Kiválasztom",
     "courierModalTitle": "Futárszolgálat",
-    "deliveryDays": "{count, plural, one {{count} nap} other {{count} nap}}",
-    "deliveryDaysRange": "{min}–{max} nap",
     "loadFailed": "Nem sikerült betölteni a szállítási lehetőségeket. Próbálja újra.",
     "mapKeyMissing": "A térképhez Yandex Maps API-kulcs szükséges.",
     "next": "Tovább",

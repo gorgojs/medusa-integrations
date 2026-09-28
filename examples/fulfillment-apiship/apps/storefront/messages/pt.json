@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Escolher",
     "courierModalTitle": "Entrega por estafeta",
-    "deliveryDays": "{count, plural, one {{count} dia} other {{count} dias}}",
-    "deliveryDaysRange": "{min}–{max} dias",
     "loadFailed": "Não foi possível carregar as opções de entrega. Tente novamente.",
     "mapKeyMissing": "O mapa precisa de uma chave de API do Yandex Maps.",
     "next": "Seguinte",

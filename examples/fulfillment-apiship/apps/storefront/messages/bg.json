@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "Избери",
     "courierModalTitle": "Доставка с куриер",
-    "deliveryDays": "{count, plural, one {{count} ден} other {{count} дни}}",
-    "deliveryDaysRange": "{min}–{max} дни",
     "loadFailed": "Вариантите за доставка не се заредиха. Опитайте отново.",
     "mapKeyMissing": "За картата е нужен API ключ за Yandex Maps.",
     "next": "Напред",

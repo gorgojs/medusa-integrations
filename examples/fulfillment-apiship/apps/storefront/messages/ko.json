@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "선택",
     "courierModalTitle": "택배 배송",
-    "deliveryDays": "{count, plural, other {{count}일}}",
-    "deliveryDaysRange": "{min}~{max}일",
     "loadFailed": "배송 방법을 불러오지 못했습니다. 다시 시도해 주세요.",
     "mapKeyMissing": "지도를 보려면 Yandex Maps API 키가 필요합니다.",
     "next": "다음",

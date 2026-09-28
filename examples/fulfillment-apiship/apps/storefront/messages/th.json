@@ -60,8 +60,6 @@
   "Apiship": {
     "choose": "เลือก",
     "courierModalTitle": "จัดส่งโดยพนักงานส่ง",
-    "deliveryDays": "{count, plural, other {{count} วัน}}",
-    "deliveryDaysRange": "{min}–{max} วัน",
     "loadFailed": "โหลดตัวเลือกการจัดส่งไม่สำเร็จ กรุณาลองใหม่",
     "mapKeyMissing": "แผนที่ต้องใช้คีย์ API ของ Yandex Maps",
     "next": "ถัดไป",
