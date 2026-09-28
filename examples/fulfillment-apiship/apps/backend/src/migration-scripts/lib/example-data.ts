@@ -1,5 +1,5 @@
 import type { MedusaContainer } from "@medusajs/framework";
-import { Modules } from "@medusajs/framework/utils";
+import { generateEntityId, Modules } from "@medusajs/framework/utils";
 import {
   integrationProviderKey,
   upsertIntegrationWorkflow,
@@ -18,6 +18,12 @@ import { getLink, getQuery } from "./utils";
 
 const APISHIP_PROVIDER_ID = integrationProviderKey("apiship", "apiship-1");
 const APISHIP_FULFILLMENT_PROVIDER_ID = "apiship_apiship";
+
+const APISHIP_CONNECTION = {
+  name: "TEST",
+  provider_key: "cdek",
+  is_enabled: true,
+};
 
 /**
  * ApiShip aggregates Russian carriers and quotes in rubles, so the example puts its
@@ -70,6 +76,7 @@ const getApishipRegion = () => {
  */
 const seedIntegration = async (container: MedusaContainer) => {
   const token = process.env.SEED_APISHIP_TOKEN;
+  const providerConnectId = process.env.SEED_APISHIP_PROVIDER_CONNECT_ID;
   const seedRegion = getApishipRegion();
 
   await upsertIntegrationWorkflow(container).run({
@@ -88,6 +95,19 @@ const seedIntegration = async (container: MedusaContainer) => {
         sender_contact_name: process.env.STORE_NAME || "Gorgo Medusa Store",
         sender_phone: process.env.STORE_PHONE || "",
         sender_company: process.env.STORE_NAME || "Gorgo Medusa Store",
+        ...(providerConnectId
+          ? {
+              settings: {
+                connections: [
+                  {
+                    id: generateEntityId(undefined, "ascon"),
+                    ...APISHIP_CONNECTION,
+                    provider_connect_id: providerConnectId,
+                  },
+                ],
+              },
+            }
+          : {}),
       },
     },
   });
