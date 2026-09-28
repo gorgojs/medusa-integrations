@@ -3,8 +3,10 @@
 import { useState } from "react"
 import {
   ApishipDeliveryModal,
+  ApishipProviderLogo,
   getApishipDeliveryType,
   getApishipSelection,
+  useApishipProviders,
   type ApishipSelection,
 } from "@modules/checkout/components/apiship"
 import { useShippingSelection } from "@modules/checkout/context/shipping-selection-context"
@@ -28,12 +30,16 @@ const ApishipDeliveryRow: React.FC<DeliveryRowProps> = ({
   const { getOptionData } = useShippingSelection()
   const [open, setOpen] = useState(false)
 
+  const selection = option
+    ? ((getOptionData(option.id) as { apishipData?: ApishipSelection } | undefined)
+        ?.apishipData ?? getApishipSelection(cart, option.id))
+    : null
+  const providers = useApishipProviders(option?.id, open || !!selection)
+
   if (!option) return null
 
   const toPoint = getApishipDeliveryType(option) === 2
-  const selection =
-    (getOptionData(option.id) as { apishipData?: ApishipSelection } | undefined)
-      ?.apishipData ?? getApishipSelection(cart, option.id)
+  const providerKey = selection?.point?.providerKey ?? selection?.tariff.providerKey
   const addr = cart.shipping_address
 
   const addressText = addr?.address_1
@@ -46,6 +52,11 @@ const ApishipDeliveryRow: React.FC<DeliveryRowProps> = ({
         heading={toPoint ? t("pickupPointHeading") : tCheckout("addressHeading")}
         onClick={() => setOpen(true)}
         value={!selection ? null : toPoint ? selection.point?.address : addressText}
+        trailing={
+          selection && providerKey ? (
+            <ApishipProviderLogo src={providers[providerKey]?.icon} />
+          ) : null
+        }
         data-testid="checkout-apiship-row"
       />
 
@@ -55,6 +66,7 @@ const ApishipDeliveryRow: React.FC<DeliveryRowProps> = ({
         cart={cart}
         addresses={addresses}
         option={option}
+        providers={providers}
       />
     </>
   )

@@ -8,6 +8,7 @@ type CheckoutInfoRowProps = {
   icon: ReactNode
   heading: string
   value?: ReactNode
+  trailing?: ReactNode
   onClick: () => void
   hidden?: boolean
   disabled?: boolean
@@ -18,6 +19,7 @@ export default function CheckoutInfoRow({
   icon,
   heading,
   value,
+  trailing,
   onClick,
   hidden,
   disabled,
@@ -42,8 +44,13 @@ export default function CheckoutInfoRow({
           {value && <span className="txt-small text-ui-fg-base">{value}</span>}
         </div>
       </div>
-      {!disabled && (
-        <ChevronRight className="text-ui-fg-base flex-shrink-0 rtl:rotate-180" />
+      {(trailing || !disabled) && (
+        <div className="flex flex-shrink-0 items-center gap-x-3">
+          {trailing}
+          {!disabled && (
+            <ChevronRight className="text-ui-fg-base flex-shrink-0 rtl:rotate-180" />
+          )}
+        </div>
       )}
     </button>
   )
