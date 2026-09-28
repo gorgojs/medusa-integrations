@@ -27,8 +27,10 @@ import { DEFAULT_REGION } from "@lib/util/env"
  */
 export async function retrieveCart(cartId?: string, fields?: string) {
   const id = cartId || (await getCartId())
+  // +shipping_methods.data carries whatever a calculated provider collected, so a reload
+  // finds the choice the customer already made instead of asking for it again.
   fields ??=
-    "*items, *region, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name"
+    "*items, *region, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name, +shipping_methods.data"
 
   if (!id) {
     return null
@@ -225,16 +227,21 @@ export async function deleteLineItem(lineId: string) {
 export async function setShippingMethod({
   cartId,
   shippingMethodId,
+  data,
 }: {
   cartId: string
   shippingMethodId: string
+  // A calculated provider can need a choice the customer makes at the checkout, such as
+  // a carrier tariff or a pickup point. It rides along here and comes back on the
+  // shipping method.
+  data?: Record<string, unknown>
 }) {
   const headers = {
     ...(await getAuthHeaders()),
   }
 
   return sdk.store.cart
-    .addShippingMethod(cartId, { option_id: shippingMethodId }, {}, headers)
+    .addShippingMethod(cartId, { option_id: shippingMethodId, data }, {}, headers)
     .then(async () => {
       const cartCacheTag = await getCacheTag("carts")
       revalidateTag(cartCacheTag)

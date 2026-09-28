@@ -1,10 +1,18 @@
 "use client"
 
-import { useState, useEffect, useTransition, useMemo } from "react"
+import { useState, useEffect, useRef, useTransition, useMemo } from "react"
 import { setShippingMethod, updateCart, updateRegion } from "@lib/data/cart"
 import { calculatePriceForShippingOption } from "@lib/data/fulfillment"
+import {
+  compareShippingOptions,
+  findShippingOptionDescriptor,
+} from "@lib/constants"
 import { convertToLocale } from "@lib/util/money"
-import { getDeliveryDays, isPickupShippingOption } from "@lib/util/fulfillment"
+import {
+  getDeliveryDays,
+  isPickupShippingOption,
+  type DeliveryDays,
+} from "@lib/util/fulfillment"
 import { useCartUpdate } from "@modules/checkout/context/cart-update-context"
 import { Loader, CursorDefault } from "@medusajs/icons"
 import { DropdownMenu, RadioGroup, clx } from "@medusajs/ui"
@@ -13,6 +21,11 @@ import { usePathname } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
 import { useErrorMessage } from "@lib/util/use-error-message"
 import { useLocaleDirection } from "@lib/hooks/use-locale-direction"
+import ShippingOptionCard from "@modules/checkout/components/shipping-option"
+import {
+  useSelectedShippingOptionId,
+  useShippingSelection,
+} from "@modules/checkout/context/shipping-selection-context"
 
 type CountryOption = {
   country: string
@@ -64,9 +77,9 @@ export default function CheckoutShippingSection({
     Record<string, number>
   >({})
   const [shippingError, setShippingError] = useState<string | null>(null)
-  const [shippingMethodId, setShippingMethodId] = useState<string | null>(
-    cart.shipping_methods?.at(-1)?.shipping_option_id || null
-  )
+  const { setPendingOptionId, getOptionData, clearOptionData } =
+    useShippingSelection()
+  const shippingMethodId = useSelectedShippingOptionId(cart)
 
   const [now, setNow] = useState<Date | null>(null)
   useEffect(() => {
@@ -107,6 +120,27 @@ export default function CheckoutShippingSection({
     }).format(startDate) + ` – ${formatDeliveryDate(maxDaysFromNow)}`
   }
 
+  const formatDeliveryDays = (days: DeliveryDays | null) =>
+    !days
+      ? null
+      : days.max === 0
+        ? t("deliveryToday")
+        : !now
+          ? null
+          : days.min !== undefined && days.max !== undefined
+            ? days.min === days.max
+              ? formatDeliveryDate(days.min)
+              : formatDeliveryRange(days.min, days.max)
+            : days.max !== undefined
+              ? t("deliveryDateUntil", {
+                date: formatDeliveryDate(days.max),
+              })
+              : days.min !== undefined
+                ? t("deliveryDateFrom", {
+                  date: formatDeliveryDate(days.min),
+                })
+                : null
+
   const countryOptions = useMemo<CountryOption[]>(() => {
     return regions
       .flatMap((r) =>
@@ -139,7 +173,24 @@ export default function CheckoutShippingSection({
     })
   }
 
-  const shippingOptions = availableShippingOptions
+  const shippingOptions = useMemo(
+    () =>
+      availableShippingOptions
+        ? [...availableShippingOptions].sort(compareShippingOptions)
+        : null,
+    [availableShippingOptions]
+  )
+
+  const quotedUpFront = (option: HttpTypes.StoreCartShippingOption) =>
+    option.price_type === "calculated" &&
+    !findShippingOptionDescriptor(option)?.pricedByChoice
+
+  const calculatedPriceKey = JSON.stringify({
+    options:
+      shippingOptions?.filter(quotedUpFront).map((option) => option.id) ?? [],
+    cart: cart.id,
+    updatedAt: cart.updated_at,
+  })
 
   useEffect(() => {
     setIsLoadingPrices(true)
@@ -148,9 +199,7 @@ export default function CheckoutShippingSection({
       return
     }
 
-    const calculatedMethods = shippingOptions.filter(
-      (sm) => sm.price_type === "calculated"
-    )
+    const calculatedMethods = shippingOptions.filter(quotedUpFront)
 
     if (!calculatedMethods.length) {
       setIsLoadingPrices(false)
@@ -164,33 +213,142 @@ export default function CheckoutShippingSection({
     ).then((results) => {
       const pricesMap: Record<string, number> = {}
       results.forEach((r) => {
-        if (r.status === "fulfilled" && r.value?.id) {
-          pricesMap[r.value.id] = r.value.amount ?? 0
+        if (
+          r.status === "fulfilled" &&
+          r.value?.id &&
+          typeof r.value.amount === "number"
+        ) {
+          pricesMap[r.value.id] = r.value.amount
         }
       })
       setCalculatedPricesMap(pricesMap)
       setIsLoadingPrices(false)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [availableShippingOptions, cart.id])
+  }, [calculatedPriceKey])
+
+  const optionOrderKey = (shippingOptions ?? []).map((o) => o.id).join(",")
+  const autoSelectedForCart = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (shippingMethodId || !shippingOptions?.length) return
+    if (autoSelectedForCart.current === cart.id) return
+    autoSelectedForCart.current = cart.id
+
+    let cancelled = false
+
+    void (async () => {
+      for (const option of shippingOptions) {
+        if (cancelled) return
+
+        if (findShippingOptionDescriptor(option)?.pricedByChoice) {
+          setPendingOptionId(option.id)
+          return
+        }
+
+        const err = await setShippingMethod({
+          cartId: cart.id,
+          shippingMethodId: option.id,
+        })
+          .then(() => null)
+          .catch((e: Error) => e.message)
+
+        if (cancelled) return
+        if (!err) {
+          setPendingOptionId(option.id)
+          return
+        }
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [optionOrderKey, cart.id, shippingMethodId])
+
+  const addressKey = [
+    cart.shipping_address?.country_code,
+    cart.shipping_address?.province,
+    cart.shipping_address?.city,
+    cart.shipping_address?.postal_code,
+    cart.shipping_address?.address_1,
+    cart.shipping_address?.address_2,
+  ].join("|")
+  const currentMethod = cart.shipping_methods?.at(-1)
+  const currentMethodId = currentMethod?.id ?? null
+  const currentDescriptor = findShippingOptionDescriptor(
+    shippingOptions?.find(
+      (option) => option.id === currentMethod?.shipping_option_id
+    )
+  )
+  const removeStaleMethod = currentDescriptor?.pricedByChoice
+    ? currentDescriptor.removeShippingMethod
+    : undefined
+  const previousAddressKey = useRef(addressKey)
+
+  useEffect(() => {
+    if (previousAddressKey.current === addressKey) return
+    previousAddressKey.current = addressKey
+
+    clearOptionData()
+
+    if (!currentMethodId || !removeStaleMethod) return
+
+    trackCartUpdate(() => removeStaleMethod(currentMethodId)).catch(
+      (e: Error) => setShippingError(e.message)
+    )
+  }, [
+    addressKey,
+    currentMethodId,
+    removeStaleMethod,
+    clearOptionData,
+    trackCartUpdate,
+  ])
 
   const handleSelectShipping = async (id: string) => {
     setShippingError(null)
     const prev = shippingMethodId
-    setShippingMethodId(id)
+    setPendingOptionId(id)
+
+    const selectedOption = shippingOptions?.find((option) => option.id === id)
+    const descriptor = findShippingOptionDescriptor(selectedOption)
+    const pricedByChoice = Boolean(descriptor?.pricedByChoice)
+    const data = getOptionData(id)
+
+    const clearCartMethod = async () => {
+      const currentMethodOnCart = cart.shipping_methods?.at(-1)
+      if (!currentMethodOnCart || !descriptor?.removeShippingMethod) return
+
+      const remove = descriptor.removeShippingMethod
+      await trackCartUpdate(() => remove(currentMethodOnCart.id)).catch(
+        (e: Error) => setShippingError(e.message)
+      )
+    }
+
+    if (pricedByChoice && !data) {
+      await clearCartMethod()
+      return
+    }
+
     const err = await trackCartUpdate(() =>
       setShippingMethod({
         cartId: cart.id,
         shippingMethodId: id,
+        data,
       })
     ).catch((e: Error) => e.message)
+
     if (err) {
-      setShippingMethodId(prev)
+      if (pricedByChoice) {
+        await clearCartMethod()
+        return
+      }
+
+      setPendingOptionId(prev)
       setShippingError(err as string)
       return
     }
-
-    const selectedOption = shippingOptions?.find((option) => option.id === id)
     const addr = cart.shipping_address
     const hasDeliveryFields = !!(
       addr?.address_1 ||
@@ -283,26 +441,7 @@ export default function CheckoutShippingSection({
             {shippingOptions.map((option) => {
               const isSelected = option.id === shippingMethodId
 
-              const days = getDeliveryDays(option)
-              const deliveryLabel = !days
-                ? null
-                : days.max === 0
-                  ? t("deliveryToday")
-                  : !now
-                    ? null
-                    : days.min !== undefined && days.max !== undefined
-                      ? days.min === days.max
-                        ? formatDeliveryDate(days.min)
-                        : formatDeliveryRange(days.min, days.max)
-                      : days.max !== undefined
-                        ? t("deliveryDateUntil", {
-                          date: formatDeliveryDate(days.max),
-                        })
-                        : days.min !== undefined
-                          ? t("deliveryDateFrom", {
-                            date: formatDeliveryDate(days.min),
-                          })
-                          : null
+              const deliveryLabel = formatDeliveryDays(getDeliveryDays(option))
 
               const priceAmount =
                 option.price_type === "flat"
@@ -310,6 +449,11 @@ export default function CheckoutShippingSection({
                   : calculatedPricesMap[option.id] !== undefined
                     ? calculatedPricesMap[option.id]
                     : null
+              const isUnavailable =
+                option.price_type === "calculated" &&
+                !isLoadingPrices &&
+                priceAmount === null &&
+                !findShippingOptionDescriptor(option)?.pricedByChoice
               const isFreeShipping = priceAmount === 0
               const price = isFreeShipping
                 ? t("freeShipping")
@@ -324,65 +468,18 @@ export default function CheckoutShippingSection({
                     : "—"
 
               return (
-                <div
+                <ShippingOptionCard
                   key={option.id}
-                  className={clx(
-                    "relative flex w-[180px] shrink-0 flex-col gap-2 justify-between rounded-md border bg-ui-bg-base p-3 text-start transition-colors hover:bg-ui-bg-base-hover",
-                    isSelected
-                      ? "border-ui-border-interactive"
-                      : "border-ui-border-base hover:border-ui-border-interactive/50"
-                  )}
-                  data-testid="delivery-option-radio"
-                >
-                  <RadioGroup.Item
-                    value={option.id}
-                    aria-label={option.name}
-                    className="absolute inset-0 z-10 h-full w-full cursor-pointer rounded-md bg-transparent outline-none [&>div]:hidden focus-visible:shadow-borders-interactive-with-focus"
-                  />
-                  <span className="txt-compact-medium-plus text-ui-fg-base">
-                    {option.name}
-                  </span>
-                  <div className="flex flex-col gap-y-0">
-                    <div className="min-h-[20px]">
-                      {deliveryLabel && (
-                        <span className="txt-compact-small text-ui-fg-subtle">
-                          {deliveryLabel}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-end justify-between gap-x-3">
-                      <div
-                        className={clx(
-                          "txt-compact-small-plus flex min-h-[20px] items-end",
-                          isFreeShipping
-                            ? "text-ui-tag-green-icon"
-                            : "text-ui-fg-subtle"
-                        )}
-                      >
-                        {price === null ? (
-                          <Loader className="h-3 w-3 animate-spin" />
-                        ) : (
-                          price
-                        )}
-                      </div>
-
-                      <div className="flex h-5 w-5 shrink-0 items-center justify-center">
-                        <div
-                          className={clx(
-                            "flex h-3.5 w-3.5 items-center justify-center rounded-full border bg-ui-bg-base shadow-borders-base",
-                            isSelected
-                              ? "border-ui-border-interactive bg-ui-bg-interactive shadow-borders-interactive-with-shadow"
-                              : "border-ui-border-base"
-                          )}
-                        >
-                          {isSelected && (
-                            <div className="h-1.5 w-1.5 rounded-full bg-ui-bg-base shadow-details-contrast-on-bg-interactive" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  cart={cart}
+                  option={option}
+                  isSelected={isSelected}
+                  isUnavailable={isUnavailable}
+                  price={price}
+                  isLoadingPrice={price === null}
+                  isFreeShipping={isFreeShipping}
+                  deliveryLabel={deliveryLabel}
+                  formatDeliveryDays={formatDeliveryDays}
+                />
               )
             })}
           </RadioGroup>

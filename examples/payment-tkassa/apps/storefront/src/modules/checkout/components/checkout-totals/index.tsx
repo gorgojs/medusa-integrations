@@ -32,7 +32,9 @@ const CheckoutTotals = ({ cart }: { cart: HttpTypes.StoreCart }) => {
         <div className="flex items-center justify-between">
           <span>{t("shippingCost")}</span>
           <span data-testid="cart-shipping">
-            {convertToLocale({ amount: shipping_subtotal ?? 0, currency_code, locale })}
+            {cart.shipping_methods?.length
+              ? convertToLocale({ amount: shipping_subtotal ?? 0, currency_code, locale })
+              : "—"}
           </span>
         </div>
 

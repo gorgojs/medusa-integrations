@@ -3,10 +3,8 @@
 import type React from "react"
 import { isApishipOption } from "@modules/checkout/components/apiship"
 import ApishipShippingOptionCard from "./providers/apiship"
-import {
-  ShippingOptionCardShell,
-  type ShippingOptionCardProps,
-} from "./shared"
+import ManualShippingOptionCard from "./providers/manual"
+import type { ShippingOptionCardProps } from "./shared"
 
 /**
  * Picks the card that renders one shipping option. A provider that needs more than the
@@ -18,17 +16,7 @@ const ShippingOptionCard: React.FC<ShippingOptionCardProps> = (props) => {
     case isApishipOption(props.option):
       return <ApishipShippingOptionCard {...props} />
     default:
-      return (
-        <ShippingOptionCardShell
-          option={props.option}
-          isSelected={props.isSelected}
-          isUnavailable={props.isUnavailable}
-          price={props.price}
-          isLoadingPrice={props.isLoadingPrice}
-          isFreeShipping={props.isFreeShipping}
-          caption={props.deliveryLabel}
-        />
-      )
+      return <ManualShippingOptionCard {...props} />
   }
 }
 
