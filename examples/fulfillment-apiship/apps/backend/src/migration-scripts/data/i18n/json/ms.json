@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Penghantaran kurier",
-      "pickup": "Ambil sendiri"
+      "pickup": "Ambil di titik pengambilan"
     },
     "shippingTypes": {
       "courier": {

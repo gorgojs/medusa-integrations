@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Livraison par coursier",
-      "pickup": "Retrait"
+      "pickup": "Retrait en point relais"
     },
     "shippingTypes": {
       "courier": {

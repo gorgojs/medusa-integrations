@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Kurye ile teslimat",
-      "pickup": "Teslim Alma"
+      "pickup": "Teslimat noktasından teslim alma"
     },
     "shippingTypes": {
       "courier": {

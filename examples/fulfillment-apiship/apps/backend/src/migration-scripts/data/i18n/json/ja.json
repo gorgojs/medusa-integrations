@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "宅配便",
-      "pickup": "店舗受け取り"
+      "pickup": "受取スポットで受け取り"
     },
     "shippingTypes": {
       "courier": {

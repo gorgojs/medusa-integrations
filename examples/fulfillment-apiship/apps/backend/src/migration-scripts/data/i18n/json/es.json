@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Entrega por mensajería",
-      "pickup": "Recogida"
+      "pickup": "Entrega en punto de recogida"
     },
     "shippingTypes": {
       "courier": {

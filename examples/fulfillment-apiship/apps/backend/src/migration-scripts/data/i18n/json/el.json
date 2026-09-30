@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Παράδοση με κούριερ",
-      "pickup": "Παραλαβή"
+      "pickup": "Παραλαβή από σημείο παραλαβής"
     },
     "shippingTypes": {
       "courier": {

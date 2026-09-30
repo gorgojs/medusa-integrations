@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Consegna a domicilio",
-      "pickup": "Ritiro"
+      "pickup": "Ritiro in punto di ritiro"
     },
     "shippingTypes": {
       "courier": {

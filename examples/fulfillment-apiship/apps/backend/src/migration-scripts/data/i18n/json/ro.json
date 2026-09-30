@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Livrare prin curier",
-      "pickup": "Ridicare personală"
+      "pickup": "Ridicare din punct de livrare"
     },
     "shippingTypes": {
       "courier": {

@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Kuriiritoimitus",
-      "pickup": "Nouto"
+      "pickup": "Nouto noutopisteestä"
     },
     "shippingTypes": {
       "courier": {

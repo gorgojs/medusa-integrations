@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "จัดส่งโดยผู้ให้บริการขนส่ง",
-      "pickup": "รับสินค้าด้วยตนเอง"
+      "pickup": "รับที่จุดรับสินค้า"
     },
     "shippingTypes": {
       "courier": {

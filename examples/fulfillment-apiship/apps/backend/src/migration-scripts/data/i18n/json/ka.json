@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "საკურიერო მიწოდება",
-      "pickup": "თვითმიღება"
+      "pickup": "თვითმიღება გაცემის პუნქტიდან"
     },
     "shippingTypes": {
       "courier": {

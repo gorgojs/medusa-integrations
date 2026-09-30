@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Doručenie kuriérom",
-      "pickup": "Osobný odber"
+      "pickup": "Osobný odber na výdajnom mieste"
     },
     "shippingTypes": {
       "courier": {

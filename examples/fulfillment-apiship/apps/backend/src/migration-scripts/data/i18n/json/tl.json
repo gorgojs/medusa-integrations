@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Paghahatid ng Courier",
-      "pickup": "Pickup"
+      "pickup": "Pickup sa pickup point"
     },
     "shippingTypes": {
       "courier": {

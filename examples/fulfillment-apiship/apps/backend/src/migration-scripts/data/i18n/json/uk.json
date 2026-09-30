@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Кур'єрська доставка",
-      "pickup": "Самовивіз"
+      "pickup": "Самовивіз з пункту видачі"
     },
     "shippingTypes": {
       "courier": {

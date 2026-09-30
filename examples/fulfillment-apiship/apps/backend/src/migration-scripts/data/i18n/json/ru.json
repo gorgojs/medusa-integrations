@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Доставка курьером",
-      "pickup": "Самовывоз"
+      "pickup": "Самовывоз из ПВЗ"
     },
     "shippingTypes": {
       "courier": {

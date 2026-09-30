@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "কুরিয়ার ডেলিভারি",
-      "pickup": "পিকআপ"
+      "pickup": "পিকআপ পয়েন্ট থেকে সংগ্রহ"
     },
     "shippingTypes": {
       "courier": {

@@ -72,18 +72,19 @@ demo catalog and start both apps.
    | Option | Route |
    |---|---|
    | Доставка курьером | Picked up at the warehouse, delivered to the door |
-   | Самовывоз | Picked up at the warehouse, delivered to a pickup point |
+   | Самовывоз из ПВЗ | Picked up at the warehouse, delivered to a pickup point |
 
-   Their names are translated into all 36 seeded locales, with the same strings the starter uses for
-   its own courier and pickup options. ApiShip can also take a parcel you drop off at an intake
-   point. Those routes need a connection with an intake point assigned, so the seed leaves them out.
+   Their names are translated into all 36 seeded locales. The courier one uses the starter's own
+   string, and the pickup one names the pickup point the parcel goes to. ApiShip can also take a
+   parcel you drop off at an intake point. Those routes need a connection with an intake point
+   assigned, so the seed leaves them out.
    Add them under **Settings → Locations & Shipping** once that connection exists.
 
 4. Open the storefront at http://localhost:8000, switch to the Russian region, fill a cart and go to
    the checkout. The contacts ask for a phone number, which ApiShip needs to quote and to book. The
    checkout selects Доставка курьером on its own, and the row under the options opens a two-step
-   sheet: the address first, then the tariff list, or the pickup point map for Самовывоз. Payment
-   stays disabled until the tariff, and for Самовывоз the pickup point, is picked.
+   sheet: the address first, then the tariff list, or the pickup point map for Самовывоз из ПВЗ.
+   Payment stays disabled until the tariff, and for Самовывоз из ПВЗ the pickup point, is picked.
 
 ## What the Example Adds to the Starter
 
