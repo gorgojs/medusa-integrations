@@ -30,6 +30,7 @@ export const StoreApishipInstanceQuery = z.object({
 
 export const StoreCalculateApishipShippingOption = z.object({
   cart_id: z.string(),
+  include_points: z.boolean().optional(),
 })
 
 export type StoreGetApishipPointsType = z.infer<typeof StoreGetApishipPoints>

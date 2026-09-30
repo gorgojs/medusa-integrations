@@ -14,6 +14,7 @@ export type StoreApishipPointListResponse = {
 
 export type StoreApishipCalculationResponse = {
   calculation: StoreApishipCalculation
+  points?: StoreApishipPoint[]
 }
 
 export type StoreApishipCalculateResponse = StoreApishipCalculationResponse
