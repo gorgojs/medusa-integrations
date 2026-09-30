@@ -21,6 +21,7 @@ import { Form } from "../../../../../common/form"
 import { KeyboundForm } from "../../../../../utilities/keybound-form"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
 import {
+  useApishipAccountConnections,
   useApishipPoints,
   useApishipTariffs,
   useCreateApishipConnection,
@@ -34,7 +35,6 @@ import { translateConnectionError } from "../../../../../../lib/translate-connec
 
 type ApishipConnectionCreateFormProps = {
   onClose: () => void
-  accountConnections: ApishipHttpTypes.AdminApishipAccountConnection[]
   providers: ApishipHttpTypes.AdminApishipProvider[]
   providerId?: string
 }
@@ -53,11 +53,12 @@ const ApishipConnectionCreateSchema = z.object({
 
 export const ApishipConnectionCreateForm = ({
   onClose,
-  accountConnections,
   providers,
   providerId,
 }: ApishipConnectionCreateFormProps) => {
   const { t } = useTranslation()
+  const { account_connections: accountConnections = [] } =
+    useApishipAccountConnections(providerId)
 
   const form = useForm<z.infer<typeof ApishipConnectionCreateSchema>>({
     defaultValues: {

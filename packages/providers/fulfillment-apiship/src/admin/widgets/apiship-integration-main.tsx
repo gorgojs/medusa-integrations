@@ -12,7 +12,9 @@ import { ApishipConnectionEdit } from "../components/routes/apiship/apiship-edit
 const ApishipIntegrationMainWidget = ({ data }: { data: IntegrationSectionData }) => {
   const providerId = data.providerId
   const { apiship_options } = useApishipOptions(providerId)
-  const { providers = [] } = useApishipProviders(providerId)
+  const { providers = [] } = useApishipProviders(providerId, {
+    enabled: data.isComplete,
+  })
 
   const location = useLocation()
   const navigate = useNavigate()
