@@ -1,5 +1,5 @@
 /**
- * Integration tests for store API: /store/apiship/* and /store/shipping-methods/*
+ * Integration tests for store API: /store/apiship/* and /store/carts/:id/shipping-methods/:sm_id
  *
  * External ApiShip HTTP calls are intercepted by nock so all tests are always-on
  * and deterministic — no CI_APISHIP_TOKEN required.
@@ -18,6 +18,7 @@ import {
   createShippingOptionsWorkflow,
   createShippingOptionTypesWorkflow,
 } from "@medusajs/medusa/core-flows"
+import { getApishipPointsByIdsWorkflow } from "@gorgo/medusa-fulfillment-apiship/workflows"
 import nock from "nock"
 import jwt from "jsonwebtoken"
 
@@ -210,20 +211,83 @@ medusaIntegrationTestRunner({
     }
 
     // -------------------------------------------------------------------------
-    // DELETE /store/shipping-methods/:sm_id
+    // DELETE /store/carts/:id/shipping-methods/:sm_id
     // -------------------------------------------------------------------------
-    describe("DELETE /store/shipping-methods/:sm_id", () => {
-      it("returns 200 with deleted response for a non-existent id (idempotent)", async () => {
-        const id = "sm_does_not_exist"
+    describe("DELETE /store/carts/:id/shipping-methods/:sm_id", () => {
+      const createRegion = async () => {
+        const regionModuleService = getContainer().resolve(Modules.REGION) as any
+        const region = await regionModuleService.createRegions({
+          name: "RU",
+          currency_code: "rub",
+          countries: ["ru"],
+        })
+        return region.id as string
+      }
+
+      const createCartWithShippingMethod = async (regionId: string) => {
+        const cartModuleService = getContainer().resolve(Modules.CART) as any
+
+        const cart = await cartModuleService.createCarts({
+          currency_code: "rub",
+          region_id: regionId,
+        })
+        const [shippingMethod] = await cartModuleService.addShippingMethods(cart.id, [
+          { name: "ApiShip", amount: 300, shipping_option_id: shippingOptionId },
+        ])
+
+        return { cartId: cart.id as string, shippingMethodId: shippingMethod.id as string }
+      }
+
+      const listShippingMethodIds = async (cartId: string) => {
+        const cartModuleService = getContainer().resolve(Modules.CART) as any
+        const cart = await cartModuleService.retrieveCart(cartId, {
+          relations: ["shipping_methods"],
+        })
+        return (cart.shipping_methods ?? []).map((method: any) => method.id)
+      }
+
+      it("removes a shipping method from the cart it belongs to", async () => {
+        const { cartId, shippingMethodId } = await createCartWithShippingMethod(await createRegion())
+
         const res = await api.delete(
-          `/store/shipping-methods/${id}`,
+          `/store/carts/${cartId}/shipping-methods/${shippingMethodId}`,
           { headers: storeHeaders }
         )
 
         expect(res.status).toBe(200)
-        expect(res.data.id).toBe(id)
-        expect(res.data.object).toBe("shipping_method")
-        expect(res.data.deleted).toBe(true)
+        expect(res.data).toEqual({
+          id: shippingMethodId,
+          object: "shipping_method",
+          deleted: true,
+        })
+        expect(await listShippingMethodIds(cartId)).toEqual([])
+      })
+
+      it("returns 404 and keeps the method when it belongs to another cart", async () => {
+        const regionId = await createRegion()
+        const owner = await createCartWithShippingMethod(regionId)
+        const other = await createCartWithShippingMethod(regionId)
+
+        const res = await api
+          .delete(
+            `/store/carts/${other.cartId}/shipping-methods/${owner.shippingMethodId}`,
+            { headers: storeHeaders }
+          )
+          .catch((err: any) => err.response)
+
+        expect(res.status).toBe(404)
+        expect(await listShippingMethodIds(owner.cartId)).toEqual([owner.shippingMethodId])
+      })
+
+      it("returns 404 for a cart that does not exist", async () => {
+        const res = await api
+          .delete(
+            "/store/carts/cart_does_not_exist/shipping-methods/casm_does_not_exist",
+            { headers: storeHeaders }
+          )
+          .catch((err: any) => err.response)
+
+        expect(res.status).toBe(404)
       })
     })
 
@@ -285,6 +349,31 @@ medusaIntegrationTestRunner({
           (key) => res.data.providers.find((p: any) => p.key === key).icon
         )
         expect(cdek).not.toBe(boxberry)
+      })
+    })
+
+    // -------------------------------------------------------------------------
+    // getApishipPointsByIdsWorkflow, behind POST /store/apiship/:id/calculate { include_points }
+    // -------------------------------------------------------------------------
+    describe("getApishipPointsByIdsWorkflow", () => {
+      it("resolves the instance from the shipping option and asks for exactly the requested ids", async () => {
+        const { result } = await getApishipPointsByIdsWorkflow(getContainer()).run({
+          input: {
+            shipping_option_id: shippingOptionId,
+            point_ids: [2, 1, 2],
+            fields: "id,providerKey,address",
+          },
+        })
+
+        expect(result.map((point: any) => point.id)).toEqual([1, 2])
+      })
+
+      it("returns no points and calls nobody for an empty id list", async () => {
+        const { result } = await getApishipPointsByIdsWorkflow(getContainer()).run({
+          input: { shipping_option_id: shippingOptionId, point_ids: [] },
+        })
+
+        expect(result).toEqual([])
       })
     })
 
