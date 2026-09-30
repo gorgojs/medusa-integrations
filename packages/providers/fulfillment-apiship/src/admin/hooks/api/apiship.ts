@@ -28,7 +28,10 @@ export const useApishipOptions = (providerId?: string) => {
   }
 }
 
-export const useApishipProviders = (providerId?: string) => {
+export const useApishipProviders = (
+  providerId?: string,
+  options?: { enabled?: boolean }
+) => {
   const { data, ...rest } = useQuery<
     ApishipHttpTypes.AdminApishipProviderListResponse,
     FetchError
@@ -38,6 +41,7 @@ export const useApishipProviders = (providerId?: string) => {
       sdk.client.fetch("/admin/apiship/providers", {
         query: { provider_id: providerId },
       }),
+    enabled: options?.enabled ?? true,
   })
 
   return {
@@ -56,6 +60,8 @@ export const useApishipAccountConnections = (providerId?: string) => {
       sdk.client.fetch("/admin/apiship/account-connections", {
         query: { provider_id: providerId },
       }),
+    staleTime: 0,
+    gcTime: 0,
   })
 
   return {

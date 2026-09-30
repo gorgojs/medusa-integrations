@@ -1,7 +1,6 @@
 import { Heading, FocusModal } from "@medusajs/ui"
 import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
 import { ApishipConnectionCreateForm } from "./components/apiship-connection-create-form/apiship-connection-create-form"
-import {useApishipAccountConnections} from "../../../../hooks/api/apiship"
 
 type ApishipConnectionCreateProps = {
   open: boolean
@@ -16,8 +15,6 @@ export const ApishipConnectionCreate = ({
   providers,
   providerId,
 }: ApishipConnectionCreateProps) => {
-  const { account_connections = [] } = useApishipAccountConnections(providerId)
-
   return (
     <FocusModal
       open={open}
@@ -31,7 +28,6 @@ export const ApishipConnectionCreate = ({
         <FocusModal.Header/>
         <ApishipConnectionCreateForm
           onClose={onClose}
-          accountConnections={account_connections}
           providers={providers}
           providerId={providerId}
         />
