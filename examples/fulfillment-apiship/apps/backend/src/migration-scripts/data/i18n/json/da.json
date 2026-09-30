@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Kurerlevering",
-      "pickup": "Afhentning"
+      "pickup": "Afhentning i pakkeshop"
     },
     "shippingTypes": {
       "courier": {

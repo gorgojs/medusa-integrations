@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "משלוח שליח",
-      "pickup": "איסוף עצמי"
+      "pickup": "איסוף מנקודת איסוף"
     },
     "shippingTypes": {
       "courier": {

@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Хүргэлт",
-      "pickup": "Очиж авах"
+      "pickup": "Олгох цэгээс очиж авах"
     },
     "shippingTypes": {
       "courier": {

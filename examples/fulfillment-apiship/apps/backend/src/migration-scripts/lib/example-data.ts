@@ -45,7 +45,7 @@ const APISHIP_SHIPPING_OPTIONS = [
   {
     id: "apiship_doortopoint",
     rank: 2,
-    name: "Самовывоз",
+    name: "Самовывоз из ПВЗ",
     translationKey: "pickup",
     label: "ApiShip",
     description: "A carrier picks the parcel up and delivers it to a pickup point.",

@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Dostawa kurierem",
-      "pickup": "Odbiór osobisty"
+      "pickup": "Odbiór w punkcie odbioru"
     },
     "shippingTypes": {
       "courier": {

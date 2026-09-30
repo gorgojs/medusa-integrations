@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "快递配送",
-      "pickup": "自提"
+      "pickup": "自提点取货"
     },
     "shippingTypes": {
       "courier": {

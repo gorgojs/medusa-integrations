@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "택배 배송",
-      "pickup": "픽업"
+      "pickup": "픽업 포인트 수령"
     },
     "shippingTypes": {
       "courier": {

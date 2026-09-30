@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Kurierlieferung",
-      "pickup": "Abholung"
+      "pickup": "Abholung im Paketshop"
     },
     "shippingTypes": {
       "courier": {

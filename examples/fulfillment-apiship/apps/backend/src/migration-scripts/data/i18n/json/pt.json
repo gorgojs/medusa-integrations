@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Entrega por estafeta",
-      "pickup": "Levantamento"
+      "pickup": "Levantamento em ponto de recolha"
     },
     "shippingTypes": {
       "courier": {

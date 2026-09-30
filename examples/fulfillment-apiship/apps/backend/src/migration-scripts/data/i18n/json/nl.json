@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Bezorging per koerier",
-      "pickup": "Afhalen"
+      "pickup": "Afhalen bij afhaalpunt"
     },
     "shippingTypes": {
       "courier": {

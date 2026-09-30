@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Pristatymas kurjeriu",
-      "pickup": "Atsiėmimas"
+      "pickup": "Atsiėmimas atsiėmimo punkte"
     },
     "shippingTypes": {
       "courier": {

@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Budlevering",
-      "pickup": "Henting"
+      "pickup": "Henting på hentested"
     },
     "shippingTypes": {
       "courier": {

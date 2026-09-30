@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "Budleverans",
-      "pickup": "Upphämtning"
+      "pickup": "Upphämtning hos ombud"
     },
     "shippingTypes": {
       "courier": {

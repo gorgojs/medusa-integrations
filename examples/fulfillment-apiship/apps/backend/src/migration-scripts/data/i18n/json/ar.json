@@ -80,7 +80,7 @@
     },
     "shippingOptions": {
       "courier": "التوصيل عبر مندوب",
-      "pickup": "الاستلام الذاتي"
+      "pickup": "الاستلام من نقطة الاستلام"
     },
     "shippingTypes": {
       "courier": {
