@@ -5,11 +5,9 @@ import {
   ApishipDeliveryModal,
   ApishipProviderLogo,
   getApishipDeliveryType,
-  getApishipSelection,
   useApishipProviders,
-  type ApishipSelection,
+  useApishipSelection,
 } from "@modules/checkout/components/apiship"
-import { useShippingSelection } from "@modules/checkout/context/shipping-selection-context"
 import { useTranslations } from "next-intl"
 import type React from "react"
 import { DeliveryRowShell, type DeliveryRowProps } from "../shared"
@@ -27,13 +25,9 @@ const ApishipDeliveryRow: React.FC<DeliveryRowProps> = ({
 }) => {
   const t = useTranslations("Apiship")
   const tCheckout = useTranslations("CheckoutPage")
-  const { getOptionData } = useShippingSelection()
   const [open, setOpen] = useState(false)
 
-  const selection = option
-    ? ((getOptionData(option.id) as { apishipData?: ApishipSelection } | undefined)
-        ?.apishipData ?? getApishipSelection(cart, option.id))
-    : null
+  const selection = useApishipSelection(cart, option?.id)
   const providers = useApishipProviders(option?.id, open || !!selection)
 
   if (!option) return null

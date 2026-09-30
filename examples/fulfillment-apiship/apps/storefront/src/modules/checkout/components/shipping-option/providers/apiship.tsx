@@ -2,12 +2,10 @@
 
 import { convertToLocale } from "@lib/util/money"
 import {
-  getApishipSelection,
   getTariffCost,
   getTariffDays,
-  type ApishipSelection,
+  useApishipSelection,
 } from "@modules/checkout/components/apiship"
-import { useShippingSelection } from "@modules/checkout/context/shipping-selection-context"
 import { useLocale, useTranslations } from "next-intl"
 import type React from "react"
 import { ShippingOptionCardShell, type ShippingOptionCardProps } from "../shared"
@@ -27,11 +25,7 @@ const ApishipShippingOptionCard: React.FC<ShippingOptionCardProps> = ({
 }) => {
   const tCheckout = useTranslations("CheckoutPage")
   const locale = useLocale()
-  const { getOptionData } = useShippingSelection()
-
-  const selection =
-    (getOptionData(option.id) as { apishipData?: ApishipSelection } | undefined)
-      ?.apishipData ?? getApishipSelection(cart, option.id)
+  const selection = useApishipSelection(cart, option.id)
 
   const cost = selection ? getTariffCost(selection.tariff) : null
 

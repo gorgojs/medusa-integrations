@@ -249,31 +249,6 @@ export async function setShippingMethod({
     .catch(medusaError)
 }
 
-/**
- * Drops the shipping method from the cart, through the route the ApiShip plugin adds for
- * it. Setting a method again keeps the `data` stored on it, so a tariff and a pickup point
- * chosen for another address would survive a plain replace.
- */
-export async function removeShippingMethodFromCart(shippingMethodId: string) {
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
-
-  return sdk.client
-    .fetch<{ id: string; object: string; deleted: boolean }>(
-      `/store/shipping-methods/${shippingMethodId}`,
-      {
-        method: "DELETE",
-        headers,
-      }
-    )
-    .then(async () => {
-      const cartCacheTag = await getCacheTag("carts")
-      revalidateTag(cartCacheTag)
-    })
-    .catch(medusaError)
-}
-
 export async function initiatePaymentSession(
   cart: HttpTypes.StoreCart,
   data: HttpTypes.StoreInitializePaymentSession
