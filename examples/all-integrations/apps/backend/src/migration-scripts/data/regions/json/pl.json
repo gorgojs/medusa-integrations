@@ -6,6 +6,7 @@
     "name": "Warsaw Warehouse",
     "address": {
       "address_1": "Krakowskie Przedmiescie 20",
+      "city": "Warszawa",
       "country_code": "pl"
     }
   },

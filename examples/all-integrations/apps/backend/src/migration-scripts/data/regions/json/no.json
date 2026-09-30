@@ -6,6 +6,7 @@
     "name": "Oslo Warehouse",
     "address": {
       "address_1": "Karl Johans gate 25",
+      "city": "Oslo",
       "country_code": "no"
     }
   },

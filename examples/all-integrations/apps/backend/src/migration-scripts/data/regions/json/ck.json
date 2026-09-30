@@ -6,6 +6,7 @@
     "name": "Avarua Warehouse",
     "address": {
       "address_1": "Ara Tapu 22",
+      "city": "Avarua",
       "country_code": "ck"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Ankara Warehouse",
     "address": {
       "address_1": "Atatürk Bulvarı 154",
+      "city": "Ankara",
       "country_code": "tr"
     }
   },

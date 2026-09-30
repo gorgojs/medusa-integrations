@@ -6,6 +6,7 @@
     "name": "Bandar Seri Begawan Warehouse",
     "address": {
       "address_1": "Jalan Sultan 12",
+      "city": "Bandar Seri Begawan",
       "country_code": "bn"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Nicosia Warehouse",
     "address": {
       "address_1": "Οδός Λήδρας 45",
+      "city": "Λευκωσία",
       "country_code": "cy"
     }
   },

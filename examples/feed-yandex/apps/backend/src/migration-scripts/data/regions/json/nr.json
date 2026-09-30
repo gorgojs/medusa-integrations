@@ -6,6 +6,7 @@
     "name": "Yaren Warehouse",
     "address": {
       "address_1": "Aiwo Road 3",
+      "city": "Yaren",
       "country_code": "nr"
     }
   },

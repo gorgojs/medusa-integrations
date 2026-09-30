@@ -6,6 +6,7 @@
     "name": "Amsterdam Warehouse",
     "address": {
       "address_1": "Herengracht 425",
+      "city": "Amsterdam",
       "country_code": "nl"
     }
   },

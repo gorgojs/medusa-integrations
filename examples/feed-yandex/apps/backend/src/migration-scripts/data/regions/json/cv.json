@@ -6,6 +6,7 @@
     "name": "Praia Warehouse",
     "address": {
       "address_1": "Avenida Amílcar Cabral 77",
+      "city": "Praia",
       "country_code": "cv"
     }
   },

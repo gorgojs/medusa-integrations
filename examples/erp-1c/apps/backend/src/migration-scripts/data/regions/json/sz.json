@@ -6,6 +6,7 @@
     "name": "Mbabane Warehouse",
     "address": {
       "address_1": "Gwamile Street 14",
+      "city": "Mbabane",
       "country_code": "sz"
     }
   },

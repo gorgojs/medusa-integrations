@@ -6,6 +6,7 @@
     "name": "Ulaanbaatar Warehouse",
     "address": {
       "address_1": "Энхтайвны өргөн чөлөө 15",
+      "city": "Улаанбаатар",
       "country_code": "mn"
     }
   },

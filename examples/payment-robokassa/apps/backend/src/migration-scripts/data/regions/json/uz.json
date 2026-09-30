@@ -6,6 +6,7 @@
     "name": "Tashkent Warehouse",
     "address": {
       "address_1": "Amir Temur shoh ko'chasi 1",
+      "city": "Toshkent",
       "country_code": "uz"
     }
   },

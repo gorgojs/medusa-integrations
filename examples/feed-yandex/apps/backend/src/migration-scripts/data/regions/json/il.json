@@ -6,6 +6,7 @@
     "name": "Jerusalem Warehouse",
     "address": {
       "address_1": "רחוב יפו 97",
+      "city": "ירושלים",
       "country_code": "il"
     }
   },

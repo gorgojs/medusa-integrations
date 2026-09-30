@@ -8,6 +8,7 @@
     "name": "The Valley Warehouse",
     "address": {
       "address_1": "Wallblake Road 22",
+      "city": "The Valley",
       "country_code": "ai"
     }
   },

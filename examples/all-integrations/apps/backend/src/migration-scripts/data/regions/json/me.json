@@ -6,6 +6,7 @@
     "name": "Podgorica Warehouse",
     "address": {
       "address_1": "Bulevar Svetog Petra Cetinjskog 2",
+      "city": "Podgorica",
       "country_code": "me"
     }
   },

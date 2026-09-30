@@ -6,6 +6,7 @@
     "name": "West Island Warehouse",
     "address": {
       "address_1": "Alexander Street 8",
+      "city": "West Island",
       "country_code": "cc"
     }
   },

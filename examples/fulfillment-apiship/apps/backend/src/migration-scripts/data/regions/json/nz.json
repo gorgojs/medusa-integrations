@@ -6,6 +6,7 @@
     "name": "Wellington Warehouse",
     "address": {
       "address_1": "Lambton Quay 111",
+      "city": "Wellington",
       "country_code": "nz"
     }
   },

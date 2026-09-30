@@ -6,6 +6,7 @@
     "name": "Niamey Warehouse",
     "address": {
       "address_1": "Avenue de la République 88",
+      "city": "Niamey",
       "country_code": "ne"
     }
   },

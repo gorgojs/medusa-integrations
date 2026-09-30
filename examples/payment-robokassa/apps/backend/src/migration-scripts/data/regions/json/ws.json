@@ -6,6 +6,7 @@
     "name": "Apia Warehouse",
     "address": {
       "address_1": "Beach Road 25",
+      "city": "Apia",
       "country_code": "ws"
     }
   },

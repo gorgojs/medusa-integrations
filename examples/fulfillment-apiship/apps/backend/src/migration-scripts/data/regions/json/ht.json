@@ -6,6 +6,7 @@
     "name": "Port-au-Prince Warehouse",
     "address": {
       "address_1": "Rue Capois 18",
+      "city": "Port-au-Prince",
       "country_code": "ht"
     }
   },

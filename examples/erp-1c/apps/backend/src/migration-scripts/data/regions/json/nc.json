@@ -6,6 +6,7 @@
     "name": "Nouméa Warehouse",
     "address": {
       "address_1": "Avenue du Maréchal Foch 15",
+      "city": "Nouméa",
       "country_code": "nc"
     }
   },

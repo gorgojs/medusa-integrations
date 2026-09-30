@@ -6,6 +6,7 @@
     "name": "Tórshavn Warehouse",
     "address": {
       "address_1": "Niels Finsens gøta 12",
+      "city": "Tórshavn",
       "country_code": "fo"
     }
   },

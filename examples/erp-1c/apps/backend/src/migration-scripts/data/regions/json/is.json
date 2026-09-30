@@ -6,6 +6,7 @@
     "name": "Reykjavik Warehouse",
     "address": {
       "address_1": "Laugavegur 11",
+      "city": "Reykjavík",
       "country_code": "is"
     }
   },

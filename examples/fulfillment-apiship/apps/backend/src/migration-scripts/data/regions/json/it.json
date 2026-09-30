@@ -6,6 +6,7 @@
     "name": "Rome Warehouse",
     "address": {
       "address_1": "Via del Corso 15",
+      "city": "Roma",
       "country_code": "it"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Malabo Warehouse",
     "address": {
       "address_1": "Avenida de la Independencia 12",
+      "city": "Malabo",
       "country_code": "gq"
     }
   },

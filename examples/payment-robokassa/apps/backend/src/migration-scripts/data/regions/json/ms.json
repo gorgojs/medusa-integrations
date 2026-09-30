@@ -6,6 +6,7 @@
     "name": "Plymouth Warehouse",
     "address": {
       "address_1": "Parliament Street 14",
+      "city": "Plymouth",
       "country_code": "ms"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Ngerulmud Warehouse",
     "address": {
       "address_1": "Compact Road 12",
+      "city": "Ngerulmud",
       "country_code": "pw"
     }
   },

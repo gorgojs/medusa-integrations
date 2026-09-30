@@ -6,6 +6,7 @@
     "name": "Bangkok Warehouse",
     "address": {
       "address_1": "ถนนราชดำเนิน 99",
+      "city": "กรุงเทพมหานคร",
       "country_code": "th"
     }
   },

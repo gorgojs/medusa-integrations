@@ -6,6 +6,7 @@
     "name": "Dili Warehouse",
     "address": {
       "address_1": "Avenida de Portugal 12",
+      "city": "Díli",
       "country_code": "tl"
     }
   },

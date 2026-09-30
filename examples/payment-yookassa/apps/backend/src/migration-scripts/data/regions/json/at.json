@@ -8,6 +8,7 @@
     "name": "Vienna Warehouse",
     "address": {
       "address_1": "Ringstraße 12",
+      "city": "Wien",
       "country_code": "at"
     }
   },

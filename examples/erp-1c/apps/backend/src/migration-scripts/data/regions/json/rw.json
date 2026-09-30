@@ -6,6 +6,7 @@
     "name": "Kigali Warehouse",
     "address": {
       "address_1": "KN 4 Avenue 12",
+      "city": "Kigali",
       "country_code": "rw"
     }
   },

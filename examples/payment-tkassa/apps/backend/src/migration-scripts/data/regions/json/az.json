@@ -8,6 +8,7 @@
     "name": "Baku Warehouse",
     "address": {
       "address_1": "Nizami küçəsi 203",
+      "city": "Bakı",
       "country_code": "az"
     }
   },

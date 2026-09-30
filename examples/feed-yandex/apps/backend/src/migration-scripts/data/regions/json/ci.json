@@ -6,6 +6,7 @@
     "name": "Yamoussoukro Warehouse",
     "address": {
       "address_1": "Avenue Félix Houphouët-Boigny 30",
+      "city": "Yamoussoukro",
       "country_code": "ci"
     }
   },

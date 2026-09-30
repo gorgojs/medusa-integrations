@@ -6,6 +6,7 @@
     "name": "Kinshasa Warehouse",
     "address": {
       "address_1": "Boulevard du 30 Juin 145",
+      "city": "Kinshasa",
       "country_code": "cd"
     }
   },

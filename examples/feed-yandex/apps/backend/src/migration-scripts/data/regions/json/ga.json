@@ -6,6 +6,7 @@
     "name": "Libreville Warehouse",
     "address": {
       "address_1": "Boulevard Triomphal 12",
+      "city": "Libreville",
       "country_code": "ga"
     }
   },

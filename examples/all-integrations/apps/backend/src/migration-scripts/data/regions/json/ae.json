@@ -6,6 +6,7 @@
     "name": "Abu Dhabi Warehouse",
     "address": {
       "address_1": "شارع الكورنيش 15",
+      "city": "أبوظبي",
       "country_code": "ae"
     }
   },

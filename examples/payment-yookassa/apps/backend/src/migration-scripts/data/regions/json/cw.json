@@ -6,6 +6,7 @@
     "name": "Willemstad Warehouse",
     "address": {
       "address_1": "Breedestraat 22",
+      "city": "Willemstad",
       "country_code": "cw"
     }
   },

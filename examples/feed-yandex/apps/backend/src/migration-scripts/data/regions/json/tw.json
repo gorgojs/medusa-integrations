@@ -6,6 +6,7 @@
     "name": "Taipei Warehouse",
     "address": {
       "address_1": "忠孝東路100號",
+      "city": "臺北",
       "country_code": "tw"
     }
   },

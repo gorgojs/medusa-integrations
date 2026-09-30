@@ -8,6 +8,7 @@
     "name": "Dhaka Warehouse",
     "address": {
       "address_1": "মিন্টো রোড 54",
+      "city": "ঢাকা",
       "country_code": "bd"
     }
   },

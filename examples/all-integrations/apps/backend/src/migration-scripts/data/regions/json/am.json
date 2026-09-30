@@ -8,6 +8,7 @@
     "name": "Yerevan Warehouse",
     "address": {
       "address_1": "Մաշտոցի պողոտա 40",
+      "city": "Երևան",
       "country_code": "am"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Pristina Warehouse",
     "address": {
       "address_1": "Bulevardi Nënë Tereza 21",
+      "city": "Prishtinë",
       "country_code": "xk"
     }
   },

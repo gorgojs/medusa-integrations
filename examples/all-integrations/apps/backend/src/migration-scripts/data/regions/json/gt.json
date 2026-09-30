@@ -6,6 +6,7 @@
     "name": "Guatemala City Warehouse",
     "address": {
       "address_1": "6a Avenida 9-21",
+      "city": "Ciudad de Guatemala",
       "country_code": "gt"
     }
   },

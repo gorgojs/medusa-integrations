@@ -8,6 +8,7 @@
     "name": "St. John's Warehouse",
     "address": {
       "address_1": "St. Mary's Street 18",
+      "city": "St. John's",
       "country_code": "ag"
     }
   },

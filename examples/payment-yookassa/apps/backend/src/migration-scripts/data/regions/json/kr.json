@@ -6,6 +6,7 @@
     "name": "Seoul Warehouse",
     "address": {
       "address_1": "세종대로 100",
+      "city": "서울",
       "country_code": "kr"
     }
   },

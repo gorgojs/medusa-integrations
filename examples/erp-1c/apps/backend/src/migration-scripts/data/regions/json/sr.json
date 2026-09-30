@@ -6,6 +6,7 @@
     "name": "Paramaribo Warehouse",
     "address": {
       "address_1": "Waterkant 22",
+      "city": "Paramaribo",
       "country_code": "sr"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Vilnius Warehouse",
     "address": {
       "address_1": "Gedimino prospektas 11",
+      "city": "Vilnius",
       "country_code": "lt"
     }
   },

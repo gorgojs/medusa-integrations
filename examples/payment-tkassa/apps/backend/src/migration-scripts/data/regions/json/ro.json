@@ -6,6 +6,7 @@
     "name": "Bucharest Warehouse",
     "address": {
       "address_1": "Calea Victoriei 100",
+      "city": "București",
       "country_code": "ro"
     }
   },

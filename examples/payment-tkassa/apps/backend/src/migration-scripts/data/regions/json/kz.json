@@ -6,6 +6,7 @@
     "name": "Astana Warehouse",
     "address": {
       "address_1": "Мәңгілік Ел даңғылы 10",
+      "city": "Астана",
       "country_code": "kz"
     }
   },

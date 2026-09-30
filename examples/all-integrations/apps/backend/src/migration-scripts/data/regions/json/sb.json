@@ -6,6 +6,7 @@
     "name": "Honiara Warehouse",
     "address": {
       "address_1": "Mendana Avenue 18",
+      "city": "Honiara",
       "country_code": "sb"
     }
   },

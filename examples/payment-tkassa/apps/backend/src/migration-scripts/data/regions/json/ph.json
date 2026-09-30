@@ -6,6 +6,7 @@
     "name": "Manila Warehouse",
     "address": {
       "address_1": "Roxas Boulevard 350",
+      "city": "Manila",
       "country_code": "ph"
     }
   },

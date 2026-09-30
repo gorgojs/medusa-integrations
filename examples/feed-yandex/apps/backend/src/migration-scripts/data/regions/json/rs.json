@@ -6,6 +6,7 @@
     "name": "Belgrade Warehouse",
     "address": {
       "address_1": "Кнез Михаилова 10",
+      "city": "Београд",
       "country_code": "rs"
     }
   },

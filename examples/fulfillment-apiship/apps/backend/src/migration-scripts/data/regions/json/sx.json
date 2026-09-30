@@ -6,6 +6,7 @@
     "name": "Philipsburg Warehouse",
     "address": {
       "address_1": "Front Street 22",
+      "city": "Philipsburg",
       "country_code": "sx"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Kuwait City Warehouse",
     "address": {
       "address_1": "شارع الخليج العربي 8",
+      "city": "مدينة الكويت",
       "country_code": "kw"
     }
   },

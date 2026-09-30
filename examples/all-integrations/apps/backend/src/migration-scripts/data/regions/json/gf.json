@@ -6,6 +6,7 @@
     "name": "Cayenne Warehouse",
     "address": {
       "address_1": "Avenue du Général de Gaulle 18",
+      "city": "Cayenne",
       "country_code": "gf"
     }
   },

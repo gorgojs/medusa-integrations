@@ -6,6 +6,7 @@
     "name": "Dakar Warehouse",
     "address": {
       "address_1": "Avenue Léopold Sédar Senghor 45",
+      "city": "Dakar",
       "country_code": "sn"
     }
   },

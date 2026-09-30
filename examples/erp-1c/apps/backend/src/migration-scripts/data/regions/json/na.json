@@ -6,6 +6,7 @@
     "name": "Windhoek Warehouse",
     "address": {
       "address_1": "Independence Avenue 145",
+      "city": "Windhoek",
       "country_code": "na"
     }
   },

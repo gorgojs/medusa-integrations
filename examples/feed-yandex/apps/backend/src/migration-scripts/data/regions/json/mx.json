@@ -6,6 +6,7 @@
     "name": "Mexico City Warehouse",
     "address": {
       "address_1": "Avenida Paseo de la Reforma 222",
+      "city": "Ciudad de México",
       "country_code": "mx"
     }
   },

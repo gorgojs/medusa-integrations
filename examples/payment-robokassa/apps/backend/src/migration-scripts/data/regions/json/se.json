@@ -6,6 +6,7 @@
     "name": "Stockholm Warehouse",
     "address": {
       "address_1": "Drottninggatan 45",
+      "city": "Stockholm",
       "country_code": "se"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Dodoma Warehouse",
     "address": {
       "address_1": "Barabara ya Uhuru 5",
+      "city": "Dodoma",
       "country_code": "tz"
     }
   },

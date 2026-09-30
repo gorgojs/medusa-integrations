@@ -8,6 +8,7 @@
     "name": "Manama Warehouse",
     "address": {
       "address_1": "شارع الحكومة 45",
+      "city": "المنامة",
       "country_code": "bh"
     }
   },

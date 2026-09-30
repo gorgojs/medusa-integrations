@@ -6,6 +6,7 @@
     "name": "Mata-Utu Warehouse",
     "address": {
       "address_1": "Rue de la Mission 8",
+      "city": "Mata-Utu",
       "country_code": "wf"
     }
   },

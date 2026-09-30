@@ -6,6 +6,7 @@
     "name": "Cairo Warehouse",
     "address": {
       "address_1": "شارع التحرير 34",
+      "city": "القاهرة",
       "country_code": "eg"
     }
   },

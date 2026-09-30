@@ -6,6 +6,7 @@
     "name": "Montevideo Warehouse",
     "address": {
       "address_1": "Avenida 18 de Julio 1234",
+      "city": "Montevideo",
       "country_code": "uy"
     }
   },

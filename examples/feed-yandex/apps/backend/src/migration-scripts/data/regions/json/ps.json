@@ -6,6 +6,7 @@
     "name": "Ramallah Warehouse",
     "address": {
       "address_1": "شارع الإرسال 45",
+      "city": "رام الله",
       "country_code": "ps"
     }
   },

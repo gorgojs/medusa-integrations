@@ -6,6 +6,7 @@
     "name": "Sucre Warehouse",
     "address": {
       "address_1": "Calle Bolívar 210",
+      "city": "Sucre",
       "country_code": "bo"
     }
   },

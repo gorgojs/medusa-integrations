@@ -6,6 +6,7 @@
     "name": "Djibouti Warehouse",
     "address": {
       "address_1": "Avenue Georges Clemenceau 15",
+      "city": "Djibouti",
       "country_code": "dj"
     }
   },

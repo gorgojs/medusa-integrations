@@ -6,6 +6,7 @@
     "name": "St. Peter Port Warehouse",
     "address": {
       "address_1": "High Street 8",
+      "city": "St. Peter Port",
       "country_code": "gg"
     }
   },

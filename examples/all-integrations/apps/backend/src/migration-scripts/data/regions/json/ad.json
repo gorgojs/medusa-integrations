@@ -8,6 +8,7 @@
     "name": "Andorra la Vella Warehouse",
     "address": {
       "address_1": "Avinguda Meritxell 96",
+      "city": "Andorra la Vella",
       "country_code": "ad"
     }
   },

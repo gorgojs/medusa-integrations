@@ -6,6 +6,7 @@
     "name": "San Juan Warehouse",
     "address": {
       "address_1": "Avenida Ponce de Leon 350",
+      "city": "San Juan",
       "country_code": "pr"
     }
   },

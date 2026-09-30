@@ -6,6 +6,7 @@
     "name": "Adamstown Warehouse",
     "address": {
       "address_1": "Main Road 1",
+      "city": "Adamstown",
       "country_code": "pn"
     }
   },

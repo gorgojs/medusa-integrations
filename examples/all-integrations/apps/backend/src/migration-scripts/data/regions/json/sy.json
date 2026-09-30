@@ -6,6 +6,7 @@
     "name": "Damascus Warehouse",
     "address": {
       "address_1": "الشارع المستقيم 8",
+      "city": "دمشق",
       "country_code": "sy"
     }
   },

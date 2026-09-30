@@ -6,6 +6,7 @@
     "name": "Amman Warehouse",
     "address": {
       "address_1": "شارع الملك الحسين 27",
+      "city": "عمّان",
       "country_code": "jo"
     }
   },

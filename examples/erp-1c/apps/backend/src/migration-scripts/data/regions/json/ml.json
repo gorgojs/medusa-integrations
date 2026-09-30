@@ -6,6 +6,7 @@
     "name": "Bamako Warehouse",
     "address": {
       "address_1": "Avenue Modibo Keïta 20",
+      "city": "Bamako",
       "country_code": "ml"
     }
   },

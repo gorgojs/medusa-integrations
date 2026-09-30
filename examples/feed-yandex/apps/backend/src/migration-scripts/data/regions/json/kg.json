@@ -6,6 +6,7 @@
     "name": "Bishkek Warehouse",
     "address": {
       "address_1": "Чүй проспекти 96",
+      "city": "Бишкек",
       "country_code": "kg"
     }
   },

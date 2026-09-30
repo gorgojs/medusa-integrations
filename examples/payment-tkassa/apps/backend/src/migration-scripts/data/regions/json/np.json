@@ -6,6 +6,7 @@
     "name": "Kathmandu Warehouse",
     "address": {
       "address_1": "दरबार मार्ग १५",
+      "city": "काठमाडौं",
       "country_code": "np"
     }
   },

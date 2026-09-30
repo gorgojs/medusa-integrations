@@ -6,6 +6,7 @@
     "name": "Tokyo Warehouse",
     "address": {
       "address_1": "丸の内通り 8",
+      "city": "東京",
       "country_code": "jp"
     }
   },

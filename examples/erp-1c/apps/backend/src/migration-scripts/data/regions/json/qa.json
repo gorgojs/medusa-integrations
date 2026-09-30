@@ -6,6 +6,7 @@
     "name": "Doha Warehouse",
     "address": {
       "address_1": "شارع الكورنيش 25",
+      "city": "الدوحة",
       "country_code": "qa"
     }
   },

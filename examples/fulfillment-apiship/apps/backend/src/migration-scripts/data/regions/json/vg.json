@@ -6,6 +6,7 @@
     "name": "Road Town Warehouse",
     "address": {
       "address_1": "Main Street 25",
+      "city": "Road Town",
       "country_code": "vg"
     }
   },

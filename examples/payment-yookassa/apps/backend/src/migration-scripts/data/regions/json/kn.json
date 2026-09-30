@@ -6,6 +6,7 @@
     "name": "Basseterre Warehouse",
     "address": {
       "address_1": "Bank Street 15",
+      "city": "Basseterre",
       "country_code": "kn"
     }
   },

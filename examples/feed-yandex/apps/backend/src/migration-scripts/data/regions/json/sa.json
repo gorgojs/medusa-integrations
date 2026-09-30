@@ -6,6 +6,7 @@
     "name": "Riyadh Warehouse",
     "address": {
       "address_1": "طريق الملك فهد 100",
+      "city": "الرياض",
       "country_code": "sa"
     }
   },

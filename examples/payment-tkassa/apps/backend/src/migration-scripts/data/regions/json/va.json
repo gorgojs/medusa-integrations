@@ -6,6 +6,7 @@
     "name": "Vatican City Warehouse",
     "address": {
       "address_1": "Via Della Conciliazione 5",
+      "city": "Città del Vaticano",
       "country_code": "va"
     }
   },

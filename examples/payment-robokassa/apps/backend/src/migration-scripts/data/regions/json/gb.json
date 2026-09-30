@@ -6,6 +6,7 @@
     "name": "London Warehouse",
     "address": {
       "address_1": "Victoria Street 100",
+      "city": "London",
       "country_code": "gb"
     }
   },

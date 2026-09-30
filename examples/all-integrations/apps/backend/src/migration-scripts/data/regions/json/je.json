@@ -6,6 +6,7 @@
     "name": "Saint Helier Warehouse",
     "address": {
       "address_1": "King Street 14",
+      "city": "Saint Helier",
       "country_code": "je"
     }
   },

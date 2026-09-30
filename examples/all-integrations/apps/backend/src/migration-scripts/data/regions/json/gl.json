@@ -6,6 +6,7 @@
     "name": "Nuuk Warehouse",
     "address": {
       "address_1": "Aqqusinersuaq 12",
+      "city": "Nuuk",
       "country_code": "gl"
     }
   },

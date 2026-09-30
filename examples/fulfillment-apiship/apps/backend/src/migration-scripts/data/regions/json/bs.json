@@ -8,6 +8,7 @@
     "name": "Nassau Warehouse",
     "address": {
       "address_1": "Bay Street 120",
+      "city": "Nassau",
       "country_code": "bs"
     }
   },

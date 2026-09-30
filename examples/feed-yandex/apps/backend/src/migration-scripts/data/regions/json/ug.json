@@ -6,6 +6,7 @@
     "name": "Kampala Warehouse",
     "address": {
       "address_1": "Kampala Road 25",
+      "city": "Kampala",
       "country_code": "ug"
     }
   },

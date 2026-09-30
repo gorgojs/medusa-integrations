@@ -6,6 +6,7 @@
     "name": "Muscat Warehouse",
     "address": {
       "address_1": "شارع السلطان قابوس 40",
+      "city": "مسقط",
       "country_code": "om"
     }
   },

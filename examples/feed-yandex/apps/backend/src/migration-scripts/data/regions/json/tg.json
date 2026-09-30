@@ -6,6 +6,7 @@
     "name": "Lome Warehouse",
     "address": {
       "address_1": "Boulevard du 13 Janvier 27",
+      "city": "Lomé",
       "country_code": "tg"
     }
   },

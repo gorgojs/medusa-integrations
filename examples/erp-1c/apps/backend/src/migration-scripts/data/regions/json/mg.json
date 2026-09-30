@@ -6,6 +6,7 @@
     "name": "Antananarivo Warehouse",
     "address": {
       "address_1": "Avenue de l'Indépendance 34",
+      "city": "Antananarivo",
       "country_code": "mg"
     }
   },
