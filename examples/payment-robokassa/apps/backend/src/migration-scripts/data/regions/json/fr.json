@@ -6,6 +6,7 @@
     "name": "Paris Warehouse",
     "address": {
       "address_1": "Rue de Rivoli 10",
+      "city": "Paris",
       "country_code": "fr"
     }
   },

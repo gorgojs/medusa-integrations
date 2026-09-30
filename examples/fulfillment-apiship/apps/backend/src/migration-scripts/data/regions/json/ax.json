@@ -6,6 +6,7 @@
     "name": "Mariehamn Warehouse",
     "address": {
       "address_1": "Torggatan 5",
+      "city": "Mariehamn",
       "country_code": "ax"
     }
   },

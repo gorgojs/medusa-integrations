@@ -6,6 +6,7 @@
     "name": "Gitega Warehouse",
     "address": {
       "address_1": "Avenue de l'Indépendance 10",
+      "city": "Gitega",
       "country_code": "bi"
     }
   },

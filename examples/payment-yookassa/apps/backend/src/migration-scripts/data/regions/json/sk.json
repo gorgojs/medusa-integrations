@@ -6,6 +6,7 @@
     "name": "Bratislava Warehouse",
     "address": {
       "address_1": "Obchodná 15",
+      "city": "Bratislava",
       "country_code": "sk"
     }
   },

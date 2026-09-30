@@ -6,6 +6,7 @@
     "name": "Yaounde Warehouse",
     "address": {
       "address_1": "Avenue Kennedy 18",
+      "city": "Yaoundé",
       "country_code": "cm"
     }
   },

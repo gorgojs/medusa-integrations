@@ -6,6 +6,7 @@
     "name": "Conakry Warehouse",
     "address": {
       "address_1": "Avenue de la République 25",
+      "city": "Conakry",
       "country_code": "gn"
     }
   },

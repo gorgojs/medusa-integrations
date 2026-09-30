@@ -6,6 +6,7 @@
     "name": "Skopje Warehouse",
     "address": {
       "address_1": "Булевар Илинден 8",
+      "city": "Скопје",
       "country_code": "mk"
     }
   },

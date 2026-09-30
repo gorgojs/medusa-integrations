@@ -6,6 +6,7 @@
     "name": "Singapore Warehouse",
     "address": {
       "address_1": "Shenton Way 60",
+      "city": "Singapore",
       "country_code": "sg"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Port of Spain Warehouse",
     "address": {
       "address_1": "Frederick Street 63",
+      "city": "Port of Spain",
       "country_code": "tt"
     }
   },

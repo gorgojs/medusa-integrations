@@ -6,6 +6,7 @@
     "name": "Moroni Warehouse",
     "address": {
       "address_1": "Avenue de la Corniche 12",
+      "city": "Moroni",
       "country_code": "km"
     }
   },

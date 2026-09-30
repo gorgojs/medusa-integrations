@@ -6,6 +6,7 @@
     "name": "Roseau Warehouse",
     "address": {
       "address_1": "Bay Street 22",
+      "city": "Roseau",
       "country_code": "dm"
     }
   },

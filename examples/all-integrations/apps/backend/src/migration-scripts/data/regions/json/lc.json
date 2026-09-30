@@ -6,6 +6,7 @@
     "name": "Castries Warehouse",
     "address": {
       "address_1": "Bridge Street 22",
+      "city": "Castries",
       "country_code": "lc"
     }
   },

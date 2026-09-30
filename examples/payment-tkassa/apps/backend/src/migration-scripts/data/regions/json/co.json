@@ -6,6 +6,7 @@
     "name": "Bogota Warehouse",
     "address": {
       "address_1": "Carrera Séptima 100",
+      "city": "Bogotá",
       "country_code": "co"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Kyiv Warehouse",
     "address": {
       "address_1": "Хрещатик 22",
+      "city": "Київ",
       "country_code": "ua"
     }
   },

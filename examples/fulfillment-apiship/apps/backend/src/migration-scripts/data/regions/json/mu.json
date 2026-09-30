@@ -6,6 +6,7 @@
     "name": "Port Louis Warehouse",
     "address": {
       "address_1": "Sir William Newton Street 8",
+      "city": "Port Louis",
       "country_code": "mu"
     }
   },

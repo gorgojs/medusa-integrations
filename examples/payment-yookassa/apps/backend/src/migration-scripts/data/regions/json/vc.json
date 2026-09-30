@@ -6,6 +6,7 @@
     "name": "Kingstown Warehouse",
     "address": {
       "address_1": "Bay Street 14",
+      "city": "Kingstown",
       "country_code": "vc"
     }
   },

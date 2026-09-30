@@ -6,6 +6,7 @@
     "name": "São Tomé Warehouse",
     "address": {
       "address_1": "Avenida da Independência 20",
+      "city": "São Tomé",
       "country_code": "st"
     }
   },

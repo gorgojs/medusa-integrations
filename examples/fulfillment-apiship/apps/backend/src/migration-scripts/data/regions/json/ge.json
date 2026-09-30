@@ -6,6 +6,7 @@
     "name": "Tbilisi Warehouse",
     "address": {
       "address_1": "რუსთაველის გამზირი 12",
+      "city": "თბილისი",
       "country_code": "ge"
     }
   },

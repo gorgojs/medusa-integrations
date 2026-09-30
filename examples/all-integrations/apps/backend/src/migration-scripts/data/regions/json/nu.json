@@ -6,6 +6,7 @@
     "name": "Alofi Warehouse",
     "address": {
       "address_1": "Fonuakula Road 5",
+      "city": "Alofi",
       "country_code": "nu"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Managua Warehouse",
     "address": {
       "address_1": "Avenida Bolívar 245",
+      "city": "Managua",
       "country_code": "ni"
     }
   },

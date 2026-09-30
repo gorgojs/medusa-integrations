@@ -6,6 +6,7 @@
     "name": "Laayoune Warehouse",
     "address": {
       "address_1": "شارع محمد الخامس 20",
+      "city": "العيون",
       "country_code": "eh"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Santiago Warehouse",
     "address": {
       "address_1": "Avenida Libertador Bernardo O'Higgins 1200",
+      "city": "Santiago",
       "country_code": "cl"
     }
   },

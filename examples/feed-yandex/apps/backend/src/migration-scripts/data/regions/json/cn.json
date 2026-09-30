@@ -6,6 +6,7 @@
     "name": "Beijing Warehouse",
     "address": {
       "address_1": "长安街1号",
+      "city": "北京",
       "country_code": "cn"
     }
   },

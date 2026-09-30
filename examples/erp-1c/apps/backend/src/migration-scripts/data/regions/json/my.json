@@ -6,6 +6,7 @@
     "name": "Kuala Lumpur Warehouse",
     "address": {
       "address_1": "Jalan Tun Perak 15",
+      "city": "Kuala Lumpur",
       "country_code": "my"
     }
   },

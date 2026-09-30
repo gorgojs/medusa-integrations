@@ -6,6 +6,7 @@
     "name": "Ljubljana Warehouse",
     "address": {
       "address_1": "Slovenska cesta 30",
+      "city": "Ljubljana",
       "country_code": "si"
     }
   },

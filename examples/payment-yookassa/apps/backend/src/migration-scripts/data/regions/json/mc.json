@@ -6,6 +6,7 @@
     "name": "Monaco-Ville Warehouse",
     "address": {
       "address_1": "Boulevard Albert 1er 7",
+      "city": "Monaco",
       "country_code": "mc"
     }
   },

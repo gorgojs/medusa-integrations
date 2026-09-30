@@ -8,6 +8,7 @@
     "name": "Brussels Warehouse",
     "address": {
       "address_1": "Rue de la Loi 16",
+      "city": "Bruxelles",
       "country_code": "be"
     }
   },

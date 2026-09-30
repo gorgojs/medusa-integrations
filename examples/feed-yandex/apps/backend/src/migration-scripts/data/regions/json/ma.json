@@ -6,6 +6,7 @@
     "name": "Rabat Warehouse",
     "address": {
       "address_1": "شارع محمد الخامس 350",
+      "city": "الرباط",
       "country_code": "ma"
     }
   },

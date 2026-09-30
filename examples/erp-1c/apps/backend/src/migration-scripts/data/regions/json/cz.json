@@ -6,6 +6,7 @@
     "name": "Prague Warehouse",
     "address": {
       "address_1": "Václavské náměstí 25",
+      "city": "Praha",
       "country_code": "cz"
     }
   },

@@ -6,6 +6,7 @@
     "name": "George Town Warehouse",
     "address": {
       "address_1": "Cardinall Avenue 22",
+      "city": "George Town",
       "country_code": "ky"
     }
   },

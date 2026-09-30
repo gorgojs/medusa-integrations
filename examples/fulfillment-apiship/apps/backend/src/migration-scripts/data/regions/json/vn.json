@@ -6,6 +6,7 @@
     "name": "Hanoi Warehouse",
     "address": {
       "address_1": "Phố Điện Biên Phủ 10",
+      "city": "Hà Nội",
       "country_code": "vn"
     }
   },

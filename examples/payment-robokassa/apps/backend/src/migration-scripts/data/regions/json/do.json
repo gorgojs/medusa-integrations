@@ -6,6 +6,7 @@
     "name": "Santo Domingo Warehouse",
     "address": {
       "address_1": "Calle El Conde 55",
+      "city": "Santo Domingo",
       "country_code": "do"
     }
   },

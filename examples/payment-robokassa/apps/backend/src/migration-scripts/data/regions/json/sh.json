@@ -6,6 +6,7 @@
     "name": "Jamestown Warehouse",
     "address": {
       "address_1": "Main Street 25",
+      "city": "Jamestown",
       "country_code": "sh"
     }
   },

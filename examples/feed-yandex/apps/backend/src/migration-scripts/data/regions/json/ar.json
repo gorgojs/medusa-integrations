@@ -8,6 +8,7 @@
     "name": "Buenos Aires Warehouse",
     "address": {
       "address_1": "Avenida de Mayo 825",
+      "city": "Buenos Aires",
       "country_code": "ar"
     }
   },

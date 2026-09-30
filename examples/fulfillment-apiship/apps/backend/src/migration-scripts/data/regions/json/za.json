@@ -6,6 +6,7 @@
     "name": "Pretoria Warehouse",
     "address": {
       "address_1": "Church Street 200",
+      "city": "Pretoria",
       "country_code": "za"
     }
   },

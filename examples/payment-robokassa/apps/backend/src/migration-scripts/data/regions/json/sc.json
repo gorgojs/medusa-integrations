@@ -6,6 +6,7 @@
     "name": "Victoria Warehouse",
     "address": {
       "address_1": "Independence Avenue 7",
+      "city": "Victoria",
       "country_code": "sc"
     }
   },

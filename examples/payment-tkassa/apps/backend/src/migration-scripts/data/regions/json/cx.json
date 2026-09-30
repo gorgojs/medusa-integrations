@@ -6,6 +6,7 @@
     "name": "Flying Fish Cove Warehouse",
     "address": {
       "address_1": "Gaze Road 15",
+      "city": "Flying Fish Cove",
       "country_code": "cx"
     }
   },

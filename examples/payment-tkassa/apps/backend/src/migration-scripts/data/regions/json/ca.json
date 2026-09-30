@@ -6,6 +6,7 @@
     "name": "Ottawa Warehouse",
     "address": {
       "address_1": "Wellington Street 90",
+      "city": "Ottawa",
       "country_code": "ca"
     }
   },

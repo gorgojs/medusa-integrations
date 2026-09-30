@@ -6,6 +6,7 @@
     "name": "Valletta Warehouse",
     "address": {
       "address_1": "Republic Street 58",
+      "city": "Valletta",
       "country_code": "mt"
     }
   },

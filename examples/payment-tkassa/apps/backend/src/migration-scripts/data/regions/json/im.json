@@ -6,6 +6,7 @@
     "name": "Douglas Warehouse",
     "address": {
       "address_1": "Athol Street 14",
+      "city": "Douglas",
       "country_code": "im"
     }
   },

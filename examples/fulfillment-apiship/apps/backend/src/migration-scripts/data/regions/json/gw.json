@@ -6,6 +6,7 @@
     "name": "Bissau Warehouse",
     "address": {
       "address_1": "Avenida Amílcar Cabral 14",
+      "city": "Bissau",
       "country_code": "gw"
     }
   },

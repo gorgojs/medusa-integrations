@@ -6,6 +6,7 @@
     "name": "Sofia Warehouse",
     "address": {
       "address_1": "бул. Витоша 25",
+      "city": "София",
       "country_code": "bg"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Tripoli Warehouse",
     "address": {
       "address_1": "شارع عمر المختار 56",
+      "city": "طرابلس",
       "country_code": "ly"
     }
   },

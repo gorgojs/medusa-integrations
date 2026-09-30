@@ -6,6 +6,7 @@
     "name": "Madrid Warehouse",
     "address": {
       "address_1": "Gran Vía 25",
+      "city": "Madrid",
       "country_code": "es"
     }
   },

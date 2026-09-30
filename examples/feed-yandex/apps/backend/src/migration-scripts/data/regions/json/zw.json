@@ -6,6 +6,7 @@
     "name": "Harare Warehouse",
     "address": {
       "address_1": "Samora Machel Avenue 50",
+      "city": "Harare",
       "country_code": "zw"
     }
   },

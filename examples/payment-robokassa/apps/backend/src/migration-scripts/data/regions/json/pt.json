@@ -6,6 +6,7 @@
     "name": "Lisbon Warehouse",
     "address": {
       "address_1": "Avenida da Liberdade 200",
+      "city": "Lisboa",
       "country_code": "pt"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Ouagadougou Warehouse",
     "address": {
       "address_1": "Avenue Kwame Nkrumah 40",
+      "city": "Ouagadougou",
       "country_code": "bf"
     }
   },

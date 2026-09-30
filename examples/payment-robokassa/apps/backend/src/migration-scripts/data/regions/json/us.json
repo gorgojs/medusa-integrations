@@ -6,6 +6,7 @@
     "name": "Washington Warehouse",
     "address": {
       "address_1": "Pennsylvania Avenue NW 1600",
+      "city": "Washington",
       "country_code": "us"
     }
   },

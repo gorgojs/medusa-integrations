@@ -8,6 +8,7 @@
     "name": "Minsk Warehouse",
     "address": {
       "address_1": "праспект Незалежнасці 95",
+      "city": "Мінск",
       "country_code": "by"
     }
   },

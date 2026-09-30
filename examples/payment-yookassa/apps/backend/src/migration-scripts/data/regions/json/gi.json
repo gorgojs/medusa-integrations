@@ -6,6 +6,7 @@
     "name": "Gibraltar Warehouse",
     "address": {
       "address_1": "Main Street 104",
+      "city": "Gibraltar",
       "country_code": "gi"
     }
   },

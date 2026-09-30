@@ -6,6 +6,7 @@
     "name": "Tallinn Warehouse",
     "address": {
       "address_1": "Pikk tänav 25",
+      "city": "Tallinn",
       "country_code": "ee"
     }
   },

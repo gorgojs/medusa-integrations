@@ -6,6 +6,7 @@
     "name": "Capital Hill Warehouse",
     "address": {
       "address_1": "Chalan Pale Arnold 22",
+      "city": "Capital Hill",
       "country_code": "mp"
     }
   },

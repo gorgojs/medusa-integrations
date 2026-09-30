@@ -6,6 +6,7 @@
     "name": "Sarajevo Warehouse",
     "address": {
       "address_1": "Ulica Maršala Tita 15",
+      "city": "Sarajevo",
       "country_code": "ba"
     }
   },

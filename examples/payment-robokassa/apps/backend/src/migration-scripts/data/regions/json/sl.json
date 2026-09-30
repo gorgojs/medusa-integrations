@@ -6,6 +6,7 @@
     "name": "Freetown Warehouse",
     "address": {
       "address_1": "Siaka Stevens Street 33",
+      "city": "Freetown",
       "country_code": "sl"
     }
   },

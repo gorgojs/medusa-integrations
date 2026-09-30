@@ -6,6 +6,7 @@
     "name": "Helsinki Warehouse",
     "address": {
       "address_1": "Mannerheimintie 30",
+      "city": "Helsinki",
       "country_code": "fi"
     }
   },

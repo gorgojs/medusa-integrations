@@ -6,6 +6,7 @@
     "name": "Lilongwe Warehouse",
     "address": {
       "address_1": "Independence Drive 12",
+      "city": "Lilongwe",
       "country_code": "mw"
     }
   },

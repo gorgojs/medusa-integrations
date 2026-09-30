@@ -6,6 +6,7 @@
     "name": "Lusaka Warehouse",
     "address": {
       "address_1": "Cairo Road 100",
+      "city": "Lusaka",
       "country_code": "zm"
     }
   },

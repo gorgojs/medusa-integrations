@@ -6,6 +6,7 @@
     "name": "New Delhi Warehouse",
     "address": {
       "address_1": "Connaught Place 15",
+      "city": "New Delhi",
       "country_code": "in"
     }
   },

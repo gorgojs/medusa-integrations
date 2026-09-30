@@ -6,6 +6,7 @@
     "name": "Bern Warehouse",
     "address": {
       "address_1": "Bundesgasse 16",
+      "city": "Bern",
       "country_code": "ch"
     }
   },

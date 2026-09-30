@@ -6,6 +6,7 @@
     "name": "Athens Warehouse",
     "address": {
       "address_1": "Οδός Ερμού 45",
+      "city": "Αθήνα",
       "country_code": "gr"
     }
   },

@@ -8,6 +8,7 @@
     "name": "Kabul Warehouse",
     "address": {
       "address_1": "جاده دارالامان 350",
+      "city": "کابل",
       "country_code": "af"
     }
   },

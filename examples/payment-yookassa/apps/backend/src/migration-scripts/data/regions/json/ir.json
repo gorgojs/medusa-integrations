@@ -6,6 +6,7 @@
     "name": "Tehran Warehouse",
     "address": {
       "address_1": "خیابان ولیعصر ۱۲۰",
+      "city": "تهران",
       "country_code": "ir"
     }
   },

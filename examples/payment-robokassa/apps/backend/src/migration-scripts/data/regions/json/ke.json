@@ -6,6 +6,7 @@
     "name": "Nairobi Warehouse",
     "address": {
       "address_1": "Kenyatta Avenue 33",
+      "city": "Nairobi",
       "country_code": "ke"
     }
   },

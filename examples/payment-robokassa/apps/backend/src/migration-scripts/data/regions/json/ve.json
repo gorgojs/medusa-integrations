@@ -6,6 +6,7 @@
     "name": "Caracas Warehouse",
     "address": {
       "address_1": "Avenida Urdaneta 45",
+      "city": "Caracas",
       "country_code": "ve"
     }
   },

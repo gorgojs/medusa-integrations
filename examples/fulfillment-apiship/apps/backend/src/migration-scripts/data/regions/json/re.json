@@ -6,6 +6,7 @@
     "name": "Saint-Denis Warehouse",
     "address": {
       "address_1": "Rue de Paris 15",
+      "city": "Saint-Denis",
       "country_code": "re"
     }
   },

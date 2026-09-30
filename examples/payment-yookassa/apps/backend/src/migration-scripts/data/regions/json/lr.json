@@ -6,6 +6,7 @@
     "name": "Monrovia Warehouse",
     "address": {
       "address_1": "Broad Street 19",
+      "city": "Monrovia",
       "country_code": "lr"
     }
   },

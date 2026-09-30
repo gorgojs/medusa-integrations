@@ -6,6 +6,7 @@
     "name": "Suva Warehouse",
     "address": {
       "address_1": "Victoria Parade 88",
+      "city": "Suva",
       "country_code": "fj"
     }
   },

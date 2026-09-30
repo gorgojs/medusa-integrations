@@ -6,6 +6,7 @@
     "name": "Quito Warehouse",
     "address": {
       "address_1": "Avenida Amazonas 350",
+      "city": "Quito",
       "country_code": "ec"
     }
   },

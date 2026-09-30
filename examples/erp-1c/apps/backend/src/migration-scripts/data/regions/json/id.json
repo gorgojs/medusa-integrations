@@ -6,6 +6,7 @@
     "name": "Jakarta Warehouse",
     "address": {
       "address_1": "Jalan Jenderal Sudirman 45",
+      "city": "Jakarta",
       "country_code": "id"
     }
   },

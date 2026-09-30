@@ -6,6 +6,7 @@
     "name": "Chisinau Warehouse",
     "address": {
       "address_1": "Bulevardul Ștefan cel Mare 73",
+      "city": "Chișinău",
       "country_code": "md"
     }
   },

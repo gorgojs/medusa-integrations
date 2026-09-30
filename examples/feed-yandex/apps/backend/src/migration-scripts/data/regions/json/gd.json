@@ -6,6 +6,7 @@
     "name": "St. George's Warehouse",
     "address": {
       "address_1": "Church Street 24",
+      "city": "St. George's",
       "country_code": "gd"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Saint-Pierre Warehouse",
     "address": {
       "address_1": "Rue du Général de Gaulle 12",
+      "city": "Saint-Pierre",
       "country_code": "pm"
     }
   },

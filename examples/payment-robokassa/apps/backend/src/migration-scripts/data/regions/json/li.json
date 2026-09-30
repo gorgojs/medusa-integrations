@@ -6,6 +6,7 @@
     "name": "Vaduz Warehouse",
     "address": {
       "address_1": "Städtle 49",
+      "city": "Vaduz",
       "country_code": "li"
     }
   },

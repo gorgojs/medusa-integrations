@@ -8,6 +8,7 @@
     "name": "Tirana Warehouse",
     "address": {
       "address_1": "Bulevardi Dëshmorët e Kombit 45",
+      "city": "Tiranë",
       "country_code": "al"
     }
   },

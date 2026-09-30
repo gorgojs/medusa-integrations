@@ -6,6 +6,7 @@
     "name": "Dushanbe Warehouse",
     "address": {
       "address_1": "Хиёбони Рӯдакӣ 22",
+      "city": "Душанбе",
       "country_code": "tj"
     }
   },

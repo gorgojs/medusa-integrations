@@ -6,6 +6,7 @@
     "name": "Cockburn Town Warehouse",
     "address": {
       "address_1": "Front Street 11",
+      "city": "Cockburn Town",
       "country_code": "tc"
     }
   },

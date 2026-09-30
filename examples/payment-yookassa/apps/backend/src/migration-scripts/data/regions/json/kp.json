@@ -6,6 +6,7 @@
     "name": "Pyongyang Warehouse",
     "address": {
       "address_1": "천리마거리 15",
+      "city": "평양",
       "country_code": "kp"
     }
   },

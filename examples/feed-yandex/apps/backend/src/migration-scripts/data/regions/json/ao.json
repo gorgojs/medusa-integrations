@@ -8,6 +8,7 @@
     "name": "Luanda Warehouse",
     "address": {
       "address_1": "Avenida Marginal 140",
+      "city": "Luanda",
       "country_code": "ao"
     }
   },

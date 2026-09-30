@@ -6,6 +6,7 @@
     "name": "Basse-Terre Warehouse",
     "address": {
       "address_1": "Rue du Général De Gaulle 15",
+      "city": "Basse-Terre",
       "country_code": "gp"
     }
   },

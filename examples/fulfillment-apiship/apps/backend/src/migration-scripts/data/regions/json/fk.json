@@ -6,6 +6,7 @@
     "name": "Stanley Warehouse",
     "address": {
       "address_1": "Ross Road 23",
+      "city": "Stanley",
       "country_code": "fk"
     }
   },

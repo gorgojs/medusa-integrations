@@ -8,6 +8,7 @@
     "name": "Bridgetown Warehouse",
     "address": {
       "address_1": "Broad Street 33",
+      "city": "Bridgetown",
       "country_code": "bb"
     }
   },

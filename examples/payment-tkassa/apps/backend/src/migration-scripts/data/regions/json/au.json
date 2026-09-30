@@ -8,6 +8,7 @@
     "name": "Canberra Warehouse",
     "address": {
       "address_1": "London Circuit 15",
+      "city": "Canberra",
       "country_code": "au"
     }
   },

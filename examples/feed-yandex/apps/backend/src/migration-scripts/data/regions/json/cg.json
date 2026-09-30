@@ -6,6 +6,7 @@
     "name": "Brazzaville Warehouse",
     "address": {
       "address_1": "Avenue Charles de Gaulle 18",
+      "city": "Brazzaville",
       "country_code": "cg"
     }
   },

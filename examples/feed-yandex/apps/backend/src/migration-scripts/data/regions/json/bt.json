@@ -6,6 +6,7 @@
     "name": "Thimphu Warehouse",
     "address": {
       "address_1": "Norzin Lam 18",
+      "city": "Thimphu",
       "country_code": "bt"
     }
   },

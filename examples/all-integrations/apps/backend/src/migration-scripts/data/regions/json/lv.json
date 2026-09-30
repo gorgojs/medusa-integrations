@@ -6,6 +6,7 @@
     "name": "Riga Warehouse",
     "address": {
       "address_1": "Brīvības bulvāris 11",
+      "city": "Rīga",
       "country_code": "lv"
     }
   },

@@ -6,6 +6,7 @@
     "name": "Hamilton Warehouse",
     "address": {
       "address_1": "Front Street 45",
+      "city": "Hamilton",
       "country_code": "bm"
     }
   },

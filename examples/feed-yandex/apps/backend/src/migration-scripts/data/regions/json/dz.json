@@ -8,6 +8,7 @@
     "name": "Algiers Warehouse",
     "address": {
       "address_1": "شارع ديدوش مراد 12",
+      "city": "الجزائر",
       "country_code": "dz"
     }
   },

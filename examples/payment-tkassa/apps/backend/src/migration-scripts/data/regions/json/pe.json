@@ -6,6 +6,7 @@
     "name": "Lima Warehouse",
     "address": {
       "address_1": "Jiron de la Union 400",
+      "city": "Lima",
       "country_code": "pe"
     }
   },

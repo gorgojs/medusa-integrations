@@ -6,6 +6,7 @@
     "name": "Gaborone Warehouse",
     "address": {
       "address_1": "Independence Avenue 33",
+      "city": "Gaborone",
       "country_code": "bw"
     }
   },

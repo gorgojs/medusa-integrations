@@ -6,6 +6,7 @@
     "name": "Tunis Warehouse",
     "address": {
       "address_1": "شارع الحبيب بورقيبة 20",
+      "city": "تونس",
       "country_code": "tn"
     }
   },

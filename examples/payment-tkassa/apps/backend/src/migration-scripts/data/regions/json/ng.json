@@ -6,6 +6,7 @@
     "name": "Abuja Warehouse",
     "address": {
       "address_1": "Constitution Avenue 27",
+      "city": "Abuja",
       "country_code": "ng"
     }
   },

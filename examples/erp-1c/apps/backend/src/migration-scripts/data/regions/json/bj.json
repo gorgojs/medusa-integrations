@@ -6,6 +6,7 @@
     "name": "Porto-Novo Warehouse",
     "address": {
       "address_1": "Avenue de la République 22",
+      "city": "Porto-Novo",
       "country_code": "bj"
     }
   },

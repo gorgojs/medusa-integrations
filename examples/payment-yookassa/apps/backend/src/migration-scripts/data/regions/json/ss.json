@@ -6,6 +6,7 @@
     "name": "Juba Warehouse",
     "address": {
       "address_1": "Airport Road 5",
+      "city": "Juba",
       "country_code": "ss"
     }
   },

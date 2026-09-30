@@ -6,6 +6,7 @@
     "name": "Kingston Warehouse",
     "address": {
       "address_1": "King Street 12",
+      "city": "Kingston",
       "country_code": "jm"
     }
   },
