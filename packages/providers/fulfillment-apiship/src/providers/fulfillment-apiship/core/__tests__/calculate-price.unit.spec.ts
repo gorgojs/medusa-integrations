@@ -130,18 +130,32 @@ describe("ApishipBase.calculatePrice", () => {
     expect(callArg.input.key).toMatch(/^apiship:calc:/)
   })
 
-  it("uses chosen tariff deliveryCost from data.apishipData.tariff when available", async () => {
+  it("prices the chosen tariff from the server calculation, not from the deliveryCost the storefront sent", async () => {
     setupWorkflowMocks(mockCalculatorResponse)
 
     const dataWithTariff = {
       apishipData: {
-        tariff: { tariffId: 1, deliveryCost: 999 },
+        tariff: { tariffId: 1, providerKey: "cdek", deliveryCost: 1 },
       },
     }
 
     const result = await service.calculatePrice(baseOptionData, dataWithTariff, baseContext)
 
-    expect(result.calculated_amount).toBe(999)
+    expect(result.calculated_amount).toBe(500)
+  })
+
+  it("falls back to the cheapest tariff when the chosen one is not in the calculation", async () => {
+    setupWorkflowMocks(mockCalculatorResponse)
+
+    const dataWithUnknownTariff = {
+      apishipData: {
+        tariff: { tariffId: 404, providerKey: "cdek", deliveryCost: 1 },
+      },
+    }
+
+    const result = await service.calculatePrice(baseOptionData, dataWithUnknownTariff, baseContext)
+
+    expect(result.calculated_amount).toBe(300)
   })
 
   it("uses deliveryToPoint tariffs when deliveryType is 2", async () => {

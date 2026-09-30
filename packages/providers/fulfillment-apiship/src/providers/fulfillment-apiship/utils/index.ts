@@ -1,4 +1,6 @@
 export * from "./get-cheapest-tariff"
 export * from "./filter-allowed-tariffs"
+export * from "./find-tariff"
 export * from "./hash"
 export * from "./mapping"
+export * from "./stored-selection"
