@@ -1,11 +1,8 @@
 "use client"
 
 import { Fragment, useEffect, useMemo, useState } from "react"
+import { retrieveApishipDeliveryChoice } from "@lib/data/apiship"
 import { setShippingMethod } from "@lib/data/cart"
-import {
-  retrieveApishipCalculation,
-  retrieveApishipPoints,
-} from "@lib/data/fulfillment"
 import { Loader } from "@medusajs/icons"
 import type { HttpTypes } from "@medusajs/types"
 import { Button, Text } from "@medusajs/ui"
@@ -26,16 +23,15 @@ import type {
   ApishipCalculation,
   ApishipPoint,
   ApishipProvider,
-  ApishipSelection,
   ApishipTariff,
-} from "./types"
+} from "types/apiship"
+import { useApishipSelection } from "./use-apiship-selection"
 import {
   buildDoorGroups,
   buildTariffsByPointId,
-  extractPointIds,
   getApishipDeliveryType,
-  getApishipSelection,
   groupWorktime,
+  toStoredSelection,
 } from "./utils"
 
 type ApishipDeliveryModalProps = {
@@ -64,7 +60,7 @@ export default function ApishipDeliveryModal({
   const t = useTranslations("Apiship")
   const tCheckout = useTranslations("CheckoutPage")
   const locale = useLocale()
-  const { getOptionData, setOptionData } = useShippingSelection()
+  const { setOptionData } = useShippingSelection()
 
   const toPoint = getApishipDeliveryType(option) === 2
 
@@ -80,10 +76,9 @@ export default function ApishipDeliveryModal({
   const [error, setError] = useState<string | null>(null)
   const [selectedPointId, setSelectedPointId] = useState<string | null>(null)
   const [selectedTariffKey, setSelectedTariffKey] = useState<string | null>(null)
+  const [loadedKey, setLoadedKey] = useState<string | null>(null)
 
-  const savedSelection =
-    (getOptionData(option.id) as { apishipData?: ApishipSelection } | undefined)
-      ?.apishipData ?? getApishipSelection(cart, option.id)
+  const savedSelection = useApishipSelection(cart, option.id)
   const savedPointId = savedSelection?.point?.id ?? null
   const savedTariffKey = savedSelection?.tariff.key ?? null
 
@@ -96,6 +91,10 @@ export default function ApishipDeliveryModal({
     cart.shipping_address?.address_1,
     cart.shipping_address?.address_2,
   ].join("|")
+  const itemsKey = (cart.items ?? [])
+    .map((item) => `${item.variant_id}:${item.quantity}`)
+    .join(",")
+  const requestKey = [option.id, addressKey, itemsKey].join("#")
 
   useEffect(() => {
     if (!open) return
@@ -110,51 +109,34 @@ export default function ApishipDeliveryModal({
   }, [open, savedPointId, savedTariffKey])
 
   useEffect(() => {
-    if (!open || step !== "choice") return
+    if (!open || step !== "choice" || loadedKey === requestKey) return
 
     let cancelled = false
     setIsLoading(true)
     setLoadFailed(false)
 
     void (async () => {
-      const result = await retrieveApishipCalculation(cart.id, option.id)
-      if (cancelled) return
-
-      if (!result) {
-        setLoadFailed(true)
-        setCalculation(null)
-        setTariffsByPointId({})
-        setPoints([])
-        setIsLoading(false)
-        return
-      }
-
-      setCalculation(result)
-
-      if (!toPoint) {
-        setIsLoading(false)
-        return
-      }
-
-      const byPointId = buildTariffsByPointId(result)
-      setTariffsByPointId(byPointId)
-
-      const resolved = await retrieveApishipPoints(
+      const result = await retrieveApishipDeliveryChoice(
         cart.id,
         option.id,
-        extractPointIds(byPointId)
+        toPoint
       )
       if (cancelled) return
 
-      if (!resolved) setLoadFailed(true)
-      setPoints(resolved ?? [])
+      setCalculation(result?.calculation ?? null)
+      setTariffsByPointId(
+        result && toPoint ? buildTariffsByPointId(result.calculation) : {}
+      )
+      setPoints(result?.points ?? [])
+      setLoadFailed(!result)
+      setLoadedKey(result ? requestKey : null)
       setIsLoading(false)
     })()
 
     return () => {
       cancelled = true
     }
-  }, [open, step, cart.id, option.id, toPoint, addressKey])
+  }, [open, step, cart.id, option.id, toPoint, requestKey, loadedKey])
 
   const weekdayFormatter = useMemo(
     () =>
@@ -209,11 +191,7 @@ export default function ApishipDeliveryModal({
     setIsSaving(true)
     setError(null)
 
-    const next: ApishipSelection = {
-      deliveryType: toPoint ? 2 : 1,
-      tariff: selectedTariff,
-      ...(toPoint && activePoint ? { point: activePoint } : {}),
-    }
+    const next = toStoredSelection(toPoint ? 2 : 1, selectedTariff, activePoint)
 
     try {
       await setShippingMethod({

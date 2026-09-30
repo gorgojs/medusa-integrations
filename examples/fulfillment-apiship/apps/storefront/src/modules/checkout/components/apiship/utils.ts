@@ -1,11 +1,16 @@
 import type { HttpTypes } from "@medusajs/types"
-import type { ApishipCalculation, ApishipTariff } from "./types"
+import type {
+  ApishipCalculation,
+  ApishipPoint,
+  ApishipSelection,
+  ApishipTariff,
+} from "types/apiship"
 
-export const APISHIP_PROVIDER_ID = "apiship_apiship"
+export const APISHIP_PROVIDER_PREFIX = "apiship_"
 
 export const isApishipOption = (
   option?: HttpTypes.StoreCartShippingOption | null
-) => option?.provider_id === APISHIP_PROVIDER_ID
+) => Boolean(option?.provider_id?.startsWith(APISHIP_PROVIDER_PREFIX))
 
 /**
  * Which half of the calculation a shipping option draws on. The seed writes
@@ -79,10 +84,6 @@ export const buildTariffsByPointId = (
   return tariffsByPointId
 }
 
-export const extractPointIds = (
-  tariffsByPointId: Record<string, ApishipTariff[]>
-) => Object.keys(tariffsByPointId).map(Number).filter(Number.isFinite)
-
 /**
  * Flattens the courier half of the calculation into carrier groups, dropping a tariff a
  * carrier listed twice and a group left with nothing.
@@ -133,8 +134,39 @@ export const getApishipSelection = (
   if (!method || method.shipping_option_id !== optionId) return null
 
   return (
-    (method.data as {
-      apishipData?: import("./types").ApishipSelection
-    } | null)?.apishipData ?? null
+    (method.data as { apishipData?: ApishipSelection } | null)?.apishipData ??
+    null
   )
+}
+
+export const isApishipSelectionComplete = (
+  selection: ApishipSelection | null | undefined,
+  option: HttpTypes.StoreCartShippingOption
+) => {
+  if (!selection?.tariff) return false
+
+  return getApishipDeliveryType(option) === 2 ? Boolean(selection.point) : true
+}
+
+export const toStoredSelection = (
+  deliveryType: 1 | 2,
+  tariff: ApishipTariff,
+  point?: ApishipPoint | null
+): ApishipSelection => {
+  const { pointIds: _pointIds, ...storedTariff } = tariff
+
+  return {
+    deliveryType,
+    tariff: storedTariff,
+    ...(deliveryType === 2 && point
+      ? {
+          point: {
+            id: point.id,
+            providerKey: point.providerKey,
+            name: point.name,
+            address: point.address,
+          },
+        }
+      : {}),
+  }
 }

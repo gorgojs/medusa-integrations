@@ -82,6 +82,13 @@ export type ApishipPoint = Omit<ApishipRawPoint, "id" | "lat" | "lng"> & {
   lng: number
 }
 
+export type ApishipStoredTariff = Omit<ApishipTariff, "pointIds">
+
+export type ApishipStoredPoint = Pick<
+  ApishipPoint,
+  "id" | "providerKey" | "name" | "address"
+>
+
 /**
  * What the customer picked, stored on the shipping method so a reload restores it and the
  * plugin can create the ApiShip order from it. `deliveryType` is 1 for an address and 2
@@ -89,6 +96,11 @@ export type ApishipPoint = Omit<ApishipRawPoint, "id" | "lat" | "lng"> & {
  */
 export type ApishipSelection = {
   deliveryType: number
-  tariff: ApishipTariff
-  point?: ApishipPoint
+  tariff: ApishipStoredTariff
+  point?: ApishipStoredPoint
+}
+
+export type ApishipDeliveryChoice = {
+  calculation: ApishipCalculation
+  points: ApishipPoint[]
 }

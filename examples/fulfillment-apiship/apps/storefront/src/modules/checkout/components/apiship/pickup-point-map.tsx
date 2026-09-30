@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Loader } from "@medusajs/icons"
 import { Text } from "@medusajs/ui"
 import { useTranslations } from "next-intl"
-import type { ApishipPoint, ApishipProvider } from "./types"
+import type { ApishipPoint, ApishipProvider } from "types/apiship"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {

@@ -6,7 +6,7 @@ import { useLocaleDirection } from "@lib/hooks/use-locale-direction"
 import { RadioGroup, Text } from "@medusajs/ui"
 import { useLocale } from "next-intl"
 import ProviderLogo from "./provider-logo"
-import type { ApishipProvider, ApishipTariff } from "./types"
+import type { ApishipProvider, ApishipTariff } from "types/apiship"
 import { getTariffCost, getTariffDays } from "./utils"
 
 type TariffGroup = {
