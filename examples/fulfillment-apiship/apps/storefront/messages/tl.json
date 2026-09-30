@@ -62,6 +62,7 @@
     "courierModalTitle": "Paghahatid ng courier",
     "loadFailed": "Hindi ma-load ang mga opsyon sa paghahatid. Subukan ulit.",
     "mapKeyMissing": "Kailangan ng mapa ng Yandex Maps API key.",
+    "mapLoadFailed": "Hindi ma-load ang mapa. Subukan ulit.",
     "next": "Susunod",
     "noPoints": "Walang pickup point para sa address na ito.",
     "noTariffs": "Walang courier na naghahatid sa address na ito.",

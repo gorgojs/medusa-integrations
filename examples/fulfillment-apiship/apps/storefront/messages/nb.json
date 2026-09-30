@@ -62,6 +62,7 @@
     "courierModalTitle": "Levering med bud",
     "loadFailed": "Vi klarte ikke å laste leveringsalternativene. Prøv igjen.",
     "mapKeyMissing": "Kartet trenger en API-nøkkel for Yandex Maps.",
+    "mapLoadFailed": "Vi klarte ikke å laste kartet. Prøv igjen.",
     "next": "Videre",
     "noPoints": "Det finnes ingen hentesteder for denne adressen.",
     "noTariffs": "Ingen transportør leverer til denne adressen.",

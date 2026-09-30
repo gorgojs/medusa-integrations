@@ -62,6 +62,7 @@
     "courierModalTitle": "Kurierlieferung",
     "loadFailed": "Die Lieferoptionen konnten nicht geladen werden. Bitte erneut versuchen.",
     "mapKeyMissing": "Für die Karte wird ein Yandex-Maps-API-Schlüssel benötigt.",
+    "mapLoadFailed": "Die Karte konnte nicht geladen werden. Bitte erneut versuchen.",
     "next": "Weiter",
     "noPoints": "Zu dieser Adresse gibt es keine Abholstationen.",
     "noTariffs": "Kein Dienstleister liefert an diese Adresse.",

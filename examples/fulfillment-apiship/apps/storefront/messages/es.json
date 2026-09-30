@@ -62,6 +62,7 @@
     "courierModalTitle": "Entrega por mensajero",
     "loadFailed": "No pudimos cargar las opciones de envío. Inténtalo de nuevo.",
     "mapKeyMissing": "El mapa necesita una clave de API de Yandex Maps.",
+    "mapLoadFailed": "No pudimos cargar el mapa. Inténtalo de nuevo.",
     "next": "Siguiente",
     "noPoints": "No hay puntos de recogida para esta dirección.",
     "noTariffs": "Ningún transportista entrega en esta dirección.",

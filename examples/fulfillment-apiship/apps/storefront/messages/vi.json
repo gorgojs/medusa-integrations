@@ -62,6 +62,7 @@
     "courierModalTitle": "Giao bằng người giao hàng",
     "loadFailed": "Không tải được các lựa chọn giao hàng. Hãy thử lại.",
     "mapKeyMissing": "Bản đồ cần khóa API của Yandex Maps.",
+    "mapLoadFailed": "Không tải được bản đồ. Hãy thử lại.",
     "next": "Tiếp tục",
     "noPoints": "Không có điểm nhận hàng cho địa chỉ này.",
     "noTariffs": "Không có đơn vị nào giao đến địa chỉ này.",

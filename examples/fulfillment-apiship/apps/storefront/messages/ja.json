@@ -62,6 +62,7 @@
     "courierModalTitle": "宅配便でお届け",
     "loadFailed": "配送方法を読み込めませんでした。もう一度お試しください。",
     "mapKeyMissing": "地図には Yandex Maps の API キーが必要です。",
+    "mapLoadFailed": "地図を読み込めませんでした。もう一度お試しください。",
     "next": "次へ",
     "noPoints": "この住所に対応する受取場所はありません。",
     "noTariffs": "この住所に配送できる業者がありません。",

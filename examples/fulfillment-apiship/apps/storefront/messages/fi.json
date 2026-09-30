@@ -62,6 +62,7 @@
     "courierModalTitle": "Kuriiritoimitus",
     "loadFailed": "Toimitusvaihtoehtoja ei voitu ladata. Yritä uudelleen.",
     "mapKeyMissing": "Kartta tarvitsee Yandex Maps -API-avaimen.",
+    "mapLoadFailed": "Karttaa ei voitu ladata. Yritä uudelleen.",
     "next": "Seuraava",
     "noPoints": "Tähän osoitteeseen ei ole noutopisteitä.",
     "noTariffs": "Mikään kuljetusliike ei toimita tähän osoitteeseen.",

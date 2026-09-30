@@ -62,6 +62,7 @@
     "courierModalTitle": "Courier delivery",
     "loadFailed": "We couldn't load the delivery options. Please try again.",
     "mapKeyMissing": "The map needs a Yandex Maps API key.",
+    "mapLoadFailed": "We couldn't load the map. Please try again.",
     "next": "Next",
     "noPoints": "No pickup points serve this address.",
     "noTariffs": "No carrier delivers to this address.",

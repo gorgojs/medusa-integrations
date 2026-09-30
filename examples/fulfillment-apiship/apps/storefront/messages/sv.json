@@ -62,6 +62,7 @@
     "courierModalTitle": "Leverans med bud",
     "loadFailed": "Vi kunde inte läsa in leveransalternativen. Försök igen.",
     "mapKeyMissing": "Kartan behöver en API-nyckel för Yandex Maps.",
+    "mapLoadFailed": "Vi kunde inte läsa in kartan. Försök igen.",
     "next": "Nästa",
     "noPoints": "Det finns inga utlämningsställen för den här adressen.",
     "noTariffs": "Ingen transportör levererar till den här adressen.",

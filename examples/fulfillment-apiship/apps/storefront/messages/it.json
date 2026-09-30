@@ -62,6 +62,7 @@
     "courierModalTitle": "Consegna con corriere",
     "loadFailed": "Non siamo riusciti a caricare le opzioni di consegna. Riprova.",
     "mapKeyMissing": "La mappa richiede una chiave API di Yandex Maps.",
+    "mapLoadFailed": "Non siamo riusciti a caricare la mappa. Riprova.",
     "next": "Avanti",
     "noPoints": "Nessun punto di ritiro serve questo indirizzo.",
     "noTariffs": "Nessun corriere consegna a questo indirizzo.",

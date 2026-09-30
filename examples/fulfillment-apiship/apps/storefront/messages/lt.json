@@ -62,6 +62,7 @@
     "courierModalTitle": "Pristatymas kurjeriu",
     "loadFailed": "Nepavyko įkelti pristatymo parinkčių. Bandykite dar kartą.",
     "mapKeyMissing": "Žemėlapiui reikia Yandex Maps API rakto.",
+    "mapLoadFailed": "Nepavyko įkelti žemėlapio. Bandykite dar kartą.",
     "next": "Toliau",
     "noPoints": "Šiuo adresu atsiėmimo punktų nėra.",
     "noTariffs": "Šiuo adresu nepristato nė vienas vežėjas.",

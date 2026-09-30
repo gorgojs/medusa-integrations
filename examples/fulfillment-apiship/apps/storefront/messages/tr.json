@@ -62,6 +62,7 @@
     "courierModalTitle": "Kuryeyle teslimat",
     "loadFailed": "Teslimat seçenekleri yüklenemedi. Tekrar deneyin.",
     "mapKeyMissing": "Harita için Yandex Maps API anahtarı gerekiyor.",
+    "mapLoadFailed": "Harita yüklenemedi. Tekrar deneyin.",
     "next": "İleri",
     "noPoints": "Bu adres için teslim noktası yok.",
     "noTariffs": "Bu adrese teslimat yapan kargo firması yok.",

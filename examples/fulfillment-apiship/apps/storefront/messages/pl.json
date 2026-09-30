@@ -62,6 +62,7 @@
     "courierModalTitle": "Dostawa kurierem",
     "loadFailed": "Nie udało się wczytać opcji dostawy. Spróbuj ponownie.",
     "mapKeyMissing": "Mapa wymaga klucza API Yandex Maps.",
+    "mapLoadFailed": "Nie udało się wczytać mapy. Spróbuj ponownie.",
     "next": "Dalej",
     "noPoints": "Pod tym adresem nie ma punktów odbioru.",
     "noTariffs": "Żaden przewoźnik nie dostarcza pod ten adres.",

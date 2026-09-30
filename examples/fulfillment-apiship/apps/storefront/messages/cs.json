@@ -62,6 +62,7 @@
     "courierModalTitle": "Doručení kurýrem",
     "loadFailed": "Možnosti doručení se nepodařilo načíst. Zkuste to znovu.",
     "mapKeyMissing": "Mapa potřebuje API klíč Yandex Maps.",
+    "mapLoadFailed": "Mapu se nepodařilo načíst. Zkuste to znovu.",
     "next": "Dále",
     "noPoints": "Pro tuto adresu nejsou žádná výdejní místa.",
     "noTariffs": "Na tuto adresu nedoručuje žádný dopravce.",
