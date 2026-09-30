@@ -20,7 +20,8 @@ export type FoundTariff = Record<string, any> & {
 export function findTariff(
   calculatorResponse: CalculatorResponseType,
   deliveryType: number,
-  chosen: ChosenTariff | undefined | null
+  chosen: ChosenTariff | undefined | null,
+  pointId?: unknown
 ): FoundTariff | undefined {
   if (!chosen || chosen.tariffId === undefined || chosen.tariffId === null) {
     return undefined
@@ -30,17 +31,25 @@ export function findTariff(
     ? calculatorResponse.deliveryToPoint
     : calculatorResponse.deliveryToDoor) as Array<{ providerKey?: string; tariffs?: any[] }> | undefined
 
+  const candidates: FoundTariff[] = []
+
   for (const group of groups ?? []) {
     if (!group.providerKey) continue
     if (chosen.providerKey !== undefined && chosen.providerKey !== group.providerKey) continue
 
-    const tariff = (group.tariffs ?? []).find(
-      (candidate) => String(candidate.tariffId) === String(chosen.tariffId)
-    )
-    if (tariff) {
-      return { ...tariff, providerKey: group.providerKey }
+    for (const candidate of group.tariffs ?? []) {
+      if (String(candidate.tariffId) === String(chosen.tariffId)) {
+        candidates.push({ ...candidate, providerKey: group.providerKey })
+      }
     }
   }
 
-  return undefined
+  const servesPoint = (tariff: FoundTariff) =>
+    (tariff.pointIds ?? []).some((id) => String(id) === String(pointId))
+
+  if (deliveryType === 2 && pointId !== undefined && pointId !== null) {
+    return candidates.find(servesPoint) ?? candidates[0]
+  }
+
+  return candidates[0]
 }

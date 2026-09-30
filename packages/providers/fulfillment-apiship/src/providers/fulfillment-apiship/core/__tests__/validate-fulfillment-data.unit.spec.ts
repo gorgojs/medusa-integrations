@@ -119,6 +119,36 @@ describe("ApishipBase.validateFulfillmentData", () => {
     })
   })
 
+  it("accepts a point served by a later entry of a tariff the carrier lists twice", async () => {
+    ;(getCalculationWorkflow as unknown as jest.Mock).mockReturnValue({
+      run: jest.fn().mockResolvedValue({
+        result: {
+          ...calculation,
+          deliveryToPoint: [
+            {
+              providerKey: "cdek",
+              tariffs: [
+                { tariffId: 3, tariffName: "CDEK Pickup", deliveryCost: 230, pointIds: [10] },
+                { tariffId: 3, tariffName: "CDEK Pickup", deliveryCost: 210, pointIds: [11, 12] },
+              ],
+            },
+          ],
+        },
+      }),
+    })
+    const data = {
+      apishipData: {
+        tariff: { key: "cdek:3", tariffId: 3, providerKey: "cdek" },
+        point: { id: "12", name: "MSK2401" },
+      },
+    }
+
+    const result = await service.validateFulfillmentData(pointOption, data, context)
+
+    expect(result.apishipData.tariff.deliveryCost).toBe(210)
+    expect(result.apishipData.point.id).toBe("12")
+  })
+
   it("drops a pickup point sent with a courier option", async () => {
     const data = {
       apishipData: {

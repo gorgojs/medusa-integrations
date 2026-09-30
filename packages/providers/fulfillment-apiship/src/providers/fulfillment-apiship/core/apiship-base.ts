@@ -156,7 +156,12 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     this.logger_.debug(`Apiship.calculatePrice input: ${JSON.stringify({ optionData, data, context }, null, 2)}`)
     const deliveryType = optionData.deliveryType as number
     const allowedTariffs = await this.getAllowedTariffs_(optionData, context)
-    const chosenTariff = findTariff(allowedTariffs, deliveryType, (data as any)?.apishipData?.tariff)
+    const chosenTariff = findTariff(
+      allowedTariffs,
+      deliveryType,
+      (data as any)?.apishipData?.tariff,
+      (data as any)?.apishipData?.point?.id
+    )
 
     const price = typeof chosenTariff?.deliveryCost === "number"
       ? chosenTariff.deliveryCost
@@ -497,7 +502,7 @@ class ApishipBase extends AbstractFulfillmentProviderService {
 
     const deliveryType = optionData.deliveryType as number
     const allowedTariffs = await this.getAllowedTariffs_(optionData, context)
-    const tariff = findTariff(allowedTariffs, deliveryType, selection.tariff)
+    const tariff = findTariff(allowedTariffs, deliveryType, selection.tariff, selection.point?.id)
 
     if (!tariff) {
       throw new MedusaError(

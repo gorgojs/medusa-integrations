@@ -144,6 +144,32 @@ describe("ApishipBase.calculatePrice", () => {
     expect(result.calculated_amount).toBe(500)
   })
 
+  it("prices the entry that serves the chosen point when a carrier lists a tariff twice", async () => {
+    setupWorkflowMocks({
+      ...mockCalculatorResponse,
+      deliveryToPoint: [
+        {
+          providerKey: "cdek",
+          tariffs: [
+            { tariffId: 3, deliveryCost: 230, pointIds: [10] },
+            { tariffId: 3, deliveryCost: 210, pointIds: [11, 12] },
+          ],
+        },
+      ],
+    })
+
+    const data = {
+      apishipData: {
+        tariff: { tariffId: 3, providerKey: "cdek" },
+        point: { id: "12" },
+      },
+    }
+
+    const result = await service.calculatePrice({ ...baseOptionData, deliveryType: 2 }, data, baseContext)
+
+    expect(result.calculated_amount).toBe(210)
+  })
+
   it("falls back to the cheapest tariff when the chosen one is not in the calculation", async () => {
     setupWorkflowMocks(mockCalculatorResponse)
 
