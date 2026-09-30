@@ -91,6 +91,12 @@ Also add the following function:
 
 ```ts title="src/lib/data/cart.ts"
 export async function removeShippingMethodFromCart(shippingMethodId: string) {
+  const cartId = await getCartId()
+
+  if (!cartId) {
+    throw new Error("No existing cart found")
+  }
+
   const headers = {
     ...(await getAuthHeaders()),
   }
@@ -101,7 +107,7 @@ export async function removeShippingMethodFromCart(shippingMethodId: string) {
 
   return sdk.client
     .fetch<ApishipHttpTypes.DeleteResponse<"shipping_method">>(
-      `/store/shipping-methods/${shippingMethodId}`,
+      `/store/carts/${cartId}/shipping-methods/${shippingMethodId}`,
       {
         method: "DELETE",
         headers,
@@ -1599,7 +1605,7 @@ const Shipping: React.FC<ShippingProps> = ({
 
   // add the following
   const isApishipCalculated = (option?: HttpTypes.StoreCartShippingOption | null) =>
-    option?.price_type === "calculated" && option?.provider_id === "apiship_apiship"
+    option?.price_type === "calculated" && option?.provider_id?.startsWith("apiship_")
 
   const isApishipToDoor = (option?: HttpTypes.StoreCartShippingOption | null) =>
     isApishipCalculated(option) && option?.data?.deliveryType === 1
@@ -1733,7 +1739,7 @@ const Shipping: React.FC<ShippingProps> = ({
                               currency_code: cart?.currency_code,
                             })
                           ) : calculatedPricesMap[option.id] ? (
-                            option.provider_id === "apiship_apiship" ? (
+                            option.provider_id?.startsWith("apiship_") ? (
                               "from " + convertToLocale({
                                 amount: calculatedPricesMap[option.id],
                                 currency_code: cart?.currency_code,
@@ -1822,7 +1828,7 @@ const Shipping: React.FC<ShippingProps> = ({
                 !cart.shipping_methods?.[0] ||
                 shippingMethodId === null ||
                 (
-                  (_shippingMethods?.find((o) => o.id === shippingMethodId)?.provider_id === "apiship_apiship")
+                  (_shippingMethods?.find((o) => o.id === shippingMethodId)?.provider_id?.startsWith("apiship_"))
                   && !apishipChosen
                 )
               }
