@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { Fragment, useEffect, useMemo, useState } from "react"
 import { setShippingMethod } from "@lib/data/cart"
 import {
   retrieveApishipCalculation,
@@ -15,9 +15,12 @@ import {
   CheckoutModalBackButton,
 } from "@modules/checkout/components/checkout-modal"
 import ErrorMessage from "@modules/checkout/components/error-message"
+import Clock from "@modules/common/icons/clock"
+import MapPin from "@modules/common/icons/map-pin"
 import { useShippingSelection } from "@modules/checkout/context/shipping-selection-context"
 import { useLocale, useTranslations } from "next-intl"
 import PickupPointMap from "./pickup-point-map"
+import ProviderLogo from "./provider-logo"
 import TariffList from "./tariff-list"
 import type {
   ApishipCalculation,
@@ -32,6 +35,7 @@ import {
   extractPointIds,
   getApishipDeliveryType,
   getApishipSelection,
+  groupWorktime,
 } from "./utils"
 
 type ApishipDeliveryModalProps = {
@@ -153,9 +157,18 @@ export default function ApishipDeliveryModal({
   }, [open, step, cart.id, option.id, toPoint, addressKey])
 
   const weekdayFormatter = useMemo(
-    () => new Intl.DateTimeFormat(locale, { weekday: "long" }),
+    () =>
+      new Intl.DateTimeFormat(locale, { weekday: "short", timeZone: "UTC" }),
     [locale]
   )
+
+  const formatWeekdays = (from: number, to: number) => {
+    const weekday = (day: number) => new Date(Date.UTC(2024, 0, day))
+
+    return from === to
+      ? weekdayFormatter.format(weekday(from))
+      : weekdayFormatter.formatRange(weekday(from), weekday(to))
+  }
 
   const doorGroups = useMemo(() => buildDoorGroups(calculation), [calculation])
 
@@ -167,6 +180,15 @@ export default function ApishipDeliveryModal({
   const activeProvider = activePoint
     ? providers[activePoint.providerKey ?? ""]
     : undefined
+
+  const pointTitle =
+    activePoint?.name || activeProvider?.name || t("pickupPointModalTitle")
+  const showProviderName =
+    !!activeProvider?.name && activeProvider.name !== pointTitle
+
+  const worktimeGroups = activePoint?.worktime
+    ? groupWorktime(activePoint.worktime)
+    : []
 
   const activeTariffs = useMemo(
     () => (selectedPointId ? (tariffsByPointId[selectedPointId] ?? []) : []),
@@ -234,35 +256,108 @@ export default function ApishipDeliveryModal({
       ) : toPoint ? (
         <div className="flex h-full w-full flex-col sm:flex-row">
           {activePoint && (
-            <div className="flex h-1/2 w-full shrink-0 flex-col border-b border-ui-border-base sm:h-full sm:w-[380px] sm:border-b-0 sm:border-e">
-              <div className="flex flex-col gap-y-4 overflow-y-auto px-6 pb-6 pt-4">
+            <div className="flex h-1/2 w-full shrink-0 flex-col border-b border-ui-border-base sm:h-full sm:w-[400px] sm:border-b-0 sm:border-e">
+              <div className="flex min-h-0 flex-1 flex-col gap-y-6 overflow-y-auto px-6 pb-6 pt-5 sm:px-8 sm:pt-7">
                 <CheckoutModalBackButton
                   onClick={() => setStep("address")}
                   className="self-start"
                 />
-                <div className="flex flex-col gap-y-1 pe-8">
-                  <Text className="txt-compact-medium-plus text-ui-fg-base">
-                    {activeProvider?.name ?? t("pickupPointModalTitle")}
-                  </Text>
-                  <Text className="txt-compact-small text-ui-fg-subtle">
-                    {activePoint.address}
-                  </Text>
+
+                <div className="flex flex-col gap-y-5">
+                  <h2 className="h2-docs font-semibold text-ui-fg-base sm:h1-docs">
+                    {pointTitle}
+                  </h2>
+
+                  <div className="flex flex-col gap-y-3">
+                    {showProviderName && (
+                      <div className="flex items-center gap-x-2">
+                        <ProviderLogo src={activeProvider?.icon} />
+                        <Text className="txt-compact-medium-plus text-ui-fg-base">
+                          {activeProvider?.name}
+                        </Text>
+                      </div>
+                    )}
+
+                    <TariffList
+                      groups={[
+                        {
+                          providerKey: activePoint.providerKey ?? "",
+                          tariffs: activeTariffs,
+                        },
+                      ]}
+                      currencyCode={cart.currency_code}
+                      providers={providers}
+                      selectedKey={selectedTariffKey}
+                      onSelect={setSelectedTariffKey}
+                      showGroupNames={false}
+                    />
+                  </div>
                 </div>
 
-                <TariffList
-                  groups={[
-                    {
-                      providerKey: activePoint.providerKey ?? "",
-                      tariffs: activeTariffs,
-                    },
-                  ]}
-                  currencyCode={cart.currency_code}
-                  providers={providers}
-                  selectedKey={selectedTariffKey}
-                  onSelect={setSelectedTariffKey}
-                  showGroupNames={false}
-                />
+                <div className="border-t border-ui-border-base" />
 
+                <div className="flex flex-col gap-y-4">
+                  <h3 className="h2-docs font-semibold text-ui-fg-base">
+                    {t("pointDetails")}
+                  </h3>
+
+                  {activePoint.description && (
+                    <Text className="txt-medium text-ui-fg-base">
+                      {activePoint.description}
+                    </Text>
+                  )}
+
+                  <div className="flex flex-col gap-y-4 pt-1">
+                    {activePoint.address && (
+                      <PointInfoRow icon={<MapPin />}>
+                        {activePoint.address}
+                      </PointInfoRow>
+                    )}
+
+                    {worktimeGroups.length > 0 ? (
+                      <PointInfoRow icon={<Clock />}>
+                        <dl
+                          aria-label={t("schedule")}
+                          className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1"
+                        >
+                          {worktimeGroups.map(({ from, to, hours }) => (
+                            <Fragment key={from}>
+                              <dt className="first-letter:uppercase">
+                                {formatWeekdays(from, to)}
+                              </dt>
+                              <dd className="tabular-nums">{hours}</dd>
+                            </Fragment>
+                          ))}
+                        </dl>
+                      </PointInfoRow>
+                    ) : (
+                      activePoint.timetable && (
+                        <PointInfoRow icon={<Clock />}>
+                          {activePoint.timetable}
+                        </PointInfoRow>
+                      )
+                    )}
+                  </div>
+
+                  {!!activePoint.photos?.length && (
+                    <div className="flex shrink-0 gap-x-2 overflow-x-auto pt-1 no-scrollbar">
+                      {activePoint.photos.map((src, index) => (
+                        // The photos come from each carrier's own CDN, so the hosts are not
+                        // known ahead of time and next/image cannot serve them.
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          key={src}
+                          src={src}
+                          alt={t("photoAlt", { index: index + 1 })}
+                          className="h-[100px] w-auto shrink-0 rounded-lg border border-ui-border-base object-cover"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex shrink-0 flex-col gap-y-4 bg-ui-bg-base px-6 py-4 sm:px-8">
                 <ErrorMessage
                   error={loadFailed ? t("loadFailed") : error}
                   data-testid="apiship-point-error"
@@ -270,7 +365,7 @@ export default function ApishipDeliveryModal({
 
                 <Button
                   size="large"
-                  className="w-full shrink-0"
+                  className="w-full"
                   onClick={handleConfirm}
                   isLoading={isSaving}
                   disabled={!selectedTariff}
@@ -278,54 +373,6 @@ export default function ApishipDeliveryModal({
                 >
                   {t("choose")}
                 </Button>
-
-                {activePoint.worktime && (
-                  <div className="flex flex-col gap-y-1">
-                    <Text className="txt-compact-small-plus text-ui-fg-base">
-                      {t("schedule")}
-                    </Text>
-                    {Object.entries(activePoint.worktime).map(([day, hours]) => (
-                      <div
-                        key={day}
-                        className="flex justify-between txt-compact-small text-ui-fg-subtle"
-                      >
-                        <span>
-                          {weekdayFormatter.format(
-                            new Date(Date.UTC(2024, 0, Number(day)))
-                          )}
-                        </span>
-                        <span className="text-ui-fg-muted">{hours}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {!!activePoint.photos?.length && (
-                  <div className="flex shrink-0 gap-x-2 overflow-x-auto no-scrollbar">
-                    {activePoint.photos.map((src, index) => (
-                      // The photos come from each carrier's own CDN, so the hosts are not
-                      // known ahead of time and next/image cannot serve them.
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        key={src}
-                        src={src}
-                        alt={t("photoAlt", { index: index + 1 })}
-                        className="h-[100px] w-auto shrink-0 rounded-md border border-ui-border-base object-cover"
-                      />
-                    ))}
-                  </div>
-                )}
-
-                {activePoint.description && (
-                  <div className="flex flex-col">
-                    <Text className="txt-compact-small-plus text-ui-fg-base">
-                      {t("pointDetails")}
-                    </Text>
-                    <Text className="txt-compact-small text-ui-fg-subtle">
-                      {activePoint.description}
-                    </Text>
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -401,5 +448,20 @@ export default function ApishipDeliveryModal({
         </div>
       )}
     </CheckoutModal>
+  )
+}
+
+function PointInfoRow({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex items-start gap-x-3 txt-large text-ui-fg-base">
+      <span className="flex h-[1.6rem] shrink-0 items-center">{icon}</span>
+      <div className="min-w-0 flex-1">{children}</div>
+    </div>
   )
 }

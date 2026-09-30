@@ -19,6 +19,41 @@ const DEFAULT_CENTER: [number, number] = [37.618423, 55.751244]
 const DEFAULT_ZOOM = 10
 const LOGO_MARKER_SIZE = 36
 const LOGO_MARKER_SIZE_SELECTED = 48
+const CLUSTER_MARKER_SIZE = 40
+const CLUSTER_SPACING = 60
+const CLUSTER_MAX_ZOOM = 16
+const WORLD_PIXEL_SIZE = 256
+const CLUSTER_BOUNDS_PADDING = 0.25
+const CLUSTER_ZOOM_DURATION = 300
+const HOVER_SCALE = 1.2
+const Z_INDEX_BASE = 1
+const Z_INDEX_SELECTED = 2
+const Z_INDEX_HOVERED = 3
+const CLUSTERER_PACKAGE = "@yandex/ymaps3-clusterer"
+const CLUSTERER_VERSION = "0.0.12"
+
+const BASE_TRANSFORMS: Record<string, string> = {
+  logo: "translate(-50%, -50%)",
+  pin: "rotate(-45deg)",
+  cluster: "translate(-50%, -50%)",
+}
+
+type LngLat = [number, number]
+
+type PointFeature = {
+  type: "Feature"
+  id: string
+  geometry: { type: "Point"; coordinates: LngLat }
+  properties: ApishipPoint
+}
+
+type MarkerEntry = { marker: any; el: HTMLDivElement }
+
+type WorldPoint = { x: number; y: number }
+
+type ClusterItem = { world: WorldPoint; features: PointFeature[] }
+
+type ClustererObject = ClusterItem & { lnglat: LngLat; clusterId: string }
 
 /**
  * Yandex Maps takes a full locale and rejects a bare language tag with a 400, so the
@@ -70,6 +105,14 @@ function loadYmaps3(apiKey: string, lang: string): Promise<void> {
   return loading
 }
 
+function loadClusterer(ymaps3: any) {
+  ymaps3.import.registerCdn(
+    "https://cdn.jsdelivr.net/npm/{package}",
+    `${CLUSTERER_PACKAGE}@${CLUSTERER_VERSION}`
+  )
+  return ymaps3.import(CLUSTERER_PACKAGE)
+}
+
 type PickupPointMapProps = {
   points: ApishipPoint[]
   isLoading: boolean
@@ -93,9 +136,10 @@ export default function PickupPointMap({
 
   const containerRef = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<any>(null)
-  const markersRef = useRef<Map<string, { marker: any; el: HTMLDivElement }>>(
-    new Map()
-  )
+  const clustererModuleRef = useRef<any>(null)
+  const clustererRef = useRef<any>(null)
+  const markersRef = useRef<Map<string, MarkerEntry>>(new Map())
+  const selectedPointIdRef = useRef(selectedPointId)
   const readyRef = useRef<Promise<void> | null>(null)
   const centeredPointsRef = useRef<ApishipPoint[] | null>(null)
   const [scriptFailed, setScriptFailed] = useState(false)
@@ -112,37 +156,24 @@ export default function PickupPointMap({
   }, [points])
 
   const clearMarkers = useCallback(() => {
-    const map = mapRef.current
-    for (const { marker } of Array.from(markersRef.current.values())) {
+    const clusterer = clustererRef.current
+    if (clusterer) {
       try {
-        map?.removeChild(marker)
+        mapRef.current?.removeChild(clusterer)
       } catch {
-        // The map is already gone, so the marker went with it.
+        // The map is already gone, so the clusterer went with it.
       }
     }
+    clustererRef.current = null
     markersRef.current.clear()
   }, [])
 
   const paintSelection = useCallback(() => {
-    for (const [id, { el }] of Array.from(markersRef.current.entries())) {
-      const selected = id === selectedPointId
-      el.dataset.selected = selected ? "true" : "false"
-      el.style.zIndex = selected ? "2" : "1"
-
-      if (el.dataset.kind === "logo") {
-        const size = selected ? LOGO_MARKER_SIZE_SELECTED : LOGO_MARKER_SIZE
-        el.style.width = `${size}px`
-        el.style.height = `${size}px`
-        el.style.boxShadow = selected
-          ? "0 4px 12px rgba(0,0,0,0.28)"
-          : "0 2px 6px rgba(0,0,0,0.22)"
-        continue
-      }
-
-      el.style.background = selected ? "rgb(59 130 246)" : "white"
-      el.style.borderColor = selected ? "rgb(29 78 216)" : "rgba(0,0,0,0.25)"
+    for (const [id, entry] of Array.from(markersRef.current.entries())) {
+      entry.el.dataset.selected = String(id === selectedPointIdRef.current)
+      paintMarker(entry)
     }
-  }, [selectedPointId])
+  }, [])
 
   useEffect(() => {
     if (!apiKey || !containerRef.current || mapRef.current) return
@@ -159,6 +190,9 @@ export default function PickupPointMap({
       await ymaps3.ready
       if (cancelled) return
 
+      const clustererModule = await loadClusterer(ymaps3)
+      if (cancelled || !containerRef.current) return
+
       const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer } = ymaps3
       const map = new YMap(containerRef.current, {
         location: { center: DEFAULT_CENTER, zoom: DEFAULT_ZOOM },
@@ -167,6 +201,7 @@ export default function PickupPointMap({
       map.addChild(new YMapDefaultFeaturesLayer({}))
 
       mapRef.current = map
+      clustererModuleRef.current = clustererModule
     })().catch((e) => {
       console.error("Yandex map failed to start", e)
       if (!cancelled) setScriptFailed(true)
@@ -181,6 +216,7 @@ export default function PickupPointMap({
         // Destroying a map that never finished starting is not an error worth raising.
       }
       mapRef.current = null
+      clustererModuleRef.current = null
       readyRef.current = null
       centeredPointsRef.current = null
     }
@@ -196,29 +232,74 @@ export default function PickupPointMap({
 
       const map = mapRef.current
       const ymaps3 = window.ymaps3
-      if (!map || !ymaps3) return
+      const clustererModule = clustererModuleRef.current
+      if (!map || !ymaps3 || !clustererModule) return
 
       const { YMapMarker } = ymaps3
+      const { YMapClusterer } = clustererModule
       clearMarkers()
 
-      for (const point of points) {
-        const icon = providers?.[point.providerKey ?? ""]?.icon
-        const el = icon ? createLogoMarker(icon) : createPinMarker()
-        el.title = point.name ?? point.address ?? ""
+      const features: PointFeature[] = points.map((point) => ({
+        type: "Feature",
+        id: point.id,
+        geometry: { type: "Point", coordinates: [point.lng, point.lat] },
+        properties: point,
+      }))
 
-        el.addEventListener("click", (event) => {
-          event.preventDefault()
-          event.stopPropagation()
-          onSelectPointRef.current(point.id)
-        })
+      const hover = createHoverTracker()
 
-        const marker = new YMapMarker(
-          { coordinates: [point.lng, point.lat] },
-          el
-        )
-        map.addChild(marker)
-        markersRef.current.set(point.id, { marker, el })
-      }
+      const clusterer = new YMapClusterer({
+        method: clusterBySpacing(features, CLUSTER_SPACING),
+        maxZoom: CLUSTER_MAX_ZOOM,
+        features,
+        onRender: () => hover.releaseStale(),
+        marker: (feature: PointFeature) => {
+          const point = feature.properties
+          const icon = providers?.[point.providerKey ?? ""]?.icon
+          const el = icon ? createLogoMarker(icon) : createPinMarker()
+          el.title = point.name ?? point.address ?? ""
+          el.dataset.selected = String(point.id === selectedPointIdRef.current)
+
+          el.addEventListener("click", (event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            onSelectPointRef.current(point.id)
+          })
+
+          const entry: MarkerEntry = {
+            marker: new YMapMarker(
+              { coordinates: feature.geometry.coordinates },
+              el
+            ),
+            el,
+          }
+          hover.bind(entry)
+          paintMarker(entry)
+          markersRef.current.set(point.id, entry)
+
+          return entry.marker
+        },
+        cluster: (coordinates: LngLat, clusterFeatures: PointFeature[]) => {
+          const el = createClusterMarker(clusterFeatures.length)
+
+          el.addEventListener("click", (event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            zoomToFeatures(map, clusterFeatures)
+          })
+
+          const entry: MarkerEntry = {
+            marker: new YMapMarker({ coordinates }, el),
+            el,
+          }
+          hover.bind(entry)
+          paintMarker(entry)
+
+          return entry.marker
+        },
+      })
+      map.addChild(clusterer)
+      clustererRef.current = clusterer
 
       if (centeredPointsRef.current !== points) {
         try {
@@ -228,18 +309,17 @@ export default function PickupPointMap({
           // A map torn down mid-update has nothing left to centre.
         }
       }
-
-      paintSelection()
     })()
 
     return () => {
       cancelled = true
     }
-  }, [points, providers, center, clearMarkers, paintSelection])
+  }, [points, providers, center, clearMarkers])
 
   useEffect(() => {
+    selectedPointIdRef.current = selectedPointId
     paintSelection()
-  }, [paintSelection])
+  }, [selectedPointId, paintSelection])
 
   if (!apiKey || scriptFailed) {
     return (
@@ -280,8 +360,9 @@ function createLogoMarker(icon: string) {
   el.style.background = "white"
   el.style.borderRadius = "9999px"
   el.style.boxShadow = "0 2px 6px rgba(0,0,0,0.22)"
-  el.style.transform = "translate(-50%, -50%)"
-  el.style.transition = "width 150ms ease, height 150ms ease, box-shadow 150ms ease"
+  el.style.transform = BASE_TRANSFORMS.logo
+  el.style.transition =
+    "width 150ms ease, height 150ms ease, box-shadow 150ms ease, transform 150ms ease"
   el.style.cursor = "pointer"
   el.style.position = "relative"
 
@@ -307,9 +388,10 @@ function createPinMarker() {
   el.style.background = "white"
   el.style.border = "2px solid rgba(0,0,0,0.25)"
   el.style.borderRadius = "50% 50% 50% 0"
-  el.style.transform = "rotate(-45deg)"
+  el.style.transform = BASE_TRANSFORMS.pin
   el.style.transformOrigin = "50% 50%"
   el.style.boxShadow = "0 2px 2px rgba(0,0,0,0.18)"
+  el.style.transition = "transform 150ms ease"
   el.style.cursor = "pointer"
   el.style.position = "relative"
 
@@ -327,4 +409,223 @@ function createPinMarker() {
   el.appendChild(dot)
 
   return el
+}
+
+function createClusterMarker(count: number) {
+  const el = document.createElement("div")
+  el.dataset.kind = "cluster"
+  el.className =
+    "relative flex cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-full border-2 border-ui-border-base bg-ui-bg-base px-2 shadow-[0_2px_6px_rgba(0,0,0,0.22)] txt-compact-small-plus text-ui-fg-base"
+  el.textContent = String(count)
+  el.style.minWidth = `${CLUSTER_MARKER_SIZE}px`
+  el.style.height = `${CLUSTER_MARKER_SIZE}px`
+  el.style.transform = BASE_TRANSFORMS.cluster
+  el.style.transition = "transform 150ms ease"
+
+  return el
+}
+
+function clusterBySpacing(features: PointFeature[], spacing: number) {
+  let items: ClusterItem[] | null = null
+  let cached: { zoom: number; objects: ClustererObject[] } | null = null
+
+  return {
+    render({ map }: { map: any }): ClustererObject[] {
+      items ??= features.map((feature) => ({
+        world: map.projection.toWorldCoordinates(feature.geometry.coordinates),
+        features: [feature],
+      }))
+
+      const scale = (2 ** map.zoom / 2) * WORLD_PIXEL_SIZE
+
+      if (!cached || cached.zoom !== map.zoom) {
+        cached = {
+          zoom: map.zoom,
+          objects: mergeClose(items, spacing / scale).map((item) =>
+            toClustererObject(map, item)
+          ),
+        }
+      }
+
+      const center = map.projection.toWorldCoordinates(map.center)
+
+      return cached.objects.filter(
+        ({ world }) =>
+          Math.abs(world.x - center.x) * scale <= map.size.x &&
+          Math.abs(world.y - center.y) * scale <= map.size.y
+      )
+    },
+  }
+}
+
+function mergeClose(items: ClusterItem[], distance: number) {
+  const cellOf = ({ x, y }: WorldPoint) =>
+    [Math.floor(x / distance), Math.floor(y / distance)] as const
+  let current = items
+
+  for (;;) {
+    const cells = new Map<string, ClusterItem[]>()
+    for (const item of current) {
+      const [cx, cy] = cellOf(item.world)
+      const key = `${cx}:${cy}`
+      const cell = cells.get(key)
+      if (cell) cell.push(item)
+      else cells.set(key, [item])
+    }
+
+    const taken = new Set<ClusterItem>()
+    const next: ClusterItem[] = []
+
+    for (const item of current) {
+      if (taken.has(item)) continue
+      taken.add(item)
+
+      const group = [item]
+      const [cx, cy] = cellOf(item.world)
+
+      for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = -1; dy <= 1; dy++) {
+          for (const other of cells.get(`${cx + dx}:${cy + dy}`) ?? []) {
+            if (taken.has(other)) continue
+            const gap = Math.hypot(
+              other.world.x - item.world.x,
+              other.world.y - item.world.y
+            )
+            if (gap >= distance) continue
+            taken.add(other)
+            group.push(other)
+          }
+        }
+      }
+
+      next.push(group.length === 1 ? item : combine(group))
+    }
+
+    if (next.length === current.length) return next
+    current = next
+  }
+}
+
+function combine(group: ClusterItem[]): ClusterItem {
+  const features: PointFeature[] = []
+  let x = 0
+  let y = 0
+
+  for (const item of group) {
+    const weight = item.features.length
+    x += item.world.x * weight
+    y += item.world.y * weight
+    for (const feature of item.features) features.push(feature)
+  }
+
+  return { world: { x: x / features.length, y: y / features.length }, features }
+}
+
+function toClustererObject(map: any, item: ClusterItem): ClustererObject {
+  const [first] = item.features
+
+  if (item.features.length === 1) {
+    return { ...item, lnglat: first.geometry.coordinates, clusterId: first.id }
+  }
+
+  return {
+    ...item,
+    lnglat: map.projection.fromWorldCoordinates(item.world),
+    clusterId: `cluster-${item.features.map(({ id }) => id).join(",")}`,
+  }
+}
+
+function paintMarker({ marker, el }: MarkerEntry) {
+  const selected = el.dataset.selected === "true"
+  const hovered = el.dataset.hovered === "true"
+  const baseTransform = BASE_TRANSFORMS[el.dataset.kind ?? ""] ?? ""
+
+  const zIndex = selected ? Z_INDEX_SELECTED : Z_INDEX_BASE
+  marker.update({ zIndex: hovered ? Z_INDEX_HOVERED : zIndex })
+  el.style.transform = hovered
+    ? `${baseTransform} scale(${HOVER_SCALE})`
+    : baseTransform
+
+  if (el.dataset.kind === "cluster") return
+
+  if (el.dataset.kind === "logo") {
+    const size = selected ? LOGO_MARKER_SIZE_SELECTED : LOGO_MARKER_SIZE
+    el.style.width = `${size}px`
+    el.style.height = `${size}px`
+    el.style.boxShadow = selected
+      ? "0 4px 12px rgba(0,0,0,0.28)"
+      : "0 2px 6px rgba(0,0,0,0.22)"
+    return
+  }
+
+  el.style.background = selected ? "rgb(59 130 246)" : "white"
+  el.style.borderColor = selected ? "rgb(29 78 216)" : "rgba(0,0,0,0.25)"
+}
+
+function createHoverTracker() {
+  let hovered: MarkerEntry | null = null
+
+  const setHovered = (entry: MarkerEntry | null) => {
+    if (hovered === entry) return
+    const previous = hovered
+    hovered = entry
+
+    if (previous) {
+      previous.el.dataset.hovered = "false"
+      paintMarker(previous)
+    }
+    if (entry) {
+      entry.el.dataset.hovered = "true"
+      paintMarker(entry)
+    }
+  }
+
+  return {
+    bind(entry: MarkerEntry) {
+      entry.el.addEventListener("pointerenter", (event) => {
+        if (event.pointerType === "mouse") setHovered(entry)
+      })
+      entry.el.addEventListener("pointerleave", () => {
+        if (hovered === entry) setHovered(null)
+      })
+    },
+    releaseStale() {
+      if (hovered && !hovered.el.matches(":hover")) setHovered(null)
+    },
+  }
+}
+
+function zoomToFeatures(map: any, features: PointFeature[]) {
+  let west = Infinity
+  let east = -Infinity
+  let south = Infinity
+  let north = -Infinity
+
+  for (const { geometry } of features) {
+    const [lng, lat] = geometry.coordinates
+    west = Math.min(west, lng)
+    east = Math.max(east, lng)
+    south = Math.min(south, lat)
+    north = Math.max(north, lat)
+  }
+
+  if (west === east && south === north) {
+    map.setLocation({
+      center: [west, south],
+      zoom: CLUSTER_MAX_ZOOM + 1,
+      duration: CLUSTER_ZOOM_DURATION,
+    })
+    return
+  }
+
+  const padLng = (east - west) * CLUSTER_BOUNDS_PADDING
+  const padLat = (north - south) * CLUSTER_BOUNDS_PADDING
+
+  map.setLocation({
+    bounds: [
+      [west - padLng, north + padLat],
+      [east + padLng, south - padLat],
+    ],
+    duration: CLUSTER_ZOOM_DURATION,
+  })
 }

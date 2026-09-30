@@ -105,6 +105,21 @@ export const buildDoorGroups = (calculation?: ApishipCalculation | null) => {
     .filter((group) => group.tariffs.length > 0)
 }
 
+export const groupWorktime = (worktime: Record<string, string>) => {
+  const groups: Array<{ from: number; to: number; hours: string }> = []
+
+  for (let day = 1; day <= 7; day++) {
+    const hours = worktime[String(day)]
+    if (!hours) continue
+
+    const last = groups.at(-1)
+    if (last && last.hours === hours && last.to === day - 1) last.to = day
+    else groups.push({ from: day, to: day, hours })
+  }
+
+  return groups
+}
+
 /**
  * The tariff and pickup point the customer settled on, as stored on the shipping method.
  * The cart holds one method at a time, so it only answers for the option that method was
