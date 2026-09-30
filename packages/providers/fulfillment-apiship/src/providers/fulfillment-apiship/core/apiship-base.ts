@@ -1,6 +1,7 @@
 import {
   AbstractFulfillmentProviderService,
-  isDefined
+  isDefined,
+  MedusaError
 } from "@medusajs/framework/utils"
 import { createTelemetryClient } from "@gorgo/telemetry"
 import {
@@ -23,8 +24,6 @@ import {
 import {
   assertApishipToken,
   assembleApishipOptions,
-  findApishipConnection,
-  isTariffAllowed,
 } from "../../../lib/apiship-options"
 import { fetchShipmentDocuments } from "../../../lib/shipment-documents"
 import { ProviderKeys } from "../../../types"
@@ -33,8 +32,11 @@ import type {
   StoredApishipOptions,
 } from "../../../types/apiship"
 import {
+  findTariff,
   getCheapestTariff,
   filterAllowedTariffs,
+  pickStoredPoint,
+  pickStoredTariff,
   mapToApishipOrderRequest,
   mapToApishipCalculatorRequest,
   hashObject
@@ -152,6 +154,28 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     context: CalculateShippingOptionPriceDTO["context"]
   ): Promise<CalculatedShippingOptionPrice> {
     this.logger_.debug(`Apiship.calculatePrice input: ${JSON.stringify({ optionData, data, context }, null, 2)}`)
+    const deliveryType = optionData.deliveryType as number
+    const allowedTariffs = await this.getAllowedTariffs_(optionData, context)
+    const chosenTariff = findTariff(allowedTariffs, deliveryType, (data as any)?.apishipData?.tariff)
+
+    const price = typeof chosenTariff?.deliveryCost === "number"
+      ? chosenTariff.deliveryCost
+      : getCheapestTariff(allowedTariffs, deliveryType).deliveryCost as number
+
+    const result = {
+      calculated_amount: price,
+      is_calculated_price_tax_inclusive: true,
+      data: allowedTariffs,
+    }
+
+    this.logger_.debug(`Apiship.calculatePrice output: ${JSON.stringify(result, null, 2)}`)
+    return result
+  }
+
+  private async getAllowedTariffs_(
+    optionData: CalculateShippingOptionPriceDTO["optionData"],
+    context: CalculateShippingOptionPriceDTO["context"]
+  ) {
     const apishipOptions = await this.getApishipOptions_()
     const apishipClient = await this.getApishipClient_(apishipOptions)
     const calculatorRequest = mapToApishipCalculatorRequest(
@@ -193,39 +217,11 @@ class ApishipBase extends AbstractFulfillmentProviderService {
       }
     }
 
-    const allowedTariffs = filterAllowedTariffs(
+    return filterAllowedTariffs(
       tariffs,
       apishipOptions.connections,
       context.from_location?.id
     )
-
-    const apishipData = (data as any)?.apishipData
-    const chosenTariff = apishipData?.tariff
-    let price: number | null = null
-
-    if (
-      chosenTariff &&
-      typeof chosenTariff.deliveryCost === "number" &&
-      isTariffAllowed(
-        findApishipConnection(apishipOptions.connections, chosenTariff.providerKey, context.from_location?.id),
-        chosenTariff.tariffId,
-        optionData.deliveryType as number
-      )
-    ) {
-      price = chosenTariff.deliveryCost
-    }
-    if (price === null) {
-      const cheapestTariff = getCheapestTariff(allowedTariffs, optionData.deliveryType as number)
-      price = cheapestTariff.deliveryCost as number
-    }
-    const result = {
-      calculated_amount: price,
-      is_calculated_price_tax_inclusive: true,
-      data: allowedTariffs,
-    }
-
-    this.logger_.debug(`Apiship.calculatePrice output: ${JSON.stringify(result, null, 2)}`)
-    return result
   }
 
   async canCalculate(data: CreateShippingOptionDTO): Promise<boolean> {
@@ -494,7 +490,44 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     context: any
   ): Promise<any> {
     this.logger_.debug(`Apiship.validateFulfillmentData input: ${JSON.stringify({ optionData, data, context }, null, 2)}`)
-    return data
+    const selection = data?.apishipData
+    if (!selection) {
+      return data
+    }
+
+    const deliveryType = optionData.deliveryType as number
+    const allowedTariffs = await this.getAllowedTariffs_(optionData, context)
+    const tariff = findTariff(allowedTariffs, deliveryType, selection.tariff)
+
+    if (!tariff) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        "The chosen ApiShip tariff is not available for this cart"
+      )
+    }
+
+    const pointId = selection.point?.id
+    const servesPoint = (tariff.pointIds ?? []).some(
+      (id) => String(id) === String(pointId)
+    )
+
+    if (deliveryType === 2 && !servesPoint) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        "The chosen pickup point is not served by the chosen ApiShip tariff"
+      )
+    }
+
+    return {
+      ...data,
+      apishipData: {
+        deliveryType,
+        tariff: pickStoredTariff(tariff, selection.tariff?.key),
+        ...(deliveryType === 2
+          ? { point: pickStoredPoint(selection.point, tariff.providerKey) }
+          : {}),
+      },
+    }
   }
 
   async validateOption(data: any): Promise<boolean> {
