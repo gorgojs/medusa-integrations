@@ -62,6 +62,7 @@
     "courierModalTitle": "택배 배송",
     "loadFailed": "배송 방법을 불러오지 못했습니다. 다시 시도해 주세요.",
     "mapKeyMissing": "지도를 보려면 Yandex Maps API 키가 필요합니다.",
+    "mapLoadFailed": "지도를 불러오지 못했습니다. 다시 시도해 주세요.",
     "next": "다음",
     "noPoints": "이 주소에 이용할 수 있는 픽업 장소가 없습니다.",
     "noTariffs": "이 주소로 배송하는 업체가 없습니다.",

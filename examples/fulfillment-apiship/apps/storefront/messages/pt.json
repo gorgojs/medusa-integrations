@@ -62,6 +62,7 @@
     "courierModalTitle": "Entrega por estafeta",
     "loadFailed": "Não foi possível carregar as opções de entrega. Tente novamente.",
     "mapKeyMissing": "O mapa precisa de uma chave de API do Yandex Maps.",
+    "mapLoadFailed": "Não foi possível carregar o mapa. Tente novamente.",
     "next": "Seguinte",
     "noPoints": "Não há pontos de recolha para esta morada.",
     "noTariffs": "Nenhuma transportadora entrega nesta morada.",

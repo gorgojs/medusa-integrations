@@ -62,6 +62,7 @@
     "courierModalTitle": "Bezorging per koerier",
     "loadFailed": "We konden de bezorgopties niet laden. Probeer het opnieuw.",
     "mapKeyMissing": "De kaart heeft een Yandex Maps API-sleutel nodig.",
+    "mapLoadFailed": "We konden de kaart niet laden. Probeer het opnieuw.",
     "next": "Verder",
     "noPoints": "Er zijn geen afhaalpunten voor dit adres.",
     "noTariffs": "Geen vervoerder bezorgt op dit adres.",

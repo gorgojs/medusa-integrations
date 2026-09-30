@@ -62,6 +62,7 @@
     "courierModalTitle": "Levering med kurer",
     "loadFailed": "Vi kunne ikke hente leveringsmulighederne. Prøv igen.",
     "mapKeyMissing": "Kortet kræver en API-nøgle til Yandex Maps.",
+    "mapLoadFailed": "Vi kunne ikke hente kortet. Prøv igen.",
     "next": "Videre",
     "noPoints": "Der er ingen afhentningssteder til denne adresse.",
     "noTariffs": "Ingen transportør leverer til denne adresse.",

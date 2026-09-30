@@ -62,6 +62,7 @@
     "courierModalTitle": "Livrare prin curier",
     "loadFailed": "Nu am putut încărca opțiunile de livrare. Încearcă din nou.",
     "mapKeyMissing": "Harta are nevoie de o cheie API Yandex Maps.",
+    "mapLoadFailed": "Nu am putut încărca harta. Încearcă din nou.",
     "next": "Continuă",
     "noPoints": "Nu există puncte de ridicare pentru această adresă.",
     "noTariffs": "Niciun curier nu livrează la această adresă.",

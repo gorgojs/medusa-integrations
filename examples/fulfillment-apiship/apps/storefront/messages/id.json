@@ -62,6 +62,7 @@
     "courierModalTitle": "Pengiriman kurir",
     "loadFailed": "Pilihan pengiriman gagal dimuat. Coba lagi.",
     "mapKeyMissing": "Peta memerlukan kunci API Yandex Maps.",
+    "mapLoadFailed": "Peta gagal dimuat. Coba lagi.",
     "next": "Lanjut",
     "noPoints": "Tidak ada titik ambil untuk alamat ini.",
     "noTariffs": "Tidak ada kurir yang mengantar ke alamat ini.",

@@ -62,6 +62,7 @@
     "courierModalTitle": "Livraison par coursier",
     "loadFailed": "Impossible de charger les options de livraison. Réessayez.",
     "mapKeyMissing": "La carte nécessite une clé API Yandex Maps.",
+    "mapLoadFailed": "Impossible de charger la carte. Réessayez.",
     "next": "Suivant",
     "noPoints": "Aucun point de retrait ne dessert cette adresse.",
     "noTariffs": "Aucun transporteur ne livre à cette adresse.",

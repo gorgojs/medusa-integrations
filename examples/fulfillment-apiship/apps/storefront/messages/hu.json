@@ -62,6 +62,7 @@
     "courierModalTitle": "Futárszolgálat",
     "loadFailed": "Nem sikerült betölteni a szállítási lehetőségeket. Próbálja újra.",
     "mapKeyMissing": "A térképhez Yandex Maps API-kulcs szükséges.",
+    "mapLoadFailed": "Nem sikerült betölteni a térképet. Próbálja újra.",
     "next": "Tovább",
     "noPoints": "Ehhez a címhez nincs átvételi pont.",
     "noTariffs": "Erre a címre egyik futárszolgálat sem szállít.",
