@@ -56,15 +56,18 @@ ApiShip Integration for Medusa
 
 - **Production-Ready:** Proven in live stores and ready for real-world deployment.
 - **40+ Shipping Carriers:** Work with multiple carriers under direct contracts through a single integration.
-- **Automatic Shipping Rate Calculation:** Considers package dimensions, weight, personal discounts, and carrier rates.
-- **Pickup Point Delivery:** Select a pickup point from a list or on an interactive map.
+- **Automatic Shipping Rate Calculation:** Considers package dimensions, weight and carrier tariffs, and charges the cart the price of the tariff the customer picks.
+- **Pickup Point Delivery:** The plugin returns the pickup points each tariff serves, and the example storefront shows them on an interactive map.
+- **Delivery Services per Warehouse:** Link each carrier contract to a stock location, with its own drop-off point and its own list of allowed tariffs.
 - **One-Click Order Creation:** Create shipments in ApiShip directly from Medusa Admin, no manual data entry needed.
-- **Shipment Documents Printing:** Labels, waybills, and other documents available in Medusa Admin.
+- **Shipping Labels:** The tracking number, the tracking link and the shipping label PDF appear on the fulfillment in Medusa Admin.
+- **Cash on Delivery:** Collect the cost of the items on delivery, with the delivery VAT rate sent to ApiShip.
+- **Multiple ApiShip Accounts:** Register several instances of the plugin, each with its own token and settings.
 - **Full Test Coverage:** Comprehensive unit and integration tests covering core flows and edge cases.
-- **Storefront Example:** A ready-to-use [Next.js storefront example](https://github.com/gorgojs/medusa-integrations/tree/main/examples/fulfillment-apiship/medusa-storefront) you can use as a reference.
-- **Test Mode:** Simulate calculations and orders without affecting real data.
-- **Detailed Logging:** Request and response logs for debugging and support in development mode.
-- **[Integration module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> :** Configure this plugin directly in the Medusa Admin application — no editing configuration files or redeploying the store.
+- **Storefront Example:** A complete [Next.js storefront](https://github.com/gorgojs/medusa-integrations/tree/main/examples/fulfillment-apiship/apps/storefront) ready to use as a reference.
+- **Test Mode:** Switch to ApiShip's test environment, where calculations and orders don't create real shipments.
+- **Detailed Logging:** Request and response logs at the `debug` log level for debugging and support.
+- **[Integration module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> :** Configure this plugin directly in the Medusa Admin application, with no configuration files to edit and no store redeploy.
 
 > **Integration Module:** This plugin supports the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
 
@@ -76,14 +79,14 @@ Popular delivery services available through ApiShip include CDEK, Yandex Deliver
 
 ## 💬  Support & Community
 
-Got questions or ideas about the plugin? Join the Telegram support chat — [@gorgojs_chat](https://t.me/gorgojs_chat)
+Got questions or ideas about the plugin? Join the Telegram support chat [@gorgojs_chat](https://t.me/gorgojs_chat).
 
-Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
+Connect with other Medusa developers on Telegram in [@medusajs_chat](https://t.me/medusajs_chat).
 
 ## Requirements
 
 - Medusa v2.17.2 or later
-- Node.js v20 or later
+- Node.js 20.19 or later, or 22.12 or later
 - An ApiShip account - [sign in or create one](https://a.apiship.ru)
 - Integration Module
 
