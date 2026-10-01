@@ -1,16 +1,16 @@
 ---
 title: "Getting Started with ApiShip for Medusa"
-description: "In this document, you’ll learn how to install and configure the ApiShip plugin for Medusa"
+description: "Learn how to install and configure the ApiShip plugin for Medusa."
 ---
 
 # {frontmatter.title}
 
-In this document, you’ll learn how to install and configure the ApiShip plugin for Medusa.
+In this guide, you'll learn how to install and configure the ApiShip plugin for Medusa.
 
 ## Requirements
 
 - Medusa v2.17.2 or later
-- Node.js v20 or later
+- Node.js 20.19 or later, or 22.12 or later
 - An ApiShip account - [sign in or create one](https://a.apiship.ru)
 - [Integration Module](/medusa-modules/integration)
 
@@ -35,7 +35,7 @@ In this document, you’ll learn how to install and configure the ApiShip plugin
 
 ## Configuration
 
-Add the provider configuration in your `medusa-config.ts` file of the Medusa admin application:
+Register the plugin and its two providers in `medusa-config.ts` of your Medusa application:
 
 ```ts title="medusa-config.ts"
 // ...
@@ -70,10 +70,14 @@ module.exports = defineConfig({
       options: {
         providers: [
           {
+            resolve: "@medusajs/medusa/fulfillment-manual",
+            id: "manual",
+          },
+          {
             resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
             id: "apiship",
             options: {
-              id: APISHIP_INTEGRATION_ID
+              id: APISHIP_INTEGRATION_ID,
             },
           },
         ],
@@ -83,7 +87,15 @@ module.exports = defineConfig({
 })
 ```
 
-Add environment variables with your secret `Encryption Key`:
+The configuration registers three things:
+
+- The integration provider under `@gorgo/medusa-integration`. Its `id`, `apiship-1`, names the instance, so its settings live under `int_apiship_apiship-1` and open in Medusa Admin at **Settings → Integrations → ApiShip**.
+- The plugin itself. Without this entry the provider still works, but Medusa Admin doesn't load the plugin's settings page, its delivery services widget and its translations.
+- The fulfillment provider under `@medusajs/medusa/fulfillment`. Its `options.id` must match the integration provider's `id`, which is how it finds its settings. Shipping options you create with it get the provider `apiship_apiship`.
+
+Listing providers for `@medusajs/medusa/fulfillment` replaces Medusa's default list, so the configuration names the manual provider again. Without it, shipping options that use `manual_manual` stop working.
+
+Add the encryption key the Integration Module encrypts the API token with to your environment variables:
 
 ```text title=".env"
 INTEGRATION_ENCRYPTION_KEY=supersecret
@@ -99,10 +111,25 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
     {
       name: "id",
       type: "string",
-      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
-      optional: false,
+      description: "The `id` of the ApiShip integration provider whose settings this fulfillment provider uses, the `apiship-1` in `int_apiship_apiship-1`. Leave it out, together with the integration provider's own `id`, to use the single default instance `int_apiship`.",
+      optional: true,
       expandable: false,
       children: []
     },
   ]}
 />
+
+---
+
+## Next Steps
+
+<CardList items={[
+  {
+    title: "Manage ApiShip Settings in Medusa Admin",
+    href: "/medusa-integrations/apiship/settings"
+  },
+  {
+    title: "Integrate ApiShip into Storefront",
+    href: "/medusa-integrations/apiship/storefront-integration"
+  }
+]}/>

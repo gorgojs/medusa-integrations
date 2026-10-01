@@ -1,16 +1,16 @@
 ---
 title: "Начало работы с ApiShip для Medusa"
-description: "В этом документе вы узнаете, как установить и настроить плагин ApiShip для Medusa"
+description: "Узнайте, как установить и настроить плагин ApiShip для Medusa."
 ---
 
 # {frontmatter.title}
 
-В этом документе вы узнаете, как установить и настроить плагин ApiShip для Medusa.
+В этом руководстве вы узнаете, как установить и настроить плагин ApiShip для Medusa.
 
 ## Требования
 
 - Medusa v2.17.2 или новее
-- Node.js v20 или новее
+- Node.js 20.19 или новее либо 22.12 или новее
 - Аккаунт ApiShip – [зарегистрируйтесь или войдите](https://a.apiship.ru)
 - [Модуль интеграций](/medusa-modules/integration)
 
@@ -35,7 +35,7 @@ description: "В этом документе вы узнаете, как уст�
 
 ## Настройка
 
-Добавьте конфигурацию провайдера в файл `medusa-config.js` в приложении Medusa Admin:
+Зарегистрируйте плагин и два его провайдера в `medusa-config.ts` вашего приложения Medusa:
 
 ```ts title="medusa-config.ts"
 // ...
@@ -70,10 +70,14 @@ module.exports = defineConfig({
       options: {
         providers: [
           {
+            resolve: "@medusajs/medusa/fulfillment-manual",
+            id: "manual",
+          },
+          {
             resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
             id: "apiship",
             options: {
-              id: APISHIP_INTEGRATION_ID
+              id: APISHIP_INTEGRATION_ID,
             },
           },
         ],
@@ -83,7 +87,15 @@ module.exports = defineConfig({
 })
 ```
 
-Добавьте переменную окружения с секретным ключом шифрования:
+Конфигурация регистрирует три вещи:
+
+- Провайдер интеграции в `@gorgo/medusa-integration`. Его `id`, `apiship-1`, задаёт имя инстанса, поэтому его настройки хранятся под `int_apiship_apiship-1` и открываются в Medusa Admin в **Настройки → Интеграции → ApiShip**.
+- Сам плагин. Без этой записи провайдер продолжает работать, но Medusa Admin не загружает страницу настроек плагина, виджет служб доставки и переводы.
+- Провайдер фулфилмента в `@medusajs/medusa/fulfillment`. Его `options.id` должен совпадать с `id` провайдера интеграции, так он находит свои настройки. Способы доставки, которые вы с ним создаёте, получают провайдер `apiship_apiship`.
+
+Список провайдеров в `@medusajs/medusa/fulfillment` заменяет список Medusa по умолчанию, поэтому конфигурация заново указывает ручной провайдер. Без него перестают работать способы доставки с `manual_manual`.
+
+Добавьте в переменные окружения ключ, которым Модуль интеграций шифрует API-токен:
 
 ```text title=".env"
 INTEGRATION_ENCRYPTION_KEY=supersecret
@@ -99,10 +111,25 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
     {
       name: "id",
       type: "string",
-      description: "Суффикс итогового ключа `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
-      optional: false,
+      description: "`id` провайдера интеграции ApiShip, настройки которого использует этот провайдер фулфилмента, то есть `apiship-1` в `int_apiship_apiship-1`. Если не указать его вместе с `id` самого провайдера интеграции, используется единственный инстанс по умолчанию `int_apiship`.",
+      optional: true,
       expandable: false,
       children: []
     },
   ]}
 />
+
+---
+
+## Дальнейшие шаги
+
+<CardList items={[
+  {
+    title: "Управление настройками ApiShip в Medusa Admin",
+    href: "/medusa-integrations/apiship/settings"
+  },
+  {
+    title: "Интеграция ApiShip в витрину магазина",
+    href: "/medusa-integrations/apiship/storefront-integration"
+  }
+]}/>
