@@ -49,7 +49,7 @@ src/providers/
 
 `integration-apiship` is the new directory; `fulfillment-apiship` is the existing fulfillment-module provider, and it's the one that changes in Step 3 to start reading through the new descriptor instead of `store.metadata`.
 
-```ts title="providers/integration-apiship/services/apiship-integration.ts"
+```ts title="providers/integration-apiship/services/apiship-integration.ts" collapsibleLines="54-123"
 import { AbstractIntegrationProvider, defineIntegration, z } from "@gorgo/medusa-integration"
 import { ProviderKeys } from "../../../types"
 import { APISHIP_ICON } from "../icon"
