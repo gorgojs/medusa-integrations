@@ -1,95 +1,343 @@
 ---
 title: "Интеграция ApiShip в витрину магазина"
-description: "Узнайте, как интегрировать плагин ApiShip в storefront (витрину магазина) на Next.js для Medusa."
+description: "Узнайте, как интегрировать плагин ApiShip в storefront (витрину магазина) на Next.js, построенную с использованием Medusa."
 ---
 
 # {frontmatter.title}
 
-Чтобы интегрировать плагин ApiShip в storefront (витрину магазина) на Next.js, необходимо расширить шаг выбора доставки в оформлении заказа (checkout), добавив поддержку доставки в пункты выдачи.
+Чтобы интегрировать плагин ApiShip в storefront (витрину магазина) [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter), зарегистрируйте ApiShip в точках расширения доставки, которые предоставляет стартер, и добавьте компоненты, через которые покупатель выбирает доставку при оформлении заказа.
 
-Доставка ApiShip отличается от обычных способов доставки тем, что во время оформления заказа необходимо собрать дополнительные данные, такие как выбранный пункт выдачи и тариф доставки. Эти данные должны динамически загружаться с бэкенда, отображаться покупателю в удобной форме, а затем сохраняться в корзине, чтобы впоследствии плагин мог использовать их при создании заказа в ApiShip.
+У способа доставки ApiShip нет фиксированной цены. Сначала покупатель выбирает тариф перевозчика, а для доставки в пункт выдачи ещё и сам пункт. Витрина загружает и то и другое из store-роутов плагина, показывает их в двухшаговом окне доставки и сохраняет выбор в `data` способа доставки корзины. Плагин проверяет этот выбор, рассчитывает по выбранному тарифу стоимость доставки и создаёт из него заказ в ApiShip, когда вы выполняете заказ.
 
-## Шаг 1: Установите переменные окружения
+Собственного провайдера с расчётной доставкой в стартере нет, есть только точки расширения, к которым он подключается:
 
-Селектор пункта выдачи использует [JavaScript API Яндекс Карт v3](https://yandex.ru/maps-api/docs/js-api/index.html?lang=ru). Чтобы включить карту в витрине, необходимо задать публичный API-ключ через переменные окружения.
-
-Добавьте следующее в файл `.env` вашей витрины:
-
-```bash title=".env"
-NEXT_PUBLIC_YANDEX_MAPS_API_KEY=supersecret
-```
+- `ShippingOptionDescriptor` в `src/lib/constants.tsx` сообщает оформлению заказа, когда способ доставки готов и как убрать его из корзины
+- диспетчер карточек способов доставки в `src/modules/checkout/components/shipping-option/index.tsx`
+- диспетчер строки доставки в `src/modules/checkout/components/delivery-row/index.tsx`
 
 Для витрины на Next.js необходимо внести следующие изменения:
 
+## Шаг 1: Установите пакеты карты
+
+Карта пунктов выдачи построена на [JavaScript API Яндекс Карт версии 3](https://yandex.ru/maps-api/docs/js-api/index.html). Сам API загружается с серверов Яндекса в браузере. Два npm-пакета добавляют кластеризатор, который объединяет соседние пункты выдачи в одну метку, и описания типов API.
+
+Установите их в приложение витрины, `apps/storefront`:
+
+<CodeTabs>
+  <CodeTab label="pnpm" value="pnpm">
+    ```bash
+    pnpm add @yandex/ymaps3-clusterer@0.0.12
+    pnpm add -D @yandex/ymaps3-types@1.0.21414904
+    ```
+  </CodeTab>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @yandex/ymaps3-clusterer@0.0.12
+    yarn add -D @yandex/ymaps3-types@1.0.21414904
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @yandex/ymaps3-clusterer@0.0.12
+    npm install -D @yandex/ymaps3-types@1.0.21414904
+    ```
+  </CodeTab>
+</CodeTabs>
+
+Это версии, на которых работает пример витрины.
+
 ---
 
-## Шаг 2: Сделайте номер телефона получателя обязательным
+## Шаг 2: Задайте переменные окружения
 
-ApiShip требует номер телефона получателя для расчета стоимости доставки и создания заказа в ApiShip. Поэтому витрина должна требовать обязательное указание номера телефона в форме адреса доставки.
+Карте нужен ключ JavaScript API. Создайте его в [кабинете разработчика Яндекса](https://developer.tech.yandex.ru) в разделе «JavaScript API и HTTP Геокодер» и добавьте в `.env.local` витрины:
 
-Откройте [`src/modules/checkout/components/shipping-address/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и сделайте поле ввода телефона обязательным:
+```bash title=".env.local"
+NEXT_PUBLIC_YANDEX_MAPS_API_KEY=supersecret
+```
 
-![Структура проекта Medusa Storefront после обновления файла для компонента адреса доставки](/static/apiship/storefront/src-modules-checkout-components-shipping-address-index.webp)
+Ключ публичный, потому что карта работает в браузере покупателя. Переменные `NEXT_PUBLIC_*` Next.js встраивает в сборку, поэтому после смены ключа пересоберите витрину. Без ключа окно выбора пункта выдачи сообщает, что ключа нет, а курьерская доставка продолжает работать.
 
-```tsx title="src/modules/checkout/components/shipping-address/index.tsx"
+ApiShip доставляет по России, поэтому пример также задаёт `NEXT_PUBLIC_DEFAULT_REGION=ru`, чтобы витрина открывалась в российском регионе.
+
+---
+
+## Шаг 3: Сделайте номер телефона получателя обязательным
+
+ApiShip нужен номер телефона получателя, чтобы рассчитать доставку и создать заказ. Контакты оформление заказа собирает раньше, чем доставку, поэтому сделайте поле телефона обязательным именно там.
+
+Откройте [`src/modules/checkout/components/checkout-contacts-sheet/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/checkout-contacts-sheet/index.tsx#L130-L183) и отметьте как `required` оба поля телефона, покупателя и другого получателя:
+
+![Структура проекта Medusa Storefront после обновления файла для окна контактов](/static/apiship/storefront/src-modules-checkout-components-checkout-contacts-sheet-index.webp)
+
+```tsx title="src/modules/checkout/components/checkout-contacts-sheet/index.tsx"
 <Input
-  label="Phone"
-  name="shipping_address.phone"
+  label={t("fieldPhone")}
+  name="phone"
   autoComplete="tel"
-  value={formData["shipping_address.phone"]}
+  value={formData.phone}
   onChange={handleChange}
-  required // Обязательно для ApiShip
+  required
   data-testid="shipping-phone-input"
 />
+
+// ...
+
+{isDifferentRecipient && (
+  // ...
+  <Input
+    label={t("fieldPhone")}
+    name="recipient_phone"
+    autoComplete="tel"
+    value={formData.recipient_phone}
+    onChange={handleChange}
+    required
+  />
+)}
 ```
 
-Отметив поле ввода телефона как `required`, вы обеспечите, что номер телефона получателя будет собираться на раннем этапе оформления заказа. Это гарантирует, что при расчёте доставки и создании отправления в ApiShip будут доступны необходимые данные.
+Теперь браузер не отправит окно контактов без номера телефона, и у каждого расчёта и каждого заказа в ApiShip он будет.
 
 ---
 
-## Шаг 3: Обработайте данные корзины
+## Шаг 4: Определите типы
 
-Для интеграции ApiShip в процесс оформления заказа, витрина должна иметь возможность сохранять выбор доставки клиента в корзине и получать его позже. Это обеспечивает стабильность процесса при обновлении страницы и навигации. Если клиент уже выбрал тариф и пункт самовывоза, витрина может восстановить этот выбор вместо того, чтобы снова просить его это сделать. Также требуется корректное действие по удалению, которое очищает выбор не только визуально, но и в самой корзине.
+Store-роуты плагина возвращают тарифы перевозчиков, пункты выдачи и названия перевозчиков. Поля, которые витрина из них читает, она описывает в собственных типах, вместе с выбором доставки, который она сохраняет в способе доставки.
 
-Откройте [`src/lib/data/cart.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/lib/data/cart.ts#L217-L242) и измените следующее:
+Создайте файл [`src/types/apiship.ts`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/types/apiship.ts) со следующим содержимым:
 
-![Структура проекта Medusa Storefront после обновления файла для корзины](/static/apiship/storefront/src-lib-data-cart.webp)
+![Структура проекта Medusa Storefront после создания файла для типов ApiShip](/static/apiship/storefront/src-types-apiship.webp)
 
-```ts title="src/lib/data/cart.ts"
-import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
+```ts title="src/types/apiship.ts" collapsibleLines="1-84"
+/**
+ * The shapes the storefront reads off the plugin's store routes, `/store/apiship/*`.
+ *
+ * They are declared here rather than imported from `@gorgo/medusa-fulfillment-apiship`,
+ * because the published package ships its provider code compiled to JavaScript and its
+ * `./types` entry points at sources that do not resolve outside the plugin's own build.
+ * Only the fields this checkout uses are listed, and every one of them is optional, the
+ * way a carrier's answer is.
+ */
 
-export async function retrieveCart(cartId?: string, fields?: string) {
-  // ...
-  // Добавьте параметр +shipping_methods.data
-  fields ??= "*items, *region, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name, +shipping_methods.data"
-  // ...
+/** One carrier's tariff, as the calculator returns it. */
+export type ApishipBaseTariff = {
+  tariffId?: number
+  tariffProviderId?: number
+  tariffName?: string
+  /** The price the fulfillment provider bills the cart with, in the region's currency. */
+  deliveryCost?: number
+  /** A second figure ApiShip returns alongside it. The cart is not charged this one. */
+  deliveryCostOriginal?: number
+  daysMin?: number
+  daysMax?: number
 }
 
-export async function setShippingMethod({
-  // ...
-  data,
-}: {
-  // ...
-  data?: Record<string, unknown>
-}) {
-  // ...
-  return sdk.store.cart
-    .addShippingMethod(
-      cartId,
-      {
-        // ...
-        data // Данные ApiShip
-      },
-      // ...
-    )
-    // ...
+/** A tariff that delivers to a pickup point also names the points it serves. */
+export type ApishipPointTariff = ApishipBaseTariff & {
+  pointIds?: number[]
+}
+
+/**
+ * What ApiShip's calculator answers with, narrowed to the groups that name a carrier.
+ * `deliveryToDoor` holds the tariffs that reach an address and `deliveryToPoint` the ones
+ * that reach a pickup point.
+ */
+export type ApishipCalculation = {
+  deliveryToDoor?: Array<{
+    providerKey: string
+    tariffs?: ApishipBaseTariff[]
+  }>
+  deliveryToPoint?: Array<{
+    providerKey: string
+    tariffs?: ApishipPointTariff[]
+  }>
+}
+
+/**
+ * A tariff with the two fields the checkout adds, `key` to tell one radio option from the
+ * next and `providerKey` to name the carrier it belongs to.
+ */
+export type ApishipTariff = ApishipPointTariff & {
+  key: string
+  providerKey: string
+}
+
+/** A carrier, as `/store/apiship/providers` returns it. */
+export type ApishipProvider = {
+  key?: string
+  name?: string
+  description?: string
+  icon?: string
+}
+
+/** A pickup point, before the storefront has checked it can be drawn. */
+export type ApishipRawPoint = {
+  id?: number | string | null
+  name?: string
+  address?: string
+  description?: string
+  providerKey?: string
+  photos?: string[]
+  /** Opening hours keyed 1 to 7 from Monday. */
+  worktime?: Record<string, string>
+  /** The same hours as one line, which is what the summary shows. */
+  timetable?: string
+  lat?: number | null
+  lng?: number | null
+}
+
+/** A pickup point that can be drawn, so with an id and coordinates the map can rely on. */
+export type ApishipPoint = Omit<ApishipRawPoint, "id" | "lat" | "lng"> & {
+  id: string
+  lat: number
+  lng: number
+}
+
+export type ApishipStoredTariff = Omit<ApishipTariff, "pointIds">
+
+export type ApishipStoredPoint = Pick<
+  ApishipPoint,
+  "id" | "providerKey" | "name" | "address"
+>
+
+/**
+ * What the customer picked, stored on the shipping method so a reload restores it and the
+ * plugin can create the ApiShip order from it. `deliveryType` is 1 for an address and 2
+ * for a pickup point, matching the shipping option it was chosen under.
+ */
+export type ApishipSelection = {
+  deliveryType: number
+  tariff: ApishipStoredTariff
+  point?: ApishipStoredPoint
+}
+
+export type ApishipDeliveryChoice = {
+  calculation: ApishipCalculation
+  points: ApishipPoint[]
 }
 ```
 
-Также добавьте следующую вспомогательную функцию:
+Витрина объявляет эти типы сама, а не импортирует из `@gorgo/medusa-fulfillment-apiship/types`, потому что эта точка входа указывает на исходники TypeScript, которые не разрешаются за пределами сборки самого плагина. Все поля необязательные, так как перевозчики заполняют их по-разному.
 
-```ts title="src/lib/data/cart.ts"
-export async function removeShippingMethodFromCart(shippingMethodId: string) {
+`ApishipSelection` оформление заказа сохраняет под ключом `apishipData` в `data` способа доставки. Его `deliveryType` равен `1` для курьерской доставки и `2` для пункта выдачи, по способу доставки, под которым покупатель сделал выбор.
+
+---
+
+## Шаг 5: Получите данные ApiShip
+
+Витрина обращается к трём роутам плагина. Первый рассчитывает тарифы и пункты выдачи для корзины, второй возвращает перевозчиков, третий убирает способ доставки из корзины.
+
+Создайте файл [`src/lib/data/apiship.ts`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/lib/data/apiship.ts) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для загрузки данных ApiShip](/static/apiship/storefront/src-lib-data-apiship.webp)
+
+```ts title="src/lib/data/apiship.ts" collapsibleLines="71-130"
+"use server"
+
+import { sdk } from "@lib/config"
+import medusaError from "@lib/util/medusa-error"
+import type {
+  ApishipCalculation,
+  ApishipDeliveryChoice,
+  ApishipPoint,
+  ApishipProvider,
+  ApishipRawPoint,
+} from "types/apiship"
+import { revalidateTag } from "next/cache"
+import {
+  getAuthHeaders,
+  getCacheOptions,
+  getCacheTag,
+  getCartId,
+} from "./cookies"
+
+const toCarrierGroups = <T extends { providerKey?: string; tariffs?: unknown }>(
+  groups: T[] | undefined
+) =>
+  (groups ?? []).flatMap((group) =>
+    group.providerKey ? [{ ...group, providerKey: group.providerKey }] : []
+  )
+
+const toDrawablePoints = (points: ApishipRawPoint[] | undefined) =>
+  (points ?? []).flatMap((point): ApishipPoint[] => {
+    if (
+      point.id === undefined ||
+      point.id === null ||
+      typeof point.lat !== "number" ||
+      typeof point.lng !== "number"
+    ) {
+      return []
+    }
+
+    return [{ ...point, id: String(point.id), lat: point.lat, lng: point.lng }]
+  })
+
+export const retrieveApishipDeliveryChoice = async (
+  cartId: string,
+  shippingOptionId: string,
+  includePoints: boolean
+): Promise<ApishipDeliveryChoice | null> => {
+  const headers = {
+    ...(await getAuthHeaders()),
+  }
+
+  return sdk.client
+    .fetch<{ calculation: ApishipCalculation; points?: ApishipRawPoint[] }>(
+      `/store/apiship/${shippingOptionId}/calculate`,
+      {
+        method: "POST",
+        headers,
+        body: { cart_id: cartId, include_points: includePoints },
+      }
+    )
+    .then(({ calculation, points }) => ({
+      calculation: {
+        deliveryToDoor: toCarrierGroups(calculation.deliveryToDoor),
+        deliveryToPoint: toCarrierGroups(calculation.deliveryToPoint),
+      },
+      points: toDrawablePoints(points),
+    }))
+    .catch((e) => {
+      console.error("ApiShip delivery choice failed to load", e)
+      return null
+    })
+}
+
+/**
+ * The carriers behind the tariffs. A calculation names them by key, and this is what turns
+ * `cdek` into the name the customer reads.
+ */
+export const retrieveApishipProviders = async (shippingOptionId: string) => {
+  const headers = {
+    ...(await getAuthHeaders()),
+  }
+
+  const next = {
+    ...(await getCacheOptions("fulfillment")),
+  }
+
+  return sdk.client
+    .fetch<{ providers: ApishipProvider[] }>(`/store/apiship/providers`, {
+      method: "GET",
+      headers,
+      query: {
+        shipping_option_id: shippingOptionId,
+      },
+      next,
+    })
+    .then(({ providers }) => providers)
+    .catch((e) => {
+      console.error("ApiShip carriers failed to load", e)
+      return null
+    })
+}
+
+/**
+ * Drops the shipping method from the cart, through the route the ApiShip plugin adds for
+ * it. Setting a method again keeps the `data` stored on it, so a tariff and a pickup point
+ * chosen for another address would survive a plain replace.
+ */
+export async function removeApishipShippingMethod(shippingMethodId: string) {
   const cartId = await getCartId()
 
   if (!cartId) {
@@ -100,1805 +348,2004 @@ export async function removeShippingMethodFromCart(shippingMethodId: string) {
     ...(await getAuthHeaders()),
   }
 
-  const next = {
-    ...(await getCacheOptions("fulfillment")),
-  }
-
   return sdk.client
-    .fetch<ApishipHttpTypes.DeleteResponse<"shipping_method">>(
+    .fetch<{ id: string; object: string; deleted: boolean }>(
       `/store/carts/${cartId}/shipping-methods/${shippingMethodId}`,
       {
         method: "DELETE",
         headers,
-        next,
       }
     )
     .then(async () => {
       const cartCacheTag = await getCacheTag("carts")
       revalidateTag(cartCacheTag)
     })
-    .catch(() => null)
+    .catch(medusaError)
 }
 ```
 
-Эти изменения обеспечивают три основных функции:
+`retrieveApishipDeliveryChoice` вызывает `POST /store/apiship/:shipping_option_id/calculate`. Плагин рассчитывает способ доставки по адресу и товарам корзины и возвращает только тарифы, разрешённые настройками служб доставки в Medusa Admin. С `include_points: true` он возвращает ещё и пункты выдачи, в которые доставляют эти тарифы, так что второй запрос карте не нужен. Функция отбрасывает группы перевозчиков без ключа и пункты без координат, потому что карта не может их разместить.
 
-- Витрина может прикреплять данные выбора, специфичные для ApiShip, при применении способа доставки.
-- Она может считывать сохраненные данные из корзины при перезагрузке страницы.
-- Она может полностью очистить выбор, удалив способ доставки из корзины, когда клиент решает сбросить свой выбор.
+`retrieveApishipProviders` вызывает `GET /store/apiship/providers`, который возвращает перевозчиков с названиями и логотипами. Функция передаёт `shipping_option_id`, по которому плагин определяет, к какому инстансу ApiShip относится способ доставки. С именованным инстансом, например `apiship-1`, без этого параметра роут отвечает ошибкой 404.
 
----
-
-## Шаг 4: Получите данные ApiShip
-
-Чтобы корректно отображать варианты доставки ApiShip на этапе выбора доставки, витрине необходим доступ к данным динамического расчёта, сведениям о пунктах самовывоза и списку доступных перевозчиков. Помимо тарифов и пунктов самовывоза, витрина также получает метаданные провайдера, чтобы отображать понятные пользователю названия перевозчиков в интерфейсе оформления заказа, а не внутренние идентификаторы.
-
-Откройте [`src/lib/data/fulfillment.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/lib/data/fulfillment.ts#L70-L134) и добавьте следующие вспомогательные функции:
-
-![Структура проекта Medusa Storefront после обновления файла для фулфилмента](/static/apiship/storefront/src-lib-data-fulfillment.webp)
-
-```ts title="src/lib/data/fulfillment.ts"
-import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
-
-type StorefrontApishipPoint = Omit<
-  ApishipHttpTypes.StoreApishipPoint,
-  "id" | "lat" | "lng" | "worktime"
-> & {
-  id: string
-  lat: number
-  lng: number
-  worktime?: Record<string, string>
-}
-
-type StorefrontApishipPointListResponse = {
-  points: StorefrontApishipPoint[]
-}
-
-type StorefrontApishipCalculation = {
-  deliveryToDoor?: Array<{
-    providerKey: string
-    tariffs?: Array<ApishipHttpTypes.StoreApishipDoorTariff>
-  }>
-  deliveryToPoint?: Array<{
-    providerKey: string
-    tariffs?: Array<ApishipHttpTypes.StoreApishipPointTariff>
-  }>
-}
-
-// ... другие вспомогательные функции
-
-export const retrieveCalculation = async (
-  cartId: string,
-  shippingOptionId: string
-): Promise<StorefrontApishipCalculation | null> => {
-  const headers = {
-    ...(await getAuthHeaders()),
-
-  }
-
-  const next = {
-    ...(await getCacheOptions("fulfillment")),
-  }
-
-  const body = { cart_id: cartId }
-
-  return sdk.client
-    .fetch<ApishipHttpTypes.StoreApishipCalculationResponse>(
-      `/store/apiship/${shippingOptionId}/calculate`,
-      {
-        method: "POST",
-        headers,
-        body,
-        next,
-      }
-    )
-    .then(({ calculation }) => ({
-      deliveryToDoor: (calculation.deliveryToDoor ?? []).flatMap((group) => {
-        if (!group.providerKey) {
-          return []
-        }
-
-        return [
-          {
-            providerKey: group.providerKey,
-            tariffs: group.tariffs,
-          },
-        ]
-      }),
-      deliveryToPoint: (calculation.deliveryToPoint ?? []).flatMap((group) => {
-        if (!group.providerKey) {
-          return []
-        }
-
-        return [
-          {
-            providerKey: group.providerKey,
-            tariffs: group.tariffs,
-          },
-        ]
-      }),
-    }))
-    .catch((e) => {
-      return null
-    })
-}
-
-export const getPointAddresses = async (
-  cartId: string,
-  shippingOptionId: string,
-  pointIds: Array<number>
-): Promise<StorefrontApishipPointListResponse | null> => {
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
-
-  const next = {
-    ...(await getCacheOptions("fulfillment")),
-  }
-
-  if (!pointIds.length) {
-    return {
-      points: [],
-    }
-  }
-
-  const filter = `id=[${pointIds.join(",")}]`
-  const fields = [
-    "id",
-    "description",
-    "providerKey",
-    "name",
-    "address",
-    "photos",
-    "worktime",
-    "timetable",
-    "lat",
-    "lng",
-  ].join(",")
-  const key = `apiship:points:${cartId}:${shippingOptionId}`
-
-  return sdk.client
-    .fetch<ApishipHttpTypes.StoreApishipPointListResponse>(
-      `/store/apiship/points`,
-      {
-        method: "GET",
-        headers,
-        query: {
-          key,
-          filter,
-          fields,
-          limit: 0,
-        },
-        next,
-      }
-    )
-    .then(({ points }) => ({
-      points: (points ?? []).flatMap((point) => {
-        if (
-          point.id === undefined ||
-          point.id === null ||
-          point.lat === undefined ||
-          point.lat === null ||
-          point.lng === undefined ||
-          point.lng === null
-        ) {
-          return []
-        }
-
-        return [
-          {
-            ...point,
-            id: String(point.id),
-            lat: point.lat,
-            lng: point.lng,
-            worktime: point.worktime as Record<string, string> | undefined,
-          },
-        ]
-      }),
-    }))
-    .catch((e) => {
-      console.error("getPointsAddresses error", e)
-      return null
-    })
-}
-
-export const retrieveProviders = async (): Promise<ApishipHttpTypes.StoreApishipProviderListResponse | null> => {
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
-
-  const next = {
-    ...(await getCacheOptions("fulfillment")),
-  }
-
-  return sdk.client
-    .fetch<ApishipHttpTypes.StoreApishipProviderListResponse>(
-      `/store/apiship/providers`,
-      {
-        method: "GET",
-        headers,
-        next,
-      }
-    )
-    .catch((e) => {
-      console.error("retrieveProviders error", e)
-      return null
-    })
-}
-```
-
-Запрос `retrieveCalculation` возвращает доступные тарифы доставки вместе с идентификаторами пунктов самовывоза, к которым они применимы. Запрос `getPointAddresses` преобразует эти идентификаторы в полные данные о пунктах самовывоза, такие как адреса и координаты, которые затем могут отображаться в интерфейсе оформления заказа.
-
-Кроме того, витрина получает список провайдеров ApiShip, чтобы отображать в интерфейсе удобочитаемые названия перевозчиков.
-
----
-
-## Шаг 5: Определите типы
-
-Интеграция витрины опирается на небольшой набор общих типов, которые описывают данные, возвращаемые эндпоинтом расчёта ApiShip, а также данные, сохраняемые в корзине как выбор доставки пользователя. Эти типы используются в интерфейсе карты, модальных окнах курьерской доставки и пунктов самовывоза, а также в компоненте выбранного варианта, чтобы обеспечить согласованность процесса и типовую безопасность.
-
-Откройте [`src/modules/checkout/components/shipping/apiship/types/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующие типы:
-
-![Структура проекта Medusa Storefront после создания файла для типов ApiShip](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-types-index.webp)
-
-```ts title="src/modules/checkout/components/shipping/apiship/types/index.ts"
-import type { ApishipHttpTypes } from "@gorgo/medusa-fulfillment-apiship/types"
-
-export type ApishipCalculation = {
-  deliveryToDoor?: Array<{
-    providerKey: string
-    tariffs?: Array<ApishipHttpTypes.StoreApishipDoorTariff>
-  }>
-  deliveryToPoint?: Array<{
-    providerKey: string
-    tariffs?: Array<ApishipHttpTypes.StoreApishipPointTariff>
-  }>
-}
-
-export type ApishipTariff = {
-  key: string
-  providerKey: string
-} & (
-  ApishipHttpTypes.StoreApishipDoorTariff |
-  ApishipHttpTypes.StoreApishipPointTariff
-)
-
-export type ApishipPoint = Omit<
-  ApishipHttpTypes.StoreApishipPoint,
-  "id" | "lat" | "lng" | "worktime"
-> & {
-  id: string
-  lat: number
-  lng: number
-  worktime?: Record<string, string>
-}
-
-export type Chosen = {
-  deliveryType: number
-  tariff: ApishipTariff
-  point?: ApishipPoint
-}
-```
-
-`ApishipCalculation` представляет собой рассчитанные варианты доставки, возвращаемые API витрины, разделённые на группы `to door` и `to point` по провайдерам. `Chosen` — это нормализованный набор данных, который витрина сохраняет в корзине после того, как пользователь выбирает тариф и пункт самовывоза.
+`removeApishipShippingMethod` вызывает `DELETE /store/carts/:id/shipping-methods/:shipping_method_id`. Этот роут добавляет плагин, потому что в store API Medusa нет способа убрать способ доставки из корзины. Повторная установка способа доставки сохраняет его `data`, поэтому без удаления тариф и пункт выдачи, выбранные для прежнего адреса, остались бы в корзине.
 
 ---
 
 ## Шаг 6: Создайте утилиты
 
-Интеграция с витриной использует набор общих утилит, чтобы поддерживать единообразие интерфейса и избежать дублирования логики в компонентах. Эти вспомогательные функции обрабатывают форматирование времени доставки, стабильные ссылки на колбэки для асинхронных эффектов, детерминированные ключи тарифов для выбора, блокировку прокрутки для модальных окон и преобразование тарифов пунктов самовывоза в структуру, удобную для отображения.
+Компоненты ApiShip используют общий набор функций, которые распознают способ доставки ApiShip, читают тарифы и превращают расчёт в то, что отображают списки и карта.
 
-Откройте [`src/modules/checkout/components/shipping/apiship/utils/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующие помощники:
+Создайте файл [`src/modules/checkout/components/apiship/utils.ts`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/apiship/utils.ts) со следующим содержимым:
 
-![Структура проекта Medusa Storefront после создания файла для утилит](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-utils-index.webp)
+![Структура проекта Medusa Storefront после создания файла для утилит ApiShip](/static/apiship/storefront/src-modules-checkout-components-apiship-utils.webp)
 
-```ts title="src/modules/checkout/components/shipping/apiship/utils/index.ts"
-import {
+```ts title="src/modules/checkout/components/apiship/utils.ts" collapsibleLines="59-172"
+import type { HttpTypes } from "@medusajs/types"
+import type {
   ApishipCalculation,
+  ApishipPoint,
+  ApishipSelection,
   ApishipTariff,
-} from "../types"
-import { useEffect, useRef } from "react"
+} from "types/apiship"
 
-export function days(tariff: ApishipTariff) {
+export const APISHIP_PROVIDER_PREFIX = "apiship_"
+
+export const isApishipOption = (
+  option?: HttpTypes.StoreCartShippingOption | null
+) => Boolean(option?.provider_id?.startsWith(APISHIP_PROVIDER_PREFIX))
+
+/**
+ * Which half of the calculation a shipping option draws on. The seed writes
+ * `deliveryType` into the option's own data, 1 for a courier and 2 for a pickup point.
+ */
+export const getApishipDeliveryType = (
+  option?: HttpTypes.StoreCartShippingOption | null
+): 1 | 2 | null => {
+  if (!isApishipOption(option)) return null
+
+  const deliveryType = (option?.data as { deliveryType?: unknown } | null)
+    ?.deliveryType
+
+  return deliveryType === 1 || deliveryType === 2 ? deliveryType : null
+}
+
+/**
+ * ApiShip quotes every tariff twice, `deliveryCost` and `deliveryCostOriginal`. The
+ * fulfillment provider bills the cart with `deliveryCost`, so that is the one the checkout
+ * shows, and the customer pays what they picked.
+ */
+export const getTariffCost = (tariff: ApishipTariff) =>
+  typeof tariff.deliveryCost === "number" ? tariff.deliveryCost : null
+
+export const getTariffDays = (tariff: ApishipTariff) => {
   const min = tariff.daysMin ?? 0
   const max = tariff.daysMax ?? 0
+
   if (!min && !max) return null
-  if (min === max) return min === 1 ? `${min} day` : `${min} days`
-  return `${min}–${max} days`
+
+  return { min: min || max, max: max || min }
 }
 
-export function useLatestRef<T>(value: T) {
-  const ref = useRef(value)
-  useEffect(() => {
-    ref.current = value
-  }, [value])
-  return ref
-}
-
-export function buildTariffKey (
+/**
+ * Identifies a tariff across a render. ApiShip has no single id that is always filled in,
+ * so the carrier key is combined with whichever of its ids came back, and the index closes
+ * the gap for a carrier that sent neither.
+ */
+export const buildTariffKey = (
   providerKey: string,
   tariff: Omit<ApishipTariff, "key" | "providerKey">,
-  idx: number
-) {
-  return `${providerKey}:${tariff.tariffId ?? tariff.tariffProviderId ?? tariff.tariffName ?? idx}`
-}
+  index: number
+) =>
+  `${providerKey}:${tariff.tariffId ?? tariff.tariffProviderId ?? tariff.tariffName ?? index}`
 
-export function useLockBodyScroll(locked: boolean) {
-  useEffect(() => {
-    if (!locked) return
+/**
+ * Inverts the calculation into "which tariffs serve this pickup point", which is the
+ * question the map asks once the customer clicks a marker. One tariff usually covers many
+ * points, so it is listed under each of them.
+ */
+export const buildTariffsByPointId = (
+  calculation?: ApishipCalculation | null
+) => {
+  const tariffsByPointId: Record<string, ApishipTariff[]> = {}
 
-    const body = document.body
-    const html = document.documentElement
-
-    const prevBodyOverflow = body.style.overflow
-    const prevBodyPaddingRight = body.style.paddingRight
-    const prevHtmlOverflow = html.style.overflow
-
-    const scrollbarWidth = window.innerWidth - html.clientWidth
-    if (scrollbarWidth > 0) {
-      body.style.paddingRight = `${scrollbarWidth}px`
-    }
-
-    body.style.overflow = "hidden"
-    html.style.overflow = "hidden"
-
-    return () => {
-      body.style.overflow = prevBodyOverflow
-      body.style.paddingRight = prevBodyPaddingRight
-      html.style.overflow = prevHtmlOverflow
-    }
-  }, [locked])
-}
-
-export function useAsyncEffect(fn: (isCancelled: () => boolean) => Promise<void>, deps: any[]) {
-  useEffect(() => {
-    let cancelled = false
-    const isCancelled = () => cancelled
-    fn(isCancelled).catch((e) => console.error(e))
-    return () => { cancelled = true }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps)
-}
-
-export function buildTariffsByPointId(calculation?: ApishipCalculation | null) {
-  const map: Record<string, ApishipTariff[]> = {}
   calculation?.deliveryToPoint?.forEach(({ providerKey, tariffs }) => {
-    tariffs?.forEach((tariff) => {
+    tariffs?.forEach((tariff, index) => {
+      const key = buildTariffKey(providerKey, tariff, index)
+
       for (const pointId of tariff.pointIds ?? []) {
-        const key = `${providerKey}:${tariff.tariffProviderId ?? ""}:${tariff.tariffId ?? ""}`
         const entry: ApishipTariff = { key, providerKey, ...tariff }
-        const arr = (map[String(pointId)] ??= [])
-        if (!arr.some((t) => t.key === key)) arr.push(entry)
+        const pointTariffs = (tariffsByPointId[String(pointId)] ??= [])
+
+        if (!pointTariffs.some((t) => t.key === key)) {
+          pointTariffs.push(entry)
+        }
       }
     })
   })
-  return map
+
+  return tariffsByPointId
 }
 
-export function extractPointIds(map: Record<string, ApishipTariff[]>) {
-  return Object.keys(map).map(Number).filter(Number.isFinite)
-}
-```
+/**
+ * Flattens the courier half of the calculation into carrier groups, dropping a tariff a
+ * carrier listed twice and a group left with nothing.
+ */
+export const buildDoorGroups = (calculation?: ApishipCalculation | null) => {
+  const seen = new Set<string>()
 
-Эти утилиты используются в модальных окнах и на карте для форматирования времени доставки, сохранения стабильных ключей выбора между рендерами, безопасного выполнения асинхронных эффектов без обновления состояния после размонтирования и корректной подготовки модели данных пунктов самовывоза, используемой для отображения тарифов по каждому пункту.
+  return (calculation?.deliveryToDoor ?? [])
+    .map((group) => ({
+      providerKey: group.providerKey,
+      tariffs: (group.tariffs ?? []).flatMap((tariff, index) => {
+        const key = buildTariffKey(group.providerKey, tariff, index)
 
----
+        if (seen.has(key)) return []
+        seen.add(key)
 
-## Шаг 7: Создайте карту пунктов самовывоза
-
-Этот компонент отвечает за отображение Яндекс Карты, размещение на ней маркеров пунктов самовывоза и показ панели с подробной информацией и доступными тарифами при выборе пункта.
-
-Откройте [`src/modules/checkout/components/shipping/apiship/apiship-map.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
-
-![Структура проекта Medusa Storefront после создания файла карты пунктов самовывоза](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-apiship-map.webp)
-
-```tsx title="src/modules/checkout/components/shipping/apiship/apiship-map.tsx"
-"use client"
-
-import { useCallback, useEffect, useMemo, useRef } from "react"
-import { Button, Heading, Text, clx, IconButton } from "@medusajs/ui"
-import { Loader, XMark } from "@medusajs/icons"
-import { Radio, RadioGroup } from "@headlessui/react"
-import MedusaRadio from "@modules/common/components/radio"
-import {
-  ApishipPoint,
-  ApishipTariff
-} from "./types"
-import {
-  days,
-  useLatestRef
-} from "./utils"
-
-const DEFAULT_CENTER: [number, number] = [37.618423, 55.751244]
-
-type ApishipMapProps = {
-  points: ApishipPoint[]
-  tariffsByPointId: Record<string, ApishipTariff[]>
-  isLoading?: boolean
-  selectedPointId: string | null
-  selectedTariffKey: string | null
-  isPanelOpen: boolean
-  onClosePanel: () => void
-  onSelectPoint: (id: string) => void
-  onSelectTariff: (tariffKey: string) => void
-  onChoose: (payload: { point: ApishipPoint; tariff: ApishipTariff }) => void
-  chosen?: { pointId?: string; tariffKey?: string } | null
-  providersMap: Record<string, string>
+        return [{ ...tariff, key, providerKey: group.providerKey }]
+      }),
+    }))
+    .filter((group) => group.tariffs.length > 0)
 }
 
-const WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] as const
+export const groupWorktime = (worktime: Record<string, string>) => {
+  const groups: Array<{ from: number; to: number; hours: string }> = []
 
-const Schedule = ({ worktime }: { worktime: Record<string, string> }) => {
-  if (!worktime || Object.keys(worktime).length === 0) return null
+  for (let day = 1; day <= 7; day++) {
+    const hours = worktime[String(day)]
+    if (!hours) continue
+
+    const last = groups.at(-1)
+    if (last && last.hours === hours && last.to === day - 1) last.to = day
+    else groups.push({ from: day, to: day, hours })
+  }
+
+  return groups
+}
+
+/**
+ * The tariff and pickup point the customer settled on, as stored on the shipping method.
+ * The cart holds one method at a time, so it only answers for the option that method was
+ * created for.
+ */
+export const getApishipSelection = (
+  cart: HttpTypes.StoreCart,
+  optionId: string
+) => {
+  const method = cart.shipping_methods?.at(-1)
+  if (!method || method.shipping_option_id !== optionId) return null
+
   return (
-    <div className="flex flex-col gap-[1px]">
-      {Object.keys(worktime).map((day) => {
-        const label = WEEK_DAYS[Number(day) - 1]
-        const time = worktime[day]
-        return (
-          <div className="flex flex-row justify-between" key={day}>
-            <Text className="txt-medium text-ui-fg-subtle">
-              {label}
-            </Text>
-            <Text className="text-ui-fg-muted">
-              {time}
-            </Text>
-          </div>
-        )
-      })}
-    </div>
+    (method.data as { apishipData?: ApishipSelection } | null)?.apishipData ??
+    null
   )
 }
 
-declare global {
-  interface Window {
-    ymaps3?: any
-    __ymaps3_loading_promise__?: Promise<void>
+export const isApishipSelectionComplete = (
+  selection: ApishipSelection | null | undefined,
+  option: HttpTypes.StoreCartShippingOption
+) => {
+  if (!selection?.tariff) return false
+
+  return getApishipDeliveryType(option) === 2 ? Boolean(selection.point) : true
+}
+
+export const toStoredSelection = (
+  deliveryType: 1 | 2,
+  tariff: ApishipTariff,
+  point?: ApishipPoint | null
+): ApishipSelection => {
+  const { pointIds: _pointIds, ...storedTariff } = tariff
+
+  return {
+    deliveryType,
+    tariff: storedTariff,
+    ...(deliveryType === 2 && point
+      ? {
+          point: {
+            id: point.id,
+            providerKey: point.providerKey,
+            name: point.name,
+            address: point.address,
+          },
+        }
+      : {}),
   }
 }
-
-function ensureYmaps3Loaded(params: { apikey: string; lang?: string }): Promise<void> {
-  if (typeof window === "undefined") return Promise.resolve()
-  if (window.__ymaps3_loading_promise__) return window.__ymaps3_loading_promise__
-
-  window.__ymaps3_loading_promise__ = new Promise<void>((resolve, reject) => {
-    const existing = document.querySelector<HTMLScriptElement>('script[src^="https://api-maps.yandex.ru/v3/"]')
-    if (existing) return resolve()
-
-    const script = document.createElement("script")
-    script.src = `https://api-maps.yandex.ru/v3/?apikey=${encodeURIComponent(params.apikey)}&lang=${encodeURIComponent(
-      params.lang ?? "ru_RU"
-    )}`
-    script.async = true
-    script.onload = () => resolve()
-    script.onerror = () => reject(new Error(`Failed to load Yandex Maps JS API v3 script: ${script.src}`))
-    document.head.appendChild(script)
-  })
-
-  return window.__ymaps3_loading_promise__
-}
-
-export const ApishipMap: React.FC<ApishipMapProps> = ({
-  points,
-  tariffsByPointId,
-  isLoading,
-  selectedPointId,
-  selectedTariffKey,
-  isPanelOpen,
-  onClosePanel,
-  onSelectPoint,
-  onSelectTariff,
-  onChoose,
-  chosen,
-  providersMap
-}) => {
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const mapRef = useRef<any>(null)
-  const markersRef = useRef<Map<string, { marker: any; el: HTMLDivElement }>>(new Map())
-  const initPromiseRef = useRef<Promise<void> | null>(null)
-
-  const isSameAsChosen =
-    !!chosen?.pointId &&
-    !!chosen?.tariffKey &&
-    chosen.pointId === selectedPointId &&
-    chosen.tariffKey === selectedTariffKey
-
-  const onSelectPointRef = useLatestRef(onSelectPoint)
-
-  const center = useMemo<[number, number]>(() => {
-    const p = points?.[0]
-    return p ? [p.lng, p.lat] : DEFAULT_CENTER
-  }, [points])
-
-  const activePoint = useMemo(() => {
-    return selectedPointId ? points.find((p) => p.id === selectedPointId) ?? null : null
-  }, [points, selectedPointId])
-
-  const activeTariffs = useMemo(() => {
-    if (!selectedPointId) return []
-    return tariffsByPointId[selectedPointId] ?? []
-  }, [tariffsByPointId, selectedPointId])
-
-  const selectedTariff = useMemo(() => {
-    if (!selectedTariffKey) return null
-    return activeTariffs.find((t) => t.key === selectedTariffKey) ?? null
-  }, [activeTariffs, selectedTariffKey])
-
-  const clearMarkers = useCallback(() => {
-    const map = mapRef.current
-    if (!map) return
-    for (const { marker } of markersRef.current.values()) {
-      try {
-        map.removeChild(marker)
-      } catch { }
-    }
-    markersRef.current.clear()
-  }, [])
-
-  const destroyMap = useCallback(() => {
-    clearMarkers()
-    try {
-      mapRef.current?.destroy?.()
-    } catch { }
-    mapRef.current = null
-    initPromiseRef.current = null
-  }, [clearMarkers])
-
-  const applySelectionStyles = useCallback(() => {
-    for (const [id, { el }] of markersRef.current.entries()) {
-      const sel = id === selectedPointId
-
-      el.style.background = sel ? "#3b82f6" : "white"
-      el.style.border = sel ? "2px solid #1d4ed8" : "2px solid rgba(0,0,0,0.25)"
-
-      const dot = el.firstElementChild as HTMLElement | null
-      if (dot) {
-        dot.style.border = sel
-          ? "2px solid rgba(255,255,255,0.95)"
-          : "2px solid rgba(0,0,0,0.25)"
-      }
-    }
-  }, [selectedPointId])
-
-  useEffect(() => {
-    if (!containerRef.current || mapRef.current) return
-    let cancelled = false
-
-    initPromiseRef.current = (async () => {
-      const apikey = process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY
-      if (!apikey) throw new Error("NEXT_PUBLIC_YANDEX_MAPS_API_KEY is not set")
-
-      await ensureYmaps3Loaded({ apikey, lang: "ru_RU" })
-      if (cancelled) return
-
-      const ymaps3 = window.ymaps3
-      if (!ymaps3) return
-      await ymaps3.ready
-      if (cancelled) return
-
-      ymaps3.import.registerCdn("https://cdn.jsdelivr.net/npm/{package}", "@yandex/ymaps3-default-ui-theme@0.0")
-
-      const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer } = ymaps3
-
-      const map = new YMap(containerRef.current!, { location: { center, zoom: 10 } })
-      map.addChild(new YMapDefaultSchemeLayer({}))
-      map.addChild(new YMapDefaultFeaturesLayer({ zIndex: 1800 }))
-
-      mapRef.current = map
-    })().catch((e) => console.error("Yandex map init failed", e))
-
-    return () => {
-      cancelled = true
-      destroyMap()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [destroyMap])
-
-  useEffect(() => {
-    (async () => {
-      if (!initPromiseRef.current) return
-      await initPromiseRef.current
-      try {
-        mapRef.current?.setLocation?.({ center, zoom: 10 })
-      } catch { }
-    })()
-  }, [center])
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      if (!initPromiseRef.current) return
-      await initPromiseRef.current
-      if (cancelled) return
-
-      const map = mapRef.current
-      const ymaps3 = window.ymaps3
-      if (!map || !ymaps3) return
-
-      const { YMapMarker } = ymaps3
-
-      clearMarkers()
-
-      for (const p of points) {
-        const el = document.createElement("div")
-
-        const SIZE = 18
-
-        el.style.width = `${SIZE}px`
-        el.style.height = `${SIZE}px`
-
-        el.style.background = "white"
-        el.style.border = "2px solid rgba(0,0,0,0.25)"
-        el.style.borderRadius = "50% 50% 50% 0"
-        el.style.transform = "rotate(-45deg)"
-        el.style.boxShadow = "0 2px 2px rgba(0,0,0,0.18)"
-        el.style.cursor = "pointer"
-        el.style.position = "relative"
-        el.style.transformOrigin = "50% 50%"
-
-        const dot = document.createElement("div")
-        dot.style.width = "8px"
-        dot.style.height = "8px"
-        dot.style.background = "white"
-        dot.style.border = "2px solid rgba(0,0,0,0.25)"
-        dot.style.borderRadius = "9999px"
-        dot.style.position = "absolute"
-        dot.style.left = "50%"
-        dot.style.top = "50%"
-        dot.style.transform = "translate(-50%, -50%) rotate(45deg)"
-        dot.style.boxSizing = "border-box"
-
-        el.appendChild(dot)
-
-        el.title = p.name ?? p.address ?? `Point ${p.id}`
-
-        el.addEventListener("click", (e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          onSelectPointRef.current(p.id)
-        })
-
-        const marker = new YMapMarker({ coordinates: [p.lng, p.lat] }, el)
-        map.addChild(marker)
-        markersRef.current.set(p.id, { marker, el })
-      }
-      applySelectionStyles()
-    })()
-
-    return () => {
-      cancelled = true
-    }
-  }, [points, clearMarkers, onSelectPointRef])
-
-  useEffect(() => {
-    applySelectionStyles()
-  }, [applySelectionStyles])
-
-  const showNoPoints = !isLoading && points.length === 0
-
-  return (
-    <div className="relative w-full h-full">
-      <div ref={containerRef} className="w-full h-full" />
-      {isLoading && (
-        <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-          <Loader />
-        </div>
-      )}
-      {showNoPoints && (
-        <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-          <Text className="text-ui-fg-muted">No pickup points found for this shipping method.</Text>
-        </div>
-      )}
-      {!isLoading && activePoint && isPanelOpen && !showNoPoints && (
-        <div className="absolute left-0 top-0 z-[70] w-full md:w-[470px] h-full border-r bg-white flex flex-col min-h-0">
-          <div className="flex flex-row justify-between p-[35px] pb-0 items-center">
-            <Heading
-              level="h2"
-              className="flex flex-row text-3xl-regular gap-x-2 items-baseline"
-            >
-              {`${providersMap?.[activePoint.providerKey ?? ""] ?? ""} pickup point`.trimStart()}
-            </Heading>
-            <IconButton
-              aria-label="Close"
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                onClosePanel()
-              }}
-              className="shadow-none"
-            >
-              <XMark />
-            </IconButton>
-          </div>
-
-          <div className="flex-1 min-h-0 overflow-y-auto p-[35px] pt-[18px] flex flex-col gap-[18px]">
-            <div className="flex flex-col">
-              <Text className="font-medium txt-medium text-ui-fg-base">
-                {activePoint.name}
-              </Text>
-              <Text className="text-ui-fg-muted txt-medium">
-                {activePoint.address}
-              </Text>
-            </div>
-
-            <div className="flex flex-col gap-[10px]">
-              <Text className="font-medium txt-medium text-ui-fg-base">Tariffs</Text>
-
-              <RadioGroup className="flex flex-col gap-[10px]">
-                {activeTariffs.map((t) => {
-                  const active = t.key === selectedTariffKey
-                  const cost =
-                    typeof t.deliveryCostOriginal === "number"
-                      ? t.deliveryCostOriginal
-                      : t.deliveryCost
-
-                  return (
-                    <Radio
-                      key={t.tariffId}
-                      value={t.tariffId}
-                      data-testid="delivery-option-radio"
-                      onClick={() => {
-                        onSelectTariff(t.key)
-                      }}
-                      className={clx(
-                        "flex items-center justify-between text-small-regular cursor-pointer py-2 border rounded-rounded pl-2 pr-3 hover:shadow-borders-interactive-with-active",
-                        { "border-ui-border-interactive": active }
-                      )}
-                    >
-                      <div className="flex gap-2 w-full">
-                        <MedusaRadio checked={active} />
-                        <div className="flex flex-row w-full items-center justify-between">
-                          <div className="flex flex-col">
-                            <span className="txt-compact-small-plus">
-                              {t.tariffName}
-                            </span>
-                            <span className="txt-small text-ui-fg-subtle">
-                              Delivery time: {days(t)}
-                            </span>
-                          </div>
-                          <span className="txt-small-plus text-ui-fg-subtle">
-                            {`RUB ${cost}`}
-                          </span>
-                        </div>
-                      </div>
-                    </Radio>
-                  )
-                })}
-              </RadioGroup>
-            </div>
-            <Button
-              size="large"
-              onClick={() => {
-                if (!activePoint || !selectedTariff) return
-                onChoose({ point: activePoint, tariff: selectedTariff })
-              }}
-              disabled={!selectedTariff || isSameAsChosen}
-              className="w-full mb-[16px] !overflow-visible"
-            >
-              Choose
-            </Button>
-            {activePoint.worktime && (
-              <div className="flex flex-col">
-                <Text className="font-medium txt-medium text-ui-fg-base">
-                  Schedule
-                </Text>
-                <Schedule worktime={activePoint.worktime} />
-              </div>
-            )}
-
-            {!!activePoint.photos?.length && (
-              <div className="flex flex-col gap-[10px]">
-                <Text className="font-medium txt-medium text-ui-fg-base">Photos</Text>
-                <div className="flex flex-row gap-[10px] overflow-x-auto">
-                  {activePoint.photos.map((src, index) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      key={index}
-                      src={src}
-                      alt={`Photo ${index + 1} of pickup point`}
-                      className="w-auto h-[120px] rounded-md border object-cover"
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {activePoint.description && (
-              <div className="flex flex-col">
-                <Text className="font-medium txt-medium text-ui-fg-base">
-                  Description
-                </Text>
-                <Text className="text-ui-fg-muted txt-medium">
-                  {activePoint.description}
-                </Text>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
 ```
 
-Этот компонент инициализирует Яндекс Карты один раз, перемещает центр карты при изменении списка пунктов самовывоза и отображает кликабельные маркеры для каждого доступного пункта. Когда пользователь выбирает пункт, отображается боковая панель, на которой показаны тарифы и их можно выбрать. Интерфейс карты также учитывает ранее сохранённый выбор. Если пользователь снова открывает модальное окно, компонент выделяет уже выбранный пункт самовывоза и тариф и предотвращает повторный выбор той же опции.
+- `isApishipOption` распознаёт способ доставки ApiShip по `provider_id`, который начинается с `apiship_`.
+- `getApishipDeliveryType` читает `deliveryType` из `data` способа доставки. Плагин записывает его туда из метода фулфилмента, который вы выбираете при создании способа доставки, `1` для доставки до двери и `2` для доставки в пункт выдачи.
+- `getTariffCost` возвращает `deliveryCost`, то есть стоимость, которую плагин выставляет корзине. ApiShip возвращает ещё и `deliveryCostOriginal`, его оформление заказа не использует.
+- `buildTariffKey` однозначно определяет тариф между отрисовками, потому что у ApiShip нет одного идентификатора, который заполнен всегда.
+- `buildTariffsByPointId` переворачивает расчёт в тарифы каждого пункта выдачи, а `buildDoorGroups` группирует курьерские тарифы по перевозчикам без повторов.
+- `getApishipSelection` читает сохранённый выбор из способа доставки корзины, `isApishipSelectionComplete` проверяет, что в нём есть всё нужное для способа доставки, а `toStoredSelection` собирает объект, который оформление заказа сохраняет в способе доставки.
 
 ---
 
-## Шаг 8: Создайте компонент резюме доставки ApiShip
+## Шаг 7: Вынесите форматирование дат доставки
 
-Этот компонент отображает компактное резюме выбранного клиентом способа доставки. Оно показывается после того, как пользователь выбрал пункт самовывоза или тариф курьера, чтобы на этапе оформления заказа было ясно, что в данный момент сохранено в корзине.
+Стартер форматирует даты доставки прямо в секции доставки. Списку тарифов и карточке способа доставки ApiShip нужны такие же даты, поэтому перенесите форматирование в хук.
 
-Откройте [`src/modules/checkout/components/shipping/apiship/apiship-chosen.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
+Создайте файл [`src/lib/hooks/use-format-delivery-days.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/lib/hooks/use-format-delivery-days.tsx) со следующим содержимым:
 
-![Структура проекта Medusa Storefront после создания файла для выбранного тарифа и пункта самовывоза](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-apiship-chosen.webp)
+![Структура проекта Medusa Storefront после создания файла для хука дат доставки](/static/apiship/storefront/src-lib-hooks-use-format-delivery-days.webp)
 
-```tsx title="src/modules/checkout/components/shipping/apiship/apiship-chosen.tsx"
-"use client"
-
-import { Heading, Text } from "@medusajs/ui"
-import { Chosen } from "./types"
-import { days } from "./utils"
-
-type ApishipChosenProps = {
-  chosen: Chosen
-  onRemove: () => void
-  onEdit: () => void
-}
-
-export const ApishipChosen: React.FC<ApishipChosenProps> = ({
-  chosen,
-  onRemove,
-  onEdit
-}) => {
-  const cost =
-    typeof chosen.tariff.deliveryCostOriginal === "number"
-      ? chosen.tariff.deliveryCostOriginal
-      : chosen.tariff.deliveryCost
-
-  const isToPoint = chosen.deliveryType === 2
-
-  return (
-    <div className="flex flex-col gap-4 mt-[32px]">
-      <div className="flex flex-row justify-between">
-        <Heading level="h2" className="txt-xlarge">
-          {isToPoint ? "To the Pickup Point" : "By Courier"}
-        </Heading>
-        <div className="flex flex-row gap-[16px]">
-          <Text>
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                onRemove()
-              }}
-              className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
-            >
-              Remove
-            </button>
-          </Text>
-          <Text>
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                onEdit()
-              }}
-              className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
-            >
-              Edit
-            </button>
-          </Text>
-        </div>
-      </div>
-
-      {isToPoint ? (
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-4 w-[60%]">
-            <div className="flex flex-col">
-              <Text>{chosen.point?.name}</Text>
-              {chosen.point?.address && (
-                <Text className="text-ui-fg-muted">{chosen.point.address}</Text>
-              )}
-              {chosen.point?.timetable && (
-                <Text className="text-ui-fg-muted">{chosen.point.timetable}</Text>
-              )}
-            </div>
-            {chosen.point?.description && (
-              <Text className="text-ui-fg-muted leading-none">{chosen.point.description}</Text>
-            )}
-          </div>
-          <Text>
-            {chosen.tariff.tariffName} · {`RUB ${cost ?? "—"}`}{days(chosen.tariff) ? ` · ${days(chosen.tariff)}` : ""}
-          </Text>
-        </div>
-      ) : (
-        <Text>
-          {
-            [chosen?.tariff?.tariffName,
-            typeof cost === "number" ? `RUB ${cost}` : "RUB —",
-            days?.(chosen?.tariff) || null,
-            ].filter(Boolean).join(" · ")
-          }
-        </Text>
-      )}
-    </div>
-  )
-}
-```
-
-С помощью этого компонента компонента витрина может сразу отображать ранее сохранённый выбор на этапе доставки, включая детали пункта самовывоза и тарифа. Он также позволяет пользователю либо удалить выбор, либо снова открыть модальное окно для его изменения.
-
----
-
-## Шаг 9: Создайте модальное окно выбора пункта самовывоза
-
-Этот компонент реализует отдельное модальное окно, которое позволяет клиенту выбрать пункт самовывоза ApiShip и соответствующий тариф прямо на карте. Модальное окно отвечает за загрузку пунктов самовывоза для выбранного способа доставки, восстановление ранее сохранённого выбора (если он есть) и сохранение нового выбора обратно в корзину после подтверждения клиентом.
-
-Откройте [`src/modules/checkout/components/shipping/apiship/apiship-pickup-point-modal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
-
-![Структура проекта Medusa Storefront после создания файла для модального окна пункта самовывоза ApiShip](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-apiship-pickup-point-modal.webp)
-
-```tsx title="src/modules/checkout/components/shipping/apiship/apiship-pickup-point-modal.tsx"
-"use client"
-
-import { useCallback, useEffect, useRef, useState } from "react"
-import { IconButton } from "@medusajs/ui"
-import { XMark } from "@medusajs/icons"
-import { HttpTypes } from "@medusajs/types"
-import { setShippingMethod } from "@lib/data/cart"
-import {
-  calculatePriceForShippingOption,
-  retrieveCalculation,
-  getPointAddresses,
-} from "@lib/data/fulfillment"
-import { ApishipMap } from "./apiship-map"
-import {
-  ApishipCalculation,
-  ApishipPoint,
-  ApishipTariff,
-  Chosen
-} from "./types"
-import {
-  buildTariffsByPointId,
-  extractPointIds,
-  useAsyncEffect,
-  useLatestRef,
-  useLockBodyScroll,
-} from "./utils"
-
-type ApishipPickupPointModalProps = {
-  open: boolean
-  onClose: (cancel?: boolean) => void
-  cart: HttpTypes.StoreCart
-  shippingOptionId: string | null
-  initialChosen?: Chosen | null
-  onPriceUpdate?: (shippingOptionId: string, amount: number) => void
-  onError?: (message: string) => void
-  onChosenChange: (chosen: Chosen | null) => void
-  providersMap: Record<string, string>
-}
-
-export const ApishipPickupPointModal: React.FC<ApishipPickupPointModalProps> = ({
-  open,
-  onClose,
-  cart,
-  shippingOptionId,
-  initialChosen,
-  onPriceUpdate,
-  onError,
-  onChosenChange,
-  providersMap
-}) => {
-  const onErrorRef = useLatestRef(onError)
-  const onPriceRef = useLatestRef(onPriceUpdate)
-
-  const [isLoadingPoints, setIsLoadingPoints] = useState(false)
-  const [points, setPoints] = useState<ApishipPoint[]>([])
-  const [tariffsByPointId, setTariffsByPointId] = useState<Record<string, ApishipTariff[]>>({})
-
-  const [selectedPointId, setSelectedPointId] = useState<string | null>(null)
-  const [selectedTariffKey, setSelectedTariffKey] = useState<string | null>(null)
-  const [isPanelOpen, setIsPanelOpen] = useState(false)
-
-  useLockBodyScroll(open)
-
-  useEffect(() => {
-    if (!open) return
-
-    if (initialChosen?.deliveryType === 2) {
-      setSelectedPointId(initialChosen.point?.id ?? null)
-      setSelectedTariffKey(initialChosen.tariff?.key ?? null)
-      setIsPanelOpen(true)
-      return
-    }
-
-    setSelectedPointId(null)
-    setSelectedTariffKey(null)
-    setIsPanelOpen(false)
-  }, [open, initialChosen, shippingOptionId])
-
-  useEffect(() => {
-    setSelectedPointId(null)
-    setSelectedTariffKey(null)
-    setIsPanelOpen(false)
-  }, [shippingOptionId])
-
-  useAsyncEffect(async (isCancelled) => {
-    if (!open || !shippingOptionId) return
-
-    setIsLoadingPoints(true)
-    try {
-      const calculation = await retrieveCalculation(cart.id, shippingOptionId)
-      if (isCancelled()) return
-      const tariffsMap = buildTariffsByPointId(calculation)
-      setTariffsByPointId(tariffsMap)
-
-      const pointIds = extractPointIds(tariffsMap)
-      if (!pointIds.length) {
-        setPoints([])
-        return
-      }
-
-      const pointAddresses = await getPointAddresses(
-        cart.id,
-        shippingOptionId,
-        pointIds
-      )
-      if (isCancelled()) return
-
-      setPoints(pointAddresses?.points ?? [])
-    } catch (e: any) {
-      console.error(e)
-      onErrorRef.current?.(e?.message ?? "Failed to load pickup points")
-      setPoints([])
-      setTariffsByPointId({})
-    } finally {
-      if (!isCancelled()) setIsLoadingPoints(false)
-    }
-  }, [open, shippingOptionId, cart.id])
-
-  const persistChosen = useCallback(async (next: Chosen) => {
-    if (!shippingOptionId) return
-
-    await setShippingMethod({
-      cartId: cart.id,
-      shippingMethodId: shippingOptionId,
-      data: { apishipData: next },
-    })
-
-    const calculation = await calculatePriceForShippingOption(shippingOptionId, cart.id)
-    if (calculation?.id && typeof calculation.amount === "number") {
-      onPriceRef.current?.(calculation.id, calculation.amount)
-    }
-  }, [cart.id, shippingOptionId, onPriceRef])
-
-  if (!open) return null
-
-  return (
-    <div className="fixed inset-0 z-50">
-      <div
-        className="absolute inset-0 bg-black/50"
-      />
-      <div
-        className="absolute inset-0 flex items-center justify-center p-4"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) onClose(initialChosen ? false : true)
-        }}
-      >
-        <div className="relative">
-          <IconButton
-            aria-label="Close"
-            onClick={() => onClose(initialChosen ? false : true)}
-            className="absolute right-2 top-2 z-[60] shadow-none"
-          >
-            <XMark />
-          </IconButton>
-          <div
-            className="
-              relative
-              h-[820px] w-[1350px]
-              max-w-[calc(100vw-32px)] max-h-[calc(100vh-32px)]
-              overflow-hidden rounded-rounded border bg-white
-            "
-          >
-            <ApishipMap
-              points={points}
-              tariffsByPointId={tariffsByPointId}
-              isLoading={isLoadingPoints}
-              selectedPointId={selectedPointId}
-              selectedTariffKey={selectedTariffKey}
-              isPanelOpen={isPanelOpen}
-              onClosePanel={() => {
-                setIsPanelOpen(false)
-                setSelectedPointId(null)
-              }}
-              onSelectPoint={(pid) => {
-                setSelectedPointId(pid)
-                setSelectedTariffKey(null)
-                setIsPanelOpen(true)
-              }}
-              onSelectTariff={(key) => setSelectedTariffKey(key)}
-              chosen={
-                initialChosen?.deliveryType === 2
-                  ? { pointId: initialChosen.point?.id, tariffKey: initialChosen.tariff?.key }
-                  : null
-              }
-              onChoose={async ({ point, tariff }) => {
-                const cost =
-                  typeof tariff.deliveryCostOriginal === "number"
-                    ? tariff.deliveryCostOriginal
-                    : tariff.deliveryCost
-
-                const chosen: Chosen = {
-                  deliveryType: 2,
-                  tariff,
-                  point
-                }
-                try {
-                  await persistChosen(chosen)
-                  onChosenChange(chosen)
-                  onClose()
-                } catch (e: any) {
-                  onErrorRef.current?.(e?.message ?? "Failed to save the selected tariff")
-                }
-              }}
-              providersMap={providersMap}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-```
-
-Это модальное окно блокирует прокрутку основного содержимого страницы, пока оно открыто, получает пункты самовывоза, используя результаты расчёта доставки, и передаёт ранее сохранённый выбор на карту, чтобы интерфейс отображал уже выбранные пользователем параметры. Когда пользователь подтверждает пункт и тариф, выбор сохраняется в данных способа доставки корзины, и пересчитывается обновлённая стоимость.
-
----
-
-## Шаг 10: Создайте модальное окно выбора тарифа курьера
-
-Этот компонент реализует специальное модальное окно для выбора тарифов курьерской доставки. Оно открывается, когда клиент выбирает курьерскую доставку, и позволяет ему выбрать один из доступных тарифов.
-
-Когда модальное окно открыто, оно восстанавливает ранее выбранный тариф (если он уже был сохранен в корзине), поэтому пользователь сразу видит свой предыдущий выбор. Все доступные тарифы курьерской доставки отображаются в виде группированного списка, и клиент может выбрать один из них с помощью переключателей (radio buttons).
-
-Открыть [`src/modules/checkout/components/shipping/apiship/apiship-courier-modal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
-
-![Структура проекта Medusa Storefront после создания файла для модального окна курьера ApiShip](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-apiship-courier-modal.webp)
-
-```tsx title="src/modules/checkout/components/shipping/apiship/apiship-courier-modal.tsx"
+```tsx title="src/lib/hooks/use-format-delivery-days.tsx"
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { Button, clx, Heading, IconButton, Text } from "@medusajs/ui"
-import MedusaRadio from "@modules/common/components/radio"
-import { Loader, XMark } from "@medusajs/icons"
-import { HttpTypes } from "@medusajs/types"
-import { Radio, RadioGroup } from "@headlessui/react"
-import { setShippingMethod } from "@lib/data/cart"
-import { calculatePriceForShippingOption, retrieveCalculation } from "@lib/data/fulfillment"
-import {
-  ApishipCalculation,
-  ApishipTariff,
-  Chosen
-} from "./types"
-import {
-  buildTariffKey,
-  days,
-  useLatestRef,
-  useLockBodyScroll
-} from "./utils"
+import { useLocale, useTranslations } from "next-intl"
+import type { DeliveryDays } from "@lib/util/fulfillment"
 
-type ApishipCourierModalProps = {
-  open: boolean
-  onClose: (cancel?: boolean) => void
-  cart: HttpTypes.StoreCart
-  shippingOptionId: string | null
-  initialChosen?: Chosen | null
-  onPriceUpdate?: (shippingOptionId: string, amount: number) => void
-  onError?: (message: string) => void
-  onChosenChange: (chosen: Chosen | null) => void
-  providersMap: Record<string, string>
+const NARROW_NO_BREAK_SPACE = "\u202F"
+const NO_BREAK_SPACE = "\u00A0"
+
+const keepTogether = (text: string) =>
+  text.replace(/\s/g, (space) =>
+    space === "\u2009" || space === NARROW_NO_BREAK_SPACE
+      ? NARROW_NO_BREAK_SPACE
+      : NO_BREAK_SPACE
+  )
+
+const breakAfterDash = (range: string) => {
+  const separator = /(\s+)([–—-])(\s+)/.exec(range)
+  if (!separator) return keepTogether(range)
+
+  const [match, before, dash, after] = separator
+  const start = range.slice(0, separator.index)
+  const end = range.slice(separator.index + match.length)
+
+  return `${keepTogether(start)}${keepTogether(before)}${dash}${after}${keepTogether(end)}`
 }
 
-export const ApishipCourierModal: React.FC<ApishipCourierModalProps> = ({
-  open,
-  onClose,
-  cart,
-  shippingOptionId,
-  initialChosen,
-  onPriceUpdate,
-  onError,
-  onChosenChange,
-  providersMap,
-}) => {
-  const onErrorRef = useLatestRef(onError)
-  const onPriceRef = useLatestRef(onPriceUpdate)
+export function useFormatDeliveryDays() {
+  const t = useTranslations("CheckoutPage")
+  const locale = useLocale()
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [isLoadingCalc, setIsLoadingCalc] = useState(false)
-
-  const [calculation, setCalculation] = useState<ApishipCalculation | null>(null)
-  const [selectedTariffKey, setSelectedTariffKey] = useState<string | null>(null)
-
-  useLockBodyScroll(open)
-
+  const [now, setNow] = useState<Date | null>(null)
   useEffect(() => {
-    if (!open) return
+    setNow(new Date())
+  }, [])
 
-    if (initialChosen) {
-      setSelectedTariffKey(initialChosen.tariff?.key ?? null)
-      return
-    }
+  const formatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        day: "numeric",
+        month: "long",
+      }),
+    [locale]
+  )
 
-    setSelectedTariffKey(null)
-  }, [open, initialChosen, shippingOptionId])
+  return useCallback(
+    (days: DeliveryDays | null) => {
+      if (!days) return null
+      if (days.max === 0) return t("deliveryToday")
+      if (!now) return null
 
-  useEffect(() => {
-    setSelectedTariffKey(null)
-  }, [shippingOptionId])
+      const dateIn = (daysFromNow: number) => {
+        const date = new Date(now)
+        date.setHours(0, 0, 0, 0)
+        date.setDate(date.getDate() + daysFromNow)
+        return date
+      }
 
-  function useAsyncEffect(fn: (isCancelled: () => boolean) => Promise<void>, deps: any[]) {
-    useEffect(() => {
-      let cancelled = false
-      const isCancelled = () => cancelled
-      fn(isCancelled).catch((e) => console.error(e))
-      return () => { cancelled = true }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, deps)
-  }
+      const formatDate = (daysFromNow: number) =>
+        keepTogether(formatter.format(dateIn(daysFromNow)))
 
-  useAsyncEffect(async (isCancelled) => {
-    if (!open || !shippingOptionId) return
+      if (days.min !== undefined && days.max !== undefined) {
+        if (days.min === days.max) return formatDate(days.min)
 
-    setIsLoadingCalc(true)
-    setCalculation(null)
-
-    try {
-      const calculation = await retrieveCalculation(cart.id, shippingOptionId)
-      if (isCancelled()) return
-      setCalculation(calculation)
-    } catch (e: any) {
-      console.error(e)
-      onErrorRef.current?.(e?.message ?? "Failed to load calculation")
-      setCalculation(null)
-    } finally {
-      if (!isCancelled()) setIsLoadingCalc(false)
-    }
-  }, [open, shippingOptionId, cart.id])
-
-  const doorGroups = useMemo(() => {
-    return calculation?.deliveryToDoor ?? []
-  }, [calculation])
-
-  const tariffsFlat = useMemo(() => {
-    return doorGroups.flatMap((g) =>
-      (g.tariffs ?? []).map((t, idx) => {
-        const key = buildTariffKey(g.providerKey, t, idx)
-        const full: ApishipTariff = {
-          ...t,
-          key,
-          providerKey: g.providerKey,
+        if (typeof formatter.formatRange === "function") {
+          return breakAfterDash(
+            formatter.formatRange(dateIn(days.min), dateIn(days.max))
+          )
         }
-        return full
-      })
-    )
-  }, [doorGroups])
 
-  const selectedTariff = useMemo(() => {
-    if (!selectedTariffKey) return null
-    return tariffsFlat.find((t) => t.key === selectedTariffKey) ?? null
-  }, [tariffsFlat, selectedTariffKey])
-
-  const persistChosen = useCallback(async () => {
-    if (!shippingOptionId || !selectedTariff) return
-
-    setIsLoading(true)
-    try {
-      const next: Chosen = {
-        deliveryType: 1,
-        tariff: selectedTariff
+        return `${formatDate(days.min)}${NO_BREAK_SPACE}– ${formatDate(days.max)}`
       }
 
-      await setShippingMethod({
-        cartId: cart.id,
-        shippingMethodId: shippingOptionId,
-        data: { apishipData: next },
-      })
-
-      const calc = await calculatePriceForShippingOption(shippingOptionId, cart.id)
-      if (calc?.id && typeof calc.amount === "number") {
-        onPriceRef.current?.(calc.id, calc.amount)
+      if (days.max !== undefined) {
+        return t("deliveryDateUntil", { date: formatDate(days.max) })
       }
 
-      onChosenChange(next)
-      onClose()
-    } catch (e: any) {
-      onErrorRef.current?.(e?.message ?? "Failed to save courier tariff")
-    } finally {
-      setIsLoading(false)
-    }
-  }, [cart.id, shippingOptionId, selectedTariff, onPriceRef, onChosenChange, onClose, onErrorRef])
+      if (days.min !== undefined) {
+        return t("deliveryDateFrom", { date: formatDate(days.min) })
+      }
 
-  if (!open) return null
+      return null
+    },
+    [formatter, now, t]
+  )
+}
+```
+
+Затем откройте [`src/modules/checkout/components/checkout-shipping-section/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/checkout-shipping-section/index.tsx#L11-L84) и замените встроенное форматирование хуком:
+
+![Структура проекта Medusa Storefront после обновления файла для секции доставки](/static/apiship/storefront/src-modules-checkout-components-checkout-shipping-section-index.webp)
+
+```tsx title="src/modules/checkout/components/checkout-shipping-section/index.tsx"
+import {
+  getDeliveryDays,
+  isPickupShippingOption,
+} from "@lib/util/fulfillment"
+// ...
+import { useFormatDeliveryDays } from "@lib/hooks/use-format-delivery-days"
+
+// ...
+
+  const formatDeliveryDays = useFormatDeliveryDays()
+```
+
+Удалите `now`, `getDeliveryDate`, `deliveryDateFormatter`, `formatDeliveryDate`, `formatDeliveryRange` и импорт `DeliveryDays`, теперь всё это находится в хуке. Хук форматирует дату или диапазон дат в локали витрины и не даёт дате разорваться на две строки.
+
+---
+
+## Шаг 8: Создайте хуки выбора
+
+Два хука делят выбор покупателя и список перевозчиков между карточкой способа доставки, строкой доставки и окном доставки.
+
+Создайте файл [`src/modules/checkout/components/apiship/use-apiship-selection.ts`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/apiship/use-apiship-selection.ts) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для хука выбора ApiShip](/static/apiship/storefront/src-modules-checkout-components-apiship-use-apiship-selection.webp)
+
+```ts title="src/modules/checkout/components/apiship/use-apiship-selection.ts"
+"use client"
+
+import type { HttpTypes } from "@medusajs/types"
+import { useShippingSelection } from "@modules/checkout/context/shipping-selection-context"
+import type { ApishipSelection } from "types/apiship"
+import { getApishipSelection } from "./utils"
+
+export function useApishipSelection(
+  cart: HttpTypes.StoreCart,
+  optionId: string | null | undefined
+): ApishipSelection | null {
+  const { getOptionData } = useShippingSelection()
+
+  if (!optionId) return null
 
   return (
-    <div className="fixed inset-0 z-50">
-      <div
-        className="absolute inset-0 bg-black/50"
-      />
-      <div
-        className="absolute inset-0 flex items-center justify-center p-4"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) onClose(initialChosen ? false : true)
-        }}
-      >
-        <div className="relative w-[470px] max-w-[calc(100vw-32px)]">
-          <div
-            className="
-              h-[820px] w-[470px]
-              max-w-[calc(100vw-32px)] max-h-[calc(100vh-32px)]
-              overflow-hidden rounded-rounded border bg-white
-              flex flex-col
-            "
-          >
-            <div className=" flex flex-row justify-between items-center p-[35px] pb-0">
-              <Heading
-                level="h2"
-                className="flex flex-row text-3xl-regular gap-x-2 items-baseline"
-              >
-                By courier
-              </Heading>
-              <IconButton
-                aria-label="Close"
-                onClick={() => onClose(initialChosen ? false : true)}
-                className="shadow-none"
-              >
-                <XMark />
-              </IconButton>
-            </div>
-            <div className="flex-1 min-h-0 overflow-y-auto px-[35px] pt-[18px]">
-              {isLoadingCalc ? (
-                <div className="h-full w-full flex items-center justify-center">
-                  <Loader />
-                </div>
-              ) : doorGroups.length === 0 ? (
-                <Text className="text-ui-fg-muted">No courier tariffs available.</Text>
-              ) : (
-                <div className="flex flex-col gap-[15px] pb-[18px]">
-                  {doorGroups
-                    .filter((g) => (g.tariffs?.length ?? 0) > 0)
-                    .map((g) => (
-                      <div key={g.providerKey} className="flex flex-col gap-[10px]">
-                        <Text className="font-medium txt-medium text-ui-fg-base">
-                          {providersMap[g.providerKey] ?? g.providerKey}
-                        </Text>
-                        <RadioGroup
-                          value={selectedTariffKey}
-                          onChange={(v) => setSelectedTariffKey(String(v))}
-                          className="flex flex-col gap-[10px]"
-                        >
-                          {(g.tariffs ?? []).map((t, idx) => {
-                            const k = buildTariffKey(g.providerKey, t, idx)
-                            const checked = k === selectedTariffKey
+    (getOptionData(optionId) as { apishipData?: ApishipSelection } | undefined)
+      ?.apishipData ?? getApishipSelection(cart, optionId)
+  )
+}
+```
 
-                            const cost =
-                              typeof t.deliveryCostOriginal === "number"
-                                ? t.deliveryCostOriginal
-                                : t.deliveryCost
+`useApishipSelection` возвращает выбор для одного способа доставки. Сначала он читает подтверждённый покупателем выбор из контекста выбора доставки оформления заказа, а если его там нет, берёт выбор, сохранённый в способе доставки корзины. В корзине одновременно хранится только один способ доставки, поэтому именно контекст сохраняет цену на карточке курьерской доставки, пока покупатель смотрит пункты выдачи.
 
-                            return (
-                              <Radio
-                                key={k}
-                                value={k}
-                                className={clx(
-                                  "flex items-center justify-between text-small-regular cursor-pointer py-2 border rounded-rounded pl-2 pr-3 hover:shadow-borders-interactive-with-active",
-                                  { "border-ui-border-interactive": checked }
-                                )}
-                              >
-                                <div className="flex gap-2 w-full">
-                                  <MedusaRadio checked={checked} />
-                                  <div className="flex flex-row w-full items-center justify-between">
-                                    <div className="flex flex-col">
-                                      <span className="txt-compact-small-plus">
-                                        {t.tariffName}
-                                      </span>
-                                      <span className="txt-small text-ui-fg-subtle">
-                                        Delivery time: {days(t as ApishipTariff)}
-                                      </span>
-                                    </div>
-                                    <span className="txt-small-plus text-ui-fg-subtle">
-                                      {typeof cost === "number" ? `RUB ${cost}` : "—"}
-                                    </span>
-                                  </div>
-                                </div>
-                              </Radio>
-                            )
-                          })}
-                        </RadioGroup>
-                      </div>
-                    ))}
-                </div>
-              )}
+Создайте файл [`src/modules/checkout/components/apiship/use-apiship-providers.ts`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/apiship/use-apiship-providers.ts) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для хука перевозчиков ApiShip](/static/apiship/storefront/src-modules-checkout-components-apiship-use-apiship-providers.webp)
+
+```ts title="src/modules/checkout/components/apiship/use-apiship-providers.ts"
+"use client"
+
+import { useEffect, useState } from "react"
+import { retrieveApishipProviders } from "@lib/data/apiship"
+import type { ApishipProvider } from "types/apiship"
+
+type ProvidersByKey = Record<string, ApishipProvider>
+
+const providersByOption = new Map<string, Promise<ProvidersByKey | null>>()
+
+const loadProviders = (shippingOptionId: string) => {
+  const cached = providersByOption.get(shippingOptionId)
+  if (cached) return cached
+
+  const loading = retrieveApishipProviders(shippingOptionId).then((list) => {
+    if (!list) {
+      providersByOption.delete(shippingOptionId)
+      return null
+    }
+
+    return Object.fromEntries(
+      list.flatMap((provider) =>
+        provider.key && provider.name ? [[provider.key, provider]] : []
+      )
+    ) as ProvidersByKey
+  })
+
+  providersByOption.set(shippingOptionId, loading)
+  return loading
+}
+
+export function useApishipProviders(
+  shippingOptionId: string | undefined,
+  enabled: boolean
+) {
+  const [providers, setProviders] = useState<ProvidersByKey>({})
+
+  useEffect(() => {
+    if (!enabled || !shippingOptionId) return
+
+    let cancelled = false
+
+    loadProviders(shippingOptionId).then((loaded) => {
+      if (!cancelled && loaded) setProviders(loaded)
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [enabled, shippingOptionId])
+
+  return providers
+}
+```
+
+`useApishipProviders` загружает перевозчиков способа доставки один раз и хранит запрос в словаре на уровне модуля, поэтому все компоненты страницы используют один запрос на способ доставки. Загрузка начинается, только когда `enabled` равен `true`.
+
+---
+
+## Шаг 9: Создайте список тарифов
+
+Так будет выглядеть список тарифов, который вы создадите на этом шаге, в окне курьерской доставки:
+
+![Шаг курьерской доставки в окне доставки ApiShip со списком тарифов СДЭК](/static/apiship/ru/storefront-tariff-list.webp)
+
+Список тарифов показывает тарифы одного способа доставки, сгруппированные по перевозчикам, у каждого тарифа есть дата доставки и цена. На шаге курьерской доставки окно доставки показывает в нём тарифы всех перевозчиков, а панель пункта выдачи показывает тарифы, которые обслуживают выбранный пункт.
+
+Создайте файл [`src/modules/checkout/components/apiship/provider-logo.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/apiship/provider-logo.tsx) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для логотипа перевозчика](/static/apiship/storefront/src-modules-checkout-components-apiship-provider-logo.webp)
+
+```tsx title="src/modules/checkout/components/apiship/provider-logo.tsx"
+import { clx } from "@medusajs/ui"
+import Image from "next/image"
+
+type ProviderLogoProps = {
+  src?: string
+  className?: string
+}
+
+export default function ProviderLogo({ src, className }: ProviderLogoProps) {
+  if (!src) return null
+
+  return (
+    <Image
+      src={src}
+      alt=""
+      width={24}
+      height={24}
+      className={clx(
+        "h-6 w-6 shrink-0 rounded-full shadow-borders-base",
+        className
+      )}
+    />
+  )
+}
+```
+
+`ProviderLogo` отображает логотип перевозчика, который плагин возвращает как SVG в виде data URI в поле `icon`. Его используют список тарифов, панель пункта выдачи и строка доставки.
+
+Создайте файл [`src/modules/checkout/components/apiship/tariff-list.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/apiship/tariff-list.tsx) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для списка тарифов](/static/apiship/storefront/src-modules-checkout-components-apiship-tariff-list.webp)
+
+```tsx title="src/modules/checkout/components/apiship/tariff-list.tsx"
+"use client"
+
+import { convertToLocale } from "@lib/util/money"
+import { useFormatDeliveryDays } from "@lib/hooks/use-format-delivery-days"
+import { useLocaleDirection } from "@lib/hooks/use-locale-direction"
+import { RadioGroup, Text } from "@medusajs/ui"
+import { useLocale } from "next-intl"
+import ProviderLogo from "./provider-logo"
+import type { ApishipProvider, ApishipTariff } from "types/apiship"
+import { getTariffCost, getTariffDays } from "./utils"
+
+type TariffGroup = {
+  providerKey: string
+  tariffs: ApishipTariff[]
+}
+
+type TariffListProps = {
+  groups: TariffGroup[]
+  currencyCode: string
+  providers: Record<string, ApishipProvider>
+  selectedKey: string | null
+  onSelect: (key: string) => void
+  /** Carrier headings only help when more than one carrier is on offer. */
+  showGroupNames?: boolean
+}
+
+/**
+ * The tariffs of one shipping option, grouped by carrier. Both the courier modal and the
+ * map's point panel show the same list, so the two stay in step.
+ */
+export default function TariffList({
+  groups,
+  currencyCode,
+  providers,
+  selectedKey,
+  onSelect,
+  showGroupNames = true,
+}: TariffListProps) {
+  const dir = useLocaleDirection()
+  const locale = useLocale()
+  const formatDeliveryDays = useFormatDeliveryDays()
+
+  return (
+    <RadioGroup
+      dir={dir}
+      value={selectedKey ?? undefined}
+      onValueChange={onSelect}
+      className="flex flex-col gap-[10px]"
+    >
+      {groups.map((group) => (
+        <div key={group.providerKey} className="flex flex-col gap-[10px]">
+          {showGroupNames && (
+            <div className="flex items-center gap-x-2">
+              <ProviderLogo src={providers[group.providerKey]?.icon} />
+              <Text className="txt-compact-small-plus text-ui-fg-subtle">
+                {providers[group.providerKey]?.name ?? group.providerKey}
+              </Text>
             </div>
-            <div className="p-[35px] pt-[18px] bg-white">
-              <Button
-                size="large"
-                onClick={persistChosen}
-                isLoading={isLoading}
-                disabled={!selectedTariffKey || isLoadingCalc || selectedTariff?.key === initialChosen?.tariff.key}
-                className="w-full"
-              >
-                Choose
-              </Button>
-            </div>
-          </div>
+          )}
+
+          {group.tariffs.map((tariff) => {
+            const cost = getTariffCost(tariff)
+            const days = formatDeliveryDays(getTariffDays(tariff))
+
+            return (
+              <RadioGroup.ChoiceBox
+                key={tariff.key}
+                value={tariff.key}
+                label={tariff.tariffName ?? group.providerKey}
+                description={[
+                  days,
+                  cost === null
+                    ? null
+                    : convertToLocale({
+                        amount: cost,
+                        currency_code: currencyCode,
+                        locale,
+                      }),
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+                data-testid="apiship-tariff-radio"
+              />
+            )
+          })}
         </div>
+      ))}
+    </RadioGroup>
+  )
+}
+```
+
+Каждый тариф отображается через `RadioGroup.ChoiceBox` из `@medusajs/ui`, с названием тарифа в подписи и датой доставки и ценой в описании. Панель пункта выдачи передаёт `showGroupNames={false}`, потому что все её тарифы принадлежат перевозчику этого пункта.
+
+---
+
+## Шаг 10: Создайте карту пунктов выдачи
+
+Так будет выглядеть карта пунктов выдачи, которую вы создадите на этом шаге, в окне доставки:
+
+![Карта пунктов выдачи ApiShip с метками перевозчиков и кластерами в Москве](/static/apiship/ru/storefront-pickup-point-map.webp)
+
+Карта показывает пункты выдачи, которые обслуживают адрес покупателя, отмечает каждый логотипом его перевозчика и объединяет близко расположенные пункты в кластер с числом. Клик по кластеру приближает карту к нему, клик по пункту выбирает пункт.
+
+Создайте файл [`src/modules/checkout/components/apiship/pickup-point-map.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/apiship/pickup-point-map.tsx) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для карты пунктов выдачи](/static/apiship/storefront/src-modules-checkout-components-apiship-pickup-point-map.webp)
+
+```tsx title="src/modules/checkout/components/apiship/pickup-point-map.tsx" collapsibleLines="1-28,96-517"
+"use client"
+
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import ReactDOM from "react-dom"
+import Image from "next/image"
+import { Loader } from "@medusajs/icons"
+import { Text, clx } from "@medusajs/ui"
+import { useTranslations } from "next-intl"
+import type { LngLat, YMapLocationRequest } from "@yandex/ymaps3-types"
+import type {
+  ClustererObject,
+  Feature,
+  IClusterMethod,
+  RenderProps,
+} from "@yandex/ymaps3-clusterer"
+import type { ApishipPoint, ApishipProvider } from "types/apiship"
+
+/** Moscow, where the demo warehouse is, so an empty map still opens somewhere useful. */
+const DEFAULT_CENTER: LngLat = [37.618423, 55.751244]
+const DEFAULT_ZOOM = 10
+const POINT_ZOOM = 15
+const CLUSTER_SPACING = 60
+const CLUSTER_MAX_ZOOM = 16
+const BOUNDS_PADDING = 0.25
+const ZOOM_DURATION = 300
+const WORLD_PIXEL_SIZE = 256
+const Z_INDEX_SELECTED = 1
+
+/**
+ * Yandex Maps takes a full locale and rejects a bare language tag with a 400, so the
+ * storefront's own locale is mapped onto the four the map supports.
+ */
+const YANDEX_LANGS: Record<string, string> = {
+  en: "en_US",
+  ru: "ru_RU",
+  tr: "tr_TR",
+  uk: "uk_UA",
+}
+
+const toYandexLang = (locale: string) =>
+  YANDEX_LANGS[locale.split(/[-_]/)[0].toLowerCase()] ?? "en_US"
+
+function loadYmaps3Script(apiKey: string, lang: string) {
+  if (typeof ymaps3 !== "undefined") return Promise.resolve()
+
+  return new Promise<void>((resolve, reject) => {
+    const script = document.createElement("script")
+    script.src = `https://api-maps.yandex.ru/v3/?apikey=${encodeURIComponent(
+      apiKey
+    )}&lang=${encodeURIComponent(lang)}`
+    script.async = true
+    script.onload = () => resolve()
+    script.onerror = () => {
+      script.remove()
+      reject(new Error("Failed to load the Yandex Maps script"))
+    }
+    document.head.appendChild(script)
+  })
+}
+
+async function loadMapComponents(apiKey: string, lang: string) {
+  await loadYmaps3Script(apiKey, lang)
+  await ymaps3.ready
+
+  const [{ reactify }, clusterer] = await Promise.all([
+    ymaps3.import("@yandex/ymaps3-reactify"),
+    import("@yandex/ymaps3-clusterer"),
+  ])
+
+  const bound = reactify.bindTo(React, ReactDOM)
+  const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapMarker } =
+    bound.module(ymaps3)
+  const { YMapClusterer } = bound.module(clusterer)
+
+  return {
+    YMap,
+    YMapDefaultSchemeLayer,
+    YMapDefaultFeaturesLayer,
+    YMapMarker,
+    YMapClusterer,
+  }
+}
+
+type MapComponents = Awaited<ReturnType<typeof loadMapComponents>>
+
+let mapComponentsLoading: Promise<MapComponents> | null = null
+
+const getMapComponents = (apiKey: string, lang: string) => {
+  mapComponentsLoading ??= loadMapComponents(apiKey, lang).catch((e) => {
+    mapComponentsLoading = null
+    throw e
+  })
+  return mapComponentsLoading
+}
+
+const locationForPoints = (
+  points: ApishipPoint[],
+  selectedPointId: string | null
+): YMapLocationRequest => {
+  const selected = points.find((point) => point.id === selectedPointId)
+
+  if (selected) {
+    return { center: [selected.lng, selected.lat], zoom: POINT_ZOOM }
+  }
+
+  if (!points.length) {
+    return { center: DEFAULT_CENTER, zoom: DEFAULT_ZOOM }
+  }
+
+  return locationFor(
+    points.map((point) => [point.lng, point.lat]),
+    POINT_ZOOM
+  )
+}
+
+const locationFor = (
+  coordinates: LngLat[],
+  pointZoom: number,
+  duration?: number
+): YMapLocationRequest => {
+  let west = Infinity
+  let east = -Infinity
+  let south = Infinity
+  let north = -Infinity
+
+  for (const [lng, lat] of coordinates) {
+    west = Math.min(west, lng)
+    east = Math.max(east, lng)
+    south = Math.min(south, lat)
+    north = Math.max(north, lat)
+  }
+
+  if (west === east && south === north) {
+    return { center: [west, south], zoom: pointZoom, duration }
+  }
+
+  const padLng = (east - west) * BOUNDS_PADDING
+  const padLat = (north - south) * BOUNDS_PADDING
+
+  return {
+    bounds: [
+      [west - padLng, north + padLat],
+      [east + padLng, south - padLat],
+    ],
+    duration,
+  }
+}
+
+type ClusterItem = {
+  world: { x: number; y: number }
+  features: Feature[]
+}
+
+function mergeClose(items: ClusterItem[], distance: number) {
+  const cellOf = ({ x, y }: ClusterItem["world"]) =>
+    [Math.floor(x / distance), Math.floor(y / distance)] as const
+  let current = items
+
+  for (;;) {
+    const cells = new Map<string, ClusterItem[]>()
+    for (const item of current) {
+      const [cx, cy] = cellOf(item.world)
+      const key = `${cx}:${cy}`
+      const cell = cells.get(key)
+      if (cell) cell.push(item)
+      else cells.set(key, [item])
+    }
+
+    const taken = new Set<ClusterItem>()
+    const next: ClusterItem[] = []
+
+    for (const item of current) {
+      if (taken.has(item)) continue
+      taken.add(item)
+
+      const group = [item]
+      const [cx, cy] = cellOf(item.world)
+
+      for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = -1; dy <= 1; dy++) {
+          for (const other of cells.get(`${cx + dx}:${cy + dy}`) ?? []) {
+            if (taken.has(other)) continue
+            const gap = Math.hypot(
+              other.world.x - item.world.x,
+              other.world.y - item.world.y
+            )
+            if (gap >= distance) continue
+            taken.add(other)
+            group.push(other)
+          }
+        }
+      }
+
+      next.push(group.length === 1 ? item : combine(group))
+    }
+
+    if (next.length === current.length) return next
+    current = next
+  }
+}
+
+function combine(group: ClusterItem[]): ClusterItem {
+  const features: Feature[] = []
+  let x = 0
+  let y = 0
+
+  for (const item of group) {
+    const weight = item.features.length
+    x += item.world.x * weight
+    y += item.world.y * weight
+    for (const feature of item.features) features.push(feature)
+  }
+
+  return { world: { x: x / features.length, y: y / features.length }, features }
+}
+
+function clusterBySpacing(
+  features: Feature[],
+  spacing: number
+): IClusterMethod {
+  let items: ClusterItem[] | null = null
+  let cached: { zoom: number; objects: ClustererObject[] } | null = null
+
+  return {
+    render({ map }: RenderProps) {
+      items ??= features.map((feature) => ({
+        world: map.projection.toWorldCoordinates(feature.geometry.coordinates),
+        features: [feature],
+      }))
+
+      const scale = (2 ** map.zoom / 2) * WORLD_PIXEL_SIZE
+
+      if (!cached || cached.zoom !== map.zoom) {
+        cached = {
+          zoom: map.zoom,
+          objects: mergeClose(items, spacing / scale).map(
+            ({ world, features }) =>
+              features.length === 1
+                ? {
+                    world,
+                    features,
+                    lnglat: features[0].geometry.coordinates,
+                    clusterId: features[0].id,
+                  }
+                : {
+                    world,
+                    features,
+                    lnglat: map.projection.fromWorldCoordinates(world),
+                    clusterId: `cluster-${features
+                      .map(({ id }) => id)
+                      .join(",")}`,
+                  }
+          ),
+        }
+      }
+
+      const [centerLng, centerLat] = map.center
+      const center = map.projection.toWorldCoordinates([centerLng, centerLat])
+
+      return cached.objects.filter(
+        ({ world }) =>
+          Math.abs(world.x - center.x) * scale <= map.size.x &&
+          Math.abs(world.y - center.y) * scale <= map.size.y
+      )
+    },
+  }
+}
+
+const hoverScale = "[@media(hover:hover)]:hover:scale-[1.2]"
+
+function PointMarker({
+  label,
+  icon,
+  selected,
+  onSelect,
+}: {
+  label: string
+  icon?: string
+  selected: boolean
+  onSelect: () => void
+}) {
+  if (icon) {
+    return (
+      <button
+        type="button"
+        title={label}
+        aria-label={label}
+        aria-pressed={selected}
+        onClick={onSelect}
+        className={clx(
+          "relative flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-ui-bg-base p-1 outline-none transition-[width,height,box-shadow,transform] duration-150 focus-visible:shadow-borders-focus",
+          hoverScale,
+          selected
+            ? "size-12 shadow-[0_4px_12px_rgba(0,0,0,0.28)]"
+            : "size-9 shadow-[0_2px_6px_rgba(0,0,0,0.22)]"
+        )}
+      >
+        <Image
+          src={icon}
+          alt=""
+          width={48}
+          height={48}
+          draggable={false}
+          className="pointer-events-none size-full rounded-full"
+        />
+      </button>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      aria-pressed={selected}
+      onClick={onSelect}
+      className={clx(
+        "relative block size-[18px] -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-[50%_50%_50%_0] border-2 shadow-[0_2px_2px_rgba(0,0,0,0.18)] outline-none transition-transform duration-150 focus-visible:shadow-borders-focus",
+        hoverScale,
+        selected
+          ? "border-ui-border-interactive bg-ui-bg-interactive"
+          : "border-ui-border-strong bg-ui-bg-base"
+      )}
+    >
+      <span className="absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-ui-border-strong bg-ui-bg-base" />
+    </button>
+  )
+}
+
+function ClusterMarker({
+  count,
+  onZoom,
+}: {
+  count: number
+  onZoom: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onZoom}
+      className={clx(
+        "relative flex h-10 min-w-10 -translate-x-1/2 -translate-y-1/2 select-none items-center justify-center whitespace-nowrap rounded-full border-2 border-ui-border-base bg-ui-bg-base px-2 shadow-[0_2px_6px_rgba(0,0,0,0.22)] outline-none transition-transform duration-150 txt-compact-small-plus text-ui-fg-base focus-visible:shadow-borders-focus",
+        hoverScale
+      )}
+    >
+      {count}
+    </button>
+  )
+}
+
+type PickupPointMapProps = {
+  points: ApishipPoint[]
+  isLoading: boolean
+  selectedPointId: string | null
+  providers?: Record<string, ApishipProvider>
+  onSelectPoint: (pointId: string) => void
+  /** BCP 47 tag, passed through to the map's own labels. */
+  lang: string
+}
+
+export default function PickupPointMap({
+  points,
+  isLoading,
+  selectedPointId,
+  providers,
+  onSelectPoint,
+  lang,
+}: PickupPointMapProps) {
+  const t = useTranslations("Apiship")
+  const apiKey = process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY
+
+  const [components, setComponents] = useState<MapComponents | null>(null)
+  const [loadFailed, setLoadFailed] = useState(false)
+  const [location, setLocation] = useState<YMapLocationRequest>(() =>
+    locationForPoints(points, selectedPointId)
+  )
+  const selectedPointIdRef = useRef(selectedPointId)
+  const onSelectPointRef = useRef(onSelectPoint)
+
+  useEffect(() => {
+    selectedPointIdRef.current = selectedPointId
+    onSelectPointRef.current = onSelectPoint
+  }, [selectedPointId, onSelectPoint])
+
+  useEffect(() => {
+    if (!apiKey) return
+
+    let cancelled = false
+
+    getMapComponents(apiKey, toYandexLang(lang))
+      .then((loaded) => {
+        if (!cancelled) setComponents(loaded)
+      })
+      .catch((e) => {
+        console.error("Yandex map failed to start", e)
+        if (!cancelled) setLoadFailed(true)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [apiKey, lang])
+
+  const pointsById = useMemo(
+    () => new Map(points.map((point) => [point.id, point])),
+    [points]
+  )
+
+  const features = useMemo<Feature[]>(
+    () =>
+      points.map((point) => ({
+        type: "Feature",
+        id: point.id,
+        geometry: { type: "Point", coordinates: [point.lng, point.lat] },
+      })),
+    [points]
+  )
+
+  const method = useMemo(
+    () => clusterBySpacing(features, CLUSTER_SPACING),
+    [features]
+  )
+
+  useEffect(() => {
+    setLocation(locationForPoints(points, selectedPointIdRef.current))
+  }, [points])
+
+  const zoomToCluster = useCallback((clusterFeatures: Feature[]) => {
+    setLocation(
+      locationFor(
+        clusterFeatures.map((feature) => feature.geometry.coordinates),
+        CLUSTER_MAX_ZOOM + 1,
+        ZOOM_DURATION
+      )
+    )
+  }, [])
+
+  const renderMarker = useCallback(
+    (feature: Feature) => {
+      const point = pointsById.get(feature.id)
+      if (!components || !point) return <></>
+
+      const selected = point.id === selectedPointId
+
+      return (
+        <components.YMapMarker
+          coordinates={feature.geometry.coordinates}
+          zIndex={selected ? Z_INDEX_SELECTED : 0}
+        >
+          <PointMarker
+            label={point.name ?? point.address ?? ""}
+            icon={providers?.[point.providerKey ?? ""]?.icon}
+            selected={selected}
+            onSelect={() => onSelectPointRef.current(point.id)}
+          />
+        </components.YMapMarker>
+      )
+    },
+    [components, pointsById, providers, selectedPointId]
+  )
+
+  const renderCluster = useCallback(
+    (coordinates: LngLat, clusterFeatures: Feature[]) => {
+      if (!components) return <></>
+
+      return (
+        <components.YMapMarker coordinates={coordinates}>
+          <ClusterMarker
+            count={clusterFeatures.length}
+            onZoom={() => zoomToCluster(clusterFeatures)}
+          />
+        </components.YMapMarker>
+      )
+    },
+    [components, zoomToCluster]
+  )
+
+  if (!apiKey || loadFailed) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-ui-bg-subtle p-6">
+        <Text className="text-ui-fg-muted text-center">
+          {apiKey ? t("mapLoadFailed") : t("mapKeyMissing")}
+        </Text>
       </div>
+    )
+  }
+
+  return (
+    <div className="relative h-full w-full">
+      {components && (
+        <components.YMap location={location}>
+          <components.YMapDefaultSchemeLayer />
+          <components.YMapDefaultFeaturesLayer />
+          <components.YMapClusterer
+            method={method}
+            features={features}
+            marker={renderMarker}
+            cluster={renderCluster}
+            maxZoom={CLUSTER_MAX_ZOOM}
+          />
+        </components.YMap>
+      )}
+
+      {(isLoading || !components) && (
+        <div className="absolute inset-0 flex items-center justify-center bg-ui-bg-base/80">
+          <Loader className="h-5 w-5 animate-spin text-ui-fg-muted" />
+        </div>
+      )}
+
+      {!isLoading && components && points.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center bg-ui-bg-base/80 p-6">
+          <Text className="text-ui-fg-muted text-center">{t("noPoints")}</Text>
+        </div>
+      )}
     </div>
   )
 }
 ```
 
-После того как клиент подтверждает свой выбор, нажав кнопку `Choose`, выбранный тариф сохраняется в корзине, стоимость доставки пересчитывается, и модальное окно закрывается.
+Компонент один раз загружает скрипт Яндекс Карт с ключом из [шага 2](#шаг-2-задайте-переменные-окружения) и локалью витрины. Яндекс Карты не принимают язык без региона, поэтому `toYandexLang` переводит локаль в один из четырёх языков, которые поддерживает карта, а для остальных выбирает английский. React-компоненты карты берутся из собственного модуля API `@yandex/ymaps3-reactify`, а кластеризатор из пакета, установленного на [шаге 1](#шаг-1-установите-пакеты-карты).
+
+`clusterBySpacing` объединяет метки, которые на экране стоят ближе 60 пикселей друг к другу, пересчитывает кластеры один раз на каждый уровень масштаба и возвращает только видимые. Карта подстраивает вид под все пункты или открывается на пункте, который покупатель выбрал раньше. Если ключа нет, карта не загрузилась или адрес не обслуживает ни один пункт выдачи, компонент показывает сообщение.
 
 ---
 
-## Шаг 11: Создайте файл-коллектор
+## Шаг 11: Создайте окно доставки
 
-Все компоненты и вспомогательные функции витрины ApiShip экспортируются через файл-коллектор, который служит единым входным пунктом для интеграции. Он повторно экспортирует основные элементы интерфейса, а также общие типы и утилиты, чтобы другие части витрины могли импортировать всё из одного места, вместо того чтобы ссылаться на внутренние пути файлов.
+Так будет выглядеть окно доставки, которое вы создадите на этом шаге, когда на карте выбран пункт выдачи:
 
-Откройте [`src/modules/checkout/components/shipping/apiship/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
+![Окно доставки ApiShip с выбранным пунктом выдачи, его тарифами и картой](/static/apiship/ru/storefront-delivery-sheet.webp)
 
-![Структура проекта Medusa Storefront после создания файла для единой точки входа для интеграции](/static/apiship/storefront/src-modules-checkout-components-shipping-apiship-index.webp)
+Пока ApiShip не знает адреса, он ничего не может рассчитать, поэтому в окне доставки два шага. На первом покупатель заполняет форму адреса из оформления заказа. На втором выбирает тариф курьерской доставки в списке или пункт выдачи на карте, рядом с которой открывается панель выбранного пункта.
 
-```ts title="src/modules/checkout/components/shipping/apiship/index.ts"
-export * from «./apiship-courier-modal»
-export * from «./apiship-chosen»
-export * from «./apiship-map»
-export * from «./apiship-pickup-point-modal»
-export * from «./types»
-export * from «./utils»
+Создайте файл [`src/modules/common/icons/clock.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/common/icons/clock.tsx) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для иконки часов](/static/apiship/storefront/src-modules-common-icons-clock.webp)
+
+```tsx title="src/modules/common/icons/clock.tsx"
+import type React from "react"
+
+import type { IconProps } from "types/icon"
+
+const Clock: React.FC<IconProps> = ({
+  size = "20",
+  color = "currentColor",
+  ...attributes
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...attributes}
+    >
+      <path
+        d="M10.0003 17.5C14.1425 17.5 17.5003 14.1421 17.5003 10C17.5003 5.85786 14.1425 2.5 10.0003 2.5C5.85819 2.5 2.50033 5.85786 2.50033 10C2.50033 14.1421 5.85819 17.5 10.0003 17.5Z"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 5.83337V10L12.5 11.6667"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+export default Clock
 ```
 
-Это позволяет поддерживать импорты чистыми и согласованными, а также упрощает дальнейшее обслуживание или рефакторинг интеграции без изменения путей импорта по всей витрине.
+Рядом с этой иконкой панель пункта выдачи показывает часы работы.
 
----
+Создайте файл [`src/modules/checkout/components/apiship/delivery-modal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/apiship/delivery-modal.tsx) со следующим содержимым:
 
-## Шаг 12: Интегрируйте этап доставки
+![Структура проекта Medusa Storefront после создания файла для окна доставки](/static/apiship/storefront/src-modules-checkout-components-apiship-delivery-modal.webp)
 
-Для поддержки рассчитанных способов доставки ApiShip этап доставки требует дополнительного пользовательского потока, где клиент выбирает конкретный тариф и, при необходимости, пункт самовывоза. Это обновление добавляет специфическое для ApiShip состояние и модальные окна, загружает названия провайдеров для отображения и сохраняет окончательный выбор в корзине, чтобы оформление заказа могло продолжиться только после того, как клиент сделал корректный выбор.
+```tsx title="src/modules/checkout/components/apiship/delivery-modal.tsx" collapsibleLines="1-45,140-445"
+"use client"
 
-Откройте [`src/modules/checkout/components/shipping/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/7aa21a2d0331f60495ad85be74fcaa1aa86dd2a5/examples/fulfillment-apiship/medusa-storefront/src/modules/checkout/components/shipping-address/index.tsx#L212) и добавьте следующее:
-
-![Структура проекта Medusa Storefront после обновления файла для компонента доставки](/static/apiship/storefront/src-modules-checkout-components-shipping-index.webp)
-
-```tsx title="src/modules/checkout/components/shipping/index.tsx"
-// ... другие imports
-import { setShippingMethod, removeShippingMethodFromCart } from "@lib/data/cart"
-import { calculatePriceForShippingOption, retrieveProviders } from "@lib/data/fulfillment"
-import { useEffect, useMemo, useState } from "react"
+import { Fragment, useEffect, useMemo, useState } from "react"
+import { retrieveApishipDeliveryChoice } from "@lib/data/apiship"
+import { setShippingMethod } from "@lib/data/cart"
+import { Loader } from "@medusajs/icons"
+import type { HttpTypes } from "@medusajs/types"
+import { Button, Text } from "@medusajs/ui"
+import CheckoutAddressForm from "@modules/checkout/components/checkout-address-sheet/address-form"
 import {
-  ApishipPickupPointModal,
-  ApishipCourierModal,
-  ApishipChosen,
-  days
-} from "./apiship"
+  CheckoutModal,
+  CheckoutModalBackButton,
+} from "@modules/checkout/components/checkout-modal"
+import ErrorMessage from "@modules/checkout/components/error-message"
+import Clock from "@modules/common/icons/clock"
+import MapPin from "@modules/common/icons/map-pin"
+import { useShippingSelection } from "@modules/checkout/context/shipping-selection-context"
+import { useLocale, useTranslations } from "next-intl"
+import PickupPointMap from "./pickup-point-map"
+import ProviderLogo from "./provider-logo"
+import TariffList from "./tariff-list"
+import type {
+  ApishipCalculation,
+  ApishipPoint,
+  ApishipProvider,
+  ApishipTariff,
+} from "types/apiship"
+import { useApishipSelection } from "./use-apiship-selection"
+import {
+  buildDoorGroups,
+  buildTariffsByPointId,
+  getApishipDeliveryType,
+  groupWorktime,
+  toStoredSelection,
+} from "./utils"
 
-// ...
+type ApishipDeliveryModalProps = {
+  open: boolean
+  onClose: () => void
+  cart: HttpTypes.StoreCart
+  addresses: HttpTypes.StoreCustomerAddress[] | null
+  option: HttpTypes.StoreCartShippingOptionWithServiceZone
+  providers: Record<string, ApishipProvider>
+}
 
-const Shipping: React.FC<ShippingProps> = ({
+/**
+ * ApiShip needs an address before it can quote anything, so the flow is two steps in one
+ * sheet. The first is the checkout's own address step, and only then does the second show
+ * what the carriers offer for that address, a tariff list for courier delivery and a map
+ * of pickup points for the rest.
+ */
+export default function ApishipDeliveryModal({
+  open,
+  onClose,
   cart,
-  availableShippingMethods,
-}) => {
+  addresses,
+  option,
+  providers,
+}: ApishipDeliveryModalProps) {
+  const t = useTranslations("Apiship")
+  const tCheckout = useTranslations("CheckoutPage")
+  const locale = useLocale()
+  const { setOptionData } = useShippingSelection()
 
-  // ... другие states
+  const toPoint = getApishipDeliveryType(option) === 2
 
-  // добавить следующие states
-  const [providersMap, setProvidersMap] = useState<Record<string, string>>({})
-  const [apishipChosen, setApishipChosen] = useState<any | null>(null)
-  const [apishipPickupPointModalOpen, setApishipPickupPointModalOpen] = useState(false)
-  const [apishipCourierModalOpen, setApishipCourierModalOpen] = useState(false)
+  const [step, setStep] = useState<"address" | "choice">("address")
+  const [calculation, setCalculation] = useState<ApishipCalculation | null>(null)
+  const [points, setPoints] = useState<ApishipPoint[]>([])
+  const [tariffsByPointId, setTariffsByPointId] = useState<
+    Record<string, ApishipTariff[]>
+  >({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [loadFailed, setLoadFailed] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedPointId, setSelectedPointId] = useState<string | null>(null)
+  const [selectedTariffKey, setSelectedTariffKey] = useState<string | null>(null)
+  const [loadedKey, setLoadedKey] = useState<string | null>(null)
 
-  // ...
+  const savedSelection = useApishipSelection(cart, option.id)
+  const savedPointId = savedSelection?.point?.id ?? null
+  const savedTariffKey = savedSelection?.tariff.key ?? null
 
-  // добавить следующее
-  const isApishipCalculated = (option?: HttpTypes.StoreCartShippingOption | null) =>
-    option?.price_type === "calculated" && option?.provider_id?.startsWith("apiship_")
-
-  const isApishipToDoor = (option?: HttpTypes.StoreCartShippingOption | null) =>
-    isApishipCalculated(option) && option?.data?.deliveryType === 1
-
-  const isApishipToPoint = (option?: HttpTypes.StoreCartShippingOption | null) =>
-    isApishipCalculated(option) && option?.data?.deliveryType === 2
-
-  const activeShippingOption = useMemo(() => {
-    return _shippingMethods?.find((option) => option.id === shippingMethodId) ?? null
-  }, [_shippingMethods, shippingMethodId])
-
-  const apishipMode = useMemo<"point" | "door" | null>(() => {
-    if (!isOpen || !shippingMethodId) return null
-    if (isApishipToPoint(activeShippingOption)) return "point"
-    if (isApishipToDoor(activeShippingOption)) return "door"
-    return null
-  }, [isOpen, shippingMethodId, activeShippingOption])
-
-  useEffect(() => {
-    setApishipChosen(cart.shipping_methods?.at(-1)?.data?.apishipData ?? null)
-  }, [cart.shipping_methods])
-
-  useEffect(() => {
-    if (!isOpen) return
-
-    if (!apishipMode) {
-      setApishipPickupPointModalOpen(false)
-      setApishipCourierModalOpen(false)
-      setApishipChosen(null)
-      return
-    }
-    const chosenMode =
-      apishipChosen?.deliveryType === 2 ? "point"
-        : apishipChosen?.deliveryType === 1 ? "door"
-          : null
-
-    const hasValidChosen = !!apishipChosen && chosenMode === apishipMode
-    if (hasValidChosen) {
-      setApishipPickupPointModalOpen(false)
-      setApishipCourierModalOpen(false)
-      return
-    }
-    if (apishipMode === "point") {
-      setApishipPickupPointModalOpen(true)
-      setApishipCourierModalOpen(false)
-    } else {
-      setApishipCourierModalOpen(true)
-      setApishipPickupPointModalOpen(false)
-    }
-  }, [isOpen, apishipMode, apishipChosen])
+  const hasAddress = Boolean(cart.shipping_address?.address_1)
+  const addressKey = [
+    cart.shipping_address?.country_code,
+    cart.shipping_address?.province,
+    cart.shipping_address?.city,
+    cart.shipping_address?.postal_code,
+    cart.shipping_address?.address_1,
+    cart.shipping_address?.address_2,
+  ].join("|")
+  const itemsKey = (cart.items ?? [])
+    .map((item) => `${item.variant_id}:${item.quantity}`)
+    .join(",")
+  const requestKey = [option.id, addressKey, itemsKey].join("#")
 
   useEffect(() => {
+    if (!open) return
+    setError(null)
+    setStep(hasAddress ? "choice" : "address")
+  }, [open, hasAddress])
+
+  useEffect(() => {
+    if (!open) return
+    setSelectedPointId(savedPointId)
+    setSelectedTariffKey(savedTariffKey)
+  }, [open, savedPointId, savedTariffKey])
+
+  useEffect(() => {
+    if (!open || step !== "choice" || loadedKey === requestKey) return
+
     let cancelled = false
+    setIsLoading(true)
+    setLoadFailed(false)
 
-      ; (async () => {
-        const response = await retrieveProviders()
-        const providers = response?.providers
-        if (cancelled) return
+    void (async () => {
+      const result = await retrieveApishipDeliveryChoice(
+        cart.id,
+        option.id,
+        toPoint
+      )
+      if (cancelled) return
 
-        const map: Record<string, string> = {}
-        for (const provider of providers ?? []) map[provider.key] = provider.name
-        setProvidersMap(map)
-      })()
+      setCalculation(result?.calculation ?? null)
+      setTariffsByPointId(
+        result && toPoint ? buildTariffsByPointId(result.calculation) : {}
+      )
+      setPoints(result?.points ?? [])
+      setLoadFailed(!result)
+      setLoadedKey(result ? requestKey : null)
+      setIsLoading(false)
+    })()
 
-    return () => { cancelled = true }
-  }, [])
-
-  useEffect(() => {
-    if (!isOpen) return
-    if (!apishipChosen) return
-
-    if (!apishipMode) {
-      setApishipChosen(null)
-      return
+    return () => {
+      cancelled = true
     }
+  }, [open, step, cart.id, option.id, toPoint, requestKey, loadedKey])
 
-    const chosenMode = apishipChosen.deliveryType === 2 ? "point" : "door"
-    if (chosenMode !== apishipMode) {
-      setApishipChosen(null)
+  const weekdayFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, { weekday: "short", timeZone: "UTC" }),
+    [locale]
+  )
+
+  const formatWeekdays = (from: number, to: number) => {
+    const weekday = (day: number) => new Date(Date.UTC(2024, 0, day))
+
+    return from === to
+      ? weekdayFormatter.format(weekday(from))
+      : weekdayFormatter.formatRange(weekday(from), weekday(to))
+  }
+
+  const doorGroups = useMemo(() => buildDoorGroups(calculation), [calculation])
+
+  const activePoint = useMemo(
+    () => points.find((point) => point.id === selectedPointId) ?? null,
+    [points, selectedPointId]
+  )
+
+  const activeProvider = activePoint
+    ? providers[activePoint.providerKey ?? ""]
+    : undefined
+
+  const pointTitle =
+    activePoint?.name || activeProvider?.name || t("pickupPointModalTitle")
+  const showProviderName =
+    !!activeProvider?.name && activeProvider.name !== pointTitle
+
+  const worktimeGroups = activePoint?.worktime
+    ? groupWorktime(activePoint.worktime)
+    : []
+
+  const activeTariffs = useMemo(
+    () => (selectedPointId ? (tariffsByPointId[selectedPointId] ?? []) : []),
+    [tariffsByPointId, selectedPointId]
+  )
+
+  const selectedTariff = useMemo(() => {
+    const pool = toPoint
+      ? activeTariffs
+      : doorGroups.flatMap((group) => group.tariffs)
+    return pool.find((tariff) => tariff.key === selectedTariffKey) ?? null
+  }, [toPoint, activeTariffs, doorGroups, selectedTariffKey])
+
+  const handleConfirm = async () => {
+    if (!selectedTariff) return
+    if (toPoint && !activePoint) return
+
+    setIsSaving(true)
+    setError(null)
+
+    const next = toStoredSelection(toPoint ? 2 : 1, selectedTariff, activePoint)
+
+    try {
+      await setShippingMethod({
+        cartId: cart.id,
+        shippingMethodId: option.id,
+        data: { apishipData: next },
+      })
+      setOptionData(option.id, { apishipData: next })
+      onClose()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e))
+    } finally {
+      setIsSaving(false)
     }
-  }, [isOpen, apishipMode, apishipChosen])
+  }
 
-  // ... другие effects
+  const title =
+    step === "address"
+      ? tCheckout("addressModalTitle")
+      : toPoint
+        ? t("pickupPointModalTitle")
+        : t("courierModalTitle")
 
   return (
-    <div className="bg-white">
-      {/* ... */}
-      {isOpen ? (
-        <>
-          <div className="grid">
-            {/* ... */}
-            <div data-testid="delivery-options-container">
-              <div className="pb-8 md:pt-0 pt-2">
-                {/* ... */}
-                <RadioGroup
-                  value={shippingMethodId}
-                  onChange={(v) => {
-                    if (v) {
-                      return handleSetShippingMethod(v, "shipping")
-                    }
-                  }}
-                >
-                  {_shippingMethods?.map((option) => {
-                    const isDisabled =
-                      option.price_type === "calculated" &&
-                      !isLoadingPrices &&
-                      typeof calculatedPricesMap[option.id] !== "number"
-
-                    return (
-                      <Radio
-                        key={option.id}
-                        value={option.id}
-                        data-testid="delivery-option-radio"
-                        disabled={isDisabled}
-                        className={clx(
-                          "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
-                          {
-                            "border-ui-border-interactive":
-                              option.id === shippingMethodId,
-                            "hover:shadow-brders-none cursor-not-allowed":
-                              isDisabled,
-                          }
-                        )}
-                      >
-                        {/* ... */}
-                        {/* Цены ApiShip указаны как «от X», поскольку окончательная сумма зависит от выбранного тарифа, поэтому измените следующее */}
-                        <span className="justify-self-end text-ui-fg-base">
-                          {option.price_type === "flat" ? (
-                            convertToLocale({
-                              amount: option.amount!,
-                              currency_code: cart?.currency_code,
-                            })
-                          ) : calculatedPricesMap[option.id] ? (
-                            option.provider_id?.startsWith("apiship_") ? (
-                              "from " + convertToLocale({
-                                amount: calculatedPricesMap[option.id],
-                                currency_code: cart?.currency_code,
-                              })
-                            ) :
-                              convertToLocale({
-                                amount: calculatedPricesMap[option.id],
-                                currency_code: cart?.currency_code,
-                              })
-                          ) : isLoadingPrices ? (
-                            <Loader />
-                          ) : (
-                            "-"
-                          )}
-                        </span>
-                      </Radio>
-                    )
-                  })}
-                </RadioGroup>
-                {/* добавьте следующие компоненты ApiShip */}
-                <ApishipPickupPointModal
-                  open={apishipPickupPointModalOpen}
-                  onClose={async (cancel?: boolean) => {
-                    setApishipPickupPointModalOpen(false)
-                    if (cancel) {
-                      await removeShippingMethodFromCart(cart.shipping_methods?.[0]?.id!)
-                      setShippingMethodId(null)
-                    }
-                  }}
-                  cart={cart}
-                  shippingOptionId={shippingMethodId}
-                  initialChosen={apishipChosen?.deliveryType === 2 ? apishipChosen : null}
-                  onPriceUpdate={(id, amount) => {
-                    setCalculatedPricesMap((prev) => ({ ...prev, [id]: amount }))
-                  }}
-                  onError={(msg) => setError(msg)}
-                  onChosenChange={(chosen) => setApishipChosen(chosen)}
-                  providersMap={providersMap}
+    <CheckoutModal
+      open={open}
+      onClose={onClose}
+      title={title}
+      onBack={step === "choice" && !toPoint ? () => setStep("address") : undefined}
+      wide={step === "choice" && toPoint}
+    >
+      {step === "address" ? (
+        <CheckoutAddressForm
+          cart={cart}
+          addresses={addresses}
+          onClose={onClose}
+          onSaved={() => setStep("choice")}
+          submitLabel={t("next")}
+        />
+      ) : toPoint ? (
+        <div className="flex h-full w-full flex-col sm:flex-row">
+          {activePoint && (
+            <div className="flex h-1/2 w-full shrink-0 flex-col border-b border-ui-border-base sm:h-full sm:w-[400px] sm:border-b-0 sm:border-e">
+              <div className="flex min-h-0 flex-1 flex-col gap-y-6 overflow-y-auto px-6 pb-6 pt-5 sm:px-8 sm:pt-7">
+                <CheckoutModalBackButton
+                  onClick={() => setStep("address")}
+                  className="self-start"
                 />
-                <ApishipCourierModal
-                  open={apishipCourierModalOpen}
-                  onClose={async (cancel?: boolean) => {
-                    setApishipCourierModalOpen(false)
-                    if (cancel) {
-                      await removeShippingMethodFromCart(cart.shipping_methods?.[0]?.id!)
-                      setShippingMethodId(null)
-                    }
-                  }}
-                  cart={cart}
-                  shippingOptionId={shippingMethodId}
-                  initialChosen={apishipChosen?.deliveryType === 1 ? apishipChosen : null}
-                  onPriceUpdate={(id, amount) => {
-                    setCalculatedPricesMap((prev) => ({ ...prev, [id]: amount }))
-                  }}
-                  onError={(msg) => setError(msg)}
-                  onChosenChange={(chosen) => setApishipChosen(chosen)}
-                  providersMap={providersMap}
-                />
-                {apishipChosen && (
-                  <ApishipChosen
-                    chosen={apishipChosen}
-                    onRemove={async () => {
-                      await removeShippingMethodFromCart(cart.shipping_methods?.[0]?.id!)
-                      setApishipChosen(null)
-                      setShippingMethodId(null)
-                    }}
-                    onEdit={() => {
-                      console.log(cart)
-                      if (apishipMode === "point") setApishipPickupPointModalOpen(true)
-                      if (apishipMode === "door") setApishipCourierModalOpen(true)
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
 
-          {/* ... */}
+                <div className="flex flex-col gap-y-5">
+                  <h2 className="h2-docs font-semibold text-ui-fg-base sm:h1-docs">
+                    {pointTitle}
+                  </h2>
 
-          <div>
-            {/* ... */}
-            <Button
-              // ... другие свойства
-              // change the condition for ‘disabled’
-              disabled={
-                !cart.shipping_methods?.[0] ||
-                shippingMethodId === null ||
-                (
-                  (_shippingMethods?.find((o) => o.id === shippingMethodId)?.provider_id?.startsWith("apiship_"))
-                  && !apishipChosen
-                )
-              }
-            >
-              Continue to payment
-            </Button>
-          </div>
-        </>
-      ) : (
-        <div>
-          <div className="text-small-regular">
-            {cart && (cart.shipping_methods?.length ?? 0) > 0 && (
-              {/* change the following div */}
-              <div className="flex flex-col">
-                <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                  Method
-                </Text>
-                <div className="flex flex-col">
-                  <Text className="txt-medium text-ui-fg-subtle">
-                    {cart.shipping_methods!.at(-1)!.name}
-                  </Text>
-                  {(apishipChosen && apishipChosen.point?.address) && (
-                    <Text className="txt-medium text-ui-fg-subtle">
-                      {apishipChosen.point.address}
+                  <div className="flex flex-col gap-y-3">
+                    {showProviderName && (
+                      <div className="flex items-center gap-x-2">
+                        <ProviderLogo src={activeProvider?.icon} />
+                        <Text className="txt-compact-medium-plus text-ui-fg-base">
+                          {activeProvider?.name}
+                        </Text>
+                      </div>
+                    )}
+
+                    <TariffList
+                      groups={[
+                        {
+                          providerKey: activePoint.providerKey ?? "",
+                          tariffs: activeTariffs,
+                        },
+                      ]}
+                      currencyCode={cart.currency_code}
+                      providers={providers}
+                      selectedKey={selectedTariffKey}
+                      onSelect={setSelectedTariffKey}
+                      showGroupNames={false}
+                    />
+                  </div>
+                </div>
+
+                <div className="border-t border-ui-border-base" />
+
+                <div className="flex flex-col gap-y-4">
+                  <h3 className="h2-docs font-semibold text-ui-fg-base">
+                    {t("pointDetails")}
+                  </h3>
+
+                  {activePoint.description && (
+                    <Text className="txt-medium text-ui-fg-base">
+                      {activePoint.description}
                     </Text>
                   )}
-                  {apishipChosen && (
-                    <Text className="txt-medium text-ui-fg-subtle">
-                      {
-                        [apishipChosen?.tariff?.tariffName,
-                        typeof (typeof apishipChosen.tariff.deliveryCostOriginal === "number"
-                          ? apishipChosen.tariff.deliveryCostOriginal
-                          : apishipChosen.tariff.deliveryCost) === "number"
-                          ? `RUB ${(typeof apishipChosen.tariff.deliveryCostOriginal === "number"
-                            ? apishipChosen.tariff.deliveryCostOriginal
-                            : apishipChosen.tariff.deliveryCost)}` : "RUB —",
-                        days?.(apishipChosen?.tariff) || null,
-                        ].filter(Boolean).join(" · ")
-                      }
-                    </Text>
+
+                  <div className="flex flex-col gap-y-4 pt-1">
+                    {activePoint.address && (
+                      <PointInfoRow icon={<MapPin />}>
+                        {activePoint.address}
+                      </PointInfoRow>
+                    )}
+
+                    {worktimeGroups.length > 0 ? (
+                      <PointInfoRow icon={<Clock />}>
+                        <dl
+                          aria-label={t("schedule")}
+                          className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1"
+                        >
+                          {worktimeGroups.map(({ from, to, hours }) => (
+                            <Fragment key={from}>
+                              <dt className="first-letter:uppercase">
+                                {formatWeekdays(from, to)}
+                              </dt>
+                              <dd className="tabular-nums">{hours}</dd>
+                            </Fragment>
+                          ))}
+                        </dl>
+                      </PointInfoRow>
+                    ) : (
+                      activePoint.timetable && (
+                        <PointInfoRow icon={<Clock />}>
+                          {activePoint.timetable}
+                        </PointInfoRow>
+                      )
+                    )}
+                  </div>
+
+                  {!!activePoint.photos?.length && (
+                    <div className="flex shrink-0 gap-x-2 overflow-x-auto pt-1 no-scrollbar">
+                      {activePoint.photos.map((src, index) => (
+                        // The photos come from each carrier's own CDN, so the hosts are not
+                        // known ahead of time and next/image cannot serve them.
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          key={src}
+                          src={src}
+                          alt={t("photoAlt", { index: index + 1 })}
+                          className="h-[100px] w-auto shrink-0 rounded-lg border border-ui-border-base object-cover"
+                        />
+                      ))}
+                    </div>
                   )}
                 </div>
+              </div>
+
+              <div className="flex shrink-0 flex-col gap-y-4 bg-ui-bg-base px-6 py-4 sm:px-8">
+                <ErrorMessage
+                  error={loadFailed ? t("loadFailed") : error}
+                  data-testid="apiship-point-error"
+                />
+
+                <Button
+                  size="large"
+                  className="w-full"
+                  onClick={handleConfirm}
+                  isLoading={isSaving}
+                  disabled={!selectedTariff}
+                  data-testid="apiship-point-submit"
+                >
+                  {t("choose")}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <div className="relative min-h-0 flex-1">
+            <PickupPointMap
+              points={points}
+              isLoading={isLoading}
+              selectedPointId={selectedPointId}
+              providers={providers}
+              onSelectPoint={(pointId) => {
+                setSelectedPointId(pointId)
+                setSelectedTariffKey(
+                  savedPointId === pointId ? savedTariffKey : null
+                )
+              }}
+              lang={locale}
+            />
+
+            {!activePoint && (
+              <CheckoutModalBackButton
+                onClick={() => setStep("address")}
+                className="absolute start-6 top-4 z-20"
+              />
+            )}
+
+            {!isLoading && !activePoint && points.length > 0 && (
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center p-4">
+                <Text className="rounded-full bg-ui-bg-base px-4 py-2 txt-compact-small text-ui-fg-subtle shadow-elevation-card-rest">
+                  {t("selectPointPrompt")}
+                </Text>
               </div>
             )}
           </div>
         </div>
+      ) : (
+        <div className="flex flex-col">
+          <div className="pb-2">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-10">
+                <Loader className="h-5 w-5 animate-spin text-ui-fg-muted" />
+              </div>
+            ) : doorGroups.length === 0 ? (
+              <Text className="text-ui-fg-muted">{t("noTariffs")}</Text>
+            ) : (
+              <TariffList
+                groups={doorGroups}
+                currencyCode={cart.currency_code}
+                providers={providers}
+                selectedKey={selectedTariffKey}
+                onSelect={setSelectedTariffKey}
+              />
+            )}
+          </div>
+
+          <div className="sticky bottom-0 -mx-6 -mb-4 flex flex-col gap-y-4 bg-ui-bg-base px-6 pb-4 pt-4">
+            <ErrorMessage
+              error={loadFailed ? t("loadFailed") : error}
+              data-testid="apiship-courier-error"
+            />
+
+            <Button
+              size="large"
+              className="w-full"
+              onClick={handleConfirm}
+              isLoading={isSaving}
+              disabled={!selectedTariff || isLoading}
+              data-testid="apiship-courier-submit"
+            >
+              {tCheckout("save")}
+            </Button>
+          </div>
+        </div>
       )}
-      <Divider className="mt-8" />
-    </div>
+    </CheckoutModal>
   )
 }
 
-export default Shipping
+function PointInfoRow({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex items-start gap-x-3 txt-large text-ui-fg-base">
+      <span className="flex h-[1.6rem] shrink-0 items-center">{icon}</span>
+      <div className="min-w-0 flex-1">{children}</div>
+    </div>
+  )
+}
 ```
 
-Это изменение добавляет два отдельных модальных окна для ApiShip (выбор пункта самовывоза и выбор тарифа курьера) и небольшой блок с резюме, который отображает текущий сохранённый выбор с действиями Изменить и Удалить. Оно также обеспечивает следующее:
+Окно открывается на шаге адреса, если в корзине ещё нет адреса, и на шаге выбора во всех остальных случаях. Расчёт оно загружает при открытии шага выбора и заново при каждой смене способа доставки, адреса или товаров корзины, за которыми следит `requestKey`. Для способа доставки в пункт выдачи окно строит тарифы каждого пункта через `buildTariffsByPointId`, и панель показывает тарифы выбранного пункта вместе с его адресом, часами работы, описанием и фотографиями.
 
-- Клиент не может перейти к оплате для способа доставки ApiShip, пока в корзине не будет сохранён корректный выбор ApiShip.
-- Рассчитанные цены ApiShip отображаются как от X, чтобы показать, что окончательная сумма зависит от выбранного тарифа.
+`handleConfirm` сохраняет выбор через `setShippingMethod` под ключом `data.apishipData` и в контексте выбора доставки. Плагин заново рассчитывает корзину на своей стороне и отклоняет тариф, недоступный для корзины или не обслуживающий выбранный пункт выдачи. В этом случае окно показывает ошибку и остаётся открытым.
+
+---
+
+## Шаг 12: Создайте файл-коллектор
+
+Создайте файл [`src/modules/checkout/components/apiship/index.ts`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/apiship/index.ts) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для единой точки входа ApiShip](/static/apiship/storefront/src-modules-checkout-components-apiship-index.webp)
+
+```ts title="src/modules/checkout/components/apiship/index.ts"
+export { default as ApishipDeliveryModal } from "./delivery-modal"
+export { default as ApishipProviderLogo } from "./provider-logo"
+export { useApishipProviders } from "./use-apiship-providers"
+export { useApishipSelection } from "./use-apiship-selection"
+export type {
+  ApishipPoint,
+  ApishipSelection,
+  ApishipTariff,
+} from "types/apiship"
+export {
+  APISHIP_PROVIDER_PREFIX,
+  getApishipDeliveryType,
+  getApishipSelection,
+  getTariffCost,
+  getTariffDays,
+  isApishipOption,
+} from "./utils"
+```
+
+Карточка и строка из следующих шагов импортируют всё нужное из ApiShip через этот файл.
+
+---
+
+## Шаг 13: Зарегистрируйте способы доставки ApiShip
+
+Дескриптор сообщает оформлению заказа в стартере, как обращаться со способом доставки ApiShip.
+
+Создайте файл [`src/modules/checkout/components/apiship/descriptor.ts`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/apiship/descriptor.ts) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для дескриптора ApiShip](/static/apiship/storefront/src-modules-checkout-components-apiship-descriptor.webp)
+
+```ts title="src/modules/checkout/components/apiship/descriptor.ts"
+import type { ShippingOptionDescriptor } from "@lib/constants"
+import { removeApishipShippingMethod } from "@lib/data/apiship"
+import {
+  getApishipSelection,
+  isApishipOption,
+  isApishipSelectionComplete,
+} from "./utils"
+
+export const apishipShippingOptionDescriptor: ShippingOptionDescriptor = {
+  test: isApishipOption,
+  // ApiShip attaches with the cheapest tariff it found, which is enough to price the
+  // cart but not to ship it: the order needs the tariff the customer actually picked,
+  // and a pickup point where the option delivers to one.
+  isReady: (cart, option) =>
+    isApishipSelectionComplete(getApishipSelection(cart, option.id), option),
+  pricedByChoice: true,
+  removeShippingMethod: removeApishipShippingMethod,
+}
+```
+
+Затем откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/lib/constants.tsx#L1-L119) и добавьте дескриптор в `shippingOptionDescriptors`:
+
+![Структура проекта Medusa Storefront после обновления файла с константами](/static/apiship/storefront/src-lib-constants.webp)
+
+```tsx title="src/lib/constants.tsx"
+import { apishipShippingOptionDescriptor } from "@modules/checkout/components/apiship/descriptor"
+// ...
+
+const shippingOptionDescriptors: ShippingOptionDescriptor[] = [
+  apishipShippingOptionDescriptor,
+]
+```
+
+- `test` распознаёт способ доставки ApiShip по провайдеру.
+- `isReady` считает способ доставки готовым, когда покупатель выбрал тариф, а для доставки в пункт выдачи ещё и пункт. До этого кнопка оплаты остаётся неактивной.
+- `pricedByChoice` сообщает оформлению заказа, что до выбора у способа доставки нет цены. Оформление заказа не рассчитывает его, позволяет выбрать его без цены, не добавляет его в корзину и убирает снова, когда меняется адрес.
+- `removeShippingMethod` получает функцию `removeApishipShippingMethod` из [шага 5](#шаг-5-получите-данные-apiship). Оформление заказа вызывает её каждый раз, когда убирает способ доставки из корзины.
+
+---
+
+## Шаг 14: Создайте карточку способа доставки
+
+Так будут выглядеть карточки способов доставки, которые вы создадите на этом шаге, на странице оформления заказа:
+
+![Карточки способов доставки ApiShip, у курьерской доставки цена выбранного тарифа](/static/apiship/ru/storefront-shipping-option-card.webp)
+
+Карточка показывает способ доставки ApiShip в списке способов доставки. Пока покупатель не выбрал тариф, цены на ней нет, а после выбора она показывает дату доставки по тарифу и ровно ту цену, которую выставят корзине.
+
+Создайте файл [`src/modules/checkout/components/shipping-option/providers/apiship.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/shipping-option/providers/apiship.tsx) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для карточки способа доставки ApiShip](/static/apiship/storefront/src-modules-checkout-components-shipping-option-providers-apiship.webp)
+
+```tsx title="src/modules/checkout/components/shipping-option/providers/apiship.tsx"
+"use client"
+
+import { convertToLocale } from "@lib/util/money"
+import {
+  getTariffCost,
+  getTariffDays,
+  useApishipSelection,
+} from "@modules/checkout/components/apiship"
+import { useLocale, useTranslations } from "next-intl"
+import type React from "react"
+import { ShippingOptionCardShell, type ShippingOptionCardProps } from "../shared"
+
+/**
+ * ApiShip has no price until the customer picks a tariff, so the card shows none. Once a
+ * tariff is picked the card carries its delivery dates and exactly the price the cart is
+ * charged, and keeps both while the customer looks at another method, since the choice is
+ * kept too.
+ */
+const ApishipShippingOptionCard: React.FC<ShippingOptionCardProps> = ({
+  cart,
+  option,
+  isSelected,
+  isUnavailable,
+  formatDeliveryDays,
+}) => {
+  const tCheckout = useTranslations("CheckoutPage")
+  const locale = useLocale()
+  const selection = useApishipSelection(cart, option.id)
+
+  const cost = selection ? getTariffCost(selection.tariff) : null
+
+  const price =
+    cost === null
+      ? null
+      : cost === 0
+        ? tCheckout("freeShipping")
+        : convertToLocale({
+          amount: cost,
+          currency_code: cart.currency_code,
+          locale,
+        })
+
+  const caption = selection
+    ? formatDeliveryDays(getTariffDays(selection.tariff))
+    : null
+
+  return (
+    <ShippingOptionCardShell
+      option={option}
+      isSelected={isSelected}
+      isUnavailable={isUnavailable}
+      price={price}
+      isLoadingPrice={false}
+      isFreeShipping={cost === 0}
+      caption={caption}
+    />
+  )
+}
+
+export default ApishipShippingOptionCard
+```
+
+Карточка отображается через `ShippingOptionCardShell` стартера, поэтому выглядит так же, как собственные способы доставки стартера. Цена на ней остаётся, пока покупатель смотрит другой способ доставки, потому что `useApishipSelection` тоже сохраняет выбор.
+
+Затем откройте [`src/modules/checkout/components/shipping-option/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/shipping-option/index.tsx#L4-L17) и добавьте в диспетчер карточек вариант для ApiShip:
+
+![Структура проекта Medusa Storefront после обновления файла для диспетчера карточек способов доставки](/static/apiship/storefront/src-modules-checkout-components-shipping-option-index.webp)
+
+```tsx title="src/modules/checkout/components/shipping-option/index.tsx"
+import { isApishipOption } from "@modules/checkout/components/apiship"
+import ApishipShippingOptionCard from "./providers/apiship"
+// ...
+
+  switch (true) {
+    case isApishipOption(props.option):
+      return <ApishipShippingOptionCard {...props} />
+    default:
+      return <ManualShippingOptionCard {...props} />
+  }
+```
+
+Все остальные способы доставки по-прежнему отображаются ручной карточкой стартера.
+
+---
+
+## Шаг 15: Создайте строку доставки
+
+Так будет выглядеть строка доставки, которую вы создадите на этом шаге, на странице оформления заказа:
+
+![Строка доставки ApiShip с выбранным пунктом выдачи и логотипом СДЭК](/static/apiship/ru/storefront-delivery-row.webp)
+
+Строка доставки находится под способами доставки и открывает окно доставки. Для курьерской доставки она показывает адрес, а для доставки в пункт выдачи адрес пункта под заголовком «Пункт выдачи». Когда покупатель сделал выбор, в конце строки появляется логотип перевозчика.
+
+В строке стартера пока нет места для логотипа. Откройте [`src/modules/checkout/components/checkout-info-rows/row.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/checkout-info-rows/row.tsx#L11-L54) и добавьте проп `trailing`:
+
+![Структура проекта Medusa Storefront после обновления файла для строки оформления заказа](/static/apiship/storefront/src-modules-checkout-components-checkout-info-rows-row.webp)
+
+```tsx title="src/modules/checkout/components/checkout-info-rows/row.tsx"
+type CheckoutInfoRowProps = {
+  // ...
+  trailing?: ReactNode
+  // ...
+}
+
+export default function CheckoutInfoRow({
+  // ...
+  trailing,
+  // ...
+}: CheckoutInfoRowProps) {
+  return (
+    <button
+      // ...
+    >
+      {/* ... */}
+      {(trailing || !disabled) && (
+        <div className="flex flex-shrink-0 items-center gap-x-3">
+          {trailing}
+          {!disabled && (
+            <ChevronRight className="text-ui-fg-base flex-shrink-0 rtl:rotate-180" />
+          )}
+        </div>
+      )}
+    </button>
+  )
+}
+```
+
+Откройте [`src/modules/checkout/components/delivery-row/shared.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/delivery-row/shared.tsx#L21-L54) и передайте `trailing` через `DeliveryRowShell`:
+
+![Структура проекта Medusa Storefront после обновления файла для общей строки доставки](/static/apiship/storefront/src-modules-checkout-components-delivery-row-shared.webp)
+
+```tsx title="src/modules/checkout/components/delivery-row/shared.tsx"
+type DeliveryRowShellProps = {
+  // ...
+  trailing?: ReactNode
+  // ...
+}
+
+export const DeliveryRowShell = ({
+  // ...
+  trailing,
+  // ...
+}: DeliveryRowShellProps) => (
+  <CheckoutInfoRow
+    // ...
+    trailing={trailing}
+    // ...
+  />
+)
+```
+
+Создайте файл [`src/modules/checkout/components/delivery-row/providers/apiship.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/delivery-row/providers/apiship.tsx) со следующим содержимым:
+
+![Структура проекта Medusa Storefront после создания файла для строки доставки ApiShip](/static/apiship/storefront/src-modules-checkout-components-delivery-row-providers-apiship.webp)
+
+```tsx title="src/modules/checkout/components/delivery-row/providers/apiship.tsx"
+"use client"
+
+import { useState } from "react"
+import {
+  ApishipDeliveryModal,
+  ApishipProviderLogo,
+  getApishipDeliveryType,
+  useApishipProviders,
+  useApishipSelection,
+} from "@modules/checkout/components/apiship"
+import { useTranslations } from "next-intl"
+import type React from "react"
+import { DeliveryRowShell, type DeliveryRowProps } from "../shared"
+
+/**
+ * The row an ApiShip method collects its choice through. Delivery to a pickup point asks
+ * for the point rather than an address, so the row says so and carries the point under
+ * the heading; courier delivery keeps the address. Either way the row opens the same
+ * two-step sheet, address first and the carrier's offer second.
+ */
+const ApishipDeliveryRow: React.FC<DeliveryRowProps> = ({
+  cart,
+  addresses,
+  option,
+}) => {
+  const t = useTranslations("Apiship")
+  const tCheckout = useTranslations("CheckoutPage")
+  const [open, setOpen] = useState(false)
+
+  const selection = useApishipSelection(cart, option?.id)
+  const providers = useApishipProviders(option?.id, open || !!selection)
+
+  if (!option) return null
+
+  const toPoint = getApishipDeliveryType(option) === 2
+  const providerKey = selection?.point?.providerKey ?? selection?.tariff.providerKey
+  const addr = cart.shipping_address
+
+  const addressText = addr?.address_1
+    ? [addr.address_1, addr.city, addr.postal_code].filter(Boolean).join(", ")
+    : null
+
+  return (
+    <>
+      <DeliveryRowShell
+        heading={toPoint ? t("pickupPointHeading") : tCheckout("addressHeading")}
+        onClick={() => setOpen(true)}
+        value={!selection ? null : toPoint ? selection.point?.address : addressText}
+        trailing={
+          selection && providerKey ? (
+            <ApishipProviderLogo src={providers[providerKey]?.icon} />
+          ) : null
+        }
+        data-testid="checkout-apiship-row"
+      />
+
+      <ApishipDeliveryModal
+        open={open}
+        onClose={() => setOpen(false)}
+        cart={cart}
+        addresses={addresses}
+        option={option}
+        providers={providers}
+      />
+    </>
+  )
+}
+
+export default ApishipDeliveryRow
+```
+
+Строка открывает `ApishipDeliveryModal`. Перевозчиков она начинает загружать, только когда окно открыто или выбор уже сделан, поэтому покупатель, который не открывал окно, не вызывает запрос перевозчиков.
+
+Затем откройте [`src/modules/checkout/components/delivery-row/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/src/modules/checkout/components/delivery-row/index.tsx#L3-L17) и добавьте в диспетчер строки вариант для ApiShip:
+
+![Структура проекта Medusa Storefront после обновления файла для диспетчера строки доставки](/static/apiship/storefront/src-modules-checkout-components-delivery-row-index.webp)
+
+```tsx title="src/modules/checkout/components/delivery-row/index.tsx"
+import { isApishipOption } from "@modules/checkout/components/apiship"
+// ...
+import ApishipDeliveryRow from "./providers/apiship"
+
+// ...
+
+  switch (true) {
+    case isApishipOption(props.option):
+      return <ApishipDeliveryRow {...props} />
+    default:
+      return <ManualDeliveryRow {...props} />
+  }
+```
+
+Для всех остальных способов доставки остаётся строка адреса стартера.
+
+---
+
+## Шаг 16: Добавьте строки оформления заказа в локали витрины
+
+Добавьте пространство имён `Apiship` в [`messages/ru.json`](https://github.com/gorgojs/medusa-integrations/blob/3e647007512b0aa973f6ac1e39aed7129376778f/examples/fulfillment-apiship/apps/storefront/messages/ru.json#L60-L75) и в каждую другую локаль под `messages/`:
+
+```json title="messages/ru.json"
+{
+  // ...
+  "Apiship": {
+    "choose": "Выбрать",
+    "courierModalTitle": "Доставка курьером",
+    "loadFailed": "Не удалось загрузить варианты доставки. Попробуйте ещё раз.",
+    "mapKeyMissing": "Для карты нужен ключ API Яндекс Карт.",
+    "mapLoadFailed": "Не удалось загрузить карту. Попробуйте ещё раз.",
+    "next": "Далее",
+    "noPoints": "По этому адресу нет пунктов выдачи.",
+    "noTariffs": "По этому адресу нет доставки.",
+    "photoAlt": "Фотография пункта выдачи {index}",
+    "pickupPointHeading": "Пункт выдачи",
+    "pickupPointModalTitle": "Пункт выдачи",
+    "pointDetails": "Как найти",
+    "schedule": "Часы работы",
+    "selectPointPrompt": "Выберите пункт на карте"
+  },
+  // ...
+}
+```
+
+В примере это пространство имён переведено на все 36 локалей витрины. Если в локали этих ключей нет, ошибка возникнет во время выполнения, а не при сборке.
 
 ---
 
 ## Полный пример кода интеграции в витрину
 
-Вы можете ознакомиться с изменениями, внесенными в стартовый шаблон [Medusa Next.js Starter Template](https://github.com/medusajs/nextjs-starter-medusa), в директории [`examples/medusa-storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/fulfillment-apiship/medusa-storefront).
-
-Полный код интеграции можно посмотреть в разделе [comparison page](https://github.com/gorgojs/medusa-integrations/compare/%40gorgo/medusa-fulfillment-apiship%400.0.1...main) и изучите различия в каталоге `examples/fulfillment-apiship/medusa-storefront`. Или запустите `diff` в терминале:
-
-```bash title="Terminal"
-git clone https://github.com/gorgojs/medusa-integrations
-cd medusa-integrations
-git diff @gorgo/medusa-fulfillment-apiship@0.0.1...main -- examples/fulfillment-apiship/medusa-storefront
-```
+Полный код витрины находится в [`examples/fulfillment-apiship/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/fulfillment-apiship/apps/storefront), собранной на основе [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter). В [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/fulfillment-apiship/README.md#what-the-example-adds-to-the-starter) примера перечислены все файлы, из которых состоит интеграция, включая бэкенд.
