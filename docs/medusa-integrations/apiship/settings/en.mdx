@@ -1,11 +1,11 @@
 ---
 title: "Manage ApiShip Settings in Medusa Admin"
-description: "Learn how to view and manage the ApiShip integration's details and connections in Medusa Admin"
+description: "Learn how to view and manage the ApiShip integration's settings and delivery services in Medusa Admin"
 ---
 
 # {frontmatter.title}
 
-In this guide, you'll learn how to manage the ApiShip integration's details and connections.
+In this guide, you'll learn how to manage the ApiShip integration's settings and delivery services, and how to add ApiShip shipping options to a stock location.
 
 ## View ApiShip Details
 
@@ -14,142 +14,162 @@ To view the ApiShip details:
 1. Open Medusa Admin.
 2. Go to **Settings → Integrations → ApiShip**.
 
-This opens the ApiShip settings page where you can review main details, sender information, default product parameters, payment settings, and connections.
+This opens the ApiShip settings page with the **Credentials**, **Sender** and **Delivery Services** sections, and the **Payment & VAT** and **Default Product Settings** sections beside them.
 
-![ApiShip settings overview](/static/apiship/en/settings-overview.png)
+![ApiShip settings overview](/static/apiship/en/settings-overview.webp)
+
+The action menu next to the integration's status badges holds **Test connection**, which checks the API token against ApiShip, along with **Enable**, **Disable** and **Delete**. While the integration is disabled or its settings are incomplete, the plugin's store routes return an error and the storefront shows no ApiShip tariffs.
 
 ---
 
 ## Edit ApiShip Credential Parameters
 
-You can update the provider's API token and mode from the **Credentials** section.
+The **Credentials** section holds the ApiShip API token and the test mode switch. Test mode points the plugin at ApiShip's test environment, where calculations and orders don't create real shipments.
 
 To edit the credential details:
 
 1. Go to **Settings → Integrations → ApiShip**.
-2. In the **ApiShip** section, click the action menu in the section's header.
+2. In the **Credentials** section, click the action menu in the section's header.
 3. Choose **Edit**.
-4. In the side panel that opens, update the API token or switch between test and production mode.
+4. In the side panel that opens, enter the API token or switch test mode on or off. Leave the token field empty to keep the saved token.
 5. Click **Save**.
 
-![Edit ApiShip provider details](/static/apiship/en/edit-provider-details.png)
+![Edit ApiShip credentials](/static/apiship/en/edit-provider-details.webp)
 
 ---
 
-## Edit Default Store Address
+## Edit Sender Details
 
-The **Sender** section stores the default sender details used when an order is created in ApiShip.
+The **Sender** section stores the country, address, full name, phone and company the plugin puts on every ApiShip order as the sender.
 
-If the selected stock location has enough address details, the plugin uses that stock location's address in the order. If some sender details are missing there, the default sender details from this section are used as fallback values.
+The plugin takes the country, the phone and the company from the stock location the order ships from when it has them, and falls back to this section otherwise. It takes the address from the stock location when the location's city and both address lines are filled in, and from this section otherwise. The full name always comes from this section. ApiShip rejects an order without a country, an address, a full name and a phone, so fill those in even when your stock locations carry their own details.
 
-To edit the default sender details:
+Delivery calculations at checkout don't use this section. They use the address of the stock location, so every location that ships through ApiShip needs a full address.
+
+To edit the sender details:
 
 1. Go to **Settings → Integrations → ApiShip**.
 2. In the **Sender** section, click the action menu in the section's header.
 3. Choose **Edit**.
-4. In the side panel that opens, update the sender's country, address, contact name, or phone number.
+4. In the side panel that opens, update the sender's country, address, full name, phone or company.
 5. Click **Save**.
 
-![Edit default store address](/static/apiship/en/edit-default-store-address.png)
+![Edit sender details](/static/apiship/en/edit-default-store-address.webp)
 
 ---
 
-## Edit Payment & Tax
+## Edit Payment & VAT
 
-The **Payment & VAT** section controls how the plugin fills payment-related fields in created ApiShip orders.
+The **Payment & VAT** section controls cash on delivery for ApiShip orders.
 
-If cash on delivery is enabled, the plugin sends the order's COD amount to ApiShip. The delivery VAT rate is also included in the created order when COD is enabled.
+With **Cash on Delivery** on, the plugin sends the items' prices as their cost and declared value, the items' total as the amount to collect, and the delivery VAT rate. The calculation at checkout includes the amount to collect too. With it off, the plugin sends the items with a zero cost and declared value, and no amount to collect.
 
 To edit the payment and VAT settings:
 
 1. Go to **Settings → Integrations → ApiShip**.
 2. In the **Payment & VAT** section, click the action menu in the section's header.
 3. Choose **Edit**.
-4. In the side panel that opens, update the cash on delivery setting or the delivery VAT rate.
+4. In the side panel that opens, switch **Cash on Delivery** on or off. The **Delivery VAT Rate** field appears once cash on delivery is on.
 5. Click **Save**.
 
-![Edit payment and VAT settings](/static/apiship/en/edit-payment-and-tax.png)
+![Edit payment and VAT settings](/static/apiship/en/edit-payment-and-tax.webp)
 
 ---
 
-## Edit Default Product Sizes
+## Edit Default Product Settings
 
-The **Default Product Sizes** section stores fallback dimensions and weight for products.
+The **Default Product Settings** section stores the fallback length, width and height in centimeters, and the fallback weight in grams. The defaults are 10 × 10 × 10 cm and 20 g, and every value must be greater than zero.
 
-These values are used when creating an ApiShip order for items that don't have their own dimensions or weight defined on the product variant.
+The plugin uses them for every product variant that has no dimensions or weight of its own, both when it calculates delivery at checkout and when it creates the ApiShip order.
 
-To edit the default product sizes:
+To edit the default product settings:
 
 1. Go to **Settings → Integrations → ApiShip**.
-2. In the **Default Product Sizes** section, click the action menu in the section's header.
+2. In the **Default Product Settings** section, click the action menu in the section's header.
 3. Choose **Edit**.
-4. In the side panel that opens, update the default length, width, height, and weight.
+4. In the side panel that opens, update the default length, width, height and weight.
 5. Click **Save**.
 
-![Edit default product sizes](/static/apiship/en/edit-default-product-sizes.png)
+![Edit default product settings](/static/apiship/en/edit-default-product-sizes.webp)
 
 ---
 
-## Manage Connections
+## Manage Delivery Services
 
-Connections link a delivery service in ApiShip to a specific ApiShip account connection. When an order is created, the plugin uses the enabled connection that matches the selected delivery service.
+A delivery service links a carrier contract in your ApiShip account to Medusa. When the plugin creates an order, it takes the enabled delivery service of the order's carrier whose stock location matches the location the order ships from. When there is none, it takes the enabled delivery service of that carrier set to **Any location**. Without either, creating the ApiShip order fails.
 
-You can also optionally assign an intake point to a connection.
+A delivery service also decides which tariffs of its carrier the checkout offers, and from where the carrier collects the parcels:
 
-### Add Connection
+- **Allowed tariffs** – with nothing selected, the checkout offers every tariff of the carrier. Otherwise it offers only the selected ones, chosen separately for courier delivery and for pickup point delivery.
+- **Drop-off point** – the carrier's point where you hand the parcels in. Without one, the carrier's courier collects them from the sender's address. The **From pickup point to door** and **From pickup point to pickup point** shipping options need a drop-off point, or creating the order fails.
 
-To add a connection:
+Only one delivery service per carrier and stock location can be enabled at a time, **Any location** included. To use different drop-off points for different warehouses, add a delivery service for each warehouse.
+
+### Add Delivery Service
+
+The list of connections comes from your ApiShip account, so save the API token first.
+
+To add a delivery service:
 
 1. Go to **Settings → Integrations → ApiShip**.
-2. In the **Connections** section, click **Add**.
+2. In the **Delivery Services** section, click **Add**.
 3. In the modal that opens:
-   - Choose an account connection.
-   - Optionally select an intake point.
-   - Choose whether the connection should be enabled immediately.
+   - Choose a **Connection** from your ApiShip account.
+   - Optionally choose a **Stock location**. Leave **Any location** to use the delivery service for every warehouse without a delivery service of its own.
+   - Optionally choose a **Drop-off point**.
+   - Optionally choose the **Allowed tariffs** for courier and pickup point delivery.
+   - Choose whether the delivery service is **Enabled**.
 4. Click **Save**.
 
-![Add ApiShip connection](/static/apiship/en/add-connection.png)
+![Add ApiShip delivery service](/static/apiship/en/add-connection.webp)
 
-### Edit Connection
+### Edit Delivery Service
 
-To edit a connection:
+To edit a delivery service:
 
 1. Go to **Settings → Integrations → ApiShip**.
-2. In the **Connections** section, find the connection you want to update.
+2. In the **Delivery Services** section, find the delivery service you want to update.
 3. Open the row's action menu.
 4. Choose **Edit**.
-5. In the side panel that opens, update the connection's enabled status.
+5. In the side panel that opens, update the stock location, the drop-off point, the allowed tariffs or the enabled status. The connection itself can't be changed.
 6. Click **Save**.
 
-![Edit ApiShip connection](/static/apiship/en/edit-connection.png)
+![Edit ApiShip delivery service](/static/apiship/en/edit-connection.webp)
 
-### Remove Connection
+### Delete Delivery Service
 
-To remove a connection:
+To delete a delivery service:
 
 1. Go to **Settings → Integrations → ApiShip**.
-2. In the **Connections** section, find the connection you want to remove.
+2. In the **Delivery Services** section, find the delivery service you want to delete.
 3. Open the row's action menu.
 4. Choose **Delete**.
 5. Confirm the deletion.
 
+---
+
 ## Add Shipping Options
 
-To add a shipping option displayed in the Storefront for ApiShip:
+Before you add an ApiShip shipping option, connect ApiShip to the stock location. On the location's page, open the action menu of the **Fulfillment Providers** section, choose **Edit** and select **Apiship**. The location also needs a shipping service zone.
+
+To add a shipping option for ApiShip:
 
 1. Go to **Settings → Locations & Shipping**.
 2. Choose your stock location.
-3. In the **Shipping → Shipping options** section, click **Create option**.
+3. In the **Shipping options** section of the service zone, click **Create option**.
 4. In the modal that opens:
-![Add Shipping Option](/static/apiship/en/add-shipping-option.png)
    - Set the price type to **Calculated**.
    - Specify the name of the shipping option.
-   - Select the profile and type of shipping option.
-   - Set the fulfillment provider to **ApiShip**.
-   - Choose one of the suggested fulfillment options:
+   - Select the shipping profile and the shipping option type.
+   - Set the fulfillment provider to **Apiship**.
+   - Choose one of the fulfillment options:
       - **From door to door**
       - **From door to pickup point**
       - **From pickup point to door**
       - **From pickup point to pickup point**
-   - Leave the option **Enable in store** checked.
+   - Leave **Enable in store** on.
 5. Click **Save**.
+
+![Add ApiShip shipping option](/static/apiship/en/add-shipping-option.webp)
+
+The fulfillment option decides where the carrier collects the parcel and where it delivers it. The two **From pickup point** options need a delivery service with a drop-off point. The plugin doesn't support returns, so its **Return** fulfillment option can't be used for a return shipping option.
