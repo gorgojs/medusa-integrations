@@ -1,5 +1,35 @@
 # @gorgo/medusa-fulfillment-apiship
 
+## 2.1.0
+
+### Features
+
+- return provider icons from the providers routes by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`00d57b3`](https://github.com/gorgojs/medusa-integrations/commit/00d57b31fa03eed8fac8ea820078e0fb337d81ad))
+
+- return the pickup points together with the calculation by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`af92736`](https://github.com/gorgojs/medusa-integrations/commit/af927360cd490dac7add7b348da8167467974663))
+
+- improve ui styles by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`71da04d`](https://github.com/gorgojs/medusa-integrations/commit/71da04d78586753638a851987ae5264afe61e3de))
+
+- add connection to example seed by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`b163246`](https://github.com/gorgojs/medusa-integrations/commit/b1632465381aea95d568e50302ec32b2c139ddab))
+
+- show provider icons in the admin by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`2212928`](https://github.com/gorgojs/medusa-integrations/commit/2212928f14ab750a7068ba0385649bd88fdb2a9b))
+
+### Bug Fixes
+
+- remove a shipping method only from the cart it belongs to by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`efdbc33`](https://github.com/gorgojs/medusa-integrations/commit/efdbc33ea736e4958effde786426172ce6c73238))
+
+- price and check the tariff entry that serves the chosen pickup point by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`355b65f`](https://github.com/gorgojs/medusa-integrations/commit/355b65f5d2027cbea7c6780957e2a3f3085a767d))
+
+- price the chosen tariff and check its pickup point on the server by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`e299a5b`](https://github.com/gorgojs/medusa-integrations/commit/e299a5ba01edd0214cb281a1869e5b5fed9ae2b0))
+
+- improve connection loading by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`278254e`](https://github.com/gorgojs/medusa-integrations/commit/278254e547e7d76809a29f648c68027d80cdc7a6))
+
+### Documentation
+
+- update the readme features and requirements by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`2482b76`](https://github.com/gorgojs/medusa-integrations/commit/2482b76e7781409ed4d9b9b998cf19c116983ef0))
+
+- replace the demo video in the docs and the readme by [@ttokyose](https://github.com/ttokyose) in [#501](https://github.com/gorgojs/medusa-integrations/pull/501) ([`7432b29`](https://github.com/gorgojs/medusa-integrations/commit/7432b292c5ae0dbecfc45865bea8f36ce3cebdac))
+
 ## 2.0.2
 
 ### Documentation

@@ -1,5 +1,11 @@
 # @gorgo/medusa-integration
 
+## 0.2.5
+
+### Bug Fixes
+
+- point the missing encryption key error at the plugin options by [@gorgohead](https://github.com/gorgohead) in [`5df6552`](https://github.com/gorgojs/medusa-integrations/commit/5df655284343e0e2c5d5352dc96493f18525fe81)
+
 ## 0.2.4
 
 ### Documentation
