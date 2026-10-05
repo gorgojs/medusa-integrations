@@ -16,7 +16,11 @@ type LicenseStateFn = (packageName: string) => { state: string } | undefined
 const licenseState = jest.fn<LicenseStateFn>(() => ({ state: "ok" }))
 
 type Descriptor = { identifier: string }
-type Meta = { name: string | null; license?: "required" | "optional" | null }
+type Meta = {
+  name: string | null
+  version?: string | null
+  license?: "required" | "optional" | null
+}
 
 function makeContainer(
   descriptors: Record<string, Descriptor>,
@@ -199,6 +203,63 @@ describe("checkLicenses loader", () => {
     const state = (container as any).registered[INTEGRATION_LICENSE_STATE_KEY]
     expect(state["@gorgo-store/p"].state).toBe("undetermined")
   })
+
+  it("passes the package version so the platform can apply the subscription cutoff", async () => {
+    const container = makeContainer(
+      { [`${PREFIX}p`]: { identifier: "p" } },
+      { p: { name: "@gorgo-store/p", version: "1.4.0", license: "required" } },
+    )
+    await run(container)
+    expect(reportLicense).toHaveBeenCalledWith(
+      expect.objectContaining({ packageName: "@gorgo-store/p", packageVersion: "1.4.0" }),
+    )
+  })
+
+  it("shows the verdict the online check reached after boot", async () => {
+    let live: { state: string; reason?: string } = { state: "pending" }
+    licenseState.mockImplementation(() => live)
+    const container = makeContainer(
+      { [`${PREFIX}p`]: { identifier: "p" } },
+      { p: { name: "@gorgo-store/p", license: "required" } },
+    )
+    await run(container)
+    const { licenseStates } = require("../license-state")
+
+    expect(licenseStates()).toEqual([
+      { package: "@gorgo-store/p", state: "undetermined", identifiers: ["p"] },
+    ])
+
+    live = { state: "failed", reason: "no_subscription" }
+    expect(licenseStates()).toEqual([
+      {
+        package: "@gorgo-store/p",
+        state: "failed",
+        reason: "no_subscription",
+        identifiers: ["p"],
+      },
+    ])
+
+    live = { state: "ok" }
+    expect(licenseStates()[0]).toEqual({
+      package: "@gorgo-store/p",
+      state: "ok",
+      identifiers: ["p"],
+    })
+  })
+
+  it.each(["pending", "unreachable", "something-new"])(
+    "reports %s as not verified yet",
+    async (raw) => {
+      licenseState.mockImplementation(() => ({ state: raw }))
+      const container = makeContainer(
+        { [`${PREFIX}p`]: { identifier: "p" } },
+        { p: { name: "@gorgo-store/p", license: "required" } },
+      )
+      await run(container)
+      const state = (container as any).registered[INTEGRATION_LICENSE_STATE_KEY]
+      expect(state["@gorgo-store/p"].state).toBe("undetermined")
+    },
+  )
 
   it("does not check a package that only declares gorgo.license optional", async () => {
     const container = makeContainer(
