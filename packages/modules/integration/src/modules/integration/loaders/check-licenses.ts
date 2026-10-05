@@ -6,10 +6,13 @@ import {
   INTEGRATION_PACKAGE_META_KEY,
   IntegrationProviderRegistrationPrefix,
 } from "../types"
-import { licenseStateStore } from "./license-state"
+import {
+  licenseStateStore,
+  normalizeLicenseState,
+  setLicenseStateReader,
+} from "./license-state"
 import type {
   IntegrationModuleOptions,
-  LicenseState,
   LicenseStateMap,
   PackageMetaMap,
 } from "../types"
@@ -20,12 +23,13 @@ type ReportLicense = (input: {
   license?: string
   backendUrl?: string
   packageName: string
+  packageVersion?: string
   track: (event: string, props?: Record<string, unknown>) => void
-}) => boolean
+}) => unknown
 
 type LicenseStateReader = (
   packageName: string,
-) => { state: LicenseState; reason?: string } | undefined
+) => { state: string; reason?: string } | undefined
 
 type Verifier = {
   reportLicense: ReportLicense
@@ -76,6 +80,7 @@ export default async ({
 
   const verifier = loadVerifier()
   if (!verifier) return
+  setLicenseStateReader(verifier.licenseState)
 
   const packageMeta: PackageMetaMap =
     safeResolve(container, INTEGRATION_PACKAGE_META_KEY) ?? {}
@@ -111,12 +116,13 @@ export default async ({
         license,
         backendUrl,
         packageName,
+        packageVersion: meta.version ?? undefined,
         track: (event, props) => telemetry.track(event, props),
       })
       const verdict = verifier.licenseState?.(packageName)
       state[packageName] = {
         package: packageName,
-        state: verdict?.state ?? "undetermined",
+        state: normalizeLicenseState(verdict?.state),
         ...(verdict?.reason ? { reason: verdict.reason } : {}),
         identifiers: [identifier],
       }
