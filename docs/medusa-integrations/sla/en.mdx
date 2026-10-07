@@ -1,0 +1,126 @@
+---
+title: "Gorgo Plugin SLA"
+description: "What Gorgo commits to for every plugin it publishes: a human code review of every release, response and fix times, Medusa compatibility, testing and security."
+---
+
+# {frontmatter.title}
+
+This page lists what we commit to for every open-source plugin Gorgo publishes from the [gorgojs/medusa-integrations](https://github.com/gorgojs/medusa-integrations) repository. It covers how we review and test the code, how fast we answer and fix, and how the plugins keep up with Medusa.
+
+These commitments are a public policy we keep, not a legal warranty. The plugins are distributed under the MIT license, which provides no warranty.
+
+---
+
+## Every Release Is Reviewed by a Person
+
+Every plugin and every update goes through a full code review by a developer on the Gorgo team before it is released. This applies to a new plugin and to a one-line fix alike. A person reads the whole change, not a sample of it, and the release does not go out until the review is done.
+
+Before a release, a person also checks the plugin by hand on a test store. For a payment plugin that means connecting it in Medusa Admin, paying for an order and refunding it. For a shipping plugin it means choosing a delivery option at checkout and creating a shipment.
+
+Automated tests run alongside the review and do not replace it. Payments, shipping and the exchange with accounting systems are where a mistake costs a store real money, so every change to them is read by a person who takes responsibility for it.
+
+---
+
+## Response Times
+
+| Channel | First response |
+|---|---|
+| [GitHub issues](https://github.com/gorgojs/medusa-integrations/issues) | 1 business day |
+| Telegram support chat [@gorgojs_chat](https://t.me/gorgojs_chat) | 1 business day |
+| A vulnerability report, see [Security](#security) | 1 business day |
+
+Business days are Monday to Friday. The first response means a person has read your message and replied, not that the problem is already fixed.
+
+When a message in the chat describes a bug, we open a GitHub issue for it ourselves and post the link. The report is not lost, and you can follow the fix.
+
+The Medusa developer community chat [@medusajs_chat](https://t.me/medusajs_chat) is a place to talk to other developers. We read it, but these response times do not apply there.
+
+---
+
+## Bug Fixes
+
+| Severity | What counts | Release with a fix |
+|---|---|---|
+| Critical | payments or shipments do not go through, money or orders are lost or duplicated, a vulnerability | within 2 business days of confirmation |
+| Normal | anything else that does not work as documented | within 10 business days of confirmation |
+
+A bug is confirmed once we reproduce it or find its cause. Fixes are released in the latest version of the plugin, so update to the latest version to get them. When a fix depends on the provider, we say so in the issue and suggest a workaround.
+
+---
+
+## Medusa Compatibility
+
+A GitHub Actions workflow checks for a new Medusa release every day at 06:00 UTC. When one is out, it updates Medusa in the example projects, runs the tests of every plugin against it and opens a pull request with the results.
+
+We support a new minor version of Medusa within 7 days of its release. The plugins declare Medusa as a version range in `peerDependencies`, so a plugin installs next to a newer Medusa without `--legacy-peer-deps`.
+
+---
+
+## Versions and Changes
+
+Plugin versions follow [semantic versioning](https://semver.org/).
+
+- **Patch** – a fix that changes nothing you rely on.
+- **Minor** – a new feature that works with your current configuration and code.
+- **Major** – a breaking change, which is anything that requires you to change configuration, code or data when you update.
+
+Every plugin has a changelog page in this documentation, built from the commits of each release. A major release comes with a description of what changed and how to migrate. Before we remove something, we mark it as deprecated in the changelog and keep it working until the next major version.
+
+---
+
+## Testing
+
+The plugins are tested at three levels.
+
+- **Unit tests** check the plugin's logic on its own.
+- **Integration tests** run the plugin inside a real Medusa application.
+- **Contract tests** call the provider's test API and catch a change on the provider's side, such as a renamed field or a new status.
+
+The tests run on every pull request and every day at 04:00 UTC, so a change at a provider shows up the next morning even when our code has not changed. A release does not go out while the tests fail. How the tests are set up is described in [How we test our Medusa plugins](https://gorgojs.com/blog/how-we-test-our-medusa-plugins).
+
+---
+
+## What a Plugin Has at Release
+
+Before a new plugin is released, it has:
+
+- settings in Medusa Admin through the [Integration Module](/medusa-modules/integration), when the plugin has settings;
+- documentation in English and Russian with getting started, settings, storefront integration when the plugin needs it, and a changelog;
+- an example project with Medusa and a storefront in the repository;
+- the tests described above.
+
+We record a demo video of connecting and using the plugin separately and add it to the plugin's pages.
+
+---
+
+## Provider and Regulatory Changes
+
+Payment and shipping providers change their APIs, and the requirements for receipts change too, such as Russia's 54-FZ and the fiscal data formats (FFD). Contract tests catch API changes every day, and we follow the providers' announcements and the changes to these requirements ourselves.
+
+A change that breaks a plugin is handled as a critical bug, with a fix released within 2 business days of confirmation. When a change is announced in advance, we plan the update so that it is released before the change takes effect.
+
+---
+
+## Security
+
+Do not report a vulnerability in a public issue. Report it privately on the [Security](https://github.com/gorgojs/medusa-integrations/security) tab of the repository with **Report a vulnerability**.
+
+- The first response comes within 1 business day.
+- A vulnerability is a critical bug, and the fix is released within 2 business days of confirmation.
+- After the release, we publish a security advisory on GitHub with the affected versions and the version that fixes it.
+
+<Note type="default" title="">
+
+We are adding notifications about security fixes to Medusa Admin, on the Integration Module pages.
+
+</Note>
+
+---
+
+## What the SLA Does Not Cover
+
+- Outages and changes on the provider's side. We help find the cause and contact the provider, but we cannot fix their service.
+- A plugin whose code was changed in your project, and forks of the plugins.
+- Medusa versions outside the range in the plugin's `peerDependencies`.
+- Development for a specific store beyond the plugin's features.
+- Questions about Medusa itself that are not related to a plugin. Ask them in [@medusajs_chat](https://t.me/medusajs_chat).
