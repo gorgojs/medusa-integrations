@@ -1,0 +1,399 @@
+---
+title: "Справочник хуков 1С:Предприятие Pro"
+description: "Входные данные, результат и ограничения каждого хука воркфлоу плагина 1С:Предприятие Pro"
+---
+
+# {frontmatter.title}
+
+Справочник описывает, когда вызывается каждый хук, что получает и может вернуть его обработчик и что плагин делает с результатом. Правила, общие для всех хуков, описаны на странице [Хуки воркфлоу](/medusa-integrations/1c-pro/hooks).
+
+---
+
+## setProducts
+
+Хук воркфлоу `importOnecProductsWorkflow` (`import-onec-products`). Вызывается на каждую пачку каталога, до 100 товаров, до сравнения с товарами Medusa. Каталог в 10 000 товаров вызовет его 100 раз.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products, properties }, { container }) => {
+  // ...
+
+  return new StepResponse({ products })
+})
+```
+
+Обработчик получает товары пачки и свойства классификатора:
+
+<MedusaTypeList
+  sectionTitle="SetProductsToImportInput"
+  types={[
+    {
+      name: "products",
+      type: "ProductToImport[]",
+      description: "Товары пачки, по элементу на товар `import.xml`.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "OnecProduct",
+          description: "Товар `import.xml` в разборе парсера CommerceML, с полями `id` (`Ид` в 1С), `name`, `description`, `article`, `images`, `groupId`, `requisiteValues` и `propertyValues`. Реквизиты читайте через `readRequisite`, свойства через `readProperty`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "existing",
+          type: "ExistingCatalogProduct",
+          description: "Товар Medusa с тем же `Ид`, с полем `id` и полями `product`, только категории в нём заданы как `categories: { id }[]`, а не `category_ids`. Отсутствует, если товара в Medusa ещё нет. Менять нельзя.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "product",
+          type: "DesiredCatalogProduct",
+          description: "Каким товар должен стать. Поле, которого здесь нет, импорт не трогает.",
+          optional: false,
+          expandable: false,
+          children: []
+        }
+      ]
+    },
+    {
+      name: "properties",
+      type: "ClassifierProperty[]",
+      description: "Свойства классификатора. `readProperty` разворачивает по ним значения свойств товара.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+В `product` обмен записывает `title`, `description`, `handle`, `external_id`, `type_id`, `status`, `metadata`, `category_ids` и `sales_channels`, а `thumbnail` и `images` только когда 1С прислала картинки. Поля `subtitle`, `weight`, `length`, `height`, `width`, `origin_country`, `hs_code`, `mid_code`, `material`, `collection_id` и `discountable` обмен не заполняет. Их может задать обработчик, и импорт запишет их так же, как остальные.
+
+Верните `new StepResponse({ products })`. Обработчик может поправить `product` и убрать товар из пачки. Чего он сделать не может:
+
+- вернуть товар, которого не было в пачке, или один товар дважды;
+- поменять `existing`;
+- удалить или поменять `external_id` и `metadata.onec.id` у нового товара, потому что без них следующий обмен заведёт товар заново;
+- поменять `external_id` и `metadata.onec.id` у существующего товара. Удалить эти ключи можно, тогда поля останутся как есть.
+
+После хука плагин сравнивает `product` с `existing` и пишет только поля, которые отличаются. Товар без `existing` он создаёт. Убранный из пачки товар в этом обмене не создаётся и не обновляется.
+
+---
+
+## setPriceLists
+
+Хук воркфлоу `importOnecPricesWorkflow` (`import-onec-prices`). Воркфлоу запускается внутри импорта предложений, поэтому хук вызывается на каждую пачку предложений, до 100 товаров со всеми их предложениями, до сверки с Medusa.
+
+```ts title="src/workflows/hooks/onec-prices.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecPricesWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+importOnecPricesWorkflow.hooks.setPriceLists(async ({ priceLists }, { container }) => {
+  // ...
+
+  return new StepResponse({ priceLists })
+})
+```
+
+Обработчик получает по элементу на каждый нерозничный тип цен из `offers.xml`. Розничный тип плагин пишет в цену варианта, и в хук он не попадает:
+
+<MedusaTypeList
+  sectionTitle="SetPriceListsToImportInput"
+  types={[
+    {
+      name: "priceLists",
+      type: "PriceListToImport[]",
+      description: "Нерозничные типы цен пачки, по элементу на тип.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "PriceType",
+          description: "Тип цен `offers.xml` с полями `id` (`Ид` в 1С), `name` и `currency`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "existing",
+          type: "ExistingPriceList",
+          description: "Прайс-лист Medusa этого типа цен с полями `id`, `title`, `description`, `status`, `type`, `starts_at`, `ends_at`, `rules` и `metadata`. Отсутствует, если прайс-листа для этого типа цен ещё нет. Менять нельзя.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "priceList",
+          type: "DesiredPriceList",
+          description: "Что записать в сам прайс-лист. У нового прайс-листа здесь название, описание, статус `draft` и тип `sale`. У существующего здесь пусто, чтобы не затирать правки администратора.",
+          optional: false,
+          expandable: false,
+          children: [
+            {
+              name: "title",
+              type: "string",
+              description: "Название прайс-листа.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "description",
+              type: "string",
+              description: "Описание прайс-листа.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "status",
+              type: "PriceListStatus",
+              description: "`draft` или `active`.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "type",
+              type: "PriceListType",
+              description: "`sale` или `override`.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "starts_at",
+              type: "string | null",
+              description: "Начало действия прайс-листа.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "ends_at",
+              type: "string | null",
+              description: "Конец действия прайс-листа.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "rules",
+              type: "Record<string, string[]>",
+              description: "Правила прайс-листа целиком, например `{ \"customer.groups.id\": [\"cusgroup_…\"] }`. Записанные правила заменяются этими.",
+              optional: true,
+              expandable: false,
+              children: []
+            }
+          ]
+        },
+        {
+          name: "prices",
+          type: "PriceListPriceToImport[]",
+          description: "Цены этого типа для вариантов пачки, с полями `variant_id`, `sku`, `amount` и `currency_code`. Вариант пачки, которого здесь нет, теряет цену в прайс-листе. Пустой список цены прайс-листа не трогает. Так бывает, когда по этому типу 1С ничего не прислала.",
+          optional: false,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Верните `new StepResponse({ priceLists })`. Ключ, который обработчик добавит в `priceList`, например `rules` или `status`, импорт запишет, если он отличается от записанного. Ограничения такие:
+
+- нельзя вернуть тип цен, которого не было в пачке, или один тип дважды;
+- нельзя поменять `existing`;
+- цена должна относиться к варианту из этой пачки, `amount` должен быть числом, и двух цен в одной валюте у варианта быть не может.
+
+После хука плагин создаёт прайс-листы новых типов цен и помечает их `metadata.onec.price_type_id`. У существующих он пишет изменившиеся ключи `priceList` и сверяет цены по варианту и валюте, добавляя новые, обновляя изменившиеся и удаляя лишние. Убранный из списка тип цен в этой пачке не трогается вовсе, ни прайс-лист, ни его цены.
+
+---
+
+## setOrders
+
+Хук воркфлоу `exportOnecOrdersWorkflow` (`export-onec-orders`). Вызывается один раз на выгрузку заказов в 1С, до сборки XML. В выгрузку попадают неотменённые заказы, которые ещё не выгружались и не пришли из 1С.
+
+```ts title="src/workflows/hooks/onec-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+exportOnecOrdersWorkflow.hooks.setOrders(async ({ orders }, { container }) => {
+  // ...
+
+  return new StepResponse({ orders })
+})
+```
+
+Обработчик получает каждый заказ вместе с документом CommerceML, которым тот уйдёт в 1С:
+
+<MedusaTypeList
+  sectionTitle="SetOrdersToExportInput"
+  types={[
+    {
+      name: "orders",
+      type: "OrderToExport[]",
+      description: "Заказы выгрузки, по элементу на заказ.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "MedusaOrderForExport",
+          description: "Заказ Medusa таким, каким его прочитала выгрузка, с полями `id`, `display_id`, `status`, `email`, `currency_code`, `total`, `created_at`, `metadata`, `customer`, `shipping_address` и `items`. Остальное о заказе получите одним запросом на всю выгрузку.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "document",
+          type: "ExportOrderDocument",
+          description: "Документ `orders.xml`, которым заказ уйдёт в 1С. Значения уже в виде, который ждёт 1С. Дата и время идут отдельно, суммы строками с двумя знаками.",
+          optional: false,
+          expandable: false,
+          children: [
+            {
+              name: "id",
+              type: "string",
+              description: "`Ид` документа, равен `id` заказа. По нему 1С узнаёт заказ, менять нельзя.",
+              optional: false,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "number",
+              type: "string",
+              description: "Номер документа из префикса в настройках и `display_id` заказа.",
+              optional: false,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "counterparties",
+              type: "ExportCounterparty[]",
+              description: "Контрагенты документа с полями `id`, `name`, `role`, `fullName`, `lastName`, `firstName`, `inn`, `kpp`, `address` и `contacts`. `inn` и `kpp` плагин не заполняет.",
+              optional: false,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "comment",
+              type: "string",
+              description: "`Комментарий` документа.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "items",
+              type: "ExportOrderItem[]",
+              description: "Позиции заказа с полями `id`, `name`, `article`, `unit`, `pricePerUnit`, `quantity`, `sum`, `characteristics` и `requisites`.",
+              optional: false,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "requisites",
+              type: "ExportRequisite[]",
+              description: "`ЗначенияРеквизитов` документа, пары `name` и `value`. Плагин пишет «Статус заказа», «Дата отгрузки», «Заказ оплачен» и «Отменен».",
+              optional: false,
+              expandable: false,
+              children: []
+            }
+          ]
+        }
+      ]
+    }
+  ]}
+/>
+
+У документа есть и поля `date`, `time`, `operation`, `role`, `currency`, `rate` и `sum`. Их тоже можно поправить, они уходят в XML как есть.
+
+Верните `new StepResponse({ orders })`. Обработчик может поправить `document` и убрать заказ из выгрузки. Вернуть заказ, которого в выгрузке не было, вернуть заказ дважды или поменять `document.id` нельзя.
+
+После хука плагин собирает из документов `orders.xml` и отдаёт его 1С. Отметку о выгрузке заказы получают, только когда 1С подтвердит приём. Убранный из выгрузки заказ отметку не получит и попадёт в следующую выгрузку.
+
+---
+
+## setPayload
+
+Хук есть у двух воркфлоу, `exportOnecCatalogWorkflow` (`export-onec-catalog`) и `exportOnecOrdersWorkflow` (`export-onec-orders`). Вызывается один раз на выгрузку, когда XML уже собран. У выгрузки заказов он идёт после `setOrders`. Это резервный способ для того, чего нет в модели товара или документа, например для версии схемы, которую ждёт ваша конфигурация 1С.
+
+```ts title="src/workflows/hooks/onec-payload.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportOnecCatalogWorkflow, exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+exportOnecCatalogWorkflow.hooks.setPayload(async ({ payload }) => {
+  // ...
+
+  return new StepResponse({ payload })
+})
+
+exportOnecOrdersWorkflow.hooks.setPayload(async ({ payload }) => {
+  // ...
+
+  return new StepResponse({ payload })
+})
+```
+
+Это два разных хука, и каждый регистрируется у своего воркфлоу. Обработчик получает XML строкой:
+
+<MedusaTypeList
+  sectionTitle="SetPayloadInput"
+  types={[
+    {
+      name: "payload",
+      type: "string",
+      description: "XML выгрузки, собранный плагином.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+Верните `new StepResponse({ payload })` со строкой. Без обработчика в 1С уходит XML плагина. Какие заказы получат отметку о выгрузке, решает `setOrders`, а не этот хук.
+
+---
+
+## Функции чтения 1С
+
+`@gorgo-pro/medusa-erp-1c/hooks` экспортирует две функции, которые читают значения товара 1С так, как их раскладывает CommerceML.
+
+### readRequisite
+
+```ts
+readRequisite(source, name): string | undefined
+```
+
+Первое значение реквизита из `ЗначенияРеквизитов` по его `Наименованию`. Имя сравнивается точно, с пробелами и регистром. У 1С это свободный текст, и `Полное наименование` с `ПолноеНаименование` разные реквизиты. Если реквизита нет, функция вернёт `undefined`.
+
+### readProperty
+
+```ts
+readProperty(source, properties, nameOrId): string[]
+```
+
+Значения свойства из `ЗначенияСвойств`. Свойство ищется по `Ид` или по имени, а значения-справочники разворачиваются через `properties` из входных данных хука. По имени собираются все одноимённые свойства, потому что 1С может завести своё свойство «Бренд» под каждую категорию. Если значения нет, функция вернёт пустой массив.
+
+---
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Хуки воркфлоу",
+    href: "/medusa-integrations/1c-pro/hooks"
+  },
+  {
+    title: "Примеры хуков",
+    href: "/medusa-integrations/1c-pro/hooks/examples"
+  }
+]}/>

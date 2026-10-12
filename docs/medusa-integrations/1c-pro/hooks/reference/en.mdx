@@ -1,0 +1,399 @@
+---
+title: "1C:Enterprise Pro Hooks Reference"
+description: "Input, result and constraints of every workflow hook in the 1C:Enterprise Pro plugin."
+---
+
+# {frontmatter.title}
+
+This reference describes when each hook runs, what its handler receives and may return, and what the plugin does with the result. The rules shared by all hooks are on the [Workflow Hooks](/medusa-integrations/1c-pro/hooks) page.
+
+---
+
+## setProducts
+
+A hook of the `importOnecProductsWorkflow` workflow (`import-onec-products`). It runs on every catalog batch of up to 100 products, before they're compared with Medusa products. A 10,000-product catalog calls it 100 times.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products, properties }, { container }) => {
+  // ...
+
+  return new StepResponse({ products })
+})
+```
+
+The handler receives the batch's products and the classifier properties:
+
+<MedusaTypeList
+  sectionTitle="SetProductsToImportInput"
+  types={[
+    {
+      name: "products",
+      type: "ProductToImport[]",
+      description: "The batch's products, one element per `import.xml` product.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "OnecProduct",
+          description: "The `import.xml` product as parsed by the CommerceML parser, with the `id` (the 1C `Ид`), `name`, `description`, `article`, `images`, `groupId`, `requisiteValues` and `propertyValues` fields. Read requisites with `readRequisite` and properties with `readProperty`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "existing",
+          type: "ExistingCatalogProduct",
+          description: "The Medusa product with the same `Ид`, with an `id` field and the fields of `product`, except that categories come as `categories: { id }[]` rather than `category_ids`. Absent for a product that isn't in Medusa yet. Don't change it.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "product",
+          type: "DesiredCatalogProduct",
+          description: "What the product should become. The import leaves alone any field that isn't here.",
+          optional: false,
+          expandable: false,
+          children: []
+        }
+      ]
+    },
+    {
+      name: "properties",
+      type: "ClassifierProperty[]",
+      description: "The classifier properties. `readProperty` uses them to expand a product's property values.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+The exchange fills `title`, `description`, `handle`, `external_id`, `type_id`, `status`, `metadata`, `category_ids` and `sales_channels` in `product`, and `thumbnail` and `images` only when 1C sent images. It doesn't fill `subtitle`, `weight`, `length`, `height`, `width`, `origin_country`, `hs_code`, `mid_code`, `material`, `collection_id` and `discountable`. A handler can set them, and the import writes them the same way as the rest.
+
+Return `new StepResponse({ products })`. The handler may edit `product` and remove a product from the batch. What it can't do:
+
+- return a product that wasn't in the batch, or the same product twice;
+- change `existing`;
+- delete or change `external_id` and `metadata.onec.id` of a new product, because without them the next exchange creates the product again;
+- change `external_id` and `metadata.onec.id` of an existing product. Deleting these keys is allowed, and the fields then stay as they are.
+
+After the hook, the plugin compares `product` with `existing` and writes only the fields that differ. It creates a product that has no `existing`. A product removed from the batch is neither created nor updated in this exchange.
+
+---
+
+## setPriceLists
+
+A hook of the `importOnecPricesWorkflow` workflow (`import-onec-prices`). The workflow runs inside the offers import, so the hook runs on every offers batch of up to 100 products with all their offers, before reconciling with Medusa.
+
+```ts title="src/workflows/hooks/onec-prices.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecPricesWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+importOnecPricesWorkflow.hooks.setPriceLists(async ({ priceLists }, { container }) => {
+  // ...
+
+  return new StepResponse({ priceLists })
+})
+```
+
+The handler receives one element per non-retail price type from `offers.xml`. The plugin writes the retail type to the variant price, and the hook doesn't get it:
+
+<MedusaTypeList
+  sectionTitle="SetPriceListsToImportInput"
+  types={[
+    {
+      name: "priceLists",
+      type: "PriceListToImport[]",
+      description: "The batch's non-retail price types, one element per type.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "PriceType",
+          description: "The `offers.xml` price type, with the `id` (the 1C `Ид`), `name` and `currency` fields.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "existing",
+          type: "ExistingPriceList",
+          description: "The Medusa price list of this price type, with the `id`, `title`, `description`, `status`, `type`, `starts_at`, `ends_at`, `rules` and `metadata` fields. Absent for a type that has no price list yet. Don't change it.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "priceList",
+          type: "DesiredPriceList",
+          description: "What to write to the price list itself. For a new price list, it holds the title, the description, the `draft` status and the `sale` type. For an existing one, it's empty, so the administrator's changes aren't overwritten.",
+          optional: false,
+          expandable: false,
+          children: [
+            {
+              name: "title",
+              type: "string",
+              description: "The price list title.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "description",
+              type: "string",
+              description: "The price list description.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "status",
+              type: "PriceListStatus",
+              description: "`draft` or `active`.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "type",
+              type: "PriceListType",
+              description: "`sale` or `override`.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "starts_at",
+              type: "string | null",
+              description: "When the price list starts.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "ends_at",
+              type: "string | null",
+              description: "When the price list ends.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "rules",
+              type: "Record<string, string[]>",
+              description: "The full set of price list rules, for example `{ \"customer.groups.id\": [\"cusgroup_…\"] }`. They replace the rules already written.",
+              optional: true,
+              expandable: false,
+              children: []
+            }
+          ]
+        },
+        {
+          name: "prices",
+          type: "PriceListPriceToImport[]",
+          description: "The prices of this type for the batch's variants, with the `variant_id`, `sku`, `amount` and `currency_code` fields. A batch variant missing here loses its price in the price list. An empty list leaves the price list's prices alone. That happens when 1C sent nothing for this type.",
+          optional: false,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Return `new StepResponse({ priceLists })`. A key the handler puts into `priceList`, such as `rules` or `status`, is written by the import if it differs from what's stored. The constraints are:
+
+- you can't return a price type that wasn't in the batch, or the same type twice;
+- you can't change `existing`;
+- a price must belong to a variant from this batch, `amount` must be a number, and a variant can't have two prices in the same currency.
+
+After the hook, the plugin creates price lists for new price types and marks them with `metadata.onec.price_type_id`. For existing ones, it writes the changed `priceList` keys and reconciles prices by variant and currency, adding new ones, updating changed ones and removing extra ones. A price type removed from the list isn't touched at all in this batch, neither the price list nor its prices.
+
+---
+
+## setOrders
+
+A hook of the `exportOnecOrdersWorkflow` workflow (`export-onec-orders`). It runs once per order export to 1C, before the XML is built. The export includes orders that aren't canceled, haven't been exported yet, and didn't come from 1C.
+
+```ts title="src/workflows/hooks/onec-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+exportOnecOrdersWorkflow.hooks.setOrders(async ({ orders }, { container }) => {
+  // ...
+
+  return new StepResponse({ orders })
+})
+```
+
+The handler receives every order together with the CommerceML document it goes to 1C as:
+
+<MedusaTypeList
+  sectionTitle="SetOrdersToExportInput"
+  types={[
+    {
+      name: "orders",
+      type: "OrderToExport[]",
+      description: "The export's orders, one element per order.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "MedusaOrderForExport",
+          description: "The Medusa order as the export read it, with the `id`, `display_id`, `status`, `email`, `currency_code`, `total`, `created_at`, `metadata`, `customer`, `shipping_address` and `items` fields. Get anything else about the orders with one query for the whole export.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "document",
+          type: "ExportOrderDocument",
+          description: "The `orders.xml` document the order goes to 1C as. Values are already in the form 1C expects. Date and time are separate, and amounts are strings with two decimals.",
+          optional: false,
+          expandable: false,
+          children: [
+            {
+              name: "id",
+              type: "string",
+              description: "The document's `Ид`, equal to the order's `id`. 1C recognizes the order by it, so don't change it.",
+              optional: false,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "number",
+              type: "string",
+              description: "The document number, made of the prefix from the settings and the order's `display_id`.",
+              optional: false,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "counterparties",
+              type: "ExportCounterparty[]",
+              description: "The document's counterparties, with the `id`, `name`, `role`, `fullName`, `lastName`, `firstName`, `inn`, `kpp`, `address` and `contacts` fields. The plugin doesn't fill `inn` and `kpp`.",
+              optional: false,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "comment",
+              type: "string",
+              description: "The document's `Комментарий`.",
+              optional: true,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "items",
+              type: "ExportOrderItem[]",
+              description: "The order lines, with the `id`, `name`, `article`, `unit`, `pricePerUnit`, `quantity`, `sum`, `characteristics` and `requisites` fields.",
+              optional: false,
+              expandable: false,
+              children: []
+            },
+            {
+              name: "requisites",
+              type: "ExportRequisite[]",
+              description: "The document's `ЗначенияРеквизитов`, as `name` and `value` pairs. The plugin writes \"Статус заказа\", \"Дата отгрузки\", \"Заказ оплачен\" and \"Отменен\".",
+              optional: false,
+              expandable: false,
+              children: []
+            }
+          ]
+        }
+      ]
+    }
+  ]}
+/>
+
+The document also has the `date`, `time`, `operation`, `role`, `currency`, `rate` and `sum` fields. You can edit them as well, and they go into the XML as they are.
+
+Return `new StepResponse({ orders })`. The handler may edit `document` and remove an order from the export. It can't return an order that wasn't in the export, return an order twice, or change `document.id`.
+
+After the hook, the plugin builds `orders.xml` from the documents and hands it to 1C. Orders get the exported mark only once 1C confirms it received them. An order removed from the export doesn't get the mark and goes out with the next export.
+
+---
+
+## setPayload
+
+Two workflows have this hook, `exportOnecCatalogWorkflow` (`export-onec-catalog`) and `exportOnecOrdersWorkflow` (`export-onec-orders`). It runs once per export, when the XML is already built. In the order export, it runs after `setOrders`. It's a fallback for what the product or document model doesn't cover, for example the schema version your 1C configuration expects.
+
+```ts title="src/workflows/hooks/onec-payload.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportOnecCatalogWorkflow, exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+exportOnecCatalogWorkflow.hooks.setPayload(async ({ payload }) => {
+  // ...
+
+  return new StepResponse({ payload })
+})
+
+exportOnecOrdersWorkflow.hooks.setPayload(async ({ payload }) => {
+  // ...
+
+  return new StepResponse({ payload })
+})
+```
+
+These are two separate hooks, and each one is registered on its own workflow. The handler receives the XML as a string:
+
+<MedusaTypeList
+  sectionTitle="SetPayloadInput"
+  types={[
+    {
+      name: "payload",
+      type: "string",
+      description: "The export XML built by the plugin.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+Return `new StepResponse({ payload })` with a string. Without a handler, the plugin's XML goes to 1C. `setOrders` decides which orders get the exported mark, not this hook.
+
+---
+
+## 1C Reading Functions
+
+`@gorgo-pro/medusa-erp-1c/hooks` exports two functions that read the values of a 1C product the way CommerceML lays them out.
+
+### readRequisite
+
+```ts
+readRequisite(source, name): string | undefined
+```
+
+The first value of a requisite from `ЗначенияРеквизитов`, found by its `Наименование`. The name is compared exactly, including spaces and case. In 1C it's free text, and `Полное наименование` and `ПолноеНаименование` are different requisites. If there's no such requisite, the function returns `undefined`.
+
+### readProperty
+
+```ts
+readProperty(source, properties, nameOrId): string[]
+```
+
+The values of a property from `ЗначенияСвойств`. The property is looked up by `Ид` or by name, and reference values are expanded through `properties` from the hook input. A lookup by name collects all properties with that name, because 1C may create its own "Бренд" (brand) property for each category. If there's no value, the function returns an empty array.
+
+---
+
+## References
+
+<CardList items={[
+  {
+    title: "Workflow Hooks",
+    href: "/medusa-integrations/1c-pro/hooks"
+  },
+  {
+    title: "Hook Examples",
+    href: "/medusa-integrations/1c-pro/hooks/examples"
+  }
+]}/>

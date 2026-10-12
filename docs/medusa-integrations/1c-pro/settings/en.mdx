@@ -1,0 +1,151 @@
+---
+title: "Manage 1C:Enterprise Pro Settings in the Medusa Admin"
+description: "Learn how to set up the sales channel, region, price types, currencies and price lists of the 1C:Enterprise Pro integration in the Medusa Admin."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to manage the settings of the 1C:Enterprise Pro integration.
+
+## View 1C:Enterprise Settings
+
+To open the 1C:Enterprise settings page:
+
+1. Open the Medusa Admin.
+2. Go to **Settings → Integrations → 1C:Enterprise**.
+
+The integration settings page opens. It shows the status, the **Sync settings** and **Advanced** sections, and two sections added by the plugin, **Sales channel & region** and **Currency mapping**.
+
+{/* TODO: screenshot */}
+
+---
+
+## Choose the Sales Channel and Region
+
+The sales channel and the region are required. Until you save them, the integration stays **Not configured** or **Incomplete**, and the exchange answers 1C with a failure.
+
+- **Sales channel** – the plugin links products and stock locations from 1C to it. Orders that come from 1C get it as well.
+- **Region** – the region of an order from 1C when no region matches the document's currency.
+
+To choose the sales channel and region:
+
+1. Go to **Settings → Integrations → 1C:Enterprise**.
+2. In the **Sales channel & region** section, choose the sales channel.
+3. Choose the region.
+4. Click **Save**.
+
+{/* TODO: screenshot */}
+
+---
+
+## Edit the Sync Settings
+
+The **Sync settings** section holds the **Price type ID** field. It's the `Ид` of the 1C price type that the plugin writes to the variant price as the retail price. If the field is empty, the first price type in `offers.xml` is the retail one. Each of the other price types becomes a price list. See [Enable Price Lists from 1C](#enable-price-lists-from-1c) below.
+
+When exporting the catalog to 1C, the plugin sets the same `Ид` on prices. If the field is empty, the export uses the `Ид` `11111111-1111-1111-1111-111111111111`.
+
+To edit the sync settings:
+
+1. Go to **Settings → Integrations → 1C:Enterprise**.
+2. In the **Sync settings** section, click the action menu in the section header.
+3. Choose **Edit**.
+4. In the side panel that opens, enter the `Ид` of the retail price type.
+5. Click **Save**.
+
+{/* TODO: screenshot */}
+
+---
+
+## Set Up the Currency Mapping
+
+The **Currency mapping** section links a currency name, as 1C writes it in the exchange files, to a currency of your Medusa store. The plugin uses it to pick the currency of variant prices, price list prices and orders from 1C, and picks an order's region by its currency.
+
+The name is compared ignoring case and surrounding spaces. For a currency without a mapping, the plugin uses its 1C name in lowercase as the Medusa currency code, so `USD` from 1C becomes `usd` without any setup. If no mapping is set at all, the plugin treats `руб` as `rub`.
+
+To add a mapping:
+
+1. Go to **Settings → Integrations → 1C:Enterprise**.
+2. In the **Currency mapping** section, click **Add**.
+3. In the side panel that opens, choose a Medusa currency from your store's currencies.
+4. Enter the currency name as 1C writes it.
+5. Click **Save**.
+
+To change or remove a mapping, open the action menu in its row and choose **Edit** or **Delete**.
+
+{/* TODO: screenshot */}
+
+---
+
+## Edit the Advanced Settings
+
+The **Advanced** section holds two fields:
+
+- **Order number prefix** – a string placed before the Medusa order number in the export to 1C. With the `WEB-` prefix, order 1042 goes to 1C as `WEB-1042`.
+- **Action for products missing from a full catalog export** – what to do with a previously imported product that's no longer in a full catalog export. **Do nothing**, **Deactivate (set to draft)** or **Delete**. The default is **Do nothing**.
+
+The plugin stores the number an order went to 1C under in the order itself. When 1C sends the order back, the plugin recognizes it by its `Ид` or by that number and doesn't create it a second time, so changing the prefix doesn't affect orders already exported.
+
+The action only runs after a full catalog export. If 1C sent only changes, no product counts as missing.
+
+To edit the advanced settings:
+
+1. Go to **Settings → Integrations → 1C:Enterprise**.
+2. In the **Advanced** section, click the action menu in the section header.
+3. Choose **Edit**.
+4. In the side panel that opens, set the prefix and the action for missing products.
+5. Click **Save**.
+
+{/* TODO: screenshot */}
+
+---
+
+## Check the Settings
+
+This plugin's connection test doesn't call 1C, because 1C starts the exchange itself. Instead, it checks that the sales channel and region are chosen and that their IDs look real, `sc_…` and `reg_…`.
+
+To check the settings:
+
+1. Go to **Settings → Integrations → 1C:Enterprise**.
+2. Open the action menu next to the integration's name.
+3. Choose **Test connection**.
+
+The result appears in a notification.
+
+---
+
+## Enable Price Lists from 1C
+
+The plugin brings every 1C price type except the retail one into Medusa as a price list. It creates a new price list as a draft of the **Sale** type, with the price type's name as the title and `1C price type: <name>` as the description. Prices in it are updated on every exchange. The plugin doesn't touch the title, status, type or rules of an existing price list, so your changes to it stay.
+
+To make the price list's prices visible to customers:
+
+1. Open the Medusa Admin and go to **Price Lists**.
+2. Open the price list named after the 1C price type.
+3. In the **Configuration** section, click the action menu, choose **Edit**, pick the customer groups in the **Customer availability** field, and click **Save**.
+4. In the price list header, click the action menu and choose **Edit**.
+5. Change **Status** to **Active** and click **Save**.
+
+Set the groups before activating the price list. Otherwise, between the two steps, the price list applies to everyone.
+
+<Note type="warning">
+
+Medusa applies an active price list without customer groups to every storefront visitor, guests included. If the wholesale price is below the retail one, such a price list shows it to everybody. That's why the plugin creates new price lists as drafts.
+
+</Note>
+
+To have the price list get its group and status without manual setup, use the `setPriceLists` hook. The [Wholesale Price for a Customer Group](/medusa-integrations/1c-pro/hooks/examples#wholesale-price-for-a-customer-group) example shows how.
+
+---
+
+## Next Steps
+
+<CardList items={[
+  {
+    title: "Workflow Hooks",
+    href: "/medusa-integrations/1c-pro/hooks"
+  },
+  {
+    title: "Hook Examples",
+    href: "/medusa-integrations/1c-pro/hooks/examples"
+  }
+]}/>

@@ -1,0 +1,80 @@
+---
+title: "1C:Enterprise Pro Integration with Medusa"
+description: "Paid plugin that exchanges the catalog, prices, stock and orders between Medusa and 1C:Enterprise ERP."
+---
+
+<div>
+  <img alt="Medusa-1C logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-medusa-logo.svg" width="270"/>
+</div>
+
+# {frontmatter.title}
+
+Paid integration plugin for data exchange between Medusa and 1C:Enterprise ERP over the CommerceML protocol. The free version has [its own documentation](/medusa-integrations/1c-enterprise).
+
+<Note type="success" title="The plugin is in closed beta">
+
+Participants get a price below the release one for the first year, help with the edge cases of their own 1C configuration and a chat with the development team. To take part in the testing, [apply for the beta](https://gorgojs.com/beta/medusa-1c).
+
+</Note>
+
+---
+
+## Plugin Features
+
+- **Catalog from 1C** – products, categories from classifier groups, product types and images.
+- **Offers** – variants with SKUs, options built from characteristics, and the retail price.
+- **Price types** – every non-retail 1C price type becomes a Medusa price list.
+- **Per-warehouse stock** – 1C warehouses become Medusa stock locations, with stock levels kept for each.
+- **Two-way order exchange** – Medusa orders go to 1C, and orders created in 1C come into Medusa.
+- **Catalog export to 1C** – products created or changed in Medusa go to 1C.
+- **Products missing from 1C** – after a full catalog export, you can unpublish or delete them.
+- **Large catalogs** – the plugin is tested on a 400,000 SKU catalog and processes it in batches of 100 products.
+- **Workflow hooks** – your own code adjusts what the exchange writes to Medusa and sends to 1C, without forking the plugin.
+- **[Integration Module](/medusa-modules/integration)**<AccentBadge badge="New" /> – you configure every plugin setting in the Medusa Admin.
+
+<Note type="success" title="Integration Module">
+
+The plugin works through the Integration Module. The plugin declares its options as a schema, and a store administrator configures them in the Medusa Admin, with no `medusa-config` edits and no redeploy. Read more in [the module documentation](/medusa-modules/integration).
+
+</Note>
+
+---
+
+## What Is 1C:Enterprise
+
+1C:Enterprise is a platform for accounting systems, with configurations such as "1C:Trade Management" built on it. They exchange CommerceML files with an online store. 1C starts the exchange itself. It calls the store's exchange URL, sends the catalog, offers and orders, and picks up the orders placed on the store.
+
+---
+
+## 💬 Support & Community
+
+Got questions or ideas about the plugin? Join the Telegram support chat, [@gorgojs_chat](https://t.me/gorgojs_chat).
+
+Connect with other Medusa developers on Telegram, [@medusajs_chat](https://t.me/medusajs_chat).
+
+---
+
+## Next Steps
+
+<CardList items={[
+  {
+    title: "Getting Started",
+    href: "/medusa-integrations/1c-pro/getting-started"
+  },
+  {
+    title: "Settings in the Medusa Admin",
+    href: "/medusa-integrations/1c-pro/settings"
+  },
+  {
+    title: "Workflow Hooks",
+    href: "/medusa-integrations/1c-pro/hooks"
+  },
+  {
+    title: "Hooks Reference",
+    href: "/medusa-integrations/1c-pro/hooks/reference"
+  },
+  {
+    title: "Hook Examples",
+    href: "/medusa-integrations/1c-pro/hooks/examples"
+  }
+]}/>

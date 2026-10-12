@@ -1,0 +1,387 @@
+---
+title: "Примеры хуков 1С:Предприятие Pro"
+description: "Готовые обработчики хуков плагина 1С:Предприятие Pro для частых задач обмена"
+---
+
+# {frontmatter.title}
+
+На этой странице собраны обработчики для частых задач обмена с 1С. Код примеров взят из тестов плагина, которые проверяют каждый из них на настоящем обмене. Описание входных данных и результата каждого хука находится на странице [Справочник хуков](/medusa-integrations/1c-pro/hooks/reference).
+
+<Note type="default" title="">
+
+Каждый пример регистрирует свой обработчик, а Medusa разрешает только один обработчик на хук. Чтобы применить несколько примеров к одному хуку, объедините их, как в разделе [Несколько правок в одном обработчике](#несколько-правок-в-одном-обработчике).
+
+</Note>
+
+---
+
+## Не импортировать услуги
+
+В 1С услуги ведутся в той же номенклатуре, что и товары, но в магазине им не место, потому что у них нет ни остатка, ни карточки. Обработчик убирает из пачки товары, у которых реквизит «ВидНоменклатуры» равен «Услуга». Запросов к базе нет.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+import { readRequisite } from "@gorgo-pro/medusa-erp-1c/hooks"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products }) => {
+  return new StepResponse({
+    products: products.filter(({ source }) => readRequisite(source, "ВидНоменклатуры") !== "Услуга"),
+  })
+})
+```
+
+Убранная услуга не создаётся в Medusa. Если она попала в магазин раньше, обработчик её не удалит, потому что убранный товар импорт не трогает вовсе.
+
+---
+
+## Реквизиты и свойства в поля товара
+
+Полное наименование, вес и материал 1С хранит в реквизитах и свойствах товара, а у товара Medusa для них есть поля `subtitle`, `weight` и `material`. Обмен их не заполняет, и обработчик переносит значения сам. Запросов к базе нет.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+import { readProperty, readRequisite } from "@gorgo-pro/medusa-erp-1c/hooks"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products, properties }) => {
+  return new StepResponse({
+    products: products.map(({ source, existing, product }) => {
+      const fullName = readRequisite(source, "Полное наименование")
+      const weight = Number.parseFloat((readRequisite(source, "Вес") ?? "").replace(",", "."))
+      const [material] = readProperty(source, properties, "Материал")
+
+      return {
+        source,
+        existing,
+        product: {
+          ...product,
+          ...(fullName ? { subtitle: fullName } : {}),
+          ...(Number.isFinite(weight) ? { weight } : {}),
+          ...(material ? { material } : {}),
+        },
+      }
+    }),
+  })
+})
+```
+
+Поле попадает в товар, только когда 1С прислала значение. Ключ со значением `undefined` импорт счёл бы изменившимся и стёр бы значение, заданное в Medusa Admin. Вес 1С может прислать с десятичной запятой, поэтому перед разбором она заменяется точкой.
+
+---
+
+## Черновик без картинок
+
+Товар без единой картинки выглядит на витрине пустой карточкой. Обработчик оставляет такой товар черновиком, пока картинка не появится. Запросов к базе нет.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products }) => {
+  return new StepResponse({
+    products: products.map((item) => {
+      const images = item.product.images ?? item.existing?.images ?? []
+
+      return images.length ? item : { ...item, product: { ...item.product, status: "draft" } }
+    }),
+  })
+})
+```
+
+Обмен публикует товар на каждом импорте, так что товар сам станет опубликованным в обмене, где 1С пришлёт ему картинку. Обратная сторона в том, что товар без картинок, опубликованный вручную, следующий обмен снова переведёт в черновик.
+
+---
+
+## Не перезаписывать правки из Medusa Admin
+
+Название и описание товара часто правят в Medusa Admin, а следующий обмен вернул бы значения из 1С. Обработчик удаляет эти ключи у существующих товаров, и импорт оставляет поля как есть. Запросов к базе нет.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products }) => {
+  return new StepResponse({
+    products: products.map((item) => {
+      if (!item.existing) {
+        return item
+      }
+
+      const { title: _title, description: _description, ...product } = item.product
+
+      return { ...item, product }
+    }),
+  })
+})
+```
+
+Новый товар получает название и описание из 1С, потому что без названия его не создать. После этого правки названия и описания в 1С до магазина не доходят.
+
+---
+
+## Бренд в коллекцию
+
+Бренд товара 1С хранит свойством «Бренд», а в Medusa его удобно держать коллекцией. Обработчик ищет коллекции с названиями брендов пачки и ставит товару найденную. Один запрос к базе на пачку.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+import { readProperty } from "@gorgo-pro/medusa-erp-1c/hooks"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products, properties }, { container }) => {
+  const brandByOnecId = new Map(products.map(({ source }) => [source.id, readProperty(source, properties, "Бренд")[0]]))
+  const titles = [...new Set([...brandByOnecId.values()].filter((title): title is string => Boolean(title)))]
+
+  if (!titles.length) {
+    return new StepResponse({ products })
+  }
+
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const { data: collections } = await query.graph({
+    entity: "product_collection",
+    fields: ["id", "title"],
+    filters: { title: titles },
+  })
+  const collectionIdByTitle = new Map(collections.map((collection) => [collection.title, collection.id]))
+
+  return new StepResponse({
+    products: products.map((item) => {
+      const collectionId = collectionIdByTitle.get(brandByOnecId.get(item.source.id) ?? "")
+
+      return collectionId ? { ...item, product: { ...item.product, collection_id: collectionId } } : item
+    }),
+  })
+})
+```
+
+Коллекции обработчик только ищет, а заводите их вы, в Medusa Admin. Товар, для бренда которого коллекции нет, остаётся без изменений. Создавать коллекции из обработчика можно, но тогда ему нужна функция отката. Её описывают [правила для обработчиков](/medusa-integrations/1c-pro/hooks#как-хук-влияет-на-скорость-обмена).
+
+---
+
+## Оптовая цена для группы покупателей
+
+Тип цен «Оптовая цена» должен действовать только для покупателей из группы «Опт». Обработчик включает его прайс-лист и ставит ему правило группы, так что гость по-прежнему видит розничную цену. Тип прайс-листа `override`, чтобы покупатель из группы платил ровно цену из 1С, а не меньшую из оптовой и розничной. Один запрос к базе на пачку, и только когда в пачке есть этот тип цен.
+
+```ts title="src/workflows/hooks/onec-prices.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { ContainerRegistrationKeys, PriceListStatus, PriceListType } from "@medusajs/framework/utils"
+import { importOnecPricesWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+const WHOLESALE_PRICE_TYPE_NAME = "Оптовая цена"
+const WHOLESALE_GROUP_NAME = "Опт"
+
+importOnecPricesWorkflow.hooks.setPriceLists(async ({ priceLists }, { container }) => {
+  if (!priceLists.some(({ source }) => source.name === WHOLESALE_PRICE_TYPE_NAME)) {
+    return new StepResponse({ priceLists })
+  }
+
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const { data: groups } = await query.graph({
+    entity: "customer_group",
+    fields: ["id"],
+    filters: { name: WHOLESALE_GROUP_NAME },
+  })
+  const groupId = groups[0]?.id
+
+  if (!groupId) {
+    return new StepResponse({ priceLists })
+  }
+
+  return new StepResponse({
+    priceLists: priceLists.map((item) =>
+      item.source.name === WHOLESALE_PRICE_TYPE_NAME
+        ? {
+            ...item,
+            priceList: {
+              ...item.priceList,
+              status: PriceListStatus.ACTIVE,
+              type: PriceListType.OVERRIDE,
+              rules: { "customer.groups.id": [groupId] },
+            },
+          }
+        : item,
+    ),
+  })
+})
+```
+
+Группу «Опт» заведите в Medusa Admin заранее. Без неё прайс-лист остаётся черновиком, как без обработчика. Статус, тип и правила этого прайс-листа обработчик ставит на каждом обмене, поэтому их изменения в Medusa Admin следующий обмен вернёт.
+
+---
+
+## Не выгружать тестовые заказы
+
+Заказы, которые команда оформляет для проверки витрины, не должны попадать в 1С. Обработчик убирает из выгрузки заказы с адресов `@test.invalid`. Запросов к базе нет.
+
+```ts title="src/workflows/hooks/onec-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+exportOnecOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.filter(({ source }) => !source.email?.endsWith("@test.invalid")),
+  })
+})
+```
+
+Убранный заказ не получает отметку о выгрузке. Он попадает в хук при каждой выгрузке, и обработчик убирает его снова.
+
+---
+
+## Источник заказа и комментарий покупателя
+
+Менеджеру в 1С полезно видеть, откуда пришёл заказ и что написал покупатель. Отдельного поля для комментария у заказа Medusa нет, поэтому витрина записывает его в `metadata.comment`. Обработчик переносит комментарий в документ и добавляет реквизит «Источник». Запросов к базе нет.
+
+```ts title="src/workflows/hooks/onec-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+exportOnecOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.map(({ source, document }) => {
+      const comment = source.metadata?.comment
+
+      return {
+        source,
+        document: {
+          ...document,
+          ...(typeof comment === "string" && comment ? { comment } : {}),
+          requisites: [...document.requisites, { name: "Источник", value: "Интернет-магазин" }],
+        },
+      }
+    }),
+  })
+})
+```
+
+Сохранить комментарий в `metadata.comment` заказа должна витрина. Реквизит «Источник» попадёт в документ, а что с ним сделает 1С, зависит от вашей конфигурации.
+
+---
+
+## Контрагент-юрлицо и способ доставки
+
+Покупатель из группы «Юрлица» должен уйти в 1С контрагентом с ИНН и КПП, а менеджеру нужен способ доставки. ИНН и КПП хранятся в `metadata` покупателя, способ доставки в заказе, и обработчик получает всё это одним запросом на всю выгрузку.
+
+```ts title="src/workflows/hooks/onec-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
+import { exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+const COMPANY_GROUP_NAME = "Юрлица"
+
+exportOnecOrdersWorkflow.hooks.setOrders(async ({ orders }, { container }) => {
+  if (!orders.length) {
+    return new StepResponse({ orders })
+  }
+
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const { data } = await query.graph({
+    entity: "order",
+    fields: ["id", "customer.metadata", "customer.groups.name", "shipping_methods.name"],
+    filters: { id: orders.map(({ source }) => source.id) },
+  })
+  const extraById = new Map(data.map((order) => [order.id, order]))
+
+  return new StepResponse({
+    orders: orders.map(({ source, document }) => {
+      const extra = extraById.get(source.id)
+      const isCompany = extra?.customer?.groups?.some((group: { name?: string } | null) => group?.name === COMPANY_GROUP_NAME)
+      const { inn, kpp } = (extra?.customer?.metadata ?? {}) as { inn?: string; kpp?: string }
+      const delivery = extra?.shipping_methods?.[0]?.name
+
+      return {
+        source,
+        document: {
+          ...document,
+          counterparties: document.counterparties.map((counterparty) =>
+            isCompany && inn ? { ...counterparty, inn, ...(kpp ? { kpp } : {}) } : counterparty,
+          ),
+          requisites: delivery
+            ? [...document.requisites, { name: "Способ доставки", value: delivery }]
+            : document.requisites,
+        },
+      }
+    }),
+  })
+})
+```
+
+Запрос идёт через связь заказа с покупателем, поэтому в базе это три SQL-запроса, но на всю выгрузку, а не на заказ. ИНН и КПП плагин выводит после имени контрагента и перед адресом. На настоящей конфигурации 1С это место ещё не проверялось, поэтому убедитесь, что ваша читает их оттуда.
+
+---
+
+## Версия схемы для старой конфигурации 1С
+
+Плагин пишет в корень файла `ВерсияСхемы="2.10"`, а старая конфигурация 1С может ждать свою версию, например 2.05. В модели товара и документа версии схемы нет, поэтому обработчик правит готовый XML через `setPayload`, у выгрузки каталога и у выгрузки заказов. Запросов к базе нет.
+
+```ts title="src/workflows/hooks/onec-payload.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportOnecCatalogWorkflow, exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+const OLD_SCHEMA_VERSION = "2.05"
+
+function withSchemaVersion(payload: string): string {
+  return payload.replace(/ВерсияСхемы="[^"]*"/, `ВерсияСхемы="${OLD_SCHEMA_VERSION}"`)
+}
+
+exportOnecCatalogWorkflow.hooks.setPayload(async ({ payload }) => {
+  return new StepResponse({ payload: withSchemaVersion(payload) })
+})
+
+exportOnecOrdersWorkflow.hooks.setPayload(async ({ payload }) => {
+  return new StepResponse({ payload: withSchemaVersion(payload) })
+})
+```
+
+Обработчик меняет только номер версии, а устройство файла остаётся тем, что пишет плагин. Если ваша конфигурация отличается и устройством, правьте XML в том же обработчике. Правка строки ничего не знает об устройстве XML, поэтому всё, что выражается через `setOrders`, надёжнее делать там.
+
+---
+
+## Несколько правок в одном обработчике
+
+Medusa разрешает один обработчик на хук, поэтому правки проекта для одного хука собираются в одном обработчике. Удобно держать каждую правку отдельной функцией и вызывать их по очереди. Отбор ставьте первым, чтобы остальные правки не тратили время на убранные элементы.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+import { readRequisite, type ProductToImport } from "@gorgo-pro/medusa-erp-1c/hooks"
+
+function skipServices(products: ProductToImport[]): ProductToImport[] {
+  return products.filter(({ source }) => readRequisite(source, "ВидНоменклатуры") !== "Услуга")
+}
+
+function keepManagerEdits(products: ProductToImport[]): ProductToImport[] {
+  return products.map((item) => {
+    if (!item.existing) {
+      return item
+    }
+
+    const { title: _title, description: _description, ...product } = item.product
+
+    return { ...item, product }
+  })
+}
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products }) => {
+  return new StepResponse({ products: keepManagerEdits(skipServices(products)) })
+})
+```
+
+Функции, которым нужна база, делайте асинхронными и вызывайте через `await`. Тогда у каждой по-прежнему один запрос на пачку.
+
+---
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Хуки воркфлоу",
+    href: "/medusa-integrations/1c-pro/hooks"
+  },
+  {
+    title: "Справочник хуков",
+    href: "/medusa-integrations/1c-pro/hooks/reference"
+  }
+]}/>

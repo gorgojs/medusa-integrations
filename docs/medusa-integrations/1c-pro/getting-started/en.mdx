@@ -1,0 +1,169 @@
+---
+title: "Getting Started with 1C:Enterprise Pro for Medusa (v0.1.0-beta.1)"
+description: "In this document, you'll learn how to install the 1C:Enterprise Pro plugin, register it in Medusa and set up the exchange in 1C."
+---
+
+# {frontmatter.title}
+
+In this document, you'll learn how to install the 1C:Enterprise Pro plugin, register it in Medusa and set up the exchange in 1C.
+
+<Note type="success" title="The plugin is available to beta participants">
+
+The plugin is published to Gorgo's private package registry. To install it, [apply for the beta](https://gorgojs.com/beta/medusa-1c). Once your application is approved, you get an access token for the registry.
+
+</Note>
+
+## Prerequisites
+
+- Medusa server v2.17.2 or later
+- Node.js v20 or later
+- [Integration Module](/medusa-modules/integration) v0.1.4 or later
+- An access token for Gorgo's package registry
+
+---
+
+## Installation
+
+`@gorgo-pro` packages are located in the `registry.gorgojs.com` registry, not in the public npm registry. Point your package manager at this registry for the `@gorgo-pro` scope and pass it the token. Yarn 2 and later reads its settings from `.yarnrc.yml`, npm from `.npmrc`:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```yaml title=".yarnrc.yml"
+    npmScopes:
+      gorgo-pro:
+        npmRegistryServer: "https://registry.gorgojs.com"
+        npmAuthToken: "${GORGO_TOKEN}"
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```text title=".npmrc"
+    @gorgo-pro:registry=https://registry.gorgojs.com/
+    //registry.gorgojs.com/:_authToken=${GORGO_TOKEN}
+    ```
+  </CodeTab>
+</CodeTabs>
+
+Both files take the token from the `GORGO_TOKEN` environment variable, so it stays out of your project's repository. Set this variable wherever dependencies get installed, on your machine and in CI.
+
+Install the plugin together with the Integration Module:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration @gorgo-pro/medusa-erp-1c@0.1.0-beta.1
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration @gorgo-pro/medusa-erp-1c@0.1.0-beta.1
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Configuration
+
+Add the plugin configuration to the `medusa-config.ts` file of your Medusa application:
+
+```ts title="medusa-config.ts"
+// ...
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo-pro/medusa-erp-1c/providers/integration-1c",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo-pro/medusa-erp-1c",
+      options: {},
+    },
+  ],
+})
+```
+
+The first entry registers the 1C provider in the Integration Module, which brings its settings into the Medusa Admin. The second one adds the plugin itself, with the exchange URL for 1C, the admin widgets and the exchange workflows.
+
+<Note type="default" title="">
+
+The plugin has no options in `medusa-config`. You set the sales channel, the region, the price types and everything else in the Medusa Admin, as described in [Settings in the Medusa Admin](/medusa-integrations/1c-pro/settings). The plugin has no secret fields either, so the Integration Module doesn't need an `encryptionKey` for it.
+
+</Note>
+
+---
+
+## Migration
+
+The Integration Module keeps settings in its own tables. Run the following command to apply the database migrations:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn medusa db:migrate
+    ```
+  </CodeTab>
+  <CodeTab label="npx" value="npx">
+    ```bash
+    npx medusa db:migrate
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Set Up the Exchange in 1C
+
+1C starts the exchange. In the site exchange settings of your 1C configuration, set:
+
+- **Site address** – `https://<your Medusa backend URL>/hooks/erp/1c`
+- **User** – the email of a Medusa Admin user
+- **Password** – that user's password
+
+The plugin checks the login and password the same way the Medusa Admin does on sign-in. Create a separate user for the exchange, so that 1C doesn't store an employee's password and you can delete that user or change the password without affecting anyone else.
+
+You don't need to configure compression or chunk size. The plugin tells 1C itself that it accepts zip archives and file chunks of up to 1 MB. From the received files, it imports the catalog (`import*.xml`) first, then the offers (`offers*.xml`) and the orders (`orders*.xml`).
+
+<Note type="warning">
+
+The plugin keeps the exchange session in the memory of the Medusa process. If the server restarts in the middle of an exchange, the exchange breaks off and has to be repeated. If your backend runs as several instances, route every request to `/hooks/erp/1c` to the same one. Otherwise a request that lands on another instance gets an authorization failure, even though the login and password are correct.
+
+</Note>
+
+---
+
+## Exchange Log
+
+Exchange entries in the Medusa log start with `[1C Integration]`. After every catalog and offers batch, the plugin writes a progress line:
+
+```
+[1C Integration] import: progress catalog 40% (200/500 products, batch 2/5)
+```
+
+The plugin commits batches one by one, and an interrupted exchange keeps the ones that got through. Repeating the whole exchange is safe, because products are matched by their 1C `Ид` and variants by SKU.
+
+When the exchange fails, 1C receives a `failure` response with the reason, and the same reason goes to the log. The duration of every import step is visible at the `debug` level, for example with the `LOG_LEVEL=debug` environment variable.
+
+---
+
+## Next Steps
+
+<CardList items={[
+  {
+    title: "Settings in the Medusa Admin",
+    href: "/medusa-integrations/1c-pro/settings"
+  },
+  {
+    title: "Workflow Hooks",
+    href: "/medusa-integrations/1c-pro/hooks"
+  }
+]}/>

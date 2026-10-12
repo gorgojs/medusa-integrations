@@ -1,0 +1,387 @@
+---
+title: "1C:Enterprise Pro Hook Examples"
+description: "Ready-made hook handlers of the 1C:Enterprise Pro plugin for common exchange tasks."
+---
+
+# {frontmatter.title}
+
+This page collects handlers for common tasks in the 1C exchange. The code of the examples comes from the plugin's tests, which check each of them on a real exchange. The input and result of every hook are described in the [Hooks Reference](/medusa-integrations/1c-pro/hooks/reference).
+
+<Note type="default" title="">
+
+Each example registers its own handler, and Medusa allows only one handler per hook. To apply several examples to the same hook, combine them as shown in [Several Changes in One Handler](#several-changes-in-one-handler).
+
+</Note>
+
+---
+
+## Skip Services
+
+1C keeps services in the same item catalog as goods, but they don't belong in the store, since they have neither stock nor a product page. The handler removes products whose "ВидНоменклатуры" (item kind) requisite is "Услуга" (service) from the batch. No database queries.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+import { readRequisite } from "@gorgo-pro/medusa-erp-1c/hooks"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products }) => {
+  return new StepResponse({
+    products: products.filter(({ source }) => readRequisite(source, "ВидНоменклатуры") !== "Услуга"),
+  })
+})
+```
+
+A removed service isn't created in Medusa. If it got into the store earlier, the handler doesn't delete it, because the import doesn't touch a removed product at all.
+
+---
+
+## Requisites and Properties to Product Fields
+
+1C keeps the full name, weight and material in a product's requisites and properties, while a Medusa product has the `subtitle`, `weight` and `material` fields for them. The exchange doesn't fill these fields, so the handler moves the values itself. No database queries.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+import { readProperty, readRequisite } from "@gorgo-pro/medusa-erp-1c/hooks"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products, properties }) => {
+  return new StepResponse({
+    products: products.map(({ source, existing, product }) => {
+      const fullName = readRequisite(source, "Полное наименование")
+      const weight = Number.parseFloat((readRequisite(source, "Вес") ?? "").replace(",", "."))
+      const [material] = readProperty(source, properties, "Материал")
+
+      return {
+        source,
+        existing,
+        product: {
+          ...product,
+          ...(fullName ? { subtitle: fullName } : {}),
+          ...(Number.isFinite(weight) ? { weight } : {}),
+          ...(material ? { material } : {}),
+        },
+      }
+    }),
+  })
+})
+```
+
+A field gets into the product only when 1C sent a value. The import would treat a key holding `undefined` as changed and erase a value set in the Medusa Admin. 1C may send the weight with a decimal comma, so it's replaced with a dot before parsing.
+
+---
+
+## Draft Without Images
+
+A product without a single image shows up on the storefront as an empty card. The handler keeps such a product as a draft until an image arrives. No database queries.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products }) => {
+  return new StepResponse({
+    products: products.map((item) => {
+      const images = item.product.images ?? item.existing?.images ?? []
+
+      return images.length ? item : { ...item, product: { ...item.product, status: "draft" } }
+    }),
+  })
+})
+```
+
+The exchange publishes the product on every import, so the product gets published by itself in the exchange where 1C sends it an image. The flip side is that the next exchange turns a product without images that someone published by hand back into a draft.
+
+---
+
+## Keep Edits Made in the Medusa Admin
+
+Product titles and descriptions often get edited in the Medusa Admin, and the next exchange would bring back the values from 1C. The handler deletes these keys for existing products, and the import leaves the fields as they are. No database queries.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products }) => {
+  return new StepResponse({
+    products: products.map((item) => {
+      if (!item.existing) {
+        return item
+      }
+
+      const { title: _title, description: _description, ...product } = item.product
+
+      return { ...item, product }
+    }),
+  })
+})
+```
+
+A new product gets its title and description from 1C, because it can't be created without a title. After that, title and description changes made in 1C no longer reach the store.
+
+---
+
+## Brand to Collection
+
+1C keeps a product's brand in the "Бренд" (brand) property, while in Medusa it's handy to keep it as a collection. The handler looks up the collections named after the batch's brands and assigns the matching one to each product. One database query per batch.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+import { readProperty } from "@gorgo-pro/medusa-erp-1c/hooks"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products, properties }, { container }) => {
+  const brandByOnecId = new Map(products.map(({ source }) => [source.id, readProperty(source, properties, "Бренд")[0]]))
+  const titles = [...new Set([...brandByOnecId.values()].filter((title): title is string => Boolean(title)))]
+
+  if (!titles.length) {
+    return new StepResponse({ products })
+  }
+
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const { data: collections } = await query.graph({
+    entity: "product_collection",
+    fields: ["id", "title"],
+    filters: { title: titles },
+  })
+  const collectionIdByTitle = new Map(collections.map((collection) => [collection.title, collection.id]))
+
+  return new StepResponse({
+    products: products.map((item) => {
+      const collectionId = collectionIdByTitle.get(brandByOnecId.get(item.source.id) ?? "")
+
+      return collectionId ? { ...item, product: { ...item.product, collection_id: collectionId } } : item
+    }),
+  })
+})
+```
+
+The handler only looks collections up, and you create them in the Medusa Admin. A product whose brand has no collection stays unchanged. A handler can create collections too, but then it needs a rollback function. The [handler rules](/medusa-integrations/1c-pro/hooks#how-a-hook-affects-exchange-speed) describe it.
+
+---
+
+## Wholesale Price for a Customer Group
+
+The "Оптовая цена" (wholesale price) price type should apply only to customers in the "Опт" (wholesale) group. The handler activates its price list and gives it the group rule, so a guest still sees the retail price. The price list type is `override`, so that a group customer pays exactly the 1C price rather than the lower of the wholesale and retail ones. One database query per batch, and only when the batch has this price type.
+
+```ts title="src/workflows/hooks/onec-prices.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { ContainerRegistrationKeys, PriceListStatus, PriceListType } from "@medusajs/framework/utils"
+import { importOnecPricesWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+const WHOLESALE_PRICE_TYPE_NAME = "Оптовая цена"
+const WHOLESALE_GROUP_NAME = "Опт"
+
+importOnecPricesWorkflow.hooks.setPriceLists(async ({ priceLists }, { container }) => {
+  if (!priceLists.some(({ source }) => source.name === WHOLESALE_PRICE_TYPE_NAME)) {
+    return new StepResponse({ priceLists })
+  }
+
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const { data: groups } = await query.graph({
+    entity: "customer_group",
+    fields: ["id"],
+    filters: { name: WHOLESALE_GROUP_NAME },
+  })
+  const groupId = groups[0]?.id
+
+  if (!groupId) {
+    return new StepResponse({ priceLists })
+  }
+
+  return new StepResponse({
+    priceLists: priceLists.map((item) =>
+      item.source.name === WHOLESALE_PRICE_TYPE_NAME
+        ? {
+            ...item,
+            priceList: {
+              ...item.priceList,
+              status: PriceListStatus.ACTIVE,
+              type: PriceListType.OVERRIDE,
+              rules: { "customer.groups.id": [groupId] },
+            },
+          }
+        : item,
+    ),
+  })
+})
+```
+
+Create the "Опт" group in the Medusa Admin beforehand. Without it, the price list stays a draft, as it would without a handler. The handler sets this price list's status, type and rules on every exchange, so the next exchange reverts any change you make to them in the Medusa Admin.
+
+---
+
+## Skip Test Orders
+
+Orders the team places to check the storefront shouldn't reach 1C. The handler removes orders from `@test.invalid` addresses from the export. No database queries.
+
+```ts title="src/workflows/hooks/onec-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+exportOnecOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.filter(({ source }) => !source.email?.endsWith("@test.invalid")),
+  })
+})
+```
+
+A removed order doesn't get the exported mark. It reaches the hook on every export, and the handler removes it again each time.
+
+---
+
+## Order Source and Customer Comment
+
+A manager in 1C wants to see where an order came from and what the customer wrote. A Medusa order has no separate field for a comment, so the storefront puts it in `metadata.comment`. The handler moves the comment into the document and adds the "Источник" (source) requisite. No database queries.
+
+```ts title="src/workflows/hooks/onec-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+exportOnecOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.map(({ source, document }) => {
+      const comment = source.metadata?.comment
+
+      return {
+        source,
+        document: {
+          ...document,
+          ...(typeof comment === "string" && comment ? { comment } : {}),
+          requisites: [...document.requisites, { name: "Источник", value: "Интернет-магазин" }],
+        },
+      }
+    }),
+  })
+})
+```
+
+Saving the comment to the order's `metadata.comment` is up to the storefront. The "Источник" requisite gets into the document, and what 1C does with it depends on your configuration.
+
+---
+
+## Company Counterparty and Shipping Method
+
+A customer from the "Юрлица" (companies) group should go to 1C as a counterparty with an INN and KPP (Russian tax IDs), and the manager needs the shipping method. The INN and KPP are stored in the customer's `metadata` and the shipping method in the order, and the handler gets all of it with one query for the whole export.
+
+```ts title="src/workflows/hooks/onec-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
+import { exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+const COMPANY_GROUP_NAME = "Юрлица"
+
+exportOnecOrdersWorkflow.hooks.setOrders(async ({ orders }, { container }) => {
+  if (!orders.length) {
+    return new StepResponse({ orders })
+  }
+
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const { data } = await query.graph({
+    entity: "order",
+    fields: ["id", "customer.metadata", "customer.groups.name", "shipping_methods.name"],
+    filters: { id: orders.map(({ source }) => source.id) },
+  })
+  const extraById = new Map(data.map((order) => [order.id, order]))
+
+  return new StepResponse({
+    orders: orders.map(({ source, document }) => {
+      const extra = extraById.get(source.id)
+      const isCompany = extra?.customer?.groups?.some((group: { name?: string } | null) => group?.name === COMPANY_GROUP_NAME)
+      const { inn, kpp } = (extra?.customer?.metadata ?? {}) as { inn?: string; kpp?: string }
+      const delivery = extra?.shipping_methods?.[0]?.name
+
+      return {
+        source,
+        document: {
+          ...document,
+          counterparties: document.counterparties.map((counterparty) =>
+            isCompany && inn ? { ...counterparty, inn, ...(kpp ? { kpp } : {}) } : counterparty,
+          ),
+          requisites: delivery
+            ? [...document.requisites, { name: "Способ доставки", value: delivery }]
+            : document.requisites,
+        },
+      }
+    }),
+  })
+})
+```
+
+The query goes through the link between the order and the customer, so in the database it's three SQL queries, but for the whole export rather than per order. The plugin writes the INN and KPP after the counterparty's name and before the address. This position hasn't been checked against a real 1C configuration yet, so make sure yours reads them there.
+
+---
+
+## Schema Version for an Older 1C Configuration
+
+The plugin writes `ВерсияСхемы="2.10"` to the root of the file, while an older 1C configuration may expect its own version, for example 2.05. The product and document models have no schema version, so the handler edits the finished XML through `setPayload`, in both the catalog export and the order export. No database queries.
+
+```ts title="src/workflows/hooks/onec-payload.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportOnecCatalogWorkflow, exportOnecOrdersWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+
+const OLD_SCHEMA_VERSION = "2.05"
+
+function withSchemaVersion(payload: string): string {
+  return payload.replace(/ВерсияСхемы="[^"]*"/, `ВерсияСхемы="${OLD_SCHEMA_VERSION}"`)
+}
+
+exportOnecCatalogWorkflow.hooks.setPayload(async ({ payload }) => {
+  return new StepResponse({ payload: withSchemaVersion(payload) })
+})
+
+exportOnecOrdersWorkflow.hooks.setPayload(async ({ payload }) => {
+  return new StepResponse({ payload: withSchemaVersion(payload) })
+})
+```
+
+The handler changes only the version number, and the file layout stays the one the plugin writes. If your configuration also differs in layout, edit the XML in the same handler. A string edit knows nothing about the XML structure, so anything you can express through `setOrders` is more reliable there.
+
+---
+
+## Several Changes in One Handler
+
+Medusa allows one handler per hook, so your project's changes for one hook go into a single handler. It's convenient to keep each change in its own function and call them in turn. Put filtering first, so the other changes don't spend time on removed elements.
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+import { readRequisite, type ProductToImport } from "@gorgo-pro/medusa-erp-1c/hooks"
+
+function skipServices(products: ProductToImport[]): ProductToImport[] {
+  return products.filter(({ source }) => readRequisite(source, "ВидНоменклатуры") !== "Услуга")
+}
+
+function keepManagerEdits(products: ProductToImport[]): ProductToImport[] {
+  return products.map((item) => {
+    if (!item.existing) {
+      return item
+    }
+
+    const { title: _title, description: _description, ...product } = item.product
+
+    return { ...item, product }
+  })
+}
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products }) => {
+  return new StepResponse({ products: keepManagerEdits(skipServices(products)) })
+})
+```
+
+Make the functions that need the database async and call them with `await`. Each of them then still makes one query per batch.
+
+---
+
+## References
+
+<CardList items={[
+  {
+    title: "Workflow Hooks",
+    href: "/medusa-integrations/1c-pro/hooks"
+  },
+  {
+    title: "Hooks Reference",
+    href: "/medusa-integrations/1c-pro/hooks/reference"
+  }
+]}/>

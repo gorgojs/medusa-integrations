@@ -1,0 +1,169 @@
+---
+title: "1C:Enterprise Pro Workflow Hooks"
+description: "How to adjust what the 1C exchange writes to Medusa and sends to 1C without changing the plugin's code."
+---
+
+# {frontmatter.title}
+
+The 1C exchange runs as Medusa workflows, and the plugin exposes hooks in several of them. A hook handler receives what the exchange is about to write to Medusa or send to 1C, and returns a corrected version. That's how you move 1C requisites into product fields, add data Medusa doesn't have to an order, or enable a price list for a customer group, without changing the plugin's code.
+
+<Note type="info" title="What Is a Workflow Hook">
+
+A workflow hook is a point inside a Medusa workflow where you plug in your own function. Medusa calls it while the workflow runs and passes it data, and the workflow uses whatever the function returns. Read more in the [Medusa documentation](https://docs.medusajs.com/learn/fundamentals/workflows/workflow-hooks).
+
+</Note>
+
+---
+
+## Available Hooks
+
+| Workflow | Hook | When It Runs | What It Changes |
+| --- | --- | --- | --- |
+| `importOnecProductsWorkflow` | [`setProducts`](/medusa-integrations/1c-pro/hooks/reference#setproducts) | on every catalog batch, up to 100 products | Medusa products from `import.xml` |
+| `importOnecPricesWorkflow` | [`setPriceLists`](/medusa-integrations/1c-pro/hooks/reference#setpricelists) | on every offers batch, up to 100 products | price lists of non-retail price types and their prices |
+| `exportOnecOrdersWorkflow` | [`setOrders`](/medusa-integrations/1c-pro/hooks/reference#setorders) | once per order export | the order documents that go to 1C |
+| `exportOnecOrdersWorkflow`, `exportOnecCatalogWorkflow` | [`setPayload`](/medusa-integrations/1c-pro/hooks/reference#setpayload) | once per export, when the XML is built | the XML of the order or catalog export |
+
+Import the workflows from `@gorgo-pro/medusa-erp-1c/workflows`, and the input and result types of the hooks and the functions that read 1C requisites and properties from `@gorgo-pro/medusa-erp-1c/hooks`.
+
+<Note type="default" title="">
+
+During the beta, hook names and element shapes may still change based on participants' feedback. After the release, they change only with a major version of the plugin.
+
+</Note>
+
+---
+
+## Register a Handler
+
+Register the handler in a file under `src/workflows/hooks` in your Medusa project. Medusa loads it when the server starts. For example, this handler keeps 1C services out of the store:
+
+```ts title="src/workflows/hooks/onec-catalog.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importOnecProductsWorkflow } from "@gorgo-pro/medusa-erp-1c/workflows"
+import { readRequisite } from "@gorgo-pro/medusa-erp-1c/hooks"
+
+importOnecProductsWorkflow.hooks.setProducts(async ({ products }) => {
+  return new StepResponse({
+    products: products.filter(({ source }) => readRequisite(source, "ВидНоменклатуры") !== "Услуга"),
+  })
+})
+```
+
+The handler receives the batch's products and returns them in a `StepResponse`, keeping only those whose "ВидНоменклатуры" requisite isn't "Услуга" (service). `readRequisite` reads a requisite of a 1C product by its name, so you don't parse CommerceML yourself.
+
+---
+
+## How an Element Is Built
+
+Every hook except `setPayload` receives an array of elements. An element brings together everything the decision needs:
+
+- `source` – the record the result is built from. On import, it's the 1C record. On export, it's the Medusa order.
+- `existing` – the current Medusa record. It's present only on import, and only for a record that already exists in Medusa.
+- The target field – what the exchange writes or sends. It's `product` for a product, `priceList` and `prices` for a price type, and `document` for an order.
+
+The handler edits the target field and returns the elements. `setPayload` works differently. It receives the finished XML as a string, and it's there for what the product or document model doesn't cover, for example the schema version your 1C configuration expects.
+
+---
+
+## Result Rules
+
+- **Return `new StepResponse({ <array> })`.** The plugin takes only the array, so you don't need to return the other input keys.
+- **Remove an element to skip writing that record in this exchange.** An order removed from the export doesn't get the exported mark and goes out with the next one.
+- **Delete a key from `product` or `priceList` to leave that field alone.** That way a value set in the Medusa Admin survives the exchange. An order `document` goes to 1C in full, and a deleted key leaves an empty node in `orders.xml`, so change values in a document instead of deleting them.
+- **Don't add elements or change matching keys.** A product is matched by its 1C `Ид` before the hook, and 1C recognizes an order by the document's `Ид`. The plugin checks this and stops the exchange with an error naming the hook.
+- **Return the same result for the same input.** Otherwise, every repeated exchange rewrites the catalog all over again.
+
+<Note type="default" title="">
+
+A handler that returns a plain object or nothing stops the exchange with an error like `importOnecProductsWorkflow.hooks.setProducts handler must return new StepResponse({ products }), it returned nothing usable`. The plugin only gets what's inside the `StepResponse` from Medusa.
+
+</Note>
+
+---
+
+## One Handler for Each Hook
+
+Medusa allows only one handler per hook in the whole application. A second handler registered on the same hook stops the server from starting with the error `Cannot define multiple hook handlers for the setProducts hook`. Gather all of your project's changes for one hook into a single handler and run them one after another inside it.
+
+---
+
+## How a Hook Affects Exchange Speed
+
+The handler runs inside a workflow step, and 1C waits for a response while it runs. `setProducts` and `setPriceLists` run on every batch, so a 10,000-product catalog calls each of them a hundred times. The workflow engine copies the hook's input and result, and anything you add to an element is copied along with it.
+
+Here's what three kinds of `setProducts` handler cost:
+
+| Handler | Database Queries per Catalog Import | Catalog Re-Import Time |
+| --- | ---: | ---: |
+| Only fields from the input | as many as without a handler | within run-to-run spread |
+| One query per batch | +10 | within run-to-run spread |
+| One query per product | +990 | +12% |
+
+The measurement used a catalog of 1,000 products and 4,000 offers, which is 10 batches, with a local PostgreSQL where a query takes about a millisecond. The table shows medians of three runs, and one run for the query-per-product handler. A re-import barely writes anything, so a handler's cost shows most there. On a remote database every query also costs network latency, and the gap grows.
+
+To keep a handler from slowing the exchange down:
+
+- **Make one query per batch.** Collect the keys of all elements, make one `query.graph` call filtered by that array, and put the response into a `Map`.
+- **Keep elements lean.** Hold lookups that only the handler needs in local variables, not in the element.
+- **Write to the database from a handler only with compensation.** Pass a rollback function as the second argument of the hook registration, and pass what it needs as the second argument of `StepResponse`. The plugin commits batches one by one, and a batch that fails rolls back only itself.
+- **Don't make the result depend on batch order.** After a failure, 1C repeats the whole exchange, and the batches may come in a different composition.
+
+This is what a query per product looks like. For a batch of 100 products, it's 100 queries:
+
+```ts
+for (const item of products) {
+  const [brand] = readProperty(item.source, properties, "Бренд")
+  const { data } = await query.graph({
+    entity: "product_collection",
+    fields: ["id"],
+    filters: { title: brand },
+  })
+  // ...
+}
+```
+
+One query per batch gets the same for all products at once:
+
+```ts
+const titles = products.flatMap(({ source }) => readProperty(source, properties, "Бренд"))
+const { data } = await query.graph({
+  entity: "product_collection",
+  fields: ["id", "title"],
+  filters: { title: titles },
+})
+const collectionIdByTitle = new Map(data.map((collection) => [collection.title, collection.id]))
+```
+
+The full example with this query is on the [Hook Examples](/medusa-integrations/1c-pro/hooks/examples#brand-to-collection) page.
+
+<Note type="warning">
+
+On a test catalog of a few products, a query per product goes unnoticed. It shows up on the full catalog, once the exchange is already running in production.
+
+</Note>
+
+### Measure It Yourself
+
+Start the server with `LOG_LEVEL=debug`. The plugin logs the duration of every catalog import step, and the hook's step is named after the hook:
+
+```
+[1C Integration] import: import-onec-products › setProducts 35 ms
+```
+
+`setPriceLists` runs inside the child workflow of the offers import, so its time is part of the overall `import-onec-offers finished in … ms` line. Exports aren't logged step by step.
+
+---
+
+## References
+
+<CardList items={[
+  {
+    title: "Hooks Reference",
+    href: "/medusa-integrations/1c-pro/hooks/reference"
+  },
+  {
+    title: "Hook Examples",
+    href: "/medusa-integrations/1c-pro/hooks/examples"
+  }
+]}/>
