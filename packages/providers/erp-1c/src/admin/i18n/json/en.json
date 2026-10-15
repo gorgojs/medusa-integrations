@@ -1,7 +1,7 @@
 {
   "onec": {
-    "name": "1C:Enterprise",
-    "description": "Data exchange between Medusa and 1C:Enterprise ERP",
+    "name": "1C:Enterprise Catalog",
+    "description": "Products, categories and prices from 1C:Enterprise ERP into Medusa",
     "sections": {
       "sync": "Sync settings",
       "attributes": "Attribute IDs"

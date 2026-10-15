@@ -5,13 +5,13 @@
 </p>
 
 <h1 align="center">
-  Интеграция 1С:Предприятие с Medusa
+  Интеграция 1С:Предприятие Каталог с Medusa
 </h1>
 
 <p align="center">
   <a href="https://docs.gorgojs.ru/medusa-integrations/1c-enterprise">Документация</a>
   <br/>
-  Синхронизация товаров и заказов между Medusa и 1С:Предприятие.
+  Импорт товаров, категорий и цен из ERP 1С:Предприятие в Medusa.
   <br/>
   <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/erp-1c/README.md">Read README in English ↗</a>
 </p>

@@ -5,13 +5,13 @@
 </p>
 
 <h1 align="center">
-  Medusa – 1C:Enterprise Integration
+  Medusa – 1C:Enterprise Catalog Integration
 </h1>
 
 <p align="center">
   <a href="https://docs.gorgojs.com/medusa-integrations/1c-enterprise">Documentation</a>
   <br/>
-  Sync products and orders between Medusa and 1C:Enterprise.
+  Import products, categories and prices from 1C:Enterprise into Medusa.
   <br/>
   <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/erp-1c/README.ru.md">Читать README на русском ↗</a>
 </p>
