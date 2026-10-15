@@ -118,8 +118,8 @@
   <a href="./packages/providers/erp-1c">
     <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-logo.svg" width="80" align="left" alt="1C:Enterprise logo">
   </a>
-  <strong><a href="./packages/providers/erp-1c">1С:Предприятие</a></strong><br/>
-  Синхронизация каталога и заказов между Medusa и 1С:Предприятием. В комплекте пример backend-приложения.<br/>
+  <strong><a href="./packages/providers/erp-1c">1С:Предприятие Каталог</a></strong><br/>
+  Импорт товаров, категорий и цен из 1С:Предприятия в Medusa. В комплекте пример backend-приложения.<br/>
   <a href="https://docs.gorgojs.ru/medusa-integrations/1c-enterprise">документация</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">npm</a> |
   <a href="./examples/erp-1c">пример</a>

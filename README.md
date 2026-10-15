@@ -121,8 +121,8 @@
   <a href="./packages/providers/erp-1c">
     <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/1c-logo.svg" width="80" align="left" alt="1C:Enterprise logo">
   </a>
-  <strong><a href="./packages/providers/erp-1c">1C:Enterprise</a></strong><br/>
-  Integration for synchronizing catalog and order data between Medusa and 1C:Enterprise, with an example backend.<br/>
+  <strong><a href="./packages/providers/erp-1c">1C:Enterprise Catalog</a></strong><br/>
+  Imports products, categories and prices from 1C:Enterprise into Medusa, with an example backend.<br/>
   <a href="https://docs.gorgojs.com/medusa-integrations/1c-enterprise">docs</a> |
   <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">npm</a> |
   <a href="./examples/erp-1c">example</a>

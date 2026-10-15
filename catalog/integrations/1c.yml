@@ -1,22 +1,20 @@
-# 1C:Enterprise — ERP data-exchange integration, authored by Gorgo.
-# See example.yml for the fully-annotated template.
+# 1C:Enterprise Catalog, the free edition of the 1C:Enterprise integration, authored by Gorgo.
+# It imports products, categories and prices from 1C. The paid edition, which also exchanges stock
+# and orders, is 1c-pro.yml. See example.yml for the fully-annotated template.
 #
-# NOTE: unlike tkassa/apiship/robokassa/yookassa, this ships as its own standalone Medusa
-# plugin (registered under `plugins`, package "@gorgo/medusa-1c") rather than a provider plugged
-# into a Medusa module's `options.providers` (under `modules`). `identifier` below is a
-# catalog-only id (matches the npm scope / docs slug), not a provider `static identifier`.
-# docsSnippet reflects that: it's a `plugins` entry, not a `modules` entry.
+# `identifier` equals the provider's `static identifier`, which is how the catalog tells that the
+# integration is installed.
 
 identifier: "1c"
 npm: "@gorgo/medusa-1c"
 category: "erp"
 author: "gorgo"
 displayName:
-  en: "1C:Enterprise"
-  ru: "1С:Предприятие"
+  en: "1C:Enterprise Catalog"
+  ru: "1С:Предприятие Каталог"
 shortDescription:
-  en: "Data exchange between Medusa and 1C:Enterprise ERP"
-  ru: "Обмен данными между Medusa и ERP 1С:Предприятие"
+  en: "Products, categories and prices from 1C:Enterprise ERP into Medusa"
+  ru: "Товары, категории и цены из ERP 1С:Предприятие в Medusa"
 icon: "1c.svg"
 repository: "https://github.com/gorgojs/medusa-integrations"
 docsUrl: "https://docs.gorgojs.com/medusa-integrations/1c-enterprise"
@@ -65,7 +63,7 @@ docsSnippet:
 
     ## Set up
 
-    1. Open **Settings → Integrations → 1C:Enterprise**.
+    1. Open **Settings → Integrations → 1C:Enterprise Catalog**.
     2. Configure integration settings.
   ru: |
     ## Установка
@@ -111,6 +109,6 @@ docsSnippet:
 
     ## Настройка
 
-    1. Откройте **Настройки → Интеграции → 1С:Предприятие**.
+    1. Откройте **Настройки → Интеграции → 1С:Предприятие Каталог**.
     2. Настройте параметры интеграции.
 active: true
