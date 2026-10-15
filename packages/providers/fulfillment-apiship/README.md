@@ -44,7 +44,7 @@ ApiShip Integration for Medusa
 
 <p align="center">
   <a href="https://static.gorgojs.com/videos/fulfillment-apiship/demo/fulfillment-apiship-demo-en.mp4">
-    <img src="https://static.gorgojs.com/videos/fulfillment-apiship/demo/fulfillment-apiship-demo-en-poster-play.fc51e058.webp" alt="Watch the ApiShip plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
+    <img src="https://static.gorgojs.com/videos/fulfillment-apiship/demo/fulfillment-apiship-demo-en-poster-play.d9ad2e5e.webp" alt="Watch the ApiShip plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
