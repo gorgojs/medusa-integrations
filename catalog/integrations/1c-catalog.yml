@@ -1,33 +1,34 @@
-# 1C:Enterprise, the paid edition of the 1C:Enterprise integration, authored by Gorgo.
-# It exchanges the catalog, prices, stock and orders. The free edition, 1C:Enterprise Catalog, is
-# 1c.yml. See example.yml for the fully-annotated template.
+# 1C:Enterprise Catalog, the free edition of the 1C:Enterprise integration, authored by Gorgo.
+# It imports products, categories and prices from 1C. The paid edition, which also exchanges stock
+# and orders, is 1c-pro.yml. See example.yml for the fully-annotated template.
 #
 # `identifier` equals the provider's `static identifier`, which is how the catalog tells that the
 # integration is installed.
 
-identifier: "1c-pro"
-npm: "@gorgo-store/medusa-erp-1c"
+identifier: "1c-catalog"
+npm: "@gorgo/medusa-1c"
 category: "erp"
 author: "gorgo"
 displayName:
-  en: "1C:Enterprise"
-  ru: "1С:Предприятие"
+  en: "1C:Enterprise Catalog"
+  ru: "1С:Предприятие Каталог"
 shortDescription:
-  en: "Two-way exchange of the catalog, prices, stock and orders between Medusa and 1C:Enterprise ERP"
-  ru: "Двусторонний обмен каталогом, ценами, остатками и заказами между Medusa и ERP 1С:Предприятие"
+  en: "Products, categories and prices from 1C:Enterprise ERP into Medusa"
+  ru: "Товары, категории и цены из ERP 1С:Предприятие в Medusa"
 icon: "1c.svg"
-docsUrl: "https://docs.gorgojs.com/medusa-integrations/1c-pro"
+repository: "https://github.com/gorgojs/medusa-integrations"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/1c-enterprise-catalog"
 docsSnippet:
   en: |
     ## Install
 
     ```bash
     # with npm
-    npm install @gorgo-store/medusa-erp-1c@beta
+    npm install @gorgo/medusa-1c
     # or with yarn
-    yarn add @gorgo-store/medusa-erp-1c@beta
+    yarn add @gorgo/medusa-1c
     # or with pnpm
-    pnpm add @gorgo-store/medusa-erp-1c@beta
+    pnpm add @gorgo/medusa-1c
     ```
 
     ## Use
@@ -43,15 +44,15 @@ docsSnippet:
             encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
             providers: [
               {
-                resolve: "@gorgo-store/medusa-erp-1c/providers/integration-1c",
-                id: "1c-1",
+                resolve: "@gorgo/medusa-1c/providers/integration-1c",
+                id: "1c-catalog-1",
                 options: {},
               },
             ],
           },
         },
         {
-          resolve: "@gorgo-store/medusa-erp-1c",
+          resolve: "@gorgo/medusa-1c",
           options: {},
         },
       ],
@@ -62,18 +63,18 @@ docsSnippet:
 
     ## Set up
 
-    1. Open **Settings → Integrations → 1C:Enterprise**.
+    1. Open **Settings → Integrations → 1C:Enterprise Catalog**.
     2. Configure integration settings.
   ru: |
     ## Установка
 
     ```bash
     # with npm
-    npm install @gorgo-store/medusa-erp-1c@beta
+    npm install @gorgo/medusa-1c
     # or with yarn
-    yarn add @gorgo-store/medusa-erp-1c@beta
+    yarn add @gorgo/medusa-1c
     # or with pnpm
-    pnpm add @gorgo-store/medusa-erp-1c@beta
+    pnpm add @gorgo/medusa-1c
     ```
 
     ## Подключение
@@ -89,15 +90,15 @@ docsSnippet:
             encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
             providers: [
               {
-                resolve: "@gorgo-store/medusa-erp-1c/providers/integration-1c",
-                id: "1c-1",
+                resolve: "@gorgo/medusa-1c/providers/integration-1c",
+                id: "1c-catalog-1",
                 options: {},
               },
             ],
           },
         },
         {
-          resolve: "@gorgo-store/medusa-erp-1c",
+          resolve: "@gorgo/medusa-1c",
           options: {},
         },
       ],
@@ -108,6 +109,6 @@ docsSnippet:
 
     ## Настройка
 
-    1. Откройте **Настройки → Интеграции → 1С:Предприятие**.
+    1. Откройте **Настройки → Интеграции → 1С:Предприятие Каталог**.
     2. Настройте параметры интеграции.
 active: true

@@ -20,11 +20,11 @@ docsSnippet:
 
     ```bash
     # with npm
-    npm install @gorgo/medusa-fulfillment-apiship@beta
+    npm install @gorgo/medusa-fulfillment-apiship
     # or with yarn
-    yarn add @gorgo/medusa-fulfillment-apiship@beta
+    yarn add @gorgo/medusa-fulfillment-apiship
     # or with pnpm
-    pnpm add @gorgo/medusa-fulfillment-apiship@beta
+    pnpm add @gorgo/medusa-fulfillment-apiship
     ```
 
     ## Use
@@ -82,11 +82,11 @@ docsSnippet:
 
     ```bash
     # with npm
-    npm install @gorgo/medusa-fulfillment-apiship@beta
+    npm install @gorgo/medusa-fulfillment-apiship
     # or with yarn
-    yarn add @gorgo/medusa-fulfillment-apiship@beta
+    yarn add @gorgo/medusa-fulfillment-apiship
     # or with pnpm
-    pnpm add @gorgo/medusa-fulfillment-apiship@beta
+    pnpm add @gorgo/medusa-fulfillment-apiship
     ```
 
     ## Подключение

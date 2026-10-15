@@ -20,11 +20,11 @@ docsSnippet:
 
     ```bash
     # with npm
-    npm install @gorgo/medusa-payment-yookassa@beta
+    npm install @gorgo/medusa-payment-yookassa
     # or with yarn
-    yarn add @gorgo/medusa-payment-yookassa@beta
+    yarn add @gorgo/medusa-payment-yookassa
     # or with pnpm
-    pnpm add @gorgo/medusa-payment-yookassa@beta
+    pnpm add @gorgo/medusa-payment-yookassa
     ```
 
     ## Use
@@ -82,11 +82,11 @@ docsSnippet:
 
     ```bash
     # with npm
-    npm install @gorgo/medusa-payment-yookassa@beta
+    npm install @gorgo/medusa-payment-yookassa
     # or with yarn
-    yarn add @gorgo/medusa-payment-yookassa@beta
+    yarn add @gorgo/medusa-payment-yookassa
     # or with pnpm
-    pnpm add @gorgo/medusa-payment-yookassa@beta
+    pnpm add @gorgo/medusa-payment-yookassa
     ```
 
     ## Подключение
