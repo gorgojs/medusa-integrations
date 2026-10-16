@@ -1,0 +1,131 @@
+<!-- TODO: logo assets/paypal-medusa-logo.svg, in the style of the other plugins -->
+
+<h1 align="center">
+PayPal Payments for Medusa
+</h1>
+
+<p align="center">
+  <a href="https://docs.gorgojs.com/medusa-integrations/paypal">Documentation</a>
+  <br/>
+  A Medusa plugin that provides PayPal Checkout payments.
+  <br/>
+  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/payment-paypal/README.ru.md">Читать README на русском ↗</a>
+</p>
+
+<br/>
+
+<p align="center">
+  <a href="https://medusajs.com">
+    <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
+  </a>
+  <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-payment-paypal.json&logo=checkmarx" alt="Medusa" />
+  </a>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-paypal">
+    <img src="https://img.shields.io/npm/v/@gorgo/medusa-payment-paypal.svg?logo=npm&label=npm" alt="npm version" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://t.me/gorgojs_chat">
+    <img src="https://img.shields.io/badge/Telegram-Support_Chat-0088cc?logo=telegram&style=social" alt="Telegram Support Chat" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://t.me/medusajs_chat">
+    <img src="https://img.shields.io/badge/Telegram-Medusa.js_Dev_Community_Chat-0088cc?logo=telegram&style=social" alt="Medusa.js Chat on Telegram" />
+  </a>
+</p>
+
+## Plugin Features
+
+- **PayPal Checkout** – the buyer pays in the PayPal window with their PayPal account, or with a card as a guest when you choose the guest checkout landing page.
+- **Capture Now or Later** – PayPal takes the money when the buyer pays, or holds the amount until you capture it from the order in Medusa Admin. A capture always takes the whole authorization.
+- **Refunds and Cancellations** – full and partial refunds, several per payment. Canceling an order voids an authorization that was not captured and refunds a captured payment.
+- **Orders Completed by Webhook** – the plugin checks every PayPal webhook with the PayPal API. If the buyer closes the tab after paying, the webhook still places the order, and a capture PayPal holds for review becomes captured once PayPal confirms it.
+- **Express Checkout Routes** – store routes give the storefront the public settings for the PayPal JS SDK and the buyer's contact and address from PayPal.
+- **25 PayPal Currencies** – amounts follow each currency's decimal places, so a JPY, HUF or TWD order goes to PayPal in whole units.
+- **Several PayPal Accounts** – the store can connect more than one PayPal app, for example one per region.
+- **Detailed Logging** – debug logs of every provider call, without credentials.
+- **Tests** – unit and integration tests of the payment cycle, and a contract test against the PayPal sandbox.
+- **[Integration Module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" />** – you configure the plugin in Medusa Admin without editing configuration files or redeploying the store. The module stores the secret encrypted, and **Test connection** checks the keys and the webhook subscription.
+
+## What is PayPal
+
+With PayPal, the buyer pays with an account that holds their cards and bank accounts, so the store never handles card details. PayPal accepts payments in [25 currencies](https://developer.paypal.com/reference/currency-codes/).
+
+## 💬 Support & Community
+
+Got questions or ideas about the plugin? Join the Telegram support chat, [@gorgojs_chat](https://t.me/gorgojs_chat).
+
+Connect with other Medusa developers on Telegram in [@medusajs_chat](https://t.me/medusajs_chat).
+
+## Requirements
+
+- Medusa v2.17.2 or later
+- Node.js v20.19 or v22.12 and later
+- A PayPal Business account and an app in the [PayPal Developer Dashboard](https://developer.paypal.com/dashboard/)
+- Integration Module
+
+## Installation
+
+```bash
+yarn add @gorgo/medusa-integration @gorgo/medusa-payment-paypal
+# or
+npm install @gorgo/medusa-integration @gorgo/medusa-payment-paypal
+```
+
+## Configuration
+
+Register the plugin and both providers in `medusa-config.ts`:
+
+```ts
+const PAYPAL_INTEGRATION_ID = "paypal-1"
+
+module.exports = defineConfig({
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-paypal/providers/integration-paypal",
+            id: PAYPAL_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-paypal",
+      options: {},
+    },
+  ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-paypal/providers/payment-paypal",
+            id: "paypal",
+            options: { id: PAYPAL_INTEGRATION_ID },
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Set `INTEGRATION_ENCRYPTION_KEY` in the backend's `.env`, restart the server, and enter the client ID, secret and webhook ID in **Settings → Integrations → PayPal**. Point the PayPal webhook at `https://<your backend>/hooks/payment/paypal_paypal` and subscribe it to `PAYMENT.AUTHORIZATION.CREATED` and `PAYMENT.CAPTURE.COMPLETED`.
+
+## Documentation
+
+The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-integrations/paypal).
+
+## License
+
+Licensed under the [MIT License](LICENSE).
