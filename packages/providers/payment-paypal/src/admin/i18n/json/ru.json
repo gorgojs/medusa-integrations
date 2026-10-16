@@ -1,0 +1,44 @@
+{
+  "paypal": {
+    "name": "PayPal",
+    "description": "Оплата через PayPal Checkout",
+    "sections": {
+      "credentials": "Доступы",
+      "behavior": "Поведение",
+      "checkout": "Страница оплаты PayPal"
+    },
+    "fields": {
+      "environment": "Окружение",
+      "clientId": "Client ID",
+      "clientSecret": "Секрет",
+      "webhookId": "ID вебхука",
+      "intent": "Способ списания",
+      "brandName": "Название бренда",
+      "landingPage": "Стартовая страница",
+      "softDescriptor": "Текст в выписке по карте"
+    },
+    "hints": {
+      "environment": "Sandbox принимает тестовые платежи с sandbox-аккаунтов, Live принимает настоящие. У каждого окружения свои ключи и вебхуки.",
+      "clientId": "Из приложения в разделе Apps & Credentials в PayPal Developer Dashboard, для выбранного окружения.",
+      "clientSecret": "Показан рядом с Client ID в том же приложении.",
+      "webhookId": "ID вебхука в том же приложении. Направьте вебхук на https://<ваш бэкенд>/hooks/payment/paypal_<id провайдера> и подпишите его на PAYMENT.AUTHORIZATION.CREATED и PAYMENT.CAPTURE.COMPLETED. Без него плагин не может проверить вебхуки PayPal и игнорирует их.",
+      "intent": "«Списать сразу» списывает деньги, когда покупатель платит. «Только заблокировать» блокирует сумму, а списываете её вы из заказа в Admin. PayPal гарантирует средства 3 дня и позволяет списать их в течение 29 дней.",
+      "brandName": "Показывается на страницах PayPal вместо названия компании из вашего аккаунта PayPal. До 127 символов.",
+      "landingPage": "Страница, которую покупатель видит первой после перехода в PayPal.",
+      "softDescriptor": "Добавляется после названия вашей компании в выписке по карте покупателя. В выписке видно 22 символа вместе с префиксом PAYPAL *, поэтому текст должен быть коротким."
+    },
+    "environments": {
+      "sandbox": "Sandbox",
+      "live": "Live"
+    },
+    "intents": {
+      "capture": "Списать сразу",
+      "authorize": "Только заблокировать"
+    },
+    "landingPages": {
+      "NO_PREFERENCE": "На выбор PayPal",
+      "LOGIN": "Вход в PayPal",
+      "GUEST_CHECKOUT": "Гостевая оплата картой"
+    }
+  }
+}
