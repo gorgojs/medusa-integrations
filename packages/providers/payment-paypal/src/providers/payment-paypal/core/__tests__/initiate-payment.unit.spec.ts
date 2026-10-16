@@ -99,6 +99,71 @@ describe("PayPalBase.initiatePayment: new order", () => {
     })
   })
 
+  it("fills the card form with the buyer's email, name and billing address", async () => {
+    const { provider, client } = makeProvider()
+    client.createOrder.mockResolvedValue(order())
+
+    await provider.initiatePayment({
+      amount: 10,
+      currency_code: "EUR",
+      data: {
+        session_id: SESSION_ID,
+        email: "anna@example.com",
+        billing_address: {
+          first_name: "Anna",
+          last_name: "Smith",
+          address_1: "Billing St 2",
+          city: "Hamburg",
+          postal_code: "20095",
+          country_code: "de",
+        },
+        shipping_address: { address_1: "Main St 1", city: "Berlin", postal_code: "10115", country_code: "de" },
+      },
+    })
+
+    const paypal = client.createOrder.mock.calls[0][0].payment_source.paypal
+    expect(paypal.email_address).toBe("anna@example.com")
+    expect(paypal.name).toEqual({ given_name: "Anna", surname: "Smith" })
+    expect(paypal.address).toEqual({
+      address_line_1: "Billing St 2",
+      admin_area_2: "Hamburg",
+      postal_code: "20095",
+      country_code: "DE",
+    })
+  })
+
+  it("takes the name and the street from the delivery address when the billing address lacks them", async () => {
+    const { provider, client } = makeProvider()
+    client.createOrder.mockResolvedValue(order())
+
+    await provider.initiatePayment({
+      amount: 10,
+      currency_code: "EUR",
+      data: {
+        session_id: SESSION_ID,
+        billing_address: { country_code: "de" },
+        shipping_address: {
+          first_name: "Anna",
+          last_name: "Smith",
+          address_1: "Main St 1",
+          city: "Berlin",
+          postal_code: "10115",
+          country_code: "de",
+        },
+      },
+    })
+
+    const paypal = client.createOrder.mock.calls[0][0].payment_source.paypal
+    expect(paypal.email_address).toBeUndefined()
+    expect(paypal.name).toEqual({ given_name: "Anna", surname: "Smith" })
+    expect(paypal.address).toEqual({
+      address_line_1: "Main St 1",
+      admin_area_2: "Berlin",
+      postal_code: "10115",
+      country_code: "DE",
+    })
+  })
+
   it("lets the wallet supply the address in an express checkout", async () => {
     const { provider, client } = makeProvider()
     client.createOrder.mockResolvedValue(order())
@@ -106,7 +171,12 @@ describe("PayPalBase.initiatePayment: new order", () => {
     const output = await provider.initiatePayment({
       amount: 10,
       currency_code: "EUR",
-      data: { session_id: SESSION_ID, express: true, shipping_address: { country_code: "de" } },
+      data: {
+        session_id: SESSION_ID,
+        express: true,
+        email: "anna@example.com",
+        shipping_address: { country_code: "de" },
+      },
     })
 
     const body = client.createOrder.mock.calls[0][0]
@@ -114,6 +184,8 @@ describe("PayPalBase.initiatePayment: new order", () => {
       shipping_preference: "GET_FROM_FILE",
       user_action: "CONTINUE",
     })
+    expect(body.payment_source.paypal).not.toHaveProperty("email_address")
+    expect(body.payment_source.paypal).not.toHaveProperty("address")
     expect(body.purchase_units[0].shipping).toBeUndefined()
     expect(output.data.express).toBe(true)
   })

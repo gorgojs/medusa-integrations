@@ -22,7 +22,7 @@ export type PayPalRefundRecord = {
 /**
  * What the provider keeps in the Medusa payment session. Medusa merges it with the
  * data the storefront sent (`session_id`, and `express`, `paypal_order_id`,
- * `shipping_address` when given).
+ * `shipping_address`, `billing_address`, `email` when given).
  */
 export type PayPalSessionData = {
   session_id?: string
@@ -38,4 +38,6 @@ export type PayPalSessionData = {
   refunds?: PayPalRefundRecord[]
   decline?: { code: string; message: string; retryable: boolean }
   shipping_address?: MedusaAddress
+  billing_address?: MedusaAddress
+  email?: string | null
 }

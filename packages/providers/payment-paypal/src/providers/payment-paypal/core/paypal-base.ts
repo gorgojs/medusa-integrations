@@ -72,18 +72,42 @@ function withoutEmpty<T extends Record<string, unknown>>(value: T): T {
   return Object.fromEntries(Object.entries(value).filter(([, v]) => v !== undefined && v !== "")) as T
 }
 
+function toPayPalAddress(address: MedusaAddress) {
+  return withoutEmpty({
+    address_line_1: address.address_1 ?? undefined,
+    address_line_2: address.address_2 ?? undefined,
+    admin_area_2: address.city ?? undefined,
+    admin_area_1: address.province ?? undefined,
+    postal_code: address.postal_code ?? undefined,
+    country_code: String(address.country_code).toUpperCase(),
+  })
+}
+
 function toPayPalShipping(address: MedusaAddress) {
   const fullName = [address.first_name, address.last_name].filter(Boolean).join(" ")
   return withoutEmpty({
     name: fullName ? { full_name: fullName } : undefined,
-    address: withoutEmpty({
-      address_line_1: address.address_1 ?? undefined,
-      address_line_2: address.address_2 ?? undefined,
-      admin_area_2: address.city ?? undefined,
-      admin_area_1: address.province ?? undefined,
-      postal_code: address.postal_code ?? undefined,
-      country_code: String(address.country_code).toUpperCase(),
-    }),
+    address: toPayPalAddress(address),
+  })
+}
+
+/**
+ * The buyer's email, name and billing address, which PayPal fills in on its card form. A billing
+ * address without a name or a street takes them from the delivery address.
+ */
+function toPayPalPayer(input: PayPalSessionData) {
+  const billing = input.billing_address
+  const shipping = input.shipping_address
+  const person = billing?.first_name || billing?.last_name ? billing : shipping
+  const address = billing?.address_1 ? billing : shipping
+  const name = withoutEmpty({
+    given_name: person?.first_name ?? undefined,
+    surname: person?.last_name ?? undefined,
+  })
+  return withoutEmpty({
+    email_address: input.email ?? undefined,
+    name: Object.keys(name).length ? name : undefined,
+    address: address?.country_code ? toPayPalAddress(address) : undefined,
   })
 }
 
@@ -584,6 +608,8 @@ abstract class PayPalBase extends AbstractPaymentProvider {
       ],
       payment_source: {
         paypal: {
+          // In an express checkout the buyer picks these details in the PayPal window.
+          ...(input.express ? {} : toPayPalPayer(input)),
           experience_context: withoutEmpty({
             brand_name: options.brandName,
             landing_page: options.landingPage ?? "NO_PREFERENCE",
