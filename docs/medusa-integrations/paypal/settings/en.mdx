@@ -1,0 +1,95 @@
+---
+title: "Manage PayPal Settings in Medusa Admin"
+description: "Learn how to view and edit PayPal integration settings in Medusa Admin through the Integration Module."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to view and edit PayPal integration settings in Medusa Admin via the [Integration Module](/medusa-modules/integration).
+
+## View PayPal Details
+
+To view the PayPal details:
+
+1. Open Medusa Admin.
+2. Go to **Settings → Integrations → PayPal**.
+
+This opens the PayPal settings page where you can review the credentials, the payment behavior and the PayPal checkout page settings.
+
+{/* TODO: screenshot settings-overview */}
+
+---
+
+## Edit PayPal Credentials
+
+The **Credentials** section holds the environment and the keys of your app from the <a href="https://developer.paypal.com/dashboard/" target="_blank">PayPal Developer Dashboard</a>. **Sandbox** takes test payments from sandbox accounts, **Live** takes real ones, and each environment has its own client ID, secret and webhooks.
+
+To edit the credentials:
+
+1. Go to **Settings → Integrations → PayPal**.
+2. In the **Credentials** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, choose the environment and update the client ID, the secret and the webhook ID. See [Webhook Setup](/medusa-integrations/paypal/getting-started#webhook-setup) for where the webhook ID comes from.
+5. Click **Save**.
+
+{/* TODO: screenshot edit-credentials */}
+
+Then click **Test connection**. It gets an access token from the chosen environment, so wrong keys or keys from the other environment fail here. With a webhook ID, it also checks that the webhook exists in that environment and is subscribed to `PAYMENT.AUTHORIZATION.CREATED` and `PAYMENT.CAPTURE.COMPLETED`.
+
+---
+
+## Edit Payment Behavior
+
+The **Behavior** section decides when PayPal takes the money.
+
+- **Capture right away** takes the money when the buyer pays.
+- **Authorize only** holds the amount, and you capture it from the order in Medusa Admin. PayPal guarantees the funds for 3 days and lets you capture within 29 days.
+
+To edit the payment behavior:
+
+1. Go to **Settings → Integrations → PayPal**.
+2. In the **Behavior** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, choose the payment intent.
+5. Click **Save**.
+
+{/* TODO: screenshot edit-behavior */}
+
+<Note type="warning" title="Captures and Refunds">A capture from the order in Medusa Admin always takes the whole authorization, even when you enter a smaller amount. Refunds can be partial, and you make them from the order in Medusa Admin too, since a refund made in the PayPal dashboard does not reach Medusa.</Note>
+
+---
+
+## Edit the PayPal Checkout Page
+
+The **PayPal checkout page** section changes what the buyer sees after leaving for PayPal.
+
+- **Brand name** replaces the business name of your PayPal account on PayPal pages, up to 127 characters.
+- **Landing page** is the page the buyer sees first. You can leave the choice to PayPal, or open the PayPal login or the guest checkout with a card.
+- **Card statement text** is added after your business name on the buyer's card statement. The statement shows 22 characters, the `PAYPAL *` prefix included, so keep it short.
+
+To edit the checkout page settings:
+
+1. Go to **Settings → Integrations → PayPal**.
+2. In the **PayPal checkout page** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the brand name, the landing page and the card statement text.
+5. Click **Save**.
+
+{/* TODO: screenshot edit-checkout */}
+
+---
+
+## Add Payment Provider
+
+To offer PayPal in a region of the storefront:
+
+1. Go to **Settings → Regions**.
+2. Choose your region.
+3. In the first section, click the action menu in the section's header.
+4. Choose **Edit**.
+5. In the modal that opens, add the PayPal provider, `pp_paypal_paypal`, to Payment Providers.
+6. Click **Save**.
+
+{/* TODO: screenshot add-payment-provider */}
+
+The plugin refuses a payment in a currency PayPal does not accept, so add PayPal only to regions that use one of the <a href="https://developer.paypal.com/reference/currency-codes/" target="_blank">25 PayPal currencies</a>. PayPal supports BRL, CNY and MYR as a payment currency only for PayPal accounts in the same country.

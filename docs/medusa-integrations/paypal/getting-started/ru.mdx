@@ -1,0 +1,136 @@
+---
+title: "Начало работы с PayPal для Medusa"
+description: "В этом документе вы узнаете, как установить и настроить платёжный провайдер PayPal для Medusa"
+---
+
+# {frontmatter.title}
+
+В этом документе вы узнаете, как установить и настроить платёжный провайдер PayPal для Medusa.
+
+## Требования
+
+- Medusa v2.17.2 или новее
+- Node.js v20.19 или v22.12 и новее
+- Бизнес-аккаунт PayPal и приложение в <a href="https://developer.paypal.com/dashboard/" target="_blank">PayPal Developer Dashboard</a>
+- [Модуль интеграций](/medusa-modules/integration)
+
+---
+
+## Установка
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-paypal
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-paypal
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Зарегистрируйте плагин и оба провайдера в файле `medusa-config.ts` приложения Medusa:
+
+```ts title="medusa-config.ts"
+// ...
+const PAYPAL_INTEGRATION_ID = "paypal-1"
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-paypal/providers/integration-paypal",
+            id: PAYPAL_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-paypal",
+      options: {},
+    },
+  ],
+  modules: [
+    // ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-paypal/providers/payment-paypal",
+            id: "paypal",
+            options: {
+              id: PAYPAL_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Так зарегистрированный платёжный провайдер получает id `pp_paypal_paypal`, а его вебхук приходит на роут `/hooks/payment/paypal_paypal`.
+
+<Note type="warning" title="Один плагин PayPal на проект">Плагин `@easypayment/medusa-payment-paypal` регистрирует свой провайдер под тем же id `pp_paypal_paypal`, поэтому два плагина не могут работать в одном проекте. Оставьте зарегистрированным только один из них.</Note>
+
+Добавьте переменную окружения с секретным ключом шифрования:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Параметры провайдера
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Суффикс итогового ключа `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+Client ID, секрет и остальные настройки PayPal не входят в параметры провайдера. Их вы вводите в Medusa Admin, как описано в разделе [Настройки PayPal в Medusa Admin](/medusa-integrations/paypal/settings).
+
+---
+
+## Настройка вебхуков
+
+PayPal сообщает об авторизациях и списаниях вебхуком, и по нему плагин оформляет заказ, если покупатель закрыл вкладку после оплаты. Настройте его в PayPal Developer Dashboard:
+
+1. Откройте своё приложение в разделе **Apps & Credentials**, выбрав окружение **Sandbox** или **Live**, как в настройках плагина.
+
+2. В блоке **Webhooks** нажмите **Add Webhook**.
+
+3. Укажите URL вида:
+    ```
+    https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/paypal_paypal
+    ```
+    Замените `{YOUR_MEDUSA_DOMAIN}` на домен своего магазина Medusa.
+
+4. Подпишите вебхук на события `PAYMENT.AUTHORIZATION.CREATED` и `PAYMENT.CAPTURE.COMPLETED` и сохраните его.
+
+5. Скопируйте ID вебхука и введите его в поле **ID вебхука** в настройках PayPal в Medusa Admin. После этого кнопка **Проверить соединение** проверяет, что вебхук есть в этом окружении и подписан на оба события.
+
+<Note type="warning">Без ID вебхука плагин не может проверить вебхуки PayPal и игнорирует их. Оплата при этом проходит, но заказ, который не оформила витрина, так и останется неоформленным, а списание, которое PayPal задержал на проверку, останется в Medusa авторизованным.</Note>
