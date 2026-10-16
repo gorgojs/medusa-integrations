@@ -1,7 +1,7 @@
 {
   "paypal": {
     "name": "PayPal",
-    "description": "Payments through PayPal Checkout",
+    "description": "PayPal payment system",
     "sections": {
       "credentials": "Credentials",
       "behavior": "Behavior",
@@ -10,7 +10,7 @@
     "fields": {
       "environment": "Environment",
       "clientId": "Client ID",
-      "clientSecret": "Secret",
+      "clientSecret": "Secret key",
       "webhookId": "Webhook ID",
       "intent": "Payment intent",
       "brandName": "Brand name",

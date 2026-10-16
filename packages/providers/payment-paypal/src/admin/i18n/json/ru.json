@@ -1,7 +1,7 @@
 {
   "paypal": {
     "name": "PayPal",
-    "description": "Оплата через PayPal Checkout",
+    "description": "Платёжная система PayPal",
     "sections": {
       "credentials": "Доступы",
       "behavior": "Поведение",
@@ -10,7 +10,7 @@
     "fields": {
       "environment": "Окружение",
       "clientId": "Client ID",
-      "clientSecret": "Секрет",
+      "clientSecret": "Секретный ключ",
       "webhookId": "ID вебхука",
       "intent": "Способ списания",
       "brandName": "Название бренда",
