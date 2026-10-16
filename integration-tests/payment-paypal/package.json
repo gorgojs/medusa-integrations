@@ -1,0 +1,27 @@
+{
+  "name": "@gorgo/it-payment-paypal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test:integration:http": "TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js --silent=false --runInBand --forceExit --passWithNoTests",
+    "test:integration:modules": "TEST_TYPE=integration:modules NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js --silent --runInBand --forceExit --passWithNoTests",
+    "test": "yarn run -T turbo run test:integration:http test:integration:modules"
+  },
+  "dependencies": {
+    "@gorgo/medusa-integration": "workspace:*",
+    "@gorgo/medusa-payment-paypal": "workspace:*",
+    "@medusajs/framework": "2.21.2",
+    "@medusajs/medusa": "2.21.2",
+    "@medusajs/test-utils": "2.21.2",
+    "pg-god": "^1.0.12"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.7.28",
+    "@swc/jest": "^0.2.36",
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.13.11",
+    "jest": "^29.7.0",
+    "nock": "^14.0.15",
+    "typescript": "^5.8.2"
+  }
+}
