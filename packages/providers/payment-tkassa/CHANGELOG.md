@@ -1,5 +1,11 @@
 # @gorgo/medusa-payment-tkassa
 
+## 2.0.3
+
+### Documentation
+
+- point the demo video at its versioned file by [@gorgohead](https://github.com/gorgohead) in [`1b695d0`](https://github.com/gorgojs/medusa-integrations/commit/1b695d08dc7c54e05097cb99861633fe5a76b3eb)
+
 ## 2.0.2
 
 ### Documentation

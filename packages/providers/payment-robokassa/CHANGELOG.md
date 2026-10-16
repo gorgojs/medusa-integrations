@@ -1,5 +1,11 @@
 # @gorgo/medusa-payment-robokassa
 
+## 2.0.3
+
+### Documentation
+
+- point the demo video at its versioned file by [@gorgohead](https://github.com/gorgohead) in [`75cb7ac`](https://github.com/gorgojs/medusa-integrations/commit/75cb7aca7decb8b30a5f5f1cf6d65779d22bc895)
+
 ## 2.0.2
 
 ### Documentation

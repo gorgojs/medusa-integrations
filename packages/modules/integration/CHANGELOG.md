@@ -1,5 +1,11 @@
 # @gorgo/medusa-integration
 
+## 0.2.6
+
+### Documentation
+
+- point the demo video at its versioned file by [@gorgohead](https://github.com/gorgohead) in [`f7f7099`](https://github.com/gorgojs/medusa-integrations/commit/f7f7099b92df948ab082b755da30ce51cc946074)
+
 ## 0.2.5
 
 ### Bug Fixes

@@ -1,5 +1,11 @@
 # @gorgo/medusa-payment-yookassa
 
+## 2.0.6
+
+### Documentation
+
+- point the demo video at its versioned file by [@gorgohead](https://github.com/gorgohead) in [`ec10782`](https://github.com/gorgojs/medusa-integrations/commit/ec10782e817ac677eed7af1b2db0b5b2f7cb53f3)
+
 ## 2.0.5
 
 ### Documentation
