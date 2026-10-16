@@ -1,0 +1,502 @@
+[
+  {
+    "handle": "t-shirt",
+    "title": "Medusa T-Shirt",
+    "description": "Reimagine the feel of a classic tee. With our cotton T-shirts, everyday essentials are no longer ordinary.",
+    "status": "published",
+    "category": "shirts",
+    "weight": 400,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-T-SHIRT"
+    },
+    "images": [
+      "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-black-front.png",
+      "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-black-back.png",
+      "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-white-front.png",
+      "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-white-back.png"
+    ],
+    "options": [
+      "Size",
+      "Color"
+    ],
+    "variants": [
+      {
+        "title": "S / Black",
+        "sku": "SHIRT-S-BLACK",
+        "options": {
+          "Size": "S",
+          "Color": "Black"
+        }
+      },
+      {
+        "title": "S / White",
+        "sku": "SHIRT-S-WHITE",
+        "options": {
+          "Size": "S",
+          "Color": "White"
+        }
+      },
+      {
+        "title": "M / Black",
+        "sku": "SHIRT-M-BLACK",
+        "options": {
+          "Size": "M",
+          "Color": "Black"
+        }
+      },
+      {
+        "title": "M / White",
+        "sku": "SHIRT-M-WHITE",
+        "options": {
+          "Size": "M",
+          "Color": "White"
+        }
+      },
+      {
+        "title": "L / Black",
+        "sku": "SHIRT-L-BLACK",
+        "options": {
+          "Size": "L",
+          "Color": "Black"
+        }
+      },
+      {
+        "title": "L / White",
+        "sku": "SHIRT-L-WHITE",
+        "options": {
+          "Size": "L",
+          "Color": "White"
+        }
+      },
+      {
+        "title": "XL / Black",
+        "sku": "SHIRT-XL-BLACK",
+        "options": {
+          "Size": "XL",
+          "Color": "Black"
+        }
+      },
+      {
+        "title": "XL / White",
+        "sku": "SHIRT-XL-WHITE",
+        "options": {
+          "Size": "XL",
+          "Color": "White"
+        }
+      }
+    ]
+  },
+  {
+    "handle": "sweatshirt",
+    "title": "Medusa Sweatshirt",
+    "description": "Reimagine the feel of a classic sweatshirt. With our cotton sweatshirt, everyday essentials are no longer ordinary.",
+    "status": "published",
+    "category": "sweatshirts",
+    "weight": 400,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-SWEATSHIRT"
+    },
+    "images": [
+      "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatshirt-vintage-front.png",
+      "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatshirt-vintage-back.png"
+    ],
+    "options": [
+      "Size"
+    ],
+    "variants": [
+      {
+        "title": "S",
+        "sku": "SWEATSHIRT-S",
+        "options": {
+          "Size": "S"
+        }
+      },
+      {
+        "title": "M",
+        "sku": "SWEATSHIRT-M",
+        "options": {
+          "Size": "M"
+        }
+      },
+      {
+        "title": "L",
+        "sku": "SWEATSHIRT-L",
+        "options": {
+          "Size": "L"
+        }
+      },
+      {
+        "title": "XL",
+        "sku": "SWEATSHIRT-XL",
+        "options": {
+          "Size": "XL"
+        }
+      }
+    ]
+  },
+  {
+    "handle": "sweatpants",
+    "title": "Medusa Sweatpants",
+    "description": "Reimagine the feel of classic sweatpants. With our cotton sweatpants, everyday essentials are no longer ordinary.",
+    "status": "published",
+    "category": "pants",
+    "weight": 400,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-SWEATPANTS"
+    },
+    "images": [
+      "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatpants-gray-front.png",
+      "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatpants-gray-back.png"
+    ],
+    "options": [
+      "Size"
+    ],
+    "variants": [
+      {
+        "title": "S",
+        "sku": "SWEATPANTS-S",
+        "options": {
+          "Size": "S"
+        }
+      },
+      {
+        "title": "M",
+        "sku": "SWEATPANTS-M",
+        "options": {
+          "Size": "M"
+        }
+      },
+      {
+        "title": "L",
+        "sku": "SWEATPANTS-L",
+        "options": {
+          "Size": "L"
+        }
+      },
+      {
+        "title": "XL",
+        "sku": "SWEATPANTS-XL",
+        "options": {
+          "Size": "XL"
+        }
+      }
+    ]
+  },
+  {
+    "handle": "shorts",
+    "title": "Medusa Shorts",
+    "description": "Reimagine the feel of classic shorts. With our cotton shorts, everyday essentials are no longer ordinary.",
+    "status": "published",
+    "category": "shorts",
+    "weight": 400,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-SHORTS"
+    },
+    "images": [
+      "https://medusa-public-images.s3.eu-west-1.amazonaws.com/shorts-vintage-front.png",
+      "https://medusa-public-images.s3.eu-west-1.amazonaws.com/shorts-vintage-back.png"
+    ],
+    "options": [
+      "Size"
+    ],
+    "variants": [
+      {
+        "title": "S",
+        "sku": "SHORTS-S",
+        "options": {
+          "Size": "S"
+        }
+      },
+      {
+        "title": "M",
+        "sku": "SHORTS-M",
+        "options": {
+          "Size": "M"
+        }
+      },
+      {
+        "title": "L",
+        "sku": "SHORTS-L",
+        "options": {
+          "Size": "L"
+        }
+      },
+      {
+        "title": "XL",
+        "sku": "SHORTS-XL",
+        "options": {
+          "Size": "XL"
+        }
+      }
+    ]
+  },
+  {
+    "handle": "hoodie",
+    "title": "Hoodie",
+    "description": "Classic black hoodie made from soft cotton fabric for everyday comfort. Features a relaxed fit, adjustable drawstring hood and front kangaroo pocket. Simple and versatile for layering in any season.",
+    "status": "published",
+    "category": "sweatshirts",
+    "weight": 600,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-HOODIE"
+    },
+    "images": [
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Sweatshirt%201-01KBNDBVW0ATNSHA3FPPEE9R13.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Sweatshirt%202-2-01KBNDBVW3XR32EEB9YBR673AF.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Sweatshirt%203-01KBNDBVW4XPMWCCSNTY5EV83P.png"
+    ],
+    "options": [
+      "Size"
+    ],
+    "variants": [
+      {
+        "title": "S",
+        "sku": "HOODIE-S",
+        "options": {
+          "Size": "S"
+        }
+      },
+      {
+        "title": "M",
+        "sku": "HOODIE-M",
+        "options": {
+          "Size": "M"
+        }
+      },
+      {
+        "title": "L",
+        "sku": "HOODIE-L",
+        "options": {
+          "Size": "L"
+        }
+      },
+      {
+        "title": "XL",
+        "sku": "HOODIE-XL",
+        "options": {
+          "Size": "XL"
+        }
+      }
+    ]
+  },
+  {
+    "handle": "chino-pants",
+    "title": "Chino Pants",
+    "description": "Classic black chino pants with a tailored fit and minimal design. Made from soft, durable cotton fabric with a hint of stretch for comfort. Features side pockets, belt loops and a button closure. Ideal for both casual and smart wear.",
+    "status": "published",
+    "category": "pants",
+    "weight": 500,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-CHINO-PANTS"
+    },
+    "images": [
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Chino%20pants%201-01K9Q93MCFNPMQ35V1RTGXCN0X.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Chino%20pants%202-01K9Q93MCG9EXWSXC6P1Q6C76G.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Chino%20pants%203-01K9Q93MCH6PS4HW7VBV6CSTA7.png"
+    ],
+    "options": [
+      "Size"
+    ],
+    "variants": [
+      {
+        "title": "S",
+        "sku": "CHINO-S",
+        "options": {
+          "Size": "S"
+        }
+      },
+      {
+        "title": "M",
+        "sku": "CHINO-M",
+        "options": {
+          "Size": "M"
+        }
+      },
+      {
+        "title": "L",
+        "sku": "CHINO-L",
+        "options": {
+          "Size": "L"
+        }
+      },
+      {
+        "title": "XL",
+        "sku": "CHINO-XL",
+        "options": {
+          "Size": "XL"
+        }
+      }
+    ]
+  },
+  {
+    "handle": "puffer-jacket",
+    "title": "Puffer Jacket",
+    "description": "Insulated black puffer jacket designed for warmth and comfort in cold weather. Features a high collar, front zipper with snap closure, and multiple pockets for functionality. Lightweight yet durable for everyday wear or outdoor use.",
+    "status": "published",
+    "category": "outerwear",
+    "weight": 1200,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-PUFFER-JACKET"
+    },
+    "images": [
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Winter%20jacket%209-01K9Q8E20B4Z8W84RPD5BF59HZ.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Winter%20jacket%2011-01K9Q8E20E04BD8GPVW0P3P6FM.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Winter%20jacket%2010-01K9Q8E20GGG6NX49D6RT8DMV6.png"
+    ],
+    "options": [
+      "Size"
+    ],
+    "variants": [
+      {
+        "title": "S",
+        "sku": "PUFFER-S",
+        "options": {
+          "Size": "S"
+        }
+      },
+      {
+        "title": "M",
+        "sku": "PUFFER-M",
+        "options": {
+          "Size": "M"
+        }
+      },
+      {
+        "title": "L",
+        "sku": "PUFFER-L",
+        "options": {
+          "Size": "L"
+        }
+      },
+      {
+        "title": "XL",
+        "sku": "PUFFER-XL",
+        "options": {
+          "Size": "XL"
+        }
+      }
+    ]
+  },
+  {
+    "handle": "wireless-headphones",
+    "title": "Wireless Over-Ear Headphones",
+    "description": "Matte black wireless headphones with a comfortable over-ear design for immersive listening. Provide clear sound, strong bass and long battery life. Built for everyday use at home, in the office or on the go.",
+    "status": "published",
+    "category": "headphones",
+    "weight": 300,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-WIRELESS-HEADPHONES"
+    },
+    "images": [
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Headphones%201-01K9Q3FB7AZWJQDCV0AZH1HE6R.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Headphones%202-01K9Q3FB7BTQ43JYE1EEZPBWZF.png"
+    ],
+    "options": [
+      "Color"
+    ],
+    "variants": [
+      {
+        "title": "Black",
+        "sku": "HEADPHONES",
+        "options": {
+          "Color": "Black"
+        }
+      }
+    ]
+  },
+  {
+    "handle": "electric-bike",
+    "title": "Electric Bike",
+    "description": "Matte black electric mountain bike built for performance and everyday versatility. Features a lightweight aluminum frame, integrated battery, and powerful motor for smooth assisted riding on all terrains. Designed for both city commutes and off-road trails.",
+    "status": "published",
+    "category": "e-transport",
+    "weight": 20000,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-ELECTRIC-BIKE"
+    },
+    "images": [
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Bike%201-01K9Q4C289JCSVNVZHXK90E3S3.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Bike%202-01K9Q4C28AY723T73QQ0F2ERAF.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Bike%203-01K9Q4C28CFPV312AEEF9TRBQW.png"
+    ],
+    "options": [
+      "Color"
+    ],
+    "variants": [
+      {
+        "title": "Black",
+        "sku": "BIKE",
+        "options": {
+          "Color": "Black"
+        }
+      }
+    ]
+  },
+  {
+    "handle": "serving-plate",
+    "title": "Serving Plate",
+    "description": "A sculptural stainless steel serving plate with a polished mirror finish. Its fluid, modern shape adds a refined touch to any table setting. Perfect for fruit, appetizers or decorative display. Designed for both functionality and visual impact, it reflects light beautifully and complements any contemporary home or restaurant style.",
+    "status": "published",
+    "category": "tableware",
+    "weight": 800,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-SERVING-PLATE"
+    },
+    "images": [
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Plate%201-01K9Q2JX9A6ZTY7FM3VB1CJHNT.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Plate%203-01K9Q2JX9D07HAQXPR2S0W3Y63.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Plate%202-01K9Q2JX9E8VWYZ4ZBCD12QYHE.png"
+    ],
+    "options": [
+      "Color"
+    ],
+    "variants": [
+      {
+        "title": "Silver",
+        "sku": "PLATE",
+        "options": {
+          "Color": "Silver"
+        }
+      }
+    ]
+  },
+  {
+    "handle": "espresso-cup",
+    "title": "Espresso Cup",
+    "description": "Black ceramic espresso cups designed for single or double shots. Durable, heat retaining and dishwasher safe.",
+    "status": "published",
+    "category": "coffee",
+    "weight": 200,
+    "metadata": {
+      "brand": "Medusa",
+      "mpn": "MEDUSA-ESPRESSO-CUP"
+    },
+    "images": [
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Espresso%20cup%201-01K9C972AVS9YMJ3AWBTNMYVKP.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Espresso%20cup%202-01K9C972AYF51YNCD6FYVR5CCQ.png",
+      "https://s3.eu-central-1.amazonaws.com/medusajs.cloud-data-prod-euc1-20241127132538579500000002/ef47368a1f5430f9c1b/Espresso%20cup%203-01K9C972B0KTJG2M56S2G0YVWX.png"
+    ],
+    "options": [
+      "Color"
+    ],
+    "variants": [
+      {
+        "title": "Black",
+        "sku": "ESPRESSO-CUP",
+        "options": {
+          "Color": "Black"
+        }
+      }
+    ]
+  }
+]

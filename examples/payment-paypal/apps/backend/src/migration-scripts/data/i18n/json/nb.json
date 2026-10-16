@@ -1,0 +1,103 @@
+{
+  "name": "Norsk bokmål",
+  "translations": {
+    "categories": {
+      "clothing": "Klær",
+      "coffee": "Kaffe",
+      "eTransport": "Elektrisk transport",
+      "electronics": "Elektronikk",
+      "headphones": "Hodetelefoner",
+      "home": "Hjem",
+      "outerwear": "Yttertøy",
+      "pants": "Bukser",
+      "shirts": "T-skjorter",
+      "shorts": "Shorts",
+      "sweatshirts": "Gensere",
+      "tableware": "Servise"
+    },
+    "collections": {
+      "new": "Nyheter"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klassiske sorte chinos med skreddersydd passform og minimalistisk design. Laget av mykt og slitesterkt bomullsstoff med et snev av stretch for komfort. Har sidelommer, belteløkker og knapplukking. Ideell for både avslappet og pent antrekk.",
+        "title": "Chinos"
+      },
+      "electricBike": {
+        "description": "Matt sort elektrisk terrengsykkel bygget for ytelse og hverdagslig allsidighet. Har en lett aluminiumsramme, integrert batteri og en kraftig motor for jevn elektrisk assistert sykling på alt terreng. Designet for både bypendling og off-road-stier.",
+        "title": "Elsykkel"
+      },
+      "espressoCup": {
+        "description": "Sorte keramiske espressokopper designet for enkel eller dobbel shot. Slitesterke, varmebestandige og tåler oppvaskmaskin.",
+        "title": "Espressokopp"
+      },
+      "hoodie": {
+        "description": "Klassisk sort hettegenser i mykt bomullsstoff for hverdagskomfort. Har en avslappet passform, justerbar hette med snøring og en kengurulomme foran. Enkel og allsidig for lagvis påkledning i alle årstider.",
+        "title": "Hettegenser"
+      },
+      "pufferJacket": {
+        "description": "Vattert sort dunjakke designet for varme og komfort i kaldt vær. Har høy krage, glidelås foran med trykknapplukking, og flere lommer for funksjonalitet. Lett, men slitesterk for hverdagsbruk eller utendørsaktiviteter.",
+        "title": "Dunjakke"
+      },
+      "servingPlate": {
+        "description": "Et skulpturelt serveringsfat i rustfritt stål med polert speilblank finish. Den flytende, moderne formen tilfører et raffinert preg til ethvert dekket bord. Perfekt for frukt, forretter eller dekorativ oppstilling. Designet for både funksjonalitet og visuell effekt, det reflekterer lyset vakkert og utfyller enhver moderne hjemme- eller restaurantstil.",
+        "title": "Serveringsfat"
+      },
+      "shorts": {
+        "description": "Gjenoppfinn følelsen av klassiske shorts. Med våre shorts i bomull er hverdagens basisplagg ikke lenger vanlige.",
+        "title": "Medusa shorts"
+      },
+      "sweatpants": {
+        "description": "Gjenoppfinn følelsen av en klassisk joggebukse. Med våre joggebukser i bomull er hverdagens basisplagg ikke lenger vanlige.",
+        "title": "Medusa joggebukse"
+      },
+      "sweatshirt": {
+        "description": "Gjenoppfinn følelsen av en klassisk genser. Med vår genser i bomull er hverdagens basisplagg ikke lenger vanlige.",
+        "title": "Medusa genser"
+      },
+      "tShirt": {
+        "description": "Gjenoppfinn følelsen av en klassisk T-skjorte. Med våre T-skjorter i bomull er hverdagens basisplagg ikke lenger vanlige.",
+        "title": "Medusa T-skjorte"
+      },
+      "wirelessHeadphones": {
+        "description": "Matte sorte trådløse hodetelefoner med et komfortabelt over-ear-design for en fordypende lytteopplevelse. Gir klar lyd, kraftig bass og lang batteritid. Laget for daglig bruk hjemme, på kontoret eller på farten.",
+        "title": "Trådløse over-ear-hodetelefoner"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Refusjon gitt som goodwill eller kompensasjon for ulempe",
+        "label": "Kundeservicejustering"
+      },
+      "pricingError": {
+        "description": "Refusjon for å korrigere en for høy pris, manglende rabatt eller feil pris",
+        "label": "Prisfeil"
+      },
+      "shippingIssue": {
+        "description": "Refusjon på grunn av tapt, forsinket eller feillevert forsendelse",
+        "label": "Forsendelsesproblem"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Budlevering",
+      "pickup": "Henting"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Levering innen 2–3 dager.",
+        "label": "Bud"
+      },
+      "pickup": {
+        "description": "Hent på et hentested.",
+        "label": "Henting"
+      }
+    },
+    "terms": {
+      "black": "Svart",
+      "color": "Farge",
+      "silver": "Sølv",
+      "size": "Størrelse",
+      "white": "Hvit"
+    }
+  }
+}
