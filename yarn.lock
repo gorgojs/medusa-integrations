@@ -1931,6 +1931,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gorgo/it-payment-paypal@workspace:integration-tests/payment-paypal":
+  version: 0.0.0-use.local
+  resolution: "@gorgo/it-payment-paypal@workspace:integration-tests/payment-paypal"
+  dependencies:
+    "@gorgo/medusa-integration": "workspace:*"
+    "@gorgo/medusa-payment-paypal": "workspace:*"
+    "@medusajs/framework": "npm:2.21.2"
+    "@medusajs/medusa": "npm:2.21.2"
+    "@medusajs/test-utils": "npm:2.21.2"
+    "@swc/core": "npm:^1.7.28"
+    "@swc/jest": "npm:^0.2.36"
+    "@types/jest": "npm:^29.5.13"
+    "@types/node": "npm:^22.13.11"
+    jest: "npm:^29.7.0"
+    nock: "npm:^14.0.15"
+    pg-god: "npm:^1.0.12"
+    typescript: "npm:^5.8.2"
+  languageName: unknown
+  linkType: soft
+
 "@gorgo/it-payment-robokassa@workspace:integration-tests/payment-robokassa":
   version: 0.0.0-use.local
   resolution: "@gorgo/it-payment-robokassa@workspace:integration-tests/payment-robokassa"
