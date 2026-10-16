@@ -1,0 +1,93 @@
+{
+  "name": "@gorgo/medusa-payment-paypal",
+  "version": "0.0.1",
+  "description": "PayPal payment provider for Medusa",
+  "license": "MIT",
+  "files": [
+    ".medusa/server",
+    "index.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gorgojs/medusa-integrations",
+    "directory": "packages/providers/payment-paypal"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./providers/*": "./.medusa/server/src/providers/*/index.js",
+    "./admin": {
+      "import": "./.medusa/server/src/admin/index.mjs",
+      "require": "./.medusa/server/src/admin/index.js",
+      "default": "./.medusa/server/src/admin/index.js"
+    },
+    "./*": "./.medusa/server/src/*.js"
+  },
+  "keywords": [
+    "medusa",
+    "medusa-v2",
+    "medusa-plugin",
+    "medusa-plugin-integration",
+    "medusa-plugin-payment",
+    "medusa-payment",
+    "medusa-payment-paypal",
+    "paypal",
+    "paypal-checkout",
+    "express-checkout"
+  ],
+  "scripts": {
+    "build": "yarn openapi:gen && medusa plugin:build",
+    "dev": "yarn predev && medusa plugin:develop",
+    "openapi:gen": "sh scripts/openapi-gen.sh",
+    "openapi:pull": "mkdir -p openapi && curl -fL https://raw.githubusercontent.com/paypal/paypal-rest-api-specifications/main/openapi/checkout_orders_v2.json -o openapi/checkout_orders_v2.json && curl -fL https://raw.githubusercontent.com/paypal/paypal-rest-api-specifications/main/openapi/payments_payment_v2.json -o openapi/payments_payment_v2.json && curl -fL https://raw.githubusercontent.com/paypal/paypal-rest-api-specifications/main/openapi/notifications_webhooks_v1.json -o openapi/notifications_webhooks_v1.json && yarn openapi:version",
+    "openapi:version": "shasum -a 256 openapi/*.json > openapi/SPEC_VERSION.txt && echo 'PayPal specs updated:' && cat openapi/SPEC_VERSION.txt",
+    "predev": "medusa plugin:publish",
+    "prepublishOnly": "yarn openapi:gen && medusa plugin:build",
+    "test:unit": "jest --config jest.config.js --coverage --passWithNoTests"
+  },
+  "dependencies": {
+    "@gorgo/telemetry": "^1.4.0",
+    "axios": "^1.9.0"
+  },
+  "devDependencies": {
+    "@gorgo/medusa-integration": "^0.2.4",
+    "@medusajs/admin-sdk": "^2.17.2",
+    "@medusajs/cli": "^2.17.2",
+    "@medusajs/framework": "^2.17.2",
+    "@medusajs/icons": "^2.17.2",
+    "@medusajs/medusa": "^2.17.2",
+    "@medusajs/test-utils": "^2.17.2",
+    "@medusajs/ui": "^4.1.15",
+    "@openapitools/openapi-generator-cli": "^2.25.0",
+    "@swc/core": "^1.7.28",
+    "@swc/jest": "^0.2.36",
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.13.11",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.2.25",
+    "jest": "^29.7.0",
+    "msw": "^2.7.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2",
+    "vite": "^7.3.6",
+    "yalc": "^1.0.0-pre.53"
+  },
+  "peerDependencies": {
+    "@gorgo/medusa-integration": ">=0.1.5 <1.0.0",
+    "@medusajs/admin-sdk": "^2.17.2",
+    "@medusajs/cli": "^2.17.2",
+    "@medusajs/framework": "^2.17.2",
+    "@medusajs/icons": "^2.17.2",
+    "@medusajs/medusa": "^2.17.2",
+    "@medusajs/test-utils": "^2.17.2",
+    "@medusajs/ui": "^4.1.16"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}
