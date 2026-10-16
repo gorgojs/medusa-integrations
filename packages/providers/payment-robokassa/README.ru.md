@@ -44,7 +44,7 @@
 
 <p align="center">
   <a href="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-ru.mp4">
-    <img src="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-ru-poster-play.817dc29e.webp" alt="Смотреть демо-видео плагина Robokassa" width="100%" style="border-radius: 8px; max-width: 720px;">
+    <img src="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-ru-poster-play.52c362cf.webp" alt="Смотреть демо-видео плагина Robokassa" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
