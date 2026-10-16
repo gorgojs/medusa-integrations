@@ -1,0 +1,142 @@
+# PayPal — payment provider, authored by Gorgo.
+# See example.yml for the fully-annotated template.
+
+identifier: "paypal"
+npm: "@gorgo/medusa-payment-paypal"
+category: "payment"
+author: "gorgo"
+displayName:
+  en: "PayPal"
+  ru: "PayPal"
+shortDescription:
+  en: "Accept payments via PayPal Checkout"
+  ru: "Приём платежей через PayPal Checkout"
+icon: "paypal.svg"
+repository: "https://github.com/gorgojs/medusa-integrations"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/paypal"
+docsSnippet:
+  en: |
+    ## Install
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-paypal@beta
+    # or with yarn
+    yarn add @gorgo/medusa-payment-paypal@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-paypal@beta
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    const PAYPAL_INTEGRATION_ID = "paypal-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-paypal/providers/integration-paypal",
+                id: PAYPAL_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-paypal",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-paypal/providers/payment-paypal",
+                id: "paypal",
+                options: { id: PAYPAL_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Then restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → PayPal**.
+    2. Configure integration settings.
+  ru: |
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-paypal@beta
+    # or with yarn
+    yarn add @gorgo/medusa-payment-paypal@beta
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-paypal@beta
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    const PAYPAL_INTEGRATION_ID = "paypal-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-paypal/providers/integration-paypal",
+                id: PAYPAL_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-paypal",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-paypal/providers/payment-paypal",
+                id: "paypal",
+                options: { id: PAYPAL_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Затем перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → PayPal**.
+    2. Настройте параметры интеграции.
+active: true
