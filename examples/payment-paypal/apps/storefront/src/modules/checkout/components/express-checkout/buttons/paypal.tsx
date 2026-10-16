@@ -78,6 +78,7 @@ function PayPalWalletButton({
         onShippingAddressChange={async (data, actions) => {
           const orderId = data.orderID || orderRef.current
           if (!orderId) return actions.reject()
+          let shipsThere = false
           try {
             const quote = await quoteExpressShipping(
               {
@@ -88,16 +89,30 @@ function PayPalWalletButton({
               },
               shippingOptionId
             )
-            if (!quote.ok) return actions.reject()
-            // A new total makes Medusa drop the session, so the order the
-            // customer is approving moves to a new one, which patches its amount.
-            await startExpressPayment(
-              providerId,
-              { express: true, paypal_order_id: orderId },
-              "paypal_order_id"
-            )
+            shipsThere = quote.ok
+            if (shipsThere) {
+              // A new total makes Medusa drop the session, so the order the
+              // customer is approving moves to a new one, which patches its amount.
+              await startExpressPayment(
+                providerId,
+                { express: true, paypal_order_id: orderId },
+                "paypal_order_id"
+              )
+            }
           } catch {
             return actions.reject()
+          }
+          if (!shipsThere) {
+            // PayPal shows the thrown message, so the customer learns why the
+            // address is refused. The SDK puts its own wording in `data.errors`,
+            // which its types leave out.
+            const { errors } = data as typeof data & {
+              errors?: { ADDRESS_ERROR?: string }
+            }
+            throw new Error(
+              errors?.ADDRESS_ERROR ??
+                "Your order can't be shipped to this address."
+            )
           }
         }}
         onApprove={async (data) => {
