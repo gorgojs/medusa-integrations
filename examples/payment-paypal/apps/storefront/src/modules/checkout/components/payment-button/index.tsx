@@ -3,6 +3,7 @@
 import {
   isManual,
   isPaymentSessionReady,
+  isPaypal,
   isShippingMethodReady,
   isStripeLike,
 } from "@lib/constants"
@@ -14,6 +15,7 @@ import { useSelectedShippingOptionId } from "@modules/checkout/context/shipping-
 import { useLocale, useTranslations } from "next-intl"
 import type React from "react"
 import ManualPaymentButton from "./providers/manual"
+import PayPalPaymentButton from "./providers/paypal"
 import StripePaymentButton from "./providers/stripe"
 
 type PaymentButtonProps = {
@@ -84,6 +86,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   switch (true) {
     case isStripeLike(activePaymentMethod):
       return <StripePaymentButton {...providerProps} />
+    case isPaypal(activePaymentMethod):
+      return <PayPalPaymentButton {...providerProps} />
     case isManual(activePaymentMethod):
       return <ManualPaymentButton {...providerProps} />
     default:
