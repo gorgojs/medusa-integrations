@@ -1,0 +1,126 @@
+---
+title: "Настройка экспресс-оплаты"
+description: "Узнайте, как ряд экспресс-оплаты витрины выбирает кнопки кошельков и как добавить кнопку платёжного провайдера."
+---
+
+# {frontmatter.title}
+
+В этом руководстве вы узнаете, как ряд экспресс-оплаты витрины выбирает кнопки кошельков и как добавить кнопку платёжного провайдера.
+
+Ряд стоит над формой оформления заказа. Каждая кнопка оплачивает весь заказ из окна своего кошелька. Покупатель выбирает там адрес, ряд отвечает доставкой и новым итогом, а стартер оформляет заказ, когда покупатель платит. В стартере реестр пуст, поэтому ряд ничего не показывает, пока вы не добавите в него кнопку платёжного плагина.
+
+## Как ряд находит платёжные провайдеры
+
+`CheckoutForm` загружает платёжные провайдеры, включённые в регионе корзины, тот же список, что и у шага оплаты, и передаёт его в `ExpressCheckout`. Ряд оставляет кнопку, только если её запись в реестре подходит одному из этих провайдеров:
+
+```tsx title="src/modules/checkout/components/express-checkout/index.tsx"
+  const buttons = expressButtons.flatMap(({ match, Component }) => {
+    const provider = availablePaymentMethods.find((method) => match(method.id))
+    return provider && !unavailable.includes(provider.id)
+      ? [{ providerId: provider.id, Component }]
+      : []
+  })
+```
+
+В реестре по одной записи на платёжный провайдер, и в стартере он пустой:
+
+```ts title="src/modules/checkout/components/express-checkout/registry.ts"
+/**
+ * Express buttons above the checkout, one entry per payment provider. The row
+ * shows an entry only when `match` accepts a provider enabled in the cart's
+ * region. The starter ships without entries, so the row renders nothing until a
+ * payment plugin's button is added here.
+ */
+export const expressButtons: {
+  match: (providerId: string) => boolean
+  Component: ComponentType<ExpressButtonProps>
+}[] = []
+```
+
+<Note type="default" title="">
+
+Кнопка может скрыть себя и после того, как ряд её показал. Если кошелёк недоступен покупателю, например не загрузился его скрипт, кнопка вызывает `onUnavailable`, и ряд её убирает. Когда кнопок не остаётся, ряд не показывает ничего, даже заголовка.
+
+</Note>
+
+## Что получает кнопка
+
+Все кнопки получают от ряда одни и те же свойства:
+
+```ts title="src/modules/checkout/components/express-checkout/registry.ts"
+export type ExpressButtonProps = {
+  cart: HttpTypes.StoreCart
+  /** The payment provider of the button, as enabled in the cart's region. */
+  providerId: string
+  /** The shipping option the checkout has selected, for the wallet's first quote. */
+  shippingOptionId: string | null
+  /** The wallet is not available to this customer, so the row hides the button. */
+  onUnavailable: () => void
+  onError: (error: ExpressCheckoutError | null) => void
+  /** True while the wallet's payment turns into an order. */
+  onBusy: (busy: boolean) => void
+  /** Places the order once the wallet has paid. A placed order redirects. */
+  placeOrder: () => Promise<void>
+  /**
+   * The wallet's window closed without an order. The cart may now hold the
+   * wallet's address, so the row refreshes the checkout.
+   */
+  onClosed: () => void
+}
+```
+
+С Medusa кнопка работает через Server Actions из `src/lib/data/express-checkout.ts`. Ни одна из этих функций не сбрасывает кэш корзины, потому что окно кошелька ждёт каждого ответа, а сброс кэша заново отрисовывает всё оформление заказа внутри ответа функции. Ряд обновляет страницу один раз, через `onClosed`, когда окно уже закрыто.
+
+| Функция | Что делает |
+|---|---|
+| `quoteExpressShipping` | Записывает в корзину адрес, переданный кошельком до оплаты, проверяет, что регион корзины доставляет в эту страну, и выбирает доставку. Оставляет вариант, выбранный при оформлении заказа, если он подходит, иначе берёт первый в порядке оформления заказа. Самовывоз и варианты с ценой по выбору покупателя пропускает |
+| `saveExpressContact` | Сохраняет email, телефон и полный адрес, переданные кошельком после оплаты, и заново выбирает доставку. Если итог выше `approvedTotal`, суммы, одобренной покупателем в кошельке, возвращает отказ |
+| `startExpressPayment` | Создаёт платёжную сессию, которую оплачивает кошелёк, и возвращает её данные. С `reuseKey` оставляет ожидающую сессию, в которой уже есть то же значение, например тот же заказ кошелька |
+| `revalidateExpressCheckout` | Заново отрисовывает оформление заказа с текущей корзиной |
+
+## Добавление кнопки платёжного провайдера
+
+Чтобы добавить кнопку платёжного провайдера:
+
+1. Создайте компонент в `src/modules/checkout/components/express-checkout/buttons/`, принимающий `ExpressButtonProps`. По клику создайте платёжную сессию через `startExpressPayment`, на смену адреса в кошельке отвечайте через `quoteExpressShipping`, а когда покупатель заплатит, сохраните контакты через `saveExpressContact` и вызовите `placeOrder`.
+2. Добавьте для него запись в `expressButtons` в `registry.ts` с `match`, который принимает id платёжного провайдера.
+3. Включите платёжный провайдер в регионах, где кнопка должна показываться, в разделе **Настройки → Регионы** в Medusa Admin.
+
+Так добавляет свою кнопку пример витрины плагина PayPal:
+
+```ts title="src/modules/checkout/components/express-checkout/registry.ts"
+import { isPaypal } from "@lib/constants"
+import PayPalExpressButton from "./buttons/paypal"
+
+// ...
+
+export const expressButtons: {
+  match: (providerId: string) => boolean
+  Component: ComponentType<ExpressButtonProps>
+}[] = [
+  { match: (providerId) => Boolean(isPaypal(providerId)), Component: PayPalExpressButton },
+]
+```
+
+Кнопка целиком, со сменой адреса и проверкой одобренной суммы, описана в разделе [Интеграция оплаты PayPal в витрину](/medusa-integrations/paypal/storefront-integration).
+
+## Проверка ряда
+
+Ряд и его кнопки работают на `localhost` с sandbox-ключами кошелька. Вебхуку кошелька, который оформляет заказ, если покупатель закрыл вкладку после оплаты, нужен бэкенд на публичном адресе. Примеры платёжных плагинов, например [пример PayPal](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-paypal), поднимают его через туннель командой `yarn dev:tunnel`.
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Готовый к продакшену Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter"
+  },
+  {
+    title: "Начало работы с Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter/getting-started"
+  },
+  {
+    title: "Интеграция оплаты PayPal в витрину",
+    href: "/medusa-integrations/paypal/storefront-integration"
+  }
+]}/>
