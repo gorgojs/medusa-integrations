@@ -47,104 +47,112 @@ function PayPalWalletButton({
     return null
   }
   if (!isResolved) {
-    return <div className="h-12 rounded-md bg-ui-bg-component" aria-hidden="true" />
+    return (
+      <div className="h-12 rounded-md bg-ui-bg-component" aria-hidden="true" />
+    )
   }
 
+  // The SDK puts its iframe at z-index 100. `isolate` keeps it under the
+  // checkout modals, which would otherwise open beneath the button.
   return (
-    <PayPalButtons
-      fundingSource="paypal"
-      style={{
-        layout: "horizontal",
-        color: "gold",
-        shape: "rect",
-        label: "paypal",
-        height: 48,
-        tagline: false,
-        disableMaxWidth: true,
-      }}
-      createOrder={async () => {
-        onError(null)
-        const orderId = orderIdOf(
-          await startExpressPayment(providerId, { express: true })
-        )
-        orderRef.current = orderId
-        return orderId
-      }}
-      onShippingAddressChange={async (data, actions) => {
-        const orderId = data.orderID || orderRef.current
-        if (!orderId) return actions.reject()
-        try {
-          const quote = await quoteExpressShipping(
-            {
-              country_code: data.shippingAddress.countryCode ?? "",
-              province: data.shippingAddress.state,
-              city: data.shippingAddress.city,
-              postal_code: data.shippingAddress.postalCode,
-            },
-            shippingOptionId
+    <div className="isolate">
+      <PayPalButtons
+        fundingSource="paypal"
+        style={{
+          layout: "horizontal",
+          color: "gold",
+          shape: "rect",
+          label: "paypal",
+          height: 48,
+          tagline: false,
+          disableMaxWidth: true,
+        }}
+        createOrder={async () => {
+          onError(null)
+          const orderId = orderIdOf(
+            await startExpressPayment(providerId, { express: true })
           )
-          if (!quote.ok) return actions.reject()
-          // A new total makes Medusa drop the session, so the order the
-          // customer is approving moves to a new one, which patches its amount.
-          await startExpressPayment(
-            providerId,
-            { express: true, paypal_order_id: orderId },
-            "paypal_order_id"
-          )
-        } catch {
-          return actions.reject()
-        }
-      }}
-      onApprove={async (data) => {
-        onBusy(true)
-        try {
-          const payer = await getPayPalPayer(data.orderID)
-          const approved = payer.amount ? Number(payer.amount.value) : undefined
-          const saved = await saveExpressContact(
-            {
-              email: payer.email,
-              phone: payer.phone,
-              shipping_address: payer.shipping_address,
-            },
-            shippingOptionId,
-            approved
-          )
-          if (!saved.ok) {
-            onError(
-              saved.reason === "totalChanged"
-                ? {
-                    code: "totalChanged",
-                    total: saved.total,
-                    currency_code: saved.currency_code,
-                  }
-                : { code: saved.reason }
+          orderRef.current = orderId
+          return orderId
+        }}
+        onShippingAddressChange={async (data, actions) => {
+          const orderId = data.orderID || orderRef.current
+          if (!orderId) return actions.reject()
+          try {
+            const quote = await quoteExpressShipping(
+              {
+                country_code: data.shippingAddress.countryCode ?? "",
+                province: data.shippingAddress.state,
+                city: data.shippingAddress.city,
+                postal_code: data.shippingAddress.postalCode,
+              },
+              shippingOptionId
             )
+            if (!quote.ok) return actions.reject()
+            // A new total makes Medusa drop the session, so the order the
+            // customer is approving moves to a new one, which patches its amount.
+            await startExpressPayment(
+              providerId,
+              { express: true, paypal_order_id: orderId },
+              "paypal_order_id"
+            )
+          } catch {
+            return actions.reject()
+          }
+        }}
+        onApprove={async (data) => {
+          onBusy(true)
+          try {
+            const payer = await getPayPalPayer(data.orderID)
+            const approved = payer.amount
+              ? Number(payer.amount.value)
+              : undefined
+            const saved = await saveExpressContact(
+              {
+                email: payer.email,
+                phone: payer.phone,
+                shipping_address: payer.shipping_address,
+              },
+              shippingOptionId,
+              approved
+            )
+            if (!saved.ok) {
+              onError(
+                saved.reason === "totalChanged"
+                  ? {
+                      code: "totalChanged",
+                      total: saved.total,
+                      currency_code: saved.currency_code,
+                    }
+                  : { code: saved.reason }
+              )
+              onBusy(false)
+              onClosed()
+              return
+            }
+            // The saved address may have changed the total once more.
+            await startExpressPayment(
+              providerId,
+              { express: true, paypal_order_id: data.orderID },
+              "paypal_order_id"
+            )
+            await placeOrder()
+          } catch (err) {
+            if (isNavigation(err)) return
+            onError({ code: "failed", cause: err })
             onBusy(false)
             onClosed()
-            return
           }
-          // The saved address may have changed the total once more.
-          await startExpressPayment(
-            providerId,
-            { express: true, paypal_order_id: data.orderID },
-            "paypal_order_id"
-          )
-          await placeOrder()
-        } catch (err) {
-          if (isNavigation(err)) return
+        }}
+        onCancel={() => onClosed()}
+        onError={(err) => {
           onError({ code: "failed", cause: err })
-          onBusy(false)
           onClosed()
-        }
-      }}
-      onCancel={() => onClosed()}
-      onError={(err) => {
-        onError({ code: "failed", cause: err })
-        onClosed()
-      }}
-    >
-      <Unavailable onMount={onUnavailable} />
-    </PayPalButtons>
+        }}
+      >
+        <Unavailable onMount={onUnavailable} />
+      </PayPalButtons>
+    </div>
   )
 }
 
