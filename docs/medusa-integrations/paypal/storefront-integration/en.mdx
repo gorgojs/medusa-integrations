@@ -214,11 +214,50 @@ The SDK loads with the cart's currency, and the provider is keyed by it, because
 
 ---
 
-## Step 4: Create Payment Button
+## Step 4: Start the Payment Session When the Cart Is Ready
+
+The checkout starts a payment session as soon as the customer selects a payment method. The PayPal order carries the cart's total and the delivery address, so a session started before the cart has them creates an order for a cart that has neither. An entry in `paymentSessionDataBuilders` makes the checkout wait.
+
+Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/src/lib/constants.tsx#L63-L86) and add the following entry to `paymentSessionDataBuilders`:
+
+![Directory structure in the Medusa Storefront after updating the file for constants](/static/paypal/storefront/src-lib-constants.webp)
+
+```tsx title="src/lib/constants.tsx"
+const paymentSessionDataBuilders: Array<{
+  test: (providerId?: string) => boolean | undefined
+  isReady?: (cart: HttpTypes.StoreCart) => boolean
+  build: (cart: HttpTypes.StoreCart) => Record<string, unknown>
+}> = [
+  {
+    test: (providerId) => isPaypal(providerId),
+    // The PayPal order carries the cart's total and the delivery address, so the
+    // session starts once the checkout has an email, an address and a shipping
+    // method. Earlier, PayPal gets an order for a cart that has none of them.
+    isReady: (cart) =>
+      Boolean(
+        cart.email &&
+          cart.shipping_address?.address_1 &&
+          (cart.shipping_methods?.length ?? 0) > 0
+      ),
+    // The email, the name and the billing address fill in PayPal's card form.
+    build: (cart) => ({
+      shipping_address: cart.shipping_address,
+      billing_address: cart.billing_address,
+      email: cart.email,
+    }),
+  },
+]
+```
+
+`isReady` holds the session back until the cart has an email, a delivery address and a shipping method, and `build` hands the cart's details to the provider. The provider sets the delivery address on the PayPal order, and the email, the name and the billing address fill in PayPal's card form when the customer pays by card. The payment button reads the same `isReady`, so the PayPal button at the payment step stays disabled until then.
+
+---
+
+## Step 5: Create Payment Button
 
 {/* TODO: screenshot of the PayPal button at the payment step */}
 
-At the payment step, the PayPal button takes the place of the order button when the customer selects PayPal.
+At the payment step, the PayPal button takes the place of the order button when the customer selects PayPal. While the cart is not ready, a disabled order button stands there instead.
 
 Create [`src/modules/checkout/components/payment-button/providers/paypal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/src/modules/checkout/components/payment-button/providers/paypal.tsx) with the following content:
 
@@ -227,8 +266,9 @@ Create [`src/modules/checkout/components/payment-button/providers/paypal.tsx`](h
 ```tsx title="src/modules/checkout/components/payment-button/providers/paypal.tsx"
 "use client"
 
-import { isPaypal } from "@lib/constants"
+import { buildPaymentSessionData, isPaypal } from "@lib/constants"
 import { startExpressPayment } from "@lib/data/express-checkout"
+import { Button } from "@medusajs/ui"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import PayPalScope, {
   isNavigation,
@@ -240,6 +280,7 @@ function PayPalButtonsInner({
   cart,
   notReady,
   cartUpdating,
+  label,
   "data-testid": dataTestId,
 }: PaymentProviderButtonProps) {
   const [{ isResolved, isRejected }] = usePayPalScriptReducer()
@@ -251,6 +292,20 @@ function PayPalButtonsInner({
       isPaypal(s.provider_id)
     )?.provider_id ?? "pp_paypal_paypal"
 
+  // The PayPal buttons show once the checkout has what the order needs.
+  if (notReady || cartUpdating) {
+    return (
+      <Button
+        disabled
+        size="large"
+        isLoading={cartUpdating}
+        className="w-full"
+        data-testid={dataTestId}
+      >
+        {label}
+      </Button>
+    )
+  }
   if (isRejected) {
     return <ErrorMessage error="payment failed" data-testid={dataTestId} />
   }
@@ -260,10 +315,10 @@ function PayPalButtonsInner({
     )
   }
 
+  // `isolate` keeps the SDK's iframe, at z-index 100, under the checkout modals.
   return (
-    <div data-testid={dataTestId}>
+    <div className="isolate" data-testid={dataTestId}>
       <PayPalButtons
-        disabled={notReady || cartUpdating}
         style={{
           layout: "vertical",
           color: "gold",
@@ -271,13 +326,20 @@ function PayPalButtonsInner({
           label: "paypal",
           height: 48,
         }}
-        // A new session at the click, so the PayPal order carries the cart's
-        // total and address as they are when the customer pays.
+        // The order of the session the checkout started when the cart was ready.
+        // Without one, a new session at the click carries the cart as it is now.
         createOrder={async () => {
           setErrorMessage(null)
-          const data = await startExpressPayment(providerId, {
-            shipping_address: cart.shipping_address,
-          })
+          const pending = cart.payment_collection?.payment_sessions?.find(
+            (s) => isPaypal(s.provider_id) && s.status === "pending"
+          )?.data?.paypal_order_id
+          if (typeof pending === "string" && pending) {
+            return pending
+          }
+          const data = await startExpressPayment(
+            providerId,
+            buildPaymentSessionData(providerId, cart) ?? {}
+          )
           const orderId = data.paypal_order_id
           if (typeof orderId !== "string" || !orderId) {
             throw new Error("PayPal payment session has no order")
@@ -317,11 +379,11 @@ const PayPalPaymentButton = (props: PaymentProviderButtonProps) => (
 export default PayPalPaymentButton
 ```
 
-`createOrder` starts a new payment session at the click, so the PayPal order carries the cart's total and address as they are when the customer pays, and PayPal shows that address instead of asking for one. `onApprove` places the order through `usePlaceOrder`, the same hook the other payment buttons use.
+`createOrder` returns the order of the session the checkout started when the cart was ready. Without one, it starts a session at the click, so the order carries the cart as it is when the customer pays, and PayPal shows its address instead of asking for one. `onApprove` places the order through `usePlaceOrder`, the same hook the other payment buttons use.
 
 ---
 
-## Step 5: Register Payment Button
+## Step 6: Register Payment Button
 
 Import the button and `isPaypal` in [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L3-L19), then add a `case` for it in the dispatcher's `switch`:
 
@@ -357,7 +419,7 @@ The dispatcher now renders the PayPal button whenever the active payment session
 
 ---
 
-## Step 6: Add PayPal to the Express Checkout Row
+## Step 7: Add PayPal to the Express Checkout Row
 
 {/* TODO: screenshot of the express checkout row with the PayPal button */}
 
@@ -367,7 +429,7 @@ Create [`src/modules/checkout/components/express-checkout/buttons/paypal.tsx`](h
 
 ![Directory structure in the Medusa Storefront after creating the file for the PayPal express checkout button](/static/paypal/storefront/src-modules-checkout-components-express-checkout-buttons-paypal.webp)
 
-```tsx title="src/modules/checkout/components/express-checkout/buttons/paypal.tsx" collapsibleLines="1-52"
+```tsx title="src/modules/checkout/components/express-checkout/buttons/paypal.tsx" collapsibleLines="1-54"
 "use client"
 
 import {
@@ -417,104 +479,127 @@ function PayPalWalletButton({
     return null
   }
   if (!isResolved) {
-    return <div className="h-12 rounded-md bg-ui-bg-component" aria-hidden="true" />
+    return (
+      <div className="h-12 rounded-md bg-ui-bg-component" aria-hidden="true" />
+    )
   }
 
+  // The SDK puts its iframe at z-index 100. `isolate` keeps it under the
+  // checkout modals, which would otherwise open beneath the button.
   return (
-    <PayPalButtons
-      fundingSource="paypal"
-      style={{
-        layout: "horizontal",
-        color: "gold",
-        shape: "rect",
-        label: "paypal",
-        height: 48,
-        tagline: false,
-        disableMaxWidth: true,
-      }}
-      createOrder={async () => {
-        onError(null)
-        const orderId = orderIdOf(
-          await startExpressPayment(providerId, { express: true })
-        )
-        orderRef.current = orderId
-        return orderId
-      }}
-      onShippingAddressChange={async (data, actions) => {
-        const orderId = data.orderID || orderRef.current
-        if (!orderId) return actions.reject()
-        try {
-          const quote = await quoteExpressShipping(
-            {
-              country_code: data.shippingAddress.countryCode ?? "",
-              province: data.shippingAddress.state,
-              city: data.shippingAddress.city,
-              postal_code: data.shippingAddress.postalCode,
-            },
-            shippingOptionId
+    <div className="isolate">
+      <PayPalButtons
+        fundingSource="paypal"
+        style={{
+          layout: "horizontal",
+          color: "gold",
+          shape: "rect",
+          label: "paypal",
+          height: 48,
+          tagline: false,
+          disableMaxWidth: true,
+        }}
+        createOrder={async () => {
+          onError(null)
+          const orderId = orderIdOf(
+            await startExpressPayment(providerId, { express: true })
           )
-          if (!quote.ok) return actions.reject()
-          // A new total makes Medusa drop the session, so the order the
-          // customer is approving moves to a new one, which patches its amount.
-          await startExpressPayment(
-            providerId,
-            { express: true, paypal_order_id: orderId },
-            "paypal_order_id"
-          )
-        } catch {
-          return actions.reject()
-        }
-      }}
-      onApprove={async (data) => {
-        onBusy(true)
-        try {
-          const payer = await getPayPalPayer(data.orderID)
-          const approved = payer.amount ? Number(payer.amount.value) : undefined
-          const saved = await saveExpressContact(
-            {
-              email: payer.email,
-              phone: payer.phone,
-              shipping_address: payer.shipping_address,
-            },
-            shippingOptionId,
-            approved
-          )
-          if (!saved.ok) {
-            onError(
-              saved.reason === "totalChanged"
-                ? {
-                    code: "totalChanged",
-                    total: saved.total,
-                    currency_code: saved.currency_code,
-                  }
-                : { code: saved.reason }
+          orderRef.current = orderId
+          return orderId
+        }}
+        onShippingAddressChange={async (data, actions) => {
+          const orderId = data.orderID || orderRef.current
+          if (!orderId) return actions.reject()
+          let shipsThere = false
+          try {
+            const quote = await quoteExpressShipping(
+              {
+                country_code: data.shippingAddress.countryCode ?? "",
+                province: data.shippingAddress.state,
+                city: data.shippingAddress.city,
+                postal_code: data.shippingAddress.postalCode,
+              },
+              shippingOptionId
             )
+            shipsThere = quote.ok
+            if (shipsThere) {
+              // A new total makes Medusa drop the session, so the order the
+              // customer is approving moves to a new one, which patches its amount.
+              await startExpressPayment(
+                providerId,
+                { express: true, paypal_order_id: orderId },
+                "paypal_order_id"
+              )
+            }
+          } catch {
+            return actions.reject()
+          }
+          if (!shipsThere) {
+            // PayPal shows the thrown message, so the customer learns why the
+            // address is refused. The SDK puts its own wording in `data.errors`,
+            // which its types leave out.
+            const { errors } = data as typeof data & {
+              errors?: { ADDRESS_ERROR?: string }
+            }
+            throw new Error(
+              errors?.ADDRESS_ERROR ??
+                "Your order can't be shipped to this address."
+            )
+          }
+        }}
+        onApprove={async (data) => {
+          onBusy(true)
+          try {
+            const payer = await getPayPalPayer(data.orderID)
+            const approved = payer.amount
+              ? Number(payer.amount.value)
+              : undefined
+            const saved = await saveExpressContact(
+              {
+                email: payer.email,
+                phone: payer.phone,
+                shipping_address: payer.shipping_address,
+              },
+              shippingOptionId,
+              approved
+            )
+            if (!saved.ok) {
+              onError(
+                saved.reason === "totalChanged"
+                  ? {
+                      code: "totalChanged",
+                      total: saved.total,
+                      currency_code: saved.currency_code,
+                    }
+                  : { code: saved.reason }
+              )
+              onBusy(false)
+              onClosed()
+              return
+            }
+            // The saved address may have changed the total once more.
+            await startExpressPayment(
+              providerId,
+              { express: true, paypal_order_id: data.orderID },
+              "paypal_order_id"
+            )
+            await placeOrder()
+          } catch (err) {
+            if (isNavigation(err)) return
+            onError({ code: "failed", cause: err })
             onBusy(false)
             onClosed()
-            return
           }
-          // The saved address may have changed the total once more.
-          await startExpressPayment(
-            providerId,
-            { express: true, paypal_order_id: data.orderID },
-            "paypal_order_id"
-          )
-          await placeOrder()
-        } catch (err) {
-          if (isNavigation(err)) return
+        }}
+        onCancel={() => onClosed()}
+        onError={(err) => {
           onError({ code: "failed", cause: err })
-          onBusy(false)
           onClosed()
-        }
-      }}
-      onCancel={() => onClosed()}
-      onError={(err) => {
-        onError({ code: "failed", cause: err })
-        onClosed()
-      }}
-    >
-      <Unavailable onMount={onUnavailable} />
-    </PayPalButtons>
+        }}
+      >
+        <Unavailable onMount={onUnavailable} />
+      </PayPalButtons>
+    </div>
   )
 }
 
@@ -535,7 +620,7 @@ export default function PayPalExpressButton(props: ExpressButtonProps) {
 }
 ```
 
-`createOrder` starts a payment session with `express: true`, so the provider lets PayPal ask for the address. `onShippingAddressChange` recalculates the shipping and the total for the address the customer picks, and starts a session with the same `paypal_order_id`. A new total makes Medusa drop the session, so the provider attaches the same PayPal order to the new session and updates its amount. `onApprove` saves the buyer's contact and address from `getPayPalPayer` on the cart, compares the total with the amount the customer approved, and places the order. A total above the approved amount stops there with a message, because PayPal does not always report the address before approval, for example for a guest paying by card, and the shipping for it can raise the total.
+`createOrder` starts a payment session with `express: true`, so the provider lets PayPal ask for the address. `onShippingAddressChange` recalculates the shipping and the total for the address the customer picks, and starts a session with the same `paypal_order_id`. When the cart's region does not ship to that address, it throws PayPal's own `ADDRESS_ERROR` text, which the PayPal window shows so the customer picks another address. A new total makes Medusa drop the session, so the provider attaches the same PayPal order to the new session and updates its amount. `onApprove` saves the buyer's contact and address from `getPayPalPayer` on the cart, compares the total with the amount the customer approved, and places the order. A total above the approved amount stops there with a message, because PayPal does not always report the address before approval, for example for a guest paying by card, and the shipping for it can raise the total.
 
 Then list the button in [`src/modules/checkout/components/express-checkout/registry.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/src/modules/checkout/components/express-checkout/registry.ts#L43-L48):
 

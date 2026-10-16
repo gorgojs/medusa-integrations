@@ -214,11 +214,50 @@ SDK загружается с валютой корзины, и при её см
 
 ---
 
-## Шаг 4: Создайте кнопку оплаты
+## Шаг 4: Запускайте платёжную сессию, когда корзина готова
+
+Оформление заказа создаёт платёжную сессию, как только покупатель выбрал способ оплаты. Заказ PayPal содержит итог корзины и адрес доставки, поэтому сессия, запущенная раньше, создаёт заказ для корзины, в которой нет ни того, ни другого. Запись в `paymentSessionDataBuilders` заставляет оформление заказа подождать.
+
+Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/src/lib/constants.tsx#L63-L86) и добавьте в `paymentSessionDataBuilders` следующую запись:
+
+![Структура проекта Medusa Storefront после обновления файла с константами](/static/paypal/storefront/src-lib-constants.webp)
+
+```tsx title="src/lib/constants.tsx"
+const paymentSessionDataBuilders: Array<{
+  test: (providerId?: string) => boolean | undefined
+  isReady?: (cart: HttpTypes.StoreCart) => boolean
+  build: (cart: HttpTypes.StoreCart) => Record<string, unknown>
+}> = [
+  {
+    test: (providerId) => isPaypal(providerId),
+    // The PayPal order carries the cart's total and the delivery address, so the
+    // session starts once the checkout has an email, an address and a shipping
+    // method. Earlier, PayPal gets an order for a cart that has none of them.
+    isReady: (cart) =>
+      Boolean(
+        cart.email &&
+          cart.shipping_address?.address_1 &&
+          (cart.shipping_methods?.length ?? 0) > 0
+      ),
+    // The email, the name and the billing address fill in PayPal's card form.
+    build: (cart) => ({
+      shipping_address: cart.shipping_address,
+      billing_address: cart.billing_address,
+      email: cart.email,
+    }),
+  },
+]
+```
+
+`isReady` не пускает сессию, пока в корзине нет email, адреса доставки и способа доставки, а `build` передаёт данные корзины провайдеру. Провайдер ставит адрес доставки в заказ PayPal, а email, имя и billing-адрес заполняют форму PayPal, когда покупатель платит картой. Кнопка оплаты читает тот же `isReady`, поэтому кнопка PayPal на шаге оплаты остаётся неактивной до этого момента.
+
+---
+
+## Шаг 5: Создайте кнопку оплаты
 
 {/* TODO: screenshot of the PayPal button at the payment step */}
 
-На шаге оплаты кнопка PayPal заменяет кнопку оформления заказа, когда покупатель выбирает PayPal.
+На шаге оплаты кнопка PayPal заменяет кнопку оформления заказа, когда покупатель выбирает PayPal. Пока корзина не готова, вместо неё стоит неактивная кнопка оформления заказа.
 
 Создайте [`src/modules/checkout/components/payment-button/providers/paypal.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/src/modules/checkout/components/payment-button/providers/paypal.tsx) со следующим содержимым:
 
@@ -227,8 +266,9 @@ SDK загружается с валютой корзины, и при её см
 ```tsx title="src/modules/checkout/components/payment-button/providers/paypal.tsx"
 "use client"
 
-import { isPaypal } from "@lib/constants"
+import { buildPaymentSessionData, isPaypal } from "@lib/constants"
 import { startExpressPayment } from "@lib/data/express-checkout"
+import { Button } from "@medusajs/ui"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import PayPalScope, {
   isNavigation,
@@ -240,6 +280,7 @@ function PayPalButtonsInner({
   cart,
   notReady,
   cartUpdating,
+  label,
   "data-testid": dataTestId,
 }: PaymentProviderButtonProps) {
   const [{ isResolved, isRejected }] = usePayPalScriptReducer()
@@ -251,6 +292,20 @@ function PayPalButtonsInner({
       isPaypal(s.provider_id)
     )?.provider_id ?? "pp_paypal_paypal"
 
+  // The PayPal buttons show once the checkout has what the order needs.
+  if (notReady || cartUpdating) {
+    return (
+      <Button
+        disabled
+        size="large"
+        isLoading={cartUpdating}
+        className="w-full"
+        data-testid={dataTestId}
+      >
+        {label}
+      </Button>
+    )
+  }
   if (isRejected) {
     return <ErrorMessage error="payment failed" data-testid={dataTestId} />
   }
@@ -260,10 +315,10 @@ function PayPalButtonsInner({
     )
   }
 
+  // `isolate` keeps the SDK's iframe, at z-index 100, under the checkout modals.
   return (
-    <div data-testid={dataTestId}>
+    <div className="isolate" data-testid={dataTestId}>
       <PayPalButtons
-        disabled={notReady || cartUpdating}
         style={{
           layout: "vertical",
           color: "gold",
@@ -271,13 +326,20 @@ function PayPalButtonsInner({
           label: "paypal",
           height: 48,
         }}
-        // A new session at the click, so the PayPal order carries the cart's
-        // total and address as they are when the customer pays.
+        // The order of the session the checkout started when the cart was ready.
+        // Without one, a new session at the click carries the cart as it is now.
         createOrder={async () => {
           setErrorMessage(null)
-          const data = await startExpressPayment(providerId, {
-            shipping_address: cart.shipping_address,
-          })
+          const pending = cart.payment_collection?.payment_sessions?.find(
+            (s) => isPaypal(s.provider_id) && s.status === "pending"
+          )?.data?.paypal_order_id
+          if (typeof pending === "string" && pending) {
+            return pending
+          }
+          const data = await startExpressPayment(
+            providerId,
+            buildPaymentSessionData(providerId, cart) ?? {}
+          )
           const orderId = data.paypal_order_id
           if (typeof orderId !== "string" || !orderId) {
             throw new Error("PayPal payment session has no order")
@@ -317,11 +379,11 @@ const PayPalPaymentButton = (props: PaymentProviderButtonProps) => (
 export default PayPalPaymentButton
 ```
 
-`createOrder` создаёт новую платёжную сессию в момент клика, поэтому заказ PayPal содержит итог и адрес корзины на момент оплаты, и PayPal показывает этот адрес, а не спрашивает его. `onApprove` оформляет заказ через `usePlaceOrder`, тот же хук, что у остальных кнопок оплаты.
+`createOrder` возвращает заказ сессии, которую оформление заказа запустило, когда корзина была готова. Если сессии нет, он создаёт её в момент клика, поэтому заказ содержит корзину на момент оплаты, и PayPal показывает её адрес, а не спрашивает его. `onApprove` оформляет заказ через `usePlaceOrder`, тот же хук, что у остальных кнопок оплаты.
 
 ---
 
-## Шаг 5: Зарегистрируйте кнопку оплаты
+## Шаг 6: Зарегистрируйте кнопку оплаты
 
 Импортируйте кнопку и `isPaypal` в [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L3-L19), затем добавьте для неё `case` в `switch` диспетчера:
 
@@ -357,7 +419,7 @@ import StripePaymentButton from "./providers/stripe"
 
 ---
 
-## Шаг 6: Добавьте PayPal в ряд экспресс-оплаты
+## Шаг 7: Добавьте PayPal в ряд экспресс-оплаты
 
 {/* TODO: screenshot of the express checkout row with the PayPal button */}
 
@@ -367,7 +429,7 @@ import StripePaymentButton from "./providers/stripe"
 
 ![Структура проекта Medusa Storefront после создания файла с кнопкой PayPal для экспресс-оплаты](/static/paypal/storefront/src-modules-checkout-components-express-checkout-buttons-paypal.webp)
 
-```tsx title="src/modules/checkout/components/express-checkout/buttons/paypal.tsx" collapsibleLines="1-52"
+```tsx title="src/modules/checkout/components/express-checkout/buttons/paypal.tsx" collapsibleLines="1-54"
 "use client"
 
 import {
@@ -417,104 +479,127 @@ function PayPalWalletButton({
     return null
   }
   if (!isResolved) {
-    return <div className="h-12 rounded-md bg-ui-bg-component" aria-hidden="true" />
+    return (
+      <div className="h-12 rounded-md bg-ui-bg-component" aria-hidden="true" />
+    )
   }
 
+  // The SDK puts its iframe at z-index 100. `isolate` keeps it under the
+  // checkout modals, which would otherwise open beneath the button.
   return (
-    <PayPalButtons
-      fundingSource="paypal"
-      style={{
-        layout: "horizontal",
-        color: "gold",
-        shape: "rect",
-        label: "paypal",
-        height: 48,
-        tagline: false,
-        disableMaxWidth: true,
-      }}
-      createOrder={async () => {
-        onError(null)
-        const orderId = orderIdOf(
-          await startExpressPayment(providerId, { express: true })
-        )
-        orderRef.current = orderId
-        return orderId
-      }}
-      onShippingAddressChange={async (data, actions) => {
-        const orderId = data.orderID || orderRef.current
-        if (!orderId) return actions.reject()
-        try {
-          const quote = await quoteExpressShipping(
-            {
-              country_code: data.shippingAddress.countryCode ?? "",
-              province: data.shippingAddress.state,
-              city: data.shippingAddress.city,
-              postal_code: data.shippingAddress.postalCode,
-            },
-            shippingOptionId
+    <div className="isolate">
+      <PayPalButtons
+        fundingSource="paypal"
+        style={{
+          layout: "horizontal",
+          color: "gold",
+          shape: "rect",
+          label: "paypal",
+          height: 48,
+          tagline: false,
+          disableMaxWidth: true,
+        }}
+        createOrder={async () => {
+          onError(null)
+          const orderId = orderIdOf(
+            await startExpressPayment(providerId, { express: true })
           )
-          if (!quote.ok) return actions.reject()
-          // A new total makes Medusa drop the session, so the order the
-          // customer is approving moves to a new one, which patches its amount.
-          await startExpressPayment(
-            providerId,
-            { express: true, paypal_order_id: orderId },
-            "paypal_order_id"
-          )
-        } catch {
-          return actions.reject()
-        }
-      }}
-      onApprove={async (data) => {
-        onBusy(true)
-        try {
-          const payer = await getPayPalPayer(data.orderID)
-          const approved = payer.amount ? Number(payer.amount.value) : undefined
-          const saved = await saveExpressContact(
-            {
-              email: payer.email,
-              phone: payer.phone,
-              shipping_address: payer.shipping_address,
-            },
-            shippingOptionId,
-            approved
-          )
-          if (!saved.ok) {
-            onError(
-              saved.reason === "totalChanged"
-                ? {
-                    code: "totalChanged",
-                    total: saved.total,
-                    currency_code: saved.currency_code,
-                  }
-                : { code: saved.reason }
+          orderRef.current = orderId
+          return orderId
+        }}
+        onShippingAddressChange={async (data, actions) => {
+          const orderId = data.orderID || orderRef.current
+          if (!orderId) return actions.reject()
+          let shipsThere = false
+          try {
+            const quote = await quoteExpressShipping(
+              {
+                country_code: data.shippingAddress.countryCode ?? "",
+                province: data.shippingAddress.state,
+                city: data.shippingAddress.city,
+                postal_code: data.shippingAddress.postalCode,
+              },
+              shippingOptionId
             )
+            shipsThere = quote.ok
+            if (shipsThere) {
+              // A new total makes Medusa drop the session, so the order the
+              // customer is approving moves to a new one, which patches its amount.
+              await startExpressPayment(
+                providerId,
+                { express: true, paypal_order_id: orderId },
+                "paypal_order_id"
+              )
+            }
+          } catch {
+            return actions.reject()
+          }
+          if (!shipsThere) {
+            // PayPal shows the thrown message, so the customer learns why the
+            // address is refused. The SDK puts its own wording in `data.errors`,
+            // which its types leave out.
+            const { errors } = data as typeof data & {
+              errors?: { ADDRESS_ERROR?: string }
+            }
+            throw new Error(
+              errors?.ADDRESS_ERROR ??
+                "Your order can't be shipped to this address."
+            )
+          }
+        }}
+        onApprove={async (data) => {
+          onBusy(true)
+          try {
+            const payer = await getPayPalPayer(data.orderID)
+            const approved = payer.amount
+              ? Number(payer.amount.value)
+              : undefined
+            const saved = await saveExpressContact(
+              {
+                email: payer.email,
+                phone: payer.phone,
+                shipping_address: payer.shipping_address,
+              },
+              shippingOptionId,
+              approved
+            )
+            if (!saved.ok) {
+              onError(
+                saved.reason === "totalChanged"
+                  ? {
+                      code: "totalChanged",
+                      total: saved.total,
+                      currency_code: saved.currency_code,
+                    }
+                  : { code: saved.reason }
+              )
+              onBusy(false)
+              onClosed()
+              return
+            }
+            // The saved address may have changed the total once more.
+            await startExpressPayment(
+              providerId,
+              { express: true, paypal_order_id: data.orderID },
+              "paypal_order_id"
+            )
+            await placeOrder()
+          } catch (err) {
+            if (isNavigation(err)) return
+            onError({ code: "failed", cause: err })
             onBusy(false)
             onClosed()
-            return
           }
-          // The saved address may have changed the total once more.
-          await startExpressPayment(
-            providerId,
-            { express: true, paypal_order_id: data.orderID },
-            "paypal_order_id"
-          )
-          await placeOrder()
-        } catch (err) {
-          if (isNavigation(err)) return
+        }}
+        onCancel={() => onClosed()}
+        onError={(err) => {
           onError({ code: "failed", cause: err })
-          onBusy(false)
           onClosed()
-        }
-      }}
-      onCancel={() => onClosed()}
-      onError={(err) => {
-        onError({ code: "failed", cause: err })
-        onClosed()
-      }}
-    >
-      <Unavailable onMount={onUnavailable} />
-    </PayPalButtons>
+        }}
+      >
+        <Unavailable onMount={onUnavailable} />
+      </PayPalButtons>
+    </div>
   )
 }
 
@@ -535,7 +620,7 @@ export default function PayPalExpressButton(props: ExpressButtonProps) {
 }
 ```
 
-`createOrder` создаёт платёжную сессию с `express: true`, и провайдер разрешает PayPal спросить адрес. `onShippingAddressChange` пересчитывает доставку и итог для выбранного адреса и создаёт сессию с тем же `paypal_order_id`. Новый итог заставляет Medusa удалить сессию, поэтому провайдер привязывает прежний заказ PayPal к новой сессии и обновляет его сумму. `onApprove` сохраняет в корзине контакты и адрес покупателя из `getPayPalPayer`, сравнивает итог с одобренной суммой и оформляет заказ. Если итог выше одобренной суммы, кнопка останавливается с сообщением, потому что PayPal не всегда сообщает адрес до одобрения, например при гостевой оплате картой, и доставка для него может поднять итог.
+`createOrder` создаёт платёжную сессию с `express: true`, и провайдер разрешает PayPal спросить адрес. `onShippingAddressChange` пересчитывает доставку и итог для выбранного адреса и создаёт сессию с тем же `paypal_order_id`. Если регион корзины не доставляет по этому адресу, колбэк выбрасывает ошибку с текстом PayPal `ADDRESS_ERROR`, и окно PayPal показывает его покупателю, чтобы тот выбрал другой адрес. Новый итог заставляет Medusa удалить сессию, поэтому провайдер привязывает прежний заказ PayPal к новой сессии и обновляет его сумму. `onApprove` сохраняет в корзине контакты и адрес покупателя из `getPayPalPayer`, сравнивает итог с одобренной суммой и оформляет заказ. Если итог выше одобренной суммы, кнопка останавливается с сообщением, потому что PayPal не всегда сообщает адрес до одобрения, например при гостевой оплате картой, и доставка для него может поднять итог.
 
 Затем добавьте кнопку в [`src/modules/checkout/components/express-checkout/registry.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/src/modules/checkout/components/express-checkout/registry.ts#L43-L48):
 
