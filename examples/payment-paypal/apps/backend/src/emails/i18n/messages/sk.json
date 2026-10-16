@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Pokračovať v nákupe",
+    "haveAccount": "Už máte účet? Prejdite na",
+    "item": "Položka",
+    "myOrders": "Moje objednávky",
+    "orCall": "alebo zavolajte",
+    "orderSummary": "Súhrn objednávky",
+    "questionsPrefix": "Ak máte otázky, napíšte nám na",
+    "shipping": "Doprava",
+    "total": "Spolu",
+    "trackOrder": "Sledovať objednávku",
+    "viewOrder": "Zobraziť objednávku"
+  },
+  "Delivery": {
+    "bodyOrder": "Objednávka <strong>č. {id}</strong> bola doručená. Veríme, že všetko dorazilo v poriadku.",
+    "headingAnon": "Vaša objednávka bola doručená",
+    "headingWithName": "{name}, vaša objednávka bola doručená",
+    "preview": "Objednávka č. {id} doručená",
+    "somethingWrong": "Ak niečo nie je v poriadku, napíšte nám do 14 dní a vyriešime to.",
+    "subject": "Objednávka č. {id} doručená",
+    "textFallback": "Objednávka č. {id} bola doručená."
+  },
+  "Fulfillment": {
+    "bodyOrder": "Objednávka <strong>č. {id}</strong> je zabalená a čaká na odovzdanie dopravcovi.",
+    "deliveryCity": "Doručujeme do {city}.",
+    "headingAnon": "Pripravujeme vašu objednávku",
+    "headingWithName": "{name}, pripravujeme vašu objednávku",
+    "nextStep": "Číslo zásielky pošleme hneď, ako sa balík vydá na cestu.",
+    "preview": "Objednávka č. {id} sa pripravuje",
+    "subject": "Objednávka č. {id} sa pripravuje",
+    "textFallback": "Objednávka č. {id} bola zabalená."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. Všetky práva vyhradené."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "Objednávka <strong>č. {id}</strong> bola zrušená.",
+    "headingAnon": "Vaša objednávka bola zrušená",
+    "headingWithName": "{name}, vaša objednávka bola zrušená",
+    "preview": "Objednávka č. {id} zrušená",
+    "refundNote": "Ak bola objednávka zaplatená, peniaze sa vrátia na tú istú kartu. Bankám to zvyčajne trvá až 10 pracovných dní.",
+    "subject": "Objednávka č. {id} zrušená",
+    "textFallback": "Objednávka č. {id} bola zrušená."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "Objednávka <strong>č. {id}</strong> bola dokončená. Ďakujeme, že ste si vybrali nás!",
+    "bodyPromo": "Budeme radi, keď sa k nám vrátite. Pozrite si novinky v našom obchode.",
+    "deliveryCity": "Doručené do {city}.",
+    "headingAnon": "Vaša objednávka je dokončená!",
+    "headingWithName": "{name}, vaša objednávka je dokončená!",
+    "preview": "Objednávka č. {id} dokončená. Ďakujeme za nákup!",
+    "subject": "Objednávka č. {id} dokončená",
+    "textFallback": "Objednávka č. {id} dokončená. Ďakujeme za nákup!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "Objednávka <strong>č. {id}</strong> bola úspešne vytvorená.",
+    "deliveryCity": "Doručujeme do {city}.",
+    "headingAnon": "Vaša objednávka je vytvorená!",
+    "headingWithName": "{name}, vaša objednávka je vytvorená!",
+    "preview": "Objednávka č. {id} bola úspešne vytvorená",
+    "subject": "Objednávka č. {id} vytvorená",
+    "textFallback": "Objednávka č. {id} bola vytvorená.\n\nPripravujeme vašu objednávku a čoskoro ju odošleme.",
+    "watchStatus": "Stav objednávky môžete sledovať vo svojom účte."
+  },
+  "OrderTransfer": {
+    "body": "Bola podaná žiadosť o prevod objednávky <strong>č. {id}</strong> na iný účet. Ak ste to boli vy, potvrďte prevod tlačidlom nižšie. Ak nie, tento e-mail jednoducho ignorujte.",
+    "button": "Zobraziť žiadosť",
+    "heading": "Žiadosť o prevod objednávky",
+    "hint": "Objednávka bude prevedená až po vašom potvrdení. Ak ste o prevod nežiadali, s vašou objednávkou sa nič nestane.",
+    "preview": "Žiadosť o prevod objednávky č. {id}",
+    "subject": "Žiadosť o prevod objednávky č. {id}",
+    "textFallback": "Žiadosť o prevod objednávky č. {id}\n\nPre zobrazenie žiadosti prejdite na odkaz:\n{url}\n\nAk ste o prevod nežiadali, tento e-mail jednoducho ignorujte."
+  },
+  "PasswordReset": {
+    "body": "Dostali sme žiadosť o obnovenie hesla pre <strong>{email}</strong>. Kliknite na tlačidlo nižšie a nastavte si nové heslo.",
+    "button": "Obnoviť heslo",
+    "heading": "Obnovenie hesla",
+    "hint": "Odkaz je platný <strong>15 minút</strong>. Ak ste o obnovenie hesla nežiadali, tento e-mail jednoducho ignorujte.",
+    "preview": "Obnovenie hesla, odkaz platí 15 minút",
+    "subject": "Obnovenie hesla",
+    "textFallback": "Obnovenie hesla\n\nPre obnovenie hesla prejdite na odkaz (platný 15 minút):\n{url}\n\nAk ste o obnovenie hesla nežiadali, tento e-mail jednoducho ignorujte."
+  },
+  "Payment": {
+    "bodyOrder": "Objednávka <strong>č. {id}</strong> bola úspešne zaplatená. Teraz ju pripravujeme na odoslanie.",
+    "headingAnon": "Vaša objednávka je zaplatená!",
+    "headingWithName": "{name}, vaša objednávka je zaplatená!",
+    "preview": "Objednávka č. {id} bola úspešne zaplatená",
+    "subject": "Objednávka č. {id} zaplatená",
+    "textFallback": "Objednávka č. {id} bola zaplatená.\n\nPripravujeme vašu objednávku a čoskoro ju odošleme.",
+    "watchStatus": "Stav objednávky môžete sledovať vo svojom účte."
+  },
+  "Shipment": {
+    "bodyOrder": "Objednávka <strong>č. {id}</strong> bola odovzdaná dopravcovi.",
+    "deliveryCity": "Doručujeme do {city}.",
+    "deliveryTime": "Obvyklá doba doručenia je 1-7 pracovných dní podľa vášho regiónu.",
+    "headingAnon": "Vaša objednávka je na ceste!",
+    "headingWithName": "{name}, vaša objednávka je na ceste!",
+    "noTracking": "Číslo zásielky doplníme do objednávky vo vašom účte hneď, ako balík odovzdáme dopravcovi.",
+    "preview": "Objednávka č. {id} odoslaná",
+    "subject": "Objednávka č. {id} odoslaná",
+    "textDelivery": "Obvyklá doba doručenia je 1-7 pracovných dní.",
+    "textFallback": "Objednávka č. {id} bola odoslaná.",
+    "textTracking": "Číslo zásielky: {numbers}",
+    "trackLabel": "Číslo zásielky:",
+    "trackingTitle": "Informácie o sledovaní"
+  },
+  "Welcome": {
+    "body": "Ďakujeme za registráciu! Váš účet je pripravený. Teraz môžete objednávať rýchlejšie, sledovať svoje objednávky a ukladať si doručovacie adresy v účte.",
+    "button": "Začať nakupovať",
+    "claimOrders": "Objednávali ste už predtým bez účtu? Tieto objednávky k nemu môžete pripojiť v sekcii",
+    "claimOrdersLink": "vaše objednávky",
+    "headingAnon": "Vitajte!",
+    "headingWithName": "Vitajte, {name}!",
+    "preview": "Vitajte v {store}!",
+    "subject": "Vitajte!",
+    "textFallback": "Vitajte!\n\nĎakujeme za registráciu. Váš účet je pripravený.\nZačať nakupovať: {url}"
+  }
+}
