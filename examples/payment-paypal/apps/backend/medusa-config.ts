@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from "@medusajs/framework/utils";
 loadEnv(process.env.NODE_ENV || "development", process.cwd());
 
 const isProd = process.env.NODE_ENV === "production";
+const PAYPAL_INTEGRATION_ID = "paypal-1";
 const redisUrl = process.env.REDIS_URL;
 
 // create-medusa-app writes REDIS_URL into every generated .env whether Redis runs
@@ -82,6 +83,16 @@ module.exports = defineConfig({
       secure: process.env.COOKIE_SECURE === "true",
     },
   },
+  admin: {
+    vite: () => {
+      return {
+        // Used only during testing, do not enable in production
+        server: {
+          allowedHosts: true,
+        },
+      };
+    },
+  },
   featureFlags: {
     translation: true,
   },
@@ -93,12 +104,42 @@ module.exports = defineConfig({
         // Integration providers plug in here. Browse the catalog at
         // https://gorgojs.com/medusa/plugins?integrationModule=true or read
         // https://docs.gorgojs.com/medusa-modules/integration
-        providers: [],
+        providers: [
+          {
+            resolve:
+              "@gorgo/medusa-payment-paypal/providers/integration-paypal",
+            id: PAYPAL_INTEGRATION_ID,
+            options: {},
+          },
+        ],
       },
+    },
+    // Registered as its own plugin (not just referenced from `modules` below) so the
+    // admin build discovers its admin extensions, such as the i18n bundle in src/admin/i18n.
+    // Without this entry the provider still works, but its admin UI never loads
+    // and translation keys render raw (e.g. "paypal.name" instead of "PayPal").
+    {
+      resolve: "@gorgo/medusa-payment-paypal",
+      options: {},
     },
   ],
   modules: [
     { resolve: "@medusajs/medusa/translation" },
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-paypal/providers/payment-paypal",
+            id: "paypal",
+            options: {
+              // must match the provider id used in the integration module above
+              id: PAYPAL_INTEGRATION_ID,
+            },
+          },
+        ],
+      },
+    },
     {
       resolve: "@medusajs/medusa/notification",
       options: {
