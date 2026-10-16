@@ -53,6 +53,15 @@
       }
     ]
   },
+  "payment-paypal": {
+    "dir": "packages/providers/payment-paypal",
+    "examples": [
+      {
+        "dir": "examples/payment-paypal",
+        "it": "payment-paypal"
+      }
+    ]
+  },
   "payment-yookassa": {
     "dir": "packages/providers/payment-yookassa",
     "examples": [
