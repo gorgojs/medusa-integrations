@@ -1,0 +1,126 @@
+---
+title: "Set Up Express Checkout"
+description: "Learn how the storefront's express checkout row picks the wallet buttons it shows, and how to add a button for a payment provider."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how the storefront's express checkout row picks the wallet buttons it shows, and how to add a button for a payment provider.
+
+The row sits above the checkout form. Each button pays for the whole order from its wallet's window. The customer picks the address there, the row answers with the shipping and the new total, and the starter places the order once the customer pays. The starter ships the registry empty, so the row renders nothing until you add a payment plugin's button.
+
+## How the Row Finds Payment Providers
+
+`CheckoutForm` loads the payment providers enabled in the cart's region, the same list the payment step uses, and passes it to `ExpressCheckout`. The row keeps a button only when its registry entry matches one of those providers:
+
+```tsx title="src/modules/checkout/components/express-checkout/index.tsx"
+  const buttons = expressButtons.flatMap(({ match, Component }) => {
+    const provider = availablePaymentMethods.find((method) => match(method.id))
+    return provider && !unavailable.includes(provider.id)
+      ? [{ providerId: provider.id, Component }]
+      : []
+  })
+```
+
+The registry lists one entry per payment provider, and the starter's list is empty:
+
+```ts title="src/modules/checkout/components/express-checkout/registry.ts"
+/**
+ * Express buttons above the checkout, one entry per payment provider. The row
+ * shows an entry only when `match` accepts a provider enabled in the cart's
+ * region. The starter ships without entries, so the row renders nothing until a
+ * payment plugin's button is added here.
+ */
+export const expressButtons: {
+  match: (providerId: string) => boolean
+  Component: ComponentType<ExpressButtonProps>
+}[] = []
+```
+
+<Note type="default" title="">
+
+A button can still hide itself after the row renders it. When a wallet is not available to the customer, for example because the wallet's script fails to load, the button calls `onUnavailable`, and the row drops it. Without any button left, the row renders nothing, not even its title.
+
+</Note>
+
+## What a Button Receives
+
+Every button gets the same props from the row:
+
+```ts title="src/modules/checkout/components/express-checkout/registry.ts"
+export type ExpressButtonProps = {
+  cart: HttpTypes.StoreCart
+  /** The payment provider of the button, as enabled in the cart's region. */
+  providerId: string
+  /** The shipping option the checkout has selected, for the wallet's first quote. */
+  shippingOptionId: string | null
+  /** The wallet is not available to this customer, so the row hides the button. */
+  onUnavailable: () => void
+  onError: (error: ExpressCheckoutError | null) => void
+  /** True while the wallet's payment turns into an order. */
+  onBusy: (busy: boolean) => void
+  /** Places the order once the wallet has paid. A placed order redirects. */
+  placeOrder: () => Promise<void>
+  /**
+   * The wallet's window closed without an order. The cart may now hold the
+   * wallet's address, so the row refreshes the checkout.
+   */
+  onClosed: () => void
+}
+```
+
+A button talks to Medusa through the server actions in `src/lib/data/express-checkout.ts`. None of them revalidates the cart, because the wallet's window waits for each answer and a revalidation renders the whole checkout again inside the action's response. The row refreshes the page once, through `onClosed`, after the window has closed.
+
+| Action | What it does |
+|---|---|
+| `quoteExpressShipping` | Puts the address the wallet shares before payment on the cart, checks that the cart's region ships to its country, and picks the shipping. It keeps the option the checkout selected when it still fits, otherwise the first in the order the checkout offers them, skipping pickup and options priced by a choice the customer has to make |
+| `saveExpressContact` | Saves the email, the phone and the full address the wallet shares after payment, sets the shipping again, and refuses a total above `approvedTotal`, the amount the customer approved in the wallet |
+| `startExpressPayment` | Starts the payment session the wallet pays and returns its data. With `reuseKey`, it keeps a pending session that already holds the same value, for example the same wallet order |
+| `revalidateExpressCheckout` | Renders the checkout again with the cart as it is now |
+
+## Add a Button for a Payment Provider
+
+To add a button for a payment provider:
+
+1. Create a component under `src/modules/checkout/components/express-checkout/buttons/`, taking `ExpressButtonProps`. Start the payment session with `startExpressPayment` when the customer clicks, answer the wallet's address changes with `quoteExpressShipping`, and once the customer pays, save the contact with `saveExpressContact` and call `placeOrder`.
+2. Add an entry for it to `expressButtons` in `registry.ts`, with a `match` that accepts the payment provider's id.
+3. Enable the payment provider in the regions where the button should show, under **Settings → Regions** in Medusa Admin.
+
+The PayPal plugin's example storefront adds its button this way:
+
+```ts title="src/modules/checkout/components/express-checkout/registry.ts"
+import { isPaypal } from "@lib/constants"
+import PayPalExpressButton from "./buttons/paypal"
+
+// ...
+
+export const expressButtons: {
+  match: (providerId: string) => boolean
+  Component: ComponentType<ExpressButtonProps>
+}[] = [
+  { match: (providerId) => Boolean(isPaypal(providerId)), Component: PayPalExpressButton },
+]
+```
+
+The whole button, with the address changes and the check of the approved amount, is described in [Integrate PayPal Payment into Storefront](/medusa-integrations/paypal/storefront-integration).
+
+## Test the Row
+
+The row and its buttons work on `localhost` with the sandbox credentials of a wallet. A wallet's webhook, which completes the order when the customer closes the tab after paying, needs the backend on a public address. The example projects of the payment plugins, such as the [PayPal example](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-paypal), run it through a tunnel with `yarn dev:tunnel`.
+
+## References
+
+<CardList items={[
+  {
+    title: "Production-ready Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter"
+  },
+  {
+    title: "Getting Started with Medusa DTC Starter",
+    href: "/tools/medusa-dtc-starter/getting-started"
+  },
+  {
+    title: "Integrate PayPal Payment into Storefront",
+    href: "/medusa-integrations/paypal/storefront-integration"
+  }
+]}/>
