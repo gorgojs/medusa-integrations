@@ -1,6 +1,6 @@
 "use client"
 
-import { isPaypal } from "@lib/constants"
+import { buildPaymentSessionData, isPaypal } from "@lib/constants"
 import { startExpressPayment } from "@lib/data/express-checkout"
 import { Button } from "@medusajs/ui"
 import ErrorMessage from "@modules/checkout/components/error-message"
@@ -70,9 +70,10 @@ function PayPalButtonsInner({
           if (typeof pending === "string" && pending) {
             return pending
           }
-          const data = await startExpressPayment(providerId, {
-            shipping_address: cart.shipping_address,
-          })
+          const data = await startExpressPayment(
+            providerId,
+            buildPaymentSessionData(providerId, cart) ?? {}
+          )
           const orderId = data.paypal_order_id
           if (typeof orderId !== "string" || !orderId) {
             throw new Error("PayPal payment session has no order")

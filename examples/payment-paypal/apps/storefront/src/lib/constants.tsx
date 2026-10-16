@@ -76,7 +76,12 @@ const paymentSessionDataBuilders: Array<{
           cart.shipping_address?.address_1 &&
           (cart.shipping_methods?.length ?? 0) > 0
       ),
-    build: (cart) => ({ shipping_address: cart.shipping_address }),
+    // The email, the name and the billing address fill in PayPal's card form.
+    build: (cart) => ({
+      shipping_address: cart.shipping_address,
+      billing_address: cart.billing_address,
+      email: cart.email,
+    }),
   },
 ]
 
