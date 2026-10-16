@@ -44,6 +44,7 @@ export const paymentInfoMap: Record<string, PaymentInfo> = {
   },
   pp_paypal_paypal: {
     title: "PayPal",
+    subtitle: "Cards, wallet",
     icon: <PayPal />,
   },
   pp_system_default: {
