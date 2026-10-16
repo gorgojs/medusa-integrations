@@ -646,6 +646,26 @@ export const expressButtons: {
 
 ---
 
+## Шаг 8: Добавьте подписи провайдера в локали витрины
+
+Добавьте `subtitle` к `pp_paypal_paypal` в [`messages/ru.json`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/messages/ru.json#L517-L520) и в каждую другую локаль под `messages/`:
+
+```json title="messages/ru.json"
+{
+  "PaymentMethods": {
+    // ...
+    "pp_paypal_paypal": {
+      "title": "PayPal",
+      "subtitle": "Карты, кошелёк"
+    }
+  }
+}
+```
+
+В стартере `pp_paypal_paypal` уже есть с названием, поэтому новый здесь только подзаголовок. Для локали без записи витрина берёт английские `title` и `subtitle` из `paymentInfoMap` в [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/src/lib/constants.tsx#L45-L49), поэтому добавьте туда тот же подзаголовок.
+
+---
+
 ## Полный пример кода интеграции в витрину
 
 Готовая витрина находится в [`examples/payment-paypal/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-paypal/apps/storefront) и построена на [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter). В [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/README.md#what-the-example-adds-to-the-starter) самого примера перечислены все файлы интеграции, включая бэкенд.

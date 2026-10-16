@@ -646,6 +646,26 @@ The row now shows PayPal in every region where `pp_paypal_paypal` is enabled, an
 
 ---
 
+## Step 8: Add Provider Labels to Storefront Locales
+
+Add a `subtitle` to `pp_paypal_paypal` in [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/messages/en.json#L517-L520) and in every other locale under `messages/`:
+
+```json title="messages/en.json"
+{
+  "PaymentMethods": {
+    // ...
+    "pp_paypal_paypal": {
+      "title": "PayPal",
+      "subtitle": "Cards, wallet"
+    }
+  }
+}
+```
+
+The starter already lists `pp_paypal_paypal` with its title, so only the subtitle is new. For a locale without an entry, the storefront takes the English `title` and `subtitle` from `paymentInfoMap` in [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/apps/storefront/src/lib/constants.tsx#L45-L49), so add the same subtitle there.
+
+---
+
 ## Full Storefront Integration Code Example
 
 The complete storefront is located at [`examples/payment-paypal/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-paypal/apps/storefront), built on the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter). The example's own [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-paypal/README.md#what-the-example-adds-to-the-starter) lists every file the integration consists of, backend included.
