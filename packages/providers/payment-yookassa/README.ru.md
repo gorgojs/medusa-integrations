@@ -44,7 +44,7 @@
 
 <p align="center">
   <a href="https://static.gorgojs.com/videos/payment-yookassa/demo/payment-yookassa-demo-ru.mp4">
-    <img src="https://static.gorgojs.com/videos/payment-yookassa/demo/payment-yookassa-demo-ru-poster-play.e6ff7dab.webp" alt="Смотреть демо-видео плагина ЮKassa" width="100%" style="border-radius: 8px; max-width: 720px;">
+    <img src="https://static.gorgojs.com/videos/payment-yookassa/demo/payment-yookassa-demo-ru-poster-play.75a6d57d.webp" alt="Смотреть демо-видео плагина ЮKassa" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
