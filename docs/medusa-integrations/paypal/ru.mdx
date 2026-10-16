@@ -1,0 +1,74 @@
+---
+title: "Платежи PayPal для Medusa"
+description: "Плагин Medusa для приёма платежей через PayPal Checkout"
+---
+
+{/* TODO: логотип assets/paypal-medusa-logo.svg в стиле других плагинов */}
+
+# {frontmatter.title}
+
+Плагин Medusa для приёма платежей через PayPal Checkout.
+
+## Возможности плагина
+
+- **PayPal Checkout** – покупатель платит в окне PayPal своим аккаунтом PayPal или картой без аккаунта, если в настройках выбрана гостевая оплата.
+- **Списание сразу или позже** – PayPal списывает деньги при оплате или блокирует сумму, а вы списываете её из заказа в Medusa Admin. Списать можно только всю заблокированную сумму.
+- **Возвраты и отмена** – полные и частичные возвраты, несколько на один платёж. Отмена заказа снимает блокировку с несписанной суммы, а списанный платёж возвращает.
+- **Заказ создаётся по вебхуку** – плагин проверяет каждый вебхук PayPal через API PayPal. Если покупатель закрыл вкладку после оплаты, вебхук всё равно оформит заказ, а списание, которое PayPal задержал на проверку, завершится после подтверждения PayPal.
+- **Экспресс-оплата** – роуты Store API отдают витрине публичные настройки для JS SDK PayPal, а также контакты и адрес покупателя из PayPal. Пример витрины добавляет PayPal в ряд экспресс-оплаты [Medusa DTC Starter](/tools/medusa-dtc-starter).
+- **25 валют PayPal** – плагин учитывает число знаков после запятой у каждой валюты, поэтому заказ в JPY, HUF или TWD уходит в PayPal в целых единицах.
+- **Несколько аккаунтов PayPal** – магазин может подключить несколько приложений PayPal, например по одному на регион.
+- **Подробное логирование** – отладочные логи каждого вызова провайдера без ключей доступа.
+- **Тесты** – юнит- и интеграционные тесты платёжного цикла и контрактный тест с песочницей PayPal.
+- **Пример витрины магазина** – готовая <a href="https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-paypal/apps/storefront" target="_blank">витрина на Next.js</a>, которую можно взять за образец.
+- **[Модуль интеграций](/medusa-modules/integration)**<AccentBadge badge="New" /> – вы настраиваете плагин в Medusa Admin без правки конфигурационных файлов и повторного развёртывания магазина. Модуль хранит секрет в зашифрованном виде, а кнопка **Проверить соединение** проверяет ключи и подписку вебхука.
+
+<Note type="default" title="О Модуле интеграций">Модуль интеграций позволяет плагину описать свои параметры схемой, и администратор магазина настраивает их в Medusa Admin без правки `medusa-config` и без повторного развёртывания. Интерфейс, хранение, шифрование и проверку значений модуль берёт на себя. Подробнее в [документации](/medusa-modules/integration).</Note>
+
+---
+
+## Что такое PayPal
+
+В PayPal покупатель платит аккаунтом, к которому привязаны его карты и банковские счета, поэтому данные карты в магазин не попадают. PayPal принимает платежи в <a href="https://developer.paypal.com/reference/currency-codes/" target="_blank">25 валютах</a>. Подробнее на сайте <a href="https://developer.paypal.com/" target="_blank">PayPal Developer</a>.
+
+---
+
+## Разработчикам
+
+<CardList items={[
+  {
+    title: "Настройка окружения для разработки",
+    href: "https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-paypal"
+  },
+  {
+    title: "История изменений",
+    href: "/medusa-integrations/paypal/changelog"
+  }
+]}/>
+
+---
+
+## 💬 Поддержка и сообщество
+
+Есть вопросы или идеи по плагину? Пишите в Telegram-чат поддержки [@gorgojs_chat](https://t.me/gorgojs_chat).
+
+Общайтесь с другими разработчиками на Medusa в Telegram-чате [@medusajs_chat](https://t.me/medusajs_chat).
+
+---
+
+## Дальнейшие шаги
+
+<CardList items={[
+  {
+    title: "Начало работы",
+    href: "/medusa-integrations/paypal/getting-started"
+  },
+  {
+    title: "Настройки PayPal в Medusa Admin",
+    href: "/medusa-integrations/paypal/settings"
+  },
+  {
+    title: "Интеграция в витрину",
+    href: "/medusa-integrations/paypal/storefront-integration"
+  }
+]}/>
