@@ -1,5 +1,15 @@
 # @gorgo/medusa-fulfillment-apiship
 
+## 2.1.1
+
+### Documentation
+
+- update the demo video posters to the frame with the pickup point photos by [@ttokyose](https://github.com/ttokyose) in [#507](https://github.com/gorgojs/medusa-integrations/pull/507) ([`3833663`](https://github.com/gorgojs/medusa-integrations/commit/383366389fbd4d49a04311e4e14a23fb11bb7a2c))
+
+- update the demo video posters to the st petersburg cut by [@ttokyose](https://github.com/ttokyose) in [#507](https://github.com/gorgojs/medusa-integrations/pull/507) ([`04526c8`](https://github.com/gorgojs/medusa-integrations/commit/04526c81fe8315169b4b503797a5ce348243d1fb))
+
+- update the demo video posters in the docs and the readme by [@ttokyose](https://github.com/ttokyose) in [#507](https://github.com/gorgojs/medusa-integrations/pull/507) ([`c9108b8`](https://github.com/gorgojs/medusa-integrations/commit/c9108b83d3afd95a5acae7ffa9037d761c34610c))
+
 ## 2.1.0
 
 ### Features
