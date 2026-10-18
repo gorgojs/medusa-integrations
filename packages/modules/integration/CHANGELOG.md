@@ -1,5 +1,13 @@
 # @gorgo/medusa-integration
 
+## 0.2.7
+
+### Bug Fixes
+
+- make the catalog repository optional for paid integrations by [@gorgohead](https://github.com/gorgohead) in [`9f5a619`](https://github.com/gorgojs/medusa-integrations/commit/9f5a619e3c05d5ac218b3ca310beff574b7fc463)
+
+- regenerate the offline catalog with both 1c editions by [@gorgohead](https://github.com/gorgohead) in [`2e31475`](https://github.com/gorgojs/medusa-integrations/commit/2e31475ad8fcf7281cccbd0ab6a8aa744ceb560b)
+
 ## 0.2.6
 
 ### Documentation

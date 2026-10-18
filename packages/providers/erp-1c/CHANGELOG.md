@@ -1,5 +1,15 @@
 # @gorgo/medusa-1c
 
+## 0.3.0
+
+### Features
+
+- rename the provider identifier to 1c-catalog by [@gorgohead](https://github.com/gorgohead) in [`201c593`](https://github.com/gorgojs/medusa-integrations/commit/201c593c12b75b5d54bcbf38494f2139d1fb51d3)
+
+### Bug Fixes
+
+- rename the integration to 1c:enterprise catalog by [@gorgohead](https://github.com/gorgohead) in [`bc15cc9`](https://github.com/gorgojs/medusa-integrations/commit/bc15cc9cc4c4504dfb5088a43cd74a72ce4eb8a1)
+
 ## 0.2.0
 
 ### Highlights
