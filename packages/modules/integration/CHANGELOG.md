@@ -1,5 +1,11 @@
 # @gorgo/medusa-integration
 
+## 0.2.8
+
+### Bug Fixes
+
+- regenerate the offline catalog with the 1c beta note by [@gorgohead](https://github.com/gorgohead) in [`e770894`](https://github.com/gorgojs/medusa-integrations/commit/e77089494b9670e70041043d09be076b1921c99f)
+
 ## 0.2.7
 
 ### Bug Fixes
