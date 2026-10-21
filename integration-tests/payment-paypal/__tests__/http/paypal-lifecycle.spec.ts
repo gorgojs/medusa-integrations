@@ -114,7 +114,8 @@ medusaIntegrationTestRunner({
       expect(created[0].body.purchase_units[0]).toMatchObject({
         reference_id: collectionId,
         custom_id: session.id,
-        amount: { currency_code: "EUR", value: "10.00" },
+        amount: { currency_code: "EUR", value: "10.00", breakdown: { item_total: { currency_code: "EUR", value: "10.00" } } },
+        items: [{ name: "Tee", quantity: "1", unit_amount: { currency_code: "EUR", value: "10.00" } }],
       })
 
       const captures: Call[] = []
@@ -233,11 +234,17 @@ medusaIntegrationTestRunner({
       expect(created).toHaveLength(1)
       expect(second.id).not.toBe(first.id)
       expect(second.data).toMatchObject({ paypal_order_id: "ORDER-1", session_id: second.id })
-      expect(patches[0].body).toEqual([
+      // the new amount goes with the cart's items, which the order did not have yet
+      expect(patches[0].body).toMatchObject([
         {
           op: "replace",
           path: `/purchase_units/@reference_id=='${collectionId}'/amount`,
-          value: { currency_code: "EUR", value: "20.00" },
+          value: { currency_code: "EUR", value: "20.00", breakdown: { item_total: { currency_code: "EUR", value: "20.00" } } },
+        },
+        {
+          op: "add",
+          path: `/purchase_units/@reference_id=='${collectionId}'/items`,
+          value: [{ name: "Tee", quantity: "2", unit_amount: { currency_code: "EUR", value: "10.00" } }],
         },
         { op: "replace", path: `/purchase_units/@reference_id=='${collectionId}'/custom_id`, value: second.id },
       ])
