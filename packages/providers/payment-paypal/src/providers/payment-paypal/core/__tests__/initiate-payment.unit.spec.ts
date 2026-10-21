@@ -99,6 +99,71 @@ describe("PayPalBase.initiatePayment: new order", () => {
     })
   })
 
+  it("fills the card form with the buyer's email, name and billing address", async () => {
+    const { provider, client } = makeProvider()
+    client.createOrder.mockResolvedValue(order())
+
+    await provider.initiatePayment({
+      amount: 10,
+      currency_code: "EUR",
+      data: {
+        session_id: SESSION_ID,
+        email: "anna@example.com",
+        billing_address: {
+          first_name: "Anna",
+          last_name: "Smith",
+          address_1: "Billing St 2",
+          city: "Hamburg",
+          postal_code: "20095",
+          country_code: "de",
+        },
+        shipping_address: { address_1: "Main St 1", city: "Berlin", postal_code: "10115", country_code: "de" },
+      },
+    })
+
+    const paypal = client.createOrder.mock.calls[0][0].payment_source.paypal
+    expect(paypal.email_address).toBe("anna@example.com")
+    expect(paypal.name).toEqual({ given_name: "Anna", surname: "Smith" })
+    expect(paypal.address).toEqual({
+      address_line_1: "Billing St 2",
+      admin_area_2: "Hamburg",
+      postal_code: "20095",
+      country_code: "DE",
+    })
+  })
+
+  it("takes the name and the street from the delivery address when the billing address lacks them", async () => {
+    const { provider, client } = makeProvider()
+    client.createOrder.mockResolvedValue(order())
+
+    await provider.initiatePayment({
+      amount: 10,
+      currency_code: "EUR",
+      data: {
+        session_id: SESSION_ID,
+        billing_address: { country_code: "de" },
+        shipping_address: {
+          first_name: "Anna",
+          last_name: "Smith",
+          address_1: "Main St 1",
+          city: "Berlin",
+          postal_code: "10115",
+          country_code: "de",
+        },
+      },
+    })
+
+    const paypal = client.createOrder.mock.calls[0][0].payment_source.paypal
+    expect(paypal.email_address).toBeUndefined()
+    expect(paypal.name).toEqual({ given_name: "Anna", surname: "Smith" })
+    expect(paypal.address).toEqual({
+      address_line_1: "Main St 1",
+      admin_area_2: "Berlin",
+      postal_code: "10115",
+      country_code: "DE",
+    })
+  })
+
   it("lets the wallet supply the address in an express checkout", async () => {
     const { provider, client } = makeProvider()
     client.createOrder.mockResolvedValue(order())
@@ -106,7 +171,12 @@ describe("PayPalBase.initiatePayment: new order", () => {
     const output = await provider.initiatePayment({
       amount: 10,
       currency_code: "EUR",
-      data: { session_id: SESSION_ID, express: true, shipping_address: { country_code: "de" } },
+      data: {
+        session_id: SESSION_ID,
+        express: true,
+        email: "anna@example.com",
+        shipping_address: { country_code: "de" },
+      },
     })
 
     const body = client.createOrder.mock.calls[0][0]
@@ -114,6 +184,8 @@ describe("PayPalBase.initiatePayment: new order", () => {
       shipping_preference: "GET_FROM_FILE",
       user_action: "CONTINUE",
     })
+    expect(body.payment_source.paypal).not.toHaveProperty("email_address")
+    expect(body.payment_source.paypal).not.toHaveProperty("address")
     expect(body.purchase_units[0].shipping).toBeUndefined()
     expect(output.data.express).toBe(true)
   })
@@ -275,5 +347,125 @@ describe("PayPalBase.initiatePayment: reused order", () => {
     ).rejects.toThrow()
     expect(logger.error.mock.calls[0][0]).toContain(SESSION_ID)
     expect(logger.error.mock.calls[0][0]).toContain(ORDER_ID)
+  })
+})
+
+describe("PayPalBase.initiatePayment: cart items", () => {
+  const CART = {
+    item_subtotal: 10,
+    shipping_subtotal: 2,
+    tax_total: 0,
+    discount_subtotal: 0,
+    items: [{ title: "Medusa T-Shirt", quantity: 2, subtotal: 10 }],
+  }
+  const ITEMS = [{ name: "Medusa T-Shirt", quantity: "2", unit_amount: { currency_code: "EUR", value: "5.00" } }]
+  const BREAKDOWN = {
+    item_total: { currency_code: "EUR", value: "10.00" },
+    shipping: { currency_code: "EUR", value: "2.00" },
+  }
+
+  it("sends the cart's items and the amount breakdown with a new order", async () => {
+    const { provider, client } = makeProvider()
+    provider.getPayPalCart.mockResolvedValue(CART)
+    client.createOrder.mockResolvedValue(order())
+
+    await provider.initiatePayment({ amount: 12, currency_code: "EUR", data: { session_id: SESSION_ID } })
+
+    expect(provider.getPayPalCart).toHaveBeenCalledWith(COLLECTION_ID)
+    const unit = client.createOrder.mock.calls[0][0].purchase_units[0]
+    expect(unit.amount).toEqual({ currency_code: "EUR", value: "12.00", breakdown: BREAKDOWN })
+    expect(unit.items).toEqual(ITEMS)
+  })
+
+  it("sends the amount alone when the merchant turned items off", async () => {
+    const { provider, client } = makeProvider({ sendItems: false })
+    provider.getPayPalCart.mockResolvedValue(CART)
+    client.createOrder.mockResolvedValue(order())
+
+    await provider.initiatePayment({ amount: 12, currency_code: "EUR", data: { session_id: SESSION_ID } })
+
+    expect(provider.getPayPalCart).not.toHaveBeenCalled()
+    const unit = client.createOrder.mock.calls[0][0].purchase_units[0]
+    expect(unit.amount).toEqual({ currency_code: "EUR", value: "12.00" })
+    expect(unit).not.toHaveProperty("items")
+  })
+
+  it("sends the amount alone when the cart does not add up to it", async () => {
+    const { provider, client } = makeProvider()
+    provider.getPayPalCart.mockResolvedValue(CART)
+    client.createOrder.mockResolvedValue(order())
+
+    await provider.initiatePayment({ amount: 9, currency_code: "EUR", data: { session_id: SESSION_ID } })
+
+    const unit = client.createOrder.mock.calls[0][0].purchase_units[0]
+    expect(unit.amount).toEqual({ currency_code: "EUR", value: "9.00" })
+    expect(unit).not.toHaveProperty("items")
+  })
+
+  it("still creates the order when the cart cannot be read", async () => {
+    const { provider, client, logger } = makeProvider()
+    provider.getPayPalCart.mockRejectedValue(new Error("query failed"))
+    client.createOrder.mockResolvedValue(order())
+
+    await provider.initiatePayment({ amount: 12, currency_code: "EUR", data: { session_id: SESSION_ID } })
+
+    expect(client.createOrder.mock.calls[0][0].purchase_units[0]).not.toHaveProperty("items")
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining("query failed"))
+  })
+
+  it("adds the items to a reused order that had none, together with the new amount", async () => {
+    const { provider, client } = makeProvider()
+    provider.getPayPalCart.mockResolvedValue(CART)
+    client.getOrder.mockResolvedValue(order({ status: "CREATED" }))
+
+    await provider.initiatePayment({
+      amount: 12,
+      currency_code: "EUR",
+      data: { session_id: "payses_2", paypal_order_id: ORDER_ID, express: true },
+    })
+
+    const unit = `/purchase_units/@reference_id=='${COLLECTION_ID}'`
+    expect(client.patchOrder.mock.calls[0][1]).toEqual([
+      { op: "replace", path: `${unit}/amount`, value: { currency_code: "EUR", value: "12.00", breakdown: BREAKDOWN } },
+      { op: "add", path: `${unit}/items`, value: ITEMS },
+      { op: "replace", path: `${unit}/custom_id`, value: "payses_2" },
+    ])
+  })
+
+  it("replaces the items of a reused order that has them", async () => {
+    const { provider, client } = makeProvider()
+    provider.getPayPalCart.mockResolvedValue(CART)
+    client.getOrder.mockResolvedValue(order({ status: "CREATED" }, { items: [{ name: "Old" }] }))
+
+    await provider.initiatePayment({
+      amount: 12,
+      currency_code: "EUR",
+      data: { session_id: "payses_2", paypal_order_id: ORDER_ID, express: true },
+    })
+
+    expect(client.patchOrder.mock.calls[0][1][1]).toEqual({
+      op: "replace",
+      path: `/purchase_units/@reference_id=='${COLLECTION_ID}'/items`,
+      value: ITEMS,
+    })
+  })
+
+  it("removes the items of a reused order when the new amount goes without them", async () => {
+    const { provider, client } = makeProvider()
+    provider.getPayPalCart.mockResolvedValue(null)
+    client.getOrder.mockResolvedValue(order({ status: "CREATED" }, { items: [{ name: "Old" }] }))
+
+    await provider.initiatePayment({
+      amount: 12,
+      currency_code: "EUR",
+      data: { session_id: "payses_2", paypal_order_id: ORDER_ID, express: true },
+    })
+
+    const unit = `/purchase_units/@reference_id=='${COLLECTION_ID}'`
+    expect(client.patchOrder.mock.calls[0][1]).toEqual([
+      { op: "replace", path: `${unit}/amount`, value: { currency_code: "EUR", value: "12.00" } },
+      { op: "remove", path: `${unit}/items` },
+      { op: "replace", path: `${unit}/custom_id`, value: "payses_2" },
+    ])
   })
 })
