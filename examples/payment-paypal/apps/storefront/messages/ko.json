@@ -515,7 +515,8 @@
       "subtitle": "Medusa Payments"
     },
     "pp_paypal_paypal": {
-      "title": "PayPal"
+      "title": "PayPal",
+      "subtitle": "카드, 지갑"
     },
     "pp_stripe-bancontact_stripe": {
       "title": "Bancontact",
