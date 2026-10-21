@@ -1,4 +1,8 @@
-<!-- TODO: logo assets/paypal-medusa-logo.svg, in the style of the other plugins -->
+<p align="center">
+  <a href="https://docs.gorgojs.com/medusa-integrations/paypal">
+    <img alt="Medusa-PayPal logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/paypal-medusa-logo.svg" width="270">
+  </a>
+</p>
 
 <h1 align="center">
 PayPal Payments for Medusa
@@ -7,7 +11,7 @@ PayPal Payments for Medusa
 <p align="center">
   <a href="https://docs.gorgojs.com/medusa-integrations/paypal">Documentation</a>
   <br/>
-  A Medusa plugin that provides PayPal Checkout payments.
+  A Medusa plugin that provides PayPal payments.
   <br/>
   <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/payment-paypal/README.ru.md">Читать README на русском ↗</a>
 </p>
@@ -40,16 +44,15 @@ PayPal Payments for Medusa
 
 ## Plugin Features
 
-- **PayPal Checkout** – the buyer pays in the PayPal window with their PayPal account, or with a card as a guest when you choose the guest checkout landing page.
-- **Capture Now or Later** – PayPal takes the money when the buyer pays, or holds the amount until you capture it from the order in Medusa Admin. A capture always takes the whole authorization.
-- **Refunds and Cancellations** – full and partial refunds, several per payment. Canceling an order voids an authorization that was not captured and refunds a captured payment.
-- **Orders Completed by Webhook** – the plugin checks every PayPal webhook with the PayPal API. If the buyer closes the tab after paying, the webhook still places the order, and a capture PayPal holds for review becomes captured once PayPal confirms it.
-- **Express Checkout Routes** – store routes give the storefront the public settings for the PayPal JS SDK and the buyer's contact and address from PayPal.
-- **25 PayPal Currencies** – amounts follow each currency's decimal places, so a JPY, HUF or TWD order goes to PayPal in whole units.
-- **Several PayPal Accounts** – the store can connect more than one PayPal app, for example one per region.
-- **Detailed Logging** – debug logs of every provider call, without credentials.
-- **Tests** – unit and integration tests of the payment cycle, and a contract test against the PayPal sandbox.
-- **[Integration Module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" />** – you configure the plugin in Medusa Admin without editing configuration files or redeploying the store. The module stores the secret encrypted, and **Test connection** checks the keys and the webhook subscription.
+- **Production-Ready:** Proven in live stores and ready for real-world deployment.
+- **One-Step & Two-Step Payments:** Autocapture or authorization/hold payment flows.
+- **Refunds & Cancellations:** Full refund and order cancellation support.
+- **Webhook Notifications:** Real-time payment status updates with signature verification.
+- **Express Checkout:** PayPal in the express checkout row of the [Medusa DTC Starter by Gorgo](https://docs.gorgojs.com/tools/medusa-dtc-starter).
+- **Detailed Logging:** Request and response logs for debugging and support in development mode.
+- **Full Test Coverage:** Comprehensive unit and integration tests covering core flows and edge cases.
+- **Storefront Example:** A complete <a href="https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-paypal/apps/storefront" target="_blank">Next.js storefront</a> ready to use as a reference.
+- **[Integration module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> :** Configure this plugin directly in the Medusa Admin application – no editing configuration files or redeploying the store.
 
 ## What is PayPal
 
