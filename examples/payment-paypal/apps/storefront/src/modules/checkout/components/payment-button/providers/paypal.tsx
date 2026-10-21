@@ -1,7 +1,8 @@
 "use client"
 
-import { isPaypal } from "@lib/constants"
+import { buildPaymentSessionData, isPaypal } from "@lib/constants"
 import { startExpressPayment } from "@lib/data/express-checkout"
+import { Button } from "@medusajs/ui"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import PayPalScope, {
   isNavigation,
@@ -13,6 +14,7 @@ function PayPalButtonsInner({
   cart,
   notReady,
   cartUpdating,
+  label,
   "data-testid": dataTestId,
 }: PaymentProviderButtonProps) {
   const [{ isResolved, isRejected }] = usePayPalScriptReducer()
@@ -24,6 +26,20 @@ function PayPalButtonsInner({
       isPaypal(s.provider_id)
     )?.provider_id ?? "pp_paypal_paypal"
 
+  // The PayPal buttons show once the checkout has what the order needs.
+  if (notReady || cartUpdating) {
+    return (
+      <Button
+        disabled
+        size="large"
+        isLoading={cartUpdating}
+        className="w-full"
+        data-testid={dataTestId}
+      >
+        {label}
+      </Button>
+    )
+  }
   if (isRejected) {
     return <ErrorMessage error="payment failed" data-testid={dataTestId} />
   }
@@ -33,10 +49,10 @@ function PayPalButtonsInner({
     )
   }
 
+  // `isolate` keeps the SDK's iframe, at z-index 100, under the checkout modals.
   return (
-    <div data-testid={dataTestId}>
+    <div className="isolate" data-testid={dataTestId}>
       <PayPalButtons
-        disabled={notReady || cartUpdating}
         style={{
           layout: "vertical",
           color: "gold",
@@ -44,13 +60,20 @@ function PayPalButtonsInner({
           label: "paypal",
           height: 48,
         }}
-        // A new session at the click, so the PayPal order carries the cart's
-        // total and address as they are when the customer pays.
+        // The order of the session the checkout started when the cart was ready.
+        // Without one, a new session at the click carries the cart as it is now.
         createOrder={async () => {
           setErrorMessage(null)
-          const data = await startExpressPayment(providerId, {
-            shipping_address: cart.shipping_address,
-          })
+          const pending = cart.payment_collection?.payment_sessions?.find(
+            (s) => isPaypal(s.provider_id) && s.status === "pending"
+          )?.data?.paypal_order_id
+          if (typeof pending === "string" && pending) {
+            return pending
+          }
+          const data = await startExpressPayment(
+            providerId,
+            buildPaymentSessionData(providerId, cart) ?? {}
+          )
           const orderId = data.paypal_order_id
           if (typeof orderId !== "string" || !orderId) {
             throw new Error("PayPal payment session has no order")

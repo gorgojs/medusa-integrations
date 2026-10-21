@@ -515,7 +515,8 @@
       "subtitle": "Medusa Payments"
     },
     "pp_paypal_paypal": {
-      "title": "PayPal"
+      "title": "PayPal",
+      "subtitle": "Kort, tegnebog"
     },
     "pp_stripe-bancontact_stripe": {
       "title": "Bancontact",

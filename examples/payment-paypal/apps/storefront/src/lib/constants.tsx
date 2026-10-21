@@ -44,6 +44,7 @@ export const paymentInfoMap: Record<string, PaymentInfo> = {
   },
   pp_paypal_paypal: {
     title: "PayPal",
+    subtitle: "Cards, wallet",
     icon: <PayPal />,
   },
   pp_system_default: {
@@ -64,7 +65,26 @@ const paymentSessionDataBuilders: Array<{
   test: (providerId?: string) => boolean | undefined
   isReady?: (cart: HttpTypes.StoreCart) => boolean
   build: (cart: HttpTypes.StoreCart) => Record<string, unknown>
-}> = []
+}> = [
+  {
+    test: (providerId) => isPaypal(providerId),
+    // The PayPal order carries the cart's total and the delivery address, so the
+    // session starts once the checkout has an email, an address and a shipping
+    // method. Earlier, PayPal gets an order for a cart that has none of them.
+    isReady: (cart) =>
+      Boolean(
+        cart.email &&
+          cart.shipping_address?.address_1 &&
+          (cart.shipping_methods?.length ?? 0) > 0
+      ),
+    // The email, the name and the billing address fill in PayPal's card form.
+    build: (cart) => ({
+      shipping_address: cart.shipping_address,
+      billing_address: cart.billing_address,
+      email: cart.email,
+    }),
+  },
+]
 
 export const buildPaymentSessionData = (
   providerId: string | undefined,
