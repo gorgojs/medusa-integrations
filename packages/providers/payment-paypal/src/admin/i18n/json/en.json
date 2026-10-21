@@ -1,7 +1,7 @@
 {
   "paypal": {
     "name": "PayPal",
-    "description": "Payments through PayPal Checkout",
+    "description": "PayPal payment system",
     "sections": {
       "credentials": "Credentials",
       "behavior": "Behavior",
@@ -10,22 +10,24 @@
     "fields": {
       "environment": "Environment",
       "clientId": "Client ID",
-      "clientSecret": "Secret",
+      "clientSecret": "Secret key",
       "webhookId": "Webhook ID",
       "intent": "Payment intent",
       "brandName": "Brand name",
       "landingPage": "Landing page",
-      "softDescriptor": "Card statement text"
+      "softDescriptor": "Card statement text",
+      "sendItems": "Cart items"
     },
     "hints": {
-      "environment": "Sandbox takes test payments from sandbox accounts, Live takes real ones. Each environment has its own keys and webhooks.",
-      "clientId": "From the app under Apps & Credentials in the PayPal Developer Dashboard, for the selected environment.",
-      "clientSecret": "Shown next to the client ID in the same app.",
-      "webhookId": "ID of the webhook in the same app. Point the webhook at https://<your backend>/hooks/payment/paypal_<provider id> and subscribe it to PAYMENT.AUTHORIZATION.CREATED and PAYMENT.CAPTURE.COMPLETED. Without it, the plugin cannot verify PayPal's webhooks and ignores them.",
-      "intent": "Capture right away takes the money when the customer pays. Authorize only holds the amount, and you capture it from the order in Admin. PayPal guarantees the funds for 3 days and lets you capture within 29 days.",
-      "brandName": "Shown on PayPal pages instead of the business name of your PayPal account. Up to 127 characters.",
-      "landingPage": "The page the customer sees first after leaving for PayPal.",
-      "softDescriptor": "Added after your business name on the customer's card statement. The statement shows 22 characters, PAYPAL * prefix included, so keep it short."
+      "environment": "Sandbox takes test payments, Live takes real ones.",
+      "clientId": "From your app under Apps & Credentials in the PayPal Developer Dashboard.",
+      "clientSecret": "Shown next to the client ID in your app in the PayPal Developer Dashboard.",
+      "webhookId": "Verifies PayPal webhook notifications. From the Webhooks section of your app in the PayPal Developer Dashboard.",
+      "intent": "With Capture right away, the payment is one-stage and the money is debited right away. With Authorize only, it is two-stage and the amount is held until you capture it.",
+      "brandName": "Shown on PayPal pages instead of the business name of your PayPal account.",
+      "landingPage": "The first page the customer sees in PayPal.",
+      "softDescriptor": "Added after your business name on the customer's card statement.",
+      "sendItems": "Sends the cart's items, shipping, tax and discount to PayPal, shown to the customer and in your PayPal account."
     },
     "environments": {
       "sandbox": "Sandbox",

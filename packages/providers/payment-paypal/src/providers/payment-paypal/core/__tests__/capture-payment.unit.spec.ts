@@ -18,7 +18,8 @@ describe("PayPalBase.capturePayment", () => {
     expect(client.captureAuthorization).toHaveBeenCalledWith("AUTH-1", { final_capture: true }, "capt_1")
     // no amount: the capture is always full, as with the official Stripe provider
     expect(client.captureAuthorization.mock.calls[0][1]).not.toHaveProperty("amount")
-    expect(output.data).toMatchObject({ capture_id: "CAP-1", capture_status: "COMPLETED" })
+    // the authorization the session started with is now fully captured
+    expect(output.data).toMatchObject({ capture_id: "CAP-1", capture_status: "COMPLETED", authorization_status: "CAPTURED" })
   })
 
   it("makes no PayPal call when the payment already has a capture", async () => {

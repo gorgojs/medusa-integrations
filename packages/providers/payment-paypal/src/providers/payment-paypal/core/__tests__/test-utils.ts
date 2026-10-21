@@ -13,6 +13,7 @@ export const DEFAULT_OPTIONS: PayPalOptions = {
   clientSecret: "client-secret",
   intent: "capture",
   landingPage: "NO_PREFERENCE",
+  sendItems: true,
 }
 
 export function makeLogger() {
@@ -44,6 +45,7 @@ export function makeProvider(options: Partial<PayPalOptions> = {}) {
   provider.resolveOptions = async () => ({ ...DEFAULT_OPTIONS, ...options })
   provider.getClient = () => client
   provider.getPaymentCollectionId = jest.fn().mockResolvedValue(COLLECTION_ID)
+  provider.getPayPalCart = jest.fn().mockResolvedValue(null)
   return { provider, client, logger }
 }
 

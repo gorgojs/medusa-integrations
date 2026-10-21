@@ -157,8 +157,6 @@ describe("PayPalBase.getWebhookActionAndData", () => {
     ["PAYMENT.CAPTURE.DECLINED", PaymentActions.FAILED],
     ["PAYMENT.CAPTURE.DENIED", PaymentActions.FAILED],
     ["PAYMENT.CAPTURE.PENDING", PaymentActions.PENDING],
-    ["PAYMENT.CAPTURE.REFUNDED", PaymentActions.CANCELED],
-    ["PAYMENT.CAPTURE.REVERSED", PaymentActions.CANCELED],
     ["PAYMENT.AUTHORIZATION.VOIDED", PaymentActions.CANCELED],
   ])("maps %s to %s", async (eventType, action) => {
     const { provider } = setup()
@@ -169,13 +167,18 @@ describe("PayPalBase.getWebhookActionAndData", () => {
     })
   })
 
-  it("logs that Medusa does not record a refund made in PayPal", async () => {
-    const { provider, logger } = setup()
+  // a refund of part of a capture cancels nothing, so it must never reach Medusa as `canceled`
+  it.each(["PAYMENT.CAPTURE.REFUNDED", "PAYMENT.CAPTURE.REVERSED"])(
+    "does not support %s, and logs that Medusa does not record it",
+    async (eventType) => {
+      const { provider, logger } = setup()
 
-    await provider.getWebhookActionAndData(payload(event("PAYMENT.CAPTURE.REFUNDED", { custom_id: SESSION_ID })))
-
-    expect(logger.info.mock.calls[0][0]).toContain("does not record refunds")
-  })
+      await expect(
+        provider.getWebhookActionAndData(payload(event(eventType, { custom_id: SESSION_ID })))
+      ).resolves.toEqual({ action: PaymentActions.NOT_SUPPORTED })
+      expect(logger.info.mock.calls[0][0]).toContain("does not record refunds and reversals")
+    }
+  )
 
   it.each(["CHECKOUT.ORDER.APPROVED", "CUSTOMER.DISPUTE.CREATED"])("does not support %s", async (eventType) => {
     const { provider } = setup()
