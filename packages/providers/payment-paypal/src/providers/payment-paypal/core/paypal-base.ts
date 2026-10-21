@@ -34,11 +34,19 @@ import { PayPalApiError, PayPalClient } from "../../../lib/paypal-client"
 import type { Order, OrderRequest } from "../../../lib/paypal-orders-client"
 import { ProviderKeys } from "../../../types"
 import { formatAmount } from "../../../utils/amounts"
+import { buildPayPalCartLines, type PayPalCartLines } from "../../../utils/cart-items"
 import { assertPayPalCurrency } from "../../../utils/currencies"
 import { getPayPalDecline } from "../../../utils/decline"
 import { mapAuthorizationStatus, mapCaptureStatus, resolveOrderStatus } from "../../../utils/status-map"
-import { isPayPalCertUrl, readTransmission, readWebhookBody, WEBHOOK_ACTIONS } from "../../../utils/webhook"
+import {
+  isPayPalCertUrl,
+  readTransmission,
+  readWebhookBody,
+  UNRECORDED_WEBHOOK_EVENTS,
+  WEBHOOK_ACTIONS,
+} from "../../../utils/webhook"
 import { getPaymentCollectionId } from "../../../workflows/get-payment-collection-id"
+import { getPayPalCart } from "../../../workflows/get-paypal-cart"
 import { MedusaAddress, PayPalOptions, PayPalRefundRecord, PayPalSessionData } from "../types"
 
 /**
@@ -72,18 +80,42 @@ function withoutEmpty<T extends Record<string, unknown>>(value: T): T {
   return Object.fromEntries(Object.entries(value).filter(([, v]) => v !== undefined && v !== "")) as T
 }
 
+function toPayPalAddress(address: MedusaAddress) {
+  return withoutEmpty({
+    address_line_1: address.address_1 ?? undefined,
+    address_line_2: address.address_2 ?? undefined,
+    admin_area_2: address.city ?? undefined,
+    admin_area_1: address.province ?? undefined,
+    postal_code: address.postal_code ?? undefined,
+    country_code: String(address.country_code).toUpperCase(),
+  })
+}
+
 function toPayPalShipping(address: MedusaAddress) {
   const fullName = [address.first_name, address.last_name].filter(Boolean).join(" ")
   return withoutEmpty({
     name: fullName ? { full_name: fullName } : undefined,
-    address: withoutEmpty({
-      address_line_1: address.address_1 ?? undefined,
-      address_line_2: address.address_2 ?? undefined,
-      admin_area_2: address.city ?? undefined,
-      admin_area_1: address.province ?? undefined,
-      postal_code: address.postal_code ?? undefined,
-      country_code: String(address.country_code).toUpperCase(),
-    }),
+    address: toPayPalAddress(address),
+  })
+}
+
+/**
+ * The buyer's email, name and billing address, which PayPal fills in on its card form. A billing
+ * address without a name or a street takes them from the delivery address.
+ */
+function toPayPalPayer(input: PayPalSessionData) {
+  const billing = input.billing_address
+  const shipping = input.shipping_address
+  const person = billing?.first_name || billing?.last_name ? billing : shipping
+  const address = billing?.address_1 ? billing : shipping
+  const name = withoutEmpty({
+    given_name: person?.first_name ?? undefined,
+    surname: person?.last_name ?? undefined,
+  })
+  return withoutEmpty({
+    email_address: input.email ?? undefined,
+    name: Object.keys(name).length ? name : undefined,
+    address: address?.country_code ? toPayPalAddress(address) : undefined,
   })
 }
 
@@ -128,6 +160,61 @@ abstract class PayPalBase extends AbstractPaymentProvider {
     return getPaymentCollectionId(sessionId)
   }
 
+  protected getPayPalCart(collectionId: string) {
+    return getPayPalCart(collectionId)
+  }
+
+  /**
+   * The cart's items and amount breakdown for the PayPal order, or `null` to send the amount alone:
+   * when the merchant turned items off, the collection belongs to no cart, or the cart does not add
+   * up to the amount. A failed read never stops the payment.
+   */
+  private async cartLines(
+    options: PayPalOptions,
+    collectionId: string,
+    currency: string,
+    value: string
+  ): Promise<PayPalCartLines | null> {
+    if (options.sendItems === false) {
+      return null
+    }
+    try {
+      const cart = await this.getPayPalCart(collectionId)
+      const lines = buildPayPalCartLines(cart, currency, value)
+      if (!lines && cart?.items?.length) {
+        this.logger_.debug(
+          `PayPalBase.cartLines: the cart of payment collection ${collectionId} does not add up to ${value} ${currency}, sending the amount without items`
+        )
+      }
+      return lines
+    } catch (error) {
+      this.logger_.warn(
+        `PayPalBase.cartLines: could not read the cart of payment collection ${collectionId}, sending the amount without items: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      )
+      return null
+    }
+  }
+
+  /**
+   * The PATCH operations that set an order's amount, and its items with it: PayPal checks an amount
+   * against the items already on the order, so items are added, replaced or removed in the same call.
+   */
+  private amountPatch(order: Order, referenceId: string, currency: string, value: string, lines: PayPalCartLines | null) {
+    const unit = `/purchase_units/@reference_id=='${referenceId}'`
+    const hasItems = !!order.purchase_units?.[0]?.items?.length
+    const amount = { currency_code: currency, value, ...(lines ? { breakdown: lines.breakdown } : {}) }
+    return [
+      { op: "replace" as const, path: `${unit}/amount`, value: amount },
+      ...(lines
+        ? [{ op: hasItems ? ("replace" as const) : ("add" as const), path: `${unit}/items`, value: lines.items }]
+        : hasItems
+          ? [{ op: "remove" as const, path: `${unit}/items` }]
+          : []),
+    ]
+  }
+
   /**
    * Create the PayPal order for a session, or reuse the order the storefront
    * passes as `paypal_order_id`. Medusa deletes every session when the cart total
@@ -151,6 +238,7 @@ abstract class PayPalBase extends AbstractPaymentProvider {
       const options = await this.resolveOptions()
       const client = this.getClient(options)
       const collectionId = await this.getPaymentCollectionId(sessionId)
+      const lines = await this.cartLines(options, collectionId, currency, value)
 
       let order: Order
       if (input.paypal_order_id) {
@@ -158,11 +246,7 @@ abstract class PayPalBase extends AbstractPaymentProvider {
         this.assertReusable(order, collectionId, currency)
         this.assertNotRaisedAfterApproval(order, value)
         await client.patchOrder(order.id!, [
-          {
-            op: "replace",
-            path: `/purchase_units/@reference_id=='${collectionId}'/amount`,
-            value: { currency_code: currency, value },
-          },
+          ...this.amountPatch(order, collectionId, currency, value, lines),
           {
             op: "replace",
             path: `/purchase_units/@reference_id=='${collectionId}'/custom_id`,
@@ -171,7 +255,7 @@ abstract class PayPalBase extends AbstractPaymentProvider {
         ])
       } else {
         order = await client.createOrder(
-          this.buildOrderRequest(options, input, { collectionId, sessionId, currency, value }),
+          this.buildOrderRequest(options, input, { collectionId, sessionId, currency, value, lines }),
           context?.idempotency_key ?? sessionId
         )
       }
@@ -282,7 +366,10 @@ abstract class PayPalBase extends AbstractPaymentProvider {
             decline?.code
           )
         }
-        output = { data: { ...session, capture_id: capture.id, capture_status: capture.status } }
+        // final_capture takes the whole authorization, so PayPal now reports it CAPTURED
+        output = {
+          data: { ...session, authorization_status: "CAPTURED", capture_id: capture.id, capture_status: capture.status },
+        }
       } catch (error) {
         // A repeated capture of a captured authorization fails with 422. The spec does
         // not name that error, so the order decides whether the capture already exists.
@@ -424,7 +511,8 @@ abstract class PayPalBase extends AbstractPaymentProvider {
     try {
       const currency = assertPayPalCurrency(currency_code)
       const value = formatAmount(amount, currency)
-      const client = this.getClient(await this.resolveOptions())
+      const options = await this.resolveOptions()
+      const client = this.getClient(options)
       const order = await client.getOrder(session.paypal_order_id)
       if (!PATCHABLE_ORDER_STATUSES.has(String(order.status))) {
         const output = { data: session }
@@ -432,14 +520,10 @@ abstract class PayPalBase extends AbstractPaymentProvider {
         return output
       }
       this.assertNotRaisedAfterApproval(order, value)
+      // The reference id of an order the provider created is the payment collection id.
       const referenceId = order.purchase_units?.[0]?.reference_id ?? "default"
-      await client.patchOrder(session.paypal_order_id, [
-        {
-          op: "replace",
-          path: `/purchase_units/@reference_id=='${referenceId}'/amount`,
-          value: { currency_code: currency, value },
-        },
-      ])
+      const lines = referenceId === "default" ? null : await this.cartLines(options, referenceId, currency, value)
+      await client.patchOrder(session.paypal_order_id, this.amountPatch(order, referenceId, currency, value, lines))
 
       const output = { data: { ...session, amount: value, currency_code: currency } }
       this.logger_.debug(`PayPalBase.updatePayment output: ${JSON.stringify(output)}`)
@@ -496,6 +580,11 @@ abstract class PayPalBase extends AbstractPaymentProvider {
       }
       const action = (event.event_type && WEBHOOK_ACTIONS[event.event_type]) || PaymentActions.NOT_SUPPORTED
       const resource = event.resource ?? {}
+      if (event.event_type && UNRECORDED_WEBHOOK_EVENTS.has(event.event_type)) {
+        this.logger_.info(
+          `PayPal webhook ${event.id}: ${event.event_type} for ${resource.id}. Medusa does not record refunds and reversals made in PayPal`
+        )
+      }
       if (action === PaymentActions.NOT_SUPPORTED) {
         this.logger_.debug(`PayPalBase.getWebhookActionAndData output: ${JSON.stringify(unsupported)}`)
         return unsupported
@@ -513,7 +602,7 @@ abstract class PayPalBase extends AbstractPaymentProvider {
       }
       if (action === PaymentActions.CANCELED) {
         this.logger_.info(
-          `PayPal webhook ${event.id}: ${event.event_type} for ${resource.id}. Medusa does not record refunds and voids made in PayPal`
+          `PayPal webhook ${event.id}: ${event.event_type} for ${resource.id}. Medusa does not record voids made in PayPal`
         )
       }
 
@@ -566,7 +655,7 @@ abstract class PayPalBase extends AbstractPaymentProvider {
   protected buildOrderRequest(
     options: PayPalOptions,
     input: PayPalSessionData,
-    order: { collectionId: string; sessionId: string; currency: string; value: string }
+    order: { collectionId: string; sessionId: string; currency: string; value: string; lines?: PayPalCartLines | null }
   ): OrderRequest {
     const shipping = input.shipping_address?.country_code ? toPayPalShipping(input.shipping_address) : undefined
     const shippingPreference = input.express ? "GET_FROM_FILE" : shipping ? "SET_PROVIDED_ADDRESS" : "NO_SHIPPING"
@@ -577,13 +666,20 @@ abstract class PayPalBase extends AbstractPaymentProvider {
         withoutEmpty({
           reference_id: order.collectionId,
           custom_id: order.sessionId,
-          amount: { currency_code: order.currency, value: order.value },
+          amount: {
+            currency_code: order.currency,
+            value: order.value,
+            ...(order.lines ? { breakdown: order.lines.breakdown } : {}),
+          },
+          items: order.lines?.items,
           soft_descriptor: options.softDescriptor,
           shipping: input.express ? undefined : shipping,
         }),
       ],
       payment_source: {
         paypal: {
+          // In an express checkout the buyer picks these details in the PayPal window.
+          ...(input.express ? {} : toPayPalPayer(input)),
           experience_context: withoutEmpty({
             brand_name: options.brandName,
             landing_page: options.landingPage ?? "NO_PREFERENCE",

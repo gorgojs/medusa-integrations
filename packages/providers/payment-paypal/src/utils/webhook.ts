@@ -16,7 +16,8 @@ export type PayPalWebhookEvent = {
 
 /**
  * PayPal event → Medusa webhook action. Only `authorized` and `captured` move a payment in Medusa;
- * the others are logged with their meaning, the core subscriber skips them.
+ * the others are logged with their meaning, the core subscriber skips them. Refunds and reversals
+ * are not here: a refund of part of a capture is no cancellation, see UNRECORDED_WEBHOOK_EVENTS.
  */
 export const WEBHOOK_ACTIONS: Record<string, PaymentActions> = {
   "PAYMENT.AUTHORIZATION.CREATED": PaymentActions.AUTHORIZED,
@@ -26,9 +27,13 @@ export const WEBHOOK_ACTIONS: Record<string, PaymentActions> = {
   "PAYMENT.CAPTURE.DENIED": PaymentActions.FAILED,
   "PAYMENT.CAPTURE.PENDING": PaymentActions.PENDING,
   "PAYMENT.AUTHORIZATION.VOIDED": PaymentActions.CANCELED,
-  "PAYMENT.CAPTURE.REFUNDED": PaymentActions.CANCELED,
-  "PAYMENT.CAPTURE.REVERSED": PaymentActions.CANCELED,
 }
+
+/**
+ * Money returned after a capture: a refund, or a reversal after a dispute. No Medusa action fits, so
+ * the provider answers `not_supported` and logs that Medusa does not record it.
+ */
+export const UNRECORDED_WEBHOOK_EVENTS = new Set(["PAYMENT.CAPTURE.REFUNDED", "PAYMENT.CAPTURE.REVERSED"])
 
 /** The events a webhook must listen to for Medusa to act on PayPal payments. */
 export const REQUIRED_WEBHOOK_EVENTS = Object.keys(WEBHOOK_ACTIONS).filter((name) =>

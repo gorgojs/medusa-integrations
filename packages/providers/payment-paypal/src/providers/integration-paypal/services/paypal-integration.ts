@@ -89,6 +89,13 @@ const descriptor = defineIntegration({
       label: "paypal.fields.softDescriptor",
       hint: "paypal.hints.softDescriptor",
     },
+    sendItems: {
+      type: "boolean",
+      default: true,
+      control: "switch",
+      label: "paypal.fields.sendItems",
+      hint: "paypal.hints.sendItems",
+    },
   },
 
   sections: [
@@ -106,7 +113,7 @@ const descriptor = defineIntegration({
     {
       id: "checkout",
       title: "paypal.sections.checkout",
-      options: ["brandName", "landingPage", "softDescriptor"],
+      options: ["brandName", "landingPage", "softDescriptor", "sendItems"],
     },
   ],
 
