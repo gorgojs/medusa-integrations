@@ -1,17 +1,18 @@
 ---
 title: "Начало работы с PayPal для Medusa"
-description: "В этом документе вы узнаете, как установить и настроить платёжный провайдер PayPal для Medusa"
+description: "Узнайте, как установить и настроить платежный провайдер PayPal для Medusa."
 ---
 
 # {frontmatter.title}
 
-В этом документе вы узнаете, как установить и настроить платёжный провайдер PayPal для Medusa.
+В этом руководстве вы узнаете, как установить и настроить платежный провайдер PayPal для Medusa.
 
 ## Требования
 
 - Medusa v2.17.2 или новее
-- Node.js v20.19 или v22.12 и новее
-- Бизнес-аккаунт PayPal и приложение в <a href="https://developer.paypal.com/dashboard/" target="_blank">PayPal Developer Dashboard</a>
+- Node.js v20 или новее
+- Бизнес-аккаунт PayPal – [зарегистрируйтесь или войдите](https://www.paypal.com/business)
+- Приложение в PayPal Developer Dashboard – [зарегистрируйтесь или войдите](https://developer.paypal.com/dashboard/applications)
 - [Модуль интеграций](/medusa-modules/integration)
 
 ---
@@ -35,7 +36,7 @@ description: "В этом документе вы узнаете, как уст�
 
 ## Настройка
 
-Зарегистрируйте плагин и оба провайдера в файле `medusa-config.ts` приложения Medusa:
+Добавьте конфигурации провайдера модуля интеграций и платежного модуля Medusa в файл `medusa-config.ts` в приложении Medusa Admin:
 
 ```ts title="medusa-config.ts"
 // ...
@@ -85,8 +86,6 @@ module.exports = defineConfig({
 
 Так зарегистрированный платёжный провайдер получает id `pp_paypal_paypal`, а его вебхук приходит на роут `/hooks/payment/paypal_paypal`.
 
-<Note type="warning" title="Один плагин PayPal на проект">Плагин `@easypayment/medusa-payment-paypal` регистрирует свой провайдер под тем же id `pp_paypal_paypal`, поэтому два плагина не могут работать в одном проекте. Оставьте зарегистрированным только один из них.</Note>
-
 Добавьте переменную окружения с секретным ключом шифрования:
 
 ```text title=".env"
@@ -111,23 +110,23 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
   ]}
 />
 
-Client ID, секрет и остальные настройки PayPal не входят в параметры провайдера. Их вы вводите в Medusa Admin, как описано в разделе [Настройки PayPal в Medusa Admin](/medusa-integrations/paypal/settings).
+Client ID, секретный ключ и остальные настройки PayPal не входят в параметры провайдера. Их вы вводите в Medusa Admin, как описано в разделе [Настройки PayPal в Medusa Admin](/medusa-integrations/paypal/settings).
 
 ---
 
 ## Настройка вебхуков
 
-PayPal сообщает об авторизациях и списаниях вебхуком, и по нему плагин оформляет заказ, если покупатель закрыл вкладку после оплаты. Настройте его в PayPal Developer Dashboard:
+Чтобы корректно обрабатывать платёжные уведомления от PayPal, настройте URL вебхука в своём приложении PayPal следующим образом:
 
 1. Откройте своё приложение в разделе **Apps & Credentials**, выбрав окружение **Sandbox** или **Live**, как в настройках плагина.
 
 2. В блоке **Webhooks** нажмите **Add Webhook**.
 
-3. Укажите URL вида:
-    ```
+3. Добавьте новый URL вебхука в следующем формате:
+    ```text title="Webhook URL"
     https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/paypal_paypal
     ```
-    Замените `{YOUR_MEDUSA_DOMAIN}` на домен своего магазина Medusa.
+    Замените `{YOUR_MEDUSA_DOMAIN}` на домен вашего магазина Medusa.
 
 4. Подпишите вебхук на события `PAYMENT.AUTHORIZATION.CREATED` и `PAYMENT.CAPTURE.COMPLETED` и сохраните его.
 

@@ -1,17 +1,18 @@
 ---
 title: "Getting Started with PayPal Payment for Medusa"
-description: "In this document, you’ll learn how to install and configure the PayPal payment provider for Medusa"
+description: "Learn how to install and configure the PayPal payment provider for Medusa."
 ---
 
 # {frontmatter.title}
 
-In this document, you’ll learn how to install and configure the PayPal payment provider for Medusa.
+In this guide, you'll learn how to install and configure the PayPal payment provider for Medusa.
 
 ## Requirements
 
 - Medusa v2.17.2 or later
-- Node.js v20.19 or v22.12 and later
-- A PayPal Business account and an app in the <a href="https://developer.paypal.com/dashboard/" target="_blank">PayPal Developer Dashboard</a>
+- Node.js v20 or later
+- A PayPal Business account – [sign in or create one](https://www.paypal.com/business)
+- An app in the PayPal Developer Dashboard – [sign in or create one](https://developer.paypal.com/dashboard/applications)
 - [Integration Module](/medusa-modules/integration)
 
 ---
@@ -35,7 +36,7 @@ In this document, you’ll learn how to install and configure the PayPal payment
 
 ## Configuration
 
-Register the plugin and both providers in the `medusa-config.ts` file of your Medusa application:
+Add the configurations of the Integration Module provider and of the Medusa Payment Module in your `medusa-config.ts` file of the Medusa Admin application:
 
 ```ts title="medusa-config.ts"
 // ...
@@ -85,8 +86,6 @@ module.exports = defineConfig({
 
 The payment provider registered this way gets the id `pp_paypal_paypal`, and its webhook route is `/hooks/payment/paypal_paypal`.
 
-<Note type="warning" title="One PayPal Plugin per Project">The `@easypayment/medusa-payment-paypal` plugin registers its provider under the same id, `pp_paypal_paypal`, so the two plugins cannot run side by side in one project. Keep only one of them registered.</Note>
-
 Add environment variables with your secret `Encryption Key`:
 
 ```text title=".env"
@@ -111,23 +110,23 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
   ]}
 />
 
-The client ID, the secret and the other PayPal settings are not provider options. You enter them in Medusa Admin, as described in [Manage PayPal Settings in Medusa Admin](/medusa-integrations/paypal/settings).
+The client ID, the secret key and the other PayPal settings are not provider options. You enter them in Medusa Admin, as described in [Manage PayPal Settings in Medusa Admin](/medusa-integrations/paypal/settings).
 
 ---
 
 ## Webhook Setup
 
-PayPal reports authorizations and captures to a webhook, and the plugin places an order from it when the buyer closes the tab after paying. Set it up in the PayPal Developer Dashboard:
+To properly handle payment notifications from PayPal, configure the webhook URL in your PayPal app as following:
 
 1. Open your app under **Apps & Credentials**, with the **Sandbox** or **Live** environment that matches the plugin's settings.
 
 2. In the **Webhooks** section, click **Add Webhook**.
 
-3. Add a URL like:
-    ```
+3. Add a new webhook URL in the following format:
+    ```text title="Webhook URL"
     https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/paypal_paypal
     ```
-    Replace `{YOUR_MEDUSA_DOMAIN}` with the domain of your Medusa store.
+    Change `{YOUR_MEDUSA_DOMAIN}` with your medusa store domain.
 
 4. Subscribe the webhook to the `PAYMENT.AUTHORIZATION.CREATED` and `PAYMENT.CAPTURE.COMPLETED` events, and save it.
 
