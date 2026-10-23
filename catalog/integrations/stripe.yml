@@ -1,0 +1,142 @@
+# Stripe — payment provider, authored by Gorgo.
+# See example.yml for the fully-annotated template.
+
+identifier: "stripe"
+npm: "@gorgo/medusa-payment-stripe"
+category: "payment"
+author: "gorgo"
+displayName:
+  en: "Stripe"
+  ru: "Stripe"
+shortDescription:
+  en: "Accept payments via Stripe, with Apple Pay, Google Pay and Link"
+  ru: "Приём платежей через Stripe, с Apple Pay, Google Pay и Link"
+icon: "stripe.svg"
+repository: "https://github.com/gorgojs/medusa-integrations"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/stripe"
+docsSnippet:
+  en: |
+    ## Install
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-stripe
+    # or with yarn
+    yarn add @gorgo/medusa-payment-stripe
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-stripe
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    const STRIPE_INTEGRATION_ID = "stripe-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-stripe/providers/integration-stripe",
+                id: STRIPE_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-stripe",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-stripe/providers/payment-stripe",
+                id: "stripe",
+                options: { id: STRIPE_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Then restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → Stripe**.
+    2. Configure integration settings.
+  ru: |
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-stripe
+    # or with yarn
+    yarn add @gorgo/medusa-payment-stripe
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-stripe
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    const STRIPE_INTEGRATION_ID = "stripe-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-stripe/providers/integration-stripe",
+                id: STRIPE_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-stripe",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-stripe/providers/payment-stripe",
+                id: "stripe",
+                options: { id: STRIPE_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Затем перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → Stripe**.
+    2. Настройте параметры интеграции.
+active: true
