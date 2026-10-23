@@ -1,0 +1,164 @@
+---
+title: "Getting Started with Stripe Payment for Medusa"
+description: "Learn how to install and configure the Stripe payment provider for Medusa."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to install and configure the Stripe payment provider for Medusa, set up its webhook and the domains for wallets, and switch from Medusa's built-in Stripe provider.
+
+## Requirements
+
+- Medusa v2.17.2 or later
+- Node.js v20.19 or later, or v22.12 or later
+- A Stripe account – [sign in or create one](https://dashboard.stripe.com/register). Stripe works with businesses in <a href="https://stripe.com/global" target="_blank">supported countries</a> only
+- [Integration Module](/medusa-modules/integration)
+
+---
+
+## Installation
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-stripe
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-stripe
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Configuration
+
+Add the configurations of the Integration Module provider and of the Medusa Payment Module in your `medusa-config.ts` file of the Medusa Admin application:
+
+```ts title="medusa-config.ts"
+// ...
+const STRIPE_INTEGRATION_ID = "stripe-1"
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-stripe/providers/integration-stripe",
+            id: STRIPE_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-stripe",
+      options: {},
+    },
+  ],
+  modules: [
+    // ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-stripe/providers/payment-stripe",
+            id: "stripe",
+            options: {
+              id: STRIPE_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+The payment provider registered this way gets the id `pp_stripe_stripe`, and its webhook route is `/hooks/payment/stripe_stripe`.
+
+Add environment variables with your secret `Encryption Key`:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Provider Options
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+The secret key, the publishable key and the other Stripe settings are not provider options. You enter them in Medusa Admin, as described in [Manage Stripe Settings in Medusa Admin](/medusa-integrations/stripe/settings).
+
+---
+
+## Webhook Setup
+
+To properly handle payment notifications from Stripe, add a webhook endpoint for your store in the Stripe Dashboard:
+
+1. Open <a href="https://dashboard.stripe.com/webhooks" target="_blank">Webhooks</a> in the Stripe Dashboard, in the test or live mode that matches your keys.
+
+2. Add an endpoint with the URL in the following format:
+    ```text title="Webhook URL"
+    https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/stripe_stripe
+    ```
+    Change `{YOUR_MEDUSA_DOMAIN}` with your medusa store domain.
+
+3. Select the `payment_intent.succeeded` and `payment_intent.amount_capturable_updated` events, and save the endpoint.
+
+4. Reveal the endpoint's signing secret, which starts with `whsec_`, and enter it in the **Webhook signing secret** field of the Stripe settings in Medusa Admin. **Test connection** then checks that an enabled endpoint whose URL contains `/hooks/payment/stripe_` exists in that mode and sends both events.
+
+During development, the <a href="https://docs.stripe.com/stripe-cli" target="_blank">Stripe CLI</a> forwards the events to your local backend and prints the signing secret to use:
+
+```bash
+stripe listen --forward-to localhost:9000/hooks/payment/stripe_stripe
+```
+
+<Note type="warning">Without a signing secret the plugin cannot verify Stripe's webhooks, so it ignores them. Payments still go through, but an order the storefront did not complete, for example because the customer closed the tab after paying, stays uncompleted.</Note>
+
+---
+
+## Register Domains for Wallets
+
+Apple Pay, Google Pay and Link appear only on domains registered with Stripe. Register every domain and subdomain that shows the checkout, as described in Stripe's guide to <a href="https://docs.stripe.com/payments/payment-methods/pmd-registration" target="_blank">registering payment method domains</a>. A domain registered in live mode is registered in test mode too.
+
+Until the domain is registered, the wallets stay hidden, and the express checkout row shows no Stripe button.
+
+---
+
+## Switch from Medusa's Stripe Provider
+
+The plugin registers under the same provider id and webhook URL as Medusa's built-in `@medusajs/payment-stripe`, so it replaces it without a data migration. The payments, the sessions and the saved cards the built-in provider created stay in the database, and the plugin captures, refunds and cancels those payments.
+
+To switch:
+
+1. Replace `@medusajs/medusa/payment-stripe` in the `providers` of the Payment Module with `@gorgo/medusa-payment-stripe/providers/payment-stripe`, keeping `id: "stripe"`, and register the integration provider as shown in [Configuration](#configuration). Keep only one of the two providers with `id: "stripe"`.
+
+2. Enter the keys in Medusa Admin. The built-in provider read `apiKey` and `webhookSecret` from `medusa-config.ts`, and the plugin reads them from its settings.
+
+3. Set **Payment capture** in the settings. The built-in provider only authorizes by default, and its `capture: true` option matches **Capture right away**.
+
+4. Keep the webhook endpoint you already have in the Stripe Dashboard, since the URL stays `/hooks/payment/stripe_stripe`, and enter its signing secret in the settings.
+
+The built-in provider also registered a provider per payment method, such as `stripe-ideal` or `stripe-bancontact`. The plugin has one provider, and the Payment Element shows the methods your Stripe account or the payment method configuration enables, iDEAL and Bancontact included. Stripe does not offer BLIK on a PaymentIntent created at payment time, as its guide to <a href="https://docs.stripe.com/payments/accept-a-payment-deferred" target="_blank">collecting payment details before creating an Intent</a> notes, so BLIK is not available.

@@ -1,0 +1,868 @@
+---
+title: "Интеграция платежей Stripe в витрину"
+description: "Узнайте, как интегрировать платёжный провайдер Stripe в витрину на Next.js для Medusa."
+---
+
+# {frontmatter.title}
+
+Для интеграции платёжного провайдера Stripe в storefront [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter) начните с добавления необходимых UI-компонентов. Таким образом провайдер будет отображаться на странице оформления заказа наряду с другими доступными методами оплаты.
+
+Оформление заказа работает с отложенным PaymentIntent. Stripe Elements создаются с суммой и валютой корзины, без PaymentIntent за ними, поэтому выбор Stripe или переключение способа оплаты не отправляет запросов. Покупатель платит картой на шаге оплаты или через Apple Pay, Google Pay или Link в ряду экспресс-оплаты. В этот момент витрина запускает платёжную сессию, провайдер создаёт PaymentIntent с итоговой суммой и адресом доставки из корзины, а Stripe.js подтверждает его.
+
+После подтверждения оплаты витрина завершает корзину и создаёт новый заказ в Medusa. Если покупатель закрыл вкладку после оплаты, заказ создаст вебхук `payment_intent.succeeded` или `payment_intent.amount_capturable_updated`.
+
+Для витрины на Next.js необходимо внести следующие изменения:
+
+## Шаг 1: Установите Stripe.js
+
+Платёжная форма и кнопки кошельков берутся из Stripe.js и его официальной обёртки для React. Установите оба пакета в витрину:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @stripe/stripe-js@10.1.0 @stripe/react-stripe-js@7.0.0
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @stripe/stripe-js@10.1.0 @stripe/react-stripe-js@7.0.0
+    ```
+  </CodeTab>
+</CodeTabs>
+
+Версия 10 пакета `@stripe/stripe-js` загружает релиз Stripe.js `endive`, который соответствует версии API `2026-09-30.endive` плагина на бэкенде, а `@stripe/react-stripe-js` даёт компоненты `Elements`, `PaymentElement` и `ExpressCheckoutElement`.
+
+---
+
+## Шаг 2: Настройте платёжный провайдер
+
+Сопоставление платёжных провайдеров в файле констант витрины определяет, как каждый провайдер выглядит на странице оформления заказа. Запись для Stripe там уже есть.
+
+Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/lib/constants.tsx#L25-L29) и измените запись `pp_stripe_stripe`:
+
+![Структура каталогов витрины Medusa после изменения файла констант](/static/stripe/storefront/src-lib-constants.webp)
+
+```tsx title="src/lib/constants.tsx"
+export const paymentInfoMap: Record<string, PaymentInfo> = {
+  pp_stripe_stripe: {
+    title: "Stripe",
+    subtitle: "Cards, wallets",
+    icon: <CreditCard />,
+  },
+  // ...
+}
+
+// ...
+
+export const isStripeLike = (providerId?: string) => {
+  return (
+    providerId?.startsWith("pp_stripe_") || providerId?.startsWith("pp_medusa-")
+  )
+}
+```
+
+Запись `pp_stripe_stripe` задаёт заголовок, подзаголовок и иконку Stripe на странице оформления заказа и служит запасным вариантом, если в локали нет перевода. Запись и функция `isStripeLike` уже есть в стартере, потому что он поставляется с платёжной формой Stripe, поэтому меняются только заголовок и подзаголовок.
+
+Вспомогательная функция `isStripeLike` проверяет, принадлежит ли `providerId` провайдеру Stripe. Её используют страница, кнопка оплаты и ряд экспресс-оплаты.
+
+---
+
+## Шаг 3: Запустите платёжную сессию с кнопки оплаты
+
+Стартер запускает платёжную сессию сразу, как только покупатель выбирает способ оплаты, а значит создал бы PaymentIntent до того, как сумма станет окончательной. Сессию Stripe вместо этого запускает его кнопка оплаты.
+
+Откройте тот же [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/lib/constants.tsx#L63-L81) и добавьте запись в функции сборки данных платёжной сессии:
+
+![Структура каталогов витрины Medusa после изменения файла констант](/static/stripe/storefront/src-lib-constants.webp)
+
+```tsx title="src/lib/constants.tsx"
+const paymentSessionDataBuilders: Array<{
+  test: (providerId?: string) => boolean | undefined
+  isReady?: (cart: HttpTypes.StoreCart) => boolean
+  build?: (cart: HttpTypes.StoreCart) => Record<string, unknown>
+  /**
+   * The provider's own pay button starts the payment session when the customer pays, so the
+   * checkout does not start one when the method is picked or the cart changes. For a provider
+   * that creates the payment at the vendor only once the amount is final, such as a deferred
+   * Stripe PaymentIntent. `isReady` still gates the pay button.
+   */
+  deferred?: boolean
+}> = [
+  {
+    // The Payment Element works on a deferred PaymentIntent, which the pay button creates
+    // once the amount is final, so picking Stripe makes no request.
+    test: isStripeLike,
+    deferred: true,
+  },
+]
+```
+
+С `deferred: true` оформление заказа не запускает сессию при выборе Stripe, после очистки сессии и при смене адреса или доставки. У записи нет `build`, потому что провайдер берёт адрес и email из корзины на бэкенде. Нет и `isReady`, потому что кнопка оплаты и так ждёт email, адреса и способ доставки.
+
+---
+
+## Шаг 4: Загрузите настройки Stripe
+
+Чтобы создать Elements, витрине нужны публикуемый ключ и способ списания. Они хранятся в настройках плагина в Medusa Admin, поэтому витрина загружает их с бэкенда, а не из переменной окружения.
+
+Создайте [`src/lib/data/stripe.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/lib/data/stripe.ts) и добавьте следующий код:
+
+![Структура каталогов витрины Medusa после создания файла с настройками Stripe](/static/stripe/storefront/src-lib-data-stripe.webp)
+
+```ts title="src/lib/data/stripe.ts"
+"use server"
+
+import { sdk } from "@lib/config"
+
+/** What the storefront needs to load Stripe.js and create the Elements, from `GET /store/stripe/config`. */
+export type StripeConfig = {
+  provider_id: string
+  publishable_key: string
+  /** The capture method of the PaymentIntents the backend creates. The Elements must use the same. */
+  capture_method: "manual" | "automatic_async"
+  payment_method_configuration: string | null
+}
+
+/**
+ * The public Stripe settings of the only Stripe integration, or null while it is not configured.
+ * The keys and the capture method change only in the Admin, so the answer is cached for a minute.
+ */
+export async function getStripeConfig(): Promise<StripeConfig | null> {
+  return sdk.client
+    .fetch<{ config: StripeConfig }>("/store/stripe/config", {
+      method: "GET",
+      next: { revalidate: 60 },
+    })
+    .then(({ config }) => config)
+    .catch(() => null)
+}
+```
+
+`getStripeConfig` обращается к `GET /store/stripe/config`, который возвращает публикуемый ключ, способ списания и конфигурацию способов оплаты интеграции Stripe. Пока интеграция не настроена, функция возвращает `null`, а ответ кэшируется на минуту.
+
+---
+
+## Шаг 5: Переведите сумму для Stripe
+
+Elements принимают сумму целым числом в минимальных единицах валюты, и она должна совпадать с суммой PaymentIntent, который создаёт провайдер.
+
+Создайте [`src/lib/util/stripe-amount.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/lib/util/stripe-amount.ts) и добавьте следующий код:
+
+![Структура каталогов витрины Medusa после создания файла с переводом суммы](/static/stripe/storefront/src-lib-util-stripe-amount.webp)
+
+```ts title="src/lib/util/stripe-amount.ts"
+/**
+ * Converts a Medusa amount, in major units, to the integer Stripe expects, the same way
+ * `@gorgo/medusa-payment-stripe` converts it for the PaymentIntent (`src/utils/amounts.ts` there).
+ * The Elements and the PaymentIntent have to agree on the amount, so a change here goes there too.
+ */
+const ZERO_DECIMAL = new Set([
+  "BIF", "CLP", "DJF", "GNF", "JPY", "KMF", "KRW", "MGA", "PYG", "RWF", "VND", "VUV", "XAF", "XOF", "XPF",
+])
+// zero-decimal currencies Stripe still takes multiplied by 100, so 5 ISK is 500
+const WHOLE_TWO_DECIMAL = new Set(["ISK", "UGX"])
+// thousandths, rounded to a hundredth, since Stripe wants the last digit to be 0
+const THREE_DECIMAL = new Set(["BHD", "JOD", "KWD", "OMR", "TND"])
+
+/** `amount` rounded half up to `decimals` places, then shifted to an integer, without float drift. */
+const shift = (amount: number, decimals: number) =>
+  Math.round(Number(`${amount.toFixed(10)}e${decimals}`))
+
+export const toStripeAmount = (amount: number, currencyCode: string) => {
+  const code = currencyCode.toUpperCase()
+  if (ZERO_DECIMAL.has(code)) {
+    return shift(amount, 0)
+  }
+  if (WHOLE_TWO_DECIMAL.has(code)) {
+    return shift(amount, 0) * 100
+  }
+  if (THREE_DECIMAL.has(code)) {
+    return shift(amount, 2) * 10
+  }
+  return shift(amount, 2)
+}
+```
+
+`toStripeAmount` переводит итог корзины так же, как его переводит провайдер на бэкенде. Валюты без дробной части, например JPY, остаются целыми, ISK и UGX умножаются на 100, так что 5 ISK уходит в Stripe как 500, а валюты с тремя знаками после запятой округляются до сотых, потому что Stripe требует, чтобы их последняя цифра была 0.
+
+---
+
+## Шаг 6: Оберните оформление заказа в Elements
+
+Платёжная форма и кнопки кошельков используют одни Elements, которые оборачивают всё оформление заказа.
+
+Откройте [`src/modules/checkout/components/payment-wrapper/stripe-wrapper.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/modules/checkout/components/payment-wrapper/stripe-wrapper.tsx) и замените его код следующим:
+
+![Структура каталогов витрины Medusa после изменения файла с обёрткой Stripe](/static/stripe/storefront/src-modules-checkout-components-payment-wrapper-stripe-wrapper.webp)
+
+```tsx title="src/modules/checkout/components/payment-wrapper/stripe-wrapper.tsx"
+"use client"
+
+import type { Stripe, StripeElementsOptions } from "@stripe/stripe-js"
+import { loadStripe } from "@stripe/stripe-js/pure"
+import { Elements } from "@stripe/react-stripe-js"
+import type { HttpTypes } from "@medusajs/types"
+import type { StripeConfig } from "@lib/data/stripe"
+import { toStripeAmount } from "@lib/util/stripe-amount"
+import { createContext, useMemo } from "react"
+
+type StripeWrapperProps = {
+  cart: HttpTypes.StoreCart
+  config: StripeConfig
+  children: React.ReactNode
+}
+
+export const StripeContext = createContext(false)
+
+// One Stripe.js instance per publishable key for the whole visit.
+const stripePromises = new Map<string, Promise<Stripe | null>>()
+
+const stripeFor = (publishableKey: string) => {
+  let promise = stripePromises.get(publishableKey)
+  if (!promise) {
+    promise = loadStripe(publishableKey)
+    stripePromises.set(publishableKey, promise)
+  }
+  return promise
+}
+
+/**
+ * Elements in deferred mode, created with the amount, the currency and the capture method of
+ * the PaymentIntent the backend will create, and without a client secret. Selecting Stripe or
+ * switching methods makes no request. The amount follows the cart, and a wallet updates it
+ * itself while its window is open.
+ */
+const StripeWrapper: React.FC<StripeWrapperProps> = ({
+  cart,
+  config,
+  children,
+}) => {
+  const stripePromise = useMemo(
+    () => stripeFor(config.publishable_key),
+    [config.publishable_key]
+  )
+
+  const options: StripeElementsOptions = {
+    mode: "payment",
+    amount: toStripeAmount(cart.total ?? 0, cart.currency_code),
+    currency: cart.currency_code.toLowerCase(),
+    captureMethod: config.capture_method,
+    ...(config.payment_method_configuration
+      ? { paymentMethodConfiguration: config.payment_method_configuration }
+      : {}),
+  }
+
+  return (
+    <StripeContext.Provider value={true}>
+      <Elements options={options} stripe={stripePromise}>
+        {children}
+      </Elements>
+    </StripeContext.Provider>
+  )
+}
+
+export default StripeWrapper
+```
+
+`StripeWrapper` создаёт Elements в режиме `payment` с суммой и валютой корзины и способом списания из настроек, без client secret. Когда итог корзины меняется, новая сумма попадает в Elements через проп `options`. `StripeContext` сообщает компонентам внутри, что Elements доступны.
+
+Откройте [`src/modules/checkout/components/payment-wrapper/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/modules/checkout/components/payment-wrapper/index.tsx) и замените его код следующим:
+
+![Структура каталогов витрины Medusa после изменения файла с платёжной обёрткой](/static/stripe/storefront/src-modules-checkout-components-payment-wrapper-index.webp)
+
+```tsx title="src/modules/checkout/components/payment-wrapper/index.tsx"
+"use client"
+
+import type React from "react"
+import StripeWrapper from "./stripe-wrapper"
+import type { HttpTypes } from "@medusajs/types"
+import type { StripeConfig } from "@lib/data/stripe"
+
+type PaymentWrapperProps = {
+  cart: HttpTypes.StoreCart
+  /** The Stripe settings, when Stripe is enabled in the cart's region. */
+  stripeConfig: StripeConfig | null
+  children: React.ReactNode
+}
+
+/**
+ * Wraps the whole checkout in the Stripe Elements when the cart's region takes Stripe, so the
+ * card form and the express checkout row share one deferred PaymentIntent setup. The
+ * PaymentIntent is created only when the customer pays.
+ */
+const PaymentWrapper: React.FC<PaymentWrapperProps> = ({
+  cart,
+  stripeConfig,
+  children,
+}) => {
+  if (stripeConfig && (cart.total ?? 0) > 0) {
+    return (
+      <StripeWrapper cart={cart} config={stripeConfig}>
+        {children}
+      </StripeWrapper>
+    )
+  }
+
+  return <div>{children}</div>
+}
+
+export default PaymentWrapper
+```
+
+`PaymentWrapper` теперь получает настройки Stripe пропом и оборачивает оформление заказа в Elements, только если они переданы и в корзине есть что оплачивать.
+
+Откройте [`src/app/[locale]/(checkout)/checkout/page.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/app/[locale]/(checkout)/checkout/page.tsx#L32-L46) и передайте настройки в обёртку:
+
+![Структура каталогов витрины Medusa после изменения файла страницы оформления заказа](/static/stripe/storefront/src-app-locale-checkout-checkout-page.webp)
+
+```tsx title="src/app/[locale]/(checkout)/checkout/page.tsx"
+import { listCartPaymentMethods } from "@lib/data/payment"
+import { getStripeConfig } from "@lib/data/stripe"
+import { isStripeLike } from "@lib/constants"
+// ...
+
+export default async function Checkout() {
+  // ...
+  const [customer, paymentMethods, stripeConfig] = await Promise.all([
+    retrieveCustomer(),
+    listCartPaymentMethods(cart.region?.id ?? ""),
+    getStripeConfig(),
+  ])
+  // the Elements wrap the checkout only where the cart's region takes Stripe
+  const regionTakesStripe = (paymentMethods ?? []).some((method) =>
+    isStripeLike(method.id)
+  )
+
+  return (
+    <PaymentWrapper
+      cart={cart}
+      stripeConfig={regionTakesStripe ? stripeConfig : null}
+    >
+      {/* ... */}
+    </PaymentWrapper>
+  )
+}
+```
+
+Страница загружает настройки на сервере вместе с платёжными провайдерами региона корзины и передаёт их, только если в этом регионе включён Stripe. Поскольку настройки загружает страница, Elements доступны с первой отрисовки, и форма оформления заказа не монтируется дважды.
+
+---
+
+## Шаг 7: Настройте Payment Element
+
+На шаге оплаты показывается Payment Element со способами оплаты вашего аккаунта Stripe.
+
+Откройте [`src/modules/checkout/components/payment-container/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/modules/checkout/components/payment-container/index.tsx#L104-L110) и передайте `PaymentElement` опцию `fields`:
+
+![Структура каталогов витрины Medusa после изменения файла с платёжным контейнером](/static/stripe/storefront/src-modules-checkout-components-payment-container-index.webp)
+
+```tsx title="src/modules/checkout/components/payment-container/index.tsx"
+        <PaymentElement
+          // the checkout already has the billing address and passes it on
+          // when the payment is confirmed
+          options={{
+            layout: "accordion",
+            fields: { billingDetails: { address: "never" } },
+          }}
+          // ...
+        />
+```
+
+Оформление заказа уже спрашивает платёжный адрес, поэтому Payment Element не спрашивает его повторно. Кнопка оплаты передаёт адрес при подтверждении платежа.
+
+---
+
+## Шаг 8: Создайте кнопку оплаты
+
+Именно кнопка оплаты создаёт PaymentIntent.
+
+Откройте [`src/modules/checkout/components/payment-button/providers/stripe.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/modules/checkout/components/payment-button/providers/stripe.tsx) и замените его код следующим:
+
+![Структура каталогов витрины Medusa после изменения файла с кнопкой оплаты Stripe](/static/stripe/storefront/src-modules-checkout-components-payment-button-providers-stripe.webp)
+
+```tsx title="src/modules/checkout/components/payment-button/providers/stripe.tsx" collapsibleLines="1-41"
+"use client"
+
+import { initiatePaymentSession } from "@lib/data/cart"
+import type { HttpTypes } from "@medusajs/types"
+import { useElements, useStripe } from "@stripe/react-stripe-js"
+import type { PaymentMethodCreateParams } from "@stripe/stripe-js"
+import { useLocale } from "next-intl"
+import {
+  PaymentButtonShell,
+  type PaymentProviderButtonProps,
+  usePlaceOrder,
+} from "../shared"
+
+// Both statuses mean the money is secured, whether it is captured now or later.
+const isPaymentSettled = (status?: string) =>
+  status === "requires_capture" || status === "succeeded"
+
+/**
+ * The billing details from the checkout. The Payment Element does not ask for the address
+ * (`fields.billingDetails.address: "never"`), and Stripe then needs every field of it, with
+ * `null` for an empty one.
+ */
+const toBillingDetails = (
+  cart: HttpTypes.StoreCart
+): PaymentMethodCreateParams.BillingDetails => {
+  const address = cart.billing_address
+  const name = [address?.first_name, address?.last_name].filter(Boolean).join(" ")
+  return {
+    name: name || null,
+    email: cart.email ?? null,
+    phone: address?.phone || null,
+    address: {
+      line1: address?.address_1 || null,
+      line2: address?.address_2 || null,
+      city: address?.city || null,
+      state: address?.province || null,
+      postal_code: address?.postal_code || null,
+      country: address?.country_code?.toUpperCase() || null,
+    },
+  } as PaymentMethodCreateParams.BillingDetails
+}
+
+/**
+ * Pays with the Payment Element. The PaymentIntent does not exist until here. The button
+ * validates the form, starts the payment session, which creates the PaymentIntent with the
+ * cart's final amount and delivery address, and confirms it with the session's client secret.
+ */
+const StripePaymentButton = ({
+  cart,
+  providerId,
+  notReady,
+  label,
+  cartUpdating,
+  "data-testid": dataTestId,
+}: PaymentProviderButtonProps & { providerId: string }) => {
+  const locale = useLocale()
+  const stripe = useStripe()
+  const elements = useElements()
+  const {
+    submitting,
+    setSubmitting,
+    errorMessage,
+    setErrorMessage,
+    completeOrder,
+  } = usePlaceOrder()
+
+  const fail = (message?: string | null) => {
+    setErrorMessage(message || null)
+    setSubmitting(false)
+  }
+
+  const handlePayment = async () => {
+    if (!stripe || !elements || !cart || submitting) {
+      return
+    }
+
+    setSubmitting(true)
+    setErrorMessage(null)
+
+    const { error: formError } = await elements.submit()
+    if (formError) {
+      return fail(formError.message)
+    }
+
+    let clientSecret: string | undefined
+    try {
+      const { payment_collection } = await initiatePaymentSession(cart, {
+        provider_id: providerId,
+      })
+      const session = payment_collection?.payment_sessions?.find(
+        (s) => s.provider_id === providerId && s.status === "pending"
+      )
+      clientSecret = session?.data?.client_secret as string | undefined
+    } catch (err) {
+      return fail(err instanceof Error ? err.message : String(err))
+    }
+    if (!clientSecret) {
+      return fail("The payment could not be started.")
+    }
+
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      clientSecret,
+      confirmParams: {
+        return_url: `${window.location.origin}/api/payment-return?cart_id=${cart.id}&locale=${locale}`,
+        payment_method_data: {
+          billing_details: toBillingDetails(cart),
+        },
+      },
+      // Only leave the site when the selected method actually requires it, so
+      // card payments still complete inline.
+      redirect: "if_required",
+    })
+
+    if (error) {
+      if (isPaymentSettled(error.payment_intent?.status)) {
+        return completeOrder()
+      }
+      return fail(error.message)
+    }
+    if (isPaymentSettled(paymentIntent.status)) {
+      return completeOrder()
+    }
+    setSubmitting(false)
+  }
+
+  return (
+    <PaymentButtonShell
+      label={label}
+      onClick={handlePayment}
+      disabled={!stripe || !elements || notReady}
+      loading={submitting || cartUpdating}
+      errorMessage={errorMessage}
+      errorTestId="stripe-payment-error-message"
+      data-testid={dataTestId}
+    />
+  )
+}
+
+export default StripePaymentButton
+```
+
+Когда покупатель нажимает кнопку, она проверяет Payment Element через `elements.submit()`, запускает платёжную сессию и берёт из неё client secret PaymentIntent. Затем `stripe.confirmPayment` подтверждает PaymentIntent с данными формы и платёжным адресом из оформления заказа. Оплата картой завершается на странице, а способ, который перенаправляет покупателя на другой сайт, например iDEAL, возвращает его через `/api/payment-return`. Когда PaymentIntent переходит в `succeeded` или `requires_capture`, кнопка оформляет заказ.
+
+---
+
+## Шаг 9: Зарегистрируйте кнопку оплаты
+
+Диспетчеру кнопок оплаты нужен id провайдера, чтобы запустить сессию Stripe.
+
+Откройте [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L84-L88) и передайте кнопке Stripe `providerId`:
+
+![Структура каталогов витрины Medusa после изменения файла с кнопкой оплаты](/static/stripe/storefront/src-modules-checkout-components-payment-button-index.webp)
+
+```tsx title="src/modules/checkout/components/payment-button/index.tsx"
+// ...
+  switch (true) {
+    case isStripeLike(activePaymentMethod):
+      return (
+        <StripePaymentButton {...providerProps} providerId={activePaymentMethod} />
+      )
+    // ...
+  }
+```
+
+Диспетчер уже выбирает кнопку Stripe для провайдеров, подходящих под `isStripeLike`. Теперь кнопка получает и id провайдера.
+
+---
+
+## Шаг 10: Добавьте Stripe в ряд экспресс-оплаты
+
+Ряд экспресс-оплаты показывает Apple Pay, Google Pay и Link над формой оформления заказа через Express Checkout Element от Stripe. Ряд и его реестр входят в стартер и описаны в разделе [Настройка экспресс-оплаты](/tools/medusa-dtc-starter/setup-express-checkout).
+
+Создайте [`src/modules/checkout/components/express-checkout/buttons/stripe.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/modules/checkout/components/express-checkout/buttons/stripe.tsx) и добавьте следующий код:
+
+![Структура каталогов витрины Medusa после создания файла с кнопкой экспресс-оплаты Stripe](/static/stripe/storefront/src-modules-checkout-components-express-checkout-buttons-stripe.webp)
+
+```tsx title="src/modules/checkout/components/express-checkout/buttons/stripe.tsx" collapsibleLines="1-47"
+"use client"
+
+import {
+  quoteExpressShipping,
+  saveExpressContact,
+  startExpressPayment,
+} from "@lib/data/express-checkout"
+import { toStripeAmount } from "@lib/util/stripe-amount"
+import { StripeContext } from "@modules/checkout/components/payment-wrapper/stripe-wrapper"
+import {
+  ExpressCheckoutElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js"
+import type {
+  ShippingRate,
+  StripeExpressCheckoutElementConfirmEvent,
+  StripeExpressCheckoutElementShippingAddressChangeEvent,
+} from "@stripe/stripe-js"
+import { unstable_rethrow } from "next/navigation"
+import { useLocale, useTranslations } from "next-intl"
+import { useContext, useEffect, useRef } from "react"
+import type { ExpressButtonProps } from "../registry"
+
+/**
+ * True for the control-flow error a placed order's `redirect()` throws. The router follows
+ * the redirect on its own, so the handler returns instead of reporting a failure over the
+ * placed order.
+ */
+const isNavigation = (error: unknown) => {
+  try {
+    unstable_rethrow(error)
+    return false
+  } catch {
+    return true
+  }
+}
+
+// Both statuses mean the money is secured, whether it is captured now or later.
+const isPaymentSettled = (status?: string) =>
+  status === "requires_capture" || status === "succeeded"
+
+const splitName = (name?: string | null) => {
+  const [first = "", ...rest] = (name ?? "").trim().split(/\s+/)
+  return { first_name: first, last_name: rest.join(" ") }
+}
+
+function StripeWalletButton({
+  cart,
+  providerId,
+  shippingOptionId,
+  onUnavailable,
+  onError,
+  onBusy,
+  placeOrder,
+  onClosed,
+}: ExpressButtonProps) {
+  const t = useTranslations("CheckoutPage")
+  const locale = useLocale()
+  const stripe = useStripe()
+  const elements = useElements()
+  const currency = cart.currency_code
+  // what the wallet sheet shows, the quoted shipping and the total the customer approves
+  const rateRef = useRef<ShippingRate | null>(null)
+  const shownTotalRef = useRef<number | undefined>(undefined)
+
+  const currentShipping = cart.shipping_methods?.at(-1)
+  const initialRate: ShippingRate = {
+    id: currentShipping?.shipping_option_id ?? "shipping",
+    displayName: currentShipping?.name ?? t("shippingCost"),
+    amount: toStripeAmount(currentShipping?.amount ?? 0, currency),
+  }
+
+  const fail = (
+    event: StripeExpressCheckoutElementConfirmEvent,
+    error: Parameters<ExpressButtonProps["onError"]>[0]
+  ) => {
+    event.paymentFailed({ reason: "fail" })
+    onError(error)
+    onBusy(false)
+    onClosed()
+  }
+
+  const handleShippingAddressChange = async (
+    event: StripeExpressCheckoutElementShippingAddressChangeEvent
+  ) => {
+    try {
+      // the wallet shares only the city, region, postal code and country before payment
+      const quote = await quoteExpressShipping(
+        {
+          country_code: event.address.country,
+          province: event.address.state,
+          city: event.address.city,
+          postal_code: event.address.postal_code,
+        },
+        rateRef.current?.id ?? shippingOptionId
+      )
+      if (!quote.ok) {
+        return event.reject()
+      }
+      rateRef.current = {
+        id: quote.shipping_option_id,
+        displayName: quote.shipping_option_name,
+        amount: toStripeAmount(quote.shipping_total, quote.currency_code),
+      }
+      shownTotalRef.current = quote.total
+      elements?.update({ amount: toStripeAmount(quote.total, quote.currency_code) })
+      event.resolve({ shippingRates: [rateRef.current] })
+    } catch {
+      event.reject()
+    }
+  }
+
+  const handleConfirm = async (event: StripeExpressCheckoutElementConfirmEvent) => {
+    if (!stripe || !elements) {
+      return fail(event, { code: "failed" })
+    }
+    onBusy(true)
+
+    const { error: formError } = await elements.submit()
+    if (formError) {
+      return fail(event, { code: "failed", cause: formError })
+    }
+
+    try {
+      const address = event.shippingAddress?.address
+      // the full address arrives only now, after the customer approved the payment
+      const saved = await saveExpressContact(
+        {
+          email: event.billingDetails?.email,
+          phone: event.billingDetails?.phone,
+          shipping_address: address
+            ? {
+                ...splitName(event.shippingAddress?.name),
+                address_1: address.line1,
+                address_2: address.line2,
+                city: address.city,
+                province: address.state,
+                postal_code: address.postal_code,
+                country_code: address.country,
+              }
+            : null,
+        },
+        rateRef.current?.id ?? shippingOptionId,
+        shownTotalRef.current
+      )
+      if (!saved.ok) {
+        // no PaymentIntent exists yet, so nothing was charged
+        return fail(
+          event,
+          saved.reason === "totalChanged"
+            ? { code: "totalChanged", total: saved.total, currency_code: saved.currency_code }
+            : { code: saved.reason }
+        )
+      }
+
+      // the wallet sends its delivery address with the confirmation, so the provider sets none
+      const session = await startExpressPayment(providerId, { express: true })
+      const clientSecret = session.client_secret
+      if (typeof clientSecret !== "string") {
+        return fail(event, { code: "failed" })
+      }
+
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        clientSecret,
+        confirmParams: {
+          return_url: `${window.location.origin}/api/payment-return?cart_id=${cart.id}&locale=${locale}`,
+        },
+        redirect: "if_required",
+      })
+      const status = error ? error.payment_intent?.status : paymentIntent.status
+      if (!isPaymentSettled(status)) {
+        onError({ code: "failed", cause: error })
+        onBusy(false)
+        onClosed()
+        return
+      }
+      await placeOrder()
+    } catch (err) {
+      if (isNavigation(err)) return
+      onError({ code: "failed", cause: err })
+      onBusy(false)
+      onClosed()
+    }
+  }
+
+  return (
+    // `isolate` keeps the wallet iframes under the checkout modals
+    <div className="isolate">
+      <ExpressCheckoutElement
+        options={{
+          emailRequired: true,
+          phoneNumberRequired: true,
+          shippingAddressRequired: true,
+          allowedShippingCountries: (cart.region?.countries ?? [])
+            .map((country) => country.iso_2?.toUpperCase())
+            .filter((code): code is string => Boolean(code)),
+          // PayPal has its own plugin, and Klarna and Amazon Pay need the pre-authorized
+          // amount to match the final one
+          paymentMethods: {
+            applePay: "auto",
+            googlePay: "auto",
+            link: "auto",
+            paypal: "never",
+            klarna: "never",
+            amazonPay: "never",
+          },
+          buttonHeight: 48,
+          layout: { maxColumns: 3, overflow: "never" },
+        }}
+        onReady={({ availablePaymentMethods }) => {
+          if (!availablePaymentMethods) onUnavailable()
+        }}
+        onLoadError={() => onUnavailable()}
+        onClick={(event) => {
+          // resolved within Stripe's one second, so nothing here waits on the server
+          onError(null)
+          rateRef.current = null
+          shownTotalRef.current = undefined
+          event.resolve({ shippingRates: [initialRate] })
+        }}
+        onShippingAddressChange={handleShippingAddressChange}
+        onShippingRateChange={(event) => event.resolve()}
+        onConfirm={handleConfirm}
+        onCancel={() => {
+          onBusy(false)
+          onClosed()
+        }}
+      />
+    </div>
+  )
+}
+
+/** Tells the row there is no Stripe button where the checkout is not inside the Stripe Elements. */
+function Unavailable({ onMount }: { onMount: () => void }) {
+  useEffect(onMount, [onMount])
+  return null
+}
+
+/**
+ * Apple Pay, Google Pay and Link in the express checkout row. The customer picks the address
+ * in the wallet, the row answers with the shipping and the new total, and the PaymentIntent is
+ * created and confirmed once they approve.
+ */
+export default function StripeExpressButton(props: ExpressButtonProps) {
+  const insideElements = useContext(StripeContext)
+  if (!insideElements) {
+    return <Unavailable onMount={props.onUnavailable} />
+  }
+  return <StripeWalletButton {...props} />
+}
+```
+
+Кнопка отвечает на события кошелька функциями из `src/lib/data/express-checkout.ts`:
+
+- На `click` кнопка сразу вызывает `event.resolve()` с доставкой, выбранной в оформлении заказа, потому что Stripe ждёт ответа одну секунду.
+- `shippingaddresschange` передаёт город, регион, индекс и страну. `quoteExpressShipping` записывает их в корзину вместе со способом доставки, а кнопка обновляет сумму в Elements и тариф доставки в кошельке. Кнопка отклоняет страну, в которую регион не доставляет.
+- `confirm` передаёт полный адрес, email и телефон. `saveExpressContact` сохраняет их в корзину и отказывает, если доставка по полному адресу подняла итог выше одобренного покупателем, ещё до списания. Затем `startExpressPayment` запускает сессию с `express: true` без обновления страницы, а `stripe.confirmPayment` подтверждает PaymentIntent. Кошелёк передаёт адрес доставки вместе с подтверждением, а Stripe не даёт изменить адрес, который уже записал бэкенд, поэтому для экспресс-оплаты провайдер адрес не записывает.
+- При `cancel` ряд обновляет оформление заказа, потому что в корзине уже может быть адрес из кошелька.
+
+Кошельки появляются только на домене, зарегистрированном в Stripe, как описано в разделе [Регистрация доменов для кошельков](/medusa-integrations/stripe/getting-started#регистрация-доменов-для-кошельков). Если в регионе корзины нет Stripe, у оформления заказа нет Elements, и кнопка сообщает ряду, что недоступна.
+
+Откройте [`src/modules/checkout/components/express-checkout/registry.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/src/modules/checkout/components/express-checkout/registry.ts#L43-L48) и добавьте кнопку в реестр:
+
+![Структура каталогов витрины Medusa после изменения файла с реестром экспресс-оплаты](/static/stripe/storefront/src-modules-checkout-components-express-checkout-registry.webp)
+
+```ts title="src/modules/checkout/components/express-checkout/registry.ts"
+import StripeExpressButton from "./buttons/stripe"
+
+// ...
+
+export const expressButtons: {
+  match: (providerId: string) => boolean
+  Component: ComponentType<ExpressButtonProps>
+}[] = [
+  { match: (providerId) => Boolean(isStripeLike(providerId)), Component: StripeExpressButton },
+]
+```
+
+Ряд показывает кнопку, когда в регионе корзины есть провайдер, подходящий под `isStripeLike`.
+
+---
+
+## Шаг 11: Добавьте подписи провайдера в локали витрины
+
+Измените `pp_stripe_stripe` в [`messages/ru.json`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/apps/storefront/messages/ru.json#L528-L531) и в каждой другой локали под `messages/`:
+
+```json title="messages/ru.json"
+{
+  "PaymentMethods": {
+    // ...
+    "pp_stripe_stripe": {
+      "title": "Stripe",
+      "subtitle": "Карты, кошельки"
+    }
+  }
+}
+```
+
+Если для локали нет записи, используются английские `title` и `subtitle` из `paymentInfoMap` в [Шаге 2](#шаг-2-настройте-платёжный-провайдер).
+
+---
+
+## Полный пример кода интеграции в витрину
+
+Полный код витрины находится в [`examples/payment-stripe/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-stripe/apps/storefront), собранной на основе [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter). В [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-stripe/README.md#what-the-example-adds-to-the-starter) примера перечислены все файлы, из которых состоит интеграция, включая бэкенд.

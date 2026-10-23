@@ -1,0 +1,57 @@
+---
+title: "Платежи Stripe для Medusa"
+description: "Плагин Medusa для приёма платежей через Stripe, с Apple Pay, Google Pay и Link в экспресс-оплате."
+---
+
+<div>
+  <img alt="Логотип Medusa-Stripe" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/stripe-medusa-logo.svg" width="270"/>
+</div>
+
+# {frontmatter.title}
+
+Плагин Medusa для приёма платежей через Stripe. Он заменяет встроенный провайдер Stripe в Medusa под тем же ID провайдера, поэтому платежи, созданные встроенным провайдером, после перехода по-прежнему списываются и возвращаются.
+
+## Возможности плагина
+
+- **Одно- и двухстадийная оплата:** Автосписание или авторизация с холдированием и списанием из заказа.
+- **Способы оплаты из аккаунта Stripe:** Карты, кошельки и локальные способы вроде iDEAL или Bancontact, как они включены в Stripe Dashboard или в конфигурации способов оплаты.
+- **Экспресс-оплата:** Apple Pay, Google Pay и Link в ряду экспресс-оплаты [Medusa DTC Starter от Gorgo](/tools/medusa-dtc-starter), с пересчётом доставки для адреса, выбранного в кошельке.
+- **Отложенный PaymentIntent:** PaymentIntent создаётся в момент оплаты, с итоговой суммой и адресом доставки из корзины.
+- **Возвраты и отмены:** Частичные возвраты и отмена авторизованных платежей.
+- **Вебхук-уведомления:** Подписанные события Stripe создают заказ, если покупатель ушёл до того, как его оформила витрина.
+- **Сохранённые карты:** Профиль в Stripe для каждого зарегистрированного покупателя и его сохранённые способы оплаты.
+- **Замена без миграции:** Тот же провайдер `pp_stripe_stripe` и тот же URL вебхука, что у `@medusajs/payment-stripe` из Medusa.
+- **Тесты:** Юнит-тесты на каждый метод провайдера и интеграционные тесты на весь цикл оплаты в Medusa.
+- **Пример витрины магазина:** Готовый <a href="https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-stripe/apps/storefront" target="_blank">пример витрины на Next.js</a> для использования как референс.
+- **[Модуль интеграций](/medusa-modules/integration)**<AccentBadge badge="New" />: Настройте плагин прямо в приложении Medusa Admin – без редактирования конфигурационных файлов и повторного развёртывания магазина.
+
+<Note type="default" title="Что такое Модуль интеграций?">Модуль интеграций позволяет любому плагину описывать свои параметры в виде схемы и даёт администратору магазина настраивать их в Medusa Admin, без правок `medusa-config` и без повторного развёртывания. UI, хранение, шифрование и валидацию модуль берёт на себя. Читайте подробнее в [этой документации](/medusa-modules/integration).</Note>
+
+---
+
+## Что такое Stripe
+
+Платёжная платформа Stripe принимает для онлайн-бизнеса карты, кошельки вроде Apple Pay и Google Pay и локальные способы оплаты в <a href="https://docs.stripe.com/currencies" target="_blank">более чем 130 валютах</a>. Подробнее на <a href="https://stripe.com/" target="_blank">сайте Stripe</a>.
+
+---
+
+## Разработчикам
+
+<CardList items={[
+  {
+    title: "Развёртывание окружения для разработки",
+    href: "https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-stripe"
+  },
+  {
+    title: "История изменений",
+    href: "/medusa-integrations/stripe/changelog"
+  }
+]}/>
+
+---
+
+## 💬  Поддержка и сообщество
+
+Есть вопросы по плагину или идеи? Пишите в чат поддержки в Telegram – [@gorgojs_chat](https://t.me/gorgojs_chat)
+
+Общайтесь с другими разработчиками Medusa в Telegram – [@medusajs_chat](https://t.me/medusajs_chat)
