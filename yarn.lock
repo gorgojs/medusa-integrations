@@ -2266,6 +2266,47 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gorgo/medusa-payment-stripe@workspace:*, @gorgo/medusa-payment-stripe@workspace:packages/providers/payment-stripe":
+  version: 0.0.0-use.local
+  resolution: "@gorgo/medusa-payment-stripe@workspace:packages/providers/payment-stripe"
+  dependencies:
+    "@gorgo/medusa-integration": "npm:^0.2.4"
+    "@gorgo/telemetry": "npm:^1.4.0"
+    "@medusajs/admin-sdk": "npm:^2.17.2"
+    "@medusajs/cli": "npm:^2.17.2"
+    "@medusajs/framework": "npm:^2.17.2"
+    "@medusajs/icons": "npm:^2.17.2"
+    "@medusajs/medusa": "npm:^2.17.2"
+    "@medusajs/test-utils": "npm:^2.17.2"
+    "@medusajs/ui": "npm:^4.1.15"
+    "@swc/core": "npm:^1.7.28"
+    "@swc/jest": "npm:^0.2.36"
+    "@types/jest": "npm:^29.5.13"
+    "@types/node": "npm:^22.13.11"
+    "@types/react": "npm:^18.3.2"
+    "@types/react-dom": "npm:^18.2.25"
+    jest: "npm:^29.7.0"
+    msw: "npm:^2.7.0"
+    prop-types: "npm:^15.8.1"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    stripe: "npm:23.0.0"
+    ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.8.2"
+    vite: "npm:^7.3.6"
+    yalc: "npm:^1.0.0-pre.53"
+  peerDependencies:
+    "@gorgo/medusa-integration": ">=0.1.5 <1.0.0"
+    "@medusajs/admin-sdk": ^2.17.2
+    "@medusajs/cli": ^2.17.2
+    "@medusajs/framework": ^2.17.2
+    "@medusajs/icons": ^2.17.2
+    "@medusajs/medusa": ^2.17.2
+    "@medusajs/test-utils": ^2.17.2
+    "@medusajs/ui": ^4.1.16
+  languageName: unknown
+  linkType: soft
+
 "@gorgo/medusa-payment-tkassa@workspace:*, @gorgo/medusa-payment-tkassa@workspace:packages/providers/payment-tkassa":
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-payment-tkassa@workspace:packages/providers/payment-tkassa"
@@ -15911,6 +15952,18 @@ __metadata:
     "@types/node":
       optional: true
   checksum: 10c0/d1f6412373962a585f877af6b5933a000573dad1b0c5fe3937633ccb7117764ad46c8fb565431d846ac08f32811c150ffdce3a273717905a983e416ea131091f
+  languageName: node
+  linkType: hard
+
+"stripe@npm:23.0.0":
+  version: 23.0.0
+  resolution: "stripe@npm:23.0.0"
+  peerDependencies:
+    "@types/node": ">=20"
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+  checksum: 10c0/08f30d511ade3161067f70d7802fe9d9a39df05fdef68d699be9842cd352503183bf07ff06113c033bcdac47fb8af1fbbeff80b34202701f7258fc23490e7822
   languageName: node
   linkType: hard
 

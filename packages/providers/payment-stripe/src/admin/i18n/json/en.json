@@ -1,0 +1,35 @@
+{
+  "stripe": {
+    "name": "Stripe",
+    "description": "Stripe payment system",
+    "sections": {
+      "credentials": "Credentials",
+      "behavior": "Behavior",
+      "checkout": "Payment details"
+    },
+    "fields": {
+      "secretKey": "Secret key",
+      "publishableKey": "Publishable key",
+      "webhookSecret": "Webhook signing secret",
+      "capture": "Payment capture",
+      "paymentMethodConfiguration": "Payment method configuration",
+      "paymentDescription": "Payment description",
+      "statementDescriptorSuffix": "Card statement text",
+      "sendReceiptEmail": "Receipt email"
+    },
+    "hints": {
+      "secretKey": "From Developers → API keys in the Stripe Dashboard. A key starting with sk_test_ takes test payments, sk_live_ takes real ones.",
+      "publishableKey": "Shown next to the secret key in the Stripe Dashboard. The storefront loads the Stripe payment form with it. Use a key of the same mode as the secret key.",
+      "webhookSecret": "Verifies Stripe webhook notifications. Shown on the webhook endpoint that sends payment_intent.succeeded and payment_intent.amount_capturable_updated to /hooks/payment/stripe_<id> on your backend.",
+      "capture": "With Capture right away, the payment is one-stage and the money is debited right away. With Authorize only, it is two-stage and the amount is held until you capture it. If the amount is not captured within 7 days, Stripe releases the hold on the card.",
+      "paymentMethodConfiguration": "The ID of a payment method configuration from Settings → Payment methods in the Stripe Dashboard. Without it, your account's default configuration decides which payment methods the customer sees.",
+      "paymentDescription": "Shown on the payment in the Stripe Dashboard.",
+      "statementDescriptorSuffix": "Added after the prefix from your Stripe account settings on the customer's card statement. Latin letters only, and 22 characters at most together with the prefix.",
+      "sendReceiptEmail": "In live mode, Stripe emails a receipt to the email the customer gave at checkout."
+    },
+    "captures": {
+      "automatic": "Capture right away",
+      "manual": "Authorize only"
+    }
+  }
+}
