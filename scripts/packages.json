@@ -62,6 +62,15 @@
       }
     ]
   },
+  "payment-stripe": {
+    "dir": "packages/providers/payment-stripe",
+    "examples": [
+      {
+        "dir": "examples/payment-stripe",
+        "it": "payment-stripe"
+      }
+    ]
+  },
   "payment-yookassa": {
     "dir": "packages/providers/payment-yookassa",
     "examples": [
