@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "クレジットカード",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "カード、ウォレット"
     },
     "pp_system_default": {
       "title": "手動決済"

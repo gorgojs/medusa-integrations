@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "Carte bancaire",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "Cartes, portefeuilles"
     },
     "pp_system_default": {
       "title": "Paiement manuel"

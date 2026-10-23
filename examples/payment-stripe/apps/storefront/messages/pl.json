@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "Karta płatnicza",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "Karty, portfele"
     },
     "pp_system_default": {
       "title": "Płatność ręczna"

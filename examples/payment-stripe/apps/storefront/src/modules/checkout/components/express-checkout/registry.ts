@@ -1,5 +1,7 @@
+import { isStripeLike } from "@lib/constants"
 import type { HttpTypes } from "@medusajs/types"
 import type { ComponentType } from "react"
+import StripeExpressButton from "./buttons/stripe"
 
 /**
  * What went wrong in a wallet, as a code the row translates. `failed` carries
@@ -41,4 +43,6 @@ export type ExpressButtonProps = {
 export const expressButtons: {
   match: (providerId: string) => boolean
   Component: ComponentType<ExpressButtonProps>
-}[] = []
+}[] = [
+  { match: (providerId) => Boolean(isStripeLike(providerId)), Component: StripeExpressButton },
+]
