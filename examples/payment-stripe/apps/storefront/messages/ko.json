@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "신용카드",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "카드, 지갑"
     },
     "pp_system_default": {
       "title": "수동 결제"

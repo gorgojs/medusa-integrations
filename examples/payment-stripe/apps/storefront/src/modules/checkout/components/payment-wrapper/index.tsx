@@ -1,44 +1,30 @@
 "use client"
 
-import { loadStripe } from "@stripe/stripe-js/pure"
 import type React from "react"
 import StripeWrapper from "./stripe-wrapper"
 import type { HttpTypes } from "@medusajs/types"
-import { isStripeLike } from "@lib/constants"
+import type { StripeConfig } from "@lib/data/stripe"
 
 type PaymentWrapperProps = {
   cart: HttpTypes.StoreCart
+  /** The Stripe settings, when Stripe is enabled in the cart's region. */
+  stripeConfig: StripeConfig | null
   children: React.ReactNode
 }
 
-const stripeKey =
-  process.env.NEXT_PUBLIC_STRIPE_KEY ||
-  process.env.NEXT_PUBLIC_MEDUSA_PAYMENTS_PUBLISHABLE_KEY
-
-const medusaAccountId = process.env.NEXT_PUBLIC_MEDUSA_PAYMENTS_ACCOUNT_ID
-const stripePromise = stripeKey
-  ? loadStripe(
-      stripeKey,
-      medusaAccountId ? { stripeAccount: medusaAccountId } : undefined
-    )
-  : null
-
-const PaymentWrapper: React.FC<PaymentWrapperProps> = ({ cart, children }) => {
-  const paymentSession = cart.payment_collection?.payment_sessions?.find(
-    (s) => s.status === "pending"
-  )
-
-  if (
-    isStripeLike(paymentSession?.provider_id) &&
-    paymentSession &&
-    stripePromise
-  ) {
+/**
+ * Wraps the whole checkout in the Stripe Elements when the cart's region takes Stripe, so the
+ * card form and the express checkout row share one deferred PaymentIntent setup. The
+ * PaymentIntent is created only when the customer pays.
+ */
+const PaymentWrapper: React.FC<PaymentWrapperProps> = ({
+  cart,
+  stripeConfig,
+  children,
+}) => {
+  if (stripeConfig && (cart.total ?? 0) > 0) {
     return (
-      <StripeWrapper
-        paymentSession={paymentSession}
-        stripeKey={stripeKey}
-        stripePromise={stripePromise}
-      >
+      <StripeWrapper cart={cart} config={stripeConfig}>
         {children}
       </StripeWrapper>
     )

@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "Credit card",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "Cards, wallets"
     },
     "pp_system_default": {
       "title": "Manual payment"

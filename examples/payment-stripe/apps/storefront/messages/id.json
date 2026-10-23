@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "Kartu kredit",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "Kartu, dompet"
     },
     "pp_system_default": {
       "title": "Pembayaran manual"
