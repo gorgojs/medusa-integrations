@@ -1,0 +1,103 @@
+---
+title: "Manage Stripe Settings in Medusa Admin"
+description: "Learn how to view and edit Stripe integration settings in Medusa Admin through the Integration Module."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to view and edit Stripe integration settings in Medusa Admin via the [Integration Module](/medusa-modules/integration).
+
+## View Stripe Details
+
+To view the Stripe details:
+
+1. Open Medusa Admin.
+2. Go to **Settings → Integrations → Stripe**.
+
+This opens the Stripe settings page where you can review the credential details, the payment capture and the payment details.
+
+![Stripe settings overview](/static/stripe/en/settings-overview.webp)
+
+---
+
+## Edit Stripe Credential Parameters
+
+You can update the secret key, the publishable key and the webhook signing secret from the first section on the Stripe settings page. A key's prefix sets its mode, so keys starting with `sk_test_` and `pk_test_` take test payments, and keys starting with `sk_live_` and `pk_live_` take real ones. Both keys come from <a href="https://dashboard.stripe.com/apikeys" target="_blank">API keys</a> in the Stripe Dashboard, and a restricted key starting with `rk_` works in place of the secret key.
+
+To edit the credential parameters:
+
+1. Go to **Settings → Integrations → Stripe**.
+2. In the **Credentials** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the secret key, the publishable key and the webhook signing secret. See [Webhook Setup](/medusa-integrations/stripe/getting-started#webhook-setup) for where the signing secret comes from.
+5. Click **Save**.
+
+![Edit Stripe credential details](/static/stripe/en/edit-credential.webp)
+
+The settings refuse a publishable key whose mode differs from the secret key's, since the storefront would then show a payment form of the other mode.
+
+Then click **Test connection**. It calls Stripe with the secret key, so a wrong key, or a restricted key that may not read PaymentIntents, fails here. With a signing secret, it also checks that an enabled webhook endpoint whose URL contains `/hooks/payment/stripe_` exists in the key's mode and sends `payment_intent.succeeded` and `payment_intent.amount_capturable_updated`. A restricted key that may not read webhook endpoints skips this check.
+
+---
+
+## Edit Behavior Type
+
+The **Behavior** section determines the payments processing type.
+
+If **Capture right away** is selected, one-step payment is used. If **Authorize only** is selected, two-step payment is used, and you capture the held amount from the order in Medusa Admin. If the amount is not captured within 7 days, Stripe releases the hold on the card.
+
+To edit the payment behavior:
+
+1. Go to **Settings → Integrations → Stripe**.
+2. In the **Behavior** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the payment capture.
+5. Click **Save**.
+
+![Edit behavior type](/static/stripe/en/edit-behavior.webp)
+
+<Note type="warning">A capture always takes the whole authorized amount. Medusa does not pass the amount of a capture to the plugin, so capturing part of a payment in Medusa Admin still captures all of it in Stripe. Capture the full amount, and refund the difference if you need to.</Note>
+
+---
+
+## Edit Payment Details
+
+The **Payment details** section determines how the payments look in Stripe and on the customer's side.
+
+- **Payment method configuration** is the ID of a configuration from <a href="https://dashboard.stripe.com/settings/payment_methods" target="_blank">Payment methods</a> in the Stripe Dashboard, starting with `pmc_`. Without it, the default configuration of your account decides which payment methods the customer sees.
+- **Payment description** is shown on the payment in the Stripe Dashboard.
+- **Card statement text** is added after the prefix from your Stripe account settings on the customer's card statement. Stripe takes Latin characters only, with at least one letter and without `<`, `>`, `\`, `'`, `"` or `*`, and the prefix and the text together show 22 characters at most.
+- **Receipt email** makes Stripe email a receipt in live mode to the address the customer gave at checkout.
+
+To edit the payment details:
+
+1. Go to **Settings → Integrations → Stripe**.
+2. In the **Payment details** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the payment method configuration, the payment description, the card statement text and the receipt email switch.
+5. Click **Save**.
+
+![Edit Stripe payment details](/static/stripe/en/edit-payment-details.webp)
+
+---
+
+## Add Payment Provider
+
+To add a payment provider displayed in the Storefront for Stripe:
+
+1. Go to **Settings → Regions**.
+2. Choose your region.
+3. In the first section, click the action menu in the section's header.
+4. Choose **Edit**.
+5. In the modal that opens, add **Stripe (STRIPE)** to Payment Providers.
+6. Click **Save**.
+
+![Add payment provider](/static/stripe/en/add-payment-provider.webp)
+
+Add Stripe only to regions that use one of the <a href="https://docs.stripe.com/currencies" target="_blank">currencies Stripe accepts</a>. In the three-decimal currencies, BHD, JOD, KWD, OMR and TND, Stripe takes amounts that end in 0, so the plugin rounds the total to a hundredth, and a 5.124 KWD order is charged 5.120 KWD.
+
+---
+
+## Refunds and Disputes in the Stripe Dashboard
+
+Make refunds from the order in Medusa Admin. A refund made in the Stripe Dashboard, and a dispute the customer opens with their bank, do not reach Medusa, and the order keeps its amounts. If you also subscribe the webhook endpoint to `refund.created`, `refund.failed` and `charge.dispute.created`, the plugin writes these refunds and disputes to the log, so you can find them there. It also logs a warning when Stripe fails a refund made from Medusa Admin, since the order already counts that money as returned. Refund the customer again in the Stripe Dashboard then.

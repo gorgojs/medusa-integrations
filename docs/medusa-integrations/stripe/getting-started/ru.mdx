@@ -1,0 +1,164 @@
+---
+title: "Начало работы со Stripe для Medusa"
+description: "Узнайте, как установить и настроить платёжный провайдер Stripe для Medusa."
+---
+
+# {frontmatter.title}
+
+В этом руководстве вы узнаете, как установить и настроить платёжный провайдер Stripe для Medusa, подключить вебхук и домены для кошельков и перейти со встроенного провайдера Stripe в Medusa.
+
+## Требования
+
+- Medusa v2.17.2 или новее
+- Node.js v20.19 или новее, либо v22.12 или новее
+- Аккаунт Stripe – [войдите или создайте](https://dashboard.stripe.com/register). Stripe работает только с компаниями из <a href="https://stripe.com/global" target="_blank">поддерживаемых стран</a>
+- [Модуль интеграций](/medusa-modules/integration)
+
+---
+
+## Установка
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-stripe
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-stripe
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Добавьте конфигурацию провайдера модуля интеграций и платёжного модуля Medusa в файл `medusa-config.ts` приложения Medusa Admin:
+
+```ts title="medusa-config.ts"
+// ...
+const STRIPE_INTEGRATION_ID = "stripe-1"
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-stripe/providers/integration-stripe",
+            id: STRIPE_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-stripe",
+      options: {},
+    },
+  ],
+  modules: [
+    // ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-stripe/providers/payment-stripe",
+            id: "stripe",
+            options: {
+              id: STRIPE_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Зарегистрированный так платёжный провайдер получает id `pp_stripe_stripe`, а его роут вебхука `/hooks/payment/stripe_stripe`.
+
+Добавьте переменную окружения с секретным ключом шифрования:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Параметры провайдера
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Суффикс в итоговом ключе `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый уникальным.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+Секретный ключ, публикуемый ключ и остальные настройки Stripe не входят в параметры провайдера. Их вы вводите в Medusa Admin, как описано в разделе [Управление настройками Stripe в Medusa Admin](/medusa-integrations/stripe/settings).
+
+---
+
+## Настройка вебхуков
+
+Чтобы обрабатывать уведомления Stripe о платежах, добавьте эндпоинт вебхука для вашего магазина в Stripe Dashboard:
+
+1. Откройте <a href="https://dashboard.stripe.com/webhooks" target="_blank">Webhooks</a> в Stripe Dashboard в тестовом или live-режиме, которому соответствуют ваши ключи.
+
+2. Добавьте эндпоинт с URL в следующем формате:
+    ```text title="Webhook URL"
+    https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/stripe_stripe
+    ```
+    Замените `{YOUR_MEDUSA_DOMAIN}` на домен вашего магазина Medusa.
+
+3. Выберите события `payment_intent.succeeded` и `payment_intent.amount_capturable_updated` и сохраните эндпоинт.
+
+4. Откройте секрет подписи эндпоинта, он начинается с `whsec_`, и введите его в поле **Секрет подписи вебхука** в настройках Stripe в Medusa Admin. Кнопка **Проверить соединение** затем проверяет, что в этом режиме есть включённый эндпоинт с `/hooks/payment/stripe_` в URL, который отправляет оба события.
+
+При разработке <a href="https://docs.stripe.com/stripe-cli" target="_blank">Stripe CLI</a> пересылает события на локальный бэкенд и печатает секрет подписи, который нужно ввести:
+
+```bash
+stripe listen --forward-to localhost:9000/hooks/payment/stripe_stripe
+```
+
+<Note type="warning">Без секрета подписи плагин не может проверить вебхуки Stripe и игнорирует их. Платежи проходят, но заказ, который витрина не оформила, например потому что покупатель закрыл вкладку после оплаты, остаётся неоформленным.</Note>
+
+---
+
+## Регистрация доменов для кошельков
+
+Apple Pay, Google Pay и Link показываются только на доменах, зарегистрированных в Stripe. Зарегистрируйте каждый домен и поддомен, на котором открывается оформление заказа, по руководству Stripe о <a href="https://docs.stripe.com/payments/payment-methods/pmd-registration" target="_blank">регистрации доменов для способов оплаты</a>. Домен, зарегистрированный в live-режиме, регистрируется и в тестовом.
+
+Пока домен не зарегистрирован, кошельки скрыты, и в ряду экспресс-оплаты нет кнопки Stripe.
+
+---
+
+## Переход со встроенного провайдера Stripe
+
+Плагин регистрируется под тем же id провайдера и URL вебхука, что встроенный `@medusajs/payment-stripe` из Medusa, поэтому заменяет его без миграции данных. Платежи, сессии и сохранённые карты, созданные встроенным провайдером, остаются в базе, и плагин списывает, возвращает и отменяет эти платежи.
+
+Чтобы перейти:
+
+1. Замените `@medusajs/medusa/payment-stripe` в `providers` платёжного модуля на `@gorgo/medusa-payment-stripe/providers/payment-stripe`, сохранив `id: "stripe"`, и зарегистрируйте интеграционный провайдер, как показано в разделе [Настройка](#настройка). Оставьте только один из двух провайдеров с `id: "stripe"`.
+
+2. Введите ключи в Medusa Admin. Встроенный провайдер брал `apiKey` и `webhookSecret` из `medusa-config.ts`, а плагин берёт их из своих настроек.
+
+3. Выберите **Способ списания** в настройках. Встроенный провайдер по умолчанию только авторизует платёж, а его опция `capture: true` соответствует **Списать сразу**.
+
+4. Оставьте эндпоинт вебхука, который уже есть в Stripe Dashboard, без изменений, потому что URL остаётся `/hooks/payment/stripe_stripe`, и введите его секрет подписи в настройках.
+
+Встроенный провайдер регистрировал ещё по провайдеру на способ оплаты, например `stripe-ideal` или `stripe-bancontact`. У плагина один провайдер, а Payment Element показывает способы, которые включены в вашем аккаунте Stripe или в конфигурации способов оплаты, в том числе iDEAL и Bancontact. BLIK Stripe не принимает для PaymentIntent, созданного в момент оплаты, как сказано в его руководстве о <a href="https://docs.stripe.com/payments/accept-a-payment-deferred" target="_blank">сборе данных оплаты до создания Intent</a>, поэтому он недоступен.
