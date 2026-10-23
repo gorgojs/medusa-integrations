@@ -73,7 +73,7 @@ A button talks to Medusa through the server actions in `src/lib/data/express-che
 
 | Action | What it does |
 |---|---|
-| `quoteExpressShipping` | Puts the address the wallet shares before payment on the cart, checks that the cart's region ships to its country, and picks the shipping. It keeps the option the checkout selected when it still fits, otherwise the first in the order the checkout offers them, skipping pickup and options priced by a choice the customer has to make |
+| `quoteExpressShipping` | Puts the address the wallet shares before payment on the cart, checks that the cart's region ships to its country, and picks the shipping. It keeps the option the checkout selected when it still fits, otherwise the first in the order the checkout offers them, skipping pickup and options priced by a choice the customer has to make. Returns the new total with the option's name and price, for a wallet that lists the shipping it charges |
 | `saveExpressContact` | Saves the email, the phone and the full address the wallet shares after payment, sets the shipping again, and refuses a total above `approvedTotal`, the amount the customer approved in the wallet |
 | `startExpressPayment` | Starts the payment session the wallet pays and returns its data. With `reuseKey`, it keeps a pending session that already holds the same value, for example the same wallet order |
 | `revalidateExpressCheckout` | Renders the checkout again with the cart as it is now |
@@ -82,7 +82,7 @@ A button talks to Medusa through the server actions in `src/lib/data/express-che
 
 To add a button for a payment provider:
 
-1. Create a component under `src/modules/checkout/components/express-checkout/buttons/`, taking `ExpressButtonProps`. Start the payment session with `startExpressPayment` when the customer clicks, answer the wallet's address changes with `quoteExpressShipping`, and once the customer pays, save the contact with `saveExpressContact` and call `placeOrder`.
+1. Create a component under `src/modules/checkout/components/express-checkout/buttons/`, taking `ExpressButtonProps`. Start the payment session with `startExpressPayment` as soon as the wallet needs it. PayPal needs it on the click, Stripe after the customer approves. Answer the wallet's address changes with `quoteExpressShipping`, and once the customer pays, save the contact with `saveExpressContact` and call `placeOrder`.
 2. Add an entry for it to `expressButtons` in `registry.ts`, with a `match` that accepts the payment provider's id.
 3. Enable the payment provider in the regions where the button should show, under **Settings → Regions** in Medusa Admin.
 
@@ -102,7 +102,7 @@ export const expressButtons: {
 ]
 ```
 
-The whole button, with the address changes and the check of the approved amount, is described in [Integrate PayPal Payment into Storefront](/medusa-integrations/paypal/storefront-integration).
+The whole button, with the address changes and the check of the approved amount, is described in [Integrate PayPal Payment into Storefront](/medusa-integrations/paypal/storefront-integration). The Stripe plugin's example adds Apple Pay, Google Pay and Link to the row the same way, with an entry that matches `isStripeLike`. The button is described in [Integrate Stripe Payment into Storefront](/medusa-integrations/stripe/storefront-integration).
 
 ## Test the Row
 
@@ -122,5 +122,9 @@ The row and its buttons work on `localhost` with the sandbox credentials of a wa
   {
     title: "Integrate PayPal Payment into Storefront",
     href: "/medusa-integrations/paypal/storefront-integration"
+  },
+  {
+    title: "Integrate Stripe Payment into Storefront",
+    href: "/medusa-integrations/stripe/storefront-integration"
   }
 ]}/>
