@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "買い物を続ける",
+    "haveAccount": "すでにアカウントをお持ちの方はこちら:",
+    "item": "商品",
+    "myOrders": "注文履歴",
+    "orCall": "またはお電話ください：",
+    "orderSummary": "ご注文内容",
+    "questionsPrefix": "ご不明な点がございましたら、こちらまでご連絡ください：",
+    "shipping": "配送料",
+    "total": "合計",
+    "trackOrder": "配送状況を確認",
+    "viewOrder": "注文を見る"
+  },
+  "Delivery": {
+    "bodyOrder": "注文 <strong>#{id}</strong> をお届けしました。問題なくお受け取りいただけていれば幸いです。",
+    "headingAnon": "ご注文をお届けしました",
+    "headingWithName": "{name}様、ご注文をお届けしました",
+    "preview": "注文 #{id} をお届けしました",
+    "somethingWrong": "不備がありましたら、14日以内にご連絡ください。対応いたします。",
+    "subject": "注文 #{id} をお届けしました",
+    "textFallback": "注文 #{id} をお届けしました。"
+  },
+  "Fulfillment": {
+    "bodyOrder": "注文 <strong>#{id}</strong> の梱包が完了し、配送業者への引き渡しを待っています。",
+    "deliveryCity": "お届け先は{city}です。",
+    "headingAnon": "ご注文を準備しています",
+    "headingWithName": "{name}様、ご注文を準備しています",
+    "nextStep": "荷物が発送され次第、追跡番号をお送りします。",
+    "preview": "注文 #{id} を準備しています",
+    "subject": "注文 #{id} を準備しています",
+    "textFallback": "注文 #{id} の梱包が完了しました。"
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. All rights reserved."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "注文 <strong>#{id}</strong> をキャンセルしました。",
+    "headingAnon": "ご注文をキャンセルしました",
+    "headingWithName": "{name}様、ご注文をキャンセルしました",
+    "preview": "注文 #{id} をキャンセルしました",
+    "refundNote": "お支払い済みの場合、同じカードへ返金されます。銀行での反映には通常10営業日ほどかかります。",
+    "subject": "注文 #{id} をキャンセルしました",
+    "textFallback": "注文 #{id} をキャンセルしました。"
+  },
+  "OrderCompleted": {
+    "bodyOrder": "ご注文 <strong>#{id}</strong> が完了しました。ご利用いただきありがとうございます！",
+    "bodyPromo": "またのご利用をお待ちしております。ストアの新着商品もぜひご覧ください。",
+    "deliveryCity": "お届け先：{city}。",
+    "headingAnon": "ご注文が完了しました！",
+    "headingWithName": "{name}様、ご注文が完了しました！",
+    "preview": "ご注文 #{id} が完了しました。ご購入ありがとうございます！",
+    "subject": "ご注文 #{id} が完了しました",
+    "textFallback": "ご注文 #{id} が完了しました。ご購入ありがとうございます！"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "ご注文 <strong>#{id}</strong> を正常に受け付けました。",
+    "deliveryCity": "お届け先：{city}。",
+    "headingAnon": "ご注文を受け付けました！",
+    "headingWithName": "{name}様、ご注文を受け付けました！",
+    "preview": "ご注文 #{id} を受け付けました",
+    "subject": "ご注文 #{id} を受け付けました",
+    "textFallback": "ご注文 #{id} を受け付けました。\n\n商品を準備のうえ、まもなく発送いたします。",
+    "watchStatus": "ご注文の状況はアカウントページで確認いただけます。"
+  },
+  "OrderTransfer": {
+    "body": "ご注文 <strong>#{id}</strong> を別のアカウントへ移管するリクエストが届きました。お心当たりがある場合は、下のボタンから移管を承認してください。心当たりがない場合は、このメールを破棄してください。",
+    "button": "リクエストを確認",
+    "heading": "注文の移管リクエスト",
+    "hint": "ご注文はお客様の承認後にのみ移管されます。心当たりがない場合、ご注文には何も起こりません。",
+    "preview": "ご注文 #{id} の移管リクエスト",
+    "subject": "ご注文 #{id} の移管リクエスト",
+    "textFallback": "ご注文 #{id} の移管リクエスト\n\n以下のリンクからリクエストをご確認ください：\n{url}\n\n心当たりがない場合は、このメールを破棄してください。"
+  },
+  "PasswordReset": {
+    "body": "<strong>{email}</strong> のパスワード再設定のリクエストを受け付けました。下のボタンから新しいパスワードを設定してください。",
+    "button": "パスワードを再設定",
+    "heading": "パスワードの再設定",
+    "hint": "リンクの有効期限は<strong>15分</strong>です。心当たりがない場合は、このメールを破棄してください。",
+    "preview": "パスワードの再設定、リンクの有効期限は15分です",
+    "subject": "パスワードの再設定",
+    "textFallback": "パスワードの再設定\n\n以下のリンクからパスワードを再設定してください（有効期限15分）：\n{url}\n\n心当たりがない場合は、このメールを破棄してください。"
+  },
+  "Payment": {
+    "bodyOrder": "ご注文 <strong>#{id}</strong> のお支払いが正常に完了しました。発送の準備を進めております。",
+    "headingAnon": "お支払いが完了しました！",
+    "headingWithName": "{name}様、お支払いが完了しました！",
+    "preview": "ご注文 #{id} のお支払いが完了しました",
+    "subject": "ご注文 #{id} のお支払いが完了しました",
+    "textFallback": "ご注文 #{id} のお支払いが完了しました。\n\n商品を準備のうえ、まもなく発送いたします。",
+    "watchStatus": "ご注文の状況はアカウントページで確認いただけます。"
+  },
+  "Shipment": {
+    "bodyOrder": "ご注文 <strong>#{id}</strong> を配送業者に引き渡しました。",
+    "deliveryCity": "お届け先：{city}。",
+    "deliveryTime": "通常のお届け日数は、地域により1〜7営業日です。",
+    "headingAnon": "ご注文の商品を発送しました！",
+    "headingWithName": "{name}様、ご注文の商品を発送しました！",
+    "noTracking": "追跡番号は、荷物を配送業者に引き渡した後、アカウントのご注文情報に追加されます。",
+    "preview": "ご注文 #{id} を発送しました",
+    "subject": "ご注文 #{id} を発送しました",
+    "textDelivery": "通常のお届け日数は1〜7営業日です。",
+    "textFallback": "ご注文 #{id} を発送しました。",
+    "textTracking": "追跡番号：{numbers}",
+    "trackLabel": "追跡番号：",
+    "trackingTitle": "配送追跡情報"
+  },
+  "Welcome": {
+    "body": "ご登録ありがとうございます！アカウントの準備が整いました。今後はよりスムーズにご注文いただけるほか、注文状況の確認やお届け先住所の保存もご利用いただけます。",
+    "button": "買い物を始める",
+    "claimOrders": "アカウントなしで以前ご注文されましたか。こちらから紐づけられます：",
+    "claimOrdersLink": "ご注文一覧",
+    "headingAnon": "ようこそ！",
+    "headingWithName": "{name}様、ようこそ！",
+    "preview": "{store} へようこそ！",
+    "subject": "ようこそ！",
+    "textFallback": "ようこそ！\n\nご登録ありがとうございます。アカウントの準備が整いました。\n買い物を始める：{url}"
+  }
+}
