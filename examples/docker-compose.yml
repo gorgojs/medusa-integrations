@@ -65,6 +65,7 @@ configs:
       CREATE DATABASE medusa_erp_1c;
       CREATE DATABASE medusa_feed_yandex;
       CREATE DATABASE medusa_fulfillment_apiship;
+      CREATE DATABASE medusa_payment_paypal;
       CREATE DATABASE medusa_payment_stripe;
       CREATE DATABASE medusa_payment_tkassa;
       CREATE DATABASE medusa_payment_robokassa;
