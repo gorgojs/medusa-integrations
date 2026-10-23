@@ -1,0 +1,103 @@
+{
+  "name": "Čeština",
+  "translations": {
+    "categories": {
+      "clothing": "Oblečení",
+      "coffee": "Káva",
+      "eTransport": "Elektrická doprava",
+      "electronics": "Elektronika",
+      "headphones": "Sluchátka",
+      "home": "Domácnost",
+      "outerwear": "Svrchní oblečení",
+      "pants": "Kalhoty",
+      "shirts": "Trička",
+      "shorts": "Kraťasy",
+      "sweatshirts": "Mikiny",
+      "tableware": "Nádobí"
+    },
+    "collections": {
+      "new": "Novinky"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klasické černé kalhoty chino s decentním designem a padnoucím střihem. Vyrobeny z měkké, odolné bavlněné tkaniny s příměsí elastanu pro pohodlí. Boční kapsy, poutka na opasek a zapínání na knoflík. Ideální jak pro volný čas, tak pro elegantnější příležitosti.",
+        "title": "Kalhoty chino"
+      },
+      "electricBike": {
+        "description": "Matné černé elektrické horské kolo navržené pro výkon a každodenní všestrannost. Lehký hliníkový rám, integrovaná baterie a výkonný motor zajišťují plynulou asistovanou jízdu na jakémkoli povrchu. Vhodné jak pro jízdu městem, tak do terénu.",
+        "title": "Elektrokolo"
+      },
+      "espressoCup": {
+        "description": "Černé keramické šálky na espresso určené pro jednoduché i dvojité dávky. Odolné, dobře udrží teplo a lze je mýt v myčce.",
+        "title": "Šálek na espresso"
+      },
+      "hoodie": {
+        "description": "Klasická černá mikina s kapucí z měkké bavlněné tkaniny pro každodenní pohodlí. Volný střih, nastavitelná kapuce se šňůrkou a přední kapsa klokan. Jednoduchá a všestranná volba pro vrstvení v každém ročním období.",
+        "title": "Mikina s kapucí"
+      },
+      "pufferJacket": {
+        "description": "Zateplená černá prošívaná bunda navržená pro teplo a pohodlí za chladného počasí. Vysoký límec, přední zip s patentkou a několik kapes pro praktičnost. Lehká, přesto odolná – vhodná na běžné nošení i do přírody.",
+        "title": "Prošívaná bunda"
+      },
+      "servingPlate": {
+        "description": "Sochařsky pojatá servírovací mísa z nerezové oceli s leštěným zrcadlovým povrchem. Její plynulý, moderní tvar dodá noblesu každému prostření stolu. Ideální na ovoce, předkrmy nebo dekorativní vystavení. Navržena pro funkčnost i vizuální působivost – krásně odráží světlo a doplní jakýkoli moderní domov či restauraci.",
+        "title": "Servírovací mísa"
+      },
+      "shorts": {
+        "description": "Objevte klasické kraťasy v novém pojetí. Díky našim bavlněným kraťasům už každodenní základy nejsou obyčejné.",
+        "title": "Kraťasy Medusa"
+      },
+      "sweatpants": {
+        "description": "Objevte klasické tepláky v novém pojetí. Díky našim bavlněným teplákům už každodenní základy nejsou obyčejné.",
+        "title": "Tepláky Medusa"
+      },
+      "sweatshirt": {
+        "description": "Objevte klasickou mikinu v novém pojetí. Díky naší bavlněné mikině už každodenní základy nejsou obyčejné.",
+        "title": "Mikina Medusa"
+      },
+      "tShirt": {
+        "description": "Objevte klasické tričko v novém pojetí. Díky našim bavlněným tričkům už každodenní základy nejsou obyčejné.",
+        "title": "Tričko Medusa"
+      },
+      "wirelessHeadphones": {
+        "description": "Matná černá bezdrátová sluchátka s pohodlnou konstrukcí přes uši pro pohlcující poslech. Čistý zvuk, silné basy a dlouhá výdrž baterie. Navržena pro každodenní použití doma, v kanceláři i na cestách.",
+        "title": "Bezdrátová sluchátka přes uši"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Vrácení peněz jako gesto dobré vůle nebo kompenzace za nepříjemnosti",
+        "label": "Kompenzace zákaznického servisu"
+      },
+      "pricingError": {
+        "description": "Vrácení peněz za účelem opravy přeplatku, chybějící slevy nebo nesprávné ceny",
+        "label": "Chyba v ceně"
+      },
+      "shippingIssue": {
+        "description": "Vrácení peněz z důvodu ztracené, opožděné nebo nesprávně doručené zásilky",
+        "label": "Problém s doručením"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Doručení kurýrem",
+      "pickup": "Osobní odběr"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Doručení do 2–3 dnů.",
+        "label": "Kurýr"
+      },
+      "pickup": {
+        "description": "Vyzvednutí na výdejním místě.",
+        "label": "Osobní odběr"
+      }
+    },
+    "terms": {
+      "black": "Černá",
+      "color": "Barva",
+      "silver": "Stříbrná",
+      "size": "Velikost",
+      "white": "Bílá"
+    }
+  }
+}

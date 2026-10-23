@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Vásárlás folytatása",
+    "haveAccount": "Van már fiókja? Ugorjon ide:",
+    "item": "Termék",
+    "myOrders": "Rendeléseim",
+    "orCall": "vagy hívjon minket:",
+    "orderSummary": "Rendelés összegzése",
+    "questionsPrefix": "Ha kérdése van, írjon nekünk a következő címre:",
+    "shipping": "Szállítás",
+    "total": "Összesen",
+    "trackOrder": "Rendelés követése",
+    "viewOrder": "Rendelés megtekintése"
+  },
+  "Delivery": {
+    "bodyOrder": "A(z) <strong>#{id}</strong> rendelést kézbesítettük. Reméljük, minden rendben érkezett.",
+    "headingAnon": "A rendelését kézbesítettük",
+    "headingWithName": "{name}, a rendelését kézbesítettük",
+    "preview": "A(z) #{id} rendelés kézbesítve",
+    "somethingWrong": "Ha bármi gond van, írjon nekünk 14 napon belül, és megoldjuk.",
+    "subject": "A(z) #{id} rendelés kézbesítve",
+    "textFallback": "A(z) #{id} rendelést kézbesítettük."
+  },
+  "Fulfillment": {
+    "bodyOrder": "A(z) <strong>#{id}</strong> rendelés be van csomagolva, és a futárra vár.",
+    "deliveryCity": "Kiszállítás ide: {city}.",
+    "headingAnon": "Készítjük a rendelését",
+    "headingWithName": "{name}, készítjük a rendelését",
+    "nextStep": "A csomagkövetési számot elküldjük, amint a csomag útnak indul.",
+    "preview": "A(z) #{id} rendelés készül",
+    "subject": "A(z) #{id} rendelés készül",
+    "textFallback": "A(z) #{id} rendelést becsomagoltuk."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. Minden jog fenntartva."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "A(z) <strong>#{id}</strong> rendelést töröltük.",
+    "headingAnon": "A rendelését töröltük",
+    "headingWithName": "{name}, a rendelését töröltük",
+    "preview": "A(z) #{id} rendelés törölve",
+    "refundNote": "Ha a rendelést kifizette, az összeg ugyanarra a kártyára tér vissza. A bankoknak ehhez általában 10 munkanap kell.",
+    "subject": "A(z) #{id} rendelés törölve",
+    "textFallback": "A(z) #{id} rendelést töröltük."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "A <strong>#{id}</strong> rendelés teljesítve. Köszönjük, hogy minket választott!",
+    "bodyPromo": "Örülnénk, ha újra ellátogatna hozzánk. Nézze meg az újdonságokat a boltunkban.",
+    "deliveryCity": "Kiszállítva ide: {city}.",
+    "headingAnon": "A rendelése teljesítve!",
+    "headingWithName": "{name}, a rendelése teljesítve!",
+    "preview": "A #{id} rendelés teljesítve. Köszönjük a vásárlást!",
+    "subject": "A #{id} rendelés teljesítve",
+    "textFallback": "A #{id} rendelés teljesítve. Köszönjük a vásárlást!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "A <strong>#{id}</strong> rendelés sikeresen létrejött.",
+    "deliveryCity": "Szállítás ide: {city}.",
+    "headingAnon": "A rendelése létrejött!",
+    "headingWithName": "{name}, a rendelése létrejött!",
+    "preview": "A #{id} rendelés sikeresen létrejött",
+    "subject": "A #{id} rendelés létrejött",
+    "textFallback": "A #{id} rendelés létrejött.\n\nElőkészítjük a rendelését, és hamarosan feladjuk.",
+    "watchStatus": "A rendelés állapotát a fiókjában követheti nyomon."
+  },
+  "OrderTransfer": {
+    "body": "Kérelem érkezett a <strong>#{id}</strong> rendelés másik fiókba történő átadására. Ha Ön kérte, erősítse meg az átadást az alábbi gombbal. Ha nem, egyszerűen hagyja figyelmen kívül ezt a levelet.",
+    "button": "Kérelem megtekintése",
+    "heading": "Rendelés átadási kérelem",
+    "hint": "A rendelés csak az Ön megerősítése után kerül átadásra. Ha nem Ön kérte az átadást, a rendelésével nem történik semmi.",
+    "preview": "Átadási kérelem a #{id} rendeléshez",
+    "subject": "Átadási kérelem a #{id} rendeléshez",
+    "textFallback": "Átadási kérelem a #{id} rendeléshez\n\nA kérelem megtekintéséhez nyissa meg a linket:\n{url}\n\nHa nem Ön kérte az átadást, egyszerűen hagyja figyelmen kívül ezt a levelet."
+  },
+  "PasswordReset": {
+    "body": "Kérelmet kaptunk a(z) <strong>{email}</strong> fiók jelszavának visszaállítására. Kattintson az alábbi gombra új jelszó beállításához.",
+    "button": "Jelszó visszaállítása",
+    "heading": "Jelszó visszaállítása",
+    "hint": "A link <strong>15 percig</strong> érvényes. Ha nem Ön kérte a jelszó visszaállítását, egyszerűen hagyja figyelmen kívül ezt a levelet.",
+    "preview": "Jelszó visszaállítása, a link 15 percig érvényes",
+    "subject": "Jelszó visszaállítása",
+    "textFallback": "Jelszó visszaállítása\n\nA jelszó visszaállításához nyissa meg a linket (15 percig érvényes):\n{url}\n\nHa nem Ön kérte a jelszó visszaállítását, egyszerűen hagyja figyelmen kívül ezt a levelet."
+  },
+  "Payment": {
+    "bodyOrder": "A <strong>#{id}</strong> rendelés sikeresen kifizetve. Most készítjük elő a feladásra.",
+    "headingAnon": "A rendelése kifizetve!",
+    "headingWithName": "{name}, a rendelése kifizetve!",
+    "preview": "A #{id} rendelés sikeresen kifizetve",
+    "subject": "A #{id} rendelés kifizetve",
+    "textFallback": "A #{id} rendelés kifizetve.\n\nElőkészítjük a rendelését, és hamarosan feladjuk.",
+    "watchStatus": "A rendelés állapotát a fiókjában követheti nyomon."
+  },
+  "Shipment": {
+    "bodyOrder": "A <strong>#{id}</strong> rendelést átadtuk a futárszolgálatnak.",
+    "deliveryCity": "Szállítás ide: {city}.",
+    "deliveryTime": "A szokásos szállítási idő régiótól függően 1-7 munkanap.",
+    "headingAnon": "A rendelése úton van!",
+    "headingWithName": "{name}, a rendelése úton van!",
+    "noTracking": "A nyomkövetési szám azután kerül a fiókjában lévő rendeléshez, hogy a csomagot átadtuk a futárszolgálatnak.",
+    "preview": "A #{id} rendelés feladva",
+    "subject": "A #{id} rendelés feladva",
+    "textDelivery": "A szokásos szállítási idő 1-7 munkanap.",
+    "textFallback": "A #{id} rendelést feladtuk.",
+    "textTracking": "Nyomkövetési szám: {numbers}",
+    "trackLabel": "Nyomkövetési szám:",
+    "trackingTitle": "Nyomkövetési információk"
+  },
+  "Welcome": {
+    "body": "Köszönjük a regisztrációt! A fiókja készen áll. Mostantól gyorsabban rendelhet, nyomon követheti a rendeléseit, és szállítási címeket menthet a fiókjába.",
+    "button": "Vásárlás megkezdése",
+    "claimOrders": "Rendelt már korábban fiók nélkül? Azokat a rendeléseket itt kapcsolhatja hozzá:",
+    "claimOrdersLink": "rendelései",
+    "headingAnon": "Üdvözöljük!",
+    "headingWithName": "Üdvözöljük, {name}!",
+    "preview": "Üdvözöljük a(z) {store} boltban!",
+    "subject": "Üdvözöljük!",
+    "textFallback": "Üdvözöljük!\n\nKöszönjük a regisztrációt. A fiókja készen áll.\nVásárlás megkezdése: {url}"
+  }
+}

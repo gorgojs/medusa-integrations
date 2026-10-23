@@ -1,0 +1,103 @@
+{
+  "name": "English",
+  "translations": {
+    "categories": {
+      "clothing": "Clothing",
+      "coffee": "Coffee",
+      "eTransport": "Electric Transport",
+      "electronics": "Electronics",
+      "headphones": "Headphones",
+      "home": "Home",
+      "outerwear": "Outerwear",
+      "pants": "Pants",
+      "shirts": "T-Shirts",
+      "shorts": "Shorts",
+      "sweatshirts": "Sweatshirts",
+      "tableware": "Tableware"
+    },
+    "collections": {
+      "new": "New Arrivals"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Classic black chino pants with a tailored fit and minimal design. Made from soft, durable cotton fabric with a hint of stretch for comfort. Features side pockets, belt loops and a button closure. Ideal for both casual and smart wear.",
+        "title": "Chino Pants"
+      },
+      "electricBike": {
+        "description": "Matte black electric mountain bike built for performance and everyday versatility. Features a lightweight aluminum frame, integrated battery, and powerful motor for smooth assisted riding on all terrains. Designed for both city commutes and off-road trails.",
+        "title": "Electric Bike"
+      },
+      "espressoCup": {
+        "description": "Black ceramic espresso cups designed for single or double shots. Durable, heat retaining and dishwasher safe.",
+        "title": "Espresso Cup"
+      },
+      "hoodie": {
+        "description": "Classic black hoodie made from soft cotton fabric for everyday comfort. Features a relaxed fit, adjustable drawstring hood and front kangaroo pocket. Simple and versatile for layering in any season.",
+        "title": "Hoodie"
+      },
+      "pufferJacket": {
+        "description": "Insulated black puffer jacket designed for warmth and comfort in cold weather. Features a high collar, front zipper with snap closure, and multiple pockets for functionality. Lightweight yet durable for everyday wear or outdoor use.",
+        "title": "Puffer Jacket"
+      },
+      "servingPlate": {
+        "description": "A sculptural stainless steel serving plate with a polished mirror finish. Its fluid, modern shape adds a refined touch to any table setting. Perfect for fruit, appetizers or decorative display. Designed for both functionality and visual impact, it reflects light beautifully and complements any contemporary home or restaurant style.",
+        "title": "Serving Plate"
+      },
+      "shorts": {
+        "description": "Reimagine the feel of classic shorts. With our cotton shorts, everyday essentials are no longer ordinary.",
+        "title": "Medusa Shorts"
+      },
+      "sweatpants": {
+        "description": "Reimagine the feel of classic sweatpants. With our cotton sweatpants, everyday essentials are no longer ordinary.",
+        "title": "Medusa Sweatpants"
+      },
+      "sweatshirt": {
+        "description": "Reimagine the feel of a classic sweatshirt. With our cotton sweatshirt, everyday essentials are no longer ordinary.",
+        "title": "Medusa Sweatshirt"
+      },
+      "tShirt": {
+        "description": "Reimagine the feel of a classic tee. With our cotton T-shirts, everyday essentials are no longer ordinary.",
+        "title": "Medusa T-Shirt"
+      },
+      "wirelessHeadphones": {
+        "description": "Matte black wireless headphones with a comfortable over-ear design for immersive listening. Provide clear sound, strong bass and long battery life. Built for everyday use at home, in the office or on the go.",
+        "title": "Wireless Over-Ear Headphones"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Refund given as goodwill or compensation for inconvenience",
+        "label": "Customer Care Adjustment"
+      },
+      "pricingError": {
+        "description": "Refund to correct an overcharge, missing discount, or incorrect price",
+        "label": "Pricing Error"
+      },
+      "shippingIssue": {
+        "description": "Refund due to lost, delayed, or misdelivered shipment",
+        "label": "Shipping Issue"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Courier delivery",
+      "pickup": "Pickup"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Delivery within 2–3 days.",
+        "label": "Courier"
+      },
+      "pickup": {
+        "description": "Pick up at a pickup point.",
+        "label": "Pickup"
+      }
+    },
+    "terms": {
+      "black": "Black",
+      "color": "Color",
+      "silver": "Silver",
+      "size": "Size",
+      "white": "White"
+    }
+  }
+}
