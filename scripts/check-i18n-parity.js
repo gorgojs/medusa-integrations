@@ -34,6 +34,7 @@ const LOCALE_DIRS = [
   'packages/providers/fulfillment-apiship/src/admin/i18n/json',
   'packages/providers/payment-robokassa/src/admin/i18n/json',
   'packages/providers/payment-paypal/src/admin/i18n/json',
+  'packages/providers/payment-stripe/src/admin/i18n/json',
   'packages/providers/payment-tkassa/src/admin/i18n/json',
   'packages/providers/payment-yookassa/src/admin/i18n/json',
 ];
