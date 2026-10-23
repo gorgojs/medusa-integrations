@@ -1,0 +1,35 @@
+{
+  "stripe": {
+    "name": "Stripe",
+    "description": "Платёжная система Stripe",
+    "sections": {
+      "credentials": "Доступы",
+      "behavior": "Поведение",
+      "checkout": "Параметры платежа"
+    },
+    "fields": {
+      "secretKey": "Секретный ключ",
+      "publishableKey": "Публикуемый ключ",
+      "webhookSecret": "Секрет подписи вебхука",
+      "capture": "Способ списания",
+      "paymentMethodConfiguration": "Конфигурация способов оплаты",
+      "paymentDescription": "Описание платежа",
+      "statementDescriptorSuffix": "Текст в выписке по карте",
+      "sendReceiptEmail": "Чек на email"
+    },
+    "hints": {
+      "secretKey": "Из раздела Developers → API keys в Stripe Dashboard. Ключ с префиксом sk_test_ принимает тестовые платежи, sk_live_ принимает настоящие.",
+      "publishableKey": "Показан рядом с секретным ключом в Stripe Dashboard. По нему витрина загружает платёжную форму Stripe. Режим ключа должен совпадать с режимом секретного ключа.",
+      "webhookSecret": "Проверяет уведомления Stripe о платежах. Показан у эндпоинта вебхука, который отправляет payment_intent.succeeded и payment_intent.amount_capturable_updated на /hooks/payment/stripe_<id> вашего бэкенда.",
+      "capture": "При «Списать сразу» оплата одностадийная и деньги списываются сразу. При «Только заблокировать» оплата двухстадийная и сумма холдируется до подтверждения списания. Если сумму не списать за 7 дней, Stripe снимает блокировку с карты.",
+      "paymentMethodConfiguration": "ID конфигурации способов оплаты из раздела Settings → Payment methods в Stripe Dashboard. Без него способы оплаты, которые видит покупатель, определяет конфигурация вашего аккаунта по умолчанию.",
+      "paymentDescription": "Показывается у платежа в Stripe Dashboard.",
+      "statementDescriptorSuffix": "Добавляется после префикса из настроек вашего аккаунта Stripe в выписке по карте покупателя. Только латиница, вместе с префиксом не длиннее 22 символов.",
+      "sendReceiptEmail": "В live-режиме Stripe отправляет чек на email, который покупатель указал при оформлении заказа."
+    },
+    "captures": {
+      "automatic": "Списать сразу",
+      "manual": "Только заблокировать"
+    }
+  }
+}
