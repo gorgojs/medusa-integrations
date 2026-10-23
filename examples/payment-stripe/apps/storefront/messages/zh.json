@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "信用卡",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "银行卡、钱包"
     },
     "pp_system_default": {
       "title": "手动付款"

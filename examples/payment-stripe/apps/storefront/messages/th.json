@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "บัตรเครดิต",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "บัตร, วอลเล็ต"
     },
     "pp_system_default": {
       "title": "ชำระเงินด้วยตนเอง"

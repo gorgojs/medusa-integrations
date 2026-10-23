@@ -83,7 +83,9 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
 
   switch (true) {
     case isStripeLike(activePaymentMethod):
-      return <StripePaymentButton {...providerProps} />
+      return (
+        <StripePaymentButton {...providerProps} providerId={activePaymentMethod} />
+      )
     case isManual(activePaymentMethod):
       return <ManualPaymentButton {...providerProps} />
     default:

@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "Betalingskort",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "Kort, lommebøker"
     },
     "pp_system_default": {
       "title": "Manuell betaling"

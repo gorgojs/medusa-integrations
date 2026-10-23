@@ -23,8 +23,8 @@ export type PaymentInfo = {
    `messages/*.json`. */
 export const paymentInfoMap: Record<string, PaymentInfo> = {
   pp_stripe_stripe: {
-    title: "Credit card",
-    subtitle: "Stripe",
+    title: "Stripe",
+    subtitle: "Cards, wallets",
     icon: <CreditCard />,
   },
   "pp_medusa-payments_default": {
@@ -71,7 +71,14 @@ const paymentSessionDataBuilders: Array<{
    * Stripe PaymentIntent. `isReady` still gates the pay button.
    */
   deferred?: boolean
-}> = []
+}> = [
+  {
+    // The Payment Element works on a deferred PaymentIntent, which the pay button creates
+    // once the amount is final, so picking Stripe makes no request.
+    test: isStripeLike,
+    deferred: true,
+  },
+]
 
 export const buildPaymentSessionData = (
   providerId: string | undefined,

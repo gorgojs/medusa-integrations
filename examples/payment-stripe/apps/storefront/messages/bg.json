@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "Кредитна карта",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "Карти, портфейли"
     },
     "pp_system_default": {
       "title": "Ръчно плащане"

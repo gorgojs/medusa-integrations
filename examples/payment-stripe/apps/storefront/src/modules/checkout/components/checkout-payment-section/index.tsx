@@ -15,7 +15,7 @@ import { CreditCard } from "@medusajs/icons"
 import type { HttpTypes } from "@medusajs/types"
 import PaymentButton from "@modules/checkout/components/payment-button"
 import ErrorMessage from "@modules/checkout/components/error-message"
-import { StripePaymentContainer } from "@modules/checkout/components/payment-container"
+import { StripePaymentElement } from "@modules/checkout/components/payment-container"
 import CheckoutBillingSheet from "@modules/checkout/components/checkout-billing-sheet"
 import { Link } from "@i18n/navigation"
 import { useTranslations } from "next-intl"
@@ -192,10 +192,7 @@ export default function CheckoutPaymentSection({
           {/* Stripe card input */}
           {isStripeLike(selectedPaymentMethod) && (
             <div className="mt-2">
-              <StripePaymentContainer
-                paymentProviderId={selectedPaymentMethod}
-                selectedPaymentOptionId={selectedPaymentMethod}
-                paymentInfoMap={paymentInfoMap}
+              <StripePaymentElement
                 setError={setError}
                 setPaymentComplete={setPaymentComplete}
               />

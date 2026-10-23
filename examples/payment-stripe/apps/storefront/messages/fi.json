@@ -526,8 +526,8 @@
       "subtitle": "Stripe"
     },
     "pp_stripe_stripe": {
-      "title": "Luottokortti",
-      "subtitle": "Stripe"
+      "title": "Stripe",
+      "subtitle": "Kortit, lompakot"
     },
     "pp_system_default": {
       "title": "Manuaalinen maksu"
