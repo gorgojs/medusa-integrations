@@ -19,16 +19,12 @@ import {
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { sdk } from "../../../lib/sdk"
 import { IntegrationIcon } from "../../../components/integration-icon"
 import { toModuleProviderId } from "../../../lib/provider-id"
-import { LICENSE_BADGE, LICENSE_STATUS_QUERY_KEY } from "../../../lib/license"
-import type {
-  AdminIntegrationLicenseStatusResponse,
-  AdminIntegrationListResponse,
-  IntegrationOverviewItem,
-} from "../../../../types"
+import { LICENSE_BADGE, useLicenseStatus } from "../../../lib/license"
+import type { AdminIntegrationListResponse, IntegrationOverviewItem } from "../../../../types"
 import type { LicenseState } from "../../../../modules/integration/types"
 
 const PAGE_SIZE = 20
@@ -143,14 +139,7 @@ const IntegrationsPage = () => {
     placeholderData: keepPreviousData,
   })
 
-  const { data: licenseData } = useQuery({
-    queryKey: LICENSE_STATUS_QUERY_KEY,
-    queryFn: () =>
-      sdk.client.fetch<AdminIntegrationLicenseStatusResponse>(
-        "/admin/integrations/license-status"
-      ),
-    staleTime: 60_000,
-  })
+  const { data: licenseData } = useLicenseStatus()
 
   const licenseByIdentifier = useMemo(() => {
     const map: Record<string, LicenseState> = {}
@@ -321,7 +310,12 @@ const IntegrationsPage = () => {
     <Container className="divide-y p-0">
       {licenseNeedsAttention && (
         <div className="px-6 py-3">
-          <Alert variant="warning">{t("integration.license.banner")}</Alert>
+          <Alert variant="warning">
+            {t("integration.license.banner")}{" "}
+            <Link to="/settings/gorgo" className="text-ui-fg-interactive">
+              {t("integration.license.bannerLink")}
+            </Link>
+          </Alert>
         </div>
       )}
       <div className="flex items-start justify-between px-6 py-4">
