@@ -98,6 +98,15 @@
       "updateFailed": "Kunde inte uppdatera"
     },
     "unknown": "Okänd integration \"{{id}}\".",
-    "back": "Tillbaka till integrationer"
+    "back": "Tillbaka till integrationer",
+    "license": {
+      "banner": "Some paid integrations could not confirm their license. They keep working.",
+      "state": {
+        "pending": "Checking license",
+        "ok": "Licensed",
+        "failed": "Unlicensed",
+        "unreachable": "License not checked"
+      }
+    }
   }
 }

@@ -1,40 +1,13 @@
-import { asValue } from "@medusajs/framework/awilix"
 import type { LoaderOptions } from "@medusajs/framework/types"
 import { createTelemetryClient } from "@gorgo/telemetry"
-import {
-  INTEGRATION_LICENSE_STATE_KEY,
-  INTEGRATION_PACKAGE_META_KEY,
-  IntegrationProviderRegistrationPrefix,
-} from "../types"
-import {
-  licenseStateStore,
-  normalizeLicenseState,
-  setLicenseStateReader,
-} from "./license-state"
-import type {
-  IntegrationModuleOptions,
-  LicenseStateMap,
-  PackageMetaMap,
-} from "../types"
+import { INTEGRATION_PACKAGE_META_KEY, IntegrationProviderRegistrationPrefix } from "../types"
+import { addVerifier, isLicenseVerifier, linkIdentifier } from "./license-state"
+import type { LicenseVerifier } from "./license-state"
+import type { IntegrationModuleOptions, PackageMetaMap } from "../types"
 
 const VERIFIER_PACKAGE = "@gorgo-store/license"
 
-type ReportLicense = (input: {
-  license?: string
-  backendUrl?: string
-  packageName: string
-  packageVersion?: string
-  track: (event: string, props?: Record<string, unknown>) => void
-}) => unknown
-
-type LicenseStateReader = (
-  packageName: string,
-) => { state: string; reason?: string } | undefined
-
-type Verifier = {
-  reportLicense: ReportLicense
-  licenseState?: LicenseStateReader
-}
+type VerdictChange = { state?: string; reason?: string }
 
 function safeResolve(container: any, key: string): any {
   try {
@@ -44,90 +17,88 @@ function safeResolve(container: any, key: string): any {
   }
 }
 
-function loadVerifier(): Verifier | null {
+/**
+ * `@gorgo-store/license` lives in the private registry, so this public module does not depend on
+ * it. Every paid package does, and resolving from the paid package's own directory reaches it
+ * under any package manager. Without a directory, the copy this module can see is used.
+ */
+function loadVerifier(fromDir?: string): LicenseVerifier | null {
   try {
-    const mod = require(VERIFIER_PACKAGE)
-    const api = mod?.default ?? mod
-    const fn = (mod?.reportLicense ?? api?.reportLicense) as unknown
-    if (typeof fn !== "function") return null
-    const state = (mod?.licenseState ?? api?.licenseState) as unknown
-    return {
-      reportLicense: fn as ReportLicense,
-      licenseState: typeof state === "function" ? (state as LicenseStateReader) : undefined,
-    }
+    const mod = fromDir
+      ? require(require.resolve(VERIFIER_PACKAGE, { paths: [fromDir] }))
+      : require(VERIFIER_PACKAGE)
+    return isLicenseVerifier(mod) ? mod : null
   } catch {
-    return null
+    return fromDir ? loadVerifier() : null
   }
 }
 
 /**
- * Check the license of every registered provider whose package declares `gorgo.license`.
- * One check per npm package, never per instance. The verdict is registered in the container
- * so the admin surface can read it; a package the verifier cannot judge never blocks boot.
+ * Registers every package that declares `"gorgo": { "license": "required" }` with the process-wide
+ * check of `@gorgo-store/license`, once per package however many instances it has. The check runs in
+ * the background, never blocks boot and never throws; the admin reads its verdicts live.
  */
-export default async ({
-  container,
-  options,
-}: LoaderOptions<IntegrationModuleOptions>): Promise<void> => {
-  const state: LicenseStateMap = licenseStateStore()
-  try {
-    ;(container as any).register({
-      [INTEGRATION_LICENSE_STATE_KEY]: asValue(state),
-    })
-  } catch {
-    // a container without register (unit tests) still gets the checks below
+export default async ({ container, options }: LoaderOptions<IntegrationModuleOptions>): Promise<void> => {
+  const packageMeta: PackageMetaMap = safeResolve(container, INTEGRATION_PACKAGE_META_KEY) ?? {}
+  const configModule = safeResolve(container, "configModule")
+  const logger = safeResolve(container, "logger")
+  const telemetry = createTelemetryClient({ packageDir: __dirname })
+  const own = new Set<string>()
+
+  const report = (packageName: string, next: VerdictChange) => {
+    if (!own.has(packageName)) return
+    if (next.state === "ok") telemetry.track("license.ok", { package: packageName })
+    else if (next.state === "unreachable") telemetry.track("license.unreachable", { package: packageName })
+    else if (next.state === "failed") telemetry.track("license.failed", { package: packageName, reason: next.reason })
   }
 
-  const verifier = loadVerifier()
-  if (!verifier) return
-  setLicenseStateReader(verifier.licenseState)
+  const configure = (verifier: LicenseVerifier) => {
+    if (!addVerifier(verifier)) return
+    verifier.configureLicense({
+      license: options?.license,
+      backendUrl: configModule?.admin?.backendUrl,
+      workerMode: configModule?.projectConfig?.workerMode,
+      logger,
+      onChange: (packageName: string, next: VerdictChange) => {
+        try {
+          report(packageName, next)
+        } catch {
+          return
+        }
+      },
+    })
+  }
 
-  const packageMeta: PackageMetaMap =
-    safeResolve(container, INTEGRATION_PACKAGE_META_KEY) ?? {}
-  const backendUrl = safeResolve(container, "configModule")?.admin?.backendUrl
-  const license = options?.license ?? process.env.GORGO_LICENSE
-
-  const registrations = (container as any).registrations ?? {}
-  const keys = Object.keys(registrations).filter((key) =>
+  const keys = Object.keys((container as any).registrations ?? {}).filter((key) =>
     key.startsWith(IntegrationProviderRegistrationPrefix),
   )
 
-  const telemetry = createTelemetryClient({ packageDir: __dirname })
-  const seen = new Set<string>()
-
   for (const key of keys) {
-    const provider = safeResolve(container, key)
-    const identifier = provider?.getIdentifier?.() ?? provider?.descriptor?.identifier
-    if (!identifier) continue
-
-    const meta = packageMeta[identifier]
-    if (meta?.license !== "required") continue
-
-    const packageName = meta.name
-    if (!packageName) continue
-    if (seen.has(packageName)) {
-      state[packageName]?.identifiers.push(identifier)
-      continue
-    }
-    seen.add(packageName)
-
     try {
-      verifier.reportLicense({
-        license,
-        backendUrl,
-        packageName,
-        packageVersion: meta.version ?? undefined,
-        track: (event, props) => telemetry.track(event, props),
-      })
-      const verdict = verifier.licenseState?.(packageName)
-      state[packageName] = {
-        package: packageName,
-        state: normalizeLicenseState(verdict?.state),
-        ...(verdict?.reason ? { reason: verdict.reason } : {}),
-        identifiers: [identifier],
+      const provider = safeResolve(container, key)
+      const identifier = provider?.getIdentifier?.() ?? provider?.descriptor?.identifier
+      const meta = identifier ? packageMeta[identifier] : undefined
+      if (meta?.license !== "required" || !meta.name) continue
+
+      linkIdentifier(meta.name, identifier)
+      if (own.has(meta.name)) continue
+
+      const verifier = loadVerifier(meta.dir)
+      if (!verifier) {
+        logger?.warn?.(`[gorgo] ${meta.name} needs ${VERIFIER_PACKAGE} with registerLicensedPackage; its license is not checked.`)
+        continue
       }
+      configure(verifier)
+      own.add(verifier.registerLicensedPackage({ packageName: meta.name, packageVersion: meta.version ?? undefined }) ?? meta.name)
     } catch {
       continue
     }
+  }
+
+  try {
+    const local = loadVerifier()
+    if (local) configure(local)
+  } catch {
+    return
   }
 }

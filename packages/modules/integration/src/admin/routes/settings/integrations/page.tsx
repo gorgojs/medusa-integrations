@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom"
 import { sdk } from "../../../lib/sdk"
 import { IntegrationIcon } from "../../../components/integration-icon"
 import { toModuleProviderId } from "../../../lib/provider-id"
+import { LICENSE_BADGE, LICENSE_STATUS_QUERY_KEY } from "../../../lib/license"
 import type {
   AdminIntegrationLicenseStatusResponse,
   AdminIntegrationListResponse,
@@ -76,14 +77,6 @@ const IntegrationCell = ({ item }: { item: IntegrationOverviewItem }) => {
       </div>
     </div>
   )
-}
-
-const LICENSE_BADGE: Record<LicenseState, { color: "green" | "orange" | "red" | "grey"; key: string }> = {
-  ok: { color: "green", key: "integration.license.badgeOk" },
-  grace: { color: "orange", key: "integration.license.badgeGrace" },
-  stale: { color: "orange", key: "integration.license.badgeStale" },
-  failed: { color: "red", key: "integration.license.badgeFailed" },
-  undetermined: { color: "grey", key: "integration.license.badgeUndetermined" },
 }
 
 /** Status column: lifecycle badge, a connection badge when supported, and the license verdict. */
@@ -151,7 +144,7 @@ const IntegrationsPage = () => {
   })
 
   const { data: licenseData } = useQuery({
-    queryKey: ["integration-license-status"],
+    queryKey: LICENSE_STATUS_QUERY_KEY,
     queryFn: () =>
       sdk.client.fetch<AdminIntegrationLicenseStatusResponse>(
         "/admin/integrations/license-status"
@@ -167,8 +160,10 @@ const IntegrationsPage = () => {
     return map
   }, [licenseData])
 
+  // Only a refusal earns the banner. "pending" is every boot, and "unreachable" is our outage, not
+  // something the merchant can fix.
   const licenseNeedsAttention = (licenseData?.packages ?? []).some(
-    (entry) => entry.state !== "ok"
+    (entry) => entry.state === "failed"
   )
 
   const integrations = data?.integrations ?? []
