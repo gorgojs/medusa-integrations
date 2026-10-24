@@ -101,11 +101,46 @@
     "back": "Entegrasyonlara dön",
     "license": {
       "banner": "Some paid integrations could not confirm their license. They keep working.",
+      "bannerLink": "See the details",
       "state": {
         "pending": "Checking license",
         "ok": "Licensed",
         "failed": "Unlicensed",
         "unreachable": "License not checked"
+      },
+      "reason": {
+        "missing": "GORGO_LICENSE is not set in this project's environment.",
+        "malformed": "GORGO_LICENSE does not look like a project key.",
+        "invalid_token": "The key is unknown or was revoked. Reissue it in your Gorgo account.",
+        "no_subscription": "The project has no subscription for this package.",
+        "domain_not_allowed": "This backend's domain is not among the project's domains. Add it in your Gorgo account.",
+        "version_after_cutoff": "This version came out after the subscription ended. Renew the subscription or install an earlier version.",
+        "version_unverifiable": "The release date of this version could not be checked against the end of the subscription.",
+        "unknown": "The license service refused the key.",
+        "unreachable": "The license service could not be reached. The check will run again later."
+      },
+      "card": {
+        "title": "License",
+        "status": "Status",
+        "project": "Project",
+        "environment": "Environment",
+        "outsideEnvironments": "Not in the project's environments",
+        "endsAt": "Subscription ends",
+        "noEnd": "No end date",
+        "cutoff": "Updates until",
+        "latestVersion": "Latest available version",
+        "checkedAt": "Last checked",
+        "never": "Not yet",
+        "recheck": "Check now",
+        "rechecked": "License checked",
+        "recheckFailed": "Could not check the license",
+        "openAccount": "Open your Gorgo account"
+      },
+      "page": {
+        "title": "Gorgo",
+        "description": "Licenses of the paid Gorgo packages in this project. Each package checks its license at startup and then once a day.",
+        "empty": "This project has no paid Gorgo packages.",
+        "missingKey": "Set GORGO_LICENSE to the project key in the environment of the Medusa server and worker, then restart them. The key is on the Key tab of the project in your Gorgo account."
       }
     }
   }
