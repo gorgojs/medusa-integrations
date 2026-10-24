@@ -23,6 +23,20 @@ function readNearestPackageJson(startDir: string): Record<string, unknown> | nul
 }
 
 /**
+ * A provider shipped by a plugin is a bare specifier ("<plugin>/providers/<name>"), installed for
+ * the project rather than for this module, so it resolves from the project directory first, the
+ * way Medusa itself loads providers. Under pnpm without hoisting or Yarn PnP the module's own
+ * location cannot see the plugin at all.
+ */
+function resolveFromProject(spec: string): string {
+  try {
+    return require.resolve(spec, { paths: [process.cwd()] })
+  } catch {
+    return require.resolve(spec)
+  }
+}
+
+/**
  * Resolve npm-package metadata (version/author/url) per provider `identifier` from each
  * registration's `resolve` specifier. identifier↔package is 1:1, so one lookup keys every
  * instance sharing the class. Best-effort: an unresolvable provider is skipped, never thrown.
@@ -33,10 +47,11 @@ export function resolvePackageMetaByIdentifier(providers: ModuleProvider[]): Pac
     const spec = (entry as { resolve?: string }).resolve
     if (!spec) continue
     try {
-      const pkgJson = readNearestPackageJson(path.dirname(require.resolve(spec)))
+      const entryPath = resolveFromProject(spec)
+      const pkgJson = readNearestPackageJson(path.dirname(entryPath))
       if (!pkgJson) continue
       const meta = parsePackageMeta(pkgJson as any)
-      const mod = require(spec)
+      const mod = require(entryPath)
       const services: Array<{ identifier?: string }> = (mod?.default ?? mod)?.services ?? []
       for (const svc of services) {
         if (svc?.identifier) out[svc.identifier] = meta
