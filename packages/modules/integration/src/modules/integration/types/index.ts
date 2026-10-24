@@ -12,9 +12,6 @@ export const INTEGRATION_OPTIONS_KEY = "integrationModuleOptions"
 /** Container key under which the resolved per-identifier package metadata map is registered. */
 export const INTEGRATION_PACKAGE_META_KEY = "integrationPackageMeta"
 
-/** Container key under which the per-package license verdicts are registered. */
-export const INTEGRATION_LICENSE_STATE_KEY = "integrationLicenseState"
-
 /** Resolved npm-package facts for one provider identifier (from its package.json). */
 export type PackageMeta = {
   name: string | null
@@ -23,29 +20,31 @@ export type PackageMeta = {
   authorUrl: string | null
   /** `gorgo.license` from the package.json: whether the package is licensed at all. */
   license: PackageLicenseRequirement
+  /** Directory of the package.json, so a licensed package's own dependencies can be reached. */
+  dir?: string
 }
 
 /** How a package declares itself licensed. `null` = not a licensed package. */
 export type PackageLicenseRequirement = "required" | "optional" | null
 
-/** Verdict of the license check for one npm package. */
-export type LicenseState =
-  | "ok"
-  | "grace"
-  | "stale"
-  | "failed"
-  | "undetermined"
+/** Verdict of the license check for one npm package, as `@gorgo-store/license` reports it. */
+export type LicenseState = "pending" | "ok" | "failed" | "unreachable"
 
 export type LicenseStateEntry = {
   package: string
   state: LicenseState
+  /** Why the check failed: `missing`, `invalid_token`, `domain_not_allowed` and so on. */
   reason?: string
-  /** Provider identifiers this package ships — lets the list map a row to its verdict. */
+  /** When the platform last answered, ISO 8601. */
+  checked_at: string | null
+  project: { handle: string; name: string } | null
+  /** `null` when the backend's host is in none of the project's environments. Absent before the first answer. */
+  environment?: { id: string; name: string } | null
+  subscription: { ends_at: string | null; cutoff: string | null } | null
+  latest_allowed_version: string | null
+  /** Provider identifiers this package ships. Empty for a package that registers itself. */
   identifiers: string[]
 }
-
-/** npm package name → verdict. Empty when the verifier is not installed. */
-export type LicenseStateMap = Record<string, LicenseStateEntry>
 
 /** identifier → PackageMeta. Empty when resolution is unavailable. */
 export type PackageMetaMap = Record<string, PackageMeta>

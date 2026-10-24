@@ -3,9 +3,9 @@ import { service } from "../_helpers"
 import type { AdminIntegrationLicenseStatusResponse } from "../../../../types"
 
 /**
- * Read-only view of the license verdict per package, as decided at boot by the
- * `checkLicenses` loader. There is no way to submit a key here — the key lives in
- * the environment (`GORGO_LICENSE`) and nowhere else.
+ * Read-only view of the license verdict per package, read live from `@gorgo-store/license` in this
+ * process. Nothing here calls the platform, and there is no way to submit a key: it lives in the
+ * environment (`GORGO_LICENSE`) and nowhere else.
  */
 export const GET = async (
   req: AuthenticatedMedusaRequest,

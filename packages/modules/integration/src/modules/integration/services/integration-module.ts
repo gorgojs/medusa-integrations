@@ -14,7 +14,7 @@ import {
   type LicenseStateEntry,
   type PackageMetaMap,
 } from "../types"
-import { licenseStates } from "../loaders/license-state"
+import { licenseStates, recheckLicenses } from "../loaders/license-state"
 import { loadCatalog } from "../../../lib/catalog"
 import type { IntegrationOverviewItem, CatalogItem } from "../../../types"
 import type { CategoryKind } from "../../../types/integration"
@@ -62,9 +62,14 @@ export default class IntegrationModuleService extends MedusaService({
     this.packageMeta_ = deps[INTEGRATION_PACKAGE_META_KEY] ?? {}
   }
 
-  /** License verdict per npm package: the loader's own plus every self-reporting package. */
+  /** License verdict per npm package: the loader's own plus every package that registers itself. */
   listLicenseStates(): LicenseStateEntry[] {
     return licenseStates()
+  }
+
+  /** Checks every licensed package right away and returns the fresh verdicts. */
+  async recheckLicenseStates(): Promise<LicenseStateEntry[]> {
+    return recheckLicenses()
   }
 
   // ── descriptors (sourced from registered integration-providers) ──────────────
