@@ -23,11 +23,16 @@ afterEach(() => {
 
 describe("resolvePackageMetaByIdentifier", () => {
   it("finds a provider package installed in the project, not next to this module", () => {
-    jest.spyOn(process, "cwd").mockReturnValue(projectWithProvider())
+    const root = projectWithProvider()
+    jest.spyOn(process, "cwd").mockReturnValue(root)
 
     const meta = resolvePackageMetaByIdentifier([{ resolve: "@acme/paid/providers/thing" } as any])
 
-    expect(meta.thing).toMatchObject({ name: "@acme/paid", version: "1.2.3" })
+    expect(meta.thing).toMatchObject({
+      name: "@acme/paid",
+      version: "1.2.3",
+      dir: path.join(root, "node_modules", "@acme", "paid"),
+    })
   })
 
   it("skips a provider it cannot resolve", () => {
