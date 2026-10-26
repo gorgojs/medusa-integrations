@@ -1,7 +1,7 @@
-import crypto from "node:crypto"
 import { getMachineId, isTelemetryEnabled, setTelemetryEnabled } from "./config-store.js"
 import { collectEnvInfo, findPackageJson } from "./env.js"
 import { maybeShowFirstRunNotice } from "./notice.js"
+import { processIdentity } from "./process.js"
 import { collectProjectInfo, type ProjectInfo } from "./project.js"
 import {
   severityForEvent,
@@ -87,7 +87,7 @@ export class TelemetryDispatcher {
   private registeredPackages = new Map<string, PackageInfo>()
   private packageProperties = new Map<string, Record<string, unknown>>()
   private readonly pingInterval: number
-  private readonly startedAt = Date.now()
+  private readonly startedAt: number
   private pingIndex = 0
   private pingTimer?: ReturnType<typeof setInterval>
 
@@ -103,7 +103,9 @@ export class TelemetryDispatcher {
     this.flushInterval = options.flushInterval ?? 10_000
     this.maxQueueSize = Math.max(options.maxQueueSize ?? 1000, 1)
     this.pingInterval = options.pingInterval ?? DEFAULT_PING_INTERVAL_MS
-    this.sessionId = crypto.randomUUID()
+    const identity = processIdentity()
+    this.sessionId = identity.id
+    this.startedAt = identity.started_at
 
     this.registerExitHandlers()
     maybeShowFirstRunNotice()
@@ -391,7 +393,7 @@ export class TelemetryDispatcher {
     project: ProjectInfo | null
   ): OtlpAttribute[] {
     return toOtlpAttributes({
-      "service.name": process.env.WORKER_MODE ?? "medusa",
+      "service.name": process.env.MEDUSA_WORKER_MODE ?? process.env.WORKER_MODE ?? "medusa",
       "package.name": pkg.name,
       "package.version": pkg.version,
       machine_id: machineId,
