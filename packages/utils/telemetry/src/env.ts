@@ -1,6 +1,7 @@
 import crypto from "node:crypto"
 import { existsSync } from "node:fs"
 import { readFile } from "node:fs/promises"
+import { createRequire } from "node:module"
 import path from "node:path"
 import type { EnvInfo } from "./types.js"
 
@@ -94,9 +95,18 @@ function getStoreIdCached(): string | undefined {
   return storeIdCache.value
 }
 
+function resolveMedusaManifest(): string {
+  const localRequire = createRequire(import.meta.url)
+  try {
+    return localRequire.resolve("@medusajs/medusa/package.json", { paths: [process.cwd()] })
+  } catch {
+    return localRequire.resolve("@medusajs/medusa/package.json")
+  }
+}
+
 async function detectMedusaVersion(): Promise<string> {
   try {
-    const pkgPath = require.resolve("@medusajs/medusa/package.json")
+    const pkgPath = resolveMedusaManifest()
     const raw = await readFile(pkgPath, "utf-8")
     const { version } = JSON.parse(raw) as { version: string }
     return version
