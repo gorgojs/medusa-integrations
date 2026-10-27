@@ -9,14 +9,16 @@ name: Content Review
 # This workflow points Claude at them rather than restating the checklist, so the review and a local
 # review stay the same review.
 
+#
+# Runs only on demand: Actions → Content Review → Run workflow, with the pull request number.
+
 on:
-  pull_request:
-    types: [opened, synchronize]
-    branches:
-      - main
-    paths:
-      - 'docs/**'
-      - 'catalog/**'
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number to review
+        required: true
+        type: number
 
 permissions:
   contents: read
@@ -26,14 +28,10 @@ jobs:
   review:
     name: Docs and voice review
     runs-on: ubuntu-latest
-    # This repository is public, and GitHub does not pass secrets to a pull_request event raised from
-    # a fork. Without this guard the job would fail on every external contribution with a missing-key
-    # error that looks like the contributor's fault. Skip cleanly instead; the deterministic gates in
-    # content.yml still run for everyone.
-    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: refs/pull/${{ inputs.pr }}/head
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
@@ -57,9 +55,14 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          track_progress: true
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
           prompt: |
-            Review the documentation changes in this pull request.
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ inputs.pr }}
+
+            Review the documentation changes in this pull request. Read the diff with `gh pr diff`
+            and post the review as a comment on the pull request with `gh pr comment`.
 
             Load the `docs-reviewer` and `gorgo-voice` skills from the gorgo plugin and follow them.
             They are the specification; do not restate their checklists in your output.
