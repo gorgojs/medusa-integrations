@@ -5,14 +5,14 @@ import { parsePackageMeta } from "./package-meta"
 import type { PackageMetaMap } from "../types"
 
 /** Walk up from `startDir` to the nearest package.json that has name + version. */
-function readNearestPackageJson(startDir: string): { pkg: Record<string, unknown>; dir: string } | null {
+function readNearestPackageJson(startDir: string): Record<string, unknown> | null {
   let dir = path.resolve(startDir)
   // eslint-disable-next-line no-constant-condition
   while (true) {
     try {
       const raw = readFileSync(path.join(dir, "package.json"), "utf-8")
       const pkg = JSON.parse(raw)
-      if (pkg?.name && pkg?.version) return { pkg, dir }
+      if (pkg?.name && pkg?.version) return pkg
     } catch {
       // keep walking up
     }
@@ -48,9 +48,9 @@ export function resolvePackageMetaByIdentifier(providers: ModuleProvider[]): Pac
     if (!spec) continue
     try {
       const entryPath = resolveFromProject(spec)
-      const found = readNearestPackageJson(path.dirname(entryPath))
-      if (!found) continue
-      const meta = { ...parsePackageMeta(found.pkg as any), dir: found.dir }
+      const pkgJson = readNearestPackageJson(path.dirname(entryPath))
+      if (!pkgJson) continue
+      const meta = parsePackageMeta(pkgJson as any)
       const mod = require(entryPath)
       const services: Array<{ identifier?: string }> = (mod?.default ?? mod)?.services ?? []
       for (const svc of services) {

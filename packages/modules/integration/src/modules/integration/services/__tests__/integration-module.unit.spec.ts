@@ -375,3 +375,63 @@ describe("IntegrationModuleService — getCatalog", () => {
     expect(catalog.every((c: any) => c.installed === false && c.provider_id === null)).toBe(true)
   })
 })
+
+describe("license states", () => {
+  type AnyFn = (...args: any[]) => any
+  const licenseStates = jest.fn<AnyFn>()
+  const recheckLicense = jest.fn<AnyFn>()
+  const packageMeta = {
+    demo: { name: "@gorgo-store/demo", version: "1.0.0", author: null, authorUrl: null, license: "required" },
+  }
+
+  /** The service bound to a mocked `@gorgo/license`, loaded after the mock is in place. */
+  function serviceWithLibrary(): any {
+    jest.resetModules()
+    jest.doMock("@gorgo/license", () => ({ licenseStates, recheckLicense }))
+    const Service = require("../integration-module").default
+    const svc = Object.create(Service.prototype)
+    svc.packageMeta_ = packageMeta
+    return svc
+  }
+
+  beforeEach(() => {
+    licenseStates.mockReset()
+    recheckLicense.mockReset()
+    licenseStates.mockReturnValue({})
+    recheckLicense.mockImplementation(async () => undefined)
+  })
+
+  afterEach(() => {
+    jest.dontMock("@gorgo/license")
+  })
+
+  it("lists the verdicts of @gorgo/license with the providers each package ships", () => {
+    licenseStates.mockReturnValue({ "@gorgo-store/demo": { state: "ok" } })
+
+    expect(serviceWithLibrary().listLicenseStates()).toEqual([
+      expect.objectContaining({ package: "@gorgo-store/demo", state: "ok", identifiers: ["demo"] }),
+    ])
+  })
+
+  it("rechecks through the library and returns the fresh verdicts", async () => {
+    licenseStates.mockReturnValue({ "@gorgo-store/demo": { state: "ok" } })
+
+    const fresh = await serviceWithLibrary().recheckLicenseStates()
+
+    expect(recheckLicense).toHaveBeenCalledTimes(1)
+    expect(fresh).toEqual([expect.objectContaining({ package: "@gorgo-store/demo", state: "ok" })])
+  })
+
+  it("never throws when the library does", async () => {
+    licenseStates.mockImplementation(() => {
+      throw new Error("boom")
+    })
+    recheckLicense.mockImplementation(async () => {
+      throw new Error("boom")
+    })
+    const svc = serviceWithLibrary()
+
+    expect(svc.listLicenseStates()).toEqual([])
+    await expect(svc.recheckLicenseStates()).resolves.toEqual([])
+  })
+})

@@ -20,14 +20,12 @@ export type PackageMeta = {
   authorUrl: string | null
   /** `gorgo.license` from the package.json: whether the package is licensed at all. */
   license: PackageLicenseRequirement
-  /** Directory of the package.json, so a licensed package's own dependencies can be reached. */
-  dir?: string
 }
 
 /** How a package declares itself licensed. `null` = not a licensed package. */
 export type PackageLicenseRequirement = "required" | "optional" | null
 
-/** Verdict of the license check for one npm package, as `@gorgo-store/license` reports it. */
+/** Verdict of the license check for one npm package, as `@gorgo/license` reports it. */
 export type LicenseState = "pending" | "ok" | "failed" | "unreachable"
 
 export type LicenseStateEntry = {

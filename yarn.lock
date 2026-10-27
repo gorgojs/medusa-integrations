@@ -2029,7 +2029,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gorgo/license@workspace:packages/utils/license":
+"@gorgo/license@workspace:*, @gorgo/license@workspace:packages/utils/license":
   version: 0.0.0-use.local
   resolution: "@gorgo/license@workspace:packages/utils/license"
   dependencies:
@@ -2179,6 +2179,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-integration@workspace:packages/modules/integration"
   dependencies:
+    "@gorgo/license": "npm:^1.0.0"
     "@gorgo/telemetry": "npm:^1.4.1"
     "@medusajs/admin-sdk": "npm:^2.17.2"
     "@medusajs/cli": "npm:^2.17.2"
