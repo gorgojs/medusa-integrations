@@ -67,7 +67,7 @@ Connect with other Medusa developers on Telegram in [@medusajs_chat](https://t.m
 ## Requirements
 
 - Medusa v2.17.2 or later
-- Node.js v20.19 or v22.12 and later
+- Node.js v22.23.4, v24.22.1, v26.12.1 or later
 - A Stripe account and its API keys from **Developers → API keys** in the [Stripe Dashboard](https://dashboard.stripe.com/)
 - Integration Module
 
