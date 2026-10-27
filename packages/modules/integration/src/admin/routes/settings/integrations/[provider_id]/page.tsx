@@ -26,9 +26,12 @@ import { LicenseSummary } from "../../../../components/license-summary"
 import { useLicenseStatus } from "../../../../lib/license"
 import type { AdminIntegrationResponse, IntegrationSectionData, UiSection } from "../../../../../types"
 
-/** A Medusa-admin section row: label on the left, value on the right. */
+/**
+ * A Medusa-admin section row: label on the left, value on the right. A value without spaces, such as an
+ * ID or a URL, breaks wherever it has to instead of running out of the section.
+ */
 const Row = ({ label, children }: { label: string; children: ReactNode }) => (
-  <div className="text-ui-fg-subtle grid grid-cols-2 px-6 py-4">
+  <div className="text-ui-fg-subtle grid grid-cols-2 px-6 py-4 [overflow-wrap:anywhere]">
     <Text size="small" weight="plus" leading="compact">
       {label}
     </Text>
