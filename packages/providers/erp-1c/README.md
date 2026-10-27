@@ -68,7 +68,7 @@ Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.
 ## Requirements
 
 - Medusa server v2.17.2 or later
-- Node.js v20 or later
+- Node.js v22.23.4, v24.22.1, v26.12.1 or later
 - Integration Module
 
 ## Installation

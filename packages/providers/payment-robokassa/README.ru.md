@@ -81,7 +81,7 @@
 ## Требования
 
 - Medusa v2.17.2 или новее  
-- Node.js v20 или новее  
+- Node.js v22.23.4, v24.22.1, v26.12.1 или новее  
 - Аккаунт Robokassa — [зарегистрируйтесь или войдите](https://login.robokassa.ru/reg?promoCode=gorgo)
 - Модуль интеграций
 
