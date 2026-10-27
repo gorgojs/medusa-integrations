@@ -21,7 +21,7 @@ Stripe Payments for Medusa
     <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-payment-stripe.json&logo=checkmarx" alt="Medusa" />
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-payment-stripe.json&logo=checkmarx" alt="Tested with latest Medusa" />
   </a>
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-stripe">
     <img src="https://img.shields.io/npm/v/@gorgo/medusa-payment-stripe.svg?logo=npm&label=npm" alt="npm version" />
@@ -52,6 +52,7 @@ Stripe Payments for Medusa
 
 ## Plugin Features
 
+- **Full Integration with Stripe:** Connect your store to Stripe for secure and reliable payments.
 - **One-Step & Two-Step Payments:** Autocapture or authorization/hold payment flows.
 - **Refunds & Cancellations:** Refund and order cancellation support.
 - **Webhook Notifications:** Real-time payment status updates with signature verification.
@@ -60,6 +61,8 @@ Stripe Payments for Medusa
 - **Full Test Coverage:** Comprehensive unit and integration tests covering core flows and edge cases.
 - **Storefront Example:** A complete <a href="https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-stripe/apps/storefront" target="_blank">Next.js storefront</a> ready to use as a reference.
 - **[Integration module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> :** Configure this plugin directly in the Medusa Admin application – no editing configuration files or redeploying the store.
+
+> **Integration Module:** This plugin supports the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
 
 ## What is Stripe
 
@@ -86,65 +89,9 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-payment-stripe
 npm install @gorgo/medusa-integration @gorgo/medusa-payment-stripe
 ```
 
-## Configuration
-
-Register the plugin and both providers in `medusa-config.ts`:
-
-```ts
-const STRIPE_INTEGRATION_ID = "stripe-1"
-
-module.exports = defineConfig({
-  plugins: [
-    {
-      resolve: "@gorgo/medusa-integration",
-      options: {
-        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
-        providers: [
-          {
-            resolve: "@gorgo/medusa-payment-stripe/providers/integration-stripe",
-            id: STRIPE_INTEGRATION_ID,
-            options: {},
-          },
-        ],
-      },
-    },
-    {
-      resolve: "@gorgo/medusa-payment-stripe",
-      options: {},
-    },
-  ],
-  modules: [
-    {
-      resolve: "@medusajs/medusa/payment",
-      options: {
-        providers: [
-          {
-            resolve: "@gorgo/medusa-payment-stripe/providers/payment-stripe",
-            id: "stripe",
-            options: { id: STRIPE_INTEGRATION_ID },
-          },
-        ],
-      },
-    },
-  ],
-})
-```
-
-Set `INTEGRATION_ENCRYPTION_KEY` in the backend's `.env`, restart the server, and enter the secret key, the publishable key and the webhook signing secret in **Settings → Integrations → Stripe**. The same page sets the capture mode, a payment method configuration, the payment description, the statement descriptor suffix and the receipt email. Point a Stripe webhook endpoint at `https://<your backend>/hooks/payment/stripe_stripe` and subscribe it to `payment_intent.succeeded` and `payment_intent.amount_capturable_updated`.
-
 ## Replacing the Core Stripe Provider
 
-The plugin takes over from Medusa's `@medusajs/payment-stripe` without a data migration. The provider ID stays `pp_stripe_stripe` and the webhook URL stays `/hooks/payment/stripe_stripe`. Payments created by the core provider are still captured and refunded, and the webhook endpoint in the Stripe Dashboard keeps working.
-
-To switch, do the following:
-
-- Register the plugin and both providers as shown above in place of the core provider, and keep `id: "stripe"` on the payment provider.
-- Move the core provider's `apiKey`, `webhookSecret` and `capture` options to **Settings → Integrations → Stripe**. The core provider only authorizes unless `capture` is `true`, while the plugin captures right away by default.
-- Do not keep both packages registered under `id: "stripe"`, since both would claim `pp_stripe_stripe`.
-
-## Usage Data
-
-The plugin sends anonymous usage data when it starts. Set `GORGO_DISABLE_TELEMETRY=true` in the environment to turn it off. Details are on the [Usage Data](https://docs.gorgojs.com/tools/usage-data) page.
+The plugin takes over from Medusa's `@medusajs/payment-stripe` without a data migration. It keeps the provider ID `pp_stripe_stripe` and the webhook URL `/hooks/payment/stripe_stripe`, so payments created by the core provider are still captured and refunded. See [Switch from Medusa's Stripe Provider](https://docs.gorgojs.com/medusa-integrations/stripe/getting-started#switch-from-medusas-stripe-provider) for the steps.
 
 ## Documentation
 
