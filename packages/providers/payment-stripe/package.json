@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-stripe",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "description": "Stripe payment provider for Medusa",
   "license": "MIT",
   "files": [

@@ -35,8 +35,8 @@
     "test:unit": "TEST_TYPE=unit NODE_OPTIONS=--experimental-vm-modules jest --silent --runInBand --forceExit"
   },
   "dependencies": {
-    "@gorgo/medusa-integration": "file:.yalc/@gorgo/medusa-integration",
-    "@gorgo/medusa-payment-stripe": "file:.yalc/@gorgo/medusa-payment-stripe",
+    "@gorgo/medusa-integration": "latest",
+    "@gorgo/medusa-payment-stripe": "latest",
     "@medusajs/admin-sdk": "2.21.2",
     "@medusajs/admin-shared": "2.21.2",
     "@medusajs/caching": "2.21.2",
