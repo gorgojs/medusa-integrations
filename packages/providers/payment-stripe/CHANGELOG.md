@@ -1,5 +1,16 @@
 # @gorgo/medusa-payment-stripe
 
+## 2.0.1
+
+### Documentation
+
+- align the readme with the other payment plugins by [@gorgohead](https://github.com/gorgohead) in [#514](https://github.com/gorgojs/medusa-integrations/pull/514) ([`443af4d`](https://github.com/gorgojs/medusa-integrations/commit/443af4d9b54cffdfef91a643187fa9758526f513))
+
+### Dependencies
+
+- Updated dependencies:
+  - @gorgo/telemetry@1.4.1
+
 ## 2.0.0
 
 ### Highlights

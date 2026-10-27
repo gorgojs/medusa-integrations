@@ -1,5 +1,11 @@
 # @gorgo/telemetry
 
+## 1.4.1
+
+### Bug Fixes
+
+- require node.js 22.23.4, 24.22.1, 26.12.1 or later by [@gorgohead](https://github.com/gorgohead) in [#514](https://github.com/gorgojs/medusa-integrations/pull/514) ([`9402e4a`](https://github.com/gorgojs/medusa-integrations/commit/9402e4a7199405fbf1ad82ad5aeae871abee68db))
+
 ## 1.4.0
 
 ### Features

@@ -1,5 +1,16 @@
 # @gorgo/medusa-payment-paypal
 
+## 2.0.1
+
+### Documentation
+
+- align the readme with the other payment plugins by [@gorgohead](https://github.com/gorgohead) in [#514](https://github.com/gorgojs/medusa-integrations/pull/514) ([`b63b61c`](https://github.com/gorgojs/medusa-integrations/commit/b63b61cf11652834a782fd86e7b0e7f5fcae3a98))
+
+### Dependencies
+
+- Updated dependencies:
+  - @gorgo/telemetry@1.4.1
+
 ## 2.0.0
 
 ### Highlights
