@@ -52,11 +52,10 @@ PayPal Payments for Medusa
 
 ## Plugin Features
 
-- **Production-Ready:** Proven in live stores and ready for real-world deployment.
 - **One-Step & Two-Step Payments:** Autocapture or authorization/hold payment flows.
 - **Refunds & Cancellations:** Full refund and order cancellation support.
 - **Webhook Notifications:** Real-time payment status updates with signature verification.
-- **Express Checkout:** PayPal in the express checkout row of the [Medusa DTC Starter by Gorgo](https://docs.gorgojs.com/tools/medusa-dtc-starter).
+- **Express Checkout:** A PayPal button for the storefront. The buyer pays without filling in the checkout form, the address comes from their PayPal account, and the shipping cost updates for it.
 - **Detailed Logging:** Request and response logs for debugging and support in development mode.
 - **Full Test Coverage:** Comprehensive unit and integration tests covering core flows and edge cases.
 - **Storefront Example:** A complete <a href="https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-paypal/apps/storefront" target="_blank">Next.js storefront</a> ready to use as a reference.
