@@ -12,8 +12,6 @@ PayPal Payments for Medusa
   <a href="https://docs.gorgojs.com/medusa-integrations/paypal">Documentation</a>
   <br/>
   A Medusa plugin that provides PayPal payments.
-  <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/payment-paypal/README.ru.md">Читать README на русском ↗</a>
 </p>
 
 <br/>
@@ -40,6 +38,16 @@ PayPal Payments for Medusa
   <a href="https://t.me/medusajs_chat">
     <img src="https://img.shields.io/badge/Telegram-Medusa.js_Dev_Community_Chat-0088cc?logo=telegram&style=social" alt="Medusa.js Chat on Telegram" />
   </a>
+</p>
+
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/payment-paypal/demo/payment-paypal-demo-en.18e12293.mp4">
+    <img src="https://static.gorgojs.com/videos/payment-paypal/demo/payment-paypal-demo-en-poster-play.dbc68c06.webp" alt="Watch the PayPal plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/payment-paypal/demo/payment-paypal-demo-en.18e12293.mp4">▶ Watch the demo video</a>
 </p>
 
 ## Plugin Features
