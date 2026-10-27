@@ -12,8 +12,6 @@ Stripe Payments for Medusa
   <a href="https://docs.gorgojs.com/medusa-integrations/stripe">Documentation</a>
   <br/>
   A Medusa plugin that provides Stripe payments.
-  <br/>
-  <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/providers/payment-stripe/README.ru.md">Читать README на русском ↗</a>
 </p>
 
 <br/>
@@ -40,6 +38,16 @@ Stripe Payments for Medusa
   <a href="https://t.me/medusajs_chat">
     <img src="https://img.shields.io/badge/Telegram-Medusa.js_Dev_Community_Chat-0088cc?logo=telegram&style=social" alt="Medusa.js Chat on Telegram" />
   </a>
+</p>
+
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/payment-stripe/demo/payment-stripe-demo-en.30bdfab5.mp4">
+    <img src="https://static.gorgojs.com/videos/payment-stripe/demo/payment-stripe-demo-en-poster-play.392fa704.webp" alt="Watch the Stripe plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/payment-stripe/demo/payment-stripe-demo-en.30bdfab5.mp4">▶ Watch the demo video</a>
 </p>
 
 ## Plugin Features
