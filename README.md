@@ -223,6 +223,7 @@ Before opening a Pull Request:
    - `payment-robokassa`
    - `payment-tkassa`
    - `payment-yookassa`
+   - `license`
    - `telemetry`
 
     Plus repo-level scopes: `deps`, `release`, `docs`, `root`. Run `yarn scopes` to print the current list.  

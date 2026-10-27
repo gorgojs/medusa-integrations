@@ -220,6 +220,7 @@ CI запускает юнит-тесты на каждый PR (только д�
    - `payment-robokassa`
    - `payment-tkassa`
    - `payment-yookassa`
+   - `license`
    - `telemetry`
 
     Плюс scope'ы уровня репозитория: `deps`, `release`, `docs`, `root`. Текущий список можно вывести командой `yarn scopes`.

@@ -34,6 +34,7 @@ This repository is organized as a Yarn v4 monorepo with shared workspaces for pl
 │   │   ├── payment-tkassa/
 │   │   └── payment-yookassa/
 │   └── utils/
+│       ├── license/
 │       └── telemetry/
 ├── scripts/
 └── docs/                            # documentation content (built by gorgo/packages/docs)
@@ -108,6 +109,7 @@ Commits must follow [Conventional Commits](https://www.conventionalcommits.org/)
   - `payment-tkassa`
   - `payment-yookassa`
 - Package scope from `packages/utils/` (folder name as-is):
+  - `license`
   - `telemetry`
 - Repo-level:
   - `deps`
