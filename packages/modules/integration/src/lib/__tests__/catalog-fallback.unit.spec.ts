@@ -1,10 +1,26 @@
+import { readdirSync, readFileSync } from "node:fs"
+import { join } from "node:path"
 import { FALLBACK_CATALOG } from "../catalog.generated"
 
+// __tests__ -> lib -> src -> integration -> modules -> packages -> repo root
+const entriesDir = join(__dirname, "..", "..", "..", "..", "..", "..", "catalog", "integrations")
+
+/**
+ * The ids gen-catalog.mjs would emit right now: every entry not marked `active: false`. Read
+ * from the top-level keys rather than through js-yaml, which this package does not declare.
+ */
+const activeCatalogIds = (): string[] =>
+  readdirSync(entriesDir)
+    .filter((f) => f.endsWith(".yml"))
+    .map((f) => readFileSync(join(entriesDir, f), "utf8"))
+    .filter((yml) => !/^active:\s*false\s*$/m.test(yml))
+    .map((yml) => yml.match(/^identifier:\s*["']?([^"'\s#]+)/m)?.[1] ?? "")
+    .sort()
+
 describe("FALLBACK_CATALOG (generated from catalog/integrations/*.yml)", () => {
-  it("contains all six active integrations", () => {
-    expect(FALLBACK_CATALOG).toHaveLength(6)
+  it("holds exactly the active catalog entries, so a stale catalog.generated.ts fails here", () => {
     const ids = FALLBACK_CATALOG.map((c) => c.integrationId).sort()
-    expect(ids).toEqual(["1c", "1c-catalog", "apiship", "robokassa", "tkassa", "yookassa"])
+    expect(ids).toEqual(activeCatalogIds())
   })
 
   it("flattens the 1c entry to the CatalogIntegration shape", () => {
