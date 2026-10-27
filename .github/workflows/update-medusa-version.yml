@@ -25,7 +25,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Resolve version delta
         id: versions
@@ -118,7 +118,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Enable Corepack and Yarn
         run: |
