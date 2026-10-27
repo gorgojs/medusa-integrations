@@ -4,7 +4,7 @@ Handy examples for Medusa Gorgo plugins.
 
 ## Prerequisites
 
-- Node.js v20+
+- Node.js v22.23.4, v24.22.1, v26.12.1 or later
 - Yarn
 - Docker & Docker Compose (optional, for spinning up PosgreSQL)
 
