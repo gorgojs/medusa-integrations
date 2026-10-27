@@ -14,7 +14,8 @@ import {
   type LicenseStateEntry,
   type PackageMetaMap,
 } from "../types"
-import { licenseStates, recheckLicenses } from "../loaders/license-state"
+import { licenseStates, recheckLicense } from "@gorgo/license"
+import { toLicenseStateEntries } from "../utils/license-entry"
 import { loadCatalog } from "../../../lib/catalog"
 import type { IntegrationOverviewItem, CatalogItem } from "../../../types"
 import type { CategoryKind } from "../../../types/integration"
@@ -62,14 +63,27 @@ export default class IntegrationModuleService extends MedusaService({
     this.packageMeta_ = deps[INTEGRATION_PACKAGE_META_KEY] ?? {}
   }
 
-  /** License verdict per npm package: the loader's own plus every package that registers itself. */
+  /**
+   * License verdict per npm package, read live from `@gorgo/license`: the packages the loader
+   * registered plus every package that registers itself. The check runs in the background, so a
+   * verdict can still be pending.
+   */
   listLicenseStates(): LicenseStateEntry[] {
-    return licenseStates()
+    try {
+      return toLicenseStateEntries(licenseStates(), this.packageMeta_)
+    } catch {
+      return []
+    }
   }
 
-  /** Checks every licensed package right away and returns the fresh verdicts. */
+  /** Checks every licensed package right away, for "Check now", and returns the fresh verdicts. */
   async recheckLicenseStates(): Promise<LicenseStateEntry[]> {
-    return recheckLicenses()
+    try {
+      await recheckLicense()
+    } catch {
+      // the verdicts below still show what the library last knew
+    }
+    return this.listLicenseStates()
   }
 
   // ── descriptors (sourced from registered integration-providers) ──────────────

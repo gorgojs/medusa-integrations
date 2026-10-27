@@ -50,6 +50,7 @@
     "test:unit": "TEST_TYPE=unit NODE_OPTIONS=--experimental-vm-modules jest --silent --runInBand --forceExit"
   },
   "dependencies": {
+    "@gorgo/license": "^1.0.0",
     "@gorgo/telemetry": "^1.4.1"
   },
   "devDependencies": {
