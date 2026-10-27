@@ -246,12 +246,21 @@ const IntegrationsPage = () => {
       columnHelper.display({
         id: "description",
         header: t("integration.columns.description"),
+        // The table's cells do not wrap, so a description would stretch the column to its whole length.
+        // A fixed width wraps it into two or three lines and leaves the rest of the row to the others.
+        size: 360,
         cell: ({ row }) =>
           row.original.description ? (
-            <Text size="small" leading="compact" className="text-ui-fg-subtle line-clamp-2">
+            <Text
+              size="small"
+              leading="compact"
+              className="text-ui-fg-subtle line-clamp-3 whitespace-normal [overflow-wrap:anywhere]"
+            >
               {t(row.original.description)}
             </Text>
           ) : null,
+        // The text wraps, so the table's tooltip for a clipped single line would never open.
+        truncateTooltip: false,
       }),
       columnHelper.display({
         id: "category",

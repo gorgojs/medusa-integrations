@@ -14,6 +14,14 @@ const SURFACE: Record<LicenseTone, string> = {
   red: "bg-ui-tag-red-bg border-ui-tag-red-border",
 }
 
+/** The transparent button's hover is an opaque grey that punches a hole in a tinted plate, so those take the tag's own hover. */
+const RECHECK: Record<LicenseTone, string | undefined> = {
+  green: undefined,
+  grey: undefined,
+  orange: "hover:bg-ui-tag-orange-bg-hover active:bg-ui-tag-orange-bg-hover",
+  red: "hover:bg-ui-tag-red-bg-hover active:bg-ui-tag-red-bg-hover",
+}
+
 /**
  * A paid integration's license on its page, under the description: the state, what to do about it,
  * "Check now" and the one link that fixes it. Nothing to click while the first check runs.
@@ -44,6 +52,7 @@ export const LicenseSummary = ({ entry }: { entry: LicenseStateEntry }) => {
           <Button
             size="small"
             variant="transparent"
+            className={RECHECK[view.tone]}
             isLoading={recheck.isPending}
             disabled={recheck.isPending}
             onClick={() => recheck.mutate()}
