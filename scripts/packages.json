@@ -80,6 +80,10 @@
       }
     ]
   },
+  "license": {
+    "dir": "packages/utils/license",
+    "examples": []
+  },
   "telemetry": {
     "dir": "packages/utils/telemetry",
     "examples": []

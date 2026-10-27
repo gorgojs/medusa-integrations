@@ -3,8 +3,13 @@
   "envMode": "loose",
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
+      "dependsOn": ["^build", "@gorgo/license#build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
       "outputs": [".medusa/**", "dist/**"],
+      "inputs": ["src/**", "package.json", "tsconfig.json"]
+    },
+    "@gorgo/license#build": {
+      "dependsOn": [],
+      "outputs": ["dist/**"],
       "inputs": ["src/**", "package.json", "tsconfig.json"]
     },
     "@gorgo/telemetry#build": {
@@ -13,21 +18,21 @@
       "inputs": ["src/**", "package.json", "tsconfig.json"]
     },
     "@gorgo/medusa-integration#build": {
-      "dependsOn": ["@gorgo/telemetry#build"],
+      "dependsOn": ["@gorgo/license#build", "@gorgo/telemetry#build"],
       "outputs": [".medusa/**"],
       "inputs": ["src/**", "package.json", "tsconfig.json"]
     },
     "test:unit": {
-      "dependsOn": ["^build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
+      "dependsOn": ["^build", "@gorgo/license#build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
       "outputs": [],
       "inputs": ["src/**", "jest.config.*", "package.json"]
     },
     "test:integration:http": {
-      "dependsOn": ["^build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
+      "dependsOn": ["^build", "@gorgo/license#build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
       "outputs": []
     },
     "test:integration:modules": {
-      "dependsOn": ["^build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
+      "dependsOn": ["^build", "@gorgo/license#build", "@gorgo/telemetry#build", "@gorgo/medusa-integration#build"],
       "outputs": []
     }
   },
