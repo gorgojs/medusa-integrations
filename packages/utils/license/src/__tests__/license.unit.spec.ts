@@ -480,6 +480,15 @@ describe("the verdict", () => {
     expect(licenseState(ONEC)).toMatchObject({ state: "failed", reason: "invalid_token" })
   })
 
+  it("does not blame the key when the service could not read the request", async () => {
+    const calls = mockFetch([{ status: 400, body: { ok: false, reason: "malformed" } }])
+    setup()
+    registerLicensedPackage({ packageName: TKASSA, packageVersion: "0.10.1" })
+    await flush(2_000)
+    expect(calls).toHaveLength(VERIFY_URLS.length)
+    expect(licenseState(TKASSA)).toMatchObject({ state: "unreachable" })
+  })
+
   it("maps an unknown refusal reason to unknown", async () => {
     mockFetch([okReply([{ name: TKASSA, ok: false, reason: "made_up" }])])
     setup()

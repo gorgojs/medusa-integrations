@@ -1,5 +1,4 @@
 import {
-  Button,
   Container,
   Heading,
   Text,
@@ -10,7 +9,7 @@ import {
   toast,
   usePrompt,
 } from "@medusajs/ui"
-import { ArrowUpRightOnBox, EllipsisHorizontal, PencilSquare, Trash, Spinner } from "@medusajs/icons"
+import { EllipsisHorizontal, PencilSquare, Trash, Spinner } from "@medusajs/icons"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
@@ -23,8 +22,8 @@ import { IntegrationIcon } from "../../../../components/integration-icon"
 import { IntegrationFieldValue } from "../../../../components/integration-form/field-value"
 import { EditSectionDrawer } from "../../../../components/integration-form/edit-section-drawer"
 import { isFieldVisible } from "../../../../components/integration-form/visibility"
-import { LicenseDetails } from "../../../../components/license-details"
-import { GORGO_ACCOUNT_URL, useLicenseStatus, useRecheckLicense } from "../../../../lib/license"
+import { LicenseSummary } from "../../../../components/license-summary"
+import { useLicenseStatus } from "../../../../lib/license"
 import type { AdminIntegrationResponse, IntegrationSectionData, UiSection } from "../../../../../types"
 
 /** A Medusa-admin section row: label on the left, value on the right. */
@@ -51,9 +50,8 @@ const EditPage = () => {
     queryFn: () => sdk.client.fetch<AdminIntegrationResponse>(`/admin/integrations/${provider_id}`),
   })
 
-  // Display query of its own: a free integration simply has no entry and shows no license card.
+  // Display query of its own: a free integration simply has no entry and shows no license block.
   const { data: licenseData } = useLicenseStatus()
-  const recheck = useRecheckLicense()
 
   const descriptor = data?.descriptor
   const record = data?.integration
@@ -154,6 +152,8 @@ const EditPage = () => {
         ? { color: "red" as const, label: t("integration.status.connectionFailed") }
         : null
     : null
+
+  const license = licenseData?.packages.find((entry) => entry.identifiers.includes(descriptor.identifier))
 
   const editing = descriptor.sections.find((s) => s.id === editingSection) ?? null
   // Secret keys with a stored value — per field, so only the actually-set secrets render as
@@ -290,6 +290,7 @@ const EditPage = () => {
                 {t(descriptor.description)}
               </Text>
             )}
+            {license && <LicenseSummary entry={license} />}
           </div>
 
           <Row label={t("integration.labels.category")}>
@@ -317,46 +318,7 @@ const EditPage = () => {
     </>
   )
 
-  const license = licenseData?.packages.find((entry) => entry.identifiers.includes(descriptor.identifier))
-
-  // One card for every paid integration, drawn by the module rather than by each plugin.
-  const licenseCard = license && (
-    <LayoutComposer.Entry id="license">
-      <Container className="divide-y p-0">
-        <div className="flex items-center justify-between px-6 py-4">
-          <Heading level="h2">{t("integration.license.card.title")}</Heading>
-          <Button
-            size="small"
-            variant="secondary"
-            isLoading={recheck.isPending}
-            disabled={recheck.isPending}
-            onClick={() => recheck.mutate()}
-          >
-            {t("integration.license.card.recheck")}
-          </Button>
-        </div>
-        <LicenseDetails entry={license} />
-        <div className="px-6 py-4">
-          <a
-            href={GORGO_ACCOUNT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-ui-fg-interactive txt-compact-small flex items-center gap-x-1"
-          >
-            {t("integration.license.card.openAccount")}
-            <ArrowUpRightOnBox />
-          </a>
-        </div>
-      </Container>
-    </LayoutComposer.Entry>
-  )
-
-  const side = (
-    <>
-      {licenseCard}
-      {sideSections.map(renderSection)}
-    </>
-  )
+  const side = <>{sideSections.map(renderSection)}</>
 
   return (
     <LayoutComposer
