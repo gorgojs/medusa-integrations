@@ -9,7 +9,7 @@ Each package has two test types:
 
 ## Prerequisites
 
-- Node.js v20+, Yarn
+- Node.js v22.23.4, v24.22.1, v26.12.1 or later, Yarn
 - A running PostgreSQL. Connection is read from each package's `.env.test` (defaults to `postgres://postgres:postgres@localhost:5432/medusa-test`); a temporary test database is created and dropped per run. The quickest way to get one is [`examples/docker-compose.yml`](../examples/docker-compose.yml).
 
 ## Running
