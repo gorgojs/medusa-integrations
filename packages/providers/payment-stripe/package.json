@@ -5,7 +5,8 @@
   "license": "MIT",
   "files": [
     ".medusa/server",
-    "index.d.ts"
+    "index.d.ts",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "repository": {
     "type": "git",
