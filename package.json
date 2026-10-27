@@ -25,7 +25,7 @@
     "lint:integrations": "node scripts/check-integration-complete.js",
     "lint:content": "yarn lint:style && yarn lint:parity && yarn lint:i18n && yarn lint:integrations",
     "build": "turbo run build --concurrency=100%",
-    "test:unit": "turbo run test:unit --filter='./packages/providers/*' --filter='./packages/modules/*' --no-cache --force",
+    "test:unit": "turbo run test:unit --filter='./packages/providers/*' --filter='./packages/modules/*' --filter='./packages/utils/*' --no-cache --force",
     "test:integration": "turbo run test:integration:http test:integration:modules --filter='./integration-tests/*' --concurrency=1 --no-cache --force",
     "test:changed": "turbo run test:unit test:integration:http test:integration:modules --filter='...[origin/main]' --concurrency=1 --no-cache --force",
     "release:version": "changeset version && node scripts/format-changelog.js && yarn install --no-immutable"
