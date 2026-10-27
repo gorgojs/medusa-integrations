@@ -67,7 +67,7 @@ Connect with other Medusa developers on Telegram in [@medusajs_chat](https://t.m
 ## Requirements
 
 - Medusa v2.17.2 or later
-- Node.js v20.19 or v22.12 and later
+- Node.js v22.23.4, v24.22.1, v26.12.1 or later
 - A PayPal Business account and an app in the [PayPal Developer Dashboard](https://developer.paypal.com/dashboard/)
 - Integration Module
 
