@@ -16,4 +16,3 @@ export type {
   LicenseSubscription,
   RegisterLicensedPackageInput,
 } from "./license"
-export { VERIFY_URLS } from "./urls"

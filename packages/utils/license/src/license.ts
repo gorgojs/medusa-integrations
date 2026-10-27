@@ -2,12 +2,16 @@ import { packageFrom } from "./package-manifest"
 import { processIdentity } from "./process"
 import { runtimeOf } from "./runtime"
 import type { HostSource } from "./runtime"
-import { verifyUrls } from "./urls"
+
+/**
+ * Hardcoded on purpose. An address read from the environment would let a merchant point the check
+ * at a server of their own that approves everything.
+ */
+const VERIFY_URL = "https://api.gorgojs.com/v1/licenses/check"
 
 const TOKEN_RE = /^gorgo_live_[a-f0-9]{16,128}$/
 const DEBOUNCE_MS = 2_000
-const ATTEMPT_TIMEOUT_MS = 3_000
-const TOTAL_BUDGET_MS = 6_000
+const TIMEOUT_MS = 3_000
 const MAX_BODY_BYTES = 16 * 1024
 const MAX_PACKAGES = 50
 const RECHECK_MS = 24 * 60 * 60 * 1000
@@ -292,12 +296,12 @@ async function readLimited(res: Response): Promise<string | null> {
   return Buffer.concat(chunks).toString("utf8")
 }
 
-async function ask(url: string, body: unknown, timeoutMs: number): Promise<Reply> {
+async function send(body: unknown): Promise<Reply> {
   try {
-    const res = await fetch(url, {
+    const res = await fetch(VERIFY_URL, {
       method: "POST",
       redirect: "error",
-      signal: AbortSignal.timeout(timeoutMs),
+      signal: AbortSignal.timeout(TIMEOUT_MS),
       headers: { "content-type": "application/json", accept: "application/json" },
       body: JSON.stringify(body),
     })
@@ -310,18 +314,6 @@ async function ask(url: string, body: unknown, timeoutMs: number): Promise<Reply
   } catch {
     return null
   }
-}
-
-/** The fallback address is tried only when the first one gives no answer, never after a 429. */
-async function send(body: unknown): Promise<Reply> {
-  const deadline = Date.now() + TOTAL_BUDGET_MS
-  for (const url of verifyUrls()) {
-    const remaining = deadline - Date.now()
-    if (remaining <= 0) break
-    const reply = await ask(url, body, Math.min(ATTEMPT_TIMEOUT_MS, remaining))
-    if (reply) return reply
-  }
-  return null
 }
 
 function refusal(entry: PackageVerdict | undefined, checkedAt: number, host: string): LicenseState {

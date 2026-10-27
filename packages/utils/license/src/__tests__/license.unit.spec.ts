@@ -9,8 +9,8 @@ import {
   registerLicensedPackage,
   resetLicenseStatesForTests,
 } from "../license"
-import { VERIFY_URLS } from "../urls"
 
+const VERIFY_URL = "https://api.gorgojs.com/v1/licenses/check"
 const TOKEN = "gorgo_live_" + "ab".repeat(24)
 const OTHER_TOKEN = "gorgo_live_" + "cd".repeat(24)
 const TKASSA = "@gorgo-store/medusa-payment-tkassa"
@@ -127,7 +127,7 @@ describe("registerLicensedPackage", () => {
 
     await flush(1)
     expect(calls).toHaveLength(1)
-    expect(calls[0]!.url).toBe(VERIFY_URLS[0])
+    expect(calls[0]!.url).toBe(VERIFY_URL)
     expect(calls[0]!.body).toMatchObject({
       license: TOKEN,
       host: "shop.example.com",
@@ -485,7 +485,7 @@ describe("the verdict", () => {
     setup()
     registerLicensedPackage({ packageName: TKASSA, packageVersion: "0.10.1" })
     await flush(2_000)
-    expect(calls).toHaveLength(VERIFY_URLS.length)
+    expect(calls).toHaveLength(1)
     expect(licenseState(TKASSA)).toMatchObject({ state: "unreachable" })
   })
 
@@ -522,32 +522,35 @@ describe("the verdict", () => {
 })
 
 describe("when the service does not answer", () => {
-  it("falls back to the second address, then marks every package unreachable", async () => {
-    const calls = mockFetch(["network", "network", okReply([okPackage(TKASSA)])])
+  it("marks every package unreachable", async () => {
+    const calls = mockFetch(["network", okReply([okPackage(TKASSA)])])
     const { warn, onChange } = setup()
     registerLicensedPackage({ packageName: TKASSA, packageVersion: "0.10.1" })
     await flush(2_000)
 
-    expect(calls.map((c) => c.url)).toEqual([...VERIFY_URLS])
+    expect(calls.map((c) => c.url)).toEqual([VERIFY_URL])
     expect(licenseState(TKASSA)).toMatchObject({ state: "unreachable" })
     expect(warn).toHaveBeenCalledWith(expect.stringContaining("could not reach"))
     expect(onChange).toHaveBeenCalledWith(TKASSA, expect.objectContaining({ state: "unreachable" }), { state: "pending" })
   })
 
   it("retries in fifteen minutes, give or take five", async () => {
-    const calls = mockFetch(["network", "network", okReply([okPackage(TKASSA)])])
+    const calls = mockFetch(["network", okReply([okPackage(TKASSA)])])
     setup()
     registerLicensedPackage({ packageName: TKASSA, packageVersion: "0.10.1" })
     await flush(2_000)
     await flush(10 * MINUTE - 1)
-    expect(calls).toHaveLength(2)
+    expect(calls).toHaveLength(1)
     await flush(11 * MINUTE)
-    expect(calls).toHaveLength(3)
+    expect(calls).toHaveLength(2)
     expect(licenseState(TKASSA)).toMatchObject({ state: "ok" })
   })
 
-  it("treats a server error and an oversized reply as unreachable", async () => {
-    mockFetch([{ status: 502 }, { raw: "x".repeat(17 * 1024) }])
+  it.each([
+    ["a server error", { status: 502 }],
+    ["an oversized reply", { raw: "x".repeat(17 * 1024) }],
+  ])("treats %s as unreachable", async (_, reply) => {
+    mockFetch([reply])
     setup()
     registerLicensedPackage({ packageName: TKASSA, packageVersion: "0.10.1" })
     await flush(2_000)
@@ -581,18 +584,7 @@ describe("when the service does not answer", () => {
     setup()
     registerLicensedPackage({ packageName: TKASSA, packageVersion: "0.10.1" })
     await flush(2_000)
-    expect(calls.map((c) => c.url)).toEqual([VERIFY_URLS[0]])
-  })
-
-  it("asks the public API first and the cabinet as the fallback, never the admin host", async () => {
-    const calls = mockFetch(["network", "network"])
-    setup()
-    registerLicensedPackage({ packageName: TKASSA, packageVersion: "0.10.1" })
-    await flush(2_000)
-    expect(calls.map((c) => c.url)).toEqual([
-      "https://api.gorgojs.com/v1/licenses/check",
-      "https://app.gorgojs.com/license/verify",
-    ])
+    expect(calls.map((c) => c.url)).toEqual([VERIFY_URL])
   })
 })
 
