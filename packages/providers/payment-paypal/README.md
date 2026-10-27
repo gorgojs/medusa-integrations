@@ -21,7 +21,7 @@ PayPal Payments for Medusa
     <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-payment-paypal.json&logo=checkmarx" alt="Medusa" />
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-payment-paypal.json&logo=checkmarx" alt="Tested with latest Medusa" />
   </a>
   <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-paypal">
     <img src="https://img.shields.io/npm/v/@gorgo/medusa-payment-paypal.svg?logo=npm&label=npm" alt="npm version" />
@@ -52,6 +52,7 @@ PayPal Payments for Medusa
 
 ## Plugin Features
 
+- **Full Integration with PayPal:** Connect your store to PayPal for secure and reliable payments.
 - **One-Step & Two-Step Payments:** Autocapture or authorization/hold payment flows.
 - **Refunds & Cancellations:** Full refund and order cancellation support.
 - **Webhook Notifications:** Real-time payment status updates with signature verification.
@@ -60,6 +61,8 @@ PayPal Payments for Medusa
 - **Full Test Coverage:** Comprehensive unit and integration tests covering core flows and edge cases.
 - **Storefront Example:** A complete <a href="https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-paypal/apps/storefront" target="_blank">Next.js storefront</a> ready to use as a reference.
 - **[Integration module](https://gorgojs.com/medusa-integration-module) <img src="https://img.shields.io/badge/NEW-green" alt="New" /> :** Configure this plugin directly in the Medusa Admin application – no editing configuration files or redeploying the store.
+
+> **Integration Module:** This plugin supports the Integration module, which lets store administrators configure it directly in the Medusa Admin application instead of editing configuration files and redeploying the store. Sensitive values are encrypted, and settings are validated before they take effect.
 
 ## What is PayPal
 
@@ -85,52 +88,6 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-payment-paypal
 # or
 npm install @gorgo/medusa-integration @gorgo/medusa-payment-paypal
 ```
-
-## Configuration
-
-Register the plugin and both providers in `medusa-config.ts`:
-
-```ts
-const PAYPAL_INTEGRATION_ID = "paypal-1"
-
-module.exports = defineConfig({
-  plugins: [
-    {
-      resolve: "@gorgo/medusa-integration",
-      options: {
-        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
-        providers: [
-          {
-            resolve: "@gorgo/medusa-payment-paypal/providers/integration-paypal",
-            id: PAYPAL_INTEGRATION_ID,
-            options: {},
-          },
-        ],
-      },
-    },
-    {
-      resolve: "@gorgo/medusa-payment-paypal",
-      options: {},
-    },
-  ],
-  modules: [
-    {
-      resolve: "@medusajs/medusa/payment",
-      options: {
-        providers: [
-          {
-            resolve: "@gorgo/medusa-payment-paypal/providers/payment-paypal",
-            id: "paypal",
-            options: { id: PAYPAL_INTEGRATION_ID },
-          },
-        ],
-      },
-    },
-  ],
-})
-```
-
-Set `INTEGRATION_ENCRYPTION_KEY` in the backend's `.env`, restart the server, and enter the client ID, secret and webhook ID in **Settings → Integrations → PayPal**. Point the PayPal webhook at `https://<your backend>/hooks/payment/paypal_paypal` and subscribe it to `PAYMENT.AUTHORIZATION.CREATED` and `PAYMENT.CAPTURE.COMPLETED`.
 
 ## Documentation
 
