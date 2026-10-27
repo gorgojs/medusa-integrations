@@ -10,6 +10,7 @@
   ],
   "packageManager": "yarn@4.9.2",
   "resolutions": {
+    "@gorgo/license": "workspace:*",
     "@gorgo/telemetry": "workspace:*",
     "@gorgo/medusa-integration": "workspace:*"
   },

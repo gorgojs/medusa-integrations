@@ -2029,6 +2029,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gorgo/license@workspace:packages/utils/license":
+  version: 0.0.0-use.local
+  resolution: "@gorgo/license@workspace:packages/utils/license"
+  dependencies:
+    "@swc/core": "npm:^1.7.28"
+    "@swc/jest": "npm:^0.2.36"
+    "@types/jest": "npm:^29.5.13"
+    "@types/node": "npm:^20.0.0"
+    jest: "npm:^29.7.0"
+    typescript: "npm:^5.6.2"
+    yalc: "npm:^1.0.0-pre.53"
+  languageName: unknown
+  linkType: soft
+
 "@gorgo/medusa-1c@workspace:*, @gorgo/medusa-1c@workspace:packages/providers/erp-1c":
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-1c@workspace:packages/providers/erp-1c"
