@@ -1,4 +1,5 @@
 import type { ModuleProvider } from "@medusajs/framework/types"
+import type { LicenseFailReason } from "@gorgo/license"
 
 /** Awilix list-key under which every registered integration-provider key is collected. */
 export const IntegrationProviderRegistrationKey = "integration_providers"
@@ -26,19 +27,24 @@ export type PackageMeta = {
 export type PackageLicenseRequirement = "required" | "optional" | null
 
 /** Verdict of the license check for one npm package, as `@gorgo/license` reports it. */
-export type LicenseState = "pending" | "ok" | "failed" | "unreachable"
+export type LicenseStatus = "pending" | "ok" | "failed" | "unreachable"
+
+export type { LicenseFailReason }
 
 export type LicenseStateEntry = {
   package: string
-  state: LicenseState
-  /** Why the check failed: `missing`, `invalid_token`, `domain_not_allowed` and so on. */
-  reason?: string
+  state: LicenseStatus
+  reason?: LicenseFailReason
   /** When the platform last answered, ISO 8601. */
   checked_at: string | null
-  project: { handle: string; name: string } | null
+  /** The backend's host the verdict was given for. Absent before the first request. */
+  host?: string
+  /** `url` leads to the project's key page in the Gorgo cabinet. */
+  project: { handle: string; name: string; url?: string } | null
   /** `null` when the backend's host is in none of the project's environments. Absent before the first answer. */
   environment?: { id: string; name: string } | null
-  subscription: { ends_at: string | null; cutoff: string | null } | null
+  /** `renews` is absent when the platform does not say. */
+  subscription: { ends_at: string | null; cutoff: string | null; renews?: boolean } | null
   latest_allowed_version: string | null
   /** Provider identifiers this package ships. Empty for a package that registers itself. */
   identifiers: string[]

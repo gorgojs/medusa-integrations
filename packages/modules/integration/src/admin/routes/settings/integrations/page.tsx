@@ -1,7 +1,6 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
 import { CogSixTooth, Trash } from "@medusajs/icons"
 import {
-  Alert,
   Container,
   Heading,
   Text,
@@ -19,19 +18,23 @@ import {
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { sdk } from "../../../lib/sdk"
 import { IntegrationIcon } from "../../../components/integration-icon"
 import { toModuleProviderId } from "../../../lib/provider-id"
-import { LICENSE_BADGE, useLicenseStatus } from "../../../lib/license"
+import { LicenseLine } from "../../../components/license-line"
+import { useLicenseStatus } from "../../../lib/license"
 import type { AdminIntegrationListResponse, IntegrationOverviewItem } from "../../../../types"
-import type { LicenseState } from "../../../../modules/integration/types"
+import type { LicenseStateEntry } from "../../../../modules/integration/types"
 
 const PAGE_SIZE = 20
 const DOCS_URL = "https://docs.gorgojs.com/medusa-modules/integration"
 
-/** Integration column: icon + name + instance badge, with a "v{version} • by {author}" meta line. */
-const IntegrationCell = ({ item }: { item: IntegrationOverviewItem }) => {
+/**
+ * Integration column: icon + name + instance badge, with a "v{version} • by {author}" meta line and,
+ * for a paid integration, its license line.
+ */
+const IntegrationCell = ({ item, license }: { item: IntegrationOverviewItem; license?: LicenseStateEntry }) => {
   const { t } = useTranslation()
   return (
     <div className="flex items-center gap-3">
@@ -70,19 +73,14 @@ const IntegrationCell = ({ item }: { item: IntegrationOverviewItem }) => {
             )}
           </Text>
         )}
+        {license && <LicenseLine entry={license} />}
       </div>
     </div>
   )
 }
 
-/** Status column: lifecycle badge, a connection badge when supported, and the license verdict. */
-const StatusCell = ({
-  item,
-  licenseState,
-}: {
-  item: IntegrationOverviewItem
-  licenseState?: LicenseState
-}) => {
+/** Status column: lifecycle badge plus a connection badge when supported. */
+const StatusCell = ({ item }: { item: IntegrationOverviewItem }) => {
   const { t } = useTranslation()
 
   const lifecycle = !item.is_configured
@@ -101,13 +99,10 @@ const StatusCell = ({
         : null
     : null
 
-  const license = licenseState ? LICENSE_BADGE[licenseState] : null
-
   return (
     <div className="flex flex-col items-start gap-1">
       <StatusBadge color={lifecycle.color}>{lifecycle.label}</StatusBadge>
       {connection && <StatusBadge color={connection.color}>{connection.label}</StatusBadge>}
-      {license && <StatusBadge color={license.color}>{t(license.key)}</StatusBadge>}
     </div>
   )
 }
@@ -142,18 +137,12 @@ const IntegrationsPage = () => {
   const { data: licenseData } = useLicenseStatus()
 
   const licenseByIdentifier = useMemo(() => {
-    const map: Record<string, LicenseState> = {}
+    const map: Record<string, LicenseStateEntry> = {}
     for (const entry of licenseData?.packages ?? []) {
-      for (const identifier of entry.identifiers ?? []) map[identifier] = entry.state
+      for (const identifier of entry.identifiers ?? []) map[identifier] = entry
     }
     return map
   }, [licenseData])
-
-  // Only a refusal earns the banner. "pending" is every boot, and "unreachable" is our outage, not
-  // something the merchant can fix.
-  const licenseNeedsAttention = (licenseData?.packages ?? []).some(
-    (entry) => entry.state === "failed"
-  )
 
   const integrations = data?.integrations ?? []
   const count = data?.count ?? 0
@@ -244,10 +233,15 @@ const IntegrationsPage = () => {
 
   const columns = useMemo(
     () => [
-      columnHelper.display({
+      columnHelper.accessor((item) => item.display_name, {
         id: "integration",
         header: t("integration.columns.integration"),
-        cell: ({ row }) => <IntegrationCell item={row.original} />,
+        cell: ({ row }) => (
+          <IntegrationCell item={row.original} license={licenseByIdentifier[row.original.identifier]} />
+        ),
+        // The license line wraps and carries its own tooltip; the table's tooltip of the whole cell's
+        // text would open next to it.
+        truncateTooltip: false,
       }),
       columnHelper.display({
         id: "description",
@@ -271,12 +265,7 @@ const IntegrationsPage = () => {
       columnHelper.display({
         id: "status",
         header: t("integration.columns.status"),
-        cell: ({ row }) => (
-          <StatusCell
-            item={row.original}
-            licenseState={licenseByIdentifier[row.original.identifier]}
-          />
-        ),
+        cell: ({ row }) => <StatusCell item={row.original} />,
       }),
       columnHelper.action({
         actions: (ctx) => buildActions(ctx.row.original),
@@ -308,16 +297,6 @@ const IntegrationsPage = () => {
 
   return (
     <Container className="divide-y p-0">
-      {licenseNeedsAttention && (
-        <div className="px-6 py-3">
-          <Alert variant="warning">
-            {t("integration.license.banner")}{" "}
-            <Link to="/settings/gorgo" className="text-ui-fg-interactive">
-              {t("integration.license.bannerLink")}
-            </Link>
-          </Alert>
-        </div>
-      )}
       <div className="flex items-start justify-between px-6 py-4">
         <div className="flex flex-col gap-1">
           <Heading level="h2">{t("integration.list.title")}</Heading>

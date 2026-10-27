@@ -101,13 +101,13 @@ type Reply = { verdict: Verdict } | { retryAfterMs: number } | null
 
 type Settings = { license?: string; backendUrl?: string; workerMode?: string; logger?: LicenseLogger }
 
+/** `missing` and `malformed` describe the key and come only from the local check before any request. */
 const KNOWN_REASONS: ReadonlySet<string> = new Set<LicenseFailReason>([
   "invalid_token",
   "no_subscription",
   "domain_not_allowed",
   "version_after_cutoff",
   "version_unverifiable",
-  "malformed",
 ])
 
 const settings: Settings = {}
@@ -238,6 +238,8 @@ function environmentOf(value: unknown): { id: string; name: string } | null | un
 function parseVerdict(raw: unknown): Verdict | null {
   if (!raw || typeof raw !== "object") return null
   const body = raw as Record<string, unknown>
+  // The service's `malformed` means it could not read the request, which says nothing about the key.
+  if (body.ok === false && body.reason === "malformed") return null
   if (body.ok === false) return { ok: false, reason: reasonOf(body.reason) }
   if (body.ok !== true || !Array.isArray(body.packages)) return null
 

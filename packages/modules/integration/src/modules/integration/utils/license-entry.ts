@@ -1,7 +1,7 @@
 import type { LicenseState as LibraryLicenseState } from "@gorgo/license"
-import type { LicenseState, LicenseStateEntry, PackageMetaMap } from "../types"
+import type { LicenseStateEntry, LicenseStatus, PackageMetaMap } from "../types"
 
-const KNOWN: ReadonlySet<string> = new Set<LicenseState>(["pending", "ok", "failed", "unreachable"])
+const KNOWN: ReadonlySet<string> = new Set<LicenseStatus>(["pending", "ok", "failed", "unreachable"])
 
 /** Provider identifiers the package ships, so the admin list can tie a verdict to its row. */
 function identifiersOf(packageMeta: PackageMetaMap, packageName: string): string[] {
@@ -23,6 +23,7 @@ export function toLicenseStateEntries(
     state: KNOWN.has(s.state) ? s.state : "pending",
     ...(s.reason ? { reason: s.reason } : {}),
     checked_at: typeof s.checkedAt === "number" ? new Date(s.checkedAt).toISOString() : null,
+    ...(s.host ? { host: s.host } : {}),
     project: s.project ?? null,
     ...(s.environment !== undefined ? { environment: s.environment } : {}),
     subscription: s.subscription ?? null,

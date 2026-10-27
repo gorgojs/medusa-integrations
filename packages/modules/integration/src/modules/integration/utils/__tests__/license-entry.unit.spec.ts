@@ -50,6 +50,44 @@ describe("toLicenseStateEntries", () => {
     ])
   })
 
+  it("carries the host, the project link, the renewal and a refusal's last allowed version", () => {
+    const [ok, refused] = toLicenseStateEntries(
+      {
+        [PAID]: {
+          state: "ok",
+          checkedAt: Date.UTC(2026, 9, 24, 10),
+          host: "api.shop.ru",
+          project: { handle: "shop", name: "Shop", url: "https://app.gorgojs.com/org_1/projects/prj_1/key" },
+          environment: { id: "env_1", name: "production" },
+          subscription: { ends_at: "2026-11-12T00:00:00.000Z", cutoff: null, renews: true },
+          latestAllowedVersion: null,
+        },
+        "@gorgo-store/medusa-other": {
+          state: "failed",
+          reason: "version_after_cutoff",
+          checkedAt: Date.UTC(2026, 9, 24, 10),
+          host: "api.shop.ru",
+          subscription: { ends_at: null, cutoff: "2026-10-12T00:00:00.000Z" },
+          latestAllowedVersion: "1.2.4",
+        },
+      },
+      packageMeta,
+    )
+
+    expect(ok).toMatchObject({
+      host: "api.shop.ru",
+      project: { handle: "shop", name: "Shop", url: "https://app.gorgojs.com/org_1/projects/prj_1/key" },
+      subscription: { ends_at: "2026-11-12T00:00:00.000Z", cutoff: null, renews: true },
+    })
+    expect(refused).toMatchObject({
+      state: "failed",
+      reason: "version_after_cutoff",
+      host: "api.shop.ru",
+      subscription: { ends_at: null, cutoff: "2026-10-12T00:00:00.000Z" },
+      latest_allowed_version: "1.2.4",
+    })
+  })
+
   it("reads a state it does not know as pending", () => {
     const [entry] = toLicenseStateEntries({ [PAID]: { state: "grace" } as never }, packageMeta)
     expect(entry).toMatchObject({ package: PAID, state: "pending" })
