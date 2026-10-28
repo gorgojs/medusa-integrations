@@ -2,19 +2,11 @@
   "name": "@gorgo/license",
   "version": "1.0.0",
   "description": "License check for paid Gorgo plugins",
-  "author": {
-    "name": "Gorgo",
-    "url": "https://gorgojs.com"
-  },
   "license": "MIT",
-  "bugs": "https://github.com/gorgojs/medusa-integrations/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/gorgojs/medusa-integrations",
     "directory": "packages/utils/license"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "files": [
     "dist"
