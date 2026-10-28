@@ -46,11 +46,11 @@
   },
   "dependencies": {
     "@a2seven/yoo-checkout": "^1.1.4",
-    "@gorgo/telemetry": "^1.4.1",
+    "@gorgo/telemetry": "^1.4.2",
     "axios": "^1.9.0"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.2.9",
+    "@gorgo/medusa-integration": "^0.3.0",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",

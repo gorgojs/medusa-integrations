@@ -1,5 +1,11 @@
 # @gorgo/telemetry
 
+## 1.4.2
+
+### Bug Fixes
+
+- improve the anonymous process ID, read the worker mode and medusa version by [@gorgohead](https://github.com/gorgohead) in [#516](https://github.com/gorgojs/medusa-integrations/pull/516) ([`31853a9`](https://github.com/gorgojs/medusa-integrations/commit/31853a999f680736ee6600850a772990bf95827f))
+
 ## 1.4.1
 
 ### Bug Fixes
