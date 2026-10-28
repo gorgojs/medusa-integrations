@@ -1,0 +1,80 @@
+---
+title: "Gorgo Dashboard"
+description: "How the Gorgo dashboard works: organizations and roles, projects with environments and domains, the project key and subscription billing."
+draft: true
+---
+
+# {frontmatter.title}
+
+In the [Gorgo dashboard](https://app.gorgojs.com) you subscribe to paid plugins, manage projects and issue the keys that plugins are installed and run with. You can sign up with an email address or with GitHub.
+
+---
+
+## Organizations and Roles
+
+Subscriptions, invoices and payment cards belong to an organization. When you sign up, you get a personal organization. For a team or an agency, create a separate organization and invite members by email. You can only invite someone who already has a dashboard account.
+
+A member's role decides which parts of the dashboard they can open.
+
+- **Owner** – projects, keys, billing and members. Only the owner can delete the organization.
+- **Administrator** – projects, keys, billing and members.
+- **Developer** – projects and keys, without billing.
+- **Billing** – subscriptions and invoices, without projects and keys.
+
+---
+
+## Projects and Environments
+
+A project corresponds to one Medusa store. By default a project has two environments, Production and Staging, and its key and subscriptions work in both. A new project is created with a Production environment, and you add Staging yourself when you need it.
+
+An environment has one backend domain and a list of storefront domains. The project key passes the license check on these domains.
+
+- All of a project's environments together can list up to three domains.
+- `localhost` and `127.0.0.1` always pass the check and don't count toward the limit.
+- Medusa Cloud domains on `medusajs.app` and `medusajs.site` must be added to an environment too, but they don't use up the limit.
+- One domain can't belong to two environments.
+
+New domains take effect at once. The plugin in the store picks them up after a restart or at its next daily check.
+
+---
+
+## Project Key
+
+Each project has one key that looks like `gorgo_live_…`. It opens the package registry for installs and confirms the license in the running store. You issue the key on the project's **Key** tab. [Install a Paid Plugin](/licensing/install) explains how to connect it.
+
+Purchases, renewals and domain edits don't change the key, and new subscriptions attach to it on their own. You only need to update the key in the store after you reissue or revoke it. Reissue the key if it has leaked.
+
+<Note type="warning" title="Reissuing and Revoking the Key">
+
+The dashboard shows the key only once. If you lose it, you have to reissue it, and the old key stops working at once. Package installs fail with a 401 error, and the plugins in the store print a warning until you put the new key everywhere the old one was. A revoked key fails both installs and license checks. The registry caches its access decision for up to a minute, so the refusal isn't instant.
+
+</Note>
+
+---
+
+## Billing
+
+The subscription price is shown in roubles on the checkout page. You pay by card on YooKassa's secure page, and the subscription starts as soon as the payment is confirmed. If the dashboard offers payment by invoice, the subscription appears once the payment is confirmed.
+
+If you turned on auto-renewal when paying by card, the next term is charged to the organization's card. 7 days before the paid period ends, the dashboard emails you the charge date and amount, or 2 days before if the term is shorter than 28 days. You can turn off auto-renewal, change a subscription's card or cancel it under **Subscriptions**. The organization's cards are added and removed in the organization settings under **Billing**, and the payment history is under **Invoices**.
+
+[Subscription FAQ](/licensing/faq) explains what happens to the plugin when the subscription ends and how to get a refund.
+
+---
+
+## Next Steps
+
+<CardList items={[
+  {
+    title: "Install a Paid Plugin",
+    href: "/licensing/install"
+  },
+  {
+    title: "Subscription FAQ",
+    href: "/licensing/faq"
+  },
+  {
+    title: "Support",
+    href: "/resources/support"
+  }
+]} />

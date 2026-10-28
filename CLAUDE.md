@@ -38,12 +38,17 @@ This repository is organized as a Yarn v4 monorepo with shared workspaces for pl
 │       └── telemetry/
 ├── scripts/
 └── docs/                            # documentation content (built by gorgo/packages/docs)
+    ├── licensing/
     ├── medusa-integrations/
     ├── medusa-modules/
+    ├── medusa-starters/
+    ├── resources/
     └── tools/
 ```
 
 > The documentation **site builder** lives in the private `gorgojs/gorgo` repo at `packages/docs`. This repo holds only the docs **content** (MDX); the builder syncs it in at build time.
+
+> **Publishing a page in one language first?** Put `draft: true` in the frontmatter of the language that isn't ready (`en.mdx` or `ru.mdx`). That page 404s in its language and drops out of the menus, the sitemap, hreflang, `llms.txt` and search, while the other language stays published. A link to it from a published page in that language renders as plain text. Keep both files and their structure, so `check-docs-parity` still passes.
 
 ## Essential Commands
 

@@ -79,8 +79,8 @@ jobs:
             1. Every code example in the diff, against the real export shape and signature in
                `packages/`. Named versus default exports and stale signatures are the most common real
                defect and are invisible in the diff. Grep for the symbol and read it.
-            2. Every behavioural claim. Trace it or flag it. A page under `docs/tools/` may document a
-               package that is not in this repo at all, so say you could not verify rather than
+            2. Every behavioural claim. Trace it or flag it. A page under `docs/medusa-starters/` or `docs/tools/` may
+               document a package that is not in this repo at all, so say you could not verify rather than
                assuming.
             3. `MedusaTypeList` fields against the real type. The parity gate only proves `en` and `ru`
                agree; both can be wrong together.

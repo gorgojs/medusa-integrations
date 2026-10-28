@@ -160,8 +160,11 @@ This repository is organized as a Yarn workspaces monorepo with shared dependenc
 │   └── utils/
 ├── scripts/
 └── docs/
+    ├── licensing/
     ├── medusa-integrations/
     ├── medusa-modules/
+    ├── medusa-starters/
+    ├── resources/
     └── tools/
 ```
 

@@ -1,0 +1,69 @@
+---
+title: "Maintenance of Gorgo Plugins, Modules and Starters"
+description: "How Gorgo tests, reviews and updates its Medusa integration plugins, the Integration Module and the DTC Starter, and how fast it answers questions."
+---
+
+# {frontmatter.title}
+
+This page describes how we test, update and fix the integration plugins, the [Integration Module](/medusa-modules/integration) and the [DTC Starter](/medusa-starters/dtc) for Medusa.
+
+<Note type="default" title="">
+
+This page isn't a legal commitment.
+
+</Note>
+
+---
+
+## Open Source
+
+We develop the plugins, the module and the starter in the open [gorgojs/medusa-integrations](https://github.com/gorgojs/medusa-integrations) and [gorgojs/medusa-dtc-starter](https://github.com/gorgojs/medusa-dtc-starter) repositories under the MIT license. You can use the code in commercial projects, adapt it to your store and fork it.
+
+The code isn't the only thing in the open. The tests and their GitHub Actions runs, the issues and the changelogs are public too, so you can check nearly everything below for yourself.
+
+<Note type="success" title="">
+
+**Found a bug or want to improve a plugin?** Send a pull request, as described in the [Contribution](https://github.com/gorgojs/medusa-integrations#contribution) section of the README.
+
+</Note>
+
+---
+
+## Tests Every Night
+
+Every night [GitHub Actions](https://github.com/gorgojs/medusa-integrations/actions/workflows/test.yml) runs the unit, integration and contract tests of every plugin and the module, and on a pull request it tests the packages the change touches. The contract tests call the providers' test APIs, such as Stripe's and PayPal's, and catch changes on the provider's side, even when our code hasn't changed. [How We Test Our Medusa Plugins](https://gorgojs.com/blog/how-we-test-our-medusa-plugins) has the details.
+
+---
+
+## Compatibility With New Medusa Versions
+
+Every day the [plugins' workflow](https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml) updates Medusa in the example projects and runs the tests, and the [starter's workflow](https://github.com/gorgojs/medusa-dtc-starter/actions/workflows/update.yaml) builds the backend and the storefront on the new version. Whatever passes goes into a pull request with the update.
+
+The plugins and the module declare Medusa in `peerDependencies` as a version range, so they install next to a new minor version without `--legacy-peer-deps`.
+
+---
+
+## Reviews and Versions
+
+A Gorgo developer reads every change before it is released. Plugin and module versions follow [semantic versioning](https://semver.org/), and every plugin has a changelog in the documentation. Before we remove anything, we mark it as deprecated and keep it working until the next major version.
+
+You copy the starter into your own project, so you bring its updates over yourself from the repository's commit history.
+
+---
+
+## Questions, Bugs and Vulnerabilities
+
+The [Support](/resources/support) page lists where to report bugs and ask questions. We usually reply within one business day.
+
+We fix vulnerabilities first, along with bugs that stop a store from taking payments or creating shipments, or that lose or duplicate orders. Such a fix ships as its own patch release.
+
+Don't report a vulnerability in a public issue. Report it privately on the repository's **Security** tab, as [SECURITY.md](https://github.com/gorgojs/medusa-integrations/blob/main/SECURITY.md) describes.
+
+---
+
+## What This Doesn't Cover
+
+- Outages and changes on the provider's side. We help you find the cause, but we can't fix someone else's service.
+- Plugin or starter code you changed in your project, and forks.
+- Medusa versions outside the range in `peerDependencies`.
+- Store-specific customizations and questions about Medusa itself. Bring the latter to the Medusa developer chat [@medusajs_chat](https://t.me/medusajs_chat).

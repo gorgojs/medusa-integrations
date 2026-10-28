@@ -1,0 +1,65 @@
+---
+title: "Paid Plugin Licensing"
+description: "How licensing works for paid Gorgo plugins: what a subscription gives you, how to get a project key and install a plugin, and what stays yours after the subscription ends."
+draft: true
+---
+
+# {frontmatter.title}
+
+A license for a paid Gorgo plugin comes with a subscription, which you take out in the [Gorgo dashboard](/licensing/dashboard). With the project key, the plugin installs from the Gorgo package registry and confirms its license in the running store.
+
+---
+
+## Open-Source and Paid Products
+
+The open-source [integration plugins](/medusa-integrations), the [Integration Module](/medusa-modules/integration) and the [DTC Starter](/medusa-starters/dtc) are distributed under the MIT license and installed from npm, so you don't need the dashboard for them.
+
+The dashboard is for paid plugins. They are published to the private `registry.gorgojs.com` registry under the `@gorgo-store` scope, such as `@gorgo-store/medusa-erp-1c`, and installed with a project key.
+
+<Note type="success" title="Beta">
+
+Paid plugins are currently available to beta participants. Each plugin's page explains how to join, such as [1C:Enterprise](/medusa-integrations/1c-enterprise).
+
+</Note>
+
+---
+
+## Connecting a Paid Plugin
+
+1. Sign up in the [Gorgo dashboard](https://app.gorgojs.com) with an email address or with GitHub.
+2. Create a project and set the domains of its environments.
+3. Subscribe to the plugin for that project.
+4. Create a project key and connect the Gorgo package registry with it.
+5. Install the plugin and check its license in Medusa Admin.
+
+The first three steps are described in [Gorgo Dashboard](/licensing/dashboard), and the rest in [Install a Paid Plugin](/licensing/install).
+
+---
+
+## The Subscription at a Glance
+
+- **One project** – a subscription covers one Medusa application and the environments its plan includes. By default these are production and staging.
+- **Versions stay yours** – every version released before the end of the paid period stays yours for good, and the registry keeps serving it.
+- **The store keeps running** – the license check runs in the background. If it fails, the plugin writes a warning to the log, and its features keep working.
+- **New versions** – while the subscription is active, you get every new version, in which we fix reported bugs and add new features.
+
+Answers to other questions, such as refunds and who can work with the plugin, are in [Subscription FAQ](/licensing/faq).
+
+---
+
+## Next Steps
+
+<CardList items={[
+  {
+    title: "Gorgo Dashboard",
+    href: "/licensing/dashboard"
+  },
+  {
+    title: "Install a Paid Plugin",
+    href: "/licensing/install"
+  },
+  {
+    title: "Subscription FAQ",
+    href: "/licensing/faq"
+  }
+]} />

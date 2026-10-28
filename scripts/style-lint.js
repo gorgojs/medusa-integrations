@@ -222,6 +222,10 @@ for (const root of roots.length ? roots : DEFAULT_ROOTS) {
 
     if (type !== 'mdx' && type !== 'md') continue;
 
+    // The page title is masked out with the rest of the frontmatter, so read it from the source.
+    const frontmatter = src.match(/^---\n([\s\S]*?)\n---\n/)?.[1];
+    const page =
+      frontmatter?.match(/^title:\s*["']?(.*?)["']?\s*$/m)?.[1] ?? null;
     let section = null;
     prose.split('\n').forEach((line, i) => {
       const m = line.match(/^(#{1,6})\s+(.*)$/);
@@ -231,7 +235,7 @@ for (const root of roots.length ? roots : DEFAULT_ROOTS) {
       if (!text || text.startsWith('{frontmatter')) return;
       // The MDX renderer maps `#` to h2, so the page's top level is 1 in source and 2 on screen.
       if (level <= 2) section = text;
-      const ctx = { level, section };
+      const ctx = { level, section, page };
       for (const rule of rules.heading) {
         if (!applies(rule, lang)) continue;
         if (rule.test(text, ctx)) record(rule, i + 1, text);

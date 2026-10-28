@@ -200,9 +200,9 @@ The rest already ship with working localhost defaults:
 | `NEXT_PUBLIC_BASE_URL` | The storefront's own address, used for absolute URLs in metadata, the sitemap, and `llms.txt` |
 | `NEXT_PUBLIC_SITE_NAME` | Store name shown in the header, footer, and checkout, and used in the `schema.org` markup and the `llms.txt` endpoint |
 | `NEXT_PUBLIC_DEFAULT_REGION` | Country code the storefront falls back to when it cannot tell where a visitor is. The template's `en` matches no seeded region, and then the first region the backend returns wins |
-| `GEOLOCATION_PROVIDER`, `GEOLOCATION_PROVIDER_API_KEY` | How a first-time visitor's country is detected. On Vercel or Cloudflare you can leave the provider unset, see the [Set Up Country Detection](/tools/medusa-dtc-starter/setup-country-detection) documentation |
+| `GEOLOCATION_PROVIDER`, `GEOLOCATION_PROVIDER_API_KEY` | How a first-time visitor's country is detected. On Vercel or Cloudflare you can leave the provider unset, see the [Set Up Country Detection](/medusa-starters/dtc/setup-country-detection) documentation |
 | `GEOLOCATION_DEBUG` | Set it to `true` and every response explains which country the middleware picked and why |
-| `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER`, `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` | Address suggestions during checkout, see the [Set Up Address Autocomplete](/tools/medusa-dtc-starter/setup-address-autocomplete) documentation |
+| `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER`, `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` | Address suggestions during checkout, see the [Set Up Address Autocomplete](/medusa-starters/dtc/setup-address-autocomplete) documentation |
 | `NEXT_PUBLIC_STRIPE_KEY` | Stripe publishable key, needed only if you take payments through Stripe |
 | `NEXT_PUBLIC_MEDUSA_PAYMENTS_PUBLISHABLE_KEY`, `NEXT_PUBLIC_MEDUSA_PAYMENTS_ACCOUNT_ID` | Key and connected account for Medusa Cloud Payments. The key is used when `NEXT_PUBLIC_STRIPE_KEY` is empty |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID. Leave it empty and the storefront loads no analytics script at all |
@@ -228,7 +228,7 @@ The storefront's logs show:
 Error fetching regions. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable.
 ```
 
-The cause is one of two things: either `NEXT_PUBLIC_MEDUSA_BACKEND_URL` isn't set or points to the wrong place, or the backend has no region configured yet. Check that the backend is running and reachable at that URL. If there really are no regions, the seed script creates several, see the [Customize Seed Data](/tools/medusa-dtc-starter/customize-seed-data) documentation.
+The cause is one of two things: either `NEXT_PUBLIC_MEDUSA_BACKEND_URL` isn't set or points to the wrong place, or the backend has no region configured yet. Check that the backend is running and reachable at that URL. If there really are no regions, the seed script creates several, see the [Customize Seed Data](/medusa-starters/dtc/customize-seed-data) documentation.
 
 ### Stripe Checkout Doesn't Load
 
@@ -250,13 +250,13 @@ The second one means no Stripe payment session exists on the cart yet, usually b
 
 A first-time visitor lands in a region that has nothing to do with their location, usually the same one every time.
 
-Set `GEOLOCATION_DEBUG=true` in `apps/storefront/.env.local`, reload, and read the `x-geo-*` headers on the document request in the browser's network panel. `x-geo-source` names what answered: `cookie` means the `_medusa_country` cookie was never cleared, so clear it or open a new private window; `fallback-first` means nothing resolved and `NEXT_PUBLIC_DEFAULT_REGION` matched no seeded region either, so set it to a real country code; `x-geo-provider: platform` means `GEOLOCATION_PROVIDER` never reached the server. See the [Set Up Country Detection](/tools/medusa-dtc-starter/setup-country-detection) documentation for what each header means.
+Set `GEOLOCATION_DEBUG=true` in `apps/storefront/.env.local`, reload, and read the `x-geo-*` headers on the document request in the browser's network panel. `x-geo-source` names what answered: `cookie` means the `_medusa_country` cookie was never cleared, so clear it or open a new private window; `fallback-first` means nothing resolved and `NEXT_PUBLIC_DEFAULT_REGION` matched no seeded region either, so set it to a real country code; `x-geo-provider: platform` means `GEOLOCATION_PROVIDER` never reached the server. See the [Set Up Country Detection](/medusa-starters/dtc/setup-country-detection) documentation for what each header means.
 
 ---
 
 ### Address Autocomplete Doesn't Work
 
-If the address field doesn't suggest anything as you type during checkout, the DaData key is probably missing. Create an account on [DaData](https://dadata.ru/?ref=276331), set your key in `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY`, and leave `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER` set to `dadata`. See the [Set Up Address Autocomplete](/tools/medusa-dtc-starter/setup-address-autocomplete) documentation for configuring autocomplete and connecting a different provider.
+If the address field doesn't suggest anything as you type during checkout, the DaData key is probably missing. Create an account on [DaData](https://dadata.ru/?ref=276331), set your key in `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY`, and leave `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER` set to `dadata`. See the [Set Up Address Autocomplete](/medusa-starters/dtc/setup-address-autocomplete) documentation for configuring autocomplete and connecting a different provider.
 
 ### CORS Errors in the Browser Console
 

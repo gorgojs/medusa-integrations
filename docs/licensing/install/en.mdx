@@ -1,0 +1,121 @@
+---
+title: "Install a Paid Plugin"
+description: "Learn how to connect the Gorgo registry with your project key and install a paid plugin in a Medusa store."
+draft: true
+---
+
+# {frontmatter.title}
+
+In this guide you connect the Gorgo package registry with your project key and install a paid plugin. The plugin's own page explains how to register it in Medusa and configure it.
+
+Before you start, you need:
+
+- an account in the [Gorgo dashboard](https://app.gorgojs.com), where you can sign up with an email address or with GitHub;
+- a project in the dashboard with the domains of your environments, see [Projects and Environments](/licensing/dashboard#projects-and-environments);
+- a subscription to the plugin for that project.
+
+---
+
+## Step 1: Create a Project Key
+
+Open the project in the dashboard, go to the **Key** tab and click **Create key**.
+
+<Note type="warning" title="">
+
+The dashboard shows the key only once, so save it right away. A lost key has to be reissued, and the old one stops working everywhere it is set.
+
+</Note>
+
+Plugins and package managers read the key from the `GORGO_LICENSE` environment variable. Set it everywhere dependencies are installed and the store runs, that is, on your machine, in CI/CD and in the backend's environments. This way the key never ends up in the project repository.
+
+```bash title=".env"
+GORGO_LICENSE=gorgo_live_...
+```
+
+---
+
+## Step 2: Connect the Registry
+
+Paid plugins are published not to the public npm registry but to `registry.gorgojs.com`. Point your package manager at this registry for `@gorgo-store` packages. Yarn 2 and later reads its settings from `.yarnrc.yml`, npm and pnpm from `.npmrc`:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```yaml title=".yarnrc.yml"
+    npmScopes:
+      gorgo-store:
+        npmRegistryServer: "https://registry.gorgojs.com"
+        npmAuthToken: "${GORGO_LICENSE}"
+    ```
+  </CodeTab>
+  <CodeTab label="pnpm" value="pnpm">
+    ```text title=".npmrc"
+    @gorgo-store:registry=https://registry.gorgojs.com/
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```text title=".npmrc"
+    @gorgo-store:registry=https://registry.gorgojs.com/
+    //registry.gorgojs.com/:_authToken=${GORGO_LICENSE}
+    ```
+  </CodeTab>
+</CodeTabs>
+
+<Note type="warning" title="pnpm 11.5.3 and Later">
+
+Since version 11.5.3, pnpm doesn't substitute environment variables into auth tokens from the project's `.npmrc`, so without an extra step the install fails to authenticate with the registry. That's why the pnpm `.npmrc` holds only the registry address, and you store the key in pnpm's user settings instead.
+
+</Note>
+
+For pnpm, run this command on your machine and in CI before installing dependencies:
+
+```bash
+pnpm config set //registry.gorgojs.com/:_authToken "$GORGO_LICENSE"
+```
+
+---
+
+## Step 3: Install the Plugin
+
+Install the package the same way as a package from the public npm registry, for example the 1C:Enterprise plugin:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo-store/medusa-erp-1c
+    ```
+  </CodeTab>
+  <CodeTab label="pnpm" value="pnpm">
+    ```bash
+    pnpm add @gorgo-store/medusa-erp-1c
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo-store/medusa-erp-1c
+    ```
+  </CodeTab>
+</CodeTabs>
+
+Then register the plugin in `medusa-config` following the guide on its page, such as [Getting Started with 1C:Enterprise](/medusa-integrations/1c-enterprise/getting-started).
+
+---
+
+## Step 4: Check the License
+
+Start the store and open **Settings → Integrations** in Medusa Admin. It shows the license check result for each paid plugin. The check runs in the background and the store doesn't wait for it, so the status may appear a few seconds after startup.
+
+<Note type="default" title="">
+
+On `localhost` and `127.0.0.1` the check always passes. In production and staging, the backend domain must belong to one of the project's environments.
+
+</Note>
+
+---
+
+## Troubleshooting
+
+- **403 on install** – the project has no subscription to this package, or the subscription ended before this version was released. The **Key** tab of the project lists the paid packages.
+- **401 on install** – the key wasn't substituted or has been revoked. Check `.npmrc` or `.yarnrc.yml` and the value of `GORGO_LICENSE`.
+- **Domain refused** – the backend domain isn't in the project's environments. Add it in the environment settings, and the plugin picks it up after a store restart or at its next daily check.
+
+If you can't find the answer here, contact us as described on the [Support](/resources/support) page.

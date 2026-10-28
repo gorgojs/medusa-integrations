@@ -200,9 +200,9 @@ NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_6c3...
 | `NEXT_PUBLIC_BASE_URL` | Собственный адрес витрины для абсолютных ссылок в метаданных, карте сайта и `llms.txt` |
 | `NEXT_PUBLIC_SITE_NAME` | Название магазина в шапке, подвале и при оформлении заказа. Оно же попадает в разметку `schema.org` и в эндпоинт `llms.txt` |
 | `NEXT_PUBLIC_DEFAULT_REGION` | Резервный код страны, когда определить местоположение посетителя не удалось. Значение `en` из шаблона не совпадает ни с одним регионом из seed-данных, и тогда выбирается первый регион, который вернёт бэкенд |
-| `GEOLOCATION_PROVIDER`, `GEOLOCATION_PROVIDER_API_KEY` | Способ определения страны нового посетителя. На Vercel или Cloudflare провайдер можно оставить незаданным, читайте в документации [Настройка определения страны](/tools/medusa-dtc-starter/setup-country-detection) |
+| `GEOLOCATION_PROVIDER`, `GEOLOCATION_PROVIDER_API_KEY` | Способ определения страны нового посетителя. На Vercel или Cloudflare провайдер можно оставить незаданным, читайте в документации [Настройка определения страны](/medusa-starters/dtc/setup-country-detection) |
 | `GEOLOCATION_DEBUG` | Задайте `true`, и каждый ответ будет объяснять, какую страну выбрал middleware и почему |
-| `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER`, `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` | Подсказки адреса при оформлении заказа, читайте в документации [Настройка автозаполнения адреса](/tools/medusa-dtc-starter/setup-address-autocomplete) |
+| `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER`, `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` | Подсказки адреса при оформлении заказа, читайте в документации [Настройка автозаполнения адреса](/medusa-starters/dtc/setup-address-autocomplete) |
 | `NEXT_PUBLIC_STRIPE_KEY` | Публикуемый ключ Stripe, нужен только если вы принимаете платежи через Stripe |
 | `NEXT_PUBLIC_MEDUSA_PAYMENTS_PUBLISHABLE_KEY`, `NEXT_PUBLIC_MEDUSA_PAYMENTS_ACCOUNT_ID` | Ключ и подключённый аккаунт Medusa Cloud Payments. Ключ используется, когда `NEXT_PUBLIC_STRIPE_KEY` пуст |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Идентификатор ресурса Google Analytics 4. Оставьте её пустой, и витрина не загрузит ни одного скрипта аналитики |
@@ -228,7 +228,7 @@ NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_6c3...
 Error fetching regions. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable.
 ```
 
-Причина одна из двух: либо `NEXT_PUBLIC_MEDUSA_BACKEND_URL` не задан или указывает не туда, либо на бэкенде пока не настроен ни один регион. Проверьте, что бэкенд запущен и доступен по этому адресу. Если регионов правда нет, их создаёт seed-скрипт, читайте в документации [Настройка начальных данных](/tools/medusa-dtc-starter/customize-seed-data).
+Причина одна из двух: либо `NEXT_PUBLIC_MEDUSA_BACKEND_URL` не задан или указывает не туда, либо на бэкенде пока не настроен ни один регион. Проверьте, что бэкенд запущен и доступен по этому адресу. Если регионов правда нет, их создаёт seed-скрипт, читайте в документации [Настройка начальных данных](/medusa-starters/dtc/customize-seed-data).
 
 ### Оплата через Stripe не загружается
 
@@ -250,13 +250,13 @@ Stripe client secret is missing. Cannot initialize Stripe.
 
 Новый посетитель попадает в регион, никак не связанный с его местоположением, обычно каждый раз в один и тот же.
 
-Задайте `GEOLOCATION_DEBUG=true` в `apps/storefront/.env.local`, перезагрузите страницу и прочитайте заголовки `x-geo-*` на запросе документа в панели сети браузера. `x-geo-source` называет, что дало ответ: `cookie` означает, что cookie `_medusa_country` не была удалена, тогда удалите её или откройте новое приватное окно; `fallback-first` означает, что определить страну не удалось, а `NEXT_PUBLIC_DEFAULT_REGION` тоже не совпала ни с одним регионом из seed-данных, тогда задайте в ней реальный код страны; `x-geo-provider: platform` означает, что переменная `GEOLOCATION_PROVIDER` не дошла до сервера. Что означает каждый заголовок, читайте в документации [Настройка определения страны](/tools/medusa-dtc-starter/setup-country-detection).
+Задайте `GEOLOCATION_DEBUG=true` в `apps/storefront/.env.local`, перезагрузите страницу и прочитайте заголовки `x-geo-*` на запросе документа в панели сети браузера. `x-geo-source` называет, что дало ответ: `cookie` означает, что cookie `_medusa_country` не была удалена, тогда удалите её или откройте новое приватное окно; `fallback-first` означает, что определить страну не удалось, а `NEXT_PUBLIC_DEFAULT_REGION` тоже не совпала ни с одним регионом из seed-данных, тогда задайте в ней реальный код страны; `x-geo-provider: platform` означает, что переменная `GEOLOCATION_PROVIDER` не дошла до сервера. Что означает каждый заголовок, читайте в документации [Настройка определения страны](/medusa-starters/dtc/setup-country-detection).
 
 ---
 
 ### Не работает автозаполнение адреса
 
-Если поле адреса при оформлении заказа не подсказывает варианты по мере набора, скорее всего не задан ключ DaData. Заведите аккаунт на [DaData](https://dadata.ru/?ref=276331), укажите свой ключ в `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` и оставьте `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER` равным `dadata`. Подробнее о настройке автозаполнения и подключении другого провайдера читайте в документации [Настройка автозаполнения адреса](/tools/medusa-dtc-starter/setup-address-autocomplete).
+Если поле адреса при оформлении заказа не подсказывает варианты по мере набора, скорее всего не задан ключ DaData. Заведите аккаунт на [DaData](https://dadata.ru/?ref=276331), укажите свой ключ в `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY` и оставьте `NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER` равным `dadata`. Подробнее о настройке автозаполнения и подключении другого провайдера читайте в документации [Настройка автозаполнения адреса](/medusa-starters/dtc/setup-address-autocomplete).
 
 ### Ошибки CORS в консоли браузера
 

@@ -1,0 +1,100 @@
+---
+title: "Frequently Asked Questions"
+description: "Answers to common questions about subscribing to paid Gorgo plugins: which versions stay yours, where you can run a plugin, how the license check works and how to cancel."
+draft: true
+---
+
+# {frontmatter.title}
+
+<Note type="default" title="">
+
+The exact subscription terms are set by the [public offer](https://app.gorgojs.com/content/public-offer) and the license agreement, which the dashboard shows at checkout. The answers below sum them up. Where an answer differs from them, the offer and the agreement prevail.
+
+</Note>
+
+---
+
+## What do I get with a subscription?
+
+A license for the plugin for one project and access to the `registry.gorgojs.com` package registry for the paid period. You take out the subscription in the [Gorgo dashboard](/licensing/dashboard). If the plan offers a free trial, it grants the same rights as a paid term and doesn't renew on its own.
+
+---
+
+## What happens to the plugin when the subscription ends?
+
+It keeps working. Every version released before the end of the paid period stays yours for good, and the registry keeps serving it. Versions released later require a renewal.
+
+---
+
+## Do I get the versions released during a gap if I renew?
+
+Yes. A renewal opens all versions again, including those released during the gap.
+
+---
+
+## Can I use one subscription in several stores?
+
+No. A subscription covers one project, that is, one Medusa application. An agency takes out a separate subscription for each client project.
+
+---
+
+## Which environments does a subscription include?
+
+The plan sets the number of environments. By default there are two, production and staging. Local development on `localhost` and `127.0.0.1` always works. You set the environment domains in the dashboard, see [Projects and Environments](/licensing/dashboard#projects-and-environments).
+
+---
+
+## Can contractors and clients work with the plugin?
+
+Yes, within the project. Your employees, your contractors, such as the agency building the store, and the clients you build it for can all use the plugin. You are responsible for what they do with it.
+
+---
+
+## Can I modify the plugin's code or keep a copy of it?
+
+The license doesn't allow you to modify or redistribute the plugin's code. To adapt the plugin to your processes, use the extension points it exports. The code you write for them is yours. You can keep copies of the package in your own registry or npm proxy, in a dependency cache and in container images, as long as only you and the people from the previous answer can access them.
+
+---
+
+## Does the store stop if the license check fails?
+
+No. The store doesn't wait for the check and never stops because of it. If the key fails the check or the server is unreachable, the plugin writes a warning to the log and shows the status in Medusa Admin under **Settings → Integrations**, and its features keep working.
+
+---
+
+## What data does the plugin send for the license check?
+
+The check runs in the background at startup and then once a day. The plugin sends:
+
+- the project key;
+- the name and version of each paid package;
+- the backend domain from `MEDUSA_BACKEND_URL` or `admin.backendUrl` in `medusa-config`, and which of the two it came from;
+- the Medusa and Node.js versions, the `NODE_ENV` value and the Medusa process mode (`workerMode`);
+- the process start time and a random ID generated anew on every start;
+- whether the process runs in CI.
+
+The start time and the ID let us tell several running processes from one that restarted, and the CI flag keeps a test run from counting as an installation. The server also sees the IP address the request comes from. The plugin sends no store, order or customer data.
+
+---
+
+## How do I cancel a subscription?
+
+In the dashboard, under **Subscriptions**, at any time. You can turn off auto-renewal there too. Access remains until the end of the paid period. A lifetime subscription can't be canceled.
+
+---
+
+## Can I get a refund?
+
+Yes. Email [support@gorgojs.com](mailto:support@gorgojs.com) from the organization owner's address and name the organization and the subscription. Within 10 days we refund the full days of the paid period that remain after we receive your request, and the paid period ends on that day.
+
+---
+
+## What if you stop releasing the plugin or close the registry?
+
+You keep your rights to the versions already released. We will give at least 90 days' notice before closing the registry, so you have time to keep copies of the packages.
+
+---
+
+## What doesn't the subscription include?
+
+Developing, configuring and integrating the plugin into your project, which is arranged under a separate contract. The plugins are provided "as is". While the subscription is active, you get every new version, in which we fix reported bugs and add new features. The [Maintenance](/resources/maintenance) page describes how we test and update the plugins.

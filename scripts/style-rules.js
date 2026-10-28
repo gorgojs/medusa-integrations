@@ -140,9 +140,13 @@ const PROSE = [
   },
 ];
 
-/** A heading under one of these sections is allowed to be a question. */
+/** A heading under one of these sections, or on a page with such a title, may be a question. */
 const FAQ_SECTION =
   /\b(faq|frequently asked)\b|часто задаваемые|вопросы и ответы/i;
+
+/** An FAQ page puts its questions at the top level, so its title marks it rather than a section. */
+const inFaq = (ctx) =>
+  FAQ_SECTION.test(ctx?.section || '') || FAQ_SECTION.test(ctx?.page || '');
 
 /** English headings that are lowercased where the house style capitalizes. */
 const TITLE_CASE_LOWERCASE_OK = new Set([
@@ -258,8 +262,7 @@ module.exports = {
       // A question mark is banned in a heading that names a topic, because "## What Is X" reads as a
       // reference section and "## What is X?" reads as a conversation. An FAQ is the exception: its
       // headings ARE the questions, and rewriting them into statements would break the format.
-      test: (text, ctx) =>
-        /\?\s*$/.test(text) && !FAQ_SECTION.test(ctx.section || ''),
+      test: (text, ctx) => /\?\s*$/.test(text) && !inFaq(ctx),
     },
     {
       id: 'en/title-case',
@@ -267,9 +270,11 @@ module.exports = {
       severity: 'warn',
       kind: 'heading',
       fix: 'capitalize every word except articles, prepositions and coordinating conjunctions',
-      test: (text) => {
+      test: (text, ctx) => {
         // Skip headings that are or contain a code identifier, and frontmatter-driven H1s.
         if (text.includes('`') || text.includes('{')) return false;
+        // An FAQ question is a sentence, not a title, so it keeps sentence case.
+        if (/\?\s*$/.test(text) && inFaq(ctx)) return false;
         const words = text
           .replace(/^\d+\.\s*/, '')
           .replace(/^Step\s+\d+:\s*/i, '')

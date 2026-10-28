@@ -157,8 +157,11 @@
 │   └── utils/
 ├── scripts/
 └── docs/
+    ├── licensing/
     ├── medusa-integrations/
     ├── medusa-modules/
+    ├── medusa-starters/
+    ├── resources/
     └── tools/
 ```
 
