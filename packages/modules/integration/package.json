@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-integration",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "description": "Integration module for Medusa",
   "author": {
     "name": "Gorgo",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@gorgo/license": "^1.0.0",
-    "@gorgo/telemetry": "^1.4.1"
+    "@gorgo/telemetry": "^1.4.2"
   },
   "devDependencies": {
     "@medusajs/admin-sdk": "^2.17.2",

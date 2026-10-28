@@ -1,5 +1,17 @@
 # @gorgo/medusa-integration
 
+## 0.3.0
+
+### Highlights
+
+- **Gorgo License for paid integrations.** A paid integration declares `"gorgo": { "license": "required" }` in its `package.json`, and the module checks its license against the project key in `GORGO_LICENSE`. Open-source integrations are not checked at all. Without a paid integration installed, the module never contacts the license service, and a free integration shows no license in the Admin.
+- **The verdict is in the Admin.** A paid integration gets a license line in the integrations table and a license block on its page, with the subscription end date, what to fix when the check fails and a link to the Gorgo account. **Check now** reruns the check right away, for example after you add a domain or renew the subscription.
+- **Never blocks the server.** The check runs in the background after startup and then once a day, all paid integrations in one request. If the license service is unreachable, it tries again in 15 minutes.
+
+### Bug Fixes
+
+- add minor UI fixes by [@gorgohead](https://github.com/gorgohead) in [#516](https://github.com/gorgojs/medusa-integrations/pull/516) ([`793f377`](https://github.com/gorgojs/medusa-integrations/commit/793f37765387f9342355f844587a0f9869a9f81a))
+
 ## 0.2.9
 
 ### Bug Fixes
