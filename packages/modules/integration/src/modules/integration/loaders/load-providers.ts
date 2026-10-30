@@ -2,6 +2,7 @@ import { asFunction, asValue, Lifetime } from "@medusajs/framework/awilix"
 import { moduleProviderLoader } from "@medusajs/framework/modules-sdk"
 import {
   LoaderOptions,
+  Logger,
   ModuleProvider,
   ModulesSdkTypes,
 } from "@medusajs/framework/types"
@@ -14,6 +15,7 @@ import {
   type PackageMetaMap,
 } from "../types"
 import IntegrationProviderService from "../services/integration-provider"
+import { findUnmarkedSecretCandidates } from "../descriptor/introspect"
 import { resolvePackageMetaByIdentifier } from "./resolve-package-meta"
 
 /**
@@ -72,9 +74,34 @@ const trackStarted = async (container: any, packageMeta: PackageMetaMap): Promis
   }
 }
 
+/**
+ * Warn once per provider about options named like a credential but not declared `secret: true`:
+ * their values are shown in the admin and kept in the change history in clear text.
+ */
+const warnUnmarkedSecrets = (container: any, logger?: Logger): void => {
+  try {
+    const log = logger ?? container.resolve("logger")
+    const seen = new Set<string>()
+    for (const r of new IntegrationProviderService(container.cradle).listRegistrations()) {
+      if (seen.has(r.identifier)) continue
+      seen.add(r.identifier)
+      for (const option of findUnmarkedSecretCandidates(r.provider.descriptor)) {
+        log.warn(
+          `[integration] Provider "${r.identifier}" declares option "${option}" without secret: true. ` +
+            `Its value is shown in the admin and kept in the change history in clear text. ` +
+            `Declare it secret: true if it is a credential.`
+        )
+      }
+    }
+  } catch {
+    // a hint for provider authors must never break loading
+  }
+}
+
 export default async ({
   container,
   options,
+  logger,
 }: LoaderOptions<
   (
     | ModulesSdkTypes.ModuleServiceInitializeOptions
@@ -93,6 +120,8 @@ export default async ({
     providers: options?.providers || [],
     registerServiceFn: registrationFn,
   })
+
+  warnUnmarkedSecrets(container, logger)
 
   // Providers are now registered — announce them (guarded; never throws).
   await trackStarted(container, packageMeta)

@@ -5,6 +5,7 @@ import type IntegrationModuleService from "../../../modules/integration/services
 import { secretFieldNames } from "../../../modules/integration/descriptor/introspect"
 import { validateOptions } from "../../../modules/integration/descriptor/validate"
 import { selectWritableValues } from "../../../modules/integration/descriptor/section-write"
+import { diffOptions } from "../../../modules/integration/descriptor/diff"
 
 export type ApplyIntegrationSectionStepInput = {
   provider_id: string
@@ -72,6 +73,9 @@ export const applyIntegrationSectionStep = createStep(
     return new StepResponse({
       category: descriptor.category,
       options,
+      // For the change history: both configs are decrypted here, and nowhere else at once.
+      // Secret options come out without values.
+      diff: diffOptions(descriptor, current, full),
     })
   }
 )

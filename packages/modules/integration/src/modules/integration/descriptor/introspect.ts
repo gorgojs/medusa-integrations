@@ -55,6 +55,20 @@ export function secretFieldNames(descriptor: Pick<IntegrationDescriptor, "option
     .map(([name]) => name)
 }
 
+/** Option ids that read like a credential. */
+const SECRET_LIKE_NAME = /password|passwd|secret|token|api[_-]?key|private[_-]?key/i
+
+/**
+ * Options whose name reads like a credential but that are not declared `secret: true`. Their
+ * values are shown in the admin and stored in the change history in clear text, so the loader
+ * warns about each one. A name is only a hint: `publishableKey` or `terminalKey` don't match.
+ */
+export function findUnmarkedSecretCandidates(descriptor: Pick<IntegrationDescriptor, "options">): string[] {
+  return Object.entries(descriptor.options)
+    .filter(([name, def]) => def.secret !== true && SECRET_LIKE_NAME.test(name))
+    .map(([name]) => name)
+}
+
 export function introspectDescriptor(descriptor: IntegrationDescriptor): UiDescriptor {
   return {
     category: descriptor.category,
