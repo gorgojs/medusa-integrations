@@ -1,4 +1,9 @@
 import type { I18nKey, CategoryKind, TestStatus } from "../../../integration"
+import type {
+  DiffEntry,
+  IntegrationChangeOutcome,
+  IntegrationChangeType,
+} from "../../../integration/history"
 
 /** One declared integration instance (registration) merged with its current row state. */
 export interface IntegrationOverviewItem {
@@ -71,4 +76,31 @@ export interface CatalogItem extends CatalogIntegration {
   installed: boolean
   /** The registered `provider_id` when installed, else null. */
   provider_id: string | null
+}
+
+/**
+ * One entry of the settings change history. `ip`, `user_agent` and `request_id` are returned by
+ * the detail route only. Secret values never appear in `diff`.
+ */
+export interface AdminIntegrationChange {
+  id: string
+  occurred_at: string
+  actor_type: string
+  actor_id: string | null
+  actor_label: string | null
+  change_type: IntegrationChangeType
+  outcome: IntegrationChangeOutcome
+  provider_id: string
+  identifier: string | null
+  instance_id: string | null
+  category: string | null
+  section_id: string | null
+  diff: DiffEntry[]
+  message: string | null
+  reverts_id: string | null
+  request_id?: string | null
+  ip?: string | null
+  user_agent?: string | null
+  created_at?: string
+  updated_at?: string
 }

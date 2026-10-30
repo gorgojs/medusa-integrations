@@ -1,5 +1,12 @@
 import { MiddlewareRoute, validateAndTransformBody, validateAndTransformQuery } from "@medusajs/framework/http"
-import { AdminUpsertIntegration, AdminSetIntegrationEnabled, AdminGetIntegrationsParams } from "./validators"
+import {
+  AdminUpsertIntegration,
+  AdminSetIntegrationEnabled,
+  AdminGetIntegrationsParams,
+  AdminGetIntegrationChangesParams,
+  AdminGetIntegrationChangeParams,
+} from "./validators"
+import * as changesQueryConfig from "./changes/query-config"
 
 export const adminIntegrationRoutesMiddlewares: MiddlewareRoute[] = [
   {
@@ -15,6 +22,28 @@ export const adminIntegrationRoutesMiddlewares: MiddlewareRoute[] = [
         defaults: [],
         defaultLimit: 20,
       } as any),
+    ],
+  },
+  // Change history: read-only. Nothing but GET is declared on these paths.
+  {
+    methods: ["GET"],
+    matcher: "/admin/integrations/changes",
+    middlewares: [
+      validateAndTransformQuery(AdminGetIntegrationChangesParams as any, changesQueryConfig.listTransformQueryConfig as any),
+    ],
+  },
+  {
+    methods: ["GET"],
+    matcher: "/admin/integrations/changes/:id",
+    middlewares: [
+      validateAndTransformQuery(AdminGetIntegrationChangeParams as any, changesQueryConfig.retrieveTransformQueryConfig as any),
+    ],
+  },
+  {
+    methods: ["GET"],
+    matcher: "/admin/integrations/:provider_id/changes",
+    middlewares: [
+      validateAndTransformQuery(AdminGetIntegrationChangesParams as any, changesQueryConfig.listTransformQueryConfig as any),
     ],
   },
   {
