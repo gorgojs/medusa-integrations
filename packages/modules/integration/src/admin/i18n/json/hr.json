@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Povijest promjena",
+      "empty": "Još nema promjena",
+      "viewAll": "Prikaži sve",
+      "events": {
+        "created": "Integracija je konfigurirana",
+        "updated": "Postavke su promijenjene",
+        "updatedSection": "Postavke „{{section}}“ su promijenjene",
+        "enabled": "Integracija je omogućena",
+        "disabled": "Integracija je onemogućena",
+        "deleted": "Postavke su izbrisane",
+        "testPassed": "Test veze je uspio",
+        "testFailed": "Test veze nije uspio",
+        "other": "Postavke su promijenjene"
+      },
+      "secret": {
+        "set": "vrijednost je postavljena",
+        "replaced": "vrijednost je zamijenjena",
+        "removed": "vrijednost je uklonjena",
+        "hidden": "vrijednost je skrivena"
+      },
+      "actors": {
+        "job": "Zakazani zadatak",
+        "system": "Sustav",
+        "apiKey": "API ključ „{{name}}“",
+        "unknownUser": "Izbrisani korisnik"
+      },
+      "fields": {
+        "title": "Naslov"
+      },
+      "truncated": "(skraćeno)",
+      "moreFields": "+{{count}} još"
     }
   }
 }

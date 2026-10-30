@@ -24,6 +24,8 @@ import { EditSectionDrawer } from "../../../../components/integration-form/edit-
 import { isFieldVisible } from "../../../../components/integration-form/visibility"
 import { LicenseSummary } from "../../../../components/license-summary"
 import { useLicenseStatus } from "../../../../lib/license"
+import { invalidateChanges } from "../../../../lib/changes"
+import { IntegrationHistorySection } from "../../../../components/history/history-section"
 import type { AdminIntegrationResponse, IntegrationSectionData, UiSection } from "../../../../../types"
 
 /**
@@ -66,6 +68,8 @@ const EditPage = () => {
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: ["integration", provider_id] })
     qc.invalidateQueries({ queryKey: ["integration-overview"] })
+    // A test, a toggle and a deletion each add an entry to the change history.
+    invalidateChanges(qc)
   }
 
   const test = useMutation({
@@ -210,6 +214,15 @@ const EditPage = () => {
   const mainSections = descriptor.sections.filter((s) => s.column !== "side")
   const sideSections = descriptor.sections.filter((s) => s.column === "side")
 
+  // Shown for an unconfigured integration too: its history survives a deletion. The layout only
+  // renders the columns it has, so a single-column layout gets the history at the end of `main`.
+  const historyInSide = descriptor.preferredLayoutId === "core:two-column"
+  const history = (
+    <LayoutComposer.Entry id="history">
+      <IntegrationHistorySection providerId={provider_id!} descriptor={descriptor} />
+    </LayoutComposer.Entry>
+  )
+
   const main = (
     <>
       {/* Identity / overview card */}
@@ -306,6 +319,7 @@ const EditPage = () => {
 
       {/* Main-column descriptor sections */}
       {mainSections.map(renderSection)}
+      {!historyInSide && history}
 
       {editing && (
         <EditSectionDrawer
@@ -321,7 +335,12 @@ const EditPage = () => {
     </>
   )
 
-  const side = <>{sideSections.map(renderSection)}</>
+  const side = (
+    <>
+      {sideSections.map(renderSection)}
+      {historyInSide && history}
+    </>
+  )
 
   return (
     <LayoutComposer

@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Ändringshistorik",
+      "empty": "Inga ändringar ännu",
+      "viewAll": "Visa alla",
+      "events": {
+        "created": "Integration konfigurerad",
+        "updated": "Inställningar ändrade",
+        "updatedSection": "Inställningar för ”{{section}}” ändrade",
+        "enabled": "Integration aktiverad",
+        "disabled": "Integration inaktiverad",
+        "deleted": "Inställningar borttagna",
+        "testPassed": "Anslutningstestet lyckades",
+        "testFailed": "Anslutningstestet misslyckades",
+        "other": "Inställningar ändrade"
+      },
+      "secret": {
+        "set": "värde angivet",
+        "replaced": "värde ersatt",
+        "removed": "värde borttaget",
+        "hidden": "värde dolt"
+      },
+      "actors": {
+        "job": "Schemalagt jobb",
+        "system": "System",
+        "apiKey": "API-nyckel ”{{name}}”",
+        "unknownUser": "Borttagen användare"
+      },
+      "fields": {
+        "title": "Titel"
+      },
+      "truncated": "(förkortad)",
+      "moreFields": "+{{count}} till"
     }
   }
 }

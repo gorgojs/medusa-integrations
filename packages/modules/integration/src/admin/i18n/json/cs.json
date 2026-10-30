@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Historie změn",
+      "empty": "Zatím žádné změny",
+      "viewAll": "Zobrazit vše",
+      "events": {
+        "created": "Integrace byla nakonfigurována",
+        "updated": "Nastavení bylo změněno",
+        "updatedSection": "Nastavení „{{section}}“ bylo změněno",
+        "enabled": "Integrace byla aktivována",
+        "disabled": "Integrace byla deaktivována",
+        "deleted": "Nastavení bylo smazáno",
+        "testPassed": "Test připojení proběhl úspěšně",
+        "testFailed": "Test připojení se nezdařil",
+        "other": "Nastavení bylo změněno"
+      },
+      "secret": {
+        "set": "hodnota nastavena",
+        "replaced": "hodnota nahrazena",
+        "removed": "hodnota odstraněna",
+        "hidden": "hodnota skryta"
+      },
+      "actors": {
+        "job": "Naplánovaná úloha",
+        "system": "Systém",
+        "apiKey": "API klíč „{{name}}“",
+        "unknownUser": "Smazaný uživatel"
+      },
+      "fields": {
+        "title": "Název"
+      },
+      "truncated": "(zkráceno)",
+      "moreFields": "Další: +{{count}}"
     }
   }
 }

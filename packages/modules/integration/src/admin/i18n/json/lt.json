@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Pakeitimų istorija",
+      "empty": "Pakeitimų dar nėra",
+      "viewAll": "Peržiūrėti viską",
+      "events": {
+        "created": "Integracija sukonfigūruota",
+        "updated": "Nustatymai pakeisti",
+        "updatedSection": "Nustatymai „{{section}}“ pakeisti",
+        "enabled": "Integracija įjungta",
+        "disabled": "Integracija išjungta",
+        "deleted": "Nustatymai ištrinti",
+        "testPassed": "Ryšio patikra sėkminga",
+        "testFailed": "Ryšio patikra nepavyko",
+        "other": "Nustatymai pakeisti"
+      },
+      "secret": {
+        "set": "reikšmė nustatyta",
+        "replaced": "reikšmė pakeista",
+        "removed": "reikšmė pašalinta",
+        "hidden": "reikšmė paslėpta"
+      },
+      "actors": {
+        "job": "Suplanuota užduotis",
+        "system": "Sistema",
+        "apiKey": "API raktas „{{name}}“",
+        "unknownUser": "Ištrintas naudotojas"
+      },
+      "fields": {
+        "title": "Pavadinimas"
+      },
+      "truncated": "(sutrumpinta)",
+      "moreFields": "dar +{{count}}"
     }
   }
 }

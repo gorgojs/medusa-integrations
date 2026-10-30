@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "變更記錄",
+      "empty": "尚無變更",
+      "viewAll": "查看全部",
+      "events": {
+        "created": "整合已設定",
+        "updated": "設定已變更",
+        "updatedSection": "「{{section}}」設定已變更",
+        "enabled": "整合已啟用",
+        "disabled": "整合已停用",
+        "deleted": "設定已刪除",
+        "testPassed": "連線測試通過",
+        "testFailed": "連線測試失敗",
+        "other": "設定已變更"
+      },
+      "secret": {
+        "set": "值已設定",
+        "replaced": "值已取代",
+        "removed": "值已移除",
+        "hidden": "值已隱藏"
+      },
+      "actors": {
+        "job": "排程工作",
+        "system": "系統",
+        "apiKey": "API 金鑰「{{name}}」",
+        "unknownUser": "已刪除的使用者"
+      },
+      "fields": {
+        "title": "標題"
+      },
+      "truncated": "（已截斷）",
+      "moreFields": "還有 {{count}} 項"
     }
   }
 }

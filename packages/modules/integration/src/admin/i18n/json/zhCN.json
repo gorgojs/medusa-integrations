@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "变更历史",
+      "empty": "暂无变更",
+      "viewAll": "查看全部",
+      "events": {
+        "created": "集成已配置",
+        "updated": "设置已更改",
+        "updatedSection": "“{{section}}”设置已更改",
+        "enabled": "集成已启用",
+        "disabled": "集成已禁用",
+        "deleted": "设置已删除",
+        "testPassed": "连接测试通过",
+        "testFailed": "连接测试失败",
+        "other": "设置已更改"
+      },
+      "secret": {
+        "set": "值已设置",
+        "replaced": "值已替换",
+        "removed": "值已移除",
+        "hidden": "值已隐藏"
+      },
+      "actors": {
+        "job": "定时任务",
+        "system": "系统",
+        "apiKey": "API 密钥“{{name}}”",
+        "unknownUser": "已删除的用户"
+      },
+      "fields": {
+        "title": "标题"
+      },
+      "truncated": "（已截断）",
+      "moreFields": "还有 {{count}} 项"
     }
   }
 }

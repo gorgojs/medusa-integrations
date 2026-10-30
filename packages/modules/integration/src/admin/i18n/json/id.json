@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Riwayat Perubahan",
+      "empty": "Belum ada perubahan",
+      "viewAll": "Lihat Semua",
+      "events": {
+        "created": "Integrasi dikonfigurasi",
+        "updated": "Pengaturan diubah",
+        "updatedSection": "Pengaturan “{{section}}” diubah",
+        "enabled": "Integrasi diaktifkan",
+        "disabled": "Integrasi dinonaktifkan",
+        "deleted": "Pengaturan dihapus",
+        "testPassed": "Uji koneksi berhasil",
+        "testFailed": "Uji koneksi gagal",
+        "other": "Pengaturan diubah"
+      },
+      "secret": {
+        "set": "nilai diatur",
+        "replaced": "nilai diganti",
+        "removed": "nilai dihapus",
+        "hidden": "nilai disembunyikan"
+      },
+      "actors": {
+        "job": "Tugas terjadwal",
+        "system": "Sistem",
+        "apiKey": "Kunci API “{{name}}”",
+        "unknownUser": "Pengguna yang dihapus"
+      },
+      "fields": {
+        "title": "Judul"
+      },
+      "truncated": "(dipersingkat)",
+      "moreFields": "+{{count}} lainnya"
     }
   }
 }

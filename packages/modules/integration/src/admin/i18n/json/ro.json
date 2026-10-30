@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Istoricul modificărilor",
+      "empty": "Nicio modificare încă",
+      "viewAll": "Vezi tot",
+      "events": {
+        "created": "Integrare configurată",
+        "updated": "Setări modificate",
+        "updatedSection": "Setările „{{section}}” modificate",
+        "enabled": "Integrare activată",
+        "disabled": "Integrare dezactivată",
+        "deleted": "Setări șterse",
+        "testPassed": "Testul conexiunii a reușit",
+        "testFailed": "Testul conexiunii a eșuat",
+        "other": "Setări modificate"
+      },
+      "secret": {
+        "set": "valoare setată",
+        "replaced": "valoare înlocuită",
+        "removed": "valoare eliminată",
+        "hidden": "valoare ascunsă"
+      },
+      "actors": {
+        "job": "Job programat",
+        "system": "Sistem",
+        "apiKey": "Cheie API „{{name}}”",
+        "unknownUser": "Utilizator șters"
+      },
+      "fields": {
+        "title": "Titlu"
+      },
+      "truncated": "(prescurtat)",
+      "moreFields": "+{{count}} în plus"
     }
   }
 }

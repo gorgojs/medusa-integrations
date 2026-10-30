@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "היסטוריית שינויים",
+      "empty": "אין שינויים עדיין",
+      "viewAll": "הצג הכול",
+      "events": {
+        "created": "האינטגרציה הוגדרה",
+        "updated": "ההגדרות שונו",
+        "updatedSection": "ההגדרות של “{{section}}” שונו",
+        "enabled": "האינטגרציה הופעלה",
+        "disabled": "האינטגרציה הושבתה",
+        "deleted": "ההגדרות נמחקו",
+        "testPassed": "בדיקת החיבור עברה בהצלחה",
+        "testFailed": "בדיקת החיבור נכשלה",
+        "other": "ההגדרות שונו"
+      },
+      "secret": {
+        "set": "הערך הוגדר",
+        "replaced": "הערך הוחלף",
+        "removed": "הערך הוסר",
+        "hidden": "הערך מוסתר"
+      },
+      "actors": {
+        "job": "משימה מתוזמנת",
+        "system": "מערכת",
+        "apiKey": "מפתח API “{{name}}”",
+        "unknownUser": "משתמש שנמחק"
+      },
+      "fields": {
+        "title": "כותרת"
+      },
+      "truncated": "(קוצר)",
+      "moreFields": "+{{count}} נוספים"
     }
   }
 }
