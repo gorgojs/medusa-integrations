@@ -1,5 +1,5 @@
 import type { DeleteResponse } from "@medusajs/framework/types"
-import type { CatalogItem, IntegrationOverviewItem, MaskedIntegration } from "./entities"
+import type { AdminIntegrationChange, CatalogItem, IntegrationOverviewItem, MaskedIntegration } from "./entities"
 import type { CategoryKind, TestConnectionResult, UiDescriptor } from "../../../integration"
 import type { LicenseStateEntry } from "../../../../modules/integration/types"
 
@@ -40,4 +40,15 @@ export interface AdminIntegrationCatalogResponse {
 
 export interface AdminIntegrationLicenseStatusResponse {
   packages: LicenseStateEntry[]
+}
+
+export interface AdminIntegrationChangeListResponse {
+  integration_changes: AdminIntegrationChange[]
+  count: number
+  offset: number
+  limit: number
+}
+
+export interface AdminIntegrationChangeResponse {
+  integration_change: AdminIntegrationChange
 }

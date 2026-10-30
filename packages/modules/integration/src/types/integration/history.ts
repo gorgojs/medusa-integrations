@@ -37,12 +37,15 @@ export type DiffValueEntry = {
   truncated?: true
 }
 
-/** A changed secret option. Its value is never stored, only what happened to it. */
+/**
+ * A changed secret option. Its value is never stored, only what happened to it. `"hidden"` is set
+ * by the read routes for an entry recorded while the option was still plain and is secret now.
+ */
 export type DiffSecretEntry = {
   field: string
   label?: I18nKey
   secret: true
-  op: "set" | "replaced" | "removed"
+  op: "set" | "replaced" | "removed" | "hidden"
 }
 
 export type DiffEntry = DiffValueEntry | DiffSecretEntry
