@@ -1,6 +1,6 @@
 import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { upsertIntegrationWorkflow, deleteIntegrationWorkflow } from "../../../../workflows/integration"
-import { service, maskedView, requireProvider } from "../_helpers"
+import { service, maskedView, requireProvider, changeActor } from "../_helpers"
 import type { AdminUpsertIntegrationType } from "../validators"
 import type {
   AdminIntegrationResponse,
@@ -45,6 +45,7 @@ export const POST = async (
       section_id: req.validatedBody.section_id,
       title: req.validatedBody.title,
       values: req.validatedBody.values,
+      actor: changeActor(req),
     },
   })
   res.json({ integration: maskedView(result, svc.getSecretKeys(provider_id)) })
@@ -58,7 +59,7 @@ export const DELETE = async (
   const provider_id = req.params.provider_id
   requireProvider(svc, provider_id)
   await deleteIntegrationWorkflow(req.scope).run({
-    input: { provider_id },
+    input: { provider_id, actor: changeActor(req) },
   })
   res.json({ id: provider_id, object: "integration", deleted: true })
 }

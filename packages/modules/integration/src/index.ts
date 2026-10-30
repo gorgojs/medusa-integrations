@@ -42,3 +42,12 @@ export { INTEGRATION_MODULE } from "./modules/integration"
 export { default as IntegrationModuleService } from "./modules/integration/services/integration-module"
 export type { ResolvedOptions } from "./modules/integration/services/integration-module"
 export type { IntegrationModuleOptions } from "./modules/integration/types"
+
+// Settings change history: rows live in the integration module (`listIntegrationChanges`, …).
+export type {
+  DiffEntry,
+  IntegrationChangeActor,
+  IntegrationChangeOutcome,
+  IntegrationChangeType,
+  RecordIntegrationChangeInput,
+} from "./types/integration/history"

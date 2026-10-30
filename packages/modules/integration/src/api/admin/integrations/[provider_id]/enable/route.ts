@@ -1,6 +1,6 @@
 import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { setIntegrationEnabledWorkflow } from "../../../../../workflows/integration"
-import { service, maskedView, requireProvider } from "../../_helpers"
+import { service, maskedView, requireProvider, changeActor } from "../../_helpers"
 import type { AdminSetIntegrationEnabledType } from "../../validators"
 import type { AdminIntegrationUpsertResponse } from "../../../../../types"
 
@@ -14,7 +14,7 @@ export const POST = async (
   requireProvider(svc, provider_id)
 
   const { result } = await setIntegrationEnabledWorkflow(req.scope).run({
-    input: { provider_id, is_enabled: req.validatedBody.is_enabled },
+    input: { provider_id, is_enabled: req.validatedBody.is_enabled, actor: changeActor(req) },
   })
   res.json({ integration: maskedView(result, svc.getSecretKeys(provider_id)) })
 }
