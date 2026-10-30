@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Историја на промени",
+      "empty": "Сè уште нема промени",
+      "viewAll": "Прикажи ги сите",
+      "events": {
+        "created": "Интеграцијата е конфигурирана",
+        "updated": "Поставките се променети",
+        "updatedSection": "Поставките на „{{section}}“ се променети",
+        "enabled": "Интеграцијата е овозможена",
+        "disabled": "Интеграцијата е оневозможена",
+        "deleted": "Поставките се избришани",
+        "testPassed": "Тестот на врската успеа",
+        "testFailed": "Тестот на врската не успеа",
+        "other": "Поставките се променети"
+      },
+      "secret": {
+        "set": "вредноста е поставена",
+        "replaced": "вредноста е заменета",
+        "removed": "вредноста е отстранета",
+        "hidden": "вредноста е скриена"
+      },
+      "actors": {
+        "job": "Закажана задача",
+        "system": "Систем",
+        "apiKey": "API клуч „{{name}}“",
+        "unknownUser": "Избришан корисник"
+      },
+      "fields": {
+        "title": "Наслов"
+      },
+      "truncated": "(скратено)",
+      "moreFields": "+{{count}} повеќе"
     }
   }
 }

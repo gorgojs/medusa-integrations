@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Değişiklik Geçmişi",
+      "empty": "Henüz değişiklik yok",
+      "viewAll": "Tümünü Gör",
+      "events": {
+        "created": "Entegrasyon yapılandırıldı",
+        "updated": "Ayarlar değiştirildi",
+        "updatedSection": "“{{section}}” ayarları değiştirildi",
+        "enabled": "Entegrasyon etkinleştirildi",
+        "disabled": "Entegrasyon devre dışı bırakıldı",
+        "deleted": "Ayarlar silindi",
+        "testPassed": "Bağlantı testi başarılı",
+        "testFailed": "Bağlantı testi başarısız",
+        "other": "Ayarlar değiştirildi"
+      },
+      "secret": {
+        "set": "değer ayarlandı",
+        "replaced": "değer değiştirildi",
+        "removed": "değer kaldırıldı",
+        "hidden": "değer gizlendi"
+      },
+      "actors": {
+        "job": "Zamanlanmış görev",
+        "system": "Sistem",
+        "apiKey": "API anahtarı “{{name}}”",
+        "unknownUser": "Silinmiş kullanıcı"
+      },
+      "fields": {
+        "title": "Başlık"
+      },
+      "truncated": "(kısaltıldı)",
+      "moreFields": "+{{count}} daha"
     }
   }
 }

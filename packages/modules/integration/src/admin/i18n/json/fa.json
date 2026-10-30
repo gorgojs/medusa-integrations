@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "تاریخچه تغییرات",
+      "empty": "هنوز تغییری وجود ندارد",
+      "viewAll": "مشاهده همه",
+      "events": {
+        "created": "یکپارچه‌سازی پیکربندی شد",
+        "updated": "تنظیمات تغییر کرد",
+        "updatedSection": "تنظیمات «{{section}}» تغییر کرد",
+        "enabled": "یکپارچه‌سازی فعال شد",
+        "disabled": "یکپارچه‌سازی غیرفعال شد",
+        "deleted": "تنظیمات حذف شد",
+        "testPassed": "آزمایش اتصال موفق بود",
+        "testFailed": "آزمایش اتصال ناموفق بود",
+        "other": "تنظیمات تغییر کرد"
+      },
+      "secret": {
+        "set": "مقدار تنظیم شد",
+        "replaced": "مقدار جایگزین شد",
+        "removed": "مقدار حذف شد",
+        "hidden": "مقدار پنهان است"
+      },
+      "actors": {
+        "job": "کار زمان‌بندی‌شده",
+        "system": "سیستم",
+        "apiKey": "کلید API «{{name}}»",
+        "unknownUser": "کاربر حذف‌شده"
+      },
+      "fields": {
+        "title": "عنوان"
+      },
+      "truncated": "(کوتاه‌شده)",
+      "moreFields": "+{{count}} مورد دیگر"
     }
   }
 }

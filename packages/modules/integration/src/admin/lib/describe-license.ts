@@ -42,7 +42,7 @@ export type LicenseFormat = {
 }
 
 /** Medusa names languages `ptBR` and `zhCN`, which Intl rejects. */
-function intlLocale(language: string): string {
+export function intlLocale(language: string): string {
   try {
     return Intl.getCanonicalLocales(language.replace(/^([a-z]{2})([A-Z]{2})$/, "$1-$2"))[0] ?? "en"
   } catch {

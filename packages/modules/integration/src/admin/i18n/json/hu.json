@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Módosítási előzmények",
+      "empty": "Még nincsenek módosítások",
+      "viewAll": "Összes megtekintése",
+      "events": {
+        "created": "Az integráció konfigurálva",
+        "updated": "A beállítások módosultak",
+        "updatedSection": "A(z) „{{section}}” beállításai módosultak",
+        "enabled": "Az integráció engedélyezve",
+        "disabled": "Az integráció letiltva",
+        "deleted": "A beállítások törölve",
+        "testPassed": "A kapcsolat tesztje sikeres",
+        "testFailed": "A kapcsolat tesztje sikertelen",
+        "other": "A beállítások módosultak"
+      },
+      "secret": {
+        "set": "érték beállítva",
+        "replaced": "érték lecserélve",
+        "removed": "érték eltávolítva",
+        "hidden": "érték elrejtve"
+      },
+      "actors": {
+        "job": "Ütemezett feladat",
+        "system": "Rendszer",
+        "apiKey": "„{{name}}” API-kulcs",
+        "unknownUser": "Törölt felhasználó"
+      },
+      "fields": {
+        "title": "Cím"
+      },
+      "truncated": "(rövidítve)",
+      "moreFields": "+{{count}} további"
     }
   }
 }

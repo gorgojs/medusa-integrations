@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Change History",
+      "empty": "No changes yet",
+      "viewAll": "View All",
+      "events": {
+        "created": "Integration configured",
+        "updated": "Settings changed",
+        "updatedSection": "“{{section}}” settings changed",
+        "enabled": "Integration enabled",
+        "disabled": "Integration disabled",
+        "deleted": "Settings deleted",
+        "testPassed": "Connection test passed",
+        "testFailed": "Connection test failed",
+        "other": "Settings changed"
+      },
+      "secret": {
+        "set": "value set",
+        "replaced": "value replaced",
+        "removed": "value removed",
+        "hidden": "value hidden"
+      },
+      "actors": {
+        "job": "Scheduled job",
+        "system": "System",
+        "apiKey": "API key “{{name}}”",
+        "unknownUser": "Deleted user"
+      },
+      "fields": {
+        "title": "Title"
+      },
+      "truncated": "(shortened)",
+      "moreFields": "+{{count}} more"
     }
   }
 }

@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Өөрчлөлтийн түүх",
+      "empty": "Одоогоор өөрчлөлт алга",
+      "viewAll": "Бүгдийг харах",
+      "events": {
+        "created": "Интеграци тохируулагдлаа",
+        "updated": "Тохиргоо өөрчлөгдлөө",
+        "updatedSection": "“{{section}}” тохиргоо өөрчлөгдлөө",
+        "enabled": "Интеграци идэвхжлээ",
+        "disabled": "Интеграци идэвхгүй боллоо",
+        "deleted": "Тохиргоо устгагдлаа",
+        "testPassed": "Холболтын шалгалт амжилттай боллоо",
+        "testFailed": "Холболтын шалгалт амжилтгүй боллоо",
+        "other": "Тохиргоо өөрчлөгдлөө"
+      },
+      "secret": {
+        "set": "утга тохируулсан",
+        "replaced": "утга солигдсон",
+        "removed": "утга устгагдсан",
+        "hidden": "утга нуугдсан"
+      },
+      "actors": {
+        "job": "Хуваарьт ажил",
+        "system": "Систем",
+        "apiKey": "API түлхүүр “{{name}}”",
+        "unknownUser": "Устгагдсан хэрэглэгч"
+      },
+      "fields": {
+        "title": "Гарчиг"
+      },
+      "truncated": "(товчилсон)",
+      "moreFields": "+{{count}} бусад"
     }
   }
 }

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { sdk } from "../../lib/sdk"
+import { invalidateChanges } from "../../lib/changes"
 import { IntegrationField } from "./field"
 import { isFieldVisible } from "./visibility"
 import type { UiSection } from "../../../types"
@@ -81,6 +82,7 @@ export const EditSectionDrawer = ({
       toast.success(t("integration.toast.saved"))
       qc.invalidateQueries({ queryKey: ["integration", providerId] })
       qc.invalidateQueries({ queryKey: ["integration-overview"] })
+      invalidateChanges(qc)
       onOpenChange(false)
     },
     onError: (e: any) => toast.error(e?.message ?? t("integration.toast.saveFailed")),

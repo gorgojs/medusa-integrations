@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "سجل التغييرات",
+      "empty": "لا توجد تغييرات بعد",
+      "viewAll": "عرض الكل",
+      "events": {
+        "created": "تمت تهيئة التكامل",
+        "updated": "تم تغيير الإعدادات",
+        "updatedSection": "تم تغيير إعدادات «{{section}}»",
+        "enabled": "تم تمكين التكامل",
+        "disabled": "تم تعطيل التكامل",
+        "deleted": "تم حذف الإعدادات",
+        "testPassed": "نجح اختبار الاتصال",
+        "testFailed": "فشل اختبار الاتصال",
+        "other": "تم تغيير الإعدادات"
+      },
+      "secret": {
+        "set": "تم تعيين القيمة",
+        "replaced": "تم استبدال القيمة",
+        "removed": "تمت إزالة القيمة",
+        "hidden": "القيمة مخفية"
+      },
+      "actors": {
+        "job": "مهمة مجدولة",
+        "system": "النظام",
+        "apiKey": "مفتاح API «{{name}}»",
+        "unknownUser": "مستخدم محذوف"
+      },
+      "fields": {
+        "title": "العنوان"
+      },
+      "truncated": "(مختصر)",
+      "moreFields": "+{{count}} أخرى"
     }
   }
 }

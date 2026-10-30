@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Historia zmian",
+      "empty": "Brak zmian",
+      "viewAll": "Zobacz wszystkie",
+      "events": {
+        "created": "Integracja skonfigurowana",
+        "updated": "Zmieniono ustawienia",
+        "updatedSection": "Zmieniono ustawienia „{{section}}”",
+        "enabled": "Włączono integrację",
+        "disabled": "Wyłączono integrację",
+        "deleted": "Usunięto ustawienia",
+        "testPassed": "Test połączenia zakończony powodzeniem",
+        "testFailed": "Test połączenia nieudany",
+        "other": "Zmieniono ustawienia"
+      },
+      "secret": {
+        "set": "wartość ustawiona",
+        "replaced": "wartość zastąpiona",
+        "removed": "wartość usunięta",
+        "hidden": "wartość ukryta"
+      },
+      "actors": {
+        "job": "Zadanie zaplanowane",
+        "system": "System",
+        "apiKey": "Klucz API „{{name}}”",
+        "unknownUser": "Usunięty użytkownik"
+      },
+      "fields": {
+        "title": "Tytuł"
+      },
+      "truncated": "(skrócono)",
+      "moreFields": "+{{count}} więcej"
     }
   }
 }
