@@ -53,7 +53,7 @@ export default async function testIntegrationConnectionsJob(container: MedusaCon
   for (const target of targets) {
     try {
       const { result } = await testIntegrationConnectionWorkflow(container).run({
-        input: { provider_id: target.provider_id },
+        input: { provider_id: target.provider_id, actor: { type: "job", id: config.name } },
       })
       outcomes.push(result.status)
       const line = `[integration] ${target.provider_id} → ${result.status}${

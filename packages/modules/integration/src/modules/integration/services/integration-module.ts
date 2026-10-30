@@ -1,6 +1,7 @@
 import { MedusaService } from "@medusajs/framework/utils"
 import { Logger } from "@medusajs/framework/types"
 import Integration from "../models/integration"
+import IntegrationChange from "../models/integration-change"
 import { deriveKey } from "./crypto"
 import { encryptSecretsInline, decryptSecretsInline } from "./secrets"
 import IntegrationProviderService from "./integration-provider"
@@ -19,6 +20,7 @@ import { toLicenseStateEntries } from "../utils/license-entry"
 import { loadCatalog } from "../../../lib/catalog"
 import type { IntegrationOverviewItem, CatalogItem } from "../../../types"
 import type { CategoryKind } from "../../../types/integration"
+import type { RecordIntegrationChangeInput } from "../../../types/integration/history"
 
 type InjectedDependencies = {
   logger?: Logger
@@ -49,7 +51,9 @@ const CACHE_TTL_MS = 60_000
 
 export default class IntegrationModuleService extends MedusaService({
   Integration,
+  IntegrationChange,
 }) {
+  protected logger_?: Logger
   protected providerService_: IntegrationProviderService
   protected options_: IntegrationModuleOptions
   protected packageMeta_: PackageMetaMap
@@ -58,6 +62,7 @@ export default class IntegrationModuleService extends MedusaService({
 
   constructor(deps: InjectedDependencies) {
     super(...arguments)
+    this.logger_ = deps.logger
     this.providerService_ = deps.integrationProviderService
     this.options_ = deps[INTEGRATION_OPTIONS_KEY] ?? {}
     this.packageMeta_ = deps[INTEGRATION_PACKAGE_META_KEY] ?? {}
@@ -298,6 +303,41 @@ export default class IntegrationModuleService extends MedusaService({
     const secretKeys = secretFieldNames(descriptor)
     if (secretKeys.length === 0) return { ...values }
     return encryptSecretsInline(values, secretKeys, this.getKey())
+  }
+
+  // ── settings change history ──────────────────────────────────────────────────
+  /**
+   * Store one entry of the settings change history. Never throws: a history that cannot be
+   * written must not break the change it describes, so a failure is logged and `null` returned.
+   */
+  async recordChange(input: RecordIntegrationChangeInput): Promise<string | null> {
+    try {
+      const created = await this.createIntegrationChanges({
+        occurred_at: input.occurred_at ?? new Date(),
+        actor_type: input.actor.type,
+        actor_id: input.actor.id ?? null,
+        actor_label: input.actor_label ?? null,
+        change_type: input.change_type,
+        outcome: input.outcome,
+        provider_id: input.provider_id,
+        identifier: input.identifier ?? null,
+        instance_id: input.instance_id ?? null,
+        category: input.category ?? null,
+        section_id: input.section_id ?? null,
+        diff: (input.diff ?? []) as unknown as Record<string, unknown>,
+        message: input.message ?? null,
+        reverts_id: input.reverts_id ?? null,
+        request_id: input.actor.request_id ?? null,
+        ip: input.actor.ip ?? null,
+        user_agent: input.actor.user_agent ?? null,
+      })
+      return created.id
+    } catch (e: any) {
+      this.logger_?.warn(
+        `[integration] could not record a ${input.change_type} change for ${input.provider_id}: ${e?.message ?? e}`
+      )
+      return null
+    }
   }
 
   // ── resolver (runtime read, cached) ──────────────────────────────────────────

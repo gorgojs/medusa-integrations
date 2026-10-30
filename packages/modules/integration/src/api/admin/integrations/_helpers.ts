@@ -1,8 +1,9 @@
-import { MedusaRequest } from "@medusajs/framework/http"
+import { AuthenticatedMedusaRequest, MedusaRequest } from "@medusajs/framework/http"
 import { MedusaError } from "@medusajs/framework/utils"
 import { INTEGRATION_MODULE } from "../../../modules/integration"
 import type IntegrationModuleService from "../../../modules/integration/services/integration-module"
 import type { MaskedIntegration } from "../../../types"
+import type { IntegrationChangeActor } from "../../../types/integration/history"
 
 export function service(req: MedusaRequest): IntegrationModuleService {
   return req.scope.resolve(INTEGRATION_MODULE)
@@ -45,5 +46,19 @@ export function maskedView(record: any, secretKeys: string[]): MaskedIntegration
     configured_secrets,
     last_test_status: record.last_test_status ?? null,
     values,
+  }
+}
+
+/**
+ * Who makes a change, for the change history: the authenticated actor (a user or an API key)
+ * and where the request came from.
+ */
+export function changeActor(req: AuthenticatedMedusaRequest): IntegrationChangeActor {
+  return {
+    type: req.auth_context?.actor_type ?? "system",
+    id: req.auth_context?.actor_id ?? null,
+    ip: req.ip ?? null,
+    user_agent: req.get("user-agent") ?? null,
+    request_id: req.requestId ?? null,
   }
 }

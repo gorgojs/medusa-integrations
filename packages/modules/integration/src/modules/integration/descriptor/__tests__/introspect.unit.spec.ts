@@ -1,5 +1,5 @@
 import { describe, expect, it } from "@jest/globals"
-import { introspectDescriptor, secretFieldNames } from "../introspect"
+import { findUnmarkedSecretCandidates, introspectDescriptor, secretFieldNames } from "../introspect"
 import { defineIntegration } from "../define"
 import type { IntegrationDescriptor } from "../define"
 
@@ -96,5 +96,38 @@ describe("introspect readonly", () => {
     expect(f.readonly).toBe(true)
     expect(f.secret).toBe(true)
     expect(f.default).toBeUndefined()
+  })
+})
+
+describe("findUnmarkedSecretCandidates", () => {
+  const options = (defs: Record<string, any>) => ({ options: defs }) as any
+
+  it("flags options named like a credential that are not declared secret", () => {
+    expect(
+      findUnmarkedSecretCandidates(
+        options({
+          apiKey: { type: "string", label: "x" },
+          api_key: { type: "string", label: "x" },
+          accessToken: { type: "string", label: "x" },
+          clientSecret: { type: "string", label: "x" },
+          adminPassword: { type: "string", label: "x" },
+          privateKey: { type: "string", label: "x" },
+        })
+      )
+    ).toEqual(["apiKey", "api_key", "accessToken", "clientSecret", "adminPassword", "privateKey"])
+  })
+
+  it("leaves declared secrets and ordinary names alone", () => {
+    expect(
+      findUnmarkedSecretCandidates(
+        options({
+          password: { type: "string", secret: true, label: "x" },
+          publishableKey: { type: "string", label: "x" },
+          terminalKey: { type: "string", label: "x" },
+          shopId: { type: "string", label: "x" },
+          merchantLogin: { type: "string", label: "x" },
+        })
+      )
+    ).toEqual([])
   })
 })
