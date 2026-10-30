@@ -116,5 +116,39 @@ moduleIntegrationTestRunner<any>({
         expect(item).toMatchObject({ is_configured: true, is_complete: true, is_enabled: true })
       })
     })
+
+    describe("recordChange", () => {
+      beforeEach(async () => {
+        const changes = await service.listIntegrationChanges({}, { take: 1000, select: ["id"] })
+        if (changes.length) await service.deleteIntegrationChanges(changes.map((c: any) => c.id))
+      })
+
+      it("stores a change and returns its id", async () => {
+        const id = await service.recordChange({
+          provider_id: A,
+          change_type: "updated",
+          outcome: "succeeded",
+          actor: { type: "system" },
+          diff: [{ field: "apiKey", from: "a", to: "b" }],
+        })
+        expect(id).toMatch(/^intch_/)
+        const [row] = await service.listIntegrationChanges({ id }, { take: 1 })
+        expect(row).toMatchObject({ provider_id: A, actor_type: "system", diff: [{ field: "apiKey", from: "a", to: "b" }] })
+        expect(row.occurred_at).toBeInstanceOf(Date)
+      })
+
+      it("never throws when a change cannot be stored", async () => {
+        await expect(
+          service.recordChange({ provider_id: null, change_type: "updated", outcome: "succeeded", actor: { type: "system" } })
+        ).resolves.toBeNull()
+      })
+
+      it("keeps the history when the integration row is deleted", async () => {
+        const row = await configure(A)
+        await service.recordChange({ provider_id: A, change_type: "created", outcome: "succeeded", actor: { type: "system" } })
+        await service.deleteIntegrations(row.id)
+        expect(await service.listIntegrationChanges({ provider_id: A }, { take: 10 })).toHaveLength(1)
+      })
+    })
   },
 })
