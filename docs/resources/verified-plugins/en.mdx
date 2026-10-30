@@ -1,0 +1,77 @@
+---
+title: "Verified Plugins"
+description: "What the Verified badge in the Gorgo plugin catalog means and how Gorgo checks Medusa plugins for it."
+---
+
+# {frontmatter.title}
+
+The [Medusa plugin catalog](https://gorgojs.com/medusa/plugins) on gorgojs.com marks some plugins with a **Verified** badge. A plugin gets the badge when it passes all four groups of checks on this page, covering security, compatibility with the latest Medusa release, maintenance and documentation.
+
+To see only these plugins, turn on the **Verified** filter in the catalog. Hover over a badge to see the plugin version, the Medusa release and the check date.
+
+---
+
+## What Gorgo Checks
+
+### Security
+
+- **No install scripts** – the published package has no `preinstall`, `install` or `postinstall` script of its own.
+- **No known vulnerabilities** – the plugin's own dependencies, apart from Medusa packages, have no known vulnerabilities rated high or critical.
+- **No malware reports** – the OSV database has no malicious-package report for the plugin or its dependencies.
+- **No secrets in the package** – the published archive has no `.env` files, key files or bundled `node_modules`, and none of its files contains a private key or a common API token.
+- **No obfuscation** – the published JavaScript shows no signs of obfuscation.
+
+### Compatibility
+
+- **Medusa version ranges** – the version ranges the plugin declares for Medusa core packages admit the latest Medusa release.
+- **Clean install** – the plugin installs into a new Medusa project on the latest release without `--force` or `--legacy-peer-deps`.
+- **Build** – `medusa build` succeeds, including Medusa Admin with the plugin's admin extensions.
+- **Migrations** – `medusa db:migrate` succeeds and, when the plugin ships migrations, creates its tables.
+- **Startup** – the server starts, `/health` responds with `200`, and the startup log has no errors.
+
+### Maintenance
+
+- **Public repository** – the source code is in a public GitHub repository that is not archived, and the npm package is not deprecated.
+- **Recent release** – the latest version was published no more than 180 days ago.
+- **Up to date with Medusa** – the plugin was built against a Medusa release no more than four months older than the latest one, or its version ranges admit the latest release and it installs on that release without errors.
+- **Tests in CI** – the repository has test files and a CI workflow that runs them.
+- **Issue response** – fewer than three user issues have gone unanswered for more than 30 days.
+- **Open-source license** – `package.json` declares an OSI-approved license.
+
+### Documentation
+
+- **Setup instructions** – the README shows how to install the plugin and register it in `medusa-config.ts`.
+- **English** – the README is written mostly in English.
+- **Environment variables** – the README lists every environment variable the plugin reads.
+
+---
+
+## How Gorgo Checks
+
+Gorgo reads the package as npm publishes it, along with its public repository. To check compatibility, Gorgo installs the plugin into a new Medusa project on the latest release. The project uses a PostgreSQL database. Gorgo then builds the project, runs the migrations and starts the server.
+
+Gorgo uses placeholder values instead of real API keys. That is enough to confirm that the plugin loads and starts, but not to test whether a payment goes through or a provider receives an order.
+
+Gorgo plugins go through the same checks as every other plugin in the catalog.
+
+---
+
+## What the Badge Means
+
+The badge says that a specific plugin version passed these checks on a specific Medusa release. It is not an endorsement or a guarantee from Gorgo, so make sure a plugin fits your store before you use it in production.
+
+The security checks look for known risks in the published package. They are not an audit of the plugin's code.
+
+A missing badge is not a warning. A plugin without it may work well but not meet every criterion on this page.
+
+---
+
+## For Plugin Authors
+
+There is no application. A plugin listed in the catalog gets the badge if it passes every check on this page. These steps help a plugin pass:
+
+- Keep the `@medusajs/*` peer dependency ranges open to new minor releases instead of pinning an exact version.
+- Host the public repository on GitHub, where Gorgo reads the repository status and issues.
+- Describe the install command, the `medusa-config.ts` registration and every environment variable in the README.
+
+If your plugin meets the criteria but has no badge, or you disagree with a result, write to the [Telegram support chat](https://t.me/gorgojs_chat).
