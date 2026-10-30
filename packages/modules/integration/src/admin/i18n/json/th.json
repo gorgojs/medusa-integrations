@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "ประวัติการเปลี่ยนแปลง",
+      "empty": "ยังไม่มีการเปลี่ยนแปลง",
+      "viewAll": "ดูทั้งหมด",
+      "events": {
+        "created": "ตั้งค่าการเชื่อมต่อแล้ว",
+        "updated": "เปลี่ยนการตั้งค่าแล้ว",
+        "updatedSection": "เปลี่ยนการตั้งค่า “{{section}}” แล้ว",
+        "enabled": "เปิดใช้งานการเชื่อมต่อแล้ว",
+        "disabled": "ปิดใช้งานการเชื่อมต่อแล้ว",
+        "deleted": "ลบการตั้งค่าแล้ว",
+        "testPassed": "ทดสอบการเชื่อมต่อสำเร็จ",
+        "testFailed": "ทดสอบการเชื่อมต่อไม่สำเร็จ",
+        "other": "เปลี่ยนการตั้งค่าแล้ว"
+      },
+      "secret": {
+        "set": "ตั้งค่าแล้ว",
+        "replaced": "เปลี่ยนค่าแล้ว",
+        "removed": "ลบค่าแล้ว",
+        "hidden": "ซ่อนค่าไว้"
+      },
+      "actors": {
+        "job": "งานที่ตั้งเวลาไว้",
+        "system": "ระบบ",
+        "apiKey": "คีย์ API “{{name}}”",
+        "unknownUser": "ผู้ใช้ที่ถูกลบ"
+      },
+      "fields": {
+        "title": "ชื่อ"
+      },
+      "truncated": "(ย่อ)",
+      "moreFields": "อีก {{count}} รายการ"
     }
   }
 }

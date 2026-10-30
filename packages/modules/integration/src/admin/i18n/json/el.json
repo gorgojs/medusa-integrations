@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Ιστορικό αλλαγών",
+      "empty": "Δεν υπάρχουν αλλαγές ακόμη",
+      "viewAll": "Προβολή όλων",
+      "events": {
+        "created": "Η ενσωμάτωση διαμορφώθηκε",
+        "updated": "Οι ρυθμίσεις άλλαξαν",
+        "updatedSection": "Οι ρυθμίσεις «{{section}}» άλλαξαν",
+        "enabled": "Η ενσωμάτωση ενεργοποιήθηκε",
+        "disabled": "Η ενσωμάτωση απενεργοποιήθηκε",
+        "deleted": "Οι ρυθμίσεις διαγράφηκαν",
+        "testPassed": "Ο έλεγχος σύνδεσης πέτυχε",
+        "testFailed": "Ο έλεγχος σύνδεσης απέτυχε",
+        "other": "Οι ρυθμίσεις άλλαξαν"
+      },
+      "secret": {
+        "set": "η τιμή ορίστηκε",
+        "replaced": "η τιμή αντικαταστάθηκε",
+        "removed": "η τιμή αφαιρέθηκε",
+        "hidden": "η τιμή είναι κρυφή"
+      },
+      "actors": {
+        "job": "Προγραμματισμένη εργασία",
+        "system": "Σύστημα",
+        "apiKey": "Κλειδί API «{{name}}»",
+        "unknownUser": "Διαγραμμένος χρήστης"
+      },
+      "fields": {
+        "title": "Τίτλος"
+      },
+      "truncated": "(συντομευμένο)",
+      "moreFields": "+{{count}} ακόμη"
     }
   }
 }

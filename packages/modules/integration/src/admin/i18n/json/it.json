@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Cronologia delle modifiche",
+      "empty": "Nessuna modifica per ora",
+      "viewAll": "Mostra tutto",
+      "events": {
+        "created": "Integrazione configurata",
+        "updated": "Impostazioni modificate",
+        "updatedSection": "Impostazioni di «{{section}}» modificate",
+        "enabled": "Integrazione abilitata",
+        "disabled": "Integrazione disabilitata",
+        "deleted": "Impostazioni eliminate",
+        "testPassed": "Test di connessione riuscito",
+        "testFailed": "Test di connessione non riuscito",
+        "other": "Impostazioni modificate"
+      },
+      "secret": {
+        "set": "valore impostato",
+        "replaced": "valore sostituito",
+        "removed": "valore rimosso",
+        "hidden": "valore nascosto"
+      },
+      "actors": {
+        "job": "Attività pianificata",
+        "system": "Sistema",
+        "apiKey": "Chiave API «{{name}}»",
+        "unknownUser": "Utente eliminato"
+      },
+      "fields": {
+        "title": "Titolo"
+      },
+      "truncated": "(abbreviato)",
+      "moreFields": "+{{count}} altri"
     }
   }
 }

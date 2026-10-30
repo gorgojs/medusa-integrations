@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "変更履歴",
+      "empty": "変更はまだありません",
+      "viewAll": "すべて表示",
+      "events": {
+        "created": "インテグレーションを設定しました",
+        "updated": "設定を変更しました",
+        "updatedSection": "「{{section}}」の設定を変更しました",
+        "enabled": "インテグレーションを有効にしました",
+        "disabled": "インテグレーションを無効にしました",
+        "deleted": "設定を削除しました",
+        "testPassed": "接続テストに成功しました",
+        "testFailed": "接続テストに失敗しました",
+        "other": "設定を変更しました"
+      },
+      "secret": {
+        "set": "値を設定",
+        "replaced": "値を置換",
+        "removed": "値を削除",
+        "hidden": "値は非表示"
+      },
+      "actors": {
+        "job": "スケジュールジョブ",
+        "system": "システム",
+        "apiKey": "APIキー「{{name}}」",
+        "unknownUser": "削除されたユーザー"
+      },
+      "fields": {
+        "title": "タイトル"
+      },
+      "truncated": "(省略)",
+      "moreFields": "他{{count}}件"
     }
   }
 }

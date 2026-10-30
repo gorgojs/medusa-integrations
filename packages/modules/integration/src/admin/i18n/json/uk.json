@@ -143,6 +143,39 @@
       "local": "local",
       "recheck": "Check now",
       "recheckFailed": "Could not check the license"
+    },
+    "history": {
+      "title": "Історія змін",
+      "empty": "Змін поки немає",
+      "viewAll": "Показати всі",
+      "events": {
+        "created": "Інтеграцію налаштовано",
+        "updated": "Налаштування змінено",
+        "updatedSection": "Налаштування «{{section}}» змінено",
+        "enabled": "Інтеграцію увімкнено",
+        "disabled": "Інтеграцію вимкнено",
+        "deleted": "Налаштування видалено",
+        "testPassed": "Перевірка з'єднання пройшла успішно",
+        "testFailed": "Перевірка з'єднання не вдалася",
+        "other": "Налаштування змінено"
+      },
+      "secret": {
+        "set": "значення встановлено",
+        "replaced": "значення замінено",
+        "removed": "значення видалено",
+        "hidden": "значення приховано"
+      },
+      "actors": {
+        "job": "Запланована задача",
+        "system": "Система",
+        "apiKey": "API-ключ «{{name}}»",
+        "unknownUser": "Видалений користувач"
+      },
+      "fields": {
+        "title": "Заголовок"
+      },
+      "truncated": "(скорочено)",
+      "moreFields": "і ще {{count}}"
     }
   }
 }
