@@ -204,6 +204,8 @@ yarn test:unit
 
 CI runs unit tests on every PR (only for changed plugins) and the full suite on push to `main` and `workflow_dispatch`. See [.github/workflows/test.yml](.github/workflows/test.yml).
 
+The [Maintenance](https://docs.gorgojs.com/resources/maintenance) page explains how we test, update and fix the plugins and the Integration Module.
+
 ## Contribution
 
 Contributions are welcome across packages, examples, and docs! Here is a little instruction about how to do it.
