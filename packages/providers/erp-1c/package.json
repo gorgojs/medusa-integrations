@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-1c",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Medusa plugin for integration with 1C:Enterprise",
   "repository": {
     "type": "git",
@@ -57,7 +57,7 @@
     "unzipper": "^0.12.3"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.3.0",
+    "@gorgo/medusa-integration": "^0.3.1",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",

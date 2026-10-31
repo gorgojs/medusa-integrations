@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-stripe",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Stripe payment provider for Medusa",
   "license": "MIT",
   "files": [
@@ -51,7 +51,7 @@
     "stripe": "23.0.0"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.3.0",
+    "@gorgo/medusa-integration": "^0.3.1",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",
