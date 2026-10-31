@@ -1,5 +1,11 @@
 # @gorgo/medusa-payment-yookassa
 
+## 2.0.8
+
+### Documentation
+
+- link the maintenance page from the readme by [@gorgohead](https://github.com/gorgohead) in [`2fb0875`](https://github.com/gorgojs/medusa-integrations/commit/2fb08758227db11067eca108c387e67863cb8f24)
+
 ## 2.0.7
 
 ### Bug Fixes

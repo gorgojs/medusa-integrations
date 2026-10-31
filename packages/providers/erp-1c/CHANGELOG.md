@@ -1,5 +1,11 @@
 # @gorgo/medusa-1c
 
+## 0.3.2
+
+### Documentation
+
+- link the maintenance page from the readme by [@gorgohead](https://github.com/gorgohead) in [`2fb0875`](https://github.com/gorgojs/medusa-integrations/commit/2fb08758227db11067eca108c387e67863cb8f24)
+
 ## 0.3.1
 
 ### Bug Fixes
