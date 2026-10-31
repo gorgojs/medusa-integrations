@@ -62,6 +62,8 @@
 
 Общайтесь с другими разработчиками Medusa в Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
 
+Как мы тестируем, обновляем и исправляем плагин, читайте на странице [Сопровождение](https://docs.gorgojs.ru/resources/maintenance).
+
 ## Требования
 
 - Medusa сервер v2.14.0 или новее

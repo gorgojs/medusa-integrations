@@ -83,6 +83,8 @@ Got questions or ideas about the plugin? Join the Telegram support chat [@gorgoj
 
 Connect with other Medusa developers on Telegram in [@medusajs_chat](https://t.me/medusajs_chat).
 
+The [Maintenance](https://docs.gorgojs.com/resources/maintenance) page explains how we test, update and fix the plugin.
+
 ## Requirements
 
 - Medusa v2.17.2 or later

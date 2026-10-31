@@ -62,6 +62,8 @@ Got questions or ideas about the plugin? Join the Telegram support chat — [@go
 
 Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
 
+The [Maintenance](https://docs.gorgojs.com/resources/maintenance) page explains how we test, update and fix the plugin.
+
 ## Requirements
 
 - Medusa server v2.14.0 or later

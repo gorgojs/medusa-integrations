@@ -120,6 +120,8 @@ Got questions or ideas? Join the Telegram support chat — [@gorgojs_chat](https
 
 Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
 
+The [Maintenance](https://docs.gorgojs.com/resources/maintenance) page explains how we test, update and fix the module.
+
 ## Requirements
 
 - Medusa v2.17.2 or later
