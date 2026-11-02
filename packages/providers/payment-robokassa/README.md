@@ -95,6 +95,54 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-payment-robokassa
 npm install @gorgo/medusa-integration @gorgo/medusa-payment-robokassa
 ```
 
+## Configuration
+
+Register the plugin and the Integration Module in `medusa-config.ts`:
+
+```ts
+const ROBOKASSA_INTEGRATION_ID = "robokassa-1"
+
+module.exports = defineConfig({
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-robokassa/providers/integration-robokassa",
+            id: ROBOKASSA_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-robokassa",
+      options: {},
+    },
+  ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-robokassa/providers/payment-robokassa",
+            id: "robokassa",
+            options: { id: ROBOKASSA_INTEGRATION_ID },
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Set `INTEGRATION_ENCRYPTION_KEY` to a long random string, for example the output of `openssl rand -hex 32`. The Integration Module derives the key that encrypts secret settings, such as API keys, from it.
+
+Then restart the server and configure the integration in Medusa Admin under **Settings → Integrations → Robokassa**.
+
 ## Documentation
 
 The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-integrations/robokassa).

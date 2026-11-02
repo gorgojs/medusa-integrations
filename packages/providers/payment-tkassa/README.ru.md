@@ -106,6 +106,54 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
 npm install @gorgo/medusa-integration @gorgo/medusa-payment-tkassa
 ```
 
+## Подключение
+
+Зарегистрируйте плагин и Модуль интеграций в `medusa-config.ts`:
+
+```ts
+const TKASSA_INTEGRATION_ID = "tkassa-1"
+
+module.exports = defineConfig({
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+            id: TKASSA_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-tkassa",
+      options: {},
+    },
+  ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/payment-tkassa",
+            id: "tkassa",
+            options: { id: TKASSA_INTEGRATION_ID },
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+В `INTEGRATION_ENCRYPTION_KEY` задайте длинную случайную строку, например результат `openssl rand -hex 32`. Из неё Модуль интеграций получает ключ, которым шифрует секретные параметры, например API-ключи.
+
+Затем перезапустите сервер и настройте интеграцию в Medusa Admin в разделе **Настройки → Интеграции → Т-Касса**.
+
 ## Документация
 
 Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/medusa-integrations/t-kassa).

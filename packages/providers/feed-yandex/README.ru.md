@@ -77,6 +77,43 @@ yarn add @gorgo/medusa-feed-yandex
 npm install @gorgo/medusa-feed-yandex
 ```
 
+## Подключение
+
+Зарегистрируйте модуль фидов и плагин в `medusa-config.ts`. Файлы фидов плагин сохраняет через File Module Medusa, здесь с локальным файловым провайдером:
+
+```ts
+module.exports = defineConfig({
+  modules: [
+    {
+      resolve: "@gorgo/medusa-feed-yandex/modules/feed",
+    },
+    {
+      resolve: "@medusajs/medusa/file",
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/medusa/file-local",
+            id: "local",
+            options: {
+              upload_dir: "static",
+              backend_url: "http://localhost:9000/static",
+            },
+          },
+        ],
+      },
+    },
+  ],
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-feed-yandex",
+      options: {},
+    },
+  ],
+})
+```
+
+Затем перезапустите сервер и создайте фид в Medusa Admin в разделе **Настройки → Фиды**.
+
 ## Документация
 
 Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.com/medusa-integrations/yandex-yml-feed).

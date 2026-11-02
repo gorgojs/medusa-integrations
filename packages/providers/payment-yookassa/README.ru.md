@@ -94,6 +94,54 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-payment-yookassa
 npm install @gorgo/medusa-integration @gorgo/medusa-payment-yookassa
 ```
 
+## Подключение
+
+Зарегистрируйте плагин и Модуль интеграций в `medusa-config.ts`:
+
+```ts
+const YOOKASSA_INTEGRATION_ID = "yookassa-1"
+
+module.exports = defineConfig({
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-yookassa/providers/integration-yookassa",
+            id: YOOKASSA_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-yookassa",
+      options: {},
+    },
+  ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-yookassa/providers/payment-yookassa",
+            id: "yookassa",
+            options: { id: YOOKASSA_INTEGRATION_ID },
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+В `INTEGRATION_ENCRYPTION_KEY` задайте длинную случайную строку, например результат `openssl rand -hex 32`. Из неё Модуль интеграций получает ключ, которым шифрует секретные параметры, например API-ключи.
+
+Затем перезапустите сервер и настройте интеграцию в Medusa Admin в разделе **Настройки → Интеграции → ЮKassa**.
+
 ## Документация
 
 Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/medusa-integrations/yookassa).

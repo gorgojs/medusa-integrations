@@ -100,6 +100,54 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship
 npm install @gorgo/medusa-integration @gorgo/medusa-fulfillment-apiship
 ```
 
+## Подключение
+
+Зарегистрируйте плагин и Модуль интеграций в `medusa-config.ts`:
+
+```ts
+const APISHIP_INTEGRATION_ID = "apiship-1"
+
+module.exports = defineConfig({
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-fulfillment-apiship/providers/integration-apiship",
+            id: APISHIP_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-fulfillment-apiship",
+      options: {},
+    },
+  ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/fulfillment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-fulfillment-apiship/providers/fulfillment-apiship",
+            id: "apiship",
+            options: { id: APISHIP_INTEGRATION_ID },
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+В `INTEGRATION_ENCRYPTION_KEY` задайте длинную случайную строку, например результат `openssl rand -hex 32`. Из неё Модуль интеграций получает ключ, которым шифрует секретные параметры, например API-ключи.
+
+Затем перезапустите сервер и настройте интеграцию в Medusa Admin в разделе **Настройки → Интеграции → ApiShip**.
+
 ## Документация
 
 Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/medusa-integrations/apiship).

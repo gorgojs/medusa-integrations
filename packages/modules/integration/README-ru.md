@@ -132,6 +132,37 @@ yarn add @gorgo/medusa-integration
 npm install @gorgo/medusa-integration
 ```
 
+## Подключение
+
+Зарегистрируйте модуль в `medusa-config.ts` вместе с провайдерами плагинов, которые вы устанавливаете, например Т-Кассы:
+
+```ts
+module.exports = defineConfig({
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-tkassa/providers/integration-tkassa",
+            id: "tkassa-1",
+            options: {},
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Затем перезапустите сервер. Каждая зарегистрированная интеграция появится в Medusa Admin в разделе **Настройки → Интеграции**.
+
+## Переменные окружения
+
+- **`INTEGRATION_ENCRYPTION_KEY`** – парольная фраза, которую вы передаёте в параметр `encryptionKey`. Из неё модуль получает ключ, которым шифрует параметры с `secret: true`. Задайте в ней длинную случайную строку, например результат `openssl rand -hex 32`. Без неё провайдер с секретным параметром не работает.
+- **`GORGO_LICENSE`** – ключ проекта из кабинета Gorgo. Он нужен только платным плагинам Gorgo. Модуль проверяет их лицензии в фоне и никогда не блокирует запуск сервера. Подробнее в руководстве [Установка платного плагина](https://docs.gorgojs.ru/licensing/install).
+
 ## Документация
 
 Полное руководство по установке, настройке и использованию доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/medusa-modules/integration).

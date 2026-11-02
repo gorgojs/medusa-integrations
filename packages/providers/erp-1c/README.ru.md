@@ -81,6 +81,38 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-1c
 npm install @gorgo/medusa-integration @gorgo/medusa-1c
 ```
 
+## Подключение
+
+Зарегистрируйте плагин и Модуль интеграций в `medusa-config.ts`:
+
+```ts
+module.exports = defineConfig({
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-1c/providers/integration-1c",
+            id: "1c-catalog-1",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-1c",
+      options: {},
+    },
+  ],
+})
+```
+
+В `INTEGRATION_ENCRYPTION_KEY` задайте длинную случайную строку, например результат `openssl rand -hex 32`. Из неё Модуль интеграций получает ключ, которым шифрует секретные параметры, например API-ключи.
+
+Затем перезапустите сервер и настройте интеграцию в Medusa Admin в разделе **Настройки → Интеграции → 1С:Предприятие Каталог**.
+
 ## Документация
 
 Полное руководство по установке, настройке и использованию плагина доступно на [сайте документации Gorgo](https://docs.gorgojs.ru/medusa-integrations/1c-enterprise-catalog).
