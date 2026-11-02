@@ -77,6 +77,43 @@ yarn add @gorgo/medusa-feed-yandex
 npm install @gorgo/medusa-feed-yandex
 ```
 
+## Configuration
+
+Register the feed module and the plugin in `medusa-config.ts`. The plugin saves feed files through Medusa's File Module, here with the local file provider:
+
+```ts
+module.exports = defineConfig({
+  modules: [
+    {
+      resolve: "@gorgo/medusa-feed-yandex/modules/feed",
+    },
+    {
+      resolve: "@medusajs/medusa/file",
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/medusa/file-local",
+            id: "local",
+            options: {
+              upload_dir: "static",
+              backend_url: "http://localhost:9000/static",
+            },
+          },
+        ],
+      },
+    },
+  ],
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-feed-yandex",
+      options: {},
+    },
+  ],
+})
+```
+
+Then restart the server and create a feed in Medusa Admin under **Settings → Feeds**.
+
 ## Documentation
 
 The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-integrations/yandex-yml-feed).

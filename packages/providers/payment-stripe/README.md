@@ -91,6 +91,54 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-payment-stripe
 npm install @gorgo/medusa-integration @gorgo/medusa-payment-stripe
 ```
 
+## Configuration
+
+Register the plugin and the Integration Module in `medusa-config.ts`:
+
+```ts
+const STRIPE_INTEGRATION_ID = "stripe-1"
+
+module.exports = defineConfig({
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-stripe/providers/integration-stripe",
+            id: STRIPE_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-stripe",
+      options: {},
+    },
+  ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-stripe/providers/payment-stripe",
+            id: "stripe",
+            options: { id: STRIPE_INTEGRATION_ID },
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Set `INTEGRATION_ENCRYPTION_KEY` to a long random string, for example the output of `openssl rand -hex 32`. The Integration Module derives the key that encrypts secret settings, such as API keys, from it.
+
+Then restart the server and configure the integration in Medusa Admin under **Settings → Integrations → Stripe**.
+
 ## Replacing the Core Stripe Provider
 
 The plugin takes over from Medusa's `@medusajs/payment-stripe` without a data migration. It keeps the provider ID `pp_stripe_stripe` and the webhook URL `/hooks/payment/stripe_stripe`, so payments created by the core provider are still captured and refunded. See [Switch from Medusa's Stripe Provider](https://docs.gorgojs.com/medusa-integrations/stripe/getting-started#switch-from-medusas-stripe-provider) for the steps.
