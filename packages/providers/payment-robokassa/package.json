@@ -2,6 +2,7 @@
   "name": "@gorgo/medusa-payment-robokassa",
   "version": "2.0.5",
   "description": "Robokassa payment provider for Medusa",
+  "license": "MIT",
   "files": [
     ".medusa/server",
     "index.d.ts"

@@ -2,6 +2,7 @@
   "name": "@gorgo/medusa-fulfillment-apiship",
   "version": "2.1.4",
   "description": "Medusa plugin for ApiShip — delivery service aggregator",
+  "license": "MIT",
   "files": [
     ".medusa/server",
     "src/types",
