@@ -1,13 +1,13 @@
 ---
 title: "Verified Plugins"
-description: "What the Verified badge in the Gorgo plugin catalog means and how Gorgo checks Medusa plugins for it."
+description: "What the Verified by Gorgo badge in the plugin catalog means and how Gorgo checks Medusa plugins for it."
 ---
 
 # {frontmatter.title}
 
-The [Medusa plugin catalog](https://gorgojs.com/medusa/plugins) on gorgojs.com marks some plugins with a **Verified** badge. A plugin gets the badge when it passes all four groups of checks on this page, covering security, compatibility with the latest Medusa release, maintenance and documentation.
+The [Medusa plugin catalog](https://gorgojs.com/medusa/plugins) marks some plugins with a **Verified by Gorgo** badge. A plugin gets the badge when it passes all four groups of checks on this page, covering security, compatibility with the latest Medusa release, maintenance and documentation.
 
-To see only these plugins, turn on the **Verified** filter in the catalog. Hover over a badge to see the plugin version, the Medusa release and the check date.
+To see only these plugins, turn on the **Verified by Gorgo** filter in the catalog. The plugin page shows the plugin version, the Medusa release and the check date next to the badge, and the catalog list shows them when you hover over the badge.
 
 ---
 
@@ -48,7 +48,7 @@ To see only these plugins, turn on the **Verified** filter in the catalog. Hover
 
 ## How Gorgo Checks
 
-Gorgo reads the package as npm publishes it, along with its public repository. To check compatibility, Gorgo installs the plugin into a new Medusa project on the latest release. The project uses a PostgreSQL database. Gorgo then builds the project, runs the migrations and starts the server.
+Gorgo reads the package as npm publishes it, along with its public repository. To check compatibility, Gorgo installs the plugin into a new Medusa project on the latest release with a PostgreSQL database, then builds the project, runs the migrations and starts the server.
 
 Gorgo uses placeholder values instead of real API keys. That is enough to confirm that the plugin loads and starts, but not to test whether a payment goes through or a provider receives an order.
 
@@ -62,13 +62,13 @@ The badge says that a specific plugin version passed these checks on a specific 
 
 The security checks look for known risks in the published package. They are not an audit of the plugin's code.
 
-A missing badge is not a warning. A plugin without it may work well but not meet every criterion on this page.
+A missing badge is not a warning. A plugin without it may work well and still fail one of the checks on this page.
 
 ---
 
 ## For Plugin Authors
 
-There is no application. A plugin listed in the catalog gets the badge if it passes every check on this page. These steps help a plugin pass:
+You don't need to apply. A plugin listed in the catalog gets the badge if it passes every check on this page. These steps help a plugin pass:
 
 - Keep the `@medusajs/*` peer dependency ranges open to new minor releases instead of pinning an exact version.
 - Host the public repository on GitHub, where Gorgo reads the repository status and issues.
