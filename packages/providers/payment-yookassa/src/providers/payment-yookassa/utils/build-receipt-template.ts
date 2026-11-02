@@ -1,4 +1,4 @@
-import { IReceipt } from "@a2seven/yoo-checkout"
+import { IReceipt } from "../../../lib/yookassa-client"
 
 export function buildReceiptTemplate(receipt: IReceipt) {
   const firstItem = receipt.items?.[0]

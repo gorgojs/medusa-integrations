@@ -16,12 +16,12 @@
  *
  * Each suite is skipped unless its own env vars are set. Both can run together.
  *
- * NOTE: @a2seven/yoo-checkout wraps axios errors via errorFactory:
+ * NOTE: the YooKassa client wraps axios errors via errorFactory:
  *   Object.assign(new ErrorResponse(), axiosError)
  * The YooKassa error body (type/code/description) lives in e.response.data,
  * not on the top-level thrown object.
  */
-import { YooCheckout } from "@a2seven/yoo-checkout"
+import { YooCheckout } from "@gorgo/medusa-payment-yookassa/lib/yookassa-client"
 
 jest.setTimeout(60 * 1000)
 
@@ -130,7 +130,7 @@ async function tryCancel(client: YooCheckout, paymentId: string | undefined) {
       // compose its message. If YooKassa changes the error response shape,
       // buildError silently produces less helpful messages in production.
       //
-      // SDK error shape: @a2seven/yoo-checkout throws
+      // SDK error shape: the YooKassa client throws
       //   Object.assign(new ErrorResponse(), axiosError)
       // so the YooKassa error body lives at e.response.data, not on the top level.
       const FAKE_ID = "00000000-0000-0000-0000-000000000000"

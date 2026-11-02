@@ -2,9 +2,11 @@
   "name": "@gorgo/medusa-payment-yookassa",
   "version": "2.0.8",
   "description": "YooKassa payment provider for Medusa",
+  "license": "MIT",
   "files": [
     ".medusa/server",
-    "index.d.ts"
+    "index.d.ts",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "repository": {
     "type": "git",
@@ -45,7 +47,6 @@
     "test:unit": "jest --config jest.config.js"
   },
   "dependencies": {
-    "@a2seven/yoo-checkout": "^1.1.4",
     "@gorgo/telemetry": "^1.4.2",
     "axios": "^1.9.0"
   },

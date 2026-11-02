@@ -1,5 +1,5 @@
 import { PaymentSessionStatus } from "@medusajs/framework/utils"
-import { PaymentStatuses } from "@a2seven/yoo-checkout"
+import { PaymentStatuses } from "../../../../lib/yookassa-client"
 
 /**
  * Regression guard for the YooKassa status → Medusa status switch table

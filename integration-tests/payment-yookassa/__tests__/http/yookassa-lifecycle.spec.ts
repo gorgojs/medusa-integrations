@@ -1,7 +1,7 @@
 const createPaymentSpy = jest.fn()
 
-jest.mock("@a2seven/yoo-checkout", () => {
-  const actual = jest.requireActual("@a2seven/yoo-checkout")
+jest.mock("@gorgo/medusa-payment-yookassa/lib/yookassa-client", () => {
+  const actual = jest.requireActual("@gorgo/medusa-payment-yookassa/lib/yookassa-client")
   return {
     ...actual,
     YooCheckout: jest.fn().mockImplementation(() => ({
