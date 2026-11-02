@@ -9,7 +9,7 @@ import {
   Payment,
   Refund,
   WebHookEvents
-} from "@a2seven/yoo-checkout"
+} from "../../../lib/yookassa-client"
 import axios, { AxiosError } from "axios"
 import {
   AbstractPaymentProvider,

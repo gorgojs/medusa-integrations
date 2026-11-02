@@ -3,7 +3,7 @@ import {
   Payment,
   Refund,
   ICreatePayment
-} from "@a2seven/yoo-checkout"
+} from "../../../lib/yookassa-client"
 
 export interface PaymentOptions extends Partial<ICreatePayment> { }
 

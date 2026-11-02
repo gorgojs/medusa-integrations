@@ -8,7 +8,6 @@
     "test": "yarn run -T turbo run test:integration:http test:integration:modules"
   },
   "dependencies": {
-    "@a2seven/yoo-checkout": "^1.1.4",
     "@gorgo/medusa-integration": "workspace:*",
     "@gorgo/medusa-payment-yookassa": "workspace:*",
     "@medusajs/framework": "2.22.1",

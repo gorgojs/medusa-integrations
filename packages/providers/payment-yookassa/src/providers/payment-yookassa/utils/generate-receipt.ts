@@ -2,7 +2,7 @@
 import {
   IItemWithoutData,
   IReceipt
-} from "@a2seven/yoo-checkout"
+} from "../../../lib/yookassa-client"
 import {
   TaxSystemCode,
   VatCode

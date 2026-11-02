@@ -1,6 +1,6 @@
 import { AbstractIntegrationProvider, defineIntegration, z } from "@gorgo/medusa-integration"
 import type { IntegrationDescriptorInput } from "@gorgo/medusa-integration"
-import { YooCheckout } from "@a2seven/yoo-checkout"
+import { YooCheckout } from "../../../lib/yookassa-client"
 import { YOOKASSA_ICON } from "../icon"
 import { validateVatCode, validateTaxSystemCode } from "../utils"
 import { vatCodes, taxSystemCodes } from "../../payment-yookassa/types"

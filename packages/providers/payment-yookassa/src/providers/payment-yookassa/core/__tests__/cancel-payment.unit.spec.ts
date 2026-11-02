@@ -54,7 +54,6 @@ describe("YookassaBase.cancelPayment", () => {
       context: { idempotency_key: "idem-cancel-1" },
     } as any)
 
-    // @a2seven/yoo-checkout forwards idempotency key as Idempotence-Key header
     expect(capturedHeaders!.get("Idempotence-Key")).toBe("idem-cancel-1")
   })
 

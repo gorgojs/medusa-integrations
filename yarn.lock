@@ -5,17 +5,6 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@a2seven/yoo-checkout@npm:^1.1.4":
-  version: 1.1.4
-  resolution: "@a2seven/yoo-checkout@npm:1.1.4"
-  dependencies:
-    "@types/axios": "npm:^0.14.0"
-    axios: "npm:^0.21.1"
-    uuid: "npm:^8.3.2"
-  checksum: 10c0/9e48aa8637b3b77ee90e9c789e8d4f273698d7f7586625ac92b8a65514d75d364c9086a2df364f95dd1511498fa4e0a968b160450e67bc79ea71b326b5158698
-  languageName: node
-  linkType: hard
-
 "@alloc/quick-lru@npm:^5.2.0":
   version: 5.3.0
   resolution: "@alloc/quick-lru@npm:5.3.0"
@@ -2015,7 +2004,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/it-payment-yookassa@workspace:integration-tests/payment-yookassa"
   dependencies:
-    "@a2seven/yoo-checkout": "npm:^1.1.4"
     "@gorgo/medusa-integration": "workspace:*"
     "@gorgo/medusa-payment-yookassa": "workspace:*"
     "@medusajs/framework": "npm:2.22.1"
@@ -2388,7 +2376,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-payment-yookassa@workspace:packages/providers/payment-yookassa"
   dependencies:
-    "@a2seven/yoo-checkout": "npm:^1.1.4"
     "@gorgo/medusa-integration": "npm:^0.3.1"
     "@gorgo/telemetry": "npm:^1.4.2"
     "@medusajs/admin-sdk": "npm:^2.17.2"
@@ -7709,15 +7696,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/axios@npm:^0.14.0":
-  version: 0.14.4
-  resolution: "@types/axios@npm:0.14.4"
-  dependencies:
-    axios: "npm:*"
-  checksum: 10c0/945ef9d9d493b7292d33cf55679af90ffb60fe85475ce79327494480d517e8263f3f0c2f262396a1ada3ef4d66f3b05ea16b1f3c40680aa2b8399c36f6a92dfa
-  languageName: node
-  linkType: hard
-
 "@types/babel__core@npm:^7.1.14, @types/babel__core@npm:^7.20.5":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -8541,7 +8519,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:*, axios@npm:^1.12.0, axios@npm:^1.13.1, axios@npm:^1.13.2, axios@npm:^1.20.0, axios@npm:^1.9.0":
+"axios@npm:^1.12.0, axios@npm:^1.13.1, axios@npm:^1.13.2, axios@npm:^1.20.0, axios@npm:^1.9.0":
   version: 1.21.0
   resolution: "axios@npm:1.21.0"
   dependencies:
@@ -8550,15 +8528,6 @@ __metadata:
     https-proxy-agent: "npm:^5.0.1"
     proxy-from-env: "npm:^2.1.0"
   checksum: 10c0/adaf1e81762aa7476b95a588f173796e9251a2683c1ffc3e2dfb3ae705c4f629976ef05ded4e7a513832214072058d480fb0bc7e46fe819621909a70f9571ed2
-  languageName: node
-  linkType: hard
-
-"axios@npm:^0.21.1":
-  version: 0.21.4
-  resolution: "axios@npm:0.21.4"
-  dependencies:
-    follow-redirects: "npm:^1.14.0"
-  checksum: 10c0/fbcff55ec68f71f02d3773d467db2fcecdf04e749826c82c2427a232f9eba63242150a05f15af9ef15818352b814257541155de0281f8fb2b7e8a5b79f7f2142
   languageName: node
   linkType: hard
 
@@ -10912,7 +10881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.16.0":
+"follow-redirects@npm:^1.16.0":
   version: 1.16.2
   resolution: "follow-redirects@npm:1.16.2"
   peerDependenciesMeta:
@@ -16836,15 +16805,6 @@ __metadata:
   bin:
     uuid: dist/esm/bin/uuid
   checksum: 10c0/9e3af58eba872ece5a5e76f4773a94fc78a0ef2c2444c38dbe6b42f41dadf76c01850fd783604f27986f6195e6286aef064d45987d401b2a33127b98ddf7c0c5
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^8.3.2":
-  version: 8.3.2
-  resolution: "uuid@npm:8.3.2"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 10c0/bcbb807a917d374a49f475fae2e87fdca7da5e5530820ef53f65ba1d12131bd81a92ecf259cc7ce317cbe0f289e7d79fdfebcef9bfa3087c8c8a2fa304c9be54
   languageName: node
   linkType: hard
 
