@@ -1,7 +1,6 @@
 import type { I18nKey, CategoryKind, TestStatus } from "../../../integration"
 import type {
   DiffEntry,
-  IntegrationChangeOutcome,
   IntegrationChangeType,
 } from "../../../integration/history"
 
@@ -89,14 +88,12 @@ export interface AdminIntegrationChange {
   actor_id: string | null
   actor_label: string | null
   change_type: IntegrationChangeType
-  outcome: IntegrationChangeOutcome
   provider_id: string
   identifier: string | null
   instance_id: string | null
   category: string | null
   section_id: string | null
   diff: DiffEntry[]
-  message: string | null
   reverts_id: string | null
   request_id?: string | null
   ip?: string | null

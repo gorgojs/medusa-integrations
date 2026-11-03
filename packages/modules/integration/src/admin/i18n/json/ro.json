@@ -148,34 +148,97 @@
       "title": "Istoricul modificărilor",
       "empty": "Nicio modificare încă",
       "viewAll": "Vezi tot",
+      "by": "De",
+      "shown_zero": "{{shown}} din {{count}} modificări afișate",
+      "shown_one": "{{shown}} din {{count}} modificare afișată",
+      "shown_two": "{{shown}} din {{count}} de modificări afișate",
+      "shown_few": "{{shown}} din {{count}} modificări afișate",
+      "shown_many": "{{shown}} din {{count}} de modificări afișate",
+      "shown_other": "{{shown}} din {{count}} de modificări afișate",
       "events": {
-        "created": "Integrare configurată",
-        "updated": "Setări modificate",
-        "updatedSection": "Setările „{{section}}” modificate",
         "enabled": "Integrare activată",
         "disabled": "Integrare dezactivată",
         "deleted": "Setări șterse",
-        "testPassed": "Testul conexiunii a reușit",
-        "testFailed": "Testul conexiunii a eșuat",
-        "other": "Setări modificate"
+        "other": "Setări modificate",
+        "fieldsSet_zero": "{{count}} câmpuri setate",
+        "fieldsSet_one": "{{count}} câmp setat",
+        "fieldsSet_two": "{{count}} de câmpuri setate",
+        "fieldsSet_few": "{{count}} câmpuri setate",
+        "fieldsSet_many": "{{count}} de câmpuri setate",
+        "fieldsSet_other": "{{count}} de câmpuri setate",
+        "fieldsChanged_zero": "{{count}} câmpuri modificate",
+        "fieldsChanged_one": "{{count}} câmp modificat",
+        "fieldsChanged_two": "{{count}} de câmpuri modificate",
+        "fieldsChanged_few": "{{count}} câmpuri modificate",
+        "fieldsChanged_many": "{{count}} de câmpuri modificate",
+        "fieldsChanged_other": "{{count}} de câmpuri modificate",
+        "fieldsDeleted_zero": "{{count}} câmpuri șterse",
+        "fieldsDeleted_one": "{{count}} câmp șters",
+        "fieldsDeleted_two": "{{count}} de câmpuri șterse",
+        "fieldsDeleted_few": "{{count}} câmpuri șterse",
+        "fieldsDeleted_many": "{{count}} de câmpuri șterse",
+        "fieldsDeleted_other": "{{count}} de câmpuri șterse"
+      },
+      "types": {
+        "created": "Câmpuri setate",
+        "updated": "Câmpuri modificate",
+        "enabled": "Integrare activată",
+        "disabled": "Integrare dezactivată",
+        "deleted": "Setări șterse"
       },
       "secret": {
-        "set": "valoare setată",
-        "replaced": "valoare înlocuită",
-        "removed": "valoare eliminată",
-        "hidden": "valoare ascunsă"
+        "set": "Valoare setată",
+        "replaced": "Valoare înlocuită",
+        "removed": "Valoare eliminată",
+        "hidden": "Valoare ascunsă"
       },
       "actors": {
-        "job": "Job programat",
         "system": "Sistem",
-        "apiKey": "Cheie API „{{name}}”",
         "unknownUser": "Utilizator șters"
       },
       "fields": {
         "title": "Titlu"
       },
       "truncated": "(prescurtat)",
-      "moreFields": "+{{count}} în plus"
+      "pageTitle": "Istoricul modificărilor integrărilor",
+      "pageSubtitle": "Cine a modificat setările integrării și când.",
+      "emptyFiltered": "Nicio modificare nu corespunde filtrelor",
+      "search": "Căutare",
+      "sort": {
+        "tooltip": "Sortare",
+        "asc": "Crescător",
+        "desc": "Descrescător"
+      },
+      "columns": {
+        "time": "Ora",
+        "integration": "Integrare",
+        "event": "Eveniment",
+        "author": "Autor",
+        "fields": "Câmpuri"
+      },
+      "filters": {
+        "integration": "Integrare",
+        "event": "Eveniment",
+        "period": "Data",
+        "clearAll": "Șterge tot",
+        "add": "Adaugă filtru"
+      },
+      "detail": {
+        "title": "Detalii modificare",
+        "general": "General",
+        "metadata": "Metadate",
+        "changes": "Modificări",
+        "integration": "Integrare",
+        "author": "Autor",
+        "time": "Ora",
+        "ip": "Adresă IP",
+        "userAgent": "Client",
+        "requestId": "ID cerere",
+        "notFound": "Modificarea nu a fost găsită",
+        "copyJson": "Copiază ca JSON",
+        "copied": "Copiat în clipboard",
+        "copyFailed": "Nu s-a putut copia în clipboard"
+      }
     }
   }
 }

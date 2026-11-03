@@ -148,34 +148,97 @@
       "title": "Histórico de alterações",
       "empty": "Nenhuma alteração ainda",
       "viewAll": "Ver tudo",
+      "by": "Por",
+      "shown_zero": "{{shown}} de {{count}} alterações exibidas",
+      "shown_one": "{{shown}} de {{count}} alteração exibida",
+      "shown_two": "{{shown}} de {{count}} alterações exibidas",
+      "shown_few": "{{shown}} de {{count}} alterações exibidas",
+      "shown_many": "{{shown}} de {{count}} alterações exibidas",
+      "shown_other": "{{shown}} de {{count}} alterações exibidas",
       "events": {
-        "created": "Integração configurada",
-        "updated": "Configurações alteradas",
-        "updatedSection": "Configurações de “{{section}}” alteradas",
         "enabled": "Integração habilitada",
         "disabled": "Integração desabilitada",
         "deleted": "Configurações excluídas",
-        "testPassed": "Teste de conexão bem-sucedido",
-        "testFailed": "Falha no teste de conexão",
-        "other": "Configurações alteradas"
+        "other": "Configurações alteradas",
+        "fieldsSet_zero": "{{count}} campos definidos",
+        "fieldsSet_one": "{{count}} campo definido",
+        "fieldsSet_two": "{{count}} campos definidos",
+        "fieldsSet_few": "{{count}} campos definidos",
+        "fieldsSet_many": "{{count}} campos definidos",
+        "fieldsSet_other": "{{count}} campos definidos",
+        "fieldsChanged_zero": "{{count}} campos alterados",
+        "fieldsChanged_one": "{{count}} campo alterado",
+        "fieldsChanged_two": "{{count}} campos alterados",
+        "fieldsChanged_few": "{{count}} campos alterados",
+        "fieldsChanged_many": "{{count}} campos alterados",
+        "fieldsChanged_other": "{{count}} campos alterados",
+        "fieldsDeleted_zero": "{{count}} campos excluídos",
+        "fieldsDeleted_one": "{{count}} campo excluído",
+        "fieldsDeleted_two": "{{count}} campos excluídos",
+        "fieldsDeleted_few": "{{count}} campos excluídos",
+        "fieldsDeleted_many": "{{count}} campos excluídos",
+        "fieldsDeleted_other": "{{count}} campos excluídos"
+      },
+      "types": {
+        "created": "Campos definidos",
+        "updated": "Campos alterados",
+        "enabled": "Integração habilitada",
+        "disabled": "Integração desabilitada",
+        "deleted": "Configurações excluídas"
       },
       "secret": {
-        "set": "valor definido",
-        "replaced": "valor substituído",
-        "removed": "valor removido",
-        "hidden": "valor oculto"
+        "set": "Valor definido",
+        "replaced": "Valor substituído",
+        "removed": "Valor removido",
+        "hidden": "Valor oculto"
       },
       "actors": {
-        "job": "Tarefa agendada",
         "system": "Sistema",
-        "apiKey": "Chave API “{{name}}”",
         "unknownUser": "Usuário excluído"
       },
       "fields": {
         "title": "Título"
       },
       "truncated": "(abreviado)",
-      "moreFields": "+{{count}} mais"
+      "pageTitle": "Histórico de alterações das integrações",
+      "pageSubtitle": "Quem alterou as configurações da integração e quando.",
+      "emptyFiltered": "Nenhuma alteração corresponde aos filtros",
+      "search": "Pesquisar",
+      "sort": {
+        "tooltip": "Ordenar",
+        "asc": "Crescente",
+        "desc": "Decrescente"
+      },
+      "columns": {
+        "time": "Hora",
+        "integration": "Integração",
+        "event": "Evento",
+        "author": "Autor",
+        "fields": "Campos"
+      },
+      "filters": {
+        "integration": "Integração",
+        "event": "Evento",
+        "period": "Data",
+        "clearAll": "Limpar tudo",
+        "add": "Adicionar filtro"
+      },
+      "detail": {
+        "title": "Detalhes da alteração",
+        "general": "Geral",
+        "metadata": "Metadados",
+        "changes": "Alterações",
+        "integration": "Integração",
+        "author": "Autor",
+        "time": "Hora",
+        "ip": "Endereço IP",
+        "userAgent": "Cliente",
+        "requestId": "ID da requisição",
+        "notFound": "Alteração não encontrada",
+        "copyJson": "Copiar como JSON",
+        "copied": "Copiado para a área de transferência",
+        "copyFailed": "Não foi possível copiar para a área de transferência"
+      }
     }
   }
 }

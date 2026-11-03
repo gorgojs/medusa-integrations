@@ -148,34 +148,97 @@
       "title": "Wijzigingsgeschiedenis",
       "empty": "Nog geen wijzigingen",
       "viewAll": "Alles bekijken",
+      "by": "Door",
+      "shown_zero": "{{shown}} van {{count}} wijzigingen getoond",
+      "shown_one": "{{shown}} van {{count}} wijziging getoond",
+      "shown_two": "{{shown}} van {{count}} wijzigingen getoond",
+      "shown_few": "{{shown}} van {{count}} wijzigingen getoond",
+      "shown_many": "{{shown}} van {{count}} wijzigingen getoond",
+      "shown_other": "{{shown}} van {{count}} wijzigingen getoond",
       "events": {
-        "created": "Integratie geconfigureerd",
-        "updated": "Instellingen gewijzigd",
-        "updatedSection": "Instellingen van “{{section}}” gewijzigd",
         "enabled": "Integratie ingeschakeld",
         "disabled": "Integratie uitgeschakeld",
         "deleted": "Instellingen verwijderd",
-        "testPassed": "Verbindingstest geslaagd",
-        "testFailed": "Verbindingstest mislukt",
-        "other": "Instellingen gewijzigd"
+        "other": "Instellingen gewijzigd",
+        "fieldsSet_zero": "{{count}} velden ingesteld",
+        "fieldsSet_one": "{{count}} veld ingesteld",
+        "fieldsSet_two": "{{count}} velden ingesteld",
+        "fieldsSet_few": "{{count}} velden ingesteld",
+        "fieldsSet_many": "{{count}} velden ingesteld",
+        "fieldsSet_other": "{{count}} velden ingesteld",
+        "fieldsChanged_zero": "{{count}} velden gewijzigd",
+        "fieldsChanged_one": "{{count}} veld gewijzigd",
+        "fieldsChanged_two": "{{count}} velden gewijzigd",
+        "fieldsChanged_few": "{{count}} velden gewijzigd",
+        "fieldsChanged_many": "{{count}} velden gewijzigd",
+        "fieldsChanged_other": "{{count}} velden gewijzigd",
+        "fieldsDeleted_zero": "{{count}} velden verwijderd",
+        "fieldsDeleted_one": "{{count}} veld verwijderd",
+        "fieldsDeleted_two": "{{count}} velden verwijderd",
+        "fieldsDeleted_few": "{{count}} velden verwijderd",
+        "fieldsDeleted_many": "{{count}} velden verwijderd",
+        "fieldsDeleted_other": "{{count}} velden verwijderd"
+      },
+      "types": {
+        "created": "Ingestelde velden",
+        "updated": "Gewijzigde velden",
+        "enabled": "Integratie ingeschakeld",
+        "disabled": "Integratie uitgeschakeld",
+        "deleted": "Instellingen verwijderd"
       },
       "secret": {
-        "set": "waarde ingesteld",
-        "replaced": "waarde vervangen",
-        "removed": "waarde verwijderd",
-        "hidden": "waarde verborgen"
+        "set": "Waarde ingesteld",
+        "replaced": "Waarde vervangen",
+        "removed": "Waarde verwijderd",
+        "hidden": "Waarde verborgen"
       },
       "actors": {
-        "job": "Geplande taak",
         "system": "Systeem",
-        "apiKey": "API-sleutel “{{name}}”",
         "unknownUser": "Verwijderde gebruiker"
       },
       "fields": {
         "title": "Titel"
       },
       "truncated": "(ingekort)",
-      "moreFields": "+{{count}} meer"
+      "pageTitle": "Wijzigingsgeschiedenis van integraties",
+      "pageSubtitle": "Wie heeft wanneer de integratie-instellingen gewijzigd.",
+      "emptyFiltered": "Geen wijzigingen komen overeen met de filters",
+      "search": "Zoeken",
+      "sort": {
+        "tooltip": "Sorteren",
+        "asc": "Oplopend",
+        "desc": "Aflopend"
+      },
+      "columns": {
+        "time": "Tijd",
+        "integration": "Integratie",
+        "event": "Gebeurtenis",
+        "author": "Auteur",
+        "fields": "Velden"
+      },
+      "filters": {
+        "integration": "Integratie",
+        "event": "Gebeurtenis",
+        "period": "Datum",
+        "clearAll": "Alles wissen",
+        "add": "Filter toevoegen"
+      },
+      "detail": {
+        "title": "Wijzigingsdetails",
+        "general": "Algemeen",
+        "metadata": "Metadata",
+        "changes": "Wijzigingen",
+        "integration": "Integratie",
+        "author": "Auteur",
+        "time": "Tijd",
+        "ip": "IP-adres",
+        "userAgent": "Client",
+        "requestId": "Verzoek-ID",
+        "notFound": "Wijziging niet gevonden",
+        "copyJson": "Kopiëren als JSON",
+        "copied": "Gekopieerd naar klembord",
+        "copyFailed": "Kopiëren naar klembord mislukt"
+      }
     }
   }
 }

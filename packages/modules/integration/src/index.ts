@@ -47,7 +47,6 @@ export type { IntegrationModuleOptions } from "./modules/integration/types"
 export type {
   DiffEntry,
   IntegrationChangeActor,
-  IntegrationChangeOutcome,
   IntegrationChangeType,
   RecordIntegrationChangeInput,
 } from "./types/integration/history"

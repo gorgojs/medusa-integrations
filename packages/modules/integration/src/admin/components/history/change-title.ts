@@ -1,34 +1,28 @@
 import type { AdminIntegrationChange } from "../../../types"
 
-export type ChangeTitle = { key: string; values?: Record<string, string> }
+export type ChangeTitle = { key: string; values?: { count: number } }
 
 const key = (name: string) => `integration.history.events.${name}`
 
 /**
- * The i18n key of a change's headline. `section` is the translated title of the edited section,
- * or null when the change has none or the section no longer exists in the descriptor.
+ * The i18n key of a change's headline. A save and a deletion say how many options they touched,
+ * whichever sections those belong to (an API call can touch several); the badges under it name
+ * them. `count` picks the plural form.
  */
-export function changeTitle(
-  change: Pick<AdminIntegrationChange, "change_type" | "outcome">,
-  section: string | null = null
-): ChangeTitle {
+export function changeTitle(change: Pick<AdminIntegrationChange, "change_type" | "diff">): ChangeTitle {
+  const count = change.diff?.length ?? 0
   switch (change.change_type) {
     case "created":
+      return count ? { key: key("fieldsSet"), values: { count } } : { key: key("other") }
+    case "updated":
+      return count ? { key: key("fieldsChanged"), values: { count } } : { key: key("other") }
+    case "deleted":
+      return count ? { key: key("fieldsDeleted"), values: { count } } : { key: key("deleted") }
     case "enabled":
     case "disabled":
-    case "deleted":
       return { key: key(change.change_type) }
-    case "updated":
-      return section ? { key: key("updatedSection"), values: { section } } : { key: key("updated") }
-    case "connection_tested":
-      return { key: key(change.outcome === "succeeded" ? "testPassed" : "testFailed") }
     default:
       // A change type a newer version of the module wrote.
       return { key: key("other") }
   }
-}
-
-/** A failed change gets the red dot in the timeline. */
-export function isFailedChange(change: Pick<AdminIntegrationChange, "outcome">): boolean {
-  return change.outcome === "failed"
 }

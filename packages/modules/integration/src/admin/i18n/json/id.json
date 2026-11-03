@@ -148,34 +148,97 @@
       "title": "Riwayat Perubahan",
       "empty": "Belum ada perubahan",
       "viewAll": "Lihat Semua",
+      "by": "Oleh",
+      "shown_zero": "Menampilkan {{shown}} dari {{count}} perubahan",
+      "shown_one": "Menampilkan {{shown}} dari {{count}} perubahan",
+      "shown_two": "Menampilkan {{shown}} dari {{count}} perubahan",
+      "shown_few": "Menampilkan {{shown}} dari {{count}} perubahan",
+      "shown_many": "Menampilkan {{shown}} dari {{count}} perubahan",
+      "shown_other": "Menampilkan {{shown}} dari {{count}} perubahan",
       "events": {
-        "created": "Integrasi dikonfigurasi",
-        "updated": "Pengaturan diubah",
-        "updatedSection": "Pengaturan “{{section}}” diubah",
         "enabled": "Integrasi diaktifkan",
         "disabled": "Integrasi dinonaktifkan",
         "deleted": "Pengaturan dihapus",
-        "testPassed": "Uji koneksi berhasil",
-        "testFailed": "Uji koneksi gagal",
-        "other": "Pengaturan diubah"
+        "other": "Pengaturan diubah",
+        "fieldsSet_zero": "{{count}} bidang diatur",
+        "fieldsSet_one": "{{count}} bidang diatur",
+        "fieldsSet_two": "{{count}} bidang diatur",
+        "fieldsSet_few": "{{count}} bidang diatur",
+        "fieldsSet_many": "{{count}} bidang diatur",
+        "fieldsSet_other": "{{count}} bidang diatur",
+        "fieldsChanged_zero": "{{count}} bidang diubah",
+        "fieldsChanged_one": "{{count}} bidang diubah",
+        "fieldsChanged_two": "{{count}} bidang diubah",
+        "fieldsChanged_few": "{{count}} bidang diubah",
+        "fieldsChanged_many": "{{count}} bidang diubah",
+        "fieldsChanged_other": "{{count}} bidang diubah",
+        "fieldsDeleted_zero": "{{count}} bidang dihapus",
+        "fieldsDeleted_one": "{{count}} bidang dihapus",
+        "fieldsDeleted_two": "{{count}} bidang dihapus",
+        "fieldsDeleted_few": "{{count}} bidang dihapus",
+        "fieldsDeleted_many": "{{count}} bidang dihapus",
+        "fieldsDeleted_other": "{{count}} bidang dihapus"
+      },
+      "types": {
+        "created": "Bidang diatur",
+        "updated": "Bidang diubah",
+        "enabled": "Integrasi diaktifkan",
+        "disabled": "Integrasi dinonaktifkan",
+        "deleted": "Pengaturan dihapus"
       },
       "secret": {
-        "set": "nilai diatur",
-        "replaced": "nilai diganti",
-        "removed": "nilai dihapus",
-        "hidden": "nilai disembunyikan"
+        "set": "Nilai diatur",
+        "replaced": "Nilai diganti",
+        "removed": "Nilai dihapus",
+        "hidden": "Nilai disembunyikan"
       },
       "actors": {
-        "job": "Tugas terjadwal",
         "system": "Sistem",
-        "apiKey": "Kunci API “{{name}}”",
         "unknownUser": "Pengguna yang dihapus"
       },
       "fields": {
         "title": "Judul"
       },
       "truncated": "(dipersingkat)",
-      "moreFields": "+{{count}} lainnya"
+      "pageTitle": "Riwayat perubahan integrasi",
+      "pageSubtitle": "Siapa yang mengubah pengaturan integrasi dan kapan.",
+      "emptyFiltered": "Tidak ada perubahan yang cocok dengan filter",
+      "search": "Cari",
+      "sort": {
+        "tooltip": "Urutkan",
+        "asc": "Menaik",
+        "desc": "Menurun"
+      },
+      "columns": {
+        "time": "Waktu",
+        "integration": "Integrasi",
+        "event": "Peristiwa",
+        "author": "Pelaku",
+        "fields": "Bidang"
+      },
+      "filters": {
+        "integration": "Integrasi",
+        "event": "Peristiwa",
+        "period": "Tanggal",
+        "clearAll": "Hapus semua",
+        "add": "Tambah filter"
+      },
+      "detail": {
+        "title": "Detail perubahan",
+        "general": "Umum",
+        "metadata": "Metadata",
+        "changes": "Perubahan",
+        "integration": "Integrasi",
+        "author": "Pelaku",
+        "time": "Waktu",
+        "ip": "Alamat IP",
+        "userAgent": "Klien",
+        "requestId": "ID permintaan",
+        "notFound": "Perubahan tidak ditemukan",
+        "copyJson": "Salin sebagai JSON",
+        "copied": "Disalin ke papan klip",
+        "copyFailed": "Tidak dapat menyalin ke papan klip"
+      }
     }
   }
 }

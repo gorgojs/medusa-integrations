@@ -148,34 +148,97 @@
       "title": "История на промените",
       "empty": "Все още няма промени",
       "viewAll": "Преглед на всички",
+      "by": "Автор",
+      "shown_zero": "Показани {{shown}} от {{count}} промени",
+      "shown_one": "Показани {{shown}} от {{count}} промяна",
+      "shown_two": "Показани {{shown}} от {{count}} промени",
+      "shown_few": "Показани {{shown}} от {{count}} промени",
+      "shown_many": "Показани {{shown}} от {{count}} промени",
+      "shown_other": "Показани {{shown}} от {{count}} промени",
       "events": {
-        "created": "Интеграцията е конфигурирана",
-        "updated": "Настройките са променени",
-        "updatedSection": "Настройките на „{{section}}“ са променени",
         "enabled": "Интеграцията е активирана",
         "disabled": "Интеграцията е деактивирана",
         "deleted": "Настройките са изтрити",
-        "testPassed": "Тестът на връзката е успешен",
-        "testFailed": "Тестът на връзката е неуспешен",
-        "other": "Настройките са променени"
+        "other": "Настройките са променени",
+        "fieldsSet_zero": "Зададени {{count}} полета",
+        "fieldsSet_one": "Зададено {{count}} поле",
+        "fieldsSet_two": "Зададени {{count}} полета",
+        "fieldsSet_few": "Зададени {{count}} полета",
+        "fieldsSet_many": "Зададени {{count}} полета",
+        "fieldsSet_other": "Зададени {{count}} полета",
+        "fieldsChanged_zero": "Променени {{count}} полета",
+        "fieldsChanged_one": "Променено {{count}} поле",
+        "fieldsChanged_two": "Променени {{count}} полета",
+        "fieldsChanged_few": "Променени {{count}} полета",
+        "fieldsChanged_many": "Променени {{count}} полета",
+        "fieldsChanged_other": "Променени {{count}} полета",
+        "fieldsDeleted_zero": "Изтрити {{count}} полета",
+        "fieldsDeleted_one": "Изтрито {{count}} поле",
+        "fieldsDeleted_two": "Изтрити {{count}} полета",
+        "fieldsDeleted_few": "Изтрити {{count}} полета",
+        "fieldsDeleted_many": "Изтрити {{count}} полета",
+        "fieldsDeleted_other": "Изтрити {{count}} полета"
+      },
+      "types": {
+        "created": "Зададени полета",
+        "updated": "Променени полета",
+        "enabled": "Интеграцията е активирана",
+        "disabled": "Интеграцията е деактивирана",
+        "deleted": "Настройките са изтрити"
       },
       "secret": {
-        "set": "стойността е зададена",
-        "replaced": "стойността е заменена",
-        "removed": "стойността е премахната",
-        "hidden": "стойността е скрита"
+        "set": "Стойността е зададена",
+        "replaced": "Стойността е заменена",
+        "removed": "Стойността е премахната",
+        "hidden": "Стойността е скрита"
       },
       "actors": {
-        "job": "Планирана задача",
         "system": "Система",
-        "apiKey": "API ключ „{{name}}“",
         "unknownUser": "Изтрит потребител"
       },
       "fields": {
         "title": "Заглавие"
       },
       "truncated": "(съкратено)",
-      "moreFields": "+{{count}} още"
+      "pageTitle": "История на промените в интеграциите",
+      "pageSubtitle": "Кой е променил настройките на интеграциите и кога.",
+      "emptyFiltered": "Няма промени, които отговарят на филтрите",
+      "search": "Търсене",
+      "sort": {
+        "tooltip": "Сортиране",
+        "asc": "Възходящо",
+        "desc": "Низходящо"
+      },
+      "columns": {
+        "time": "Време",
+        "integration": "Интеграция",
+        "event": "Събитие",
+        "author": "Автор",
+        "fields": "Полета"
+      },
+      "filters": {
+        "integration": "Интеграция",
+        "event": "Събитие",
+        "period": "Дата",
+        "clearAll": "Изчисти всички",
+        "add": "Добави филтър"
+      },
+      "detail": {
+        "title": "Подробности за промяната",
+        "general": "Общи",
+        "metadata": "Метаданни",
+        "changes": "Промени",
+        "integration": "Интеграция",
+        "author": "Автор",
+        "time": "Време",
+        "ip": "IP адрес",
+        "userAgent": "Клиент",
+        "requestId": "ID на заявката",
+        "notFound": "Промяната не е намерена",
+        "copyJson": "Копиране като JSON",
+        "copied": "Копирано в клипборда",
+        "copyFailed": "Неуспешно копиране в клипборда"
+      }
     }
   }
 }

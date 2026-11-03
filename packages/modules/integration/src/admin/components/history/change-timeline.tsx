@@ -1,8 +1,8 @@
-import { Text, Tooltip, clx } from "@medusajs/ui"
+import { Text, Tooltip } from "@medusajs/ui"
 import { useTranslation } from "react-i18next"
 import { ChangeActor } from "./change-actor"
-import { DiffRows } from "./diff-rows"
-import { changeTitle, isFailedChange } from "./change-title"
+import { FieldBadges } from "./field-badges"
+import { changeTitle } from "./change-title"
 import { useChangeTimeFormat } from "../../lib/changes"
 import type { AdminIntegrationChange, UiDescriptor, UiField } from "../../../types"
 
@@ -17,78 +17,87 @@ export function descriptorLookup(descriptor: UiDescriptor | null | undefined) {
   return { fields, sections }
 }
 
-const Dot = ({ failed }: { failed: boolean }) => (
+const Dot = () => (
   <div className="flex size-5 items-center justify-center">
     <div className="bg-ui-bg-base shadow-borders-base flex size-2.5 items-center justify-center rounded-full">
-      <div className={clx("size-1.5 rounded-full", failed ? "bg-ui-tag-red-icon" : "bg-ui-tag-neutral-icon")} />
+      <div className="bg-ui-fg-muted size-1.5 rounded-full" />
     </div>
   </div>
 )
 
 /**
- * The change history as a timeline, newest first: what changed, the changed options, who did
- * it and when. Laid out like the activity timeline on Medusa's order page.
+ * The change history as a timeline, newest first: the headline and the time, who made the change,
+ * and the options it touched. Values are in the change card, which a click on the entry opens.
+ * The line under the last entry is dotted when older changes follow and absent when that entry is
+ * the integration's first.
  */
 export const ChangeTimeline = ({
   changes,
   descriptor,
-  fieldLimit = 5,
+  hasMore = false,
   onSelect,
 }: {
   changes: AdminIntegrationChange[]
   /** The integration's current descriptor. Missing for a provider that is gone. */
   descriptor?: UiDescriptor | null
-  /** Changed options shown per entry before "and N more". */
-  fieldLimit?: number
+  /** Older changes exist beyond the ones shown. */
+  hasMore?: boolean
   /** Open the change card. Without it the entries are not clickable. */
   onSelect?: (change: AdminIntegrationChange) => void
 }) => {
   const { t } = useTranslation()
   const time = useChangeTimeFormat()
-  const { fields, sections } = descriptorLookup(descriptor)
+  const { fields } = descriptorLookup(descriptor)
 
   return (
     <div className="flex flex-col px-6 py-4">
       {changes.map((change, i) => {
-        const sectionTitle = change.section_id ? sections.get(change.section_id) : undefined
-        const title = changeTitle(change, sectionTitle ? t(sectionTitle) : null)
+        const title = changeTitle(change)
         const isLast = i === changes.length - 1
-        return (
-          <div key={change.id} className="grid grid-cols-[20px_1fr] items-start gap-x-2">
-            <div className="flex size-full flex-col items-center gap-y-0.5">
-              <Dot failed={isFailedChange(change)} />
-              {!isLast && <div className="bg-ui-border-base min-h-[14px] w-px flex-1" />}
+        const body = (
+          <div className="grid grid-cols-[20px_1fr] gap-x-2">
+            {/* The padding sits inside the entry, so the line runs on into the next one. */}
+            <div className="flex flex-col items-center gap-y-0.5 pt-1.5">
+              <Dot />
+              {!isLast ? (
+                <div className="bg-ui-border-base w-px flex-1" />
+              ) : (
+                hasMore && <div className="border-ui-border-base w-0 flex-1 border-l border-dotted" />
+              )}
             </div>
-            <div className={clx("flex min-w-0 flex-col gap-y-1", !isLast && "pb-4")}>
-              <div className="flex items-start justify-between gap-x-2">
-                {onSelect ? (
-                  <button
-                    type="button"
-                    onClick={() => onSelect(change)}
-                    className="txt-compact-small-plus text-ui-fg-base hover:text-ui-fg-interactive text-left outline-none"
-                  >
-                    {t(title.key, title.values)}
-                  </button>
-                ) : (
-                  <Text size="small" leading="compact" weight="plus">
-                    {t(title.key, title.values)}
-                  </Text>
-                )}
+            <div className="flex min-w-0 flex-col gap-y-1 pb-3 pt-1.5">
+              <div className="flex items-center justify-between gap-x-2">
+                <Text size="small" leading="compact" weight="plus" className="truncate">
+                  {t(title.key, title.values)}
+                </Text>
                 <Tooltip content={time.full(change.occurred_at)}>
-                  <Text size="small" leading="compact" className="text-ui-fg-subtle shrink-0 text-right">
+                  <Text size="small" leading="compact" className="text-ui-fg-subtle shrink-0">
                     {time.relative(change.occurred_at)}
                   </Text>
                 </Tooltip>
               </div>
-              {change.diff.length > 0 && <DiffRows diff={change.diff} fields={fields} limit={fieldLimit} />}
-              {change.message && (
-                <Text size="small" leading="compact" className="text-ui-fg-subtle break-words">
-                  {change.message}
+              <div className="flex min-w-0 items-center gap-x-2">
+                <Text size="small" leading="compact" className="text-ui-fg-subtle shrink-0">
+                  {t("integration.history.by")}
                 </Text>
-              )}
-              <ChangeActor change={change} />
+                <ChangeActor change={change} />
+              </div>
+              <FieldBadges diff={change.diff} fields={fields} className="pt-1.5" />
             </div>
           </div>
+        )
+        return onSelect ? (
+          <button
+            key={change.id}
+            type="button"
+            onClick={() => onSelect(change)}
+            // Negative margin: the hover fills the gutter while the dots stay in line with the header.
+            className="hover:bg-ui-bg-base-hover focus-visible:shadow-borders-focus -mx-2 rounded-md px-2 text-left outline-none"
+          >
+            {body}
+          </button>
+        ) : (
+          <div key={change.id}>{body}</div>
         )
       })}
     </div>

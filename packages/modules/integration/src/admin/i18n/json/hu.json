@@ -148,34 +148,97 @@
       "title": "Módosítási előzmények",
       "empty": "Még nincsenek módosítások",
       "viewAll": "Összes megtekintése",
+      "by": "Szerző",
+      "shown_zero": "{{shown}} / {{count}} módosítás megjelenítve",
+      "shown_one": "{{shown}} / {{count}} módosítás megjelenítve",
+      "shown_two": "{{shown}} / {{count}} módosítás megjelenítve",
+      "shown_few": "{{shown}} / {{count}} módosítás megjelenítve",
+      "shown_many": "{{shown}} / {{count}} módosítás megjelenítve",
+      "shown_other": "{{shown}} / {{count}} módosítás megjelenítve",
       "events": {
-        "created": "Az integráció konfigurálva",
-        "updated": "A beállítások módosultak",
-        "updatedSection": "A(z) „{{section}}” beállításai módosultak",
         "enabled": "Az integráció engedélyezve",
         "disabled": "Az integráció letiltva",
         "deleted": "A beállítások törölve",
-        "testPassed": "A kapcsolat tesztje sikeres",
-        "testFailed": "A kapcsolat tesztje sikertelen",
-        "other": "A beállítások módosultak"
+        "other": "A beállítások módosultak",
+        "fieldsSet_zero": "{{count}} mező beállítva",
+        "fieldsSet_one": "{{count}} mező beállítva",
+        "fieldsSet_two": "{{count}} mező beállítva",
+        "fieldsSet_few": "{{count}} mező beállítva",
+        "fieldsSet_many": "{{count}} mező beállítva",
+        "fieldsSet_other": "{{count}} mező beállítva",
+        "fieldsChanged_zero": "{{count}} mező módosítva",
+        "fieldsChanged_one": "{{count}} mező módosítva",
+        "fieldsChanged_two": "{{count}} mező módosítva",
+        "fieldsChanged_few": "{{count}} mező módosítva",
+        "fieldsChanged_many": "{{count}} mező módosítva",
+        "fieldsChanged_other": "{{count}} mező módosítva",
+        "fieldsDeleted_zero": "{{count}} mező törölve",
+        "fieldsDeleted_one": "{{count}} mező törölve",
+        "fieldsDeleted_two": "{{count}} mező törölve",
+        "fieldsDeleted_few": "{{count}} mező törölve",
+        "fieldsDeleted_many": "{{count}} mező törölve",
+        "fieldsDeleted_other": "{{count}} mező törölve"
+      },
+      "types": {
+        "created": "Beállított mezők",
+        "updated": "Módosult mezők",
+        "enabled": "Az integráció engedélyezve",
+        "disabled": "Az integráció letiltva",
+        "deleted": "A beállítások törölve"
       },
       "secret": {
-        "set": "érték beállítva",
-        "replaced": "érték lecserélve",
-        "removed": "érték eltávolítva",
-        "hidden": "érték elrejtve"
+        "set": "Érték beállítva",
+        "replaced": "Érték lecserélve",
+        "removed": "Érték eltávolítva",
+        "hidden": "Érték elrejtve"
       },
       "actors": {
-        "job": "Ütemezett feladat",
         "system": "Rendszer",
-        "apiKey": "„{{name}}” API-kulcs",
         "unknownUser": "Törölt felhasználó"
       },
       "fields": {
         "title": "Cím"
       },
       "truncated": "(rövidítve)",
-      "moreFields": "+{{count}} további"
+      "pageTitle": "Integrációk módosítási előzményei",
+      "pageSubtitle": "Ki módosította az integrációk beállításait, és mikor.",
+      "emptyFiltered": "Nincs a szűrőknek megfelelő módosítás",
+      "search": "Keresés",
+      "sort": {
+        "tooltip": "Rendezés",
+        "asc": "Növekvő",
+        "desc": "Csökkenő"
+      },
+      "columns": {
+        "time": "Időpont",
+        "integration": "Integráció",
+        "event": "Esemény",
+        "author": "Szerző",
+        "fields": "Mezők"
+      },
+      "filters": {
+        "integration": "Integráció",
+        "event": "Esemény",
+        "period": "Dátum",
+        "clearAll": "Összes törlése",
+        "add": "Szűrő hozzáadása"
+      },
+      "detail": {
+        "title": "A módosítás részletei",
+        "general": "Általános",
+        "metadata": "Metaadatok",
+        "changes": "Módosítások",
+        "integration": "Integráció",
+        "author": "Szerző",
+        "time": "Időpont",
+        "ip": "IP-cím",
+        "userAgent": "Kliens",
+        "requestId": "Kérés-ID",
+        "notFound": "A módosítás nem található",
+        "copyJson": "Másolás JSON-ként",
+        "copied": "Vágólapra másolva",
+        "copyFailed": "Nem sikerült a vágólapra másolni"
+      }
     }
   }
 }

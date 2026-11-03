@@ -1,6 +1,6 @@
 import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
-import { service, requireProvider, maskSecretValues } from "../../_helpers"
+import { service, requireProvider, maskSecretValues, changeFilters } from "../../_helpers"
 import type { AdminIntegrationChangeListResponse } from "../../../../../types"
 
 /** The change history of one integration, newest first. 404 for an unregistered provider. */
@@ -18,7 +18,7 @@ export const GET = async (
     entity: "integration_change",
     ...req.queryConfig,
     // The URL decides the provider, whatever the query string says.
-    filters: { ...req.filterableFields, provider_id },
+    filters: { ...changeFilters(req.filterableFields), provider_id },
   })
 
   res.json({

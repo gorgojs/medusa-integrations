@@ -148,34 +148,97 @@
       "title": "Historia zmian",
       "empty": "Brak zmian",
       "viewAll": "Zobacz wszystkie",
+      "by": "Autor",
+      "shown_zero": "Wyświetlono {{shown}} z {{count}} zmian",
+      "shown_one": "Wyświetlono {{shown}} z {{count}} zmiany",
+      "shown_two": "Wyświetlono {{shown}} z {{count}} zmiany",
+      "shown_few": "Wyświetlono {{shown}} z {{count}} zmian",
+      "shown_many": "Wyświetlono {{shown}} z {{count}} zmian",
+      "shown_other": "Wyświetlono {{shown}} z {{count}} zmiany",
       "events": {
-        "created": "Integracja skonfigurowana",
-        "updated": "Zmieniono ustawienia",
-        "updatedSection": "Zmieniono ustawienia „{{section}}”",
         "enabled": "Włączono integrację",
         "disabled": "Wyłączono integrację",
         "deleted": "Usunięto ustawienia",
-        "testPassed": "Test połączenia zakończony powodzeniem",
-        "testFailed": "Test połączenia nieudany",
-        "other": "Zmieniono ustawienia"
+        "other": "Zmieniono ustawienia",
+        "fieldsSet_zero": "Ustawiono {{count}} pól",
+        "fieldsSet_one": "Ustawiono {{count}} pole",
+        "fieldsSet_two": "Ustawiono {{count}} pola",
+        "fieldsSet_few": "Ustawiono {{count}} pola",
+        "fieldsSet_many": "Ustawiono {{count}} pól",
+        "fieldsSet_other": "Ustawiono {{count}} pola",
+        "fieldsChanged_zero": "Zmieniono {{count}} pól",
+        "fieldsChanged_one": "Zmieniono {{count}} pole",
+        "fieldsChanged_two": "Zmieniono {{count}} pola",
+        "fieldsChanged_few": "Zmieniono {{count}} pola",
+        "fieldsChanged_many": "Zmieniono {{count}} pól",
+        "fieldsChanged_other": "Zmieniono {{count}} pola",
+        "fieldsDeleted_zero": "Usunięto {{count}} pól",
+        "fieldsDeleted_one": "Usunięto {{count}} pole",
+        "fieldsDeleted_two": "Usunięto {{count}} pola",
+        "fieldsDeleted_few": "Usunięto {{count}} pola",
+        "fieldsDeleted_many": "Usunięto {{count}} pól",
+        "fieldsDeleted_other": "Usunięto {{count}} pola"
+      },
+      "types": {
+        "created": "Ustawiono pola",
+        "updated": "Zmieniono pola",
+        "enabled": "Włączono integrację",
+        "disabled": "Wyłączono integrację",
+        "deleted": "Usunięto ustawienia"
       },
       "secret": {
-        "set": "wartość ustawiona",
-        "replaced": "wartość zastąpiona",
-        "removed": "wartość usunięta",
-        "hidden": "wartość ukryta"
+        "set": "Wartość ustawiona",
+        "replaced": "Wartość zastąpiona",
+        "removed": "Wartość usunięta",
+        "hidden": "Wartość ukryta"
       },
       "actors": {
-        "job": "Zadanie zaplanowane",
         "system": "System",
-        "apiKey": "Klucz API „{{name}}”",
         "unknownUser": "Usunięty użytkownik"
       },
       "fields": {
         "title": "Tytuł"
       },
       "truncated": "(skrócono)",
-      "moreFields": "+{{count}} więcej"
+      "pageTitle": "Historia zmian integracji",
+      "pageSubtitle": "Kto zmienił ustawienia integracji i kiedy.",
+      "emptyFiltered": "Żadne zmiany nie pasują do filtrów",
+      "search": "Szukaj",
+      "sort": {
+        "tooltip": "Sortuj",
+        "asc": "Rosnąco",
+        "desc": "Malejąco"
+      },
+      "columns": {
+        "time": "Czas",
+        "integration": "Integracja",
+        "event": "Zdarzenie",
+        "author": "Autor",
+        "fields": "Pola"
+      },
+      "filters": {
+        "integration": "Integracja",
+        "event": "Zdarzenie",
+        "period": "Data",
+        "clearAll": "Wyczyść wszystko",
+        "add": "Dodaj filtr"
+      },
+      "detail": {
+        "title": "Szczegóły zmiany",
+        "general": "Ogólne",
+        "metadata": "Metadane",
+        "changes": "Zmiany",
+        "integration": "Integracja",
+        "author": "Autor",
+        "time": "Czas",
+        "ip": "Adres IP",
+        "userAgent": "Klient",
+        "requestId": "ID żądania",
+        "notFound": "Nie znaleziono zmiany",
+        "copyJson": "Kopiuj jako JSON",
+        "copied": "Skopiowano do schowka",
+        "copyFailed": "Nie udało się skopiować do schowka"
+      }
     }
   }
 }
