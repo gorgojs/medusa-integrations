@@ -127,7 +127,6 @@ moduleIntegrationTestRunner<any>({
         const id = await service.recordChange({
           provider_id: A,
           change_type: "updated",
-          outcome: "succeeded",
           actor: { type: "system" },
           diff: [{ field: "apiKey", from: "a", to: "b" }],
         })
@@ -139,13 +138,13 @@ moduleIntegrationTestRunner<any>({
 
       it("never throws when a change cannot be stored", async () => {
         await expect(
-          service.recordChange({ provider_id: null, change_type: "updated", outcome: "succeeded", actor: { type: "system" } })
+          service.recordChange({ provider_id: null, change_type: "updated", actor: { type: "system" } })
         ).resolves.toBeNull()
       })
 
       it("keeps the history when the integration row is deleted", async () => {
         const row = await configure(A)
-        await service.recordChange({ provider_id: A, change_type: "created", outcome: "succeeded", actor: { type: "system" } })
+        await service.recordChange({ provider_id: A, change_type: "created", actor: { type: "system" } })
         await service.deleteIntegrations(row.id)
         expect(await service.listIntegrationChanges({ provider_id: A }, { take: 10 })).toHaveLength(1)
       })

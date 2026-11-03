@@ -45,7 +45,6 @@ medusaIntegrationTestRunner({
       const [change] = await changesOf()
       expect(change).toMatchObject({
         change_type: "created",
-        outcome: "succeeded",
         provider_id: A,
         identifier: "test",
         instance_id: "a",
@@ -127,15 +126,14 @@ medusaIntegrationTestRunner({
       expect(await rawRows()).not.toContain(SECRET)
     })
 
-    it("records a connection test run from the admin, but not the daily job", async () => {
+    it("records no connection test: neither one run from the admin nor the daily job", async () => {
       await save({ apiKey: "pub", secretKey: SECRET })
       const res = await api.post(`/admin/integrations/${A}/test-connection`, {}, headers)
       expect(res.data.status).toBe("passed")
       await testIntegrationConnectionsJob(getContainer())
 
       const changes = await changesOf()
-      expect(changes.map((c: any) => c.change_type)).toEqual(["created", "connection_tested"])
-      expect(changes[1]).toMatchObject({ outcome: "succeeded", actor_type: "user" })
+      expect(changes.map((c: any) => c.change_type)).toEqual(["created"])
     })
 
     it("records a change made with a secret API key under the key's title", async () => {
