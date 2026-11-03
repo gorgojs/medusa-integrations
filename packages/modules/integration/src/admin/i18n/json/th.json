@@ -148,16 +148,43 @@
       "title": "ประวัติการเปลี่ยนแปลง",
       "empty": "ยังไม่มีการเปลี่ยนแปลง",
       "viewAll": "ดูทั้งหมด",
+      "by": "โดย",
+      "shown_zero": "แสดง {{shown}} จาก {{count}} การเปลี่ยนแปลง",
+      "shown_one": "แสดง {{shown}} จาก {{count}} การเปลี่ยนแปลง",
+      "shown_two": "แสดง {{shown}} จาก {{count}} การเปลี่ยนแปลง",
+      "shown_few": "แสดง {{shown}} จาก {{count}} การเปลี่ยนแปลง",
+      "shown_many": "แสดง {{shown}} จาก {{count}} การเปลี่ยนแปลง",
+      "shown_other": "แสดง {{shown}} จาก {{count}} การเปลี่ยนแปลง",
       "events": {
-        "created": "ตั้งค่าการเชื่อมต่อแล้ว",
-        "updated": "เปลี่ยนการตั้งค่าแล้ว",
-        "updatedSection": "เปลี่ยนการตั้งค่า “{{section}}” แล้ว",
         "enabled": "เปิดใช้งานการเชื่อมต่อแล้ว",
         "disabled": "ปิดใช้งานการเชื่อมต่อแล้ว",
         "deleted": "ลบการตั้งค่าแล้ว",
-        "testPassed": "ทดสอบการเชื่อมต่อสำเร็จ",
-        "testFailed": "ทดสอบการเชื่อมต่อไม่สำเร็จ",
-        "other": "เปลี่ยนการตั้งค่าแล้ว"
+        "other": "เปลี่ยนการตั้งค่าแล้ว",
+        "fieldsSet_zero": "ตั้งค่า {{count}} ฟิลด์",
+        "fieldsSet_one": "ตั้งค่า {{count}} ฟิลด์",
+        "fieldsSet_two": "ตั้งค่า {{count}} ฟิลด์",
+        "fieldsSet_few": "ตั้งค่า {{count}} ฟิลด์",
+        "fieldsSet_many": "ตั้งค่า {{count}} ฟิลด์",
+        "fieldsSet_other": "ตั้งค่า {{count}} ฟิลด์",
+        "fieldsChanged_zero": "เปลี่ยน {{count}} ฟิลด์",
+        "fieldsChanged_one": "เปลี่ยน {{count}} ฟิลด์",
+        "fieldsChanged_two": "เปลี่ยน {{count}} ฟิลด์",
+        "fieldsChanged_few": "เปลี่ยน {{count}} ฟิลด์",
+        "fieldsChanged_many": "เปลี่ยน {{count}} ฟิลด์",
+        "fieldsChanged_other": "เปลี่ยน {{count}} ฟิลด์",
+        "fieldsDeleted_zero": "ลบ {{count}} ฟิลด์",
+        "fieldsDeleted_one": "ลบ {{count}} ฟิลด์",
+        "fieldsDeleted_two": "ลบ {{count}} ฟิลด์",
+        "fieldsDeleted_few": "ลบ {{count}} ฟิลด์",
+        "fieldsDeleted_many": "ลบ {{count}} ฟิลด์",
+        "fieldsDeleted_other": "ลบ {{count}} ฟิลด์"
+      },
+      "types": {
+        "created": "ฟิลด์ที่ตั้งค่า",
+        "updated": "ฟิลด์ที่เปลี่ยน",
+        "enabled": "เปิดใช้งานการเชื่อมต่อแล้ว",
+        "disabled": "ปิดใช้งานการเชื่อมต่อแล้ว",
+        "deleted": "ลบการตั้งค่าแล้ว"
       },
       "secret": {
         "set": "ตั้งค่าแล้ว",
@@ -166,16 +193,52 @@
         "hidden": "ซ่อนค่าไว้"
       },
       "actors": {
-        "job": "งานที่ตั้งเวลาไว้",
         "system": "ระบบ",
-        "apiKey": "คีย์ API “{{name}}”",
         "unknownUser": "ผู้ใช้ที่ถูกลบ"
       },
       "fields": {
         "title": "ชื่อ"
       },
       "truncated": "(ย่อ)",
-      "moreFields": "อีก {{count}} รายการ"
+      "pageTitle": "ประวัติการเปลี่ยนแปลงการเชื่อมต่อ",
+      "pageSubtitle": "ใครเปลี่ยนการตั้งค่าการเชื่อมต่อและเมื่อใด",
+      "emptyFiltered": "ไม่มีการเปลี่ยนแปลงที่ตรงกับตัวกรอง",
+      "search": "ค้นหา",
+      "sort": {
+        "tooltip": "เรียงลำดับ",
+        "asc": "น้อยไปมาก",
+        "desc": "มากไปน้อย"
+      },
+      "columns": {
+        "time": "เวลา",
+        "integration": "การเชื่อมต่อ",
+        "event": "เหตุการณ์",
+        "author": "ผู้ดำเนินการ",
+        "fields": "ฟิลด์"
+      },
+      "filters": {
+        "integration": "การเชื่อมต่อ",
+        "event": "เหตุการณ์",
+        "period": "วันที่",
+        "clearAll": "ล้างทั้งหมด",
+        "add": "เพิ่มตัวกรอง"
+      },
+      "detail": {
+        "title": "รายละเอียดการเปลี่ยนแปลง",
+        "general": "ทั่วไป",
+        "metadata": "เมทาดาทา",
+        "changes": "การเปลี่ยนแปลง",
+        "integration": "การเชื่อมต่อ",
+        "author": "ผู้ดำเนินการ",
+        "time": "เวลา",
+        "ip": "ที่อยู่ IP",
+        "userAgent": "ไคลเอนต์",
+        "requestId": "ID คำขอ",
+        "notFound": "ไม่พบการเปลี่ยนแปลง",
+        "copyJson": "คัดลอกเป็น JSON",
+        "copied": "คัดลอกไปยังคลิปบอร์ดแล้ว",
+        "copyFailed": "ไม่สามารถคัดลอกไปยังคลิปบอร์ดได้"
+      }
     }
   }
 }

@@ -148,34 +148,97 @@
       "title": "Історія змін",
       "empty": "Змін поки немає",
       "viewAll": "Показати всі",
+      "by": "Автор",
+      "shown_zero": "Показано {{shown}} із {{count}} змін",
+      "shown_one": "Показано {{shown}} із {{count}} зміни",
+      "shown_two": "Показано {{shown}} із {{count}} змін",
+      "shown_few": "Показано {{shown}} із {{count}} змін",
+      "shown_many": "Показано {{shown}} із {{count}} змін",
+      "shown_other": "Показано {{shown}} із {{count}} змін",
       "events": {
-        "created": "Інтеграцію налаштовано",
-        "updated": "Налаштування змінено",
-        "updatedSection": "Налаштування «{{section}}» змінено",
         "enabled": "Інтеграцію увімкнено",
         "disabled": "Інтеграцію вимкнено",
         "deleted": "Налаштування видалено",
-        "testPassed": "Перевірка з'єднання пройшла успішно",
-        "testFailed": "Перевірка з'єднання не вдалася",
-        "other": "Налаштування змінено"
+        "other": "Налаштування змінено",
+        "fieldsSet_zero": "Задано {{count}} полів",
+        "fieldsSet_one": "Задано {{count}} поле",
+        "fieldsSet_two": "Задано {{count}} поля",
+        "fieldsSet_few": "Задано {{count}} поля",
+        "fieldsSet_many": "Задано {{count}} полів",
+        "fieldsSet_other": "Задано {{count}} поля",
+        "fieldsChanged_zero": "Змінено {{count}} полів",
+        "fieldsChanged_one": "Змінено {{count}} поле",
+        "fieldsChanged_two": "Змінено {{count}} поля",
+        "fieldsChanged_few": "Змінено {{count}} поля",
+        "fieldsChanged_many": "Змінено {{count}} полів",
+        "fieldsChanged_other": "Змінено {{count}} поля",
+        "fieldsDeleted_zero": "Видалено {{count}} полів",
+        "fieldsDeleted_one": "Видалено {{count}} поле",
+        "fieldsDeleted_two": "Видалено {{count}} поля",
+        "fieldsDeleted_few": "Видалено {{count}} поля",
+        "fieldsDeleted_many": "Видалено {{count}} полів",
+        "fieldsDeleted_other": "Видалено {{count}} поля"
+      },
+      "types": {
+        "created": "Задано поля",
+        "updated": "Змінено поля",
+        "enabled": "Інтеграцію увімкнено",
+        "disabled": "Інтеграцію вимкнено",
+        "deleted": "Налаштування видалено"
       },
       "secret": {
-        "set": "значення встановлено",
-        "replaced": "значення замінено",
-        "removed": "значення видалено",
-        "hidden": "значення приховано"
+        "set": "Значення встановлено",
+        "replaced": "Значення замінено",
+        "removed": "Значення видалено",
+        "hidden": "Значення приховано"
       },
       "actors": {
-        "job": "Запланована задача",
         "system": "Система",
-        "apiKey": "API-ключ «{{name}}»",
         "unknownUser": "Видалений користувач"
       },
       "fields": {
         "title": "Заголовок"
       },
       "truncated": "(скорочено)",
-      "moreFields": "і ще {{count}}"
+      "pageTitle": "Історія змін інтеграцій",
+      "pageSubtitle": "Хто змінив налаштування інтеграції та коли.",
+      "emptyFiltered": "Немає змін, що відповідають фільтрам",
+      "search": "Пошук",
+      "sort": {
+        "tooltip": "Сортувати",
+        "asc": "За зростанням",
+        "desc": "За спаданням"
+      },
+      "columns": {
+        "time": "Час",
+        "integration": "Інтеграція",
+        "event": "Подія",
+        "author": "Автор",
+        "fields": "Поля"
+      },
+      "filters": {
+        "integration": "Інтеграція",
+        "event": "Подія",
+        "period": "Дата",
+        "clearAll": "Очистити все",
+        "add": "Додати фільтр"
+      },
+      "detail": {
+        "title": "Деталі зміни",
+        "general": "Загальне",
+        "metadata": "Метадані",
+        "changes": "Зміни",
+        "integration": "Інтеграція",
+        "author": "Автор",
+        "time": "Час",
+        "ip": "IP-адреса",
+        "userAgent": "Клієнт",
+        "requestId": "ID запиту",
+        "notFound": "Зміну не знайдено",
+        "copyJson": "Копіювати як JSON",
+        "copied": "Скопійовано в буфер обміну",
+        "copyFailed": "Не вдалося скопіювати в буфер обміну"
+      }
     }
   }
 }

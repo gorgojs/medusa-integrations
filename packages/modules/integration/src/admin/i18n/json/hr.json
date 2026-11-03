@@ -148,34 +148,97 @@
       "title": "Povijest promjena",
       "empty": "Još nema promjena",
       "viewAll": "Prikaži sve",
+      "by": "Autor",
+      "shown_zero": "Prikazano {{shown}} od {{count}} promjena",
+      "shown_one": "Prikazano {{shown}} od {{count}} promjene",
+      "shown_two": "Prikazano {{shown}} od {{count}} promjena",
+      "shown_few": "Prikazano {{shown}} od {{count}} promjene",
+      "shown_many": "Prikazano {{shown}} od {{count}} promjena",
+      "shown_other": "Prikazano {{shown}} od {{count}} promjena",
       "events": {
-        "created": "Integracija je konfigurirana",
-        "updated": "Postavke su promijenjene",
-        "updatedSection": "Postavke „{{section}}“ su promijenjene",
         "enabled": "Integracija je omogućena",
         "disabled": "Integracija je onemogućena",
         "deleted": "Postavke su izbrisane",
-        "testPassed": "Test veze je uspio",
-        "testFailed": "Test veze nije uspio",
-        "other": "Postavke su promijenjene"
+        "other": "Postavke su promijenjene",
+        "fieldsSet_zero": "Postavljeno {{count}} polja",
+        "fieldsSet_one": "Postavljeno {{count}} polje",
+        "fieldsSet_two": "Postavljeno {{count}} polja",
+        "fieldsSet_few": "Postavljena {{count}} polja",
+        "fieldsSet_many": "Postavljeno {{count}} polja",
+        "fieldsSet_other": "Postavljeno {{count}} polja",
+        "fieldsChanged_zero": "Promijenjeno {{count}} polja",
+        "fieldsChanged_one": "Promijenjeno {{count}} polje",
+        "fieldsChanged_two": "Promijenjeno {{count}} polja",
+        "fieldsChanged_few": "Promijenjena {{count}} polja",
+        "fieldsChanged_many": "Promijenjeno {{count}} polja",
+        "fieldsChanged_other": "Promijenjeno {{count}} polja",
+        "fieldsDeleted_zero": "Izbrisano {{count}} polja",
+        "fieldsDeleted_one": "Izbrisano {{count}} polje",
+        "fieldsDeleted_two": "Izbrisano {{count}} polja",
+        "fieldsDeleted_few": "Izbrisana {{count}} polja",
+        "fieldsDeleted_many": "Izbrisano {{count}} polja",
+        "fieldsDeleted_other": "Izbrisano {{count}} polja"
+      },
+      "types": {
+        "created": "Postavljena polja",
+        "updated": "Promijenjena polja",
+        "enabled": "Integracija je omogućena",
+        "disabled": "Integracija je onemogućena",
+        "deleted": "Postavke su izbrisane"
       },
       "secret": {
-        "set": "vrijednost je postavljena",
-        "replaced": "vrijednost je zamijenjena",
-        "removed": "vrijednost je uklonjena",
-        "hidden": "vrijednost je skrivena"
+        "set": "Vrijednost je postavljena",
+        "replaced": "Vrijednost je zamijenjena",
+        "removed": "Vrijednost je uklonjena",
+        "hidden": "Vrijednost je skrivena"
       },
       "actors": {
-        "job": "Zakazani zadatak",
         "system": "Sustav",
-        "apiKey": "API ključ „{{name}}“",
         "unknownUser": "Izbrisani korisnik"
       },
       "fields": {
         "title": "Naslov"
       },
       "truncated": "(skraćeno)",
-      "moreFields": "+{{count}} još"
+      "pageTitle": "Povijest promjena integracija",
+      "pageSubtitle": "Tko je promijenio postavke integracija i kada.",
+      "emptyFiltered": "Nema promjena koje odgovaraju filtrima",
+      "search": "Pretraži",
+      "sort": {
+        "tooltip": "Sortiraj",
+        "asc": "Uzlazno",
+        "desc": "Silazno"
+      },
+      "columns": {
+        "time": "Vrijeme",
+        "integration": "Integracija",
+        "event": "Događaj",
+        "author": "Autor",
+        "fields": "Polja"
+      },
+      "filters": {
+        "integration": "Integracija",
+        "event": "Događaj",
+        "period": "Datum",
+        "clearAll": "Očisti sve",
+        "add": "Dodaj filtar"
+      },
+      "detail": {
+        "title": "Detalji promjene",
+        "general": "Općenito",
+        "metadata": "Metapodaci",
+        "changes": "Promjene",
+        "integration": "Integracija",
+        "author": "Autor",
+        "time": "Vrijeme",
+        "ip": "IP adresa",
+        "userAgent": "Klijent",
+        "requestId": "ID zahtjeva",
+        "notFound": "Promjena nije pronađena",
+        "copyJson": "Kopiraj kao JSON",
+        "copied": "Kopirano u međuspremnik",
+        "copyFailed": "Kopiranje u međuspremnik nije uspjelo"
+      }
     }
   }
 }

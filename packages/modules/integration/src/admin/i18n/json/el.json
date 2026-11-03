@@ -148,34 +148,97 @@
       "title": "Ιστορικό αλλαγών",
       "empty": "Δεν υπάρχουν αλλαγές ακόμη",
       "viewAll": "Προβολή όλων",
+      "by": "Από",
+      "shown_zero": "Εμφανίζονται {{shown}} από {{count}} αλλαγές",
+      "shown_one": "Εμφανίζονται {{shown}} από {{count}} αλλαγή",
+      "shown_two": "Εμφανίζονται {{shown}} από {{count}} αλλαγές",
+      "shown_few": "Εμφανίζονται {{shown}} από {{count}} αλλαγές",
+      "shown_many": "Εμφανίζονται {{shown}} από {{count}} αλλαγές",
+      "shown_other": "Εμφανίζονται {{shown}} από {{count}} αλλαγές",
       "events": {
-        "created": "Η ενσωμάτωση διαμορφώθηκε",
-        "updated": "Οι ρυθμίσεις άλλαξαν",
-        "updatedSection": "Οι ρυθμίσεις «{{section}}» άλλαξαν",
         "enabled": "Η ενσωμάτωση ενεργοποιήθηκε",
         "disabled": "Η ενσωμάτωση απενεργοποιήθηκε",
         "deleted": "Οι ρυθμίσεις διαγράφηκαν",
-        "testPassed": "Ο έλεγχος σύνδεσης πέτυχε",
-        "testFailed": "Ο έλεγχος σύνδεσης απέτυχε",
-        "other": "Οι ρυθμίσεις άλλαξαν"
+        "other": "Οι ρυθμίσεις άλλαξαν",
+        "fieldsSet_zero": "{{count}} πεδία ορίστηκαν",
+        "fieldsSet_one": "{{count}} πεδίο ορίστηκε",
+        "fieldsSet_two": "{{count}} πεδία ορίστηκαν",
+        "fieldsSet_few": "{{count}} πεδία ορίστηκαν",
+        "fieldsSet_many": "{{count}} πεδία ορίστηκαν",
+        "fieldsSet_other": "{{count}} πεδία ορίστηκαν",
+        "fieldsChanged_zero": "{{count}} πεδία άλλαξαν",
+        "fieldsChanged_one": "{{count}} πεδίο άλλαξε",
+        "fieldsChanged_two": "{{count}} πεδία άλλαξαν",
+        "fieldsChanged_few": "{{count}} πεδία άλλαξαν",
+        "fieldsChanged_many": "{{count}} πεδία άλλαξαν",
+        "fieldsChanged_other": "{{count}} πεδία άλλαξαν",
+        "fieldsDeleted_zero": "{{count}} πεδία διαγράφηκαν",
+        "fieldsDeleted_one": "{{count}} πεδίο διαγράφηκε",
+        "fieldsDeleted_two": "{{count}} πεδία διαγράφηκαν",
+        "fieldsDeleted_few": "{{count}} πεδία διαγράφηκαν",
+        "fieldsDeleted_many": "{{count}} πεδία διαγράφηκαν",
+        "fieldsDeleted_other": "{{count}} πεδία διαγράφηκαν"
+      },
+      "types": {
+        "created": "Πεδία που ορίστηκαν",
+        "updated": "Πεδία που άλλαξαν",
+        "enabled": "Η ενσωμάτωση ενεργοποιήθηκε",
+        "disabled": "Η ενσωμάτωση απενεργοποιήθηκε",
+        "deleted": "Οι ρυθμίσεις διαγράφηκαν"
       },
       "secret": {
-        "set": "η τιμή ορίστηκε",
-        "replaced": "η τιμή αντικαταστάθηκε",
-        "removed": "η τιμή αφαιρέθηκε",
-        "hidden": "η τιμή είναι κρυφή"
+        "set": "Η τιμή ορίστηκε",
+        "replaced": "Η τιμή αντικαταστάθηκε",
+        "removed": "Η τιμή αφαιρέθηκε",
+        "hidden": "Η τιμή είναι κρυφή"
       },
       "actors": {
-        "job": "Προγραμματισμένη εργασία",
         "system": "Σύστημα",
-        "apiKey": "Κλειδί API «{{name}}»",
         "unknownUser": "Διαγραμμένος χρήστης"
       },
       "fields": {
         "title": "Τίτλος"
       },
       "truncated": "(συντομευμένο)",
-      "moreFields": "+{{count}} ακόμη"
+      "pageTitle": "Ιστορικό αλλαγών ενσωματώσεων",
+      "pageSubtitle": "Ποιος άλλαξε τις ρυθμίσεις των ενσωματώσεων και πότε.",
+      "emptyFiltered": "Δεν βρέθηκαν αλλαγές που να ταιριάζουν με τα φίλτρα",
+      "search": "Αναζήτηση",
+      "sort": {
+        "tooltip": "Ταξινόμηση",
+        "asc": "Αύξουσα",
+        "desc": "Φθίνουσα"
+      },
+      "columns": {
+        "time": "Ώρα",
+        "integration": "Ενσωμάτωση",
+        "event": "Συμβάν",
+        "author": "Συντάκτης",
+        "fields": "Πεδία"
+      },
+      "filters": {
+        "integration": "Ενσωμάτωση",
+        "event": "Συμβάν",
+        "period": "Ημερομηνία",
+        "clearAll": "Εκκαθάριση όλων",
+        "add": "Προσθήκη φίλτρου"
+      },
+      "detail": {
+        "title": "Λεπτομέρειες αλλαγής",
+        "general": "Γενικά",
+        "metadata": "Μεταδεδομένα",
+        "changes": "Αλλαγές",
+        "integration": "Ενσωμάτωση",
+        "author": "Συντάκτης",
+        "time": "Ώρα",
+        "ip": "Διεύθυνση IP",
+        "userAgent": "Πελάτης",
+        "requestId": "ID αιτήματος",
+        "notFound": "Η αλλαγή δεν βρέθηκε",
+        "copyJson": "Αντιγραφή ως JSON",
+        "copied": "Αντιγράφηκε στο πρόχειρο",
+        "copyFailed": "Δεν ήταν δυνατή η αντιγραφή στο πρόχειρο"
+      }
     }
   }
 }

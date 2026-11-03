@@ -148,16 +148,43 @@
       "title": "Änderungsverlauf",
       "empty": "Noch keine Änderungen",
       "viewAll": "Alle anzeigen",
+      "by": "Von",
+      "shown_zero": "{{shown}} von {{count}} Änderungen angezeigt",
+      "shown_one": "{{shown}} von {{count}} Änderung angezeigt",
+      "shown_two": "{{shown}} von {{count}} Änderungen angezeigt",
+      "shown_few": "{{shown}} von {{count}} Änderungen angezeigt",
+      "shown_many": "{{shown}} von {{count}} Änderungen angezeigt",
+      "shown_other": "{{shown}} von {{count}} Änderungen angezeigt",
       "events": {
-        "created": "Integration konfiguriert",
-        "updated": "Einstellungen geändert",
-        "updatedSection": "Einstellungen „{{section}}“ geändert",
         "enabled": "Integration aktiviert",
         "disabled": "Integration deaktiviert",
         "deleted": "Einstellungen gelöscht",
-        "testPassed": "Verbindungstest bestanden",
-        "testFailed": "Verbindungstest fehlgeschlagen",
-        "other": "Einstellungen geändert"
+        "other": "Einstellungen geändert",
+        "fieldsSet_zero": "{{count}} Felder gesetzt",
+        "fieldsSet_one": "{{count}} Feld gesetzt",
+        "fieldsSet_two": "{{count}} Felder gesetzt",
+        "fieldsSet_few": "{{count}} Felder gesetzt",
+        "fieldsSet_many": "{{count}} Felder gesetzt",
+        "fieldsSet_other": "{{count}} Felder gesetzt",
+        "fieldsChanged_zero": "{{count}} Felder geändert",
+        "fieldsChanged_one": "{{count}} Feld geändert",
+        "fieldsChanged_two": "{{count}} Felder geändert",
+        "fieldsChanged_few": "{{count}} Felder geändert",
+        "fieldsChanged_many": "{{count}} Felder geändert",
+        "fieldsChanged_other": "{{count}} Felder geändert",
+        "fieldsDeleted_zero": "{{count}} Felder gelöscht",
+        "fieldsDeleted_one": "{{count}} Feld gelöscht",
+        "fieldsDeleted_two": "{{count}} Felder gelöscht",
+        "fieldsDeleted_few": "{{count}} Felder gelöscht",
+        "fieldsDeleted_many": "{{count}} Felder gelöscht",
+        "fieldsDeleted_other": "{{count}} Felder gelöscht"
+      },
+      "types": {
+        "created": "Gesetzte Felder",
+        "updated": "Geänderte Felder",
+        "enabled": "Integration aktiviert",
+        "disabled": "Integration deaktiviert",
+        "deleted": "Einstellungen gelöscht"
       },
       "secret": {
         "set": "Wert festgelegt",
@@ -166,16 +193,52 @@
         "hidden": "Wert ausgeblendet"
       },
       "actors": {
-        "job": "Geplanter Job",
         "system": "System",
-        "apiKey": "API-Schlüssel „{{name}}“",
         "unknownUser": "Gelöschter Benutzer"
       },
       "fields": {
         "title": "Titel"
       },
       "truncated": "(gekürzt)",
-      "moreFields": "+{{count}} weitere"
+      "pageTitle": "Änderungsverlauf der Integrationen",
+      "pageSubtitle": "Wer die Integrationseinstellungen wann geändert hat.",
+      "emptyFiltered": "Keine Änderungen entsprechen den Filtern",
+      "search": "Suchen",
+      "sort": {
+        "tooltip": "Sortieren",
+        "asc": "Aufsteigend",
+        "desc": "Absteigend"
+      },
+      "columns": {
+        "time": "Zeit",
+        "integration": "Integration",
+        "event": "Ereignis",
+        "author": "Autor",
+        "fields": "Felder"
+      },
+      "filters": {
+        "integration": "Integration",
+        "event": "Ereignis",
+        "period": "Datum",
+        "clearAll": "Alle löschen",
+        "add": "Filter hinzufügen"
+      },
+      "detail": {
+        "title": "Änderungsdetails",
+        "general": "Allgemein",
+        "metadata": "Metadaten",
+        "changes": "Änderungen",
+        "integration": "Integration",
+        "author": "Autor",
+        "time": "Zeit",
+        "ip": "IP-Adresse",
+        "userAgent": "Client",
+        "requestId": "Anfrage-ID",
+        "notFound": "Änderung nicht gefunden",
+        "copyJson": "Als JSON kopieren",
+        "copied": "In die Zwischenablage kopiert",
+        "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen"
+      }
     }
   }
 }

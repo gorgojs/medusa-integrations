@@ -18,7 +18,6 @@ export const deleteIntegrationWorkflow = createWorkflow(
       transform({ input, result }, (d) => ({
         provider_id: d.input.provider_id,
         change_type: "deleted" as const,
-        outcome: "succeeded" as const,
         actor: d.input.actor ?? null,
         // A snapshot of what was configured, so the integration can be set up again.
         diff: d.result.diff,

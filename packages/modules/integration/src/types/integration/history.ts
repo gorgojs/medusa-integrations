@@ -1,6 +1,6 @@
 import type { I18nKey } from "../../modules/integration/descriptor/meta"
 
-// Domain types for the settings change history (`integration_history` module). Zod-free, like the
+// Domain types for the settings change history (`integration_change` rows). Zod-free, like the
 // rest of `src/types`, so the admin and the http types can share them.
 
 export type IntegrationChangeType =
@@ -9,13 +9,11 @@ export type IntegrationChangeType =
   | "enabled"
   | "disabled"
   | "deleted"
-  | "connection_tested"
-
-export type IntegrationChangeOutcome = "succeeded" | "failed"
 
 /**
  * Who made a change. `type` is Medusa's `auth_context.actor_type` as-is (`"user"`, `"api-key"`),
- * or `"job"` / `"system"` for changes made without an HTTP request.
+ * or `"system"` for changes made without an HTTP request. `"job"` is the daily connection test,
+ * which reaches only the `integration.tested` event, never the change history.
  */
 export type IntegrationChangeActor = {
   type: "user" | "api-key" | "job" | "system" | (string & {})
@@ -54,7 +52,6 @@ export type DiffEntry = DiffValueEntry | DiffSecretEntry
 export type RecordIntegrationChangeInput = {
   provider_id: string
   change_type: IntegrationChangeType
-  outcome: IntegrationChangeOutcome
   actor: IntegrationChangeActor
   actor_label?: string | null
   identifier?: string | null
@@ -62,7 +59,6 @@ export type RecordIntegrationChangeInput = {
   category?: string | null
   section_id?: string | null
   diff?: DiffEntry[]
-  message?: string | null
   reverts_id?: string | null
   /** Defaults to now. */
   occurred_at?: Date

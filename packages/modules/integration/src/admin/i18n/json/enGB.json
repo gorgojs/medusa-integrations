@@ -148,34 +148,97 @@
       "title": "Change History",
       "empty": "No changes yet",
       "viewAll": "View All",
+      "by": "By",
+      "shown_zero": "{{shown}} of {{count}} changes shown",
+      "shown_one": "{{shown}} of {{count}} change shown",
+      "shown_two": "{{shown}} of {{count}} changes shown",
+      "shown_few": "{{shown}} of {{count}} changes shown",
+      "shown_many": "{{shown}} of {{count}} changes shown",
+      "shown_other": "{{shown}} of {{count}} changes shown",
       "events": {
-        "created": "Integration configured",
-        "updated": "Settings changed",
-        "updatedSection": "“{{section}}” settings changed",
         "enabled": "Integration enabled",
         "disabled": "Integration disabled",
         "deleted": "Settings deleted",
-        "testPassed": "Connection test passed",
-        "testFailed": "Connection test failed",
-        "other": "Settings changed"
+        "other": "Settings changed",
+        "fieldsSet_zero": "{{count}} fields set",
+        "fieldsSet_one": "{{count}} field set",
+        "fieldsSet_two": "{{count}} fields set",
+        "fieldsSet_few": "{{count}} fields set",
+        "fieldsSet_many": "{{count}} fields set",
+        "fieldsSet_other": "{{count}} fields set",
+        "fieldsChanged_zero": "{{count}} fields changed",
+        "fieldsChanged_one": "{{count}} field changed",
+        "fieldsChanged_two": "{{count}} fields changed",
+        "fieldsChanged_few": "{{count}} fields changed",
+        "fieldsChanged_many": "{{count}} fields changed",
+        "fieldsChanged_other": "{{count}} fields changed",
+        "fieldsDeleted_zero": "{{count}} fields deleted",
+        "fieldsDeleted_one": "{{count}} field deleted",
+        "fieldsDeleted_two": "{{count}} fields deleted",
+        "fieldsDeleted_few": "{{count}} fields deleted",
+        "fieldsDeleted_many": "{{count}} fields deleted",
+        "fieldsDeleted_other": "{{count}} fields deleted"
+      },
+      "types": {
+        "created": "Fields set",
+        "updated": "Fields changed",
+        "enabled": "Integration enabled",
+        "disabled": "Integration disabled",
+        "deleted": "Settings deleted"
       },
       "secret": {
-        "set": "value set",
-        "replaced": "value replaced",
-        "removed": "value removed",
-        "hidden": "value hidden"
+        "set": "Value set",
+        "replaced": "Value replaced",
+        "removed": "Value removed",
+        "hidden": "Value hidden"
       },
       "actors": {
-        "job": "Scheduled job",
         "system": "System",
-        "apiKey": "API key “{{name}}”",
         "unknownUser": "Deleted user"
       },
       "fields": {
         "title": "Title"
       },
       "truncated": "(shortened)",
-      "moreFields": "+{{count}} more"
+      "pageTitle": "Integration Change History",
+      "pageSubtitle": "Who changed integration settings and when.",
+      "emptyFiltered": "No changes match your filters",
+      "search": "Search",
+      "sort": {
+        "tooltip": "Sort",
+        "asc": "Ascending",
+        "desc": "Descending"
+      },
+      "columns": {
+        "time": "Time",
+        "integration": "Integration",
+        "event": "Event",
+        "author": "Author",
+        "fields": "Fields"
+      },
+      "filters": {
+        "integration": "Integration",
+        "event": "Event",
+        "period": "Date",
+        "clearAll": "Clear all",
+        "add": "Add filter"
+      },
+      "detail": {
+        "title": "Change details",
+        "general": "General",
+        "metadata": "Metadata",
+        "changes": "Changes",
+        "integration": "Integration",
+        "author": "Author",
+        "time": "Time",
+        "ip": "IP address",
+        "userAgent": "Client",
+        "requestId": "Request ID",
+        "notFound": "Change not found",
+        "copyJson": "Copy as JSON",
+        "copied": "Copied to clipboard",
+        "copyFailed": "Could not copy to clipboard"
+      }
     }
   }
 }

@@ -148,34 +148,97 @@
       "title": "Historique des modifications",
       "empty": "Aucune modification pour le moment",
       "viewAll": "Tout afficher",
+      "by": "Par",
+      "shown_zero": "{{shown}} sur {{count}} modification affichée",
+      "shown_one": "{{shown}} sur {{count}} modification affichée",
+      "shown_two": "{{shown}} sur {{count}} modifications affichées",
+      "shown_few": "{{shown}} sur {{count}} modifications affichées",
+      "shown_many": "{{shown}} sur {{count}} modifications affichées",
+      "shown_other": "{{shown}} sur {{count}} modifications affichées",
       "events": {
-        "created": "Intégration configurée",
-        "updated": "Paramètres modifiés",
-        "updatedSection": "Paramètres « {{section}} » modifiés",
         "enabled": "Intégration activée",
         "disabled": "Intégration désactivée",
         "deleted": "Paramètres supprimés",
-        "testPassed": "Test de connexion réussi",
-        "testFailed": "Échec du test de connexion",
-        "other": "Paramètres modifiés"
+        "other": "Paramètres modifiés",
+        "fieldsSet_zero": "{{count}} champ défini",
+        "fieldsSet_one": "{{count}} champ défini",
+        "fieldsSet_two": "{{count}} champs définis",
+        "fieldsSet_few": "{{count}} champs définis",
+        "fieldsSet_many": "{{count}} champs définis",
+        "fieldsSet_other": "{{count}} champs définis",
+        "fieldsChanged_zero": "{{count}} champ modifié",
+        "fieldsChanged_one": "{{count}} champ modifié",
+        "fieldsChanged_two": "{{count}} champs modifiés",
+        "fieldsChanged_few": "{{count}} champs modifiés",
+        "fieldsChanged_many": "{{count}} champs modifiés",
+        "fieldsChanged_other": "{{count}} champs modifiés",
+        "fieldsDeleted_zero": "{{count}} champ supprimé",
+        "fieldsDeleted_one": "{{count}} champ supprimé",
+        "fieldsDeleted_two": "{{count}} champs supprimés",
+        "fieldsDeleted_few": "{{count}} champs supprimés",
+        "fieldsDeleted_many": "{{count}} champs supprimés",
+        "fieldsDeleted_other": "{{count}} champs supprimés"
+      },
+      "types": {
+        "created": "Champs définis",
+        "updated": "Champs modifiés",
+        "enabled": "Intégration activée",
+        "disabled": "Intégration désactivée",
+        "deleted": "Paramètres supprimés"
       },
       "secret": {
-        "set": "valeur définie",
-        "replaced": "valeur remplacée",
-        "removed": "valeur supprimée",
-        "hidden": "valeur masquée"
+        "set": "Valeur définie",
+        "replaced": "Valeur remplacée",
+        "removed": "Valeur supprimée",
+        "hidden": "Valeur masquée"
       },
       "actors": {
-        "job": "Tâche planifiée",
         "system": "Système",
-        "apiKey": "Clé API « {{name}} »",
         "unknownUser": "Utilisateur supprimé"
       },
       "fields": {
         "title": "Titre"
       },
       "truncated": "(abrégé)",
-      "moreFields": "+{{count}} autres"
+      "pageTitle": "Historique des modifications des intégrations",
+      "pageSubtitle": "Qui a modifié les paramètres des intégrations, et quand.",
+      "emptyFiltered": "Aucune modification ne correspond aux filtres",
+      "search": "Rechercher",
+      "sort": {
+        "tooltip": "Trier",
+        "asc": "Croissant",
+        "desc": "Décroissant"
+      },
+      "columns": {
+        "time": "Heure",
+        "integration": "Intégration",
+        "event": "Événement",
+        "author": "Auteur",
+        "fields": "Champs"
+      },
+      "filters": {
+        "integration": "Intégration",
+        "event": "Événement",
+        "period": "Date",
+        "clearAll": "Tout effacer",
+        "add": "Ajouter un filtre"
+      },
+      "detail": {
+        "title": "Détails de la modification",
+        "general": "Général",
+        "metadata": "Métadonnées",
+        "changes": "Modifications",
+        "integration": "Intégration",
+        "author": "Auteur",
+        "time": "Heure",
+        "ip": "Adresse IP",
+        "userAgent": "Client",
+        "requestId": "ID de requête",
+        "notFound": "Modification introuvable",
+        "copyJson": "Copier au format JSON",
+        "copied": "Copié dans le presse-papiers",
+        "copyFailed": "Impossible de copier dans le presse-papiers"
+      }
     }
   }
 }

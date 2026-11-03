@@ -148,34 +148,97 @@
       "title": "Değişiklik Geçmişi",
       "empty": "Henüz değişiklik yok",
       "viewAll": "Tümünü Gör",
+      "by": "Değiştiren",
+      "shown_zero": "{{count}} değişiklikten {{shown}} tanesi gösteriliyor",
+      "shown_one": "{{count}} değişiklikten {{shown}} tanesi gösteriliyor",
+      "shown_two": "{{count}} değişiklikten {{shown}} tanesi gösteriliyor",
+      "shown_few": "{{count}} değişiklikten {{shown}} tanesi gösteriliyor",
+      "shown_many": "{{count}} değişiklikten {{shown}} tanesi gösteriliyor",
+      "shown_other": "{{count}} değişiklikten {{shown}} tanesi gösteriliyor",
       "events": {
-        "created": "Entegrasyon yapılandırıldı",
-        "updated": "Ayarlar değiştirildi",
-        "updatedSection": "“{{section}}” ayarları değiştirildi",
         "enabled": "Entegrasyon etkinleştirildi",
         "disabled": "Entegrasyon devre dışı bırakıldı",
         "deleted": "Ayarlar silindi",
-        "testPassed": "Bağlantı testi başarılı",
-        "testFailed": "Bağlantı testi başarısız",
-        "other": "Ayarlar değiştirildi"
+        "other": "Ayarlar değiştirildi",
+        "fieldsSet_zero": "{{count}} alan ayarlandı",
+        "fieldsSet_one": "{{count}} alan ayarlandı",
+        "fieldsSet_two": "{{count}} alan ayarlandı",
+        "fieldsSet_few": "{{count}} alan ayarlandı",
+        "fieldsSet_many": "{{count}} alan ayarlandı",
+        "fieldsSet_other": "{{count}} alan ayarlandı",
+        "fieldsChanged_zero": "{{count}} alan değiştirildi",
+        "fieldsChanged_one": "{{count}} alan değiştirildi",
+        "fieldsChanged_two": "{{count}} alan değiştirildi",
+        "fieldsChanged_few": "{{count}} alan değiştirildi",
+        "fieldsChanged_many": "{{count}} alan değiştirildi",
+        "fieldsChanged_other": "{{count}} alan değiştirildi",
+        "fieldsDeleted_zero": "{{count}} alan silindi",
+        "fieldsDeleted_one": "{{count}} alan silindi",
+        "fieldsDeleted_two": "{{count}} alan silindi",
+        "fieldsDeleted_few": "{{count}} alan silindi",
+        "fieldsDeleted_many": "{{count}} alan silindi",
+        "fieldsDeleted_other": "{{count}} alan silindi"
+      },
+      "types": {
+        "created": "Ayarlanan alanlar",
+        "updated": "Değiştirilen alanlar",
+        "enabled": "Entegrasyon etkinleştirildi",
+        "disabled": "Entegrasyon devre dışı bırakıldı",
+        "deleted": "Ayarlar silindi"
       },
       "secret": {
-        "set": "değer ayarlandı",
-        "replaced": "değer değiştirildi",
-        "removed": "değer kaldırıldı",
-        "hidden": "değer gizlendi"
+        "set": "Değer ayarlandı",
+        "replaced": "Değer değiştirildi",
+        "removed": "Değer kaldırıldı",
+        "hidden": "Değer gizlendi"
       },
       "actors": {
-        "job": "Zamanlanmış görev",
         "system": "Sistem",
-        "apiKey": "API anahtarı “{{name}}”",
         "unknownUser": "Silinmiş kullanıcı"
       },
       "fields": {
         "title": "Başlık"
       },
       "truncated": "(kısaltıldı)",
-      "moreFields": "+{{count}} daha"
+      "pageTitle": "Entegrasyon Değişiklik Geçmişi",
+      "pageSubtitle": "Entegrasyon ayarlarını kimin ve ne zaman değiştirdiği.",
+      "emptyFiltered": "Filtrelerle eşleşen değişiklik yok",
+      "search": "Ara",
+      "sort": {
+        "tooltip": "Sırala",
+        "asc": "Artan",
+        "desc": "Azalan"
+      },
+      "columns": {
+        "time": "Zaman",
+        "integration": "Entegrasyon",
+        "event": "Olay",
+        "author": "Değiştiren",
+        "fields": "Alanlar"
+      },
+      "filters": {
+        "integration": "Entegrasyon",
+        "event": "Olay",
+        "period": "Tarih",
+        "clearAll": "Tümünü temizle",
+        "add": "Filtre ekle"
+      },
+      "detail": {
+        "title": "Değişiklik ayrıntıları",
+        "general": "Genel",
+        "metadata": "Meta veriler",
+        "changes": "Değişiklikler",
+        "integration": "Entegrasyon",
+        "author": "Değiştiren",
+        "time": "Zaman",
+        "ip": "IP adresi",
+        "userAgent": "İstemci",
+        "requestId": "İstek ID'si",
+        "notFound": "Değişiklik bulunamadı",
+        "copyJson": "JSON olarak kopyala",
+        "copied": "Panoya kopyalandı",
+        "copyFailed": "Panoya kopyalanamadı"
+      }
     }
   }
 }

@@ -148,16 +148,43 @@
       "title": "سجل التغييرات",
       "empty": "لا توجد تغييرات بعد",
       "viewAll": "عرض الكل",
+      "by": "بواسطة",
+      "shown_zero": "عرض {{shown}} من أصل {{count}} تغييرات",
+      "shown_one": "عرض {{shown}} من أصل {{count}} تغيير",
+      "shown_two": "عرض {{shown}} من أصل {{count}} تغييرين",
+      "shown_few": "عرض {{shown}} من أصل {{count}} تغييرات",
+      "shown_many": "عرض {{shown}} من أصل {{count}} تغييرًا",
+      "shown_other": "عرض {{shown}} من أصل {{count}} تغيير",
       "events": {
-        "created": "تمت تهيئة التكامل",
-        "updated": "تم تغيير الإعدادات",
-        "updatedSection": "تم تغيير إعدادات «{{section}}»",
         "enabled": "تم تمكين التكامل",
         "disabled": "تم تعطيل التكامل",
         "deleted": "تم حذف الإعدادات",
-        "testPassed": "نجح اختبار الاتصال",
-        "testFailed": "فشل اختبار الاتصال",
-        "other": "تم تغيير الإعدادات"
+        "other": "تم تغيير الإعدادات",
+        "fieldsSet_zero": "تم تعيين {{count}} حقول",
+        "fieldsSet_one": "تم تعيين {{count}} حقل",
+        "fieldsSet_two": "تم تعيين {{count}} حقلين",
+        "fieldsSet_few": "تم تعيين {{count}} حقول",
+        "fieldsSet_many": "تم تعيين {{count}} حقلًا",
+        "fieldsSet_other": "تم تعيين {{count}} حقل",
+        "fieldsChanged_zero": "تم تغيير {{count}} حقول",
+        "fieldsChanged_one": "تم تغيير {{count}} حقل",
+        "fieldsChanged_two": "تم تغيير {{count}} حقلين",
+        "fieldsChanged_few": "تم تغيير {{count}} حقول",
+        "fieldsChanged_many": "تم تغيير {{count}} حقلًا",
+        "fieldsChanged_other": "تم تغيير {{count}} حقل",
+        "fieldsDeleted_zero": "تم حذف {{count}} حقول",
+        "fieldsDeleted_one": "تم حذف {{count}} حقل",
+        "fieldsDeleted_two": "تم حذف {{count}} حقلين",
+        "fieldsDeleted_few": "تم حذف {{count}} حقول",
+        "fieldsDeleted_many": "تم حذف {{count}} حقلًا",
+        "fieldsDeleted_other": "تم حذف {{count}} حقل"
+      },
+      "types": {
+        "created": "الحقول المعيّنة",
+        "updated": "الحقول المتغيرة",
+        "enabled": "تم تمكين التكامل",
+        "disabled": "تم تعطيل التكامل",
+        "deleted": "تم حذف الإعدادات"
       },
       "secret": {
         "set": "تم تعيين القيمة",
@@ -166,16 +193,52 @@
         "hidden": "القيمة مخفية"
       },
       "actors": {
-        "job": "مهمة مجدولة",
         "system": "النظام",
-        "apiKey": "مفتاح API «{{name}}»",
         "unknownUser": "مستخدم محذوف"
       },
       "fields": {
         "title": "العنوان"
       },
       "truncated": "(مختصر)",
-      "moreFields": "+{{count}} أخرى"
+      "pageTitle": "سجل تغييرات التكامل",
+      "pageSubtitle": "من غيّر إعدادات التكامل ومتى.",
+      "emptyFiltered": "لا توجد تغييرات مطابقة للمرشحات",
+      "search": "بحث",
+      "sort": {
+        "tooltip": "فرز",
+        "asc": "تصاعدي",
+        "desc": "تنازلي"
+      },
+      "columns": {
+        "time": "الوقت",
+        "integration": "التكامل",
+        "event": "الحدث",
+        "author": "المنفّذ",
+        "fields": "الحقول"
+      },
+      "filters": {
+        "integration": "التكامل",
+        "event": "الحدث",
+        "period": "التاريخ",
+        "clearAll": "مسح الكل",
+        "add": "إضافة مرشح"
+      },
+      "detail": {
+        "title": "تفاصيل التغيير",
+        "general": "عام",
+        "metadata": "البيانات الوصفية",
+        "changes": "التغييرات",
+        "integration": "التكامل",
+        "author": "المنفّذ",
+        "time": "الوقت",
+        "ip": "عنوان IP",
+        "userAgent": "العميل",
+        "requestId": "ID الطلب",
+        "notFound": "لم يتم العثور على التغيير",
+        "copyJson": "نسخ بصيغة JSON",
+        "copied": "تم النسخ إلى الحافظة",
+        "copyFailed": "تعذّر النسخ إلى الحافظة"
+      }
     }
   }
 }

@@ -148,34 +148,97 @@
       "title": "Өөрчлөлтийн түүх",
       "empty": "Одоогоор өөрчлөлт алга",
       "viewAll": "Бүгдийг харах",
+      "by": "Өөрчилсөн",
+      "shown_zero": "Нийт {{count}} өөрчлөлтөөс {{shown}}-г харуулж байна",
+      "shown_one": "Нийт {{count}} өөрчлөлтөөс {{shown}}-г харуулж байна",
+      "shown_two": "Нийт {{count}} өөрчлөлтөөс {{shown}}-г харуулж байна",
+      "shown_few": "Нийт {{count}} өөрчлөлтөөс {{shown}}-г харуулж байна",
+      "shown_many": "Нийт {{count}} өөрчлөлтөөс {{shown}}-г харуулж байна",
+      "shown_other": "Нийт {{count}} өөрчлөлтөөс {{shown}}-г харуулж байна",
       "events": {
-        "created": "Интеграци тохируулагдлаа",
-        "updated": "Тохиргоо өөрчлөгдлөө",
-        "updatedSection": "“{{section}}” тохиргоо өөрчлөгдлөө",
         "enabled": "Интеграци идэвхжлээ",
         "disabled": "Интеграци идэвхгүй боллоо",
         "deleted": "Тохиргоо устгагдлаа",
-        "testPassed": "Холболтын шалгалт амжилттай боллоо",
-        "testFailed": "Холболтын шалгалт амжилтгүй боллоо",
-        "other": "Тохиргоо өөрчлөгдлөө"
+        "other": "Тохиргоо өөрчлөгдлөө",
+        "fieldsSet_zero": "{{count}} талбар тохируулсан",
+        "fieldsSet_one": "{{count}} талбар тохируулсан",
+        "fieldsSet_two": "{{count}} талбар тохируулсан",
+        "fieldsSet_few": "{{count}} талбар тохируулсан",
+        "fieldsSet_many": "{{count}} талбар тохируулсан",
+        "fieldsSet_other": "{{count}} талбар тохируулсан",
+        "fieldsChanged_zero": "{{count}} талбар өөрчлөгдсөн",
+        "fieldsChanged_one": "{{count}} талбар өөрчлөгдсөн",
+        "fieldsChanged_two": "{{count}} талбар өөрчлөгдсөн",
+        "fieldsChanged_few": "{{count}} талбар өөрчлөгдсөн",
+        "fieldsChanged_many": "{{count}} талбар өөрчлөгдсөн",
+        "fieldsChanged_other": "{{count}} талбар өөрчлөгдсөн",
+        "fieldsDeleted_zero": "{{count}} талбар устгагдсан",
+        "fieldsDeleted_one": "{{count}} талбар устгагдсан",
+        "fieldsDeleted_two": "{{count}} талбар устгагдсан",
+        "fieldsDeleted_few": "{{count}} талбар устгагдсан",
+        "fieldsDeleted_many": "{{count}} талбар устгагдсан",
+        "fieldsDeleted_other": "{{count}} талбар устгагдсан"
+      },
+      "types": {
+        "created": "Тохируулагдсан талбарууд",
+        "updated": "Өөрчлөгдсөн талбарууд",
+        "enabled": "Интеграци идэвхжлээ",
+        "disabled": "Интеграци идэвхгүй боллоо",
+        "deleted": "Тохиргоо устгагдлаа"
       },
       "secret": {
-        "set": "утга тохируулсан",
-        "replaced": "утга солигдсон",
-        "removed": "утга устгагдсан",
-        "hidden": "утга нуугдсан"
+        "set": "Утга тохируулсан",
+        "replaced": "Утга солигдсон",
+        "removed": "Утга устгагдсан",
+        "hidden": "Утга нуугдсан"
       },
       "actors": {
-        "job": "Хуваарьт ажил",
         "system": "Систем",
-        "apiKey": "API түлхүүр “{{name}}”",
         "unknownUser": "Устгагдсан хэрэглэгч"
       },
       "fields": {
         "title": "Гарчиг"
       },
       "truncated": "(товчилсон)",
-      "moreFields": "+{{count}} бусад"
+      "pageTitle": "Интеграцийн өөрчлөлтийн түүх",
+      "pageSubtitle": "Интеграцийн тохиргоог хэн, хэзээ өөрчилсөн.",
+      "emptyFiltered": "Шүүлтүүрт тохирох өөрчлөлт алга",
+      "search": "Хайх",
+      "sort": {
+        "tooltip": "Эрэмбэлэх",
+        "asc": "Өсөхөөр",
+        "desc": "Буурахаар"
+      },
+      "columns": {
+        "time": "Цаг",
+        "integration": "Интеграци",
+        "event": "Үйл явдал",
+        "author": "Өөрчилсөн",
+        "fields": "Талбарууд"
+      },
+      "filters": {
+        "integration": "Интеграци",
+        "event": "Үйл явдал",
+        "period": "Огноо",
+        "clearAll": "Бүгдийг арилгах",
+        "add": "Шүүлтүүр нэмэх"
+      },
+      "detail": {
+        "title": "Өөрчлөлтийн дэлгэрэнгүй",
+        "general": "Ерөнхий",
+        "metadata": "Мета өгөгдөл",
+        "changes": "Өөрчлөлтүүд",
+        "integration": "Интеграци",
+        "author": "Өөрчилсөн",
+        "time": "Цаг",
+        "ip": "IP хаяг",
+        "userAgent": "Клиент",
+        "requestId": "Хүсэлтийн ID",
+        "notFound": "Өөрчлөлт олдсонгүй",
+        "copyJson": "JSON хэлбэрээр хуулах",
+        "copied": "Түр санах ойд хууллаа",
+        "copyFailed": "Түр санах ойд хуулж чадсангүй"
+      }
     }
   }
 }

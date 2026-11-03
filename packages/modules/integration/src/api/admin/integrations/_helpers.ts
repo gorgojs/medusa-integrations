@@ -66,6 +66,17 @@ export function changeActor(req: AuthenticatedMedusaRequest): IntegrationChangeA
 }
 
 /**
+ * The list filters of the change history. `q` is not a column: it becomes a case-insensitive
+ * match on the author (email or API key title), the `provider_id` and the provider identifier.
+ */
+export function changeFilters(filterable: Record<string, unknown>): Record<string, unknown> {
+  const { q, ...filters } = filterable
+  if (typeof q !== "string" || !q) return filters
+  const like = { $ilike: `%${q.replace(/[\\%_]/g, "\\$&")}%` }
+  return { ...filters, $or: [{ actor_label: like }, { provider_id: like }, { identifier: like }] }
+}
+
+/**
  * The requested fields plus `provider_id`, which `maskSecretValues` needs to find the descriptor.
  * Without it a request like `?fields=diff` would get back values that are secret now.
  */

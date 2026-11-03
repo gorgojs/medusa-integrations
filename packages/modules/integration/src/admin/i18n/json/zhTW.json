@@ -148,16 +148,43 @@
       "title": "變更記錄",
       "empty": "尚無變更",
       "viewAll": "查看全部",
+      "by": "操作者",
+      "shown_zero": "已顯示 {{shown}} / {{count}} 項變更",
+      "shown_one": "已顯示 {{shown}} / {{count}} 項變更",
+      "shown_two": "已顯示 {{shown}} / {{count}} 項變更",
+      "shown_few": "已顯示 {{shown}} / {{count}} 項變更",
+      "shown_many": "已顯示 {{shown}} / {{count}} 項變更",
+      "shown_other": "已顯示 {{shown}} / {{count}} 項變更",
       "events": {
-        "created": "整合已設定",
-        "updated": "設定已變更",
-        "updatedSection": "「{{section}}」設定已變更",
         "enabled": "整合已啟用",
         "disabled": "整合已停用",
         "deleted": "設定已刪除",
-        "testPassed": "連線測試通過",
-        "testFailed": "連線測試失敗",
-        "other": "設定已變更"
+        "other": "設定已變更",
+        "fieldsSet_zero": "已設定 {{count}} 個欄位",
+        "fieldsSet_one": "已設定 {{count}} 個欄位",
+        "fieldsSet_two": "已設定 {{count}} 個欄位",
+        "fieldsSet_few": "已設定 {{count}} 個欄位",
+        "fieldsSet_many": "已設定 {{count}} 個欄位",
+        "fieldsSet_other": "已設定 {{count}} 個欄位",
+        "fieldsChanged_zero": "已變更 {{count}} 個欄位",
+        "fieldsChanged_one": "已變更 {{count}} 個欄位",
+        "fieldsChanged_two": "已變更 {{count}} 個欄位",
+        "fieldsChanged_few": "已變更 {{count}} 個欄位",
+        "fieldsChanged_many": "已變更 {{count}} 個欄位",
+        "fieldsChanged_other": "已變更 {{count}} 個欄位",
+        "fieldsDeleted_zero": "已刪除 {{count}} 個欄位",
+        "fieldsDeleted_one": "已刪除 {{count}} 個欄位",
+        "fieldsDeleted_two": "已刪除 {{count}} 個欄位",
+        "fieldsDeleted_few": "已刪除 {{count}} 個欄位",
+        "fieldsDeleted_many": "已刪除 {{count}} 個欄位",
+        "fieldsDeleted_other": "已刪除 {{count}} 個欄位"
+      },
+      "types": {
+        "created": "已設定欄位",
+        "updated": "已變更欄位",
+        "enabled": "整合已啟用",
+        "disabled": "整合已停用",
+        "deleted": "設定已刪除"
       },
       "secret": {
         "set": "值已設定",
@@ -166,16 +193,52 @@
         "hidden": "值已隱藏"
       },
       "actors": {
-        "job": "排程工作",
         "system": "系統",
-        "apiKey": "API 金鑰「{{name}}」",
         "unknownUser": "已刪除的使用者"
       },
       "fields": {
         "title": "標題"
       },
       "truncated": "（已截斷）",
-      "moreFields": "還有 {{count}} 項"
+      "pageTitle": "整合變更記錄",
+      "pageSubtitle": "誰變更了整合設定，以及變更時間。",
+      "emptyFiltered": "沒有符合篩選條件的變更",
+      "search": "搜尋",
+      "sort": {
+        "tooltip": "排序",
+        "asc": "升序",
+        "desc": "降序"
+      },
+      "columns": {
+        "time": "時間",
+        "integration": "整合",
+        "event": "事件",
+        "author": "操作者",
+        "fields": "欄位"
+      },
+      "filters": {
+        "integration": "整合",
+        "event": "事件",
+        "period": "日期",
+        "clearAll": "全部清除",
+        "add": "新增篩選"
+      },
+      "detail": {
+        "title": "變更詳情",
+        "general": "一般",
+        "metadata": "中繼資料",
+        "changes": "變更",
+        "integration": "整合",
+        "author": "操作者",
+        "time": "時間",
+        "ip": "IP 位址",
+        "userAgent": "用戶端",
+        "requestId": "請求 ID",
+        "notFound": "找不到該變更",
+        "copyJson": "複製為 JSON",
+        "copied": "已複製到剪貼簿",
+        "copyFailed": "無法複製到剪貼簿"
+      }
     }
   }
 }

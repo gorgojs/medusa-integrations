@@ -1,6 +1,6 @@
 import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
-import { service, maskSecretValues, withProviderId } from "../_helpers"
+import { service, maskSecretValues, withProviderId, changeFilters } from "../_helpers"
 import type { AdminIntegrationChangeListResponse } from "../../../../types"
 
 /** The change history of every integration, newest first. Read-only. */
@@ -15,7 +15,7 @@ export const GET = async (
     entity: "integration_change",
     ...req.queryConfig,
     fields: withProviderId(req.queryConfig.fields),
-    filters: req.filterableFields,
+    filters: changeFilters(req.filterableFields),
   })
 
   res.json({

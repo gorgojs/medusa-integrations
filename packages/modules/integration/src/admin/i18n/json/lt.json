@@ -148,34 +148,97 @@
       "title": "Pakeitimų istorija",
       "empty": "Pakeitimų dar nėra",
       "viewAll": "Peržiūrėti viską",
+      "by": "Autorius",
+      "shown_zero": "Rodoma {{shown}} iš {{count}} pakeitimų",
+      "shown_one": "Rodoma {{shown}} iš {{count}} pakeitimo",
+      "shown_two": "Rodoma {{shown}} iš {{count}} pakeitimų",
+      "shown_few": "Rodoma {{shown}} iš {{count}} pakeitimų",
+      "shown_many": "Rodoma {{shown}} iš {{count}} pakeitimų",
+      "shown_other": "Rodoma {{shown}} iš {{count}} pakeitimų",
       "events": {
-        "created": "Integracija sukonfigūruota",
-        "updated": "Nustatymai pakeisti",
-        "updatedSection": "Nustatymai „{{section}}“ pakeisti",
         "enabled": "Integracija įjungta",
         "disabled": "Integracija išjungta",
         "deleted": "Nustatymai ištrinti",
-        "testPassed": "Ryšio patikra sėkminga",
-        "testFailed": "Ryšio patikra nepavyko",
-        "other": "Nustatymai pakeisti"
+        "other": "Nustatymai pakeisti",
+        "fieldsSet_zero": "Nustatyta {{count}} laukų",
+        "fieldsSet_one": "Nustatytas {{count}} laukas",
+        "fieldsSet_two": "Nustatyta {{count}} laukų",
+        "fieldsSet_few": "Nustatyti {{count}} laukai",
+        "fieldsSet_many": "Nustatyta {{count}} laukų",
+        "fieldsSet_other": "Nustatyta {{count}} laukų",
+        "fieldsChanged_zero": "Pakeista {{count}} laukų",
+        "fieldsChanged_one": "Pakeistas {{count}} laukas",
+        "fieldsChanged_two": "Pakeista {{count}} laukų",
+        "fieldsChanged_few": "Pakeisti {{count}} laukai",
+        "fieldsChanged_many": "Pakeista {{count}} laukų",
+        "fieldsChanged_other": "Pakeista {{count}} laukų",
+        "fieldsDeleted_zero": "Ištrinta {{count}} laukų",
+        "fieldsDeleted_one": "Ištrintas {{count}} laukas",
+        "fieldsDeleted_two": "Ištrinta {{count}} laukų",
+        "fieldsDeleted_few": "Ištrinti {{count}} laukai",
+        "fieldsDeleted_many": "Ištrinta {{count}} laukų",
+        "fieldsDeleted_other": "Ištrinta {{count}} laukų"
+      },
+      "types": {
+        "created": "Nustatyti laukai",
+        "updated": "Pakeisti laukai",
+        "enabled": "Integracija įjungta",
+        "disabled": "Integracija išjungta",
+        "deleted": "Nustatymai ištrinti"
       },
       "secret": {
-        "set": "reikšmė nustatyta",
-        "replaced": "reikšmė pakeista",
-        "removed": "reikšmė pašalinta",
-        "hidden": "reikšmė paslėpta"
+        "set": "Reikšmė nustatyta",
+        "replaced": "Reikšmė pakeista",
+        "removed": "Reikšmė pašalinta",
+        "hidden": "Reikšmė paslėpta"
       },
       "actors": {
-        "job": "Suplanuota užduotis",
         "system": "Sistema",
-        "apiKey": "API raktas „{{name}}“",
         "unknownUser": "Ištrintas naudotojas"
       },
       "fields": {
         "title": "Pavadinimas"
       },
       "truncated": "(sutrumpinta)",
-      "moreFields": "dar +{{count}}"
+      "pageTitle": "Integracijų pakeitimų istorija",
+      "pageSubtitle": "Kas ir kada pakeitė integracijų nustatymus.",
+      "emptyFiltered": "Nėra pakeitimų, atitinkančių filtrus",
+      "search": "Paieška",
+      "sort": {
+        "tooltip": "Rikiuoti",
+        "asc": "Didėjimo tvarka",
+        "desc": "Mažėjimo tvarka"
+      },
+      "columns": {
+        "time": "Laikas",
+        "integration": "Integracija",
+        "event": "Įvykis",
+        "author": "Autorius",
+        "fields": "Laukai"
+      },
+      "filters": {
+        "integration": "Integracija",
+        "event": "Įvykis",
+        "period": "Data",
+        "clearAll": "Išvalyti viską",
+        "add": "Pridėti filtrą"
+      },
+      "detail": {
+        "title": "Pakeitimo informacija",
+        "general": "Bendra",
+        "metadata": "Metaduomenys",
+        "changes": "Pakeitimai",
+        "integration": "Integracija",
+        "author": "Autorius",
+        "time": "Laikas",
+        "ip": "IP adresas",
+        "userAgent": "Klientas",
+        "requestId": "Užklausos ID",
+        "notFound": "Pakeitimas nerastas",
+        "copyJson": "Kopijuoti kaip JSON",
+        "copied": "Nukopijuota į iškarpinę",
+        "copyFailed": "Nepavyko nukopijuoti į iškarpinę"
+      }
     }
   }
 }

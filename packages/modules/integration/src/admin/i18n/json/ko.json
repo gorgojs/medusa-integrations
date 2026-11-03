@@ -148,16 +148,43 @@
       "title": "변경 기록",
       "empty": "아직 변경 사항이 없습니다",
       "viewAll": "모두 보기",
+      "by": "변경자",
+      "shown_zero": "전체 {{count}}개 중 {{shown}}개 변경 사항 표시됨",
+      "shown_one": "전체 {{count}}개 중 {{shown}}개 변경 사항 표시됨",
+      "shown_two": "전체 {{count}}개 중 {{shown}}개 변경 사항 표시됨",
+      "shown_few": "전체 {{count}}개 중 {{shown}}개 변경 사항 표시됨",
+      "shown_many": "전체 {{count}}개 중 {{shown}}개 변경 사항 표시됨",
+      "shown_other": "전체 {{count}}개 중 {{shown}}개 변경 사항 표시됨",
       "events": {
-        "created": "통합이 구성됨",
-        "updated": "설정이 변경됨",
-        "updatedSection": "“{{section}}” 설정이 변경됨",
         "enabled": "통합이 활성화됨",
         "disabled": "통합이 비활성화됨",
         "deleted": "설정이 삭제됨",
-        "testPassed": "연결 테스트 성공",
-        "testFailed": "연결 테스트 실패",
-        "other": "설정이 변경됨"
+        "other": "설정이 변경됨",
+        "fieldsSet_zero": "필드 {{count}}개 설정됨",
+        "fieldsSet_one": "필드 {{count}}개 설정됨",
+        "fieldsSet_two": "필드 {{count}}개 설정됨",
+        "fieldsSet_few": "필드 {{count}}개 설정됨",
+        "fieldsSet_many": "필드 {{count}}개 설정됨",
+        "fieldsSet_other": "필드 {{count}}개 설정됨",
+        "fieldsChanged_zero": "필드 {{count}}개 변경됨",
+        "fieldsChanged_one": "필드 {{count}}개 변경됨",
+        "fieldsChanged_two": "필드 {{count}}개 변경됨",
+        "fieldsChanged_few": "필드 {{count}}개 변경됨",
+        "fieldsChanged_many": "필드 {{count}}개 변경됨",
+        "fieldsChanged_other": "필드 {{count}}개 변경됨",
+        "fieldsDeleted_zero": "필드 {{count}}개 삭제됨",
+        "fieldsDeleted_one": "필드 {{count}}개 삭제됨",
+        "fieldsDeleted_two": "필드 {{count}}개 삭제됨",
+        "fieldsDeleted_few": "필드 {{count}}개 삭제됨",
+        "fieldsDeleted_many": "필드 {{count}}개 삭제됨",
+        "fieldsDeleted_other": "필드 {{count}}개 삭제됨"
+      },
+      "types": {
+        "created": "설정된 필드",
+        "updated": "변경된 필드",
+        "enabled": "통합이 활성화됨",
+        "disabled": "통합이 비활성화됨",
+        "deleted": "설정이 삭제됨"
       },
       "secret": {
         "set": "값 설정됨",
@@ -166,16 +193,52 @@
         "hidden": "값 숨김"
       },
       "actors": {
-        "job": "예약된 작업",
         "system": "시스템",
-        "apiKey": "API 키 “{{name}}”",
         "unknownUser": "삭제된 사용자"
       },
       "fields": {
         "title": "제목"
       },
       "truncated": "(축약됨)",
-      "moreFields": "+{{count}}개 더"
+      "pageTitle": "통합 변경 기록",
+      "pageSubtitle": "통합 설정을 누가 언제 변경했는지 보여줍니다.",
+      "emptyFiltered": "필터와 일치하는 변경 사항이 없습니다",
+      "search": "검색",
+      "sort": {
+        "tooltip": "정렬",
+        "asc": "오름차순",
+        "desc": "내림차순"
+      },
+      "columns": {
+        "time": "시간",
+        "integration": "통합",
+        "event": "이벤트",
+        "author": "변경자",
+        "fields": "필드"
+      },
+      "filters": {
+        "integration": "통합",
+        "event": "이벤트",
+        "period": "날짜",
+        "clearAll": "모두 지우기",
+        "add": "필터 추가"
+      },
+      "detail": {
+        "title": "변경 상세",
+        "general": "일반",
+        "metadata": "메타데이터",
+        "changes": "변경 내용",
+        "integration": "통합",
+        "author": "변경자",
+        "time": "시간",
+        "ip": "IP 주소",
+        "userAgent": "클라이언트",
+        "requestId": "요청 ID",
+        "notFound": "변경 사항을 찾을 수 없습니다",
+        "copyJson": "JSON으로 복사",
+        "copied": "클립보드에 복사됨",
+        "copyFailed": "클립보드에 복사하지 못했습니다"
+      }
     }
   }
 }

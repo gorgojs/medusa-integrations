@@ -6,6 +6,7 @@ import { useState } from "react"
  * Renders an integration's `icon`. The value is any browser-loadable `<img src>` string —
  * a data URI (the descriptor default), an absolute URL, or a backend-served path. When unset
  * (or the image fails to load) it falls back to a generic mark inside a framed box.
+ * `xsmall` is the framed icon of a compact table row; `small` and `base` only size the unframed one.
  */
 export const IntegrationIcon = ({
   src,
@@ -15,10 +16,11 @@ export const IntegrationIcon = ({
 }: {
   src?: string | null
   alt?: string
-  size?: "small" | "base"
+  size?: "xsmall" | "small" | "base"
   framed?: boolean
 }) => {
-  const dim = size === "small" ? "h-6 w-6" : "h-10 w-10"
+  const dim = size === "small" || size === "xsmall" ? "h-6 w-6" : "h-10 w-10"
+  const frame = size === "xsmall" ? "rounded-md w-6 h-6" : "rounded-lg w-12 h-12"
   const [errored, setErrored] = useState(false)
   const showImage = !!src && !errored
 
@@ -39,11 +41,13 @@ export const IntegrationIcon = ({
         <img
           src={src!}
           alt={alt}
-          className="rounded-lg object-cover border shadow-xs w-12 h-12"
+          className={clx("shrink-0 object-cover border shadow-xs", frame)}
           onError={() => setErrored(true)}
         />
       ) : (
-        <PuzzleSolid className="rounded-lg object-cover border shadow-xs w-12 h-12 p-3 text-ui-fg-subtle" />
+        <PuzzleSolid
+          className={clx("shrink-0 object-cover border shadow-xs text-ui-fg-subtle", frame, size === "xsmall" ? "p-1" : "p-3")}
+        />
       )}
     </>
   )
