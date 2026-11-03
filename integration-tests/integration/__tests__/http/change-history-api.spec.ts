@@ -34,7 +34,6 @@ medusaIntegrationTestRunner({
       const id: string = await svc.recordChange({
         provider_id,
         change_type: "updated",
-        outcome: "succeeded",
         actor: { type: "user", id: "user_x", ip: "10.0.0.1", user_agent: "jest", request_id: "req_1" },
         actor_label: "x@it.test",
         occurred_at,
@@ -86,10 +85,10 @@ medusaIntegrationTestRunner({
         expect((await call("/admin/integrations/changes?limit=500")).status).toBe(400)
       })
 
-      it("filters by provider_id, change_type, outcome, actor_id and occurred_at, alone and combined", async () => {
+      it("filters by provider_id, change_type, actor_id and occurred_at, alone and combined", async () => {
         await record(A, day(1), { change_type: "created" })
-        await record(A, day(2), { outcome: "failed", change_type: "connection_tested" })
-        await record(B, day(3), { actor: { type: "user", id: "user_y" } })
+        await record(A, day(2), { change_type: "enabled" })
+        await record(B, day(3), { actor: { type: "user", id: "user_y" }, actor_label: "y@it.test" })
         await record(B, day(4), { change_type: "disabled" })
 
         const count = async (qs: string) => {
@@ -100,12 +99,32 @@ medusaIntegrationTestRunner({
         expect(await count(`provider_id=${A}`)).toBe(2)
         expect(await count(`provider_id[]=${A}&provider_id[]=${B}`)).toBe(4)
         expect(await count("change_type=created")).toBe(1)
-        expect(await count("outcome=failed")).toBe(1)
         expect(await count("actor_id=user_y")).toBe(1)
         expect(await count("actor_id=user_x")).toBe(3)
         expect(await count(`occurred_at[$gte]=${day(3).toISOString()}`)).toBe(2)
         expect(await count(`provider_id=${B}&actor_id=user_x&occurred_at[$gte]=${day(2).toISOString()}`)).toBe(1)
-        expect(await count(`provider_id=${A}&outcome=succeeded`)).toBe(1)
+        expect(await count(`provider_id=${A}&change_type=enabled`)).toBe(1)
+      })
+
+      it("searches the author and the integration, case-insensitively and literally", async () => {
+        await record(A, day(1))
+        await record(B, day(2), { actor: { type: "user", id: "user_y" }, actor_label: "Anna@it.test" })
+
+        const ids = async (qs: string) => (await call(`/admin/integrations/changes?${qs}`)).data.count
+        expect(await ids("q=anna")).toBe(1)
+        expect(await ids(`q=${B.slice(-3)}`)).toBe(1)
+        expect(await ids("q=it.test")).toBe(2)
+        // LIKE wildcards are matched as text, not as patterns.
+        expect(await ids("q=%25")).toBe(0)
+        expect(await ids(`q=anna&provider_id=${A}`)).toBe(0)
+        expect((await call(`/admin/integrations/${B}/changes?q=x@`)).data.count).toBe(0)
+      })
+
+      it("sorts by the author", async () => {
+        await record(A, day(1), { actor_label: "b@it.test" })
+        await record(A, day(2), { actor_label: "a@it.test" })
+        const res = await call("/admin/integrations/changes?order=actor_label")
+        expect(res.data.integration_changes.map((c: any) => c.actor_label)).toEqual(["a@it.test", "b@it.test"])
       })
 
       it("leaves ip, user_agent and request_id out of list items", async () => {
