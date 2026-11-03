@@ -148,34 +148,97 @@
       "title": "Cronologia delle modifiche",
       "empty": "Nessuna modifica per ora",
       "viewAll": "Mostra tutto",
+      "by": "Autore",
+      "shown_zero": "{{shown}} di {{count}} modifiche mostrate",
+      "shown_one": "{{shown}} di {{count}} modifica mostrata",
+      "shown_two": "{{shown}} di {{count}} modifiche mostrate",
+      "shown_few": "{{shown}} di {{count}} modifiche mostrate",
+      "shown_many": "{{shown}} di {{count}} modifiche mostrate",
+      "shown_other": "{{shown}} di {{count}} modifiche mostrate",
       "events": {
-        "created": "Integrazione configurata",
-        "updated": "Impostazioni modificate",
-        "updatedSection": "Impostazioni di «{{section}}» modificate",
         "enabled": "Integrazione abilitata",
         "disabled": "Integrazione disabilitata",
         "deleted": "Impostazioni eliminate",
-        "testPassed": "Test di connessione riuscito",
-        "testFailed": "Test di connessione non riuscito",
-        "other": "Impostazioni modificate"
+        "other": "Impostazioni modificate",
+        "fieldsSet_zero": "{{count}} campi impostati",
+        "fieldsSet_one": "{{count}} campo impostato",
+        "fieldsSet_two": "{{count}} campi impostati",
+        "fieldsSet_few": "{{count}} campi impostati",
+        "fieldsSet_many": "{{count}} campi impostati",
+        "fieldsSet_other": "{{count}} campi impostati",
+        "fieldsChanged_zero": "{{count}} campi modificati",
+        "fieldsChanged_one": "{{count}} campo modificato",
+        "fieldsChanged_two": "{{count}} campi modificati",
+        "fieldsChanged_few": "{{count}} campi modificati",
+        "fieldsChanged_many": "{{count}} campi modificati",
+        "fieldsChanged_other": "{{count}} campi modificati",
+        "fieldsDeleted_zero": "{{count}} campi eliminati",
+        "fieldsDeleted_one": "{{count}} campo eliminato",
+        "fieldsDeleted_two": "{{count}} campi eliminati",
+        "fieldsDeleted_few": "{{count}} campi eliminati",
+        "fieldsDeleted_many": "{{count}} campi eliminati",
+        "fieldsDeleted_other": "{{count}} campi eliminati"
+      },
+      "types": {
+        "created": "Campi impostati",
+        "updated": "Campi modificati",
+        "enabled": "Integrazione abilitata",
+        "disabled": "Integrazione disabilitata",
+        "deleted": "Impostazioni eliminate"
       },
       "secret": {
-        "set": "valore impostato",
-        "replaced": "valore sostituito",
-        "removed": "valore rimosso",
-        "hidden": "valore nascosto"
+        "set": "Valore impostato",
+        "replaced": "Valore sostituito",
+        "removed": "Valore rimosso",
+        "hidden": "Valore nascosto"
       },
       "actors": {
-        "job": "Attività pianificata",
         "system": "Sistema",
-        "apiKey": "Chiave API «{{name}}»",
         "unknownUser": "Utente eliminato"
       },
       "fields": {
         "title": "Titolo"
       },
       "truncated": "(abbreviato)",
-      "moreFields": "+{{count}} altri"
+      "pageTitle": "Cronologia delle modifiche alle integrazioni",
+      "pageSubtitle": "Chi ha modificato le impostazioni delle integrazioni e quando.",
+      "emptyFiltered": "Nessuna modifica corrisponde ai filtri",
+      "search": "Cerca",
+      "sort": {
+        "tooltip": "Ordina",
+        "asc": "Crescente",
+        "desc": "Decrescente"
+      },
+      "columns": {
+        "time": "Ora",
+        "integration": "Integrazione",
+        "event": "Evento",
+        "author": "Autore",
+        "fields": "Campi"
+      },
+      "filters": {
+        "integration": "Integrazione",
+        "event": "Evento",
+        "period": "Data",
+        "clearAll": "Cancella tutto",
+        "add": "Aggiungi filtro"
+      },
+      "detail": {
+        "title": "Dettagli della modifica",
+        "general": "Generale",
+        "metadata": "Metadati",
+        "changes": "Modifiche",
+        "integration": "Integrazione",
+        "author": "Autore",
+        "time": "Ora",
+        "ip": "Indirizzo IP",
+        "userAgent": "Client",
+        "requestId": "ID richiesta",
+        "notFound": "Modifica non trovata",
+        "copyJson": "Copia come JSON",
+        "copied": "Copiato negli appunti",
+        "copyFailed": "Impossibile copiare negli appunti"
+      }
     }
   }
 }

@@ -148,16 +148,43 @@
       "title": "היסטוריית שינויים",
       "empty": "אין שינויים עדיין",
       "viewAll": "הצג הכול",
+      "by": "על ידי",
+      "shown_zero": "מוצגים {{shown}} מתוך {{count}} שינויים",
+      "shown_one": "מוצגים {{shown}} מתוך {{count}} שינוי",
+      "shown_two": "מוצגים {{shown}} מתוך {{count}} שינויים",
+      "shown_few": "מוצגים {{shown}} מתוך {{count}} שינויים",
+      "shown_many": "מוצגים {{shown}} מתוך {{count}} שינויים",
+      "shown_other": "מוצגים {{shown}} מתוך {{count}} שינויים",
       "events": {
-        "created": "האינטגרציה הוגדרה",
-        "updated": "ההגדרות שונו",
-        "updatedSection": "ההגדרות של “{{section}}” שונו",
         "enabled": "האינטגרציה הופעלה",
         "disabled": "האינטגרציה הושבתה",
         "deleted": "ההגדרות נמחקו",
-        "testPassed": "בדיקת החיבור עברה בהצלחה",
-        "testFailed": "בדיקת החיבור נכשלה",
-        "other": "ההגדרות שונו"
+        "other": "ההגדרות שונו",
+        "fieldsSet_zero": "{{count}} שדות הוגדרו",
+        "fieldsSet_one": "{{count}} שדה הוגדר",
+        "fieldsSet_two": "{{count}} שדות הוגדרו",
+        "fieldsSet_few": "{{count}} שדות הוגדרו",
+        "fieldsSet_many": "{{count}} שדות הוגדרו",
+        "fieldsSet_other": "{{count}} שדות הוגדרו",
+        "fieldsChanged_zero": "{{count}} שדות שונו",
+        "fieldsChanged_one": "{{count}} שדה שונה",
+        "fieldsChanged_two": "{{count}} שדות שונו",
+        "fieldsChanged_few": "{{count}} שדות שונו",
+        "fieldsChanged_many": "{{count}} שדות שונו",
+        "fieldsChanged_other": "{{count}} שדות שונו",
+        "fieldsDeleted_zero": "{{count}} שדות נמחקו",
+        "fieldsDeleted_one": "{{count}} שדה נמחק",
+        "fieldsDeleted_two": "{{count}} שדות נמחקו",
+        "fieldsDeleted_few": "{{count}} שדות נמחקו",
+        "fieldsDeleted_many": "{{count}} שדות נמחקו",
+        "fieldsDeleted_other": "{{count}} שדות נמחקו"
+      },
+      "types": {
+        "created": "שדות שהוגדרו",
+        "updated": "שדות ששונו",
+        "enabled": "האינטגרציה הופעלה",
+        "disabled": "האינטגרציה הושבתה",
+        "deleted": "ההגדרות נמחקו"
       },
       "secret": {
         "set": "הערך הוגדר",
@@ -166,16 +193,52 @@
         "hidden": "הערך מוסתר"
       },
       "actors": {
-        "job": "משימה מתוזמנת",
         "system": "מערכת",
-        "apiKey": "מפתח API “{{name}}”",
         "unknownUser": "משתמש שנמחק"
       },
       "fields": {
         "title": "כותרת"
       },
       "truncated": "(קוצר)",
-      "moreFields": "+{{count}} נוספים"
+      "pageTitle": "היסטוריית שינויים באינטגרציות",
+      "pageSubtitle": "מי שינה את הגדרות האינטגרציות ומתי.",
+      "emptyFiltered": "אין שינויים שתואמים למסננים",
+      "search": "חיפוש",
+      "sort": {
+        "tooltip": "מיון",
+        "asc": "עולה",
+        "desc": "יורד"
+      },
+      "columns": {
+        "time": "זמן",
+        "integration": "אינטגרציה",
+        "event": "אירוע",
+        "author": "מבצע",
+        "fields": "שדות"
+      },
+      "filters": {
+        "integration": "אינטגרציה",
+        "event": "אירוע",
+        "period": "תאריך",
+        "clearAll": "נקה הכול",
+        "add": "הוסף מסנן"
+      },
+      "detail": {
+        "title": "פרטי השינוי",
+        "general": "כללי",
+        "metadata": "מטא-נתונים",
+        "changes": "שינויים",
+        "integration": "אינטגרציה",
+        "author": "מבצע",
+        "time": "זמן",
+        "ip": "כתובת IP",
+        "userAgent": "לקוח",
+        "requestId": "ID בקשה",
+        "notFound": "השינוי לא נמצא",
+        "copyJson": "העתק כ-JSON",
+        "copied": "הועתק ללוח",
+        "copyFailed": "לא ניתן היה להעתיק ללוח"
+      }
     }
   }
 }

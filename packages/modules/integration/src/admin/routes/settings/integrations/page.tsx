@@ -313,9 +313,14 @@ const IntegrationsPage = () => {
             {t("integration.list.subtitle")}
           </Text>
         </div>
-        <Button size="small" variant="primary" onClick={() => navigate("/settings/integrations/browse")}>
-          {t("integration.list.browseIntegrations")}
-        </Button>
+        <div className="flex items-center gap-x-2">
+          <Button size="small" variant="secondary" onClick={() => navigate("/settings/integrations/history")}>
+            {t("integration.history.title")}
+          </Button>
+          <Button size="small" variant="primary" onClick={() => navigate("/settings/integrations/browse")}>
+            {t("integration.list.browseIntegrations")}
+          </Button>
+        </div>
       </div>
 
       <DataTable instance={table} className="[&_td]:py-3">

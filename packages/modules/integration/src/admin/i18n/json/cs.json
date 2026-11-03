@@ -148,34 +148,97 @@
       "title": "Historie změn",
       "empty": "Zatím žádné změny",
       "viewAll": "Zobrazit vše",
+      "by": "Autor",
+      "shown_zero": "Zobrazeno {{shown}} z {{count}} změn",
+      "shown_one": "Zobrazeno {{shown}} z {{count}} změny",
+      "shown_two": "Zobrazeno {{shown}} z {{count}} změn",
+      "shown_few": "Zobrazeno {{shown}} z {{count}} změn",
+      "shown_many": "Zobrazeno {{shown}} z {{count}} změn",
+      "shown_other": "Zobrazeno {{shown}} z {{count}} změn",
       "events": {
-        "created": "Integrace byla nakonfigurována",
-        "updated": "Nastavení bylo změněno",
-        "updatedSection": "Nastavení „{{section}}“ bylo změněno",
         "enabled": "Integrace byla aktivována",
         "disabled": "Integrace byla deaktivována",
         "deleted": "Nastavení bylo smazáno",
-        "testPassed": "Test připojení proběhl úspěšně",
-        "testFailed": "Test připojení se nezdařil",
-        "other": "Nastavení bylo změněno"
+        "other": "Nastavení bylo změněno",
+        "fieldsSet_zero": "Nastaveno {{count}} polí",
+        "fieldsSet_one": "Nastaveno {{count}} pole",
+        "fieldsSet_two": "Nastavena {{count}} pole",
+        "fieldsSet_few": "Nastavena {{count}} pole",
+        "fieldsSet_many": "Nastavena {{count}} pole",
+        "fieldsSet_other": "Nastaveno {{count}} polí",
+        "fieldsChanged_zero": "Změněno {{count}} polí",
+        "fieldsChanged_one": "Změněno {{count}} pole",
+        "fieldsChanged_two": "Změněna {{count}} pole",
+        "fieldsChanged_few": "Změněna {{count}} pole",
+        "fieldsChanged_many": "Změněna {{count}} pole",
+        "fieldsChanged_other": "Změněno {{count}} polí",
+        "fieldsDeleted_zero": "Smazáno {{count}} polí",
+        "fieldsDeleted_one": "Smazáno {{count}} pole",
+        "fieldsDeleted_two": "Smazána {{count}} pole",
+        "fieldsDeleted_few": "Smazána {{count}} pole",
+        "fieldsDeleted_many": "Smazána {{count}} pole",
+        "fieldsDeleted_other": "Smazáno {{count}} polí"
+      },
+      "types": {
+        "created": "Nastavená pole",
+        "updated": "Změněná pole",
+        "enabled": "Integrace byla aktivována",
+        "disabled": "Integrace byla deaktivována",
+        "deleted": "Nastavení bylo smazáno"
       },
       "secret": {
-        "set": "hodnota nastavena",
-        "replaced": "hodnota nahrazena",
-        "removed": "hodnota odstraněna",
-        "hidden": "hodnota skryta"
+        "set": "Hodnota nastavena",
+        "replaced": "Hodnota nahrazena",
+        "removed": "Hodnota odstraněna",
+        "hidden": "Hodnota skryta"
       },
       "actors": {
-        "job": "Naplánovaná úloha",
         "system": "Systém",
-        "apiKey": "API klíč „{{name}}“",
         "unknownUser": "Smazaný uživatel"
       },
       "fields": {
         "title": "Název"
       },
       "truncated": "(zkráceno)",
-      "moreFields": "Další: +{{count}}"
+      "pageTitle": "Historie změn integrací",
+      "pageSubtitle": "Kdo změnil nastavení integrací a kdy.",
+      "emptyFiltered": "Filtrům neodpovídají žádné změny",
+      "search": "Hledat",
+      "sort": {
+        "tooltip": "Řadit",
+        "asc": "Vzestupně",
+        "desc": "Sestupně"
+      },
+      "columns": {
+        "time": "Čas",
+        "integration": "Integrace",
+        "event": "Událost",
+        "author": "Autor",
+        "fields": "Pole"
+      },
+      "filters": {
+        "integration": "Integrace",
+        "event": "Událost",
+        "period": "Datum",
+        "clearAll": "Zrušit vše",
+        "add": "Přidat filtr"
+      },
+      "detail": {
+        "title": "Podrobnosti změny",
+        "general": "Obecné",
+        "metadata": "Metadata",
+        "changes": "Změny",
+        "integration": "Integrace",
+        "author": "Autor",
+        "time": "Čas",
+        "ip": "IP adresa",
+        "userAgent": "Klient",
+        "requestId": "ID požadavku",
+        "notFound": "Změna nebyla nalezena",
+        "copyJson": "Kopírovat jako JSON",
+        "copied": "Zkopírováno do schránky",
+        "copyFailed": "Kopírování do schránky se nezdařilo"
+      }
     }
   }
 }

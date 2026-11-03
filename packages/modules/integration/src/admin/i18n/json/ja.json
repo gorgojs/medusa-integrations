@@ -148,16 +148,43 @@
       "title": "変更履歴",
       "empty": "変更はまだありません",
       "viewAll": "すべて表示",
+      "by": "実行者",
+      "shown_zero": "{{count}}件中{{shown}}件の変更を表示",
+      "shown_one": "{{count}}件中{{shown}}件の変更を表示",
+      "shown_two": "{{count}}件中{{shown}}件の変更を表示",
+      "shown_few": "{{count}}件中{{shown}}件の変更を表示",
+      "shown_many": "{{count}}件中{{shown}}件の変更を表示",
+      "shown_other": "{{count}}件中{{shown}}件の変更を表示",
       "events": {
-        "created": "インテグレーションを設定しました",
-        "updated": "設定を変更しました",
-        "updatedSection": "「{{section}}」の設定を変更しました",
         "enabled": "インテグレーションを有効にしました",
         "disabled": "インテグレーションを無効にしました",
         "deleted": "設定を削除しました",
-        "testPassed": "接続テストに成功しました",
-        "testFailed": "接続テストに失敗しました",
-        "other": "設定を変更しました"
+        "other": "設定を変更しました",
+        "fieldsSet_zero": "{{count}}個のフィールドを設定",
+        "fieldsSet_one": "{{count}}個のフィールドを設定",
+        "fieldsSet_two": "{{count}}個のフィールドを設定",
+        "fieldsSet_few": "{{count}}個のフィールドを設定",
+        "fieldsSet_many": "{{count}}個のフィールドを設定",
+        "fieldsSet_other": "{{count}}個のフィールドを設定",
+        "fieldsChanged_zero": "{{count}}個のフィールドを変更",
+        "fieldsChanged_one": "{{count}}個のフィールドを変更",
+        "fieldsChanged_two": "{{count}}個のフィールドを変更",
+        "fieldsChanged_few": "{{count}}個のフィールドを変更",
+        "fieldsChanged_many": "{{count}}個のフィールドを変更",
+        "fieldsChanged_other": "{{count}}個のフィールドを変更",
+        "fieldsDeleted_zero": "{{count}}個のフィールドを削除",
+        "fieldsDeleted_one": "{{count}}個のフィールドを削除",
+        "fieldsDeleted_two": "{{count}}個のフィールドを削除",
+        "fieldsDeleted_few": "{{count}}個のフィールドを削除",
+        "fieldsDeleted_many": "{{count}}個のフィールドを削除",
+        "fieldsDeleted_other": "{{count}}個のフィールドを削除"
+      },
+      "types": {
+        "created": "設定されたフィールド",
+        "updated": "変更されたフィールド",
+        "enabled": "インテグレーションを有効にしました",
+        "disabled": "インテグレーションを無効にしました",
+        "deleted": "設定を削除しました"
       },
       "secret": {
         "set": "値を設定",
@@ -166,16 +193,52 @@
         "hidden": "値は非表示"
       },
       "actors": {
-        "job": "スケジュールジョブ",
         "system": "システム",
-        "apiKey": "APIキー「{{name}}」",
         "unknownUser": "削除されたユーザー"
       },
       "fields": {
         "title": "タイトル"
       },
       "truncated": "(省略)",
-      "moreFields": "他{{count}}件"
+      "pageTitle": "インテグレーションの変更履歴",
+      "pageSubtitle": "誰がいつインテグレーションの設定を変更したか。",
+      "emptyFiltered": "条件に一致する変更はありません",
+      "search": "検索",
+      "sort": {
+        "tooltip": "並べ替え",
+        "asc": "昇順",
+        "desc": "降順"
+      },
+      "columns": {
+        "time": "日時",
+        "integration": "インテグレーション",
+        "event": "イベント",
+        "author": "実行者",
+        "fields": "フィールド"
+      },
+      "filters": {
+        "integration": "インテグレーション",
+        "event": "イベント",
+        "period": "日付",
+        "clearAll": "すべてクリア",
+        "add": "フィルターを追加"
+      },
+      "detail": {
+        "title": "変更の詳細",
+        "general": "一般",
+        "metadata": "メタデータ",
+        "changes": "変更内容",
+        "integration": "インテグレーション",
+        "author": "実行者",
+        "time": "日時",
+        "ip": "IPアドレス",
+        "userAgent": "クライアント",
+        "requestId": "リクエストID",
+        "notFound": "変更が見つかりません",
+        "copyJson": "JSONとしてコピー",
+        "copied": "クリップボードにコピーしました",
+        "copyFailed": "クリップボードにコピーできませんでした"
+      }
     }
   }
 }

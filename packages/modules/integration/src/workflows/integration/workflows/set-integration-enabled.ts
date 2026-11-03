@@ -29,7 +29,6 @@ export const setIntegrationEnabledWorkflow = createWorkflow(
       transform({ input, state }, (d) => ({
         provider_id: d.input.provider_id,
         change_type: d.input.is_enabled ? ("enabled" as const) : ("disabled" as const),
-        outcome: "succeeded" as const,
         actor: d.input.actor ?? null,
         // Switching to the state it is already in changes nothing.
         skip: d.state.is_enabled === d.input.is_enabled,

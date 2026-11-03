@@ -148,34 +148,97 @@
       "title": "Lịch sử thay đổi",
       "empty": "Chưa có thay đổi nào",
       "viewAll": "Xem tất cả",
+      "by": "Bởi",
+      "shown_zero": "Hiển thị {{shown}} trên {{count}} thay đổi",
+      "shown_one": "Hiển thị {{shown}} trên {{count}} thay đổi",
+      "shown_two": "Hiển thị {{shown}} trên {{count}} thay đổi",
+      "shown_few": "Hiển thị {{shown}} trên {{count}} thay đổi",
+      "shown_many": "Hiển thị {{shown}} trên {{count}} thay đổi",
+      "shown_other": "Hiển thị {{shown}} trên {{count}} thay đổi",
       "events": {
-        "created": "Đã cấu hình tích hợp",
-        "updated": "Đã thay đổi cài đặt",
-        "updatedSection": "Đã thay đổi cài đặt “{{section}}”",
         "enabled": "Đã bật tích hợp",
         "disabled": "Đã tắt tích hợp",
         "deleted": "Đã xóa cài đặt",
-        "testPassed": "Kiểm tra kết nối thành công",
-        "testFailed": "Kiểm tra kết nối thất bại",
-        "other": "Đã thay đổi cài đặt"
+        "other": "Đã thay đổi cài đặt",
+        "fieldsSet_zero": "Đã thiết lập {{count}} trường",
+        "fieldsSet_one": "Đã thiết lập {{count}} trường",
+        "fieldsSet_two": "Đã thiết lập {{count}} trường",
+        "fieldsSet_few": "Đã thiết lập {{count}} trường",
+        "fieldsSet_many": "Đã thiết lập {{count}} trường",
+        "fieldsSet_other": "Đã thiết lập {{count}} trường",
+        "fieldsChanged_zero": "Đã thay đổi {{count}} trường",
+        "fieldsChanged_one": "Đã thay đổi {{count}} trường",
+        "fieldsChanged_two": "Đã thay đổi {{count}} trường",
+        "fieldsChanged_few": "Đã thay đổi {{count}} trường",
+        "fieldsChanged_many": "Đã thay đổi {{count}} trường",
+        "fieldsChanged_other": "Đã thay đổi {{count}} trường",
+        "fieldsDeleted_zero": "Đã xóa {{count}} trường",
+        "fieldsDeleted_one": "Đã xóa {{count}} trường",
+        "fieldsDeleted_two": "Đã xóa {{count}} trường",
+        "fieldsDeleted_few": "Đã xóa {{count}} trường",
+        "fieldsDeleted_many": "Đã xóa {{count}} trường",
+        "fieldsDeleted_other": "Đã xóa {{count}} trường"
+      },
+      "types": {
+        "created": "Trường đã thiết lập",
+        "updated": "Trường đã thay đổi",
+        "enabled": "Đã bật tích hợp",
+        "disabled": "Đã tắt tích hợp",
+        "deleted": "Đã xóa cài đặt"
       },
       "secret": {
-        "set": "đã đặt giá trị",
-        "replaced": "đã thay giá trị",
-        "removed": "đã xóa giá trị",
-        "hidden": "đã ẩn giá trị"
+        "set": "Đã đặt giá trị",
+        "replaced": "Đã thay giá trị",
+        "removed": "Đã xóa giá trị",
+        "hidden": "Đã ẩn giá trị"
       },
       "actors": {
-        "job": "Tác vụ theo lịch",
         "system": "Hệ thống",
-        "apiKey": "Khóa API “{{name}}”",
         "unknownUser": "Người dùng đã xóa"
       },
       "fields": {
         "title": "Tiêu đề"
       },
       "truncated": "(đã rút gọn)",
-      "moreFields": "+{{count}} nữa"
+      "pageTitle": "Lịch sử thay đổi tích hợp",
+      "pageSubtitle": "Ai đã thay đổi cài đặt tích hợp và khi nào.",
+      "emptyFiltered": "Không có thay đổi nào khớp với bộ lọc",
+      "search": "Tìm kiếm",
+      "sort": {
+        "tooltip": "Sắp xếp",
+        "asc": "Tăng dần",
+        "desc": "Giảm dần"
+      },
+      "columns": {
+        "time": "Thời gian",
+        "integration": "Tích hợp",
+        "event": "Sự kiện",
+        "author": "Người thực hiện",
+        "fields": "Trường"
+      },
+      "filters": {
+        "integration": "Tích hợp",
+        "event": "Sự kiện",
+        "period": "Ngày",
+        "clearAll": "Xóa tất cả",
+        "add": "Thêm bộ lọc"
+      },
+      "detail": {
+        "title": "Chi tiết thay đổi",
+        "general": "Chung",
+        "metadata": "Siêu dữ liệu",
+        "changes": "Thay đổi",
+        "integration": "Tích hợp",
+        "author": "Người thực hiện",
+        "time": "Thời gian",
+        "ip": "Địa chỉ IP",
+        "userAgent": "Máy khách",
+        "requestId": "ID yêu cầu",
+        "notFound": "Không tìm thấy thay đổi",
+        "copyJson": "Sao chép dạng JSON",
+        "copied": "Đã sao chép vào bộ nhớ tạm",
+        "copyFailed": "Không thể sao chép vào bộ nhớ tạm"
+      }
     }
   }
 }

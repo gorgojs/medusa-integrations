@@ -148,16 +148,43 @@
       "title": "变更历史",
       "empty": "暂无变更",
       "viewAll": "查看全部",
+      "by": "操作者",
+      "shown_zero": "已显示 {{shown}} / {{count}} 项变更",
+      "shown_one": "已显示 {{shown}} / {{count}} 项变更",
+      "shown_two": "已显示 {{shown}} / {{count}} 项变更",
+      "shown_few": "已显示 {{shown}} / {{count}} 项变更",
+      "shown_many": "已显示 {{shown}} / {{count}} 项变更",
+      "shown_other": "已显示 {{shown}} / {{count}} 项变更",
       "events": {
-        "created": "集成已配置",
-        "updated": "设置已更改",
-        "updatedSection": "“{{section}}”设置已更改",
         "enabled": "集成已启用",
         "disabled": "集成已禁用",
         "deleted": "设置已删除",
-        "testPassed": "连接测试通过",
-        "testFailed": "连接测试失败",
-        "other": "设置已更改"
+        "other": "设置已更改",
+        "fieldsSet_zero": "已设置 {{count}} 个字段",
+        "fieldsSet_one": "已设置 {{count}} 个字段",
+        "fieldsSet_two": "已设置 {{count}} 个字段",
+        "fieldsSet_few": "已设置 {{count}} 个字段",
+        "fieldsSet_many": "已设置 {{count}} 个字段",
+        "fieldsSet_other": "已设置 {{count}} 个字段",
+        "fieldsChanged_zero": "已更改 {{count}} 个字段",
+        "fieldsChanged_one": "已更改 {{count}} 个字段",
+        "fieldsChanged_two": "已更改 {{count}} 个字段",
+        "fieldsChanged_few": "已更改 {{count}} 个字段",
+        "fieldsChanged_many": "已更改 {{count}} 个字段",
+        "fieldsChanged_other": "已更改 {{count}} 个字段",
+        "fieldsDeleted_zero": "已删除 {{count}} 个字段",
+        "fieldsDeleted_one": "已删除 {{count}} 个字段",
+        "fieldsDeleted_two": "已删除 {{count}} 个字段",
+        "fieldsDeleted_few": "已删除 {{count}} 个字段",
+        "fieldsDeleted_many": "已删除 {{count}} 个字段",
+        "fieldsDeleted_other": "已删除 {{count}} 个字段"
+      },
+      "types": {
+        "created": "已设置字段",
+        "updated": "已更改字段",
+        "enabled": "集成已启用",
+        "disabled": "集成已禁用",
+        "deleted": "设置已删除"
       },
       "secret": {
         "set": "值已设置",
@@ -166,16 +193,52 @@
         "hidden": "值已隐藏"
       },
       "actors": {
-        "job": "定时任务",
         "system": "系统",
-        "apiKey": "API 密钥“{{name}}”",
         "unknownUser": "已删除的用户"
       },
       "fields": {
         "title": "标题"
       },
       "truncated": "（已截断）",
-      "moreFields": "还有 {{count}} 项"
+      "pageTitle": "集成变更历史",
+      "pageSubtitle": "谁更改了集成设置，以及更改时间。",
+      "emptyFiltered": "没有符合筛选条件的变更",
+      "search": "搜索",
+      "sort": {
+        "tooltip": "排序",
+        "asc": "升序",
+        "desc": "降序"
+      },
+      "columns": {
+        "time": "时间",
+        "integration": "集成",
+        "event": "事件",
+        "author": "操作者",
+        "fields": "字段"
+      },
+      "filters": {
+        "integration": "集成",
+        "event": "事件",
+        "period": "日期",
+        "clearAll": "全部清除",
+        "add": "添加筛选"
+      },
+      "detail": {
+        "title": "变更详情",
+        "general": "常规",
+        "metadata": "元数据",
+        "changes": "变更",
+        "integration": "集成",
+        "author": "操作者",
+        "time": "时间",
+        "ip": "IP 地址",
+        "userAgent": "客户端",
+        "requestId": "请求 ID",
+        "notFound": "未找到该变更",
+        "copyJson": "复制为 JSON",
+        "copied": "已复制到剪贴板",
+        "copyFailed": "无法复制到剪贴板"
+      }
     }
   }
 }

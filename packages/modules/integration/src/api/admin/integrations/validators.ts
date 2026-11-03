@@ -45,8 +45,9 @@ export const AdminGetIntegrationChangesParams = createFindParams({
     z.object({
       provider_id: stringOrArray.optional(),
       change_type: stringOrArray.optional(),
-      outcome: stringOrArray.optional(),
       actor_id: stringOrArray.optional(),
+      // Free text over the author and the integration, see `changeFilters`.
+      q: z.string().trim().min(1).optional(),
       occurred_at: createOperatorMap().optional(),
     })
   )

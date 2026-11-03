@@ -148,16 +148,43 @@
       "title": "تاریخچه تغییرات",
       "empty": "هنوز تغییری وجود ندارد",
       "viewAll": "مشاهده همه",
+      "by": "توسط",
+      "shown_zero": "{{shown}} از {{count}} تغییر نمایش داده شد",
+      "shown_one": "{{shown}} از {{count}} تغییر نمایش داده شد",
+      "shown_two": "{{shown}} از {{count}} تغییر نمایش داده شد",
+      "shown_few": "{{shown}} از {{count}} تغییر نمایش داده شد",
+      "shown_many": "{{shown}} از {{count}} تغییر نمایش داده شد",
+      "shown_other": "{{shown}} از {{count}} تغییر نمایش داده شد",
       "events": {
-        "created": "یکپارچه‌سازی پیکربندی شد",
-        "updated": "تنظیمات تغییر کرد",
-        "updatedSection": "تنظیمات «{{section}}» تغییر کرد",
         "enabled": "یکپارچه‌سازی فعال شد",
         "disabled": "یکپارچه‌سازی غیرفعال شد",
         "deleted": "تنظیمات حذف شد",
-        "testPassed": "آزمایش اتصال موفق بود",
-        "testFailed": "آزمایش اتصال ناموفق بود",
-        "other": "تنظیمات تغییر کرد"
+        "other": "تنظیمات تغییر کرد",
+        "fieldsSet_zero": "{{count}} فیلد تنظیم شد",
+        "fieldsSet_one": "{{count}} فیلد تنظیم شد",
+        "fieldsSet_two": "{{count}} فیلد تنظیم شد",
+        "fieldsSet_few": "{{count}} فیلد تنظیم شد",
+        "fieldsSet_many": "{{count}} فیلد تنظیم شد",
+        "fieldsSet_other": "{{count}} فیلد تنظیم شد",
+        "fieldsChanged_zero": "{{count}} فیلد تغییر کرد",
+        "fieldsChanged_one": "{{count}} فیلد تغییر کرد",
+        "fieldsChanged_two": "{{count}} فیلد تغییر کرد",
+        "fieldsChanged_few": "{{count}} فیلد تغییر کرد",
+        "fieldsChanged_many": "{{count}} فیلد تغییر کرد",
+        "fieldsChanged_other": "{{count}} فیلد تغییر کرد",
+        "fieldsDeleted_zero": "{{count}} فیلد حذف شد",
+        "fieldsDeleted_one": "{{count}} فیلد حذف شد",
+        "fieldsDeleted_two": "{{count}} فیلد حذف شد",
+        "fieldsDeleted_few": "{{count}} فیلد حذف شد",
+        "fieldsDeleted_many": "{{count}} فیلد حذف شد",
+        "fieldsDeleted_other": "{{count}} فیلد حذف شد"
+      },
+      "types": {
+        "created": "فیلدهای تنظیم‌شده",
+        "updated": "فیلدهای تغییریافته",
+        "enabled": "یکپارچه‌سازی فعال شد",
+        "disabled": "یکپارچه‌سازی غیرفعال شد",
+        "deleted": "تنظیمات حذف شد"
       },
       "secret": {
         "set": "مقدار تنظیم شد",
@@ -166,16 +193,52 @@
         "hidden": "مقدار پنهان است"
       },
       "actors": {
-        "job": "کار زمان‌بندی‌شده",
         "system": "سیستم",
-        "apiKey": "کلید API «{{name}}»",
         "unknownUser": "کاربر حذف‌شده"
       },
       "fields": {
         "title": "عنوان"
       },
       "truncated": "(کوتاه‌شده)",
-      "moreFields": "+{{count}} مورد دیگر"
+      "pageTitle": "تاریخچه تغییرات یکپارچه‌سازی",
+      "pageSubtitle": "چه کسی تنظیمات یکپارچه‌سازی را تغییر داده و چه زمانی.",
+      "emptyFiltered": "تغییری مطابق فیلترها یافت نشد",
+      "search": "جستجو",
+      "sort": {
+        "tooltip": "مرتب‌سازی",
+        "asc": "صعودی",
+        "desc": "نزولی"
+      },
+      "columns": {
+        "time": "زمان",
+        "integration": "یکپارچه‌سازی",
+        "event": "رویداد",
+        "author": "انجام‌دهنده",
+        "fields": "فیلدها"
+      },
+      "filters": {
+        "integration": "یکپارچه‌سازی",
+        "event": "رویداد",
+        "period": "تاریخ",
+        "clearAll": "پاک کردن همه",
+        "add": "افزودن فیلتر"
+      },
+      "detail": {
+        "title": "جزئیات تغییر",
+        "general": "عمومی",
+        "metadata": "فراداده",
+        "changes": "تغییرات",
+        "integration": "یکپارچه‌سازی",
+        "author": "انجام‌دهنده",
+        "time": "زمان",
+        "ip": "نشانی IP",
+        "userAgent": "کلاینت",
+        "requestId": "ID درخواست",
+        "notFound": "تغییر یافت نشد",
+        "copyJson": "کپی به‌صورت JSON",
+        "copied": "در کلیپ‌بورد کپی شد",
+        "copyFailed": "کپی در کلیپ‌بورد انجام نشد"
+      }
     }
   }
 }

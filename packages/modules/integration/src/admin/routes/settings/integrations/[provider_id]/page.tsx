@@ -26,6 +26,7 @@ import { LicenseSummary } from "../../../../components/license-summary"
 import { useLicenseStatus } from "../../../../lib/license"
 import { invalidateChanges } from "../../../../lib/changes"
 import { IntegrationHistorySection } from "../../../../components/history/history-section"
+import { ChangeDrawer, useChangeParam } from "../../../../components/history/change-drawer"
 import type { AdminIntegrationResponse, IntegrationSectionData, UiSection } from "../../../../../types"
 
 /**
@@ -48,6 +49,7 @@ const EditPage = () => {
   const navigate = useNavigate()
   const prompt = usePrompt()
   const [editingSection, setEditingSection] = useState<string | null>(null)
+  const { changeId, open: openChange, close: closeChange } = useChangeParam()
 
   // Single query: the resource endpoint returns descriptor (UI schema) + current values.
   const { data, isLoading } = useQuery({
@@ -68,7 +70,7 @@ const EditPage = () => {
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: ["integration", provider_id] })
     qc.invalidateQueries({ queryKey: ["integration-overview"] })
-    // A test, a toggle and a deletion each add an entry to the change history.
+    // A toggle and a deletion each add an entry to the change history.
     invalidateChanges(qc)
   }
 
@@ -219,7 +221,11 @@ const EditPage = () => {
   const historyInSide = descriptor.preferredLayoutId === "core:two-column"
   const history = (
     <LayoutComposer.Entry id="history">
-      <IntegrationHistorySection providerId={provider_id!} descriptor={descriptor} />
+      <IntegrationHistorySection
+        providerId={provider_id!}
+        descriptor={descriptor}
+        onSelect={(change) => openChange(change.id)}
+      />
     </LayoutComposer.Entry>
   )
 
@@ -320,6 +326,8 @@ const EditPage = () => {
       {/* Main-column descriptor sections */}
       {mainSections.map(renderSection)}
       {!historyInSide && history}
+
+      <ChangeDrawer changeId={changeId} onClose={closeChange} />
 
       {editing && (
         <EditSectionDrawer

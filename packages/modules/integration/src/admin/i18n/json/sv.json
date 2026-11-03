@@ -148,34 +148,97 @@
       "title": "Ändringshistorik",
       "empty": "Inga ändringar ännu",
       "viewAll": "Visa alla",
+      "by": "Av",
+      "shown_zero": "{{shown}} av {{count}} ändringar visas",
+      "shown_one": "{{shown}} av {{count}} ändring visas",
+      "shown_two": "{{shown}} av {{count}} ändringar visas",
+      "shown_few": "{{shown}} av {{count}} ändringar visas",
+      "shown_many": "{{shown}} av {{count}} ändringar visas",
+      "shown_other": "{{shown}} av {{count}} ändringar visas",
       "events": {
-        "created": "Integration konfigurerad",
-        "updated": "Inställningar ändrade",
-        "updatedSection": "Inställningar för ”{{section}}” ändrade",
         "enabled": "Integration aktiverad",
         "disabled": "Integration inaktiverad",
         "deleted": "Inställningar borttagna",
-        "testPassed": "Anslutningstestet lyckades",
-        "testFailed": "Anslutningstestet misslyckades",
-        "other": "Inställningar ändrade"
+        "other": "Inställningar ändrade",
+        "fieldsSet_zero": "{{count}} fält angivna",
+        "fieldsSet_one": "{{count}} fält angivet",
+        "fieldsSet_two": "{{count}} fält angivna",
+        "fieldsSet_few": "{{count}} fält angivna",
+        "fieldsSet_many": "{{count}} fält angivna",
+        "fieldsSet_other": "{{count}} fält angivna",
+        "fieldsChanged_zero": "{{count}} fält ändrade",
+        "fieldsChanged_one": "{{count}} fält ändrat",
+        "fieldsChanged_two": "{{count}} fält ändrade",
+        "fieldsChanged_few": "{{count}} fält ändrade",
+        "fieldsChanged_many": "{{count}} fält ändrade",
+        "fieldsChanged_other": "{{count}} fält ändrade",
+        "fieldsDeleted_zero": "{{count}} fält borttagna",
+        "fieldsDeleted_one": "{{count}} fält borttaget",
+        "fieldsDeleted_two": "{{count}} fält borttagna",
+        "fieldsDeleted_few": "{{count}} fält borttagna",
+        "fieldsDeleted_many": "{{count}} fält borttagna",
+        "fieldsDeleted_other": "{{count}} fält borttagna"
+      },
+      "types": {
+        "created": "Angivna fält",
+        "updated": "Ändrade fält",
+        "enabled": "Integration aktiverad",
+        "disabled": "Integration inaktiverad",
+        "deleted": "Inställningar borttagna"
       },
       "secret": {
-        "set": "värde angivet",
-        "replaced": "värde ersatt",
-        "removed": "värde borttaget",
-        "hidden": "värde dolt"
+        "set": "Värde angivet",
+        "replaced": "Värde ersatt",
+        "removed": "Värde borttaget",
+        "hidden": "Värde dolt"
       },
       "actors": {
-        "job": "Schemalagt jobb",
         "system": "System",
-        "apiKey": "API-nyckel ”{{name}}”",
         "unknownUser": "Borttagen användare"
       },
       "fields": {
         "title": "Titel"
       },
       "truncated": "(förkortad)",
-      "moreFields": "+{{count}} till"
+      "pageTitle": "Ändringshistorik för integrationer",
+      "pageSubtitle": "Vem som ändrade integrationsinställningar och när.",
+      "emptyFiltered": "Inga ändringar matchar filtren",
+      "search": "Sök",
+      "sort": {
+        "tooltip": "Sortera",
+        "asc": "Stigande",
+        "desc": "Fallande"
+      },
+      "columns": {
+        "time": "Tid",
+        "integration": "Integration",
+        "event": "Händelse",
+        "author": "Ändrad av",
+        "fields": "Fält"
+      },
+      "filters": {
+        "integration": "Integration",
+        "event": "Händelse",
+        "period": "Datum",
+        "clearAll": "Rensa alla",
+        "add": "Lägg till filter"
+      },
+      "detail": {
+        "title": "Ändringsdetaljer",
+        "general": "Allmänt",
+        "metadata": "Metadata",
+        "changes": "Ändringar",
+        "integration": "Integration",
+        "author": "Ändrad av",
+        "time": "Tid",
+        "ip": "IP-adress",
+        "userAgent": "Klient",
+        "requestId": "Begäran-ID",
+        "notFound": "Ändringen hittades inte",
+        "copyJson": "Kopiera som JSON",
+        "copied": "Kopierat till urklipp",
+        "copyFailed": "Det gick inte att kopiera till urklipp"
+      }
     }
   }
 }

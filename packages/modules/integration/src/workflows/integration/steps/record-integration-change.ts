@@ -3,33 +3,22 @@ import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
 import type { Logger, MedusaContainer } from "@medusajs/framework/types"
 import { INTEGRATION_MODULE } from "../../../modules/integration"
 import type IntegrationModuleService from "../../../modules/integration/services/integration-module"
-import type {
-  DiffEntry,
-  IntegrationChangeActor,
-  IntegrationChangeOutcome,
-  IntegrationChangeType,
-} from "../../../types/integration/history"
+import type { DiffEntry, IntegrationChangeActor, IntegrationChangeType } from "../../../types/integration/history"
 
 export type RecordIntegrationChangeStepInput = {
   provider_id: string
   change_type: IntegrationChangeType
-  outcome: IntegrationChangeOutcome
   /** Absent when the workflow was run without one: recorded as `{ type: "system" }`. */
   actor?: IntegrationChangeActor | null
   section_id?: string | null
   diff?: DiffEntry[]
-  message?: string | null
   /** Set by the workflow when nothing actually changed. */
   skip?: boolean
 }
 
-/** Connection tests are recorded only when a person or an API client ran them, not the daily job. */
-const TESTERS_WORTH_RECORDING = new Set(["user", "api-key"])
-
-export function shouldRecordChange(input: RecordIntegrationChangeStepInput, actor: IntegrationChangeActor): boolean {
+export function shouldRecordChange(input: RecordIntegrationChangeStepInput): boolean {
   if (input.skip) return false
   if (input.change_type === "updated" && !input.diff?.length) return false
-  if (input.change_type === "connection_tested" && !TESTERS_WORTH_RECORDING.has(actor.type)) return false
   return true
 }
 
@@ -58,7 +47,7 @@ export const recordIntegrationChangeStep = createStep(
   "record-integration-change",
   async (input: RecordIntegrationChangeStepInput, { container }) => {
     const actor: IntegrationChangeActor = input.actor ?? { type: "system" }
-    if (!shouldRecordChange(input, actor)) return new StepResponse(null, null)
+    if (!shouldRecordChange(input)) return new StepResponse(null, null)
 
     try {
       const integration: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
@@ -66,7 +55,6 @@ export const recordIntegrationChangeStep = createStep(
       const id = await integration.recordChange({
         provider_id: input.provider_id,
         change_type: input.change_type,
-        outcome: input.outcome,
         actor,
         actor_label: await resolveActorLabel(container, actor),
         identifier: descriptor?.identifier ?? null,
@@ -74,7 +62,6 @@ export const recordIntegrationChangeStep = createStep(
         category: descriptor?.category ?? null,
         section_id: input.section_id ?? null,
         diff: input.diff ?? [],
-        message: input.message ?? null,
       })
       return new StepResponse(id, id)
     } catch (e: any) {

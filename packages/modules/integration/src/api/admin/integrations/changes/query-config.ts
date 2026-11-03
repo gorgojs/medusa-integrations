@@ -6,14 +6,12 @@ export const defaultAdminIntegrationChangeListFields = [
   "actor_id",
   "actor_label",
   "change_type",
-  "outcome",
   "provider_id",
   "identifier",
   "instance_id",
   "category",
   "section_id",
   "diff",
-  "message",
   "reverts_id",
 ]
 

@@ -7,16 +7,14 @@ const IntegrationChange = model.define("integration_change", {
   id: model.id({ prefix: "intch" }).primaryKey(),
   occurred_at: model.dateTime(),
 
-  // Who: Medusa's actor type as-is ("user", "api-key"), or "job" / "system".
+  // Who: Medusa's actor type as-is ("user", "api-key"), or "system" without a request.
   actor_type: model.text(),
   actor_id: model.text().nullable(),
   // The user's email or the API key's title at the time of the change.
   actor_label: model.text().nullable(),
 
-  // What: IntegrationChangeType and IntegrationChangeOutcome. Text, not enums, so a new change
-  // type needs no migration.
+  // What: IntegrationChangeType. Text, not an enum, so a new change type needs no migration.
   change_type: model.text(),
-  outcome: model.text(),
 
   // On what: the integration's `provider_id`, kept as plain text.
   provider_id: model.text(),
@@ -27,7 +25,6 @@ const IntegrationChange = model.define("integration_change", {
 
   // Details: DiffEntry[]. Secret options appear without values.
   diff: model.json(),
-  message: model.text().nullable(),
   reverts_id: model.text().nullable(),
 
   // From where.

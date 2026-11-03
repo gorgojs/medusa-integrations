@@ -47,7 +47,6 @@ export const upsertIntegrationWorkflow = createWorkflow(
       return {
         provider_id: d.input.provider_id,
         change_type: d.state.existed ? ("updated" as const) : ("created" as const),
-        outcome: "succeeded" as const,
         actor: d.input.actor ?? null,
         section_id: d.input.section_id ?? null,
         diff,

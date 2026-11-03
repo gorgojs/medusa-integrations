@@ -148,34 +148,97 @@
       "title": "История изменений",
       "empty": "Изменений пока нет",
       "viewAll": "Вся история",
+      "by": "Автор",
+      "shown_zero": "Показано {{shown}} из {{count}} изменений",
+      "shown_one": "Показано {{shown}} из {{count}} изменения",
+      "shown_two": "Показано {{shown}} из {{count}} изменений",
+      "shown_few": "Показано {{shown}} из {{count}} изменений",
+      "shown_many": "Показано {{shown}} из {{count}} изменений",
+      "shown_other": "Показано {{shown}} из {{count}} изменений",
       "events": {
-        "created": "Интеграция настроена",
-        "updated": "Изменены настройки",
-        "updatedSection": "Изменены настройки «{{section}}»",
         "enabled": "Интеграция включена",
         "disabled": "Интеграция выключена",
         "deleted": "Настройки удалены",
-        "testPassed": "Проверка соединения пройдена",
-        "testFailed": "Проверка соединения не пройдена",
-        "other": "Изменены настройки"
+        "other": "Изменены настройки",
+        "fieldsSet_zero": "Задано {{count}} поля",
+        "fieldsSet_one": "Задано {{count}} поле",
+        "fieldsSet_two": "Задано {{count}} поля",
+        "fieldsSet_few": "Задано {{count}} поля",
+        "fieldsSet_many": "Задано {{count}} полей",
+        "fieldsSet_other": "Задано {{count}} поля",
+        "fieldsChanged_zero": "Изменено {{count}} поля",
+        "fieldsChanged_one": "Изменено {{count}} поле",
+        "fieldsChanged_two": "Изменено {{count}} поля",
+        "fieldsChanged_few": "Изменено {{count}} поля",
+        "fieldsChanged_many": "Изменено {{count}} полей",
+        "fieldsChanged_other": "Изменено {{count}} поля",
+        "fieldsDeleted_zero": "Удалено {{count}} поля",
+        "fieldsDeleted_one": "Удалено {{count}} поле",
+        "fieldsDeleted_two": "Удалено {{count}} поля",
+        "fieldsDeleted_few": "Удалено {{count}} поля",
+        "fieldsDeleted_many": "Удалено {{count}} полей",
+        "fieldsDeleted_other": "Удалено {{count}} поля"
+      },
+      "types": {
+        "created": "Заданы поля",
+        "updated": "Изменены поля",
+        "enabled": "Интеграция включена",
+        "disabled": "Интеграция выключена",
+        "deleted": "Настройки удалены"
       },
       "secret": {
-        "set": "значение задано",
-        "replaced": "значение заменено",
-        "removed": "значение удалено",
-        "hidden": "значение скрыто"
+        "set": "Значение задано",
+        "replaced": "Значение заменено",
+        "removed": "Значение удалено",
+        "hidden": "Значение скрыто"
       },
       "actors": {
-        "job": "Задача по расписанию",
         "system": "Система",
-        "apiKey": "API-ключ «{{name}}»",
         "unknownUser": "Удалённый пользователь"
       },
       "fields": {
         "title": "Название"
       },
       "truncated": "(сокращено)",
-      "moreFields": "и ещё {{count}}"
+      "pageTitle": "История изменений интеграций",
+      "pageSubtitle": "Кто и когда менял настройки интеграций.",
+      "emptyFiltered": "Нет изменений по этим фильтрам",
+      "search": "Поиск",
+      "sort": {
+        "tooltip": "Сортировка",
+        "asc": "По возрастанию",
+        "desc": "По убыванию"
+      },
+      "columns": {
+        "time": "Время",
+        "integration": "Интеграция",
+        "event": "Событие",
+        "author": "Автор",
+        "fields": "Поля"
+      },
+      "filters": {
+        "integration": "Интеграция",
+        "event": "Событие",
+        "period": "Дата",
+        "clearAll": "Сбросить фильтры",
+        "add": "Добавить фильтр"
+      },
+      "detail": {
+        "title": "Подробности изменения",
+        "general": "Общее",
+        "metadata": "Метаданные",
+        "changes": "Изменения",
+        "integration": "Интеграция",
+        "author": "Автор",
+        "time": "Время",
+        "ip": "IP-адрес",
+        "userAgent": "Клиент",
+        "requestId": "ID запроса",
+        "notFound": "Изменение не найдено",
+        "copyJson": "Скопировать как JSON",
+        "copied": "Скопировано в буфер обмена",
+        "copyFailed": "Не удалось скопировать в буфер обмена"
+      }
     }
   }
 }

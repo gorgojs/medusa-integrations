@@ -329,22 +329,6 @@
           "enumItems": [],
           "mappedType": "text"
         },
-        "outcome": {
-          "name": "outcome",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "text"
-        },
         "provider_id": {
           "name": "provider_id",
           "type": "text",
@@ -440,22 +424,6 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "json"
-        },
-        "message": {
-          "name": "message",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "text"
         },
         "reverts_id": {
           "name": "reverts_id",

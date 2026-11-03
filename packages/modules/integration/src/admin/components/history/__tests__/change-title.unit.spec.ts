@@ -1,40 +1,38 @@
 import { describe, expect, it } from "@jest/globals"
-import { changeTitle, isFailedChange } from "../change-title"
+import { changeTitle } from "../change-title"
+
+const diff = (n: number) => Array.from({ length: n }, (_, i) => ({ field: `f${i}`, from: null, to: i })) as any
 
 describe("changeTitle", () => {
-  it("names the edited section when it still exists", () => {
-    expect(changeTitle({ change_type: "updated", outcome: "succeeded" }, "Connection")).toEqual({
-      key: "integration.history.events.updatedSection",
-      values: { section: "Connection" },
+  it("counts the options a first save set", () => {
+    expect(changeTitle({ change_type: "created", diff: diff(1) })).toEqual({
+      key: "integration.history.events.fieldsSet",
+      values: { count: 1 },
     })
   })
 
-  it("falls back to a title without a section", () => {
-    expect(changeTitle({ change_type: "updated", outcome: "succeeded" }, null)).toEqual({
-      key: "integration.history.events.updated",
+  it("counts the changed options of an edit, whatever sections they are in", () => {
+    expect(changeTitle({ change_type: "updated", diff: diff(2) })).toEqual({
+      key: "integration.history.events.fieldsChanged",
+      values: { count: 2 },
     })
   })
 
-  it("tells a passed connection test from a failed one", () => {
-    expect(changeTitle({ change_type: "connection_tested", outcome: "succeeded" }).key).toBe(
-      "integration.history.events.testPassed"
-    )
-    expect(changeTitle({ change_type: "connection_tested", outcome: "failed" }).key).toBe(
-      "integration.history.events.testFailed"
-    )
+  it("counts the options a deletion removed, and has a plain title when there were none", () => {
+    expect(changeTitle({ change_type: "deleted", diff: diff(3) })).toEqual({
+      key: "integration.history.events.fieldsDeleted",
+      values: { count: 3 },
+    })
+    expect(changeTitle({ change_type: "deleted", diff: [] }).key).toBe("integration.history.events.deleted")
   })
 
-  it("has a key for every other change type and for an unknown one", () => {
-    for (const type of ["created", "enabled", "disabled", "deleted"] as const) {
-      expect(changeTitle({ change_type: type, outcome: "succeeded" }).key).toBe(`integration.history.events.${type}`)
-    }
-    expect(changeTitle({ change_type: "reverted" as any, outcome: "succeeded" }).key).toBe(
-      "integration.history.events.other"
-    )
+  it("names a toggle without a count", () => {
+    expect(changeTitle({ change_type: "enabled", diff: [] }).key).toBe("integration.history.events.enabled")
+    expect(changeTitle({ change_type: "disabled", diff: [] }).key).toBe("integration.history.events.disabled")
   })
 
-  it("marks only failed changes", () => {
-    expect(isFailedChange({ outcome: "failed" })).toBe(true)
-    expect(isFailedChange({ outcome: "succeeded" })).toBe(false)
+  it("falls back for a save without options and for a type it does not know", () => {
+    expect(changeTitle({ change_type: "updated", diff: [] }).key).toBe("integration.history.events.other")
+    expect(changeTitle({ change_type: "reverted" as any, diff: diff(1) }).key).toBe("integration.history.events.other")
   })
 })
