@@ -1,5 +1,11 @@
 # @gorgo/medusa-integration
 
+## 0.3.2
+
+### Documentation
+
+- show the medusa-config registration in the readme by [@ttokyose](https://github.com/ttokyose) in [#521](https://github.com/gorgojs/medusa-integrations/pull/521) ([`598245d`](https://github.com/gorgojs/medusa-integrations/commit/598245ddd374177258ba9283baa0ba70222f9620))
+
 ## 0.3.1
 
 ### Documentation

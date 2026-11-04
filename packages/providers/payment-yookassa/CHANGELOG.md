@@ -1,5 +1,15 @@
 # @gorgo/medusa-payment-yookassa
 
+## 2.0.9
+
+### Bug Fixes
+
+- replace the unmaintained yoo-checkout client with a bundled one by [@ttokyose](https://github.com/ttokyose) in [#521](https://github.com/gorgojs/medusa-integrations/pull/521) ([`524eb2b`](https://github.com/gorgojs/medusa-integrations/commit/524eb2b098999917319ddf2dfa5f020028657d0b))
+
+### Documentation
+
+- show the medusa-config registration in the readme by [@ttokyose](https://github.com/ttokyose) in [#521](https://github.com/gorgojs/medusa-integrations/pull/521) ([`598245d`](https://github.com/gorgojs/medusa-integrations/commit/598245ddd374177258ba9283baa0ba70222f9620))
+
 ## 2.0.8
 
 ### Documentation
