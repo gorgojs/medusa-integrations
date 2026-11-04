@@ -1,5 +1,15 @@
 # @gorgo/medusa-feed-yandex
 
+## 0.2.40
+
+### Documentation
+
+- show the medusa-config registration in the readme by [@ttokyose](https://github.com/ttokyose) in [#521](https://github.com/gorgojs/medusa-integrations/pull/521) ([`598245d`](https://github.com/gorgojs/medusa-integrations/commit/598245ddd374177258ba9283baa0ba70222f9620))
+
+### Tests
+
+- add unit tests for feed generation, its routes and the export job by [@ttokyose](https://github.com/ttokyose) in [#521](https://github.com/gorgojs/medusa-integrations/pull/521) ([`b13526a`](https://github.com/gorgojs/medusa-integrations/commit/b13526aaea77ffc0d3fac73a3ef5943c44068192))
+
 ## 0.2.39
 
 ### Documentation

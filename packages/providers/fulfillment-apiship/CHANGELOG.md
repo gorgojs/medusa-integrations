@@ -1,5 +1,15 @@
 # @gorgo/medusa-fulfillment-apiship
 
+## 2.1.5
+
+### Bug Fixes
+
+- declare the mit license in package.json by [@ttokyose](https://github.com/ttokyose) in [#521](https://github.com/gorgojs/medusa-integrations/pull/521) ([`a22d0df`](https://github.com/gorgojs/medusa-integrations/commit/a22d0df10500e14ed599b7b8adc6fc990fc24253))
+
+### Documentation
+
+- show the medusa-config registration in the readme by [@ttokyose](https://github.com/ttokyose) in [#521](https://github.com/gorgojs/medusa-integrations/pull/521) ([`598245d`](https://github.com/gorgojs/medusa-integrations/commit/598245ddd374177258ba9283baa0ba70222f9620))
+
 ## 2.1.4
 
 ### Documentation
