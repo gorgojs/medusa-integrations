@@ -82,7 +82,7 @@ A button talks to Medusa through the server actions in `src/lib/data/express-che
 
 To add a button for a payment provider:
 
-1. Create a component under `src/modules/checkout/components/express-checkout/buttons/`, taking `ExpressButtonProps`. Start the payment session with `startExpressPayment` as soon as the wallet needs it. PayPal needs it on the click, Stripe after the customer approves. Answer the wallet's address changes with `quoteExpressShipping`, and once the customer pays, save the contact with `saveExpressContact` and call `placeOrder`.
+1. Create a component under `src/modules/checkout/components/express-checkout/buttons/`, taking `ExpressButtonProps`. Start the payment session with `startExpressPayment` as soon as the wallet needs it. PayPal needs it on the click, Stripe after the customer approves, and the Authorize.net Google Pay button only after the customer pays, because the session carries the wallet's token. Answer the wallet's address changes with `quoteExpressShipping`, and once the customer pays, save the contact with `saveExpressContact` and call `placeOrder`.
 2. Add an entry for it to `expressButtons` in `registry.ts`, with a `match` that accepts the payment provider's id.
 3. Enable the payment provider in the regions where the button should show, under **Settings → Regions** in Medusa Admin.
 
@@ -102,7 +102,7 @@ export const expressButtons: {
 ]
 ```
 
-The whole button, with the address changes and the check of the approved amount, is described in [Integrate PayPal Payment into Storefront](/medusa-integrations/paypal/storefront-integration). The Stripe plugin's example adds Apple Pay, Google Pay and Link to the row the same way, with an entry that matches `isStripeLike`. The button is described in [Integrate Stripe Payment into Storefront](/medusa-integrations/stripe/storefront-integration).
+The whole button, with the address changes and the check of the approved amount, is described in [Integrate PayPal Payment into Storefront](/medusa-integrations/paypal/storefront-integration). The Stripe plugin's example adds Apple Pay, Google Pay and Link to the row the same way, with an entry that matches `isStripeLike`. The button is described in [Integrate Stripe Payment into Storefront](/medusa-integrations/stripe/storefront-integration). The Authorize.net plugin's example adds Google Pay with an entry that matches `isAuthorizeNet`, and the button is described in [Integrate Authorize.net Payment into Storefront](/medusa-integrations/authorizenet/storefront-integration).
 
 ## Test the Row
 
@@ -126,5 +126,9 @@ The row and its buttons work on `localhost` with the sandbox credentials of a wa
   {
     title: "Integrate Stripe Payment into Storefront",
     href: "/medusa-integrations/stripe/storefront-integration"
+  },
+  {
+    title: "Integrate Authorize.net Payment into Storefront",
+    href: "/medusa-integrations/authorizenet/storefront-integration"
   }
 ]}/>
