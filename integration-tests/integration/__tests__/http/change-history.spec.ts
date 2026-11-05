@@ -31,7 +31,7 @@ medusaIntegrationTestRunner({
       api.post(`/admin/integrations/${A}`, { section_id: "creds", values }, auth)
 
     const changesOf = (provider_id = A) =>
-      svc.listIntegrationChanges({ provider_id }, { order: { occurred_at: "ASC" }, take: 100 })
+      svc.listIntegrationChanges({ provider_id }, { order: { created_at: "ASC" }, take: 100 })
 
     const rawRows = async () => {
       const pg = getContainer().resolve(ContainerRegistrationKeys.PG_CONNECTION)
@@ -46,10 +46,6 @@ medusaIntegrationTestRunner({
       expect(change).toMatchObject({
         change_type: "created",
         provider_id: A,
-        identifier: "test",
-        instance_id: "a",
-        category: "payment",
-        section_id: "creds",
         actor_type: "user",
         actor_label: "admin@it.test",
       })

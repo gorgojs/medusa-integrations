@@ -1,4 +1,5 @@
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
+import { Modules } from "@medusajs/framework/utils"
 import { createAdminHeaders } from "../utils/admin"
 
 jest.setTimeout(120 * 1000)
@@ -30,13 +31,13 @@ medusaIntegrationTestRunner({
       api.post(`/admin/integrations/${id}`, { section_id: "creds", values }, headers)
 
     // `recordChange` resolves with the new row's id.
-    const record = async (provider_id: string, occurred_at: Date, extra: Record<string, unknown> = {}) => {
+    const record = async (provider_id: string, created_at: Date, extra: Record<string, unknown> = {}) => {
       const id: string = await svc.recordChange({
         provider_id,
         change_type: "updated",
         actor: { type: "user", id: "user_x", ip: "10.0.0.1", user_agent: "jest", request_id: "req_1" },
         actor_label: "x@it.test",
-        occurred_at,
+        created_at,
         diff: [],
         ...extra,
       })
@@ -46,8 +47,14 @@ medusaIntegrationTestRunner({
     const day = (n: number) => new Date(Date.UTC(2026, 0, n))
 
     describe("auth", () => {
-      it("answers 401 without credentials on all three routes", async () => {
-        for (const path of ["/admin/integrations/changes", "/admin/integrations/changes/intch_x", `/admin/integrations/${A}/changes`]) {
+      it("answers 401 without credentials on every route", async () => {
+        for (const path of [
+          "/admin/integrations/changes",
+          "/admin/integrations/changes/intch_x",
+          "/admin/integrations/changes/fields",
+          "/admin/integrations/changes/actors",
+          `/admin/integrations/${A}/changes`,
+        ]) {
           expect((await call(path, {})).status).toBe(401)
         }
       })
@@ -64,28 +71,28 @@ medusaIntegrationTestRunner({
         expect(res.data.count).toBe(3)
         expect(res.data.limit).toBe(20)
         expect(res.data.offset).toBe(0)
-        expect(res.data.integration_changes.map((c: any) => c.occurred_at)).toEqual(
+        expect(res.data.integration_changes.map((c: any) => c.created_at)).toEqual(
           [day(3), day(2), day(1)].map((d) => d.toISOString())
         )
 
         const page = await call("/admin/integrations/changes?limit=2&offset=2")
         expect(page.data).toMatchObject({ count: 3, limit: 2, offset: 2 })
         expect(page.data.integration_changes).toHaveLength(1)
-        expect(page.data.integration_changes[0].occurred_at).toBe(day(1).toISOString())
+        expect(page.data.integration_changes[0].created_at).toBe(day(1).toISOString())
       })
 
       it("honours an explicit order", async () => {
         await record(A, day(1))
         await record(A, day(2))
-        const res = await call("/admin/integrations/changes?order=occurred_at")
-        expect(res.data.integration_changes[0].occurred_at).toBe(day(1).toISOString())
+        const res = await call("/admin/integrations/changes?order=created_at")
+        expect(res.data.integration_changes[0].created_at).toBe(day(1).toISOString())
       })
 
       it("rejects limit=500 with 400", async () => {
         expect((await call("/admin/integrations/changes?limit=500")).status).toBe(400)
       })
 
-      it("filters by provider_id, change_type, actor_id and occurred_at, alone and combined", async () => {
+      it("filters by provider_id, change_type, actor_id and created_at, alone and combined", async () => {
         await record(A, day(1), { change_type: "created" })
         await record(A, day(2), { change_type: "enabled" })
         await record(B, day(3), { actor: { type: "user", id: "user_y" }, actor_label: "y@it.test" })
@@ -101,9 +108,31 @@ medusaIntegrationTestRunner({
         expect(await count("change_type=created")).toBe(1)
         expect(await count("actor_id=user_y")).toBe(1)
         expect(await count("actor_id=user_x")).toBe(3)
-        expect(await count(`occurred_at[$gte]=${day(3).toISOString()}`)).toBe(2)
-        expect(await count(`provider_id=${B}&actor_id=user_x&occurred_at[$gte]=${day(2).toISOString()}`)).toBe(1)
+        expect(await count(`created_at[$gte]=${day(3).toISOString()}`)).toBe(2)
+        expect(await count(`provider_id=${B}&actor_id=user_x&created_at[$gte]=${day(2).toISOString()}`)).toBe(1)
         expect(await count(`provider_id=${A}&change_type=enabled`)).toBe(1)
+      })
+
+      it("filters by author, System standing for everything but an admin user", async () => {
+        await record(A, day(1))
+        await record(A, day(2), { actor: { type: "user", id: "user_y" }, actor_label: "y@it.test" })
+        await record(B, day(3), { actor: { type: "api-key", id: "apk_1" }, actor_label: "CI key" })
+        await record(B, day(4), { actor: { type: "system" }, actor_label: null })
+
+        const count = async (qs: string) => {
+          const res = await call(`/admin/integrations/changes?${qs}`)
+          expect(res.status).toBe(200)
+          return res.data.count
+        }
+        expect(await count("actor_id=system")).toBe(2)
+        expect(await count("actor_id=user_y&actor_id=system")).toBe(3)
+        expect(await count("actor_id=user_x&actor_id=user_y")).toBe(2)
+        // An API key's own id still finds its changes.
+        expect(await count("actor_id=apk_1")).toBe(1)
+        // Both the authors and the search narrow the list.
+        expect(await count("actor_id=system&q=ci")).toBe(1)
+        expect(await count("actor_id=user_x&actor_id=user_y&q=y@")).toBe(1)
+        expect(await count(`actor_id=system&provider_id=${A}`)).toBe(0)
       })
 
       it("searches the author and the integration, case-insensitively and literally", async () => {
@@ -118,6 +147,22 @@ medusaIntegrationTestRunner({
         expect(await ids("q=%25")).toBe(0)
         expect(await ids(`q=anna&provider_id=${A}`)).toBe(0)
         expect((await call(`/admin/integrations/${B}/changes?q=x@`)).data.count).toBe(0)
+      })
+
+      it("finds a change by the options it touched, as the admin matched them in q_fields", async () => {
+        await record(A, day(1), { diff: [{ field: "terminalKey", label: "test.terminalKey", from: 1, to: 2 }] })
+        await record(B, day(2), { diff: [{ field: "apiKey", from: "a", to: "b" }] })
+        await record(A, day(3))
+
+        const count = async (qs: string) => (await call(`/admin/integrations/changes?${qs}`)).data.count
+        // Nothing but the options matches "terminal": the author is x@it.test, the providers int_test_*.
+        expect(await count("q=terminal")).toBe(0)
+        expect(await count("q=terminal&q_fields=test.terminalKey")).toBe(1)
+        expect(await count("q=key&q_fields=test.terminalKey&q_fields=apiKey")).toBe(2)
+        // Still a search: it narrows nothing without q and ORs with the other columns.
+        expect(await count("q_fields=apiKey")).toBe(3)
+        expect(await count("q=it.test&q_fields=apiKey")).toBe(3)
+        expect(await count(`q=key&q_fields=apiKey&provider_id=${A}`)).toBe(0)
       })
 
       it("sorts by the author", async () => {
@@ -145,6 +190,59 @@ medusaIntegrationTestRunner({
         expect(del.status).toBe(404)
         const put = await api.put("/admin/integrations/changes", { values: {} }, headers).catch((e: any) => e.response)
         expect(put.status).toBe(404)
+      })
+    })
+
+    describe("GET /admin/integrations/changes/fields", () => {
+      it("lists every option the history names, once, removed integrations included", async () => {
+        await record(A, day(1), { diff: [{ field: "terminalKey", label: "test.terminalKey", from: 1, to: 2 }] })
+        await record(A, day(2), { diff: [{ field: "terminalKey", label: "test.terminalKey", from: 2, to: 3 }] })
+        await record("int_gone", day(3), { diff: [{ field: "apiKey", secret: true, op: "set" }] })
+        const res = await call("/admin/integrations/changes/fields")
+        expect(res.status).toBe(200)
+        expect(res.data.fields).toEqual([
+          { field: "apiKey", label: null },
+          { field: "terminalKey", label: "test.terminalKey" },
+        ])
+      })
+
+      it("leaves the stored keys out of list items", async () => {
+        await record(A, day(1), { diff: [{ field: "terminalKey", label: "test.terminalKey", from: 1, to: 2 }] })
+        const [item] = (await call("/admin/integrations/changes")).data.integration_changes
+        expect(item).not.toHaveProperty("diff_fields")
+      })
+    })
+
+    describe("GET /admin/integrations/changes/actors", () => {
+      it("lists the admin users by their name or email now, a removed one by the stored email", async () => {
+        const users = getContainer().resolve(Modules.USER)
+        const [anna, boris] = await users.createUsers([
+          { email: "anna@actors.test", first_name: "Anna", last_name: "Kim" },
+          { email: "boris-now@actors.test" },
+        ])
+        await record(A, day(1), { actor: { type: "user", id: anna.id }, actor_label: "anna-old@actors.test" })
+        await record(A, day(2), { actor: { type: "user", id: anna.id }, actor_label: "anna@actors.test" })
+        await record(B, day(3), { actor: { type: "user", id: boris.id }, actor_label: "boris-then@actors.test" })
+        await record(B, day(4), { actor: { type: "user", id: "user_gone" }, actor_label: "gone@actors.test" })
+        await record(B, day(5), { actor: { type: "user", id: "user_nolabel" }, actor_label: null })
+
+        const res = await call("/admin/integrations/changes/actors")
+        expect(res.status).toBe(200)
+        expect(res.data).toEqual({
+          users: [
+            { id: anna.id, label: "Anna Kim" },
+            { id: boris.id, label: "boris-now@actors.test" },
+            { id: "user_gone", label: "gone@actors.test" },
+            { id: "user_nolabel", label: null },
+          ],
+          system: false,
+        })
+      })
+
+      it("says whether anything but an admin user made changes", async () => {
+        expect((await call("/admin/integrations/changes/actors")).data).toEqual({ users: [], system: false })
+        await record(A, day(1), { actor: { type: "api-key", id: "apk_1" }, actor_label: "CI key" })
+        expect((await call("/admin/integrations/changes/actors")).data).toEqual({ users: [], system: true })
       })
     })
 
@@ -176,7 +274,7 @@ medusaIntegrationTestRunner({
         expect(res.status).toBe(200)
         expect(res.data.count).toBe(2)
         expect(res.data.integration_changes.every((c: any) => c.provider_id === A)).toBe(true)
-        expect(res.data.integration_changes[0].occurred_at).toBe(day(3).toISOString())
+        expect(res.data.integration_changes[0].created_at).toBe(day(3).toISOString())
       })
 
       it("ignores a conflicting provider_id in the query string", async () => {
