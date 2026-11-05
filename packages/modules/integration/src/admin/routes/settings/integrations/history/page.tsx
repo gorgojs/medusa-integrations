@@ -22,6 +22,7 @@ import {
   useChangeTimeFormat,
   useIntegrationChanges,
 } from "../../../../lib/changes"
+import { usePaginationTranslations } from "../../../../lib/data-table"
 import { IntegrationIcon } from "../../../../components/integration-icon"
 import { ChangeActor } from "../../../../components/history/change-actor"
 import { ChangeDrawer, useChangeParam } from "../../../../components/history/change-drawer"
@@ -89,6 +90,7 @@ const AddFilterMenu = ({
 
 const HistoryPage = () => {
   const { t } = useTranslation()
+  const paginationLabels = usePaginationTranslations()
   const time = useChangeTimeFormat()
   const [params, setParams] = useSearchParams()
   const { changeId, open, close } = useChangeParam()
@@ -340,7 +342,7 @@ const HistoryPage = () => {
             filtered: { heading: t("integration.history.emptyFiltered") },
           }}
         />
-        <DataTable.Pagination />
+        <DataTable.Pagination translations={paginationLabels} />
       </DataTable>
 
       <ChangeDrawer changeId={changeId} onClose={close} />
