@@ -296,6 +296,14 @@ Options become live only when the integration is both enabled and complete, mean
 
 Options marked `secret` are encrypted at rest with AES-256-GCM and never reach the browser. The CRUD API masks them and reports only whether each one is set. Saving a secret as blank keeps its stored value instead of clearing it.
 
+Secret values don't reach the [change history](/medusa-modules/integration/manage-integrations#change-history) either. For a secret option, the history shows only that its value was set, replaced, or removed. It keeps the values of every other option as they are.
+
+<Note type="warning">
+
+An option that holds a credential but isn't marked `secret: true` is shown in the Admin and kept in the change history in plain text. On startup, the module logs a warning for every option whose name looks like a credential but isn't marked `secret: true`. A name looks like a credential when it contains `password`, `passwd`, `secret`, `token`, `apiKey`, or `privateKey`, in any letter case.
+
+</Note>
+
 Encryption needs a key, set as `encryptionKey` when you register the module. See [Integration Module Options](/medusa-modules/integration/module-options#encryptionkey) for how to set it and what happens without one.
 
 ## Connection Test

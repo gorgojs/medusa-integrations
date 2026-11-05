@@ -1,6 +1,6 @@
 ---
 title: "Manage Integrations in Medusa Admin"
-description: "Learn how to view, add, configure, test the connection, edit, enable, disable, and delete integrations in Medusa Admin."
+description: "Learn how to view, add, configure, test the connection, edit, enable, disable, and delete integrations in Medusa Admin, and how to browse their change history."
 ---
 
 # {frontmatter.title}
@@ -16,7 +16,7 @@ To view the integrations list:
 
 This opens the list of every integration registered in the project: the provider's name and icon, the package author, its description, and category. Each integration shows a status. You can filter the list by category and search by name.
 
-![Integrations list](/static/integration/en/integrations-overview.png)
+![Integrations list](/static/integration/en/integrations-overview.webp)
 
 ### Integration Statuses
 
@@ -125,6 +125,8 @@ To enable or disable an integration:
 
 Deleting an integration only erases its stored data: the token and the rest of its section values. The provider itself isn't removed as a source of the integration. It stays registered in `medusa-config.ts` and reappears in the list as not configured. To remove the provider entirely, delete its entry from `providers` in `medusa-config.ts`.
 
+The deletion goes into the [change history](/medusa-modules/integration/manage-integrations#change-history) with a snapshot of the values that were configured.
+
 To delete an integration:
 
 1. Go to **Settings → Integrations**.
@@ -132,3 +134,81 @@ To delete an integration:
 3. Open the action menu next to the integration's name.
 4. Choose **Delete**.
 5. Confirm the deletion.
+
+---
+
+## Change History
+
+The module records every change to an integration's settings, with its author, time, and the fields it changed. The history is kept indefinitely and stays after the integration is deleted, so it still shows how the integration was configured before the deletion.
+
+### What Gets Recorded
+
+| Event | When it's recorded |
+| --- | --- |
+| Fields set | The first save of any section, while the integration has no settings. The record lists every saved field. |
+| Fields changed | Every later save of a section. The record lists only the fields whose value changed. A save without changes isn't recorded. |
+| Integration enabled | Enabling a disabled integration. |
+| Integration disabled | Disabling an enabled integration. |
+| Settings deleted | Deleting the integration. The record holds a snapshot of every value that was configured. |
+
+Connection tests aren't recorded, and neither are changes a plugin writes straight through the module's service instead of its workflows.
+
+The author of a record is the Medusa Admin user who saved the change. Their email is stored with the record, so changes by a deleted user stay attributed. When code on the server changes settings without a user, a seed script for example, the author is **System**.
+
+Values of options marked `secret` never reach the history. For them, the history shows only what happened to the value, such as **Value set**, **Value replaced**, or **Value removed**. If an option became secret after a change was recorded, its earlier values show as **Value hidden**.
+
+Values longer than 512 characters are stored shortened and marked **(shortened)**.
+
+### Integration History
+
+The **Change History** section on an integration's page shows that integration's five latest changes. The section stays on the page after the integration is deleted.
+
+To view an integration's history:
+
+1. Go to **Settings → Integrations**.
+2. Open the integration you want to check.
+3. Find the **Change History** section.
+
+To see all of this integration's changes in a table, click **View All** below the list.
+
+![Change History section on the YooKassa integration page](/static/integration/en/history-section.webp)
+
+### All Changes
+
+The **Change History** page lists the changes of every integration in one table, with the time, integration, event, author, and changed fields.
+
+To open the history of all integrations:
+
+1. Go to **Settings → Integrations**.
+2. Click **Change History**.
+
+The search finds a change by any of the following:
+
+- the author's email;
+- the integration's identifier (`provider_id`);
+- the name of a changed field in the interface language, or its id in the descriptor.
+
+**Add filter** adds one of these filters:
+
+- **Integration**;
+- **Event** – one of the record types in the table above;
+- **Author** – the users who changed settings, and **System**;
+- **Date** – a period.
+
+Sort the table by time, integration, event, or author from the sort menu, or by clicking a column header. A second click reverses the order.
+
+The search, filters, and sorting are kept in the page address, so you can share a link to a filtered history.
+
+![Change History page with the changes of every integration](/static/integration/en/history-table.webp)
+
+### Change Details
+
+Click a change in the table or in an integration's section to open the **Change details** side panel. It has three blocks:
+
+- **General** – the integration, author, and time of the change.
+- **Metadata** – the IP address, the client (the browser or program that sent the request), and the request ID. This block is collapsed by default.
+- **Changes** – each changed field as "before → after". Enabling and disabling have no such block.
+
+**Copy as JSON** copies the whole change, without secret values. The page address with the panel open leads straight to this change.
+
+![Change details panel with the changed fields](/static/integration/en/change-details.webp)
