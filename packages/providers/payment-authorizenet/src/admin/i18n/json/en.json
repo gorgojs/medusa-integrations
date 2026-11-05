@@ -1,0 +1,39 @@
+{
+  "authorizenet": {
+    "name": "Authorize.net",
+    "description": "Authorize.net payment gateway",
+    "sections": {
+      "credentials": "Credentials",
+      "behavior": "Behavior",
+      "wallets": "Express checkout"
+    },
+    "fields": {
+      "environment": "Environment",
+      "apiLoginId": "API Login ID",
+      "transactionKey": "Transaction Key",
+      "publicClientKey": "Public Client Key",
+      "signatureKey": "Signature Key",
+      "capture": "Payment capture",
+      "googlePay": "Google Pay",
+      "googleMerchantId": "Google merchant ID"
+    },
+    "hints": {
+      "environment": "Sandbox takes test payments, Production takes real ones.",
+      "apiLoginId": "From Account → Settings → API Credentials & Keys in the Merchant Interface.",
+      "transactionKey": "Created on the same page as the API Login ID.",
+      "publicClientKey": "From Account → Settings → Security Settings → General Security Settings → Manage Public Client Key.",
+      "signatureKey": "Verifies Authorize.net webhooks. Created on the same page as the API Login ID.",
+      "capture": "With Capture right away, the payment is one-stage and the money is debited right away. With Authorize only, it is two-stage and the amount is held until you capture it.",
+      "googlePay": "Shows the Google Pay button in the storefront's express checkout row.",
+      "googleMerchantId": "From the Google Pay & Wallet Console. Needed in production only."
+    },
+    "environments": {
+      "sandbox": "Sandbox",
+      "production": "Production"
+    },
+    "captures": {
+      "automatic": "Capture right away",
+      "manual": "Authorize only"
+    }
+  }
+}
