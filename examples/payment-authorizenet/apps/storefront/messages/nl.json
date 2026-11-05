@@ -499,6 +499,16 @@
     "placeOrder": "Betalen",
     "selectPaymentMethod": "Selecteer een betaalmethode"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Kaartnummer",
+    "expiry": "Vervaldatum (MM / JJ)",
+    "cvc": "Beveiligingscode",
+    "invalidNumber": "Controleer het kaartnummer.",
+    "invalidExpiry": "Controleer de vervaldatum.",
+    "invalidCvc": "Controleer de beveiligingscode.",
+    "insecure": "Voor kaartbetalingen is een beveiligde HTTPS-verbinding nodig.",
+    "tokenError": "De kaart kon niet worden gecontroleerd. Probeer het opnieuw of gebruik een andere kaart."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Voer uw betaalgegevens in:",
     "loadError": "De betaalmethoden konden niet worden geladen."
@@ -510,6 +520,10 @@
     "paymentMethod": "Betaalmethode"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Kaarten"
+    },
     "pp_medusa-payments_default": {
       "title": "Creditcard",
       "subtitle": "Medusa Payments"

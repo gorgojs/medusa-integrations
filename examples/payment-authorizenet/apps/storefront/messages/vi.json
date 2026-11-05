@@ -499,6 +499,16 @@
     "placeOrder": "Thanh toán",
     "selectPaymentMethod": "Chọn phương thức thanh toán"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Số thẻ",
+    "expiry": "Ngày hết hạn (MM / YY)",
+    "cvc": "Mã bảo mật",
+    "invalidNumber": "Kiểm tra số thẻ.",
+    "invalidExpiry": "Kiểm tra ngày hết hạn.",
+    "invalidCvc": "Kiểm tra mã bảo mật.",
+    "insecure": "Thanh toán bằng thẻ cần kết nối HTTPS an toàn.",
+    "tokenError": "Không thể xác minh thẻ. Vui lòng thử lại hoặc dùng thẻ khác."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Nhập thông tin thanh toán của bạn:",
     "loadError": "Không thể tải các phương thức thanh toán."
@@ -510,6 +520,10 @@
     "paymentMethod": "Phương thức thanh toán"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Thẻ"
+    },
     "pp_medusa-payments_default": {
       "title": "Thẻ tín dụng",
       "subtitle": "Medusa Payments"

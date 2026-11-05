@@ -499,6 +499,16 @@
     "placeOrder": "ادفع",
     "selectPaymentMethod": "اختر طريقة الدفع"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "رقم البطاقة",
+    "expiry": "تاريخ الانتهاء (MM / YY)",
+    "cvc": "رمز الأمان",
+    "invalidNumber": "تحقق من رقم البطاقة.",
+    "invalidExpiry": "تحقق من تاريخ الانتهاء.",
+    "invalidCvc": "تحقق من رمز الأمان.",
+    "insecure": "تتطلب الدفعات بالبطاقة اتصال HTTPS آمنًا.",
+    "tokenError": "تعذّر التحقق من البطاقة. حاول مرة أخرى أو استخدم بطاقة أخرى."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "أدخل بيانات الدفع:",
     "loadError": "تعذّر تحميل طرق الدفع."
@@ -510,6 +520,10 @@
     "paymentMethod": "طريقة الدفع"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "البطاقات"
+    },
     "pp_medusa-payments_default": {
       "title": "بطاقة ائتمان",
       "subtitle": "Medusa Payments"

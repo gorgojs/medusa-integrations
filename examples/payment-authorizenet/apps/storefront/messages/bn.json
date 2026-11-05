@@ -499,6 +499,16 @@
     "placeOrder": "পে করুন",
     "selectPaymentMethod": "একটি পেমেন্ট পদ্ধতি নির্বাচন করুন"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "কার্ড নম্বর",
+    "expiry": "মেয়াদ শেষের তারিখ (MM / YY)",
+    "cvc": "সিকিউরিটি কোড",
+    "invalidNumber": "কার্ড নম্বরটি যাচাই করুন।",
+    "invalidExpiry": "মেয়াদ শেষের তারিখটি যাচাই করুন।",
+    "invalidCvc": "সিকিউরিটি কোডটি যাচাই করুন।",
+    "insecure": "কার্ডে পেমেন্টের জন্য নিরাপদ HTTPS সংযোগ প্রয়োজন।",
+    "tokenError": "কার্ডটি যাচাই করা যায়নি। আবার চেষ্টা করুন বা অন্য কার্ড ব্যবহার করুন।"
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "আপনার পেমেন্টের বিবরণ লিখুন:",
     "loadError": "পেমেন্ট পদ্ধতি লোড করা যায়নি।"
@@ -510,6 +520,10 @@
     "paymentMethod": "পেমেন্ট পদ্ধতি"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "কার্ড"
+    },
     "pp_medusa-payments_default": {
       "title": "ক্রেডিট কার্ড",
       "subtitle": "Medusa Payments"

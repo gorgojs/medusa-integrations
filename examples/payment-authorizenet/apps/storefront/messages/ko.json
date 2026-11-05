@@ -499,6 +499,16 @@
     "placeOrder": "결제하기",
     "selectPaymentMethod": "결제 방법을 선택하세요"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "카드 번호",
+    "expiry": "유효기간 (MM / YY)",
+    "cvc": "보안 코드",
+    "invalidNumber": "카드 번호를 확인해 주세요.",
+    "invalidExpiry": "유효기간을 확인해 주세요.",
+    "invalidCvc": "보안 코드를 확인해 주세요.",
+    "insecure": "카드 결제에는 안전한 HTTPS 연결이 필요합니다.",
+    "tokenError": "카드를 확인할 수 없습니다. 다시 시도하거나 다른 카드를 사용해 주세요."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "결제 정보를 입력하세요:",
     "loadError": "결제 수단을 불러오지 못했습니다."
@@ -510,6 +520,10 @@
     "paymentMethod": "결제 방법"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "카드"
+    },
     "pp_medusa-payments_default": {
       "title": "신용카드",
       "subtitle": "Medusa Payments"

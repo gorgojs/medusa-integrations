@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  isAuthorizeNet,
   isManual,
   isPaymentSessionReady,
   isShippingMethodReady,
@@ -13,6 +14,7 @@ import { useCartUpdate } from "@modules/checkout/context/cart-update-context"
 import { useSelectedShippingOptionId } from "@modules/checkout/context/shipping-selection-context"
 import { useLocale, useTranslations } from "next-intl"
 import type React from "react"
+import AuthorizeNetPaymentButton from "./providers/authorizenet"
 import ManualPaymentButton from "./providers/manual"
 import StripePaymentButton from "./providers/stripe"
 
@@ -82,6 +84,13 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   }
 
   switch (true) {
+    case isAuthorizeNet(activePaymentMethod):
+      return (
+        <AuthorizeNetPaymentButton
+          {...providerProps}
+          providerId={activePaymentMethod}
+        />
+      )
     case isStripeLike(activePaymentMethod):
       return <StripePaymentButton {...providerProps} />
     case isManual(activePaymentMethod):

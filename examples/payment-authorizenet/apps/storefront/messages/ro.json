@@ -499,6 +499,16 @@
     "placeOrder": "Plătește",
     "selectPaymentMethod": "Selectați o metodă de plată"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Număr card",
+    "expiry": "Data expirării (LL / AA)",
+    "cvc": "Cod de securitate",
+    "invalidNumber": "Verifică numărul cardului.",
+    "invalidExpiry": "Verifică data expirării.",
+    "invalidCvc": "Verifică codul de securitate.",
+    "insecure": "Plățile cu cardul necesită o conexiune HTTPS securizată.",
+    "tokenError": "Cardul nu a putut fi verificat. Încearcă din nou sau folosește alt card."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Introduceți detaliile de plată:",
     "loadError": "Metodele de plată nu au putut fi încărcate."
@@ -510,6 +520,10 @@
     "paymentMethod": "Metodă de plată"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Carduri"
+    },
     "pp_medusa-payments_default": {
       "title": "Card de credit",
       "subtitle": "Medusa Payments"

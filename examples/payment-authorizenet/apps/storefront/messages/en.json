@@ -499,6 +499,16 @@
     "placeOrder": "Pay",
     "selectPaymentMethod": "Select a payment method"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Card number",
+    "expiry": "Expiry date (MM / YY)",
+    "cvc": "Security code",
+    "invalidNumber": "Check the card number.",
+    "invalidExpiry": "Check the expiry date.",
+    "invalidCvc": "Check the security code.",
+    "insecure": "Card payments need a secure HTTPS connection.",
+    "tokenError": "The card could not be checked. Try again or use another card."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Enter your payment details:",
     "loadError": "Could not load the payment methods."
@@ -510,6 +520,10 @@
     "paymentMethod": "Payment method"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Cards"
+    },
     "pp_medusa-payments_default": {
       "title": "Credit card",
       "subtitle": "Medusa Payments"

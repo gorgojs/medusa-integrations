@@ -499,6 +499,16 @@
     "placeOrder": "Betal",
     "selectPaymentMethod": "Vælg en betalingsmetode"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Kortnummer",
+    "expiry": "Udløbsdato (MM / ÅÅ)",
+    "cvc": "Sikkerhedskode",
+    "invalidNumber": "Tjek kortnummeret.",
+    "invalidExpiry": "Tjek udløbsdatoen.",
+    "invalidCvc": "Tjek sikkerhedskoden.",
+    "insecure": "Kortbetaling kræver en sikker HTTPS-forbindelse.",
+    "tokenError": "Kortet kunne ikke kontrolleres. Prøv igen, eller brug et andet kort."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Indtast dine betalingsoplysninger:",
     "loadError": "Betalingsmetoderne kunne ikke indlæses."
@@ -510,6 +520,10 @@
     "paymentMethod": "Betalingsmetode"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Kort"
+    },
     "pp_medusa-payments_default": {
       "title": "Betalingskort",
       "subtitle": "Medusa Payments"

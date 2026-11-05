@@ -499,6 +499,16 @@
     "placeOrder": "Төлөх",
     "selectPaymentMethod": "Төлбөрийн аргаа сонгоно уу"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Картын дугаар",
+    "expiry": "Дуусах огноо (СС / ЖЖ)",
+    "cvc": "Аюулгүйн код",
+    "invalidNumber": "Картын дугаарыг шалгана уу.",
+    "invalidExpiry": "Дуусах огноог шалгана уу.",
+    "invalidCvc": "Аюулгүйн кодыг шалгана уу.",
+    "insecure": "Картаар төлөхөд аюулгүй HTTPS холболт шаардлагатай.",
+    "tokenError": "Картыг шалгаж чадсангүй. Дахин оролдох эсвэл өөр карт ашиглана уу."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Төлбөрийн мэдээллээ оруулна уу:",
     "loadError": "Төлбөрийн аргуудыг ачаалж чадсангүй."
@@ -510,6 +520,10 @@
     "paymentMethod": "Төлбөрийн арга"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Карт"
+    },
     "pp_medusa-payments_default": {
       "title": "Кредит карт",
       "subtitle": "Medusa Payments"

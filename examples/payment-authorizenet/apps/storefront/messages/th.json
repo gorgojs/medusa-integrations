@@ -499,6 +499,16 @@
     "placeOrder": "ชำระเงิน",
     "selectPaymentMethod": "เลือกวิธีการชำระเงิน"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "หมายเลขบัตร",
+    "expiry": "วันหมดอายุ (MM / YY)",
+    "cvc": "รหัสความปลอดภัย",
+    "invalidNumber": "ตรวจสอบหมายเลขบัตร",
+    "invalidExpiry": "ตรวจสอบวันหมดอายุ",
+    "invalidCvc": "ตรวจสอบรหัสความปลอดภัย",
+    "insecure": "การชำระเงินด้วยบัตรต้องใช้การเชื่อมต่อ HTTPS ที่ปลอดภัย",
+    "tokenError": "ไม่สามารถตรวจสอบบัตรได้ กรุณาลองใหม่อีกครั้งหรือใช้บัตรอื่น"
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "กรอกข้อมูลการชำระเงินของคุณ:",
     "loadError": "ไม่สามารถโหลดวิธีการชำระเงินได้"
@@ -510,6 +520,10 @@
     "paymentMethod": "วิธีการชำระเงิน"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "บัตร"
+    },
     "pp_medusa-payments_default": {
       "title": "บัตรเครดิต",
       "subtitle": "Medusa Payments"

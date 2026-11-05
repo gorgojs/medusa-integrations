@@ -499,6 +499,16 @@
     "placeOrder": "支付",
     "selectPaymentMethod": "选择支付方式"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "卡号",
+    "expiry": "有效期（MM / YY）",
+    "cvc": "安全码",
+    "invalidNumber": "请检查卡号。",
+    "invalidExpiry": "请检查有效期。",
+    "invalidCvc": "请检查安全码。",
+    "insecure": "银行卡支付需要安全的 HTTPS 连接。",
+    "tokenError": "无法验证银行卡。请重试或使用其他银行卡。"
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "请输入您的支付信息：",
     "loadError": "无法加载支付方式。"
@@ -510,6 +520,10 @@
     "paymentMethod": "支付方式"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "银行卡"
+    },
     "pp_medusa-payments_default": {
       "title": "信用卡",
       "subtitle": "Medusa Payments"

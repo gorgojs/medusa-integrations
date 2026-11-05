@@ -499,6 +499,16 @@
     "placeOrder": "Mokėti",
     "selectPaymentMethod": "Pasirinkite mokėjimo būdą"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Kortelės numeris",
+    "expiry": "Galiojimo data (MM / YY)",
+    "cvc": "Saugos kodas",
+    "invalidNumber": "Patikrinkite kortelės numerį.",
+    "invalidExpiry": "Patikrinkite galiojimo datą.",
+    "invalidCvc": "Patikrinkite saugos kodą.",
+    "insecure": "Mokėjimui kortele reikalingas saugus HTTPS ryšys.",
+    "tokenError": "Nepavyko patikrinti kortelės. Bandykite dar kartą arba naudokite kitą kortelę."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Įveskite savo mokėjimo duomenis:",
     "loadError": "Nepavyko įkelti mokėjimo būdų."
@@ -510,6 +520,10 @@
     "paymentMethod": "Mokėjimo būdas"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Kortelės"
+    },
     "pp_medusa-payments_default": {
       "title": "Kredito kortelė",
       "subtitle": "Medusa Payments"

@@ -499,6 +499,16 @@
     "placeOrder": "Bayar",
     "selectPaymentMethod": "Pilih kaedah pembayaran"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Nombor kad",
+    "expiry": "Tarikh luput (BB / TT)",
+    "cvc": "Kod keselamatan",
+    "invalidNumber": "Semak nombor kad.",
+    "invalidExpiry": "Semak tarikh luput.",
+    "invalidCvc": "Semak kod keselamatan.",
+    "insecure": "Pembayaran kad memerlukan sambungan HTTPS yang selamat.",
+    "tokenError": "Kad tidak dapat disemak. Cuba lagi atau gunakan kad lain."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Masukkan butiran pembayaran anda:",
     "loadError": "Kaedah pembayaran tidak dapat dimuatkan."
@@ -510,6 +520,10 @@
     "paymentMethod": "Kaedah pembayaran"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Kad"
+    },
     "pp_medusa-payments_default": {
       "title": "Kad kredit",
       "subtitle": "Medusa Payments"

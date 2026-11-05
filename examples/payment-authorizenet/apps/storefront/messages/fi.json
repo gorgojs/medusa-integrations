@@ -499,6 +499,16 @@
     "placeOrder": "Maksa",
     "selectPaymentMethod": "Valitse maksutapa"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Kortin numero",
+    "expiry": "Voimassaoloaika (KK / VV)",
+    "cvc": "Turvakoodi",
+    "invalidNumber": "Tarkista kortin numero.",
+    "invalidExpiry": "Tarkista voimassaoloaika.",
+    "invalidCvc": "Tarkista turvakoodi.",
+    "insecure": "Korttimaksu edellyttää suojattua HTTPS-yhteyttä.",
+    "tokenError": "Korttia ei voitu tarkistaa. Yritä uudelleen tai käytä toista korttia."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Syötä maksutietosi:",
     "loadError": "Maksutapoja ei voitu ladata."
@@ -510,6 +520,10 @@
     "paymentMethod": "Maksutapa"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Kortit"
+    },
     "pp_medusa-payments_default": {
       "title": "Luottokortti",
       "subtitle": "Medusa Payments"

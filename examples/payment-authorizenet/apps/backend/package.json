@@ -23,7 +23,11 @@
   "scripts": {
     "build": "medusa build && node scripts/copy-migration-data.js",
     "start": "medusa start",
-    "dev": "medusa develop",
+    "predev": "medusa plugin:add @gorgo/medusa-integration && medusa plugin:add @gorgo/medusa-payment-authorizenet",
+    "dev": "yarn predev && yarn && medusa develop",
+    "dev:tunnel": "concurrently \"yarn dev\" \"yarn tunnel\"",
+    "start:tunnel": "concurrently \"yarn start\" \"yarn tunnel\"",
+    "tunnel": "lt --port 9000 --subdomain medusa-authorizenet",
     "seed": "medusa exec ./src/migration-scripts/initial-data-seed.ts",
     "lint": "medusa lint",
     "test:integration:http": "TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
@@ -31,15 +35,16 @@
     "test:unit": "TEST_TYPE=unit NODE_OPTIONS=--experimental-vm-modules jest --silent --runInBand --forceExit"
   },
   "dependencies": {
-    "@gorgo/medusa-integration": "latest",
-    "@medusajs/admin-sdk": "2.21.2",
-    "@medusajs/admin-shared": "2.21.2",
-    "@medusajs/caching": "2.21.2",
-    "@medusajs/cli": "2.21.2",
-    "@medusajs/dashboard": "2.21.2",
-    "@medusajs/draft-order": "2.21.2",
-    "@medusajs/framework": "2.21.2",
-    "@medusajs/medusa": "2.21.2",
+    "@gorgo/medusa-integration": "file:.yalc/@gorgo/medusa-integration",
+    "@gorgo/medusa-payment-authorizenet": "file:.yalc/@gorgo/medusa-payment-authorizenet",
+    "@medusajs/admin-sdk": "2.22.1",
+    "@medusajs/admin-shared": "2.22.1",
+    "@medusajs/caching": "2.22.1",
+    "@medusajs/cli": "2.22.1",
+    "@medusajs/dashboard": "2.22.1",
+    "@medusajs/draft-order": "2.22.1",
+    "@medusajs/framework": "2.22.1",
+    "@medusajs/medusa": "2.22.1",
     "@medusajs/ui": "4.2.6",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.0.8",
@@ -53,17 +58,20 @@
     "zod": "4.2.0"
   },
   "devDependencies": {
-    "@medusajs/eslint-plugin": "2.21.2",
-    "@medusajs/test-utils": "2.21.2",
+    "@medusajs/eslint-plugin": "2.22.1",
+    "@medusajs/test-utils": "2.22.1",
     "@swc/core": "^1.7.28",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.13",
+    "@types/localtunnel": "^2",
     "@types/node": "^20.12.11",
     "@types/nodemailer": "^6.4.24",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.2.25",
+    "concurrently": "^9.2.0",
     "eslint": "^9.39.4",
     "jest": "^29.7.0",
+    "localtunnel": "^2.0.2",
     "prop-types": "^15.8.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2",
@@ -71,6 +79,6 @@
     "yalc": "^1.0.0-pre.53"
   },
   "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "node": "^22.23.4 || ^24.22.1 || >=26.12.1"
   }
 }

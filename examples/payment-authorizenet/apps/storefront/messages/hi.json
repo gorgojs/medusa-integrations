@@ -499,6 +499,16 @@
     "placeOrder": "भुगतान करें",
     "selectPaymentMethod": "भुगतान विधि चुनें"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "कार्ड नंबर",
+    "expiry": "समाप्ति तिथि (MM / YY)",
+    "cvc": "सिक्योरिटी कोड",
+    "invalidNumber": "कार्ड नंबर जाँचें।",
+    "invalidExpiry": "समाप्ति तिथि जाँचें।",
+    "invalidCvc": "सिक्योरिटी कोड जाँचें।",
+    "insecure": "कार्ड से भुगतान के लिए सुरक्षित HTTPS कनेक्शन ज़रूरी है।",
+    "tokenError": "कार्ड की जाँच नहीं हो सकी। फिर से प्रयास करें या कोई दूसरा कार्ड इस्तेमाल करें।"
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "अपना भुगतान विवरण दर्ज करें:",
     "loadError": "भुगतान विधियाँ लोड नहीं हो सकीं।"
@@ -510,6 +520,10 @@
     "paymentMethod": "भुगतान विधि"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "कार्ड"
+    },
     "pp_medusa-payments_default": {
       "title": "क्रेडिट कार्ड",
       "subtitle": "Medusa Payments"

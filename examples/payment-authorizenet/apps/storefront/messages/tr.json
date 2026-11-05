@@ -499,6 +499,16 @@
     "placeOrder": "Öde",
     "selectPaymentMethod": "Bir ödeme yöntemi seçin"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Kart numarası",
+    "expiry": "Son kullanma tarihi (AA / YY)",
+    "cvc": "Güvenlik kodu",
+    "invalidNumber": "Kart numarasını kontrol edin.",
+    "invalidExpiry": "Son kullanma tarihini kontrol edin.",
+    "invalidCvc": "Güvenlik kodunu kontrol edin.",
+    "insecure": "Kartla ödeme için güvenli bir HTTPS bağlantısı gerekir.",
+    "tokenError": "Kart doğrulanamadı. Lütfen tekrar deneyin veya başka bir kart kullanın."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Ödeme bilgilerinizi girin:",
     "loadError": "Ödeme yöntemleri yüklenemedi."
@@ -510,6 +520,10 @@
     "paymentMethod": "Ödeme yöntemi"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Kartlar"
+    },
     "pp_medusa-payments_default": {
       "title": "Kredi kartı",
       "subtitle": "Medusa Payments"
