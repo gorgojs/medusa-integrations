@@ -133,7 +133,21 @@ moduleIntegrationTestRunner<any>({
         expect(id).toMatch(/^intch_/)
         const [row] = await service.listIntegrationChanges({ id }, { take: 1 })
         expect(row).toMatchObject({ provider_id: A, actor_type: "system", diff: [{ field: "apiKey", from: "a", to: "b" }] })
-        expect(row.occurred_at).toBeInstanceOf(Date)
+        expect(row.created_at).toBeInstanceOf(Date)
+      })
+
+      it("stores the option ids and label keys of the change for the search", async () => {
+        const id = await service.recordChange({
+          provider_id: A,
+          change_type: "updated",
+          actor: { type: "system" },
+          diff: [
+            { field: "apiKey", label: "test.apiKey", from: "a", to: "b" },
+            { field: "token", secret: true, op: "set" },
+          ],
+        })
+        const [row] = await service.listIntegrationChanges({ id }, { take: 1, select: ["id", "diff_fields"] })
+        expect(row.diff_fields).toEqual(["apiKey", "test.apiKey", "token"])
       })
 
       it("never throws when a change cannot be stored", async () => {
