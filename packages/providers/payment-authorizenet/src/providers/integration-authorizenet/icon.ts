@@ -1,0 +1,7 @@
+const svg = `<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="300" height="300" fill="#202A45"/>
+<circle cx="130.4" cy="130.4" r="83.5" fill="#3974FE"/>
+<circle cx="220.3" cy="224.4" r="32.8" fill="#FFC300"/>
+</svg>`
+
+export const AUTHORIZENET_ICON = `data:image/svg+xml,${encodeURIComponent(svg)}`

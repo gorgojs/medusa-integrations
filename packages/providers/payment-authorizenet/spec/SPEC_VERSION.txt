@@ -1,0 +1,4 @@
+url=https://api.authorize.net/xml/v1/schema/AnetApiSchema.xsd
+sha256=c9c76cdbeba1f030bb453cdeec963457b9f85c6799db9b3888b0ade1a635a1fa
+last-modified=Fri, 25 Sep 2026 21:59:40 GMT
+pulled=2026-10-28

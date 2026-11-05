@@ -1,0 +1,157 @@
+{
+  "ANetApiRequest": [
+    "merchantAuthentication",
+    "clientId",
+    "refId"
+  ],
+  "createTransactionRequest": [
+    "merchantAuthentication",
+    "clientId",
+    "refId",
+    "transactionRequest",
+    "transactionRequestEnc"
+  ],
+  "transactionRequestType": [
+    "transactionType",
+    "amount",
+    "currencyCode",
+    "payment",
+    "profile",
+    "solution",
+    "callId",
+    "terminalNumber",
+    "authCode",
+    "refTransId",
+    "splitTenderId",
+    "order",
+    "lineItems",
+    "tax",
+    "duty",
+    "shipping",
+    "taxExempt",
+    "poNumber",
+    "customer",
+    "billTo",
+    "shipTo",
+    "customerIP",
+    "cardholderAuthentication",
+    "retail",
+    "employeeId",
+    "transactionSettings",
+    "userFields",
+    "surcharge",
+    "merchantDescriptor",
+    "subMerchant",
+    "tip",
+    "processingOptions",
+    "subsequentAuthInformation",
+    "otherTax",
+    "shipFrom",
+    "authorizationIndicatorType",
+    "tapToPhone",
+    "debtRepaymentIndicator",
+    "purchaseLevel",
+    "aftInformation",
+    "discount"
+  ],
+  "paymentType": [
+    "creditCard",
+    "bankAccount",
+    "trackData",
+    "encryptedTrackData",
+    "payPal",
+    "opaqueData",
+    "emv",
+    "dataSource"
+  ],
+  "opaqueDataType": [
+    "dataDescriptor",
+    "dataValue",
+    "dataKey",
+    "expirationTimeStamp"
+  ],
+  "creditCardType": [
+    "cardNumber",
+    "expirationDate",
+    "cardCode",
+    "isPaymentToken",
+    "cryptogram",
+    "tokenRequestorName",
+    "tokenRequestorId",
+    "tokenRequestorEci"
+  ],
+  "customerDataType": [
+    "type",
+    "id",
+    "email",
+    "driversLicense",
+    "taxId"
+  ],
+  "customerAddressType": [
+    "firstName",
+    "lastName",
+    "company",
+    "address",
+    "city",
+    "state",
+    "zip",
+    "country",
+    "phoneNumber",
+    "faxNumber",
+    "email"
+  ],
+  "nameAndAddressType": [
+    "firstName",
+    "lastName",
+    "company",
+    "address",
+    "city",
+    "state",
+    "zip",
+    "country"
+  ],
+  "settingType": [
+    "settingName",
+    "settingValue"
+  ],
+  "userField": [
+    "name",
+    "value"
+  ],
+  "getTransactionDetailsRequest": [
+    "merchantAuthentication",
+    "clientId",
+    "refId",
+    "transId",
+    "transrefId"
+  ],
+  "getMerchantDetailsRequest": [
+    "merchantAuthentication",
+    "clientId",
+    "refId"
+  ],
+  "authenticateTestRequest": [
+    "merchantAuthentication",
+    "clientId",
+    "refId"
+  ],
+  "securePaymentContainerRequest": [
+    "merchantAuthentication",
+    "clientId",
+    "refId",
+    "data"
+  ],
+  "webCheckOutDataType": [
+    "type",
+    "id",
+    "token",
+    "bankToken"
+  ],
+  "webCheckOutDataTypeToken": [
+    "cardNumber",
+    "expirationDate",
+    "cardCode",
+    "zip",
+    "fullName"
+  ]
+}

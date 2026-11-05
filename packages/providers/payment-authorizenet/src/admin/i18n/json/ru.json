@@ -1,0 +1,39 @@
+{
+  "authorizenet": {
+    "name": "Authorize.net",
+    "description": "Платёжный шлюз Authorize.net",
+    "sections": {
+      "credentials": "Доступы",
+      "behavior": "Поведение",
+      "wallets": "Экспресс-оплата"
+    },
+    "fields": {
+      "environment": "Окружение",
+      "apiLoginId": "API Login ID",
+      "transactionKey": "Ключ транзакций",
+      "publicClientKey": "Публичный ключ клиента",
+      "signatureKey": "Ключ подписи",
+      "capture": "Способ списания",
+      "googlePay": "Google Pay",
+      "googleMerchantId": "ID продавца в Google Pay"
+    },
+    "hints": {
+      "environment": "Sandbox принимает тестовые платежи, Production принимает настоящие.",
+      "apiLoginId": "Из раздела Account → Settings → API Credentials & Keys в Merchant Interface.",
+      "transactionKey": "Transaction Key с той же страницы, что и API Login ID.",
+      "publicClientKey": "Public Client Key из раздела Account → Settings → Security Settings → General Security Settings → Manage Public Client Key.",
+      "signatureKey": "Проверяет вебхуки Authorize.net. Signature Key с той же страницы, что и API Login ID.",
+      "capture": "При «Списать сразу» оплата одностадийная и деньги списываются сразу. При «Только заблокировать» оплата двухстадийная и сумма блокируется до подтверждения списания.",
+      "googlePay": "Показывает кнопку Google Pay в ряду экспресс-оплаты на витрине.",
+      "googleMerchantId": "Merchant ID из Google Pay & Wallet Console. Нужен только в продакшене."
+    },
+    "environments": {
+      "sandbox": "Sandbox",
+      "production": "Production"
+    },
+    "captures": {
+      "automatic": "Списать сразу",
+      "manual": "Только заблокировать"
+    }
+  }
+}
