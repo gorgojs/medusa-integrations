@@ -499,6 +499,16 @@
     "placeOrder": "Bayaran",
     "selectPaymentMethod": "Pumili ng paraan ng bayad"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Numero ng card",
+    "expiry": "Petsa ng pag-expire (MM / YY)",
+    "cvc": "Kodigo ng seguridad",
+    "invalidNumber": "Suriin ang numero ng card.",
+    "invalidExpiry": "Suriin ang petsa ng pag-expire.",
+    "invalidCvc": "Suriin ang kodigo ng seguridad.",
+    "insecure": "Kailangan ng ligtas na HTTPS na koneksyon para sa pagbabayad gamit ang card.",
+    "tokenError": "Hindi masuri ang card. Subukang muli o gumamit ng ibang card."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Ilagay ang detalye ng iyong pagbabayad:",
     "loadError": "Hindi ma-load ang mga paraan ng pagbabayad."
@@ -510,6 +520,10 @@
     "paymentMethod": "Paraan ng bayad"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Mga card"
+    },
     "pp_medusa-payments_default": {
       "title": "Credit card",
       "subtitle": "Medusa Payments"

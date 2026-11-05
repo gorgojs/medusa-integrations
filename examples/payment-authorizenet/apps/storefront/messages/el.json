@@ -499,6 +499,16 @@
     "placeOrder": "Πληρωμή",
     "selectPaymentMethod": "Επιλέξτε τρόπο πληρωμής"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Αριθμός κάρτας",
+    "expiry": "Ημερομηνία λήξης (ΜΜ / ΕΕ)",
+    "cvc": "Κωδικός ασφαλείας",
+    "invalidNumber": "Ελέγξτε τον αριθμό της κάρτας.",
+    "invalidExpiry": "Ελέγξτε την ημερομηνία λήξης.",
+    "invalidCvc": "Ελέγξτε τον κωδικό ασφαλείας.",
+    "insecure": "Οι πληρωμές με κάρτα απαιτούν ασφαλή σύνδεση HTTPS.",
+    "tokenError": "Δεν ήταν δυνατός ο έλεγχος της κάρτας. Δοκιμάστε ξανά ή χρησιμοποιήστε άλλη κάρτα."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Εισαγάγετε τα στοιχεία πληρωμής σας:",
     "loadError": "Δεν ήταν δυνατή η φόρτωση των μεθόδων πληρωμής."
@@ -510,6 +520,10 @@
     "paymentMethod": "Τρόπος πληρωμής"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Κάρτες"
+    },
     "pp_medusa-payments_default": {
       "title": "Πιστωτική κάρτα",
       "subtitle": "Medusa Payments"

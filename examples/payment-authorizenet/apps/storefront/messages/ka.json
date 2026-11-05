@@ -499,6 +499,16 @@
     "placeOrder": "გადახდა",
     "selectPaymentMethod": "აირჩიეთ გადახდის მეთოდი"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "ბარათის ნომერი",
+    "expiry": "მოქმედების ვადა (თთ / წწ)",
+    "cvc": "უსაფრთხოების კოდი",
+    "invalidNumber": "შეამოწმეთ ბარათის ნომერი.",
+    "invalidExpiry": "შეამოწმეთ მოქმედების ვადა.",
+    "invalidCvc": "შეამოწმეთ უსაფრთხოების კოდი.",
+    "insecure": "ბარათით გადახდას სჭირდება დაცული HTTPS კავშირი.",
+    "tokenError": "ბარათის შემოწმება ვერ მოხერხდა. სცადეთ ხელახლა ან გამოიყენეთ სხვა ბარათი."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "შეიყვანეთ გადახდის დეტალები:",
     "loadError": "გადახდის მეთოდების ჩატვირთვა ვერ მოხერხდა."
@@ -510,6 +520,10 @@
     "paymentMethod": "გადახდის მეთოდი"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "ბარათები"
+    },
     "pp_medusa-payments_default": {
       "title": "საკრედიტო ბარათი",
       "subtitle": "Medusa Payments"

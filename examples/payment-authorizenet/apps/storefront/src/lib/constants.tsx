@@ -22,6 +22,11 @@ export type PaymentInfo = {
    Add in any payment providers you want to use, and their labels to
    `messages/*.json`. */
 export const paymentInfoMap: Record<string, PaymentInfo> = {
+  pp_authorizenet_authorizenet: {
+    title: "Authorize.net",
+    subtitle: "Cards",
+    icon: <CreditCard />,
+  },
   pp_stripe_stripe: {
     title: "Credit card",
     subtitle: "Stripe",
@@ -60,6 +65,10 @@ export const isStripeLike = (providerId?: string) => {
   )
 }
 
+export const isAuthorizeNet = (providerId?: string) => {
+  return providerId?.startsWith("pp_authorizenet_")
+}
+
 const paymentSessionDataBuilders: Array<{
   test: (providerId?: string) => boolean | undefined
   isReady?: (cart: HttpTypes.StoreCart) => boolean
@@ -71,7 +80,14 @@ const paymentSessionDataBuilders: Array<{
    * Stripe PaymentIntent. `isReady` still gates the pay button.
    */
   deferred?: boolean
-}> = []
+}> = [
+  {
+    // The pay button turns the card into a one-time Accept.js token and starts the session with
+    // it right before the order is placed, so picking Authorize.net makes no request.
+    test: isAuthorizeNet,
+    deferred: true,
+  },
+]
 
 export const buildPaymentSessionData = (
   providerId: string | undefined,

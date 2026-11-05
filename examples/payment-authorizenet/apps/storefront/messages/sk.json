@@ -499,6 +499,16 @@
     "placeOrder": "Zaplatiť",
     "selectPaymentMethod": "Vyberte spôsob platby"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Číslo karty",
+    "expiry": "Platnosť do (MM / RR)",
+    "cvc": "Bezpečnostný kód",
+    "invalidNumber": "Skontrolujte číslo karty.",
+    "invalidExpiry": "Skontrolujte platnosť karty.",
+    "invalidCvc": "Skontrolujte bezpečnostný kód.",
+    "insecure": "Platba kartou vyžaduje zabezpečené pripojenie HTTPS.",
+    "tokenError": "Kartu sa nepodarilo overiť. Skúste to znova alebo použite inú kartu."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Zadajte svoje platobné údaje:",
     "loadError": "Platobné metódy sa nepodarilo načítať."
@@ -510,6 +520,10 @@
     "paymentMethod": "Spôsob platby"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Karty"
+    },
     "pp_medusa-payments_default": {
       "title": "Platobná karta",
       "subtitle": "Medusa Payments"

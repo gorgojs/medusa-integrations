@@ -499,6 +499,16 @@
     "placeOrder": "支払う",
     "selectPaymentMethod": "支払い方法を選択してください"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "カード番号",
+    "expiry": "有効期限（MM / YY）",
+    "cvc": "セキュリティコード",
+    "invalidNumber": "カード番号をご確認ください。",
+    "invalidExpiry": "有効期限をご確認ください。",
+    "invalidCvc": "セキュリティコードをご確認ください。",
+    "insecure": "カード決済には安全なHTTPS接続が必要です。",
+    "tokenError": "カードを確認できませんでした。もう一度お試しになるか、別のカードをお使いください。"
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "お支払い情報を入力してください：",
     "loadError": "お支払い方法を読み込めませんでした。"
@@ -510,6 +520,10 @@
     "paymentMethod": "支払い方法"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "カード"
+    },
     "pp_medusa-payments_default": {
       "title": "クレジットカード",
       "subtitle": "Medusa Payments"

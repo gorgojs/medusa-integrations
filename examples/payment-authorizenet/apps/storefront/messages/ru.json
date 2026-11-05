@@ -499,6 +499,16 @@
     "placeOrder": "Оплатить",
     "selectPaymentMethod": "Выберите способ оплаты"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Номер карты",
+    "expiry": "Срок действия (ММ / ГГ)",
+    "cvc": "Код безопасности",
+    "invalidNumber": "Проверьте номер карты.",
+    "invalidExpiry": "Проверьте срок действия.",
+    "invalidCvc": "Проверьте код безопасности.",
+    "insecure": "Для оплаты картой нужно защищённое соединение HTTPS.",
+    "tokenError": "Не удалось проверить карту. Попробуйте ещё раз или оплатите другой картой."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Введите данные для оплаты:",
     "loadError": "Не удалось загрузить способы оплаты."
@@ -510,6 +520,10 @@
     "paymentMethod": "Способ оплаты"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Карты"
+    },
     "pp_medusa-payments_default": {
       "title": "Банковская карта",
       "subtitle": "Medusa Payments"

@@ -499,6 +499,16 @@
     "placeOrder": "Оплатити",
     "selectPaymentMethod": "Оберіть спосіб оплати"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Номер картки",
+    "expiry": "Термін дії (ММ / РР)",
+    "cvc": "Код безпеки",
+    "invalidNumber": "Перевірте номер картки.",
+    "invalidExpiry": "Перевірте термін дії.",
+    "invalidCvc": "Перевірте код безпеки.",
+    "insecure": "Для оплати карткою потрібне захищене з'єднання HTTPS.",
+    "tokenError": "Не вдалося перевірити картку. Спробуйте ще раз або скористайтеся іншою карткою."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Введіть дані для оплати:",
     "loadError": "Не вдалося завантажити способи оплати."
@@ -510,6 +520,10 @@
     "paymentMethod": "Спосіб оплати"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Картки"
+    },
     "pp_medusa-payments_default": {
       "title": "Банківська картка",
       "subtitle": "Medusa Payments"

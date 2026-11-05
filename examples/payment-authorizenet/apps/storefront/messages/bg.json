@@ -499,6 +499,16 @@
     "placeOrder": "Плати",
     "selectPaymentMethod": "Изберете начин на плащане"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Номер на картата",
+    "expiry": "Срок на валидност (ММ / ГГ)",
+    "cvc": "Код за сигурност",
+    "invalidNumber": "Проверете номера на картата.",
+    "invalidExpiry": "Проверете срока на валидност.",
+    "invalidCvc": "Проверете кода за сигурност.",
+    "insecure": "За плащане с карта е нужна защитена HTTPS връзка.",
+    "tokenError": "Картата не можа да бъде проверена. Опитайте отново или използвайте друга карта."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Въведи данните за плащане:",
     "loadError": "Методите за плащане не се заредиха."
@@ -510,6 +520,10 @@
     "paymentMethod": "Начин на плащане"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Карти"
+    },
     "pp_medusa-payments_default": {
       "title": "Кредитна карта",
       "subtitle": "Medusa Payments"

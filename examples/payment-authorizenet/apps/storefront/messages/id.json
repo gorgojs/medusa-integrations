@@ -499,6 +499,16 @@
     "placeOrder": "Bayar",
     "selectPaymentMethod": "Pilih metode pembayaran"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Nomor kartu",
+    "expiry": "Tanggal kedaluwarsa (BB / TT)",
+    "cvc": "Kode keamanan",
+    "invalidNumber": "Periksa nomor kartu.",
+    "invalidExpiry": "Periksa tanggal kedaluwarsa.",
+    "invalidCvc": "Periksa kode keamanan.",
+    "insecure": "Pembayaran kartu memerlukan koneksi HTTPS yang aman.",
+    "tokenError": "Kartu tidak dapat diperiksa. Coba lagi atau gunakan kartu lain."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Masukkan detail pembayaran Anda:",
     "loadError": "Metode pembayaran tidak dapat dimuat."
@@ -510,6 +520,10 @@
     "paymentMethod": "Metode pembayaran"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Kartu"
+    },
     "pp_medusa-payments_default": {
       "title": "Kartu kredit",
       "subtitle": "Medusa Payments"

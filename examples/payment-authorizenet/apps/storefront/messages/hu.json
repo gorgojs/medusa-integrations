@@ -499,6 +499,16 @@
     "placeOrder": "Fizetés",
     "selectPaymentMethod": "Válasszon fizetési módot"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "Kártyaszám",
+    "expiry": "Lejárati dátum (HH / ÉÉ)",
+    "cvc": "Biztonsági kód",
+    "invalidNumber": "Ellenőrizze a kártyaszámot.",
+    "invalidExpiry": "Ellenőrizze a lejárati dátumot.",
+    "invalidCvc": "Ellenőrizze a biztonsági kódot.",
+    "insecure": "A kártyás fizetéshez biztonságos HTTPS-kapcsolat szükséges.",
+    "tokenError": "A kártyát nem sikerült ellenőrizni. Próbálja újra, vagy használjon másik kártyát."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "Adja meg fizetési adatait:",
     "loadError": "A fizetési módokat nem sikerült betölteni."
@@ -510,6 +520,10 @@
     "paymentMethod": "Fizetési mód"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Kártyák"
+    },
     "pp_medusa-payments_default": {
       "title": "Bankkártya",
       "subtitle": "Medusa Payments"

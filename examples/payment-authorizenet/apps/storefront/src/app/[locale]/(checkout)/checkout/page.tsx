@@ -1,5 +1,8 @@
 import { retrieveCart } from "@lib/data/cart"
 import { retrieveCustomer } from "@lib/data/customer"
+import { getAuthorizeNetConfig } from "@lib/data/authorizenet"
+import { listCartPaymentMethods } from "@lib/data/payment"
+import { isAuthorizeNet } from "@lib/constants"
 import PaymentWrapper from "@modules/checkout/components/payment-wrapper"
 import { CartUpdateProvider } from "@modules/checkout/context/cart-update-context"
 import { ShippingSelectionProvider } from "@modules/checkout/context/shipping-selection-context"
@@ -26,10 +29,21 @@ export default async function Checkout() {
     return notFound()
   }
 
-  const customer = await retrieveCustomer()
+  const [customer, paymentMethods, authorizeNetConfig] = await Promise.all([
+    retrieveCustomer(),
+    listCartPaymentMethods(cart.region?.id ?? ""),
+    getAuthorizeNetConfig(),
+  ])
+  // Accept.js loads only where the cart's region takes Authorize.net
+  const regionTakesAuthorizeNet = (paymentMethods ?? []).some((method) =>
+    isAuthorizeNet(method.id)
+  )
 
   return (
-    <PaymentWrapper cart={cart}>
+    <PaymentWrapper
+      cart={cart}
+      authorizeNetConfig={regionTakesAuthorizeNet ? authorizeNetConfig : null}
+    >
       <CartUpdateProvider>
         <ShippingSelectionProvider>
           <div className="overflow-x-hidden">

@@ -5,6 +5,7 @@ import { initiatePaymentSession } from "@lib/data/cart"
 import {
   buildPaymentSessionData,
   isPaymentSessionDeferred,
+  isAuthorizeNet,
   isPaymentSessionReady,
   isStripeLike,
   paymentInfoMap,
@@ -16,6 +17,7 @@ import type { HttpTypes } from "@medusajs/types"
 import PaymentButton from "@modules/checkout/components/payment-button"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { StripePaymentContainer } from "@modules/checkout/components/payment-container"
+import AuthorizeNetCardForm from "@modules/checkout/components/authorizenet-card-form"
 import CheckoutBillingSheet from "@modules/checkout/components/checkout-billing-sheet"
 import { Link } from "@i18n/navigation"
 import { useTranslations } from "next-intl"
@@ -199,6 +201,13 @@ export default function CheckoutPaymentSection({
                 setError={setError}
                 setPaymentComplete={setPaymentComplete}
               />
+            </div>
+          )}
+
+          {/* Authorize.net card input */}
+          {isAuthorizeNet(selectedPaymentMethod) && (
+            <div className="mt-2">
+              <AuthorizeNetCardForm />
             </div>
           )}
         </div>

@@ -3,11 +3,15 @@
 import { loadStripe } from "@stripe/stripe-js/pure"
 import type React from "react"
 import StripeWrapper from "./stripe-wrapper"
+import AuthorizeNetWrapper from "./authorizenet-wrapper"
 import type { HttpTypes } from "@medusajs/types"
 import { isStripeLike } from "@lib/constants"
+import type { AuthorizeNetConfig } from "@lib/data/authorizenet"
 
 type PaymentWrapperProps = {
   cart: HttpTypes.StoreCart
+  /** The Authorize.net settings, when the cart's region takes Authorize.net. */
+  authorizeNetConfig?: AuthorizeNetConfig | null
   children: React.ReactNode
 }
 
@@ -23,7 +27,35 @@ const stripePromise = stripeKey
     )
   : null
 
-const PaymentWrapper: React.FC<PaymentWrapperProps> = ({ cart, children }) => {
+/**
+ * Wraps the checkout in what the cart's payment providers need on the page. Authorize.net loads
+ * Accept.js and shares the card form with the pay button, so it wraps the whole checkout whenever
+ * the region takes it and there is something to pay.
+ */
+const PaymentWrapper: React.FC<PaymentWrapperProps> = ({
+  cart,
+  authorizeNetConfig,
+  children,
+}) => {
+  const content = (
+    <StripeOrPlain cart={cart}>{children}</StripeOrPlain>
+  )
+
+  if (authorizeNetConfig && (cart.total ?? 0) > 0) {
+    return (
+      <AuthorizeNetWrapper config={authorizeNetConfig}>
+        {content}
+      </AuthorizeNetWrapper>
+    )
+  }
+
+  return content
+}
+
+const StripeOrPlain: React.FC<{
+  cart: HttpTypes.StoreCart
+  children: React.ReactNode
+}> = ({ cart, children }) => {
   const paymentSession = cart.payment_collection?.payment_sessions?.find(
     (s) => s.status === "pending"
   )

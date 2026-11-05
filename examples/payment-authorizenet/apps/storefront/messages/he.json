@@ -499,6 +499,16 @@
     "placeOrder": "לתשלום",
     "selectPaymentMethod": "בחר אמצעי תשלום"
   },
+  "AuthorizeNetCard": {
+    "cardNumber": "מספר כרטיס",
+    "expiry": "תאריך תוקף (MM / YY)",
+    "cvc": "קוד אבטחה",
+    "invalidNumber": "בדוק את מספר הכרטיס.",
+    "invalidExpiry": "בדוק את תאריך התוקף.",
+    "invalidCvc": "בדוק את קוד האבטחה.",
+    "insecure": "תשלום בכרטיס דורש חיבור HTTPS מאובטח.",
+    "tokenError": "לא ניתן היה לאמת את הכרטיס. נסה שוב או השתמש בכרטיס אחר."
+  },
   "PaymentContainer": {
     "enterPaymentDetails": "הזן את פרטי התשלום שלך:",
     "loadError": "לא ניתן לטעון את אמצעי התשלום."
@@ -510,6 +520,10 @@
     "paymentMethod": "אמצעי תשלום"
   },
   "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "כרטיסים"
+    },
     "pp_medusa-payments_default": {
       "title": "כרטיס אשראי",
       "subtitle": "Medusa Payments"
