@@ -10,7 +10,6 @@ export type RecordIntegrationChangeStepInput = {
   change_type: IntegrationChangeType
   /** Absent when the workflow was run without one: recorded as `{ type: "system" }`. */
   actor?: IntegrationChangeActor | null
-  section_id?: string | null
   diff?: DiffEntry[]
   /** Set by the workflow when nothing actually changed. */
   skip?: boolean
@@ -51,16 +50,11 @@ export const recordIntegrationChangeStep = createStep(
 
     try {
       const integration: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
-      const descriptor = integration.getProviderDescriptor(input.provider_id)
       const id = await integration.recordChange({
         provider_id: input.provider_id,
         change_type: input.change_type,
         actor,
         actor_label: await resolveActorLabel(container, actor),
-        identifier: descriptor?.identifier ?? null,
-        instance_id: descriptor?.instanceId ?? null,
-        category: descriptor?.category ?? null,
-        section_id: input.section_id ?? null,
         diff: input.diff ?? [],
       })
       return new StepResponse(id, id)

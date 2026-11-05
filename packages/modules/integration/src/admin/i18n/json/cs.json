@@ -200,14 +200,15 @@
         "title": "Název"
       },
       "truncated": "(zkráceno)",
-      "pageTitle": "Historie změn integrací",
       "pageSubtitle": "Kdo změnil nastavení integrací a kdy.",
       "emptyFiltered": "Filtrům neodpovídají žádné změny",
       "search": "Hledat",
       "sort": {
         "tooltip": "Řadit",
-        "asc": "Vzestupně",
-        "desc": "Sestupně"
+        "aToZ": "A až Z",
+        "zToA": "Z až A",
+        "oldestFirst": "Nejstarší první",
+        "newestFirst": "Nejnovější první"
       },
       "columns": {
         "time": "Čas",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Integrace",
         "event": "Událost",
+        "author": "Autor",
         "period": "Datum",
         "clearAll": "Zrušit vše",
         "add": "Přidat filtr"

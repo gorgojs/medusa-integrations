@@ -200,14 +200,15 @@
         "title": "Judul"
       },
       "truncated": "(dipersingkat)",
-      "pageTitle": "Riwayat perubahan integrasi",
       "pageSubtitle": "Siapa yang mengubah pengaturan integrasi dan kapan.",
       "emptyFiltered": "Tidak ada perubahan yang cocok dengan filter",
       "search": "Cari",
       "sort": {
         "tooltip": "Urutkan",
-        "asc": "Menaik",
-        "desc": "Menurun"
+        "aToZ": "A ke Z",
+        "zToA": "Z ke A",
+        "oldestFirst": "Terlama dulu",
+        "newestFirst": "Terbaru dulu"
       },
       "columns": {
         "time": "Waktu",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Integrasi",
         "event": "Peristiwa",
+        "author": "Pelaku",
         "period": "Tanggal",
         "clearAll": "Hapus semua",
         "add": "Tambah filter"

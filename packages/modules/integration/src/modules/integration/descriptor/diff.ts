@@ -83,3 +83,8 @@ export function diffOptions(
 
   return entries
 }
+
+/** The option ids and label keys of a change, each once: what the search finds a change by its options with. */
+export function diffFields(diff: DiffEntry[]): string[] {
+  return [...new Set(diff.flatMap((entry) => (entry.label ? [entry.field, entry.label] : [entry.field])))]
+}

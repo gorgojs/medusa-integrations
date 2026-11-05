@@ -1,5 +1,7 @@
 import {
+  Button,
   Container,
+  DropdownMenu,
   Heading,
   Text,
   Tooltip,
@@ -14,17 +16,25 @@ import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useSearchParams } from "react-router-dom"
 import { sdk } from "../../../../lib/sdk"
-import { useChangeTimeFormat, useIntegrationChanges } from "../../../../lib/changes"
+import {
+  useChangeActors,
+  useChangeFields,
+  useChangeTimeFormat,
+  useIntegrationChanges,
+} from "../../../../lib/changes"
 import { IntegrationIcon } from "../../../../components/integration-icon"
 import { ChangeActor } from "../../../../components/history/change-actor"
 import { ChangeDrawer, useChangeParam } from "../../../../components/history/change-drawer"
 import { changeTitle } from "../../../../components/history/change-title"
 import { FieldBadges } from "../../../../components/history/field-badges"
+import { useDiffLabel } from "../../../../components/history/diff-rows"
 import {
   CHANGE_TYPES,
   HISTORY_PAGE_SIZE,
+  SYSTEM_ACTOR,
   buildChangesQuery,
   emptyFilters,
+  fieldsMatching,
   filtersFromState,
   hasFilters,
   orderFromSorting,
@@ -47,6 +57,36 @@ const filterHelper = createDataTableFilterHelper<AdminIntegrationChange>()
 // The rows carry no descriptor: badges are labelled with what each change stored.
 const NO_FIELDS = new Map<string, UiField>()
 
+/**
+ * "Add filter" as a labelled button: `DataTable.FilterMenu` draws only a funnel icon and takes no
+ * label. `options` are the filters not in use yet; picking one adds it without a value, as the
+ * table's own menu does, so its value picker opens.
+ */
+const AddFilterMenu = ({
+  label,
+  options,
+  onAdd,
+}: {
+  label: string
+  options: { id: string; label: string }[]
+  onAdd: (id: string) => void
+}) => (
+  <DropdownMenu>
+    <DropdownMenu.Trigger asChild disabled={!options.length}>
+      <Button size="small" variant="secondary">
+        {label}
+      </Button>
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content side="bottom" align="start">
+      {options.map((option) => (
+        <DropdownMenu.Item key={option.id} onClick={() => onAdd(option.id)}>
+          {option.label}
+        </DropdownMenu.Item>
+      ))}
+    </DropdownMenu.Content>
+  </DropdownMenu>
+)
+
 const HistoryPage = () => {
   const { t } = useTranslation()
   const time = useChangeTimeFormat()
@@ -57,11 +97,16 @@ const HistoryPage = () => {
   const offset = readOffset(params)
   const pageIndex = Math.floor(offset / HISTORY_PAGE_SIZE)
 
-  const { data, isLoading } = useIntegrationChanges(null, buildChangesQuery(filters, offset))
+  // The search also finds a change by the options it touched, by their labels as the rows show them.
+  const labelOf = useDiffLabel(NO_FIELDS)
+  const { data: changeFields } = useChangeFields()
+  const qFields = fieldsMatching(filters.q, changeFields?.fields ?? [], labelOf)
+  const { data, isLoading } = useIntegrationChanges(null, buildChangesQuery(filters, offset, qFields))
 
   // Search, sorting and filters all start again from the first page.
   const update = (patch: Partial<HistoryFilters>) =>
     setParams((prev) => writeFilters(prev, { ...readFilters(prev), ...patch }), { replace: true })
+  const sorting = sortingFromOrder(filters.order)
   const changes = data?.integration_changes ?? []
 
   // Registered integrations: names and icons for the rows and the options of the integration filter.
@@ -78,22 +123,32 @@ const HistoryPage = () => {
     return map
   }, [integrations])
 
+  // Who made changes: the options of the author filter.
+  const { data: actors } = useChangeActors()
+
   const columns = useMemo(() => {
-    // Every sortable column sorts the same way: the menu names the column, then the direction.
-    const sortable = (label: string) => ({
+    // The menu names the column, then the direction in words that fit its values, as Medusa's
+    // own tables do. Not Medusa's date labels: they put "Newest first" on the ascending order
+    // (medusajs/medusa#17228).
+    const byText = { asc: t("integration.history.sort.aToZ"), desc: t("integration.history.sort.zToA") }
+    const byTime = {
+      asc: t("integration.history.sort.oldestFirst"),
+      desc: t("integration.history.sort.newestFirst"),
+    }
+    const sortable = (label: string, directions = byText) => ({
       header: label,
       enableSorting: true,
       sortLabel: label,
-      sortAscLabel: t("integration.history.sort.asc"),
-      sortDescLabel: t("integration.history.sort.desc"),
+      sortAscLabel: directions.asc,
+      sortDescLabel: directions.desc,
     })
     return [
-      columnHelper.accessor("occurred_at", {
-        ...sortable(t("integration.history.columns.time")),
+      columnHelper.accessor("created_at", {
+        ...sortable(t("integration.history.columns.time"), byTime),
         cell: ({ row }) => (
-          <Tooltip content={time.full(row.original.occurred_at)}>
+          <Tooltip content={time.full(row.original.created_at)}>
             <Text size="small" leading="compact">
-              {time.relative(row.original.occurred_at)}
+              {time.relative(row.original.created_at)}
             </Text>
           </Tooltip>
         ),
@@ -138,7 +193,13 @@ const HistoryPage = () => {
       }),
       columnHelper.accessor("actor_label", {
         ...sortable(t("integration.history.columns.author")),
-        cell: ({ row }) => <ChangeActor change={row.original} />,
+        // The table clips a cell's content to its box, and the avatar's ring is a shadow drawn
+        // outside the avatar: the padding leaves room for it.
+        cell: ({ row }) => (
+          <div className="p-0.5">
+            <ChangeActor change={row.original} />
+          </div>
+        ),
       }),
       columnHelper.display({
         id: "fields",
@@ -160,13 +221,25 @@ const HistoryPage = () => {
         label: t("integration.history.filters.event"),
         options: CHANGE_TYPES.map((type) => ({ label: t(`integration.history.types.${type}`), value: type })),
       }),
-      filterHelper.accessor("occurred_at", {
+      // Only who made changes, so every author finds something; a removed account included.
+      filterHelper.accessor("actor_id", {
+        type: "select",
+        label: t("integration.history.filters.author"),
+        options: [
+          ...(actors?.users ?? []).map((user) => ({
+            label: user.label ?? t("integration.history.actors.unknownUser"),
+            value: user.id,
+          })),
+          ...(actors?.system ? [{ label: t("integration.history.actors.system"), value: SYSTEM_ACTOR }] : []),
+        ],
+      }),
+      filterHelper.accessor("created_at", {
         type: "date",
         label: t("integration.history.filters.period"),
         options: [],
       }),
     ],
-    [t, integrations]
+    [t, integrations, actors]
   )
 
   // A filter picked from the menu starts without a value, and the table keeps its picker open
@@ -176,7 +249,8 @@ const HistoryPage = () => {
   const filtering: DataTableFilteringState = {
     ...(filters.provider_id.length && { provider_id: filters.provider_id }),
     ...(filters.change_type.length && { change_type: filters.change_type }),
-    ...(filters.occurred_at && { occurred_at: filters.occurred_at }),
+    ...(filters.actor_id.length && { actor_id: filters.actor_id }),
+    ...(filters.created_at && { created_at: filters.created_at }),
     ...pendingFilters,
   }
 
@@ -205,8 +279,11 @@ const HistoryPage = () => {
       onSearchChange: (q) => update({ q }),
     },
     sorting: {
-      state: sortingFromOrder(filters.order),
-      onSortingChange: (sorting) => update({ order: orderFromSorting(sorting) }),
+      state: sorting,
+      // A header click that would leave the table unsorted flips the direction instead: the
+      // history has no unsorted order.
+      onSortingChange: (next) =>
+        update({ order: orderFromSorting(next ?? { ...sorting, desc: !sorting.desc }) }),
     },
     pagination: {
       state: { pageIndex, pageSize: HISTORY_PAGE_SIZE },
@@ -226,19 +303,30 @@ const HistoryPage = () => {
   return (
     <Container className="divide-y p-0">
       <div className="flex flex-col gap-1 px-6 py-4">
-        <Heading level="h2">{t("integration.history.pageTitle")}</Heading>
+        <Heading level="h2">{t("integration.history.title")}</Heading>
         <Text size="small" className="text-ui-fg-subtle">
           {t("integration.history.pageSubtitle")}
         </Text>
       </div>
 
-      <DataTable instance={table} className="[&_td]:py-3">
+      {/* Rows without the line between them: the table draws it as each row's bottom border. */}
+      <DataTable instance={table} className="[&_td]:py-3 [&_tbody_tr]:border-b-0">
         {/* The toolbar draws the bar of active filters itself. */}
         <DataTable.Toolbar
           className="justify-between gap-x-2"
           translations={{ clearAll: t("integration.history.filters.clearAll") }}
         >
-          <DataTable.FilterMenu tooltip={t("integration.history.filters.add")} />
+          <AddFilterMenu
+            label={t("integration.history.filters.add")}
+            options={tableFilters.filter((filter) => !(filter.id in filtering))}
+            onAdd={(id) =>
+              table.addFilter({
+                id,
+                // The empty value of each type, as the table's own menu sets it.
+                value: tableFilters.find((filter) => filter.id === id)?.type === "select" ? [] : null,
+              })
+            }
+          />
           <div className="flex items-center gap-x-2">
             <DataTable.Search placeholder={t("integration.history.search")} />
             <DataTable.SortingMenu tooltip={t("integration.history.sort.tooltip")} />

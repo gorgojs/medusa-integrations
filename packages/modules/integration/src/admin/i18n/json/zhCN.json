@@ -200,14 +200,15 @@
         "title": "标题"
       },
       "truncated": "（已截断）",
-      "pageTitle": "集成变更历史",
       "pageSubtitle": "谁更改了集成设置，以及更改时间。",
       "emptyFiltered": "没有符合筛选条件的变更",
       "search": "搜索",
       "sort": {
         "tooltip": "排序",
-        "asc": "升序",
-        "desc": "降序"
+        "aToZ": "A 到 Z",
+        "zToA": "Z 到 A",
+        "oldestFirst": "按最旧的",
+        "newestFirst": "按最新的"
       },
       "columns": {
         "time": "时间",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "集成",
         "event": "事件",
+        "author": "操作者",
         "period": "日期",
         "clearAll": "全部清除",
         "add": "添加筛选"

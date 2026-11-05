@@ -2,7 +2,12 @@ import { keepPreviousData, useQuery, type QueryClient } from "@tanstack/react-qu
 import { useTranslation } from "react-i18next"
 import { sdk } from "./sdk"
 import { changeTimeFormat, type ChangeTimeFormat } from "./format-date"
-import type { AdminIntegrationChangeListResponse, AdminIntegrationChangeResponse } from "../../types"
+import type {
+  AdminIntegrationChangeActorsResponse,
+  AdminIntegrationChangeFieldsResponse,
+  AdminIntegrationChangeListResponse,
+  AdminIntegrationChangeResponse,
+} from "../../types"
 
 /** Every change-history query starts with this key, so one invalidation refreshes them all. */
 export const CHANGES_QUERY_KEY = ["integration-changes"] as const
@@ -12,10 +17,14 @@ export type IntegrationChangesQuery = {
   offset?: number
   provider_id?: string | string[]
   change_type?: string | string[]
-  occurred_at?: Record<string, string>
-  /** Free text over the author and the integration. */
+  /** Admin user ids, and `system` for every change shown as System. */
+  actor_id?: string[]
+  created_at?: Record<string, string>
+  /** Free text over the author, the integration and the options changed. */
   q?: string
-  /** A column, `-` in front for descending. The API defaults to `-occurred_at`. */
+  /** Ids and label keys of the options whose label contains `q`, see `fieldsMatching`. */
+  q_fields?: string[]
+  /** A column, `-` in front for descending. The API defaults to `-created_at`. */
   order?: string
 }
 
@@ -28,6 +37,24 @@ export function useIntegrationChanges(providerId: string | null, query: Integrat
         providerId ? `/admin/integrations/${providerId}/changes` : "/admin/integrations/changes",
         { query }
       ),
+    placeholderData: keepPreviousData,
+  })
+}
+
+/** Every option the history names, for the search: the API matches no translated labels itself. */
+export function useChangeFields() {
+  return useQuery({
+    queryKey: [...CHANGES_QUERY_KEY, "fields"],
+    queryFn: () => sdk.client.fetch<AdminIntegrationChangeFieldsResponse>("/admin/integrations/changes/fields"),
+    placeholderData: keepPreviousData,
+  })
+}
+
+/** Who the history names, for the author filter: admin users by label, and whether System made changes. */
+export function useChangeActors() {
+  return useQuery({
+    queryKey: [...CHANGES_QUERY_KEY, "actors"],
+    queryFn: () => sdk.client.fetch<AdminIntegrationChangeActorsResponse>("/admin/integrations/changes/actors"),
     placeholderData: keepPreviousData,
   })
 }

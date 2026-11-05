@@ -38,17 +38,19 @@ export const AdminGetIntegrationChangesParams = createFindParams({
   limit: 20,
   offset: 0,
   // Newest first unless the request sets its own `order`.
-  order: "-occurred_at",
+  order: "-created_at",
 })
   .extend({ limit: changesLimit })
   .merge(
     z.object({
       provider_id: stringOrArray.optional(),
       change_type: stringOrArray.optional(),
+      // The author's id, or `system` for every change the admin shows as System, see `changeFilters`.
       actor_id: stringOrArray.optional(),
-      // Free text over the author and the integration, see `changeFilters`.
+      // Free text over the author, the integration and the options changed, see `changeFilters`.
       q: z.string().trim().min(1).optional(),
-      occurred_at: createOperatorMap().optional(),
+      q_fields: stringOrArray.optional(),
+      created_at: createOperatorMap().optional(),
     })
   )
 

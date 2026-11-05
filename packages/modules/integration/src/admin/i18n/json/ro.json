@@ -200,14 +200,15 @@
         "title": "Titlu"
       },
       "truncated": "(prescurtat)",
-      "pageTitle": "Istoricul modificărilor integrărilor",
       "pageSubtitle": "Cine a modificat setările integrării și când.",
       "emptyFiltered": "Nicio modificare nu corespunde filtrelor",
       "search": "Căutare",
       "sort": {
         "tooltip": "Sortare",
-        "asc": "Crescător",
-        "desc": "Descrescător"
+        "aToZ": "De la A la Z",
+        "zToA": "De la Z la A",
+        "oldestFirst": "Cel mai vechi primul",
+        "newestFirst": "Cel mai nou primul"
       },
       "columns": {
         "time": "Ora",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Integrare",
         "event": "Eveniment",
+        "author": "Autor",
         "period": "Data",
         "clearAll": "Șterge tot",
         "add": "Adaugă filtru"

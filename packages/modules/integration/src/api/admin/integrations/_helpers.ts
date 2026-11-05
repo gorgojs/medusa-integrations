@@ -65,15 +65,57 @@ export function changeActor(req: AuthenticatedMedusaRequest): IntegrationChangeA
   }
 }
 
+/** What `actor_id` takes for every change made by anything but an admin user. */
+const SYSTEM_ACTOR = "system"
+
+const strings = (value: unknown) => [value].flat().filter((v): v is string => typeof v === "string" && !!v)
+
 /**
  * The list filters of the change history. `q` is not a column: it becomes a case-insensitive
- * match on the author (email or API key title), the `provider_id` and the provider identifier.
+ * match on the author (email or API key title) and the `provider_id`, which holds the provider's
+ * identifier and instance.
+ * The options a change touched are matched by the admin, which alone has their translated labels:
+ * it sends the ids and label keys whose label contains `q` as `q_fields`, and a change that
+ * touched any of them matches too. Without `q`, `q_fields` is ignored.
+ *
+ * `actor_id` also takes `system`, for the changes the admin shows as System: made by an API key,
+ * by code without a request, by anything but an admin user.
  */
 export function changeFilters(filterable: Record<string, unknown>): Record<string, unknown> {
-  const { q, ...filters } = filterable
-  if (typeof q !== "string" || !q) return filters
-  const like = { $ilike: `%${q.replace(/[\\%_]/g, "\\$&")}%` }
-  return { ...filters, $or: [{ actor_label: like }, { provider_id: like }, { identifier: like }] }
+  const { q, q_fields, actor_id, ...filters } = filterable
+  const conditions: Record<string, unknown>[] = []
+
+  const actors = strings(actor_id)
+  if (actors.length) {
+    const ids = actors.filter((id) => id !== SYSTEM_ACTOR)
+    conditions.push(
+      actors.includes(SYSTEM_ACTOR)
+        ? {
+            $or: [
+              ...(ids.length ? [{ actor_id: ids }] : []),
+              { actor_type: { $ne: "user" } },
+              { actor_id: null },
+            ],
+          }
+        : { actor_id: ids }
+    )
+  }
+
+  if (typeof q === "string" && q) {
+    const like = { $ilike: `%${q.replace(/[\\%_]/g, "\\$&")}%` }
+    const fields = strings(q_fields)
+    conditions.push({
+      $or: [
+        { actor_label: like },
+        { provider_id: like },
+        ...(fields.length ? [{ diff_fields: { $overlap: fields } }] : []),
+      ],
+    })
+  }
+
+  // Two conditions may each be an `$or`, so they go under `$and` rather than side by side.
+  if (conditions.length > 1) return { ...filters, $and: conditions }
+  return { ...filters, ...conditions[0] }
 }
 
 /**

@@ -200,14 +200,15 @@
         "title": "Başlık"
       },
       "truncated": "(kısaltıldı)",
-      "pageTitle": "Entegrasyon Değişiklik Geçmişi",
       "pageSubtitle": "Entegrasyon ayarlarını kimin ve ne zaman değiştirdiği.",
       "emptyFiltered": "Filtrelerle eşleşen değişiklik yok",
       "search": "Ara",
       "sort": {
         "tooltip": "Sırala",
-        "asc": "Artan",
-        "desc": "Azalan"
+        "aToZ": "A'dan Z'ye",
+        "zToA": "Z'den A'ya",
+        "oldestFirst": "Eskiden yeniye",
+        "newestFirst": "Yeniden eskiye"
       },
       "columns": {
         "time": "Zaman",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Entegrasyon",
         "event": "Olay",
+        "author": "Değiştiren",
         "period": "Tarih",
         "clearAll": "Tümünü temizle",
         "add": "Filtre ekle"
