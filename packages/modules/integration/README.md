@@ -67,6 +67,7 @@ The Integration Module is useful for any Medusa developer building plugins, prov
 - **Encrypted secrets:** Fields marked `secret` are encrypted (AES-256-GCM) and never reach the browser.
 - **Multiple instances:** The same provider can be configured more than once. For example, for several accounts in the same third-party service.
 - **Connection test:** Verify credentials against the third-party service right from the Admin.
+- **Change history:** The module records who changed which fields of an integration's settings and when. You can search and filter the history in the Admin, and secret values never reach it.
 - **Extensible UI:** Sections can be reordered (LayoutComposer). If the generated sections aren't enough, you can implement any UI for your options using custom widgets.
 - **Integration catalog:** Available integrations are shown in the Admin, and any plugin appears there on equal footing with the built-in ones.
 
