@@ -200,14 +200,15 @@
         "title": "Pavadinimas"
       },
       "truncated": "(sutrumpinta)",
-      "pageTitle": "Integracijų pakeitimų istorija",
       "pageSubtitle": "Kas ir kada pakeitė integracijų nustatymus.",
       "emptyFiltered": "Nėra pakeitimų, atitinkančių filtrus",
       "search": "Paieška",
       "sort": {
         "tooltip": "Rikiuoti",
-        "asc": "Didėjimo tvarka",
-        "desc": "Mažėjimo tvarka"
+        "aToZ": "A iki Z",
+        "zToA": "Z iki A",
+        "oldestFirst": "Seniausi viršuje",
+        "newestFirst": "Naujausi viršuje"
       },
       "columns": {
         "time": "Laikas",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Integracija",
         "event": "Įvykis",
+        "author": "Autorius",
         "period": "Data",
         "clearAll": "Išvalyti viską",
         "add": "Pridėti filtrą"

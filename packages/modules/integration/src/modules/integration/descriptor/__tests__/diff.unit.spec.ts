@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals"
 import { defineIntegration } from "../define"
-import { diffOptions, DIFF_MAX_BYTES, DIFF_MAX_FIELDS, DIFF_MAX_VALUE_LENGTH } from "../diff"
+import { diffFields, diffOptions, DIFF_MAX_BYTES, DIFF_MAX_FIELDS, DIFF_MAX_VALUE_LENGTH } from "../diff"
 
 const descriptor = defineIntegration({
   category: "payment",
@@ -112,5 +112,22 @@ describe("diffOptions", () => {
     expect(entries[0].to).toHaveLength(DIFF_MAX_VALUE_LENGTH)
     const last = entries[entries.length - 1]
     expect(last).toEqual({ field: last.field, label: last.label, from: null, to: null, truncated: true })
+  })
+})
+
+describe("diffFields", () => {
+  it("lists the option ids and label keys once each", () => {
+    expect(
+      diffFields([
+        { field: "apiKey", label: "demo.apiKey", from: "a", to: "b" },
+        { field: "secret", label: "demo.secret", secret: true, op: "set" },
+        { field: "@title", from: "x", to: "y" },
+        { field: "token", label: "demo.apiKey", from: 1, to: 2 },
+      ])
+    ).toEqual(["apiKey", "demo.apiKey", "secret", "demo.secret", "@title", "token"])
+  })
+
+  it("is empty for a change without options", () => {
+    expect(diffFields([])).toEqual([])
   })
 })

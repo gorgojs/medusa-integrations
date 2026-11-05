@@ -200,14 +200,15 @@
         "title": "כותרת"
       },
       "truncated": "(קוצר)",
-      "pageTitle": "היסטוריית שינויים באינטגרציות",
       "pageSubtitle": "מי שינה את הגדרות האינטגרציות ומתי.",
       "emptyFiltered": "אין שינויים שתואמים למסננים",
       "search": "חיפוש",
       "sort": {
         "tooltip": "מיון",
-        "asc": "עולה",
-        "desc": "יורד"
+        "aToZ": "א עד ת",
+        "zToA": "ת עד א",
+        "oldestFirst": "הישן ביותר תחילה",
+        "newestFirst": "החדש ביותר תחילה"
       },
       "columns": {
         "time": "זמן",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "אינטגרציה",
         "event": "אירוע",
+        "author": "מבצע",
         "period": "תאריך",
         "clearAll": "נקה הכול",
         "add": "הוסף מסנן"

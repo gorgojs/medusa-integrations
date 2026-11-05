@@ -200,14 +200,15 @@
         "title": "Cím"
       },
       "truncated": "(rövidítve)",
-      "pageTitle": "Integrációk módosítási előzményei",
       "pageSubtitle": "Ki módosította az integrációk beállításait, és mikor.",
       "emptyFiltered": "Nincs a szűrőknek megfelelő módosítás",
       "search": "Keresés",
       "sort": {
         "tooltip": "Rendezés",
-        "asc": "Növekvő",
-        "desc": "Csökkenő"
+        "aToZ": "A-Z",
+        "zToA": "Z-A",
+        "oldestFirst": "Legrégebbi elöl",
+        "newestFirst": "Legújabb elöl"
       },
       "columns": {
         "time": "Időpont",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Integráció",
         "event": "Esemény",
+        "author": "Szerző",
         "period": "Dátum",
         "clearAll": "Összes törlése",
         "add": "Szűrő hozzáadása"

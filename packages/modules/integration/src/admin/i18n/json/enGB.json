@@ -200,14 +200,15 @@
         "title": "Title"
       },
       "truncated": "(shortened)",
-      "pageTitle": "Integration Change History",
       "pageSubtitle": "Who changed integration settings and when.",
       "emptyFiltered": "No changes match your filters",
       "search": "Search",
       "sort": {
         "tooltip": "Sort",
-        "asc": "Ascending",
-        "desc": "Descending"
+        "aToZ": "A to Z",
+        "zToA": "Z to A",
+        "oldestFirst": "Oldest first",
+        "newestFirst": "Newest first"
       },
       "columns": {
         "time": "Time",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Integration",
         "event": "Event",
+        "author": "Author",
         "period": "Date",
         "clearAll": "Clear all",
         "add": "Add filter"

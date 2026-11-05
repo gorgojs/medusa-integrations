@@ -83,21 +83,14 @@ export interface CatalogItem extends CatalogIntegration {
  */
 export interface AdminIntegrationChange {
   id: string
-  occurred_at: string
+  created_at: string
   actor_type: string
   actor_id: string | null
   actor_label: string | null
   change_type: IntegrationChangeType
   provider_id: string
-  identifier: string | null
-  instance_id: string | null
-  category: string | null
-  section_id: string | null
   diff: DiffEntry[]
-  reverts_id: string | null
   request_id?: string | null
   ip?: string | null
   user_agent?: string | null
-  created_at?: string
-  updated_at?: string
 }

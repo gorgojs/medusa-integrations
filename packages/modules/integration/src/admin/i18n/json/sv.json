@@ -200,14 +200,15 @@
         "title": "Titel"
       },
       "truncated": "(förkortad)",
-      "pageTitle": "Ändringshistorik för integrationer",
       "pageSubtitle": "Vem som ändrade integrationsinställningar och när.",
       "emptyFiltered": "Inga ändringar matchar filtren",
       "search": "Sök",
       "sort": {
         "tooltip": "Sortera",
-        "asc": "Stigande",
-        "desc": "Fallande"
+        "aToZ": "A till Ö",
+        "zToA": "Ö till A",
+        "oldestFirst": "Äldsta först",
+        "newestFirst": "Nyaste först"
       },
       "columns": {
         "time": "Tid",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Integration",
         "event": "Händelse",
+        "author": "Ändrad av",
         "period": "Datum",
         "clearAll": "Rensa alla",
         "add": "Lägg till filter"

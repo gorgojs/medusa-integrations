@@ -2,6 +2,7 @@ import type { DeleteResponse } from "@medusajs/framework/types"
 import type { AdminIntegrationChange, CatalogItem, IntegrationOverviewItem, MaskedIntegration } from "./entities"
 import type { CategoryKind, TestConnectionResult, UiDescriptor } from "../../../integration"
 import type { LicenseStateEntry } from "../../../../modules/integration/types"
+import type { IntegrationChangeField, IntegrationChangeUser } from "../../../integration/history"
 
 export interface AdminIntegrationListResponse {
   integrations: IntegrationOverviewItem[]
@@ -51,4 +52,17 @@ export interface AdminIntegrationChangeListResponse {
 
 export interface AdminIntegrationChangeResponse {
   integration_change: AdminIntegrationChange
+}
+
+/** Every option the change history names, for the search. */
+export interface AdminIntegrationChangeFieldsResponse {
+  fields: IntegrationChangeField[]
+}
+
+/** Who the change history names, for the author filter. */
+export interface AdminIntegrationChangeActorsResponse {
+  /** Admin users, by label. */
+  users: IntegrationChangeUser[]
+  /** Whether anything other than an admin user made changes: what the admin shows as System. */
+  system: boolean
 }

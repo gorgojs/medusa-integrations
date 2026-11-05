@@ -200,14 +200,15 @@
         "title": "Tiêu đề"
       },
       "truncated": "(đã rút gọn)",
-      "pageTitle": "Lịch sử thay đổi tích hợp",
       "pageSubtitle": "Ai đã thay đổi cài đặt tích hợp và khi nào.",
       "emptyFiltered": "Không có thay đổi nào khớp với bộ lọc",
       "search": "Tìm kiếm",
       "sort": {
         "tooltip": "Sắp xếp",
-        "asc": "Tăng dần",
-        "desc": "Giảm dần"
+        "aToZ": "Từ A đến Z",
+        "zToA": "Từ Z đến A",
+        "oldestFirst": "Cũ nhất trước",
+        "newestFirst": "Mới nhất trước"
       },
       "columns": {
         "time": "Thời gian",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Tích hợp",
         "event": "Sự kiện",
+        "author": "Người thực hiện",
         "period": "Ngày",
         "clearAll": "Xóa tất cả",
         "add": "Thêm bộ lọc"

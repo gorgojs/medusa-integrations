@@ -1,5 +1,6 @@
-import { MedusaService } from "@medusajs/framework/utils"
-import { Logger } from "@medusajs/framework/types"
+import { InjectManager, MedusaContext, MedusaService } from "@medusajs/framework/utils"
+import type { Context, Logger } from "@medusajs/framework/types"
+import type { EntityManager } from "@medusajs/framework/mikro-orm/knex"
 import Integration from "../models/integration"
 import IntegrationChange from "../models/integration-change"
 import { deriveKey } from "./crypto"
@@ -20,7 +21,12 @@ import { toLicenseStateEntries } from "../utils/license-entry"
 import { loadCatalog } from "../../../lib/catalog"
 import type { IntegrationOverviewItem, CatalogItem } from "../../../types"
 import type { CategoryKind } from "../../../types/integration"
-import type { RecordIntegrationChangeInput } from "../../../types/integration/history"
+import type {
+  IntegrationChangeField,
+  IntegrationChangeUser,
+  RecordIntegrationChangeInput,
+} from "../../../types/integration/history"
+import { diffFields } from "../descriptor/diff"
 
 type InjectedDependencies = {
   logger?: Logger
@@ -313,18 +319,14 @@ export default class IntegrationModuleService extends MedusaService({
   async recordChange(input: RecordIntegrationChangeInput): Promise<string | null> {
     try {
       const created = await this.createIntegrationChanges({
-        occurred_at: input.occurred_at ?? new Date(),
+        ...(input.created_at && { created_at: input.created_at }),
         actor_type: input.actor.type,
         actor_id: input.actor.id ?? null,
         actor_label: input.actor_label ?? null,
         change_type: input.change_type,
         provider_id: input.provider_id,
-        identifier: input.identifier ?? null,
-        instance_id: input.instance_id ?? null,
-        category: input.category ?? null,
-        section_id: input.section_id ?? null,
         diff: (input.diff ?? []) as unknown as Record<string, unknown>,
-        reverts_id: input.reverts_id ?? null,
+        diff_fields: diffFields(input.diff ?? []),
         request_id: input.actor.request_id ?? null,
         ip: input.actor.ip ?? null,
         user_agent: input.actor.user_agent ?? null,
@@ -336,6 +338,51 @@ export default class IntegrationModuleService extends MedusaService({
       )
       return null
     }
+  }
+
+  /**
+   * Every option the history names, once per id and label key. The search needs them: the admin
+   * shows translated labels, which the database does not have, so it matches the search against
+   * them itself and sends back the keys. Read from `diff`, so removed options and integrations
+   * are included.
+   */
+  @InjectManager()
+  async listChangeFields(@MedusaContext() sharedContext: Context<EntityManager> = {}): Promise<IntegrationChangeField[]> {
+    const rows: { field: string; label: string | null }[] = await sharedContext.manager!.execute(
+      `select distinct e->>'field' as field, e->>'label' as label
+       from integration_change c
+       cross join lateral jsonb_array_elements(
+         case when jsonb_typeof(c.diff) = 'array' then c.diff else '[]'::jsonb end
+       ) e
+       where c.deleted_at is null and e->>'field' is not null
+       order by field, label`
+    )
+    return rows.map((row) => ({ field: row.field, label: row.label ?? null }))
+  }
+
+  /**
+   * Who the history names, for its author filter: every admin user with the email stored with
+   * their latest change, and whether anything else made changes (an API key, code run without a
+   * request). A removed account stays in the list as long as its changes do.
+   */
+  @InjectManager()
+  async listChangeActors(
+    @MedusaContext() sharedContext: Context<EntityManager> = {}
+  ): Promise<{ users: IntegrationChangeUser[]; system: boolean }> {
+    const manager = sharedContext.manager!
+    const users: { id: string; label: string | null }[] = await manager.execute(
+      `select distinct on (actor_id) actor_id as id, actor_label as label
+       from integration_change
+       where deleted_at is null and actor_type = 'user' and actor_id is not null
+       order by actor_id, actor_label is null, created_at desc`
+    )
+    const [{ system }]: { system: boolean }[] = await manager.execute(
+      `select exists (
+         select 1 from integration_change
+         where deleted_at is null and (actor_type <> 'user' or actor_id is null)
+       ) as system`
+    )
+    return { users: users.map((user) => ({ id: user.id, label: user.label ?? null })), system: !!system }
   }
 
   // ── resolver (runtime read, cached) ──────────────────────────────────────────
