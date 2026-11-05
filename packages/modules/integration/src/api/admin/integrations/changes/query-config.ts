@@ -1,18 +1,13 @@
 // List rows leave out where the request came from; the detail returns every column.
 export const defaultAdminIntegrationChangeListFields = [
   "id",
-  "occurred_at",
+  "created_at",
   "actor_type",
   "actor_id",
   "actor_label",
   "change_type",
   "provider_id",
-  "identifier",
-  "instance_id",
-  "category",
-  "section_id",
   "diff",
-  "reverts_id",
 ]
 
 export const defaultAdminIntegrationChangeFields = [
@@ -20,8 +15,6 @@ export const defaultAdminIntegrationChangeFields = [
   "request_id",
   "ip",
   "user_agent",
-  "created_at",
-  "updated_at",
 ]
 
 export const retrieveTransformQueryConfig = {

@@ -70,9 +70,9 @@ export const ChangeTimeline = ({
                 <Text size="small" leading="compact" weight="plus" className="truncate">
                   {t(title.key, title.values)}
                 </Text>
-                <Tooltip content={time.full(change.occurred_at)}>
+                <Tooltip content={time.full(change.created_at)}>
                   <Text size="small" leading="compact" className="text-ui-fg-subtle shrink-0">
-                    {time.relative(change.occurred_at)}
+                    {time.relative(change.created_at)}
                   </Text>
                 </Tooltip>
               </div>

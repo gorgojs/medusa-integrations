@@ -200,14 +200,15 @@
         "title": "タイトル"
       },
       "truncated": "(省略)",
-      "pageTitle": "インテグレーションの変更履歴",
       "pageSubtitle": "誰がいつインテグレーションの設定を変更したか。",
       "emptyFiltered": "条件に一致する変更はありません",
       "search": "検索",
       "sort": {
         "tooltip": "並べ替え",
-        "asc": "昇順",
-        "desc": "降順"
+        "aToZ": "A→Z",
+        "zToA": "Z→A",
+        "oldestFirst": "古い順",
+        "newestFirst": "新しい順"
       },
       "columns": {
         "time": "日時",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "インテグレーション",
         "event": "イベント",
+        "author": "実行者",
         "period": "日付",
         "clearAll": "すべてクリア",
         "add": "フィルターを追加"

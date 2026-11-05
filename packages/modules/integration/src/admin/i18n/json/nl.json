@@ -200,14 +200,15 @@
         "title": "Titel"
       },
       "truncated": "(ingekort)",
-      "pageTitle": "Wijzigingsgeschiedenis van integraties",
       "pageSubtitle": "Wie heeft wanneer de integratie-instellingen gewijzigd.",
       "emptyFiltered": "Geen wijzigingen komen overeen met de filters",
       "search": "Zoeken",
       "sort": {
         "tooltip": "Sorteren",
-        "asc": "Oplopend",
-        "desc": "Aflopend"
+        "aToZ": "A tot Z",
+        "zToA": "Z tot A",
+        "oldestFirst": "Oudste eerst",
+        "newestFirst": "Nieuwste eerst"
       },
       "columns": {
         "time": "Tijd",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Integratie",
         "event": "Gebeurtenis",
+        "author": "Auteur",
         "period": "Datum",
         "clearAll": "Alles wissen",
         "add": "Filter toevoegen"

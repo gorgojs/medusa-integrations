@@ -200,14 +200,15 @@
         "title": "Tytuł"
       },
       "truncated": "(skrócono)",
-      "pageTitle": "Historia zmian integracji",
       "pageSubtitle": "Kto zmienił ustawienia integracji i kiedy.",
       "emptyFiltered": "Żadne zmiany nie pasują do filtrów",
       "search": "Szukaj",
       "sort": {
         "tooltip": "Sortuj",
-        "asc": "Rosnąco",
-        "desc": "Malejąco"
+        "aToZ": "od A do Z",
+        "zToA": "od Z do A",
+        "oldestFirst": "Od najstarszych",
+        "newestFirst": "Od najnowszych"
       },
       "columns": {
         "time": "Czas",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Integracja",
         "event": "Zdarzenie",
+        "author": "Autor",
         "period": "Data",
         "clearAll": "Wyczyść wszystko",
         "add": "Dodaj filtr"

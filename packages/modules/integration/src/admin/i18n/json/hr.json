@@ -200,14 +200,15 @@
         "title": "Naslov"
       },
       "truncated": "(skraćeno)",
-      "pageTitle": "Povijest promjena integracija",
       "pageSubtitle": "Tko je promijenio postavke integracija i kada.",
       "emptyFiltered": "Nema promjena koje odgovaraju filtrima",
       "search": "Pretraži",
       "sort": {
         "tooltip": "Sortiraj",
-        "asc": "Uzlazno",
-        "desc": "Silazno"
+        "aToZ": "A do Z",
+        "zToA": "Z do A",
+        "oldestFirst": "Najstarije prvo",
+        "newestFirst": "Najnovije prvo"
       },
       "columns": {
         "time": "Vrijeme",
@@ -219,6 +220,7 @@
       "filters": {
         "integration": "Integracija",
         "event": "Događaj",
+        "author": "Autor",
         "period": "Datum",
         "clearAll": "Očisti sve",
         "add": "Dodaj filtar"

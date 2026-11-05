@@ -150,7 +150,7 @@ export const ChangeDrawer = ({ changeId, onClose }: { changeId: string | null; o
                   <ChangeActor change={change} className="text-ui-fg-base" />
                 </DetailRow>
                 <DetailRow label={t("integration.history.detail.time")}>
-                  <Plain>{time.full(change.occurred_at)}</Plain>
+                  <Plain>{time.full(change.created_at)}</Plain>
                 </DetailRow>
               </Section>
               <Section

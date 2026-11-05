@@ -249,22 +249,6 @@
           "enumItems": [],
           "mappedType": "text"
         },
-        "occurred_at": {
-          "name": "occurred_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "unique": false,
-          "length": 6,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "datetime"
-        },
         "actor_type": {
           "name": "actor_type",
           "type": "text",
@@ -345,70 +329,6 @@
           "enumItems": [],
           "mappedType": "text"
         },
-        "identifier": {
-          "name": "identifier",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "text"
-        },
-        "instance_id": {
-          "name": "instance_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "text"
-        },
-        "category": {
-          "name": "category",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "text"
-        },
-        "section_id": {
-          "name": "section_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "unique": false,
-          "length": null,
-          "precision": null,
-          "scale": null,
-          "default": null,
-          "comment": null,
-          "enumItems": [],
-          "mappedType": "text"
-        },
         "diff": {
           "name": "diff",
           "type": "jsonb",
@@ -425,21 +345,21 @@
           "enumItems": [],
           "mappedType": "json"
         },
-        "reverts_id": {
-          "name": "reverts_id",
-          "type": "text",
+        "diff_fields": {
+          "name": "diff_fields",
+          "type": "text[]",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "unique": false,
           "length": null,
           "precision": null,
           "scale": null,
-          "default": null,
+          "default": "'{}'",
           "comment": null,
           "enumItems": [],
-          "mappedType": "text"
+          "mappedType": "array"
         },
         "request_id": {
           "name": "request_id",
@@ -551,22 +471,22 @@
           "expression": "CREATE INDEX IF NOT EXISTS \"IDX_integration_change_deleted_at\" ON \"integration_change\" (\"deleted_at\") WHERE deleted_at IS NULL"
         },
         {
-          "keyName": "IDX_integration_change_provider_id_occurred_at",
+          "keyName": "IDX_integration_change_provider_id_created_at",
           "columnNames": [],
           "composite": false,
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_integration_change_provider_id_occurred_at\" ON \"integration_change\" (\"provider_id\", \"occurred_at\") WHERE deleted_at IS NULL"
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_integration_change_provider_id_created_at\" ON \"integration_change\" (\"provider_id\", \"created_at\") WHERE deleted_at IS NULL"
         },
         {
-          "keyName": "IDX_integration_change_occurred_at",
+          "keyName": "IDX_integration_change_created_at",
           "columnNames": [],
           "composite": false,
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_integration_change_occurred_at\" ON \"integration_change\" (\"occurred_at\") WHERE deleted_at IS NULL"
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_integration_change_created_at\" ON \"integration_change\" (\"created_at\") WHERE deleted_at IS NULL"
         },
         {
           "keyName": "IDX_integration_change_actor_id",

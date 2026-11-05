@@ -2,6 +2,7 @@ import { describe, expect, it } from "@jest/globals"
 import {
   buildChangesQuery,
   emptyFilters,
+  fieldsMatching,
   filtersFromState,
   hasFilters,
   isEmptyFilterValue,
@@ -15,12 +16,13 @@ import {
 describe("history filters in the URL", () => {
   it("reads the filters and drops values it does not know", () => {
     const params = new URLSearchParams(
-      "provider_id=int_x&change_type=updated&change_type=bogus&from=2026-10-01T00:00:00.000Z&to=nope&q=%20anna%20&order=-actor_label"
+      "provider_id=int_x&change_type=updated&change_type=bogus&actor_id=user_1&actor_id=system&actor_id=&from=2026-10-01T00:00:00.000Z&to=nope&q=%20anna%20&order=-actor_label"
     )
     expect(readFilters(params)).toEqual({
       provider_id: ["int_x"],
       change_type: ["updated"],
-      occurred_at: { $gte: "2026-10-01T00:00:00.000Z" },
+      actor_id: ["user_1", "system"],
+      created_at: { $gte: "2026-10-01T00:00:00.000Z" },
       q: " anna ",
       order: "-actor_label",
     })
@@ -30,7 +32,8 @@ describe("history filters in the URL", () => {
     expect(readFilters(new URLSearchParams())).toEqual({
       provider_id: [],
       change_type: [],
-      occurred_at: null,
+      actor_id: [],
+      created_at: null,
       q: "",
       order: "",
     })
@@ -44,7 +47,8 @@ describe("history filters in the URL", () => {
     const filters = {
       provider_id: ["int_a", "int_b"],
       change_type: ["deleted"],
-      occurred_at: { $gte: "2026-10-01T00:00:00.000Z", $lte: "2026-10-05T00:00:00.000Z" },
+      actor_id: ["user_1", "system"],
+      created_at: { $gte: "2026-10-01T00:00:00.000Z", $lte: "2026-10-05T00:00:00.000Z" },
       q: "tkassa",
       order: "provider_id",
     }
@@ -66,6 +70,7 @@ describe("history filters in the URL", () => {
 
   it("counts a search as a filter and the sorting as none", () => {
     expect(hasFilters(readFilters(new URLSearchParams("q=anna")))).toBe(true)
+    expect(hasFilters(readFilters(new URLSearchParams("actor_id=system")))).toBe(true)
     expect(hasFilters(readFilters(new URLSearchParams("q=%20")))).toBe(false)
     expect(hasFilters(readFilters(new URLSearchParams("order=provider_id")))).toBe(false)
   })
@@ -85,30 +90,45 @@ describe("buildChangesQuery", () => {
     })
   })
 
+  it("sends the options the search matched, and only with the search", () => {
+    const query = buildChangesQuery(readFilters(new URLSearchParams("q=key")), 0, ["demo.apiKey"])
+    expect(query).toMatchObject({ q: "key", q_fields: ["demo.apiKey"] })
+    expect(buildChangesQuery(readFilters(new URLSearchParams()), 0, ["demo.apiKey"])).not.toHaveProperty("q_fields")
+    expect(buildChangesQuery(readFilters(new URLSearchParams("q=key")), 0, [])).not.toHaveProperty("q_fields")
+  })
+
+  it("sends the authors, System among them", () => {
+    expect(buildChangesQuery(readFilters(new URLSearchParams("actor_id=user_1&actor_id=system")), 0)).toEqual({
+      limit: 20,
+      offset: 0,
+      actor_id: ["user_1", "system"],
+    })
+  })
+
   it("makes the end of the period the end of that day", () => {
     const to = new Date(2026, 9, 5).toISOString()
     const query = buildChangesQuery(readFilters(new URLSearchParams({ to })), 20)
     expect(query.offset).toBe(20)
-    expect(query.occurred_at?.$lte).toBe(new Date(2026, 9, 5, 23, 59, 59, 999).toISOString())
+    expect(query.created_at?.$lte).toBe(new Date(2026, 9, 5, 23, 59, 59, 999).toISOString())
   })
 })
 
 describe("sorting", () => {
   it("is newest first without an order", () => {
-    expect(sortingFromOrder("")).toEqual({ id: "occurred_at", desc: true })
-    expect(orderFromSorting({ id: "occurred_at", desc: true })).toBe("")
+    expect(sortingFromOrder("")).toEqual({ id: "created_at", desc: true })
+    expect(orderFromSorting({ id: "created_at", desc: true })).toBe("")
   })
 
   it("round-trips a column and a direction", () => {
     expect(sortingFromOrder("-actor_label")).toEqual({ id: "actor_label", desc: true })
     expect(orderFromSorting({ id: "actor_label", desc: true })).toBe("-actor_label")
-    expect(orderFromSorting({ id: "occurred_at", desc: false })).toBe("occurred_at")
+    expect(orderFromSorting({ id: "created_at", desc: false })).toBe("created_at")
   })
 })
 
 describe("filters picked from the table menu", () => {
   // The menu adds a filter with an empty value and keeps its picker open while it stays empty.
-  const state = { provider_id: [], change_type: ["updated"], occurred_at: null }
+  const state = { provider_id: [], change_type: ["updated"], actor_id: ["user_1"], created_at: null }
 
   it("tells an empty filter from one with a value", () => {
     expect(isEmptyFilterValue([])).toBe(true)
@@ -120,19 +140,53 @@ describe("filters picked from the table menu", () => {
   })
 
   it("keeps the empty ones aside, so the URL gets only filters with a value", () => {
-    expect(emptyFilters(state)).toEqual({ provider_id: [], occurred_at: null })
+    expect(emptyFilters(state)).toEqual({ provider_id: [], created_at: null })
     expect(filtersFromState(state)).toEqual({
       provider_id: [],
       change_type: ["updated"],
-      occurred_at: null,
+      actor_id: ["user_1"],
+      created_at: null,
     })
   })
 
   it("reads a date range from the table state", () => {
-    expect(filtersFromState({ occurred_at: { $gte: "2026-10-01T00:00:00.000Z" } })).toEqual({
+    expect(filtersFromState({ created_at: { $gte: "2026-10-01T00:00:00.000Z" } })).toEqual({
       provider_id: [],
       change_type: [],
-      occurred_at: { $gte: "2026-10-01T00:00:00.000Z" },
+      actor_id: [],
+      created_at: { $gte: "2026-10-01T00:00:00.000Z" },
     })
+  })
+})
+
+describe("fieldsMatching", () => {
+  const fields = [
+    { field: "terminalKey", label: "tkassa.terminalKey" },
+    { field: "apiKey", label: "yookassa.apiKey" },
+    { field: "webhookUrl", label: null },
+    { field: "@title", label: null },
+  ]
+  // As the table labels them: a translation for the label keys, the id otherwise.
+  const shown: Record<string, string> = {
+    "tkassa.terminalKey": "Ключ терминала",
+    "yookassa.apiKey": "Секретный ключ",
+    "@title": "Название",
+  }
+  const labelOf = (field: { field: string; label: string | null }) =>
+    shown[field.label ?? field.field] ?? field.field
+
+  it("matches the label as shown, case-insensitively, and sends its key", () => {
+    expect(fieldsMatching(" КЛЮЧ ", fields, labelOf)).toEqual(["tkassa.terminalKey", "yookassa.apiKey"])
+    expect(fieldsMatching("назв", fields, labelOf)).toEqual(["@title"])
+  })
+
+  it("matches the option id too, and sends the id of an option stored without a label", () => {
+    expect(fieldsMatching("terminalkey", fields, labelOf)).toEqual(["tkassa.terminalKey"])
+    expect(fieldsMatching("webhook", fields, labelOf)).toEqual(["webhookUrl"])
+  })
+
+  it("matches nothing for an empty search or an unknown word", () => {
+    expect(fieldsMatching(" ", fields, labelOf)).toEqual([])
+    expect(fieldsMatching("price", fields, labelOf)).toEqual([])
   })
 })

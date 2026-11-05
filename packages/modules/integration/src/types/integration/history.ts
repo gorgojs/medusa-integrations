@@ -48,18 +48,22 @@ export type DiffSecretEntry = {
 
 export type DiffEntry = DiffValueEntry | DiffSecretEntry
 
+/** An option the change history names: its id and the label key it was stored with. */
+export type IntegrationChangeField = { field: string; label: I18nKey | null }
+
+/**
+ * An admin user the change history names: the user's id and their name or email now, or the
+ * email stored with their changes once the account is gone. `null` when there is neither.
+ */
+export type IntegrationChangeUser = { id: string; label: string | null }
+
 /** One entry of the change history, as the integration module's service stores it. */
 export type RecordIntegrationChangeInput = {
   provider_id: string
   change_type: IntegrationChangeType
   actor: IntegrationChangeActor
   actor_label?: string | null
-  identifier?: string | null
-  instance_id?: string | null
-  category?: string | null
-  section_id?: string | null
   diff?: DiffEntry[]
-  reverts_id?: string | null
   /** Defaults to now. */
-  occurred_at?: Date
+  created_at?: Date
 }

@@ -47,7 +47,7 @@ export const DiffValue = ({ field, value }: { field?: UiField; value: unknown })
  */
 export function useDiffLabel(fields: Map<string, UiField>) {
   const { t, i18n } = useTranslation()
-  return (entry: DiffEntry): string => {
+  return (entry: Pick<DiffEntry, "field"> & { label?: string | null }): string => {
     if (entry.field === "@title") return t("integration.history.fields.title")
     const current = fields.get(entry.field)
     if (current) return t(current.label)
