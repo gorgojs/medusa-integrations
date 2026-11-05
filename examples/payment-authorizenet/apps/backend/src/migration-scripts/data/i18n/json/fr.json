@@ -1,0 +1,103 @@
+{
+  "name": "Français",
+  "translations": {
+    "categories": {
+      "clothing": "Vêtements",
+      "coffee": "Café",
+      "eTransport": "Transport électrique",
+      "electronics": "Électronique",
+      "headphones": "Casques",
+      "home": "Maison",
+      "outerwear": "Vêtements d'extérieur",
+      "pants": "Pantalons",
+      "shirts": "T-shirts",
+      "shorts": "Shorts",
+      "sweatshirts": "Sweat-shirts",
+      "tableware": "Vaisselle"
+    },
+    "collections": {
+      "new": "Nouveautés"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Pantalon chino noir classique à coupe ajustée et au design épuré. Confectionné dans un coton doux et résistant avec une touche d'élasthanne pour le confort. Poches latérales, passants de ceinture et fermeture à bouton. Idéal pour un look décontracté ou habillé.",
+        "title": "Pantalon chino"
+      },
+      "electricBike": {
+        "description": "VTT électrique noir mat conçu pour la performance et la polyvalence au quotidien. Cadre en aluminium léger, batterie intégrée et moteur puissant pour une conduite assistée fluide sur tous les terrains. Pensé aussi bien pour les trajets urbains que pour les sentiers tout-terrain.",
+        "title": "Vélo électrique"
+      },
+      "espressoCup": {
+        "description": "Tasses à espresso en céramique noire conçues pour un simple ou un double. Résistantes, elles conservent la chaleur et passent au lave-vaisselle.",
+        "title": "Tasse à espresso"
+      },
+      "hoodie": {
+        "description": "Sweat à capuche noir classique en coton doux pour un confort quotidien. Coupe décontractée, capuche à cordon ajustable et poche kangourou à l'avant. Simple et polyvalent, à superposer en toute saison.",
+        "title": "Sweat à capuche"
+      },
+      "pufferJacket": {
+        "description": "Doudoune noire isolante conçue pour la chaleur et le confort par temps froid. Col montant, fermeture éclair à pression et plusieurs poches pratiques. Légère mais résistante, pour un usage quotidien ou en plein air.",
+        "title": "Doudoune"
+      },
+      "servingPlate": {
+        "description": "Plat de service sculptural en acier inoxydable avec une finition miroir polie. Sa forme fluide et moderne apporte une touche raffinée à toute table. Parfait pour les fruits, les amuse-bouches ou en pièce décorative. Conçu pour allier fonctionnalité et impact visuel, il reflète magnifiquement la lumière et s'accorde à tout intérieur contemporain, à la maison comme au restaurant.",
+        "title": "Plat de service"
+      },
+      "shorts": {
+        "description": "Redécouvrez la sensation d'un short classique. Avec nos shorts en coton, les indispensables du quotidien n'ont plus rien d'ordinaire.",
+        "title": "Short Medusa"
+      },
+      "sweatpants": {
+        "description": "Redécouvrez la sensation d'un pantalon de survêtement classique. Avec nos pantalons de survêtement en coton, les indispensables du quotidien n'ont plus rien d'ordinaire.",
+        "title": "Pantalon de survêtement Medusa"
+      },
+      "sweatshirt": {
+        "description": "Redécouvrez la sensation d'un sweat-shirt classique. Avec notre sweat-shirt en coton, les indispensables du quotidien n'ont plus rien d'ordinaire.",
+        "title": "Sweat-shirt Medusa"
+      },
+      "tShirt": {
+        "description": "Redécouvrez la sensation d'un t-shirt classique. Avec nos t-shirts en coton, les indispensables du quotidien n'ont plus rien d'ordinaire.",
+        "title": "T-shirt Medusa"
+      },
+      "wirelessHeadphones": {
+        "description": "Casque sans fil noir mat au design circum-auriculaire confortable pour une écoute immersive. Son clair, basses puissantes et grande autonomie. Conçu pour un usage quotidien à la maison, au bureau ou en déplacement.",
+        "title": "Casque sans fil"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Remboursement accordé à titre commercial ou en compensation d'un désagrément",
+        "label": "Geste commercial"
+      },
+      "pricingError": {
+        "description": "Remboursement pour corriger un trop-perçu, une remise manquante ou un prix incorrect",
+        "label": "Erreur de prix"
+      },
+      "shippingIssue": {
+        "description": "Remboursement pour un colis perdu, retardé ou mal livré",
+        "label": "Problème de livraison"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Livraison par coursier",
+      "pickup": "Retrait"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Livraison sous 2 à 3 jours.",
+        "label": "Coursier"
+      },
+      "pickup": {
+        "description": "À retirer en point relais.",
+        "label": "Retrait"
+      }
+    },
+    "terms": {
+      "black": "Noir",
+      "color": "Couleur",
+      "silver": "Argenté",
+      "size": "Taille",
+      "white": "Blanc"
+    }
+  }
+}

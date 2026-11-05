@@ -1,0 +1,103 @@
+{
+  "name": "Türkçe",
+  "translations": {
+    "categories": {
+      "clothing": "Giyim",
+      "coffee": "Kahve",
+      "eTransport": "Elektrikli Ulaşım",
+      "electronics": "Elektronik",
+      "headphones": "Kulaklıklar",
+      "home": "Ev",
+      "outerwear": "Dış Giyim",
+      "pants": "Pantolonlar",
+      "shirts": "Tişörtler",
+      "shorts": "Şortlar",
+      "sweatshirts": "Sweatshirtler",
+      "tableware": "Sofra Eşyaları"
+    },
+    "collections": {
+      "new": "Yeni Gelenler"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Şık kesimli ve sade tasarımlı klasik siyah chino pantolon. Konfor için hafif esneklik payı olan yumuşak ve dayanıklı pamuklu kumaştan üretilmiştir. Yan cepler, kemer halkaları ve düğmeli kapama özelliklerine sahiptir. Hem günlük hem de şık kombinler için idealdir.",
+        "title": "Chino Pantolon"
+      },
+      "electricBike": {
+        "description": "Performans ve günlük çok yönlülük için üretilmiş mat siyah elektrikli dağ bisikleti. Hafif alüminyum kadro, entegre pil ve her türlü zeminde pürüzsüz destekli sürüş için güçlü motor özelliklerine sahiptir. Hem şehir içi ulaşım hem de arazi parkurları için tasarlanmıştır.",
+        "title": "Elektrikli Bisiklet"
+      },
+      "espressoCup": {
+        "description": "Tek veya çift shot için tasarlanmış siyah seramik espresso fincanları. Dayanıklı, ısı tutan ve bulaşık makinesinde yıkanabilir.",
+        "title": "Espresso Fincanı"
+      },
+      "hoodie": {
+        "description": "Günlük konfor için yumuşak pamuklu kumaştan üretilmiş klasik siyah kapüşonlu sweatshirt. Rahat kesim, ayarlanabilir ipli kapüşon ve ön kanguru cep özellikleriyle. Her mevsim katmanlı giyim için sade ve çok yönlü.",
+        "title": "Kapüşonlu Sweatshirt"
+      },
+      "pufferJacket": {
+        "description": "Soğuk havalarda sıcaklık ve konfor için tasarlanmış astarlı siyah şişme mont. Yüksek yaka, çıtçıtlı fermuar kapama ve işlevsellik için birden fazla cep özelliğine sahiptir. Günlük kullanım veya açık hava aktiviteleri için hafif ama dayanıklıdır.",
+        "title": "Şişme Mont"
+      },
+      "servingPlate": {
+        "description": "Cilalı ayna kaplamaya sahip heykelsi paslanmaz çelik servis tabağı. Akışkan, modern formu her masa düzenine zarif bir dokunuş katar. Meyve, aperatif veya dekoratif sunumlar için mükemmeldir. Hem işlevsellik hem de görsel etki için tasarlanmış olup ışığı güzel bir şekilde yansıtır ve her modern ev veya restoran tarzını tamamlar.",
+        "title": "Servis Tabağı"
+      },
+      "shorts": {
+        "description": "Klasik şortun hissini yeniden keşfedin. Pamuklu şortumuzla günlük temel parçalar artık sıradan değil.",
+        "title": "Medusa Şort"
+      },
+      "sweatpants": {
+        "description": "Klasik eşofman altının hissini yeniden keşfedin. Pamuklu eşofman altımızla günlük temel parçalar artık sıradan değil.",
+        "title": "Medusa Eşofman Altı"
+      },
+      "sweatshirt": {
+        "description": "Klasik bir sweatshirtin hissini yeniden keşfedin. Pamuklu sweatshirtimizle günlük temel parçalar artık sıradan değil.",
+        "title": "Medusa Sweatshirt"
+      },
+      "tShirt": {
+        "description": "Klasik bir tişörtün hissini yeniden keşfedin. Pamuklu tişörtlerimizle günlük temel parçalar artık sıradan değil.",
+        "title": "Medusa Tişört"
+      },
+      "wirelessHeadphones": {
+        "description": "Sürükleyici bir dinleme deneyimi için rahat kulak üstü tasarıma sahip mat siyah kablosuz kulaklık. Net ses, güçlü bas ve uzun pil ömrü sunar. Evde, ofiste veya yolda günlük kullanım için tasarlanmıştır.",
+        "title": "Kablosuz Kulak Üstü Kulaklık"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Rahatsızlık için iyi niyet göstergesi veya tazminat olarak verilen iade",
+        "label": "Müşteri Hizmetleri Düzenlemesi"
+      },
+      "pricingError": {
+        "description": "Fazla ücretlendirme, eksik indirim veya yanlış fiyatı düzeltmek için iade",
+        "label": "Fiyatlandırma Hatası"
+      },
+      "shippingIssue": {
+        "description": "Kayıp, gecikmiş veya yanlış teslim edilen gönderi nedeniyle iade",
+        "label": "Kargo Sorunu"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Kurye ile teslimat",
+      "pickup": "Teslim Alma"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "2–3 gün içinde teslimat.",
+        "label": "Kurye"
+      },
+      "pickup": {
+        "description": "Bir teslim noktasından teslim alın.",
+        "label": "Teslim Alma"
+      }
+    },
+    "terms": {
+      "black": "Siyah",
+      "color": "Renk",
+      "silver": "Gümüş",
+      "size": "Beden",
+      "white": "Beyaz"
+    }
+  }
+}

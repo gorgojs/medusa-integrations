@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Tiếp tục mua sắm",
+    "haveAccount": "Bạn đã có tài khoản? Hãy mở",
+    "item": "Sản phẩm",
+    "myOrders": "Đơn hàng của tôi",
+    "orCall": "hoặc gọi",
+    "orderSummary": "Tóm tắt đơn hàng",
+    "questionsPrefix": "Nếu có thắc mắc, hãy viết cho chúng tôi tại",
+    "shipping": "Phí vận chuyển",
+    "total": "Tổng cộng",
+    "trackOrder": "Theo dõi đơn hàng",
+    "viewOrder": "Xem đơn hàng"
+  },
+  "Delivery": {
+    "bodyOrder": "Đơn hàng <strong>#{id}</strong> đã được giao. Mong rằng mọi thứ đến nơi nguyên vẹn.",
+    "headingAnon": "Đơn hàng của bạn đã được giao",
+    "headingWithName": "{name}, đơn hàng của bạn đã được giao",
+    "preview": "Đơn hàng #{id} đã giao",
+    "somethingWrong": "Nếu có gì chưa ổn, hãy báo cho chúng tôi trong vòng 14 ngày và chúng tôi sẽ xử lý.",
+    "subject": "Đơn hàng #{id} đã giao",
+    "textFallback": "Đơn hàng #{id} đã được giao."
+  },
+  "Fulfillment": {
+    "bodyOrder": "Đơn hàng <strong>#{id}</strong> đã được đóng gói và đang chờ bàn giao cho đơn vị vận chuyển.",
+    "deliveryCity": "Giao đến {city}.",
+    "headingAnon": "Chúng tôi đang chuẩn bị đơn hàng của bạn",
+    "headingWithName": "{name}, chúng tôi đang chuẩn bị đơn hàng của bạn",
+    "nextStep": "Chúng tôi sẽ gửi mã vận đơn ngay khi kiện hàng lên đường.",
+    "preview": "Đơn hàng #{id} đang được chuẩn bị",
+    "subject": "Đơn hàng #{id} đang được chuẩn bị",
+    "textFallback": "Đơn hàng #{id} đã được đóng gói."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. Bảo lưu mọi quyền."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "Đơn hàng <strong>#{id}</strong> đã bị hủy.",
+    "headingAnon": "Đơn hàng của bạn đã bị hủy",
+    "headingWithName": "{name}, đơn hàng của bạn đã bị hủy",
+    "preview": "Đơn hàng #{id} đã hủy",
+    "refundNote": "Nếu đơn hàng đã thanh toán, tiền sẽ hoàn về đúng thẻ đó. Ngân hàng thường cần tối đa 10 ngày làm việc.",
+    "subject": "Đơn hàng #{id} đã hủy",
+    "textFallback": "Đơn hàng #{id} đã bị hủy."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "Đơn hàng <strong>#{id}</strong> đã hoàn tất. Cảm ơn bạn đã chọn chúng tôi!",
+    "bodyPromo": "Rất mong được gặp lại bạn. Hãy xem các sản phẩm mới trong cửa hàng của chúng tôi.",
+    "deliveryCity": "Đã giao đến {city}.",
+    "headingAnon": "Đơn hàng của bạn đã hoàn tất!",
+    "headingWithName": "{name}, đơn hàng của bạn đã hoàn tất!",
+    "preview": "Đơn hàng #{id} đã hoàn tất. Cảm ơn bạn đã mua hàng!",
+    "subject": "Đơn hàng #{id} đã hoàn tất",
+    "textFallback": "Đơn hàng #{id} đã hoàn tất. Cảm ơn bạn đã mua hàng!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "Đơn hàng <strong>#{id}</strong> đã được tạo thành công.",
+    "deliveryCity": "Giao đến {city}.",
+    "headingAnon": "Đơn hàng của bạn đã được tạo!",
+    "headingWithName": "{name}, đơn hàng của bạn đã được tạo!",
+    "preview": "Đơn hàng #{id} đã được tạo thành công",
+    "subject": "Đơn hàng #{id} đã được tạo",
+    "textFallback": "Đơn hàng #{id} đã được tạo.\n\nChúng tôi đang chuẩn bị đơn hàng và sẽ gửi đi trong thời gian sớm nhất.",
+    "watchStatus": "Bạn có thể theo dõi trạng thái đơn hàng trong tài khoản của mình."
+  },
+  "OrderTransfer": {
+    "body": "Đã có yêu cầu chuyển đơn hàng <strong>#{id}</strong> sang một tài khoản khác. Nếu đó là bạn, hãy xác nhận việc chuyển bằng nút bên dưới. Nếu không, hãy bỏ qua email này.",
+    "button": "Xem yêu cầu",
+    "heading": "Yêu cầu chuyển đơn hàng",
+    "hint": "Đơn hàng chỉ được chuyển sau khi bạn xác nhận. Nếu bạn không yêu cầu chuyển, đơn hàng của bạn sẽ không thay đổi.",
+    "preview": "Yêu cầu chuyển đơn hàng #{id}",
+    "subject": "Yêu cầu chuyển đơn hàng #{id}",
+    "textFallback": "Yêu cầu chuyển đơn hàng #{id}\n\nĐể xem yêu cầu, hãy mở liên kết:\n{url}\n\nNếu bạn không yêu cầu chuyển, hãy bỏ qua email này."
+  },
+  "PasswordReset": {
+    "body": "Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho <strong>{email}</strong>. Nhấn nút bên dưới để đặt mật khẩu mới.",
+    "button": "Đặt lại mật khẩu",
+    "heading": "Đặt lại mật khẩu",
+    "hint": "Liên kết có hiệu lực trong <strong>15 phút</strong>. Nếu bạn không yêu cầu đặt lại mật khẩu, hãy bỏ qua email này.",
+    "preview": "Đặt lại mật khẩu, liên kết có hiệu lực 15 phút",
+    "subject": "Đặt lại mật khẩu",
+    "textFallback": "Đặt lại mật khẩu\n\nĐể đặt lại mật khẩu, hãy mở liên kết (có hiệu lực 15 phút):\n{url}\n\nNếu bạn không yêu cầu đặt lại mật khẩu, hãy bỏ qua email này."
+  },
+  "Payment": {
+    "bodyOrder": "Đơn hàng <strong>#{id}</strong> đã được thanh toán thành công. Chúng tôi đang chuẩn bị để gửi đi.",
+    "headingAnon": "Đơn hàng của bạn đã được thanh toán!",
+    "headingWithName": "{name}, đơn hàng của bạn đã được thanh toán!",
+    "preview": "Đơn hàng #{id} đã được thanh toán thành công",
+    "subject": "Đơn hàng #{id} đã thanh toán",
+    "textFallback": "Đơn hàng #{id} đã được thanh toán.\n\nChúng tôi đang chuẩn bị đơn hàng và sẽ gửi đi trong thời gian sớm nhất.",
+    "watchStatus": "Bạn có thể theo dõi trạng thái đơn hàng trong tài khoản của mình."
+  },
+  "Shipment": {
+    "bodyOrder": "Đơn hàng <strong>#{id}</strong> đã được bàn giao cho đơn vị vận chuyển.",
+    "deliveryCity": "Giao đến {city}.",
+    "deliveryTime": "Thời gian giao hàng thông thường là 1-7 ngày làm việc tùy theo khu vực của bạn.",
+    "headingAnon": "Đơn hàng của bạn đang trên đường!",
+    "headingWithName": "{name}, đơn hàng của bạn đang trên đường!",
+    "noTracking": "Mã vận đơn sẽ được thêm vào đơn hàng trong tài khoản của bạn ngay khi kiện hàng được bàn giao cho đơn vị vận chuyển.",
+    "preview": "Đơn hàng #{id} đã được gửi đi",
+    "subject": "Đơn hàng #{id} đã được gửi đi",
+    "textDelivery": "Thời gian giao hàng thông thường là 1-7 ngày làm việc.",
+    "textFallback": "Đơn hàng #{id} đã được gửi đi.",
+    "textTracking": "Mã vận đơn: {numbers}",
+    "trackLabel": "Mã vận đơn:",
+    "trackingTitle": "Thông tin theo dõi"
+  },
+  "Welcome": {
+    "body": "Cảm ơn bạn đã đăng ký! Tài khoản của bạn đã sẵn sàng. Giờ đây bạn có thể đặt hàng nhanh hơn, theo dõi đơn hàng và lưu địa chỉ giao hàng trong tài khoản.",
+    "button": "Bắt đầu mua sắm",
+    "claimOrders": "Bạn từng đặt hàng khi chưa có tài khoản? Có thể liên kết các đơn đó tại",
+    "claimOrdersLink": "đơn hàng của bạn",
+    "headingAnon": "Chào mừng bạn!",
+    "headingWithName": "Chào mừng, {name}!",
+    "preview": "Chào mừng bạn đến với {store}!",
+    "subject": "Chào mừng bạn!",
+    "textFallback": "Chào mừng bạn!\n\nCảm ơn bạn đã đăng ký. Tài khoản của bạn đã sẵn sàng.\nBắt đầu mua sắm: {url}"
+  }
+}
