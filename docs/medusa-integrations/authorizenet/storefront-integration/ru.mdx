@@ -1,0 +1,1185 @@
+---
+title: "Интеграция Authorize.net в витрину магазина"
+description: "Узнайте, как интегрировать платёжный провайдер Authorize.net в storefront (витрину магазина) на Next.js для Medusa."
+---
+
+# {frontmatter.title}
+
+Для интеграции платёжного провайдера Authorize.net в storefront [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter) начните с добавления необходимых UI-компонентов. Таким образом провайдер будет отображаться на странице оформления заказа наряду с другими доступными методами оплаты.
+
+Покупатель вводит карту в собственной форме на странице оформления заказа, а витрина передаёт её в Accept.js, скрипт Authorize.net, который возвращает одноразовый токен карты. Выбор Authorize.net не отправляет запросов. Когда покупатель платит, витрина получает токен, запускает с ним платёжную сессию и завершает корзину, а провайдер проводит транзакцию в момент создания заказа. Google Pay в ряду экспресс-оплаты платит так же, только с токеном Google Pay.
+
+Номер карты уходит из браузера покупателя прямо в Authorize.net и не попадает на ваш сервер. Но поля карты находятся на вашей странице, поэтому Authorize.net относит такую интеграцию к типу SAQ A-EP по PCI DSS, как сказано в его <a href="https://developer.authorize.net/api/reference/features/acceptjs.html" target="_blank">руководстве по Accept.js</a>.
+
+Для витрины на Next.js необходимо внести следующие изменения:
+
+## Шаг 1: Настройте платёжный провайдер
+
+Сопоставление платёжных провайдеров в файле констант витрины определяет, как каждый провайдер выглядит на странице оформления заказа.
+
+Откройте [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/lib/constants.tsx#L25-L29) и добавьте запись `pp_authorizenet_authorizenet` и функцию `isAuthorizeNet`:
+
+![Структура каталогов витрины Medusa после изменения файла констант](/static/authorizenet/storefront/src-lib-constants.webp)
+
+```tsx title="src/lib/constants.tsx"
+export const paymentInfoMap: Record<string, PaymentInfo> = {
+  pp_authorizenet_authorizenet: {
+    title: "Authorize.net",
+    subtitle: "Cards",
+    icon: <CreditCard />,
+  },
+  // ...
+}
+
+// ...
+
+export const isAuthorizeNet = (providerId?: string) => {
+  return providerId?.startsWith("pp_authorizenet_")
+}
+```
+
+Запись `pp_authorizenet_authorizenet` задаёт заголовок, подзаголовок и иконку Authorize.net на странице оформления заказа и служит резервным значением, когда в локали нет перевода.
+
+Функция `isAuthorizeNet` проверяет, относится ли `providerId` к Authorize.net. Ею пользуются страница, секция оплаты, кнопка оплаты и ряд экспресс-оплаты.
+
+---
+
+## Шаг 2: Запустите платёжную сессию с кнопки оплаты
+
+Оформление заказа запускает платёжную сессию сразу, как только покупатель выбирает способ оплаты, если запись способа не помечена `deferred`. Authorize.net нужен в сессии токен карты, а токен появляется только в момент оплаты, поэтому его сессию запускает кнопка оплаты.
+
+Откройте тот же [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/lib/constants.tsx#L83-L90) и добавьте запись в функции сборки данных платёжной сессии:
+
+![Структура каталогов витрины Medusa после изменения файла констант](/static/authorizenet/storefront/src-lib-constants.webp)
+
+```tsx title="src/lib/constants.tsx"
+const paymentSessionDataBuilders: Array<{
+  // ...
+}> = [
+  {
+    // The pay button turns the card into a one-time Accept.js token and starts the session with
+    // it right before the order is placed, so picking Authorize.net makes no request.
+    test: isAuthorizeNet,
+    deferred: true,
+  },
+]
+```
+
+С `deferred: true` ни выбор Authorize.net, ни изменение корзины не запускают сессию, а кнопка оплаты ждёт только контакты, адреса и доставку. В сессии нет ничего, кроме токена. Сумму провайдер берёт из Medusa, а email и адреса из корзины.
+
+---
+
+## Шаг 3: Загрузите настройки Authorize.net
+
+Accept.js нужны API Login ID и Public Client Key вашего аккаунта, а кнопке Google Pay нужны настройки Google Pay. Плагин отдаёт их по `GET /store/authorizenet/config`, поэтому витрина не хранит их в своих переменных окружения.
+
+Создайте [`src/lib/data/authorizenet.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/lib/data/authorizenet.ts):
+
+![Структура каталогов витрины Medusa после создания файла с настройками Authorize.net](/static/authorizenet/storefront/src-lib-data-authorizenet.webp)
+
+```ts title="src/lib/data/authorizenet.ts"
+"use server"
+
+import { sdk } from "@lib/config"
+
+/** What the storefront needs to run Accept.js and the Google Pay button, from `GET /store/authorizenet/config`. */
+export type AuthorizeNetConfig = {
+  provider_id: string
+  environment: "sandbox" | "production"
+  /** Accept.js sends the API Login ID and the Public Client Key in `authData`. Both are public by design. */
+  api_login_id: string
+  client_key: string
+  /** `null` while Google Pay is off in the Admin. */
+  google_pay: {
+    environment: "TEST" | "PRODUCTION"
+    gateway_merchant_id: string
+    merchant_id: string | null
+  } | null
+}
+
+/**
+ * The public Authorize.net settings of the only Authorize.net integration, or null while it is not
+ * configured. They change only in the Admin, so the answer is cached for a minute.
+ */
+export async function getAuthorizeNetConfig(): Promise<AuthorizeNetConfig | null> {
+  return sdk.client
+    .fetch<{ config: AuthorizeNetConfig }>("/store/authorizenet/config", {
+      method: "GET",
+      next: { revalidate: 60 },
+    })
+    .then(({ config }) => config)
+    .catch(() => null)
+}
+```
+
+`getAuthorizeNetConfig` возвращает публичные настройки интеграции Authorize.net или `null`, если она не настроена в Medusa Admin или настройки не удалось получить. API Login ID и Public Client Key публичны по замыслу Authorize.net, потому что Accept.js отправляет их из браузера, а секретов в ответе нет.
+
+---
+
+## Шаг 4: Проверьте карту и получите токен
+
+Кнопка оплаты проверяет поля карты и превращает их в токен. Эта логика находится в двух небольших файлах.
+
+Создайте [`src/lib/util/card.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/lib/util/card.ts):
+
+![Структура каталогов витрины Medusa после создания файла с полями карты](/static/authorizenet/storefront/src-lib-util-card.webp)
+
+```ts title="src/lib/util/card.ts"
+/** The card fields of the Authorize.net form, as the customer typed them. */
+export type CardFields = {
+  number: string
+  expiry: string
+  cvc: string
+}
+
+export const EMPTY_CARD: CardFields = { number: "", expiry: "", cvc: "" }
+
+/** A problem with the card fields, named after its key in the `AuthorizeNetCard` catalog. */
+export type CardProblem = "invalidNumber" | "invalidExpiry" | "invalidCvc"
+
+export const digitsOnly = (value: string) => value.replace(/\D/g, "")
+
+/** Groups the digits by four, the way a card shows them: `4111 1111 1111 1111`. */
+export const formatCardNumber = (value: string) =>
+  digitsOnly(value)
+    .slice(0, 19)
+    .replace(/(\d{4})(?=\d)/g, "$1 ")
+
+/** `MM / YY` as the customer types it. */
+export const formatExpiry = (value: string) => {
+  const digits = digitsOnly(value).slice(0, 4)
+  return digits.length > 2 ? `${digits.slice(0, 2)} / ${digits.slice(2)}` : digits
+}
+
+/** The Luhn checksum every card number carries in its last digit. */
+export const passesLuhn = (digits: string) => {
+  let sum = 0
+  for (let i = 0; i < digits.length; i++) {
+    let digit = Number(digits[digits.length - 1 - i])
+    if (i % 2 === 1) {
+      digit *= 2
+      if (digit > 9) digit -= 9
+    }
+    sum += digit
+  }
+  return digits.length > 0 && sum % 10 === 0
+}
+
+/** The month and the four-digit year of `MM / YY`, or null when it is not a date. */
+export const parseExpiry = (value: string) => {
+  const digits = digitsOnly(value)
+  if (digits.length !== 4) {
+    return null
+  }
+  const month = Number(digits.slice(0, 2))
+  if (month < 1 || month > 12) {
+    return null
+  }
+  return { month: digits.slice(0, 2), year: `20${digits.slice(2)}` }
+}
+
+/**
+ * The first problem with the card fields, or null when they can go to Accept.js. The checks are
+ * the ones Accept.js makes itself, done first so the customer reads them in their language.
+ */
+export const findCardProblem = (card: CardFields, now = new Date()): CardProblem | null => {
+  const number = digitsOnly(card.number)
+  if (number.length < 13 || number.length > 19 || !passesLuhn(number)) {
+    return "invalidNumber"
+  }
+  const expiry = parseExpiry(card.expiry)
+  const thisMonth = now.getFullYear() * 12 + now.getMonth() + 1
+  if (!expiry || Number(expiry.year) * 12 + Number(expiry.month) < thisMonth) {
+    return "invalidExpiry"
+  }
+  if (!/^\d{3,4}$/.test(card.cvc)) {
+    return "invalidCvc"
+  }
+  return null
+}
+```
+
+`formatCardNumber` и `formatExpiry` форматируют поля по мере ввода. `findCardProblem` повторяет проверки самого Accept.js, контрольную сумму Луна, срок действия в будущем и код безопасности из трёх или четырёх цифр, чтобы покупатель увидел ошибку на своём языке до того, как что-то уйдёт со страницы.
+
+Создайте [`src/lib/util/accept-js.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/lib/util/accept-js.ts):
+
+![Структура каталогов витрины Medusa после создания файла с Accept.js](/static/authorizenet/storefront/src-lib-util-accept-js.webp)
+
+```ts title="src/lib/util/accept-js.ts"
+import { digitsOnly, parseExpiry, type CardFields } from "@lib/util/card"
+
+/** The one-time token Accept.js returns for a card, which the backend charges. */
+export type OpaqueData = {
+  dataDescriptor: string
+  dataValue: string
+}
+
+type AcceptResponse = {
+  messages: {
+    resultCode: "Ok" | "Error"
+    message: { code: string; text: string }[]
+  }
+  opaqueData?: OpaqueData
+}
+
+type AcceptJs = {
+  dispatchData: (
+    secureData: {
+      authData: { clientKey: string; apiLoginID: string }
+      cardData: { cardNumber: string; month: string; year: string; cardCode: string }
+    },
+    responseHandler: (response: AcceptResponse) => void
+  ) => void
+}
+
+declare global {
+  interface Window {
+    Accept?: AcceptJs
+  }
+}
+
+/** Accept.js from Authorize.net. It has to load from their domain; it cannot be bundled. */
+export const ACCEPT_JS_URLS = {
+  sandbox: "https://jstest.authorize.net/v1/Accept.js",
+  production: "https://js.authorize.net/v1/Accept.js",
+} as const
+
+/** An Accept.js failure, named after its key in the `AuthorizeNetCard` catalog. */
+export type AcceptProblem = "invalidNumber" | "invalidExpiry" | "invalidCvc" | "insecure" | "tokenError"
+
+/** Accept.js error codes the customer can do something about. Every other code is `tokenError`. */
+const PROBLEMS: Record<string, AcceptProblem> = {
+  E_WC_02: "insecure",
+  E_WC_05: "invalidNumber",
+  E_WC_06: "invalidExpiry",
+  E_WC_07: "invalidExpiry",
+  E_WC_08: "invalidExpiry",
+  E_WC_15: "invalidCvc",
+}
+
+export class AcceptError extends Error {
+  constructor(
+    readonly problem: AcceptProblem,
+    readonly code?: string
+  ) {
+    super(code ? `Accept.js ${code}` : "Accept.js failed")
+  }
+}
+
+/**
+ * Sends the card to Authorize.net and resolves with the token. The card number never reaches the
+ * shop's server: only the token does, and it is good for one transaction within 15 minutes.
+ */
+export function createCardToken(
+  card: CardFields,
+  auth: { apiLoginId: string; clientKey: string }
+): Promise<OpaqueData> {
+  const accept = typeof window === "undefined" ? undefined : window.Accept
+  const expiry = parseExpiry(card.expiry)
+  if (!accept) {
+    return Promise.reject(new AcceptError("tokenError"))
+  }
+  if (!expiry) {
+    return Promise.reject(new AcceptError("invalidExpiry"))
+  }
+
+  return new Promise((resolve, reject) => {
+    accept.dispatchData(
+      {
+        authData: { clientKey: auth.clientKey, apiLoginID: auth.apiLoginId },
+        cardData: {
+          cardNumber: digitsOnly(card.number),
+          month: expiry.month,
+          year: expiry.year,
+          cardCode: card.cvc,
+        },
+      },
+      (response) => {
+        if (response.messages.resultCode === "Ok" && response.opaqueData) {
+          resolve(response.opaqueData)
+          return
+        }
+        const code = response.messages.message?.[0]?.code
+        reject(new AcceptError(PROBLEMS[code ?? ""] ?? "tokenError", code))
+      }
+    )
+  })
+}
+```
+
+`createCardToken` вызывает `Accept.dispatchData` с картой и двумя публичными значениями и возвращает токен `opaqueData`. Коды ошибок Accept.js, которые покупатель может исправить, функция сопоставляет с теми же ошибками, что и `findCardProblem`, а для страницы без HTTPS возвращает `insecure`. Все остальные коды превращаются в `tokenError`.
+
+---
+
+## Шаг 5: Загрузите Accept.js на странице оформления заказа
+
+Accept.js загружается только с домена Authorize.net, а форма карты и кнопка оплаты находятся в разных частях оформления заказа. Обёртка вокруг оформления загружает скрипт и хранит карту для них обеих.
+
+Создайте [`src/modules/checkout/components/payment-wrapper/authorizenet-wrapper.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/modules/checkout/components/payment-wrapper/authorizenet-wrapper.tsx):
+
+![Структура каталогов витрины Medusa после создания файла с обёрткой Authorize.net](/static/authorizenet/storefront/src-modules-checkout-components-payment-wrapper-authorizenet-wrapper.webp)
+
+```tsx title="src/modules/checkout/components/payment-wrapper/authorizenet-wrapper.tsx"
+"use client"
+
+import type { AuthorizeNetConfig } from "@lib/data/authorizenet"
+import { ACCEPT_JS_URLS } from "@lib/util/accept-js"
+import { EMPTY_CARD, type CardFields } from "@lib/util/card"
+import Script from "next/script"
+import { createContext, useContext, useMemo, useState } from "react"
+
+type AuthorizeNetState = {
+  config: AuthorizeNetConfig
+  /** Accept.js has loaded and `window.Accept` can take a card. */
+  acceptReady: boolean
+  /** The card the customer is typing. The form writes it, the pay button reads it. */
+  card: CardFields
+  setCard: (card: CardFields) => void
+}
+
+const AuthorizeNetContext = createContext<AuthorizeNetState | null>(null)
+
+/** The Authorize.net settings and the card form's state, or null outside a checkout that takes Authorize.net. */
+export const useAuthorizeNet = () => useContext(AuthorizeNetContext)
+
+type AuthorizeNetWrapperProps = {
+  config: AuthorizeNetConfig
+  children: React.ReactNode
+}
+
+/**
+ * Loads Accept.js and holds the card form's fields, so the form in the payment section and the
+ * pay button below it share one card. The card stays in this page's memory: Accept.js sends it to
+ * Authorize.net and the shop's server only ever gets the token.
+ */
+const AuthorizeNetWrapper: React.FC<AuthorizeNetWrapperProps> = ({ config, children }) => {
+  const [acceptReady, setAcceptReady] = useState(
+    () => typeof window !== "undefined" && !!window.Accept
+  )
+  const [card, setCard] = useState<CardFields>(EMPTY_CARD)
+
+  const value = useMemo(
+    () => ({ config, acceptReady, card, setCard }),
+    [config, acceptReady, card]
+  )
+
+  return (
+    <AuthorizeNetContext.Provider value={value}>
+      <Script
+        src={ACCEPT_JS_URLS[config.environment]}
+        strategy="afterInteractive"
+        charSet="utf-8"
+        onReady={() => setAcceptReady(true)}
+      />
+      {children}
+    </AuthorizeNetContext.Provider>
+  )
+}
+
+export default AuthorizeNetWrapper
+```
+
+Обёртка загружает Accept.js песочницы или продакшена в зависимости от окружения в настройках и отмечает его готовым, когда появляется `window.Accept`. `useAuthorizeNet` отдаёт форме карты и кнопке оплаты настройки и карту и возвращает `null` вне оформления заказа, где Authorize.net не принимают.
+
+Откройте [`src/modules/checkout/components/payment-wrapper/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/modules/checkout/components/payment-wrapper/index.tsx) и замените его код следующим:
+
+![Структура каталогов витрины Medusa после изменения файла с платёжной обёрткой](/static/authorizenet/storefront/src-modules-checkout-components-payment-wrapper-index.webp)
+
+```tsx title="src/modules/checkout/components/payment-wrapper/index.tsx"
+"use client"
+
+import { loadStripe } from "@stripe/stripe-js/pure"
+import type React from "react"
+import StripeWrapper from "./stripe-wrapper"
+import AuthorizeNetWrapper from "./authorizenet-wrapper"
+import type { HttpTypes } from "@medusajs/types"
+import { isStripeLike } from "@lib/constants"
+import type { AuthorizeNetConfig } from "@lib/data/authorizenet"
+
+type PaymentWrapperProps = {
+  cart: HttpTypes.StoreCart
+  /** The Authorize.net settings, when the cart's region takes Authorize.net. */
+  authorizeNetConfig?: AuthorizeNetConfig | null
+  children: React.ReactNode
+}
+
+const stripeKey =
+  process.env.NEXT_PUBLIC_STRIPE_KEY ||
+  process.env.NEXT_PUBLIC_MEDUSA_PAYMENTS_PUBLISHABLE_KEY
+
+const medusaAccountId = process.env.NEXT_PUBLIC_MEDUSA_PAYMENTS_ACCOUNT_ID
+const stripePromise = stripeKey
+  ? loadStripe(
+      stripeKey,
+      medusaAccountId ? { stripeAccount: medusaAccountId } : undefined
+    )
+  : null
+
+/**
+ * Wraps the checkout in what the cart's payment providers need on the page. Authorize.net loads
+ * Accept.js and shares the card form with the pay button, so it wraps the whole checkout whenever
+ * the region takes it and there is something to pay.
+ */
+const PaymentWrapper: React.FC<PaymentWrapperProps> = ({
+  cart,
+  authorizeNetConfig,
+  children,
+}) => {
+  const content = (
+    <StripeOrPlain cart={cart}>{children}</StripeOrPlain>
+  )
+
+  if (authorizeNetConfig && (cart.total ?? 0) > 0) {
+    return (
+      <AuthorizeNetWrapper config={authorizeNetConfig}>
+        {content}
+      </AuthorizeNetWrapper>
+    )
+  }
+
+  return content
+}
+
+const StripeOrPlain: React.FC<{
+  cart: HttpTypes.StoreCart
+  children: React.ReactNode
+}> = ({ cart, children }) => {
+  const paymentSession = cart.payment_collection?.payment_sessions?.find(
+    (s) => s.status === "pending"
+  )
+
+  if (
+    isStripeLike(paymentSession?.provider_id) &&
+    paymentSession &&
+    stripePromise
+  ) {
+    return (
+      <StripeWrapper
+        paymentSession={paymentSession}
+        stripeKey={stripeKey}
+        stripePromise={stripePromise}
+      >
+        {children}
+      </StripeWrapper>
+    )
+  }
+
+  return <div>{children}</div>
+}
+
+export default PaymentWrapper
+```
+
+Платёжная обёртка помещает всё оформление заказа в обёртку Authorize.net, когда получает настройки, а в корзине есть что оплатить. Обёртка Stripe из стартера остаётся внутри неё без изменений.
+
+Откройте [`src/app/[locale]/(checkout)/checkout/page.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/app/[locale]/(checkout)/checkout/page.tsx#L32-L46) и передайте настройки в обёртку:
+
+![Структура каталогов витрины Medusa после изменения файла страницы оформления заказа](/static/authorizenet/storefront/src-app-locale-checkout-checkout-page.webp)
+
+```tsx title="src/app/[locale]/(checkout)/checkout/page.tsx"
+import { getAuthorizeNetConfig } from "@lib/data/authorizenet"
+import { listCartPaymentMethods } from "@lib/data/payment"
+import { isAuthorizeNet } from "@lib/constants"
+// ...
+
+export default async function Checkout() {
+  // ...
+
+  const [customer, paymentMethods, authorizeNetConfig] = await Promise.all([
+    retrieveCustomer(),
+    listCartPaymentMethods(cart.region?.id ?? ""),
+    getAuthorizeNetConfig(),
+  ])
+  // Accept.js loads only where the cart's region takes Authorize.net
+  const regionTakesAuthorizeNet = (paymentMethods ?? []).some((method) =>
+    isAuthorizeNet(method.id)
+  )
+
+  return (
+    <PaymentWrapper
+      cart={cart}
+      authorizeNetConfig={regionTakesAuthorizeNet ? authorizeNetConfig : null}
+    >
+      {/* ... */}
+    </PaymentWrapper>
+  )
+}
+```
+
+Страница загружает настройки на сервере и передаёт их только для региона, который принимает Authorize.net, поэтому в других регионах Accept.js не загружается.
+
+---
+
+## Шаг 6: Добавьте форму карты
+
+Форма карты показывает поля номера карты, срока действия и кода безопасности, когда покупатель выбирает Authorize.net.
+
+Создайте [`src/modules/checkout/components/authorizenet-card-form/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/modules/checkout/components/authorizenet-card-form/index.tsx):
+
+![Структура каталогов витрины Medusa после создания файла с формой карты](/static/authorizenet/storefront/src-modules-checkout-components-authorizenet-card-form-index.webp)
+
+```tsx title="src/modules/checkout/components/authorizenet-card-form/index.tsx"
+"use client"
+
+import { formatCardNumber, formatExpiry, digitsOnly } from "@lib/util/card"
+import { Text } from "@medusajs/ui"
+import Input from "@modules/common/components/input"
+import SkeletonCardDetails from "@modules/skeletons/components/skeleton-card-details"
+import { useTranslations } from "next-intl"
+import { useAuthorizeNet } from "../payment-wrapper/authorizenet-wrapper"
+
+/**
+ * The card fields for Authorize.net. They live outside any form and the shop's server never sees
+ * them: the pay button hands them to Accept.js, which returns a one-time token.
+ */
+const AuthorizeNetCardForm = () => {
+  const t = useTranslations("AuthorizeNetCard")
+  const tc = useTranslations("PaymentContainer")
+  const authorizeNet = useAuthorizeNet()
+
+  if (!authorizeNet) {
+    return <SkeletonCardDetails />
+  }
+
+  const { card, setCard } = authorizeNet
+
+  return (
+    <div className="my-4 flex flex-col gap-y-2" data-testid="authorizenet-card-form">
+      <Text className="txt-medium-plus text-ui-fg-base mb-1">
+        {tc("enterPaymentDetails")}
+      </Text>
+      <Input
+        name="authorizenet-card-number"
+        label={t("cardNumber")}
+        autoComplete="cc-number"
+        inputMode="numeric"
+        value={card.number}
+        onChange={(e) =>
+          setCard({ ...card, number: formatCardNumber(e.target.value) })
+        }
+        required
+        data-testid="authorizenet-card-number"
+      />
+      <div className="grid grid-cols-2 gap-x-2">
+        <Input
+          name="authorizenet-card-expiry"
+          label={t("expiry")}
+          autoComplete="cc-exp"
+          inputMode="numeric"
+          value={card.expiry}
+          onChange={(e) =>
+            setCard({ ...card, expiry: formatExpiry(e.target.value) })
+          }
+          required
+          data-testid="authorizenet-card-expiry"
+        />
+        <Input
+          name="authorizenet-card-cvc"
+          label={t("cvc")}
+          autoComplete="cc-csc"
+          inputMode="numeric"
+          value={card.cvc}
+          onChange={(e) =>
+            setCard({ ...card, cvc: digitsOnly(e.target.value).slice(0, 4) })
+          }
+          required
+          data-testid="authorizenet-card-cvc"
+        />
+      </div>
+    </div>
+  )
+}
+
+export default AuthorizeNetCardForm
+```
+
+Форма построена на `Input` стартера, поэтому выглядит как остальные поля оформления заказа, а значения `autoComplete` позволяют браузеру подставить сохранённую карту. Форма пишет поля в состояние обёртки и не входит ни в какой `form`, поэтому ничто не отправит их на ваш сервер.
+
+Откройте [`src/modules/checkout/components/checkout-payment-section/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/modules/checkout/components/checkout-payment-section/index.tsx#L207-L212) и покажите форму под способами оплаты:
+
+![Структура каталогов витрины Medusa после изменения файла с секцией оплаты](/static/authorizenet/storefront/src-modules-checkout-components-checkout-payment-section-index.webp)
+
+```tsx title="src/modules/checkout/components/checkout-payment-section/index.tsx"
+import { isAuthorizeNet } from "@lib/constants"
+import AuthorizeNetCardForm from "@modules/checkout/components/authorizenet-card-form"
+// ...
+
+          {/* Authorize.net card input */}
+          {isAuthorizeNet(selectedPaymentMethod) && (
+            <div className="mt-2">
+              <AuthorizeNetCardForm />
+            </div>
+          )}
+```
+
+Форма появляется под плитками способов оплаты, пока выбран Authorize.net.
+
+---
+
+## Шаг 7: Создайте кнопку оплаты
+
+Кнопка оплаты превращает карту в токен, запускает с ним платёжную сессию и создаёт заказ.
+
+Создайте [`src/modules/checkout/components/payment-button/providers/authorizenet.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/modules/checkout/components/payment-button/providers/authorizenet.tsx):
+
+![Структура каталогов витрины Medusa после создания файла с кнопкой оплаты Authorize.net](/static/authorizenet/storefront/src-modules-checkout-components-payment-button-providers-authorizenet.webp)
+
+```tsx title="src/modules/checkout/components/payment-button/providers/authorizenet.tsx" collapsibleLines="113-137"
+"use client"
+
+import { initiatePaymentSession } from "@lib/data/cart"
+import { AcceptError, type AcceptProblem, createCardToken } from "@lib/util/accept-js"
+import { findCardProblem } from "@lib/util/card"
+import { useTranslations } from "next-intl"
+import { useState } from "react"
+import { useAuthorizeNet } from "@modules/checkout/components/payment-wrapper/authorizenet-wrapper"
+import {
+  PaymentButtonShell,
+  type PaymentProviderButtonProps,
+  usePlaceOrder,
+} from "../shared"
+
+type AuthorizeNetButtonProps = PaymentProviderButtonProps & { providerId: string }
+
+/**
+ * Pays with the card form. Nothing reaches Authorize.net before this click: the button checks the
+ * card, has Accept.js turn it into a one-time token, starts the payment session with that token and
+ * places the order. The backend runs the transaction while the order is placed, so a declined card
+ * comes back as the order's error, which the shared error messages turn into a failed payment.
+ * A problem with the card itself, found here or by Accept.js, is shown in its own words instead:
+ * the shared messages would read the word "card" in it as a failed payment too.
+ */
+const AuthorizeNetPayButton = ({
+  cart,
+  providerId,
+  notReady,
+  label,
+  cartUpdating,
+  "data-testid": dataTestId,
+}: AuthorizeNetButtonProps) => {
+  const t = useTranslations("AuthorizeNetCard")
+  const authorizeNet = useAuthorizeNet()!
+  const {
+    submitting,
+    setSubmitting,
+    errorMessage,
+    setErrorMessage,
+    completeOrder,
+  } = usePlaceOrder()
+  const [cardProblem, setCardProblem] = useState<AcceptProblem | null>(null)
+
+  const fail = (message: string) => {
+    setErrorMessage(message)
+    setSubmitting(false)
+  }
+
+  const failOnCard = (problem: AcceptProblem) => {
+    setCardProblem(problem)
+    setSubmitting(false)
+  }
+
+  const handlePayment = async () => {
+    if (submitting) {
+      return
+    }
+    setCardProblem(null)
+    setErrorMessage(null)
+
+    const problem = findCardProblem(authorizeNet.card)
+    if (problem) {
+      return failOnCard(problem)
+    }
+
+    setSubmitting(true)
+
+    let opaqueData
+    try {
+      opaqueData = await createCardToken(authorizeNet.card, {
+        apiLoginId: authorizeNet.config.api_login_id,
+        clientKey: authorizeNet.config.client_key,
+      })
+    } catch (err) {
+      return failOnCard(err instanceof AcceptError ? err.problem : "tokenError")
+    }
+
+    try {
+      await initiatePaymentSession(cart, {
+        provider_id: providerId,
+        data: { opaque_data: opaqueData },
+      })
+    } catch (err) {
+      return fail(err instanceof Error ? err.message : String(err))
+    }
+
+    await completeOrder()
+  }
+
+  return (
+    <>
+      <PaymentButtonShell
+        label={label}
+        onClick={handlePayment}
+        disabled={notReady || !authorizeNet.acceptReady}
+        loading={submitting || cartUpdating}
+        errorMessage={errorMessage}
+        errorTestId="authorizenet-payment-error-message"
+        data-testid={dataTestId}
+      />
+      {cardProblem && (
+        <div
+          className="pt-2 text-rose-500 text-small-regular"
+          data-testid="authorizenet-card-error-message"
+        >
+          <span>{t(cardProblem)}</span>
+        </div>
+      )}
+    </>
+  )
+}
+
+/**
+ * The checkout leaves Accept.js out when Authorize.net is not configured in the Admin or the cart
+ * has nothing to pay. The button then stays disabled.
+ */
+const AuthorizeNetPaymentButton = (props: AuthorizeNetButtonProps) => {
+  const authorizeNet = useAuthorizeNet()
+
+  if (!authorizeNet) {
+    return (
+      <PaymentButtonShell
+        label={props.label}
+        onClick={() => {}}
+        disabled
+        loading={props.cartUpdating}
+        errorMessage={null}
+        errorTestId="authorizenet-payment-error-message"
+        data-testid={props["data-testid"]}
+      />
+    )
+  }
+
+  return <AuthorizeNetPayButton {...props} />
+}
+
+export default AuthorizeNetPaymentButton
+```
+
+`handlePayment` проверяет карту через `findCardProblem`, получает токен через `createCardToken`, запускает сессию с `{ opaque_data }` и вызывает `completeOrder`. Проблему с картой, которую нашли `findCardProblem` или Accept.js, кнопка показывает под собой строкой из `AuthorizeNetCard`. Общие сообщения об ошибках витрины она обходит, потому что они превращают любой текст со словом «card» в неудачную оплату. Провайдер проводит транзакцию, пока Medusa создаёт заказ, поэтому отказ по карте возвращается как ошибка заказа, общие сообщения показывают его как неудачную оплату, и покупатель может исправить карту и оплатить снова. Пока Accept.js не загрузился, кнопка неактивна.
+
+---
+
+## Шаг 8: Зарегистрируйте кнопку оплаты
+
+Откройте [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L87-L93) и добавьте вариант для Authorize.net:
+
+![Структура каталогов витрины Medusa после изменения файла с кнопкой оплаты](/static/authorizenet/storefront/src-modules-checkout-components-payment-button-index.webp)
+
+```tsx title="src/modules/checkout/components/payment-button/index.tsx"
+import AuthorizeNetPaymentButton from "./providers/authorizenet"
+// ...
+
+  switch (true) {
+    case isAuthorizeNet(activePaymentMethod):
+      return (
+        <AuthorizeNetPaymentButton
+          {...providerProps}
+          providerId={activePaymentMethod}
+        />
+      )
+    // ...
+  }
+```
+
+Теперь оформление заказа показывает кнопку Authorize.net, когда Authorize.net выбран способом оплаты.
+
+---
+
+## Шаг 9: Добавьте Google Pay в ряд экспресс-оплаты
+
+Ряд экспресс-оплаты над оформлением заказа показывает кнопку кошелька для каждого платёжного провайдера, который её регистрирует. Кнопка Google Pay платит через того же провайдера, что и форма карты, только вместо токена Accept.js передаёт токен Google Pay.
+
+Установите официальную кнопку Google Pay для React:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @google-pay/button-react@4.1.0
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @google-pay/button-react@4.1.0
+    ```
+  </CodeTab>
+</CodeTabs>
+
+Создайте [`src/modules/checkout/components/express-checkout/buttons/authorizenet-google-pay.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/modules/checkout/components/express-checkout/buttons/authorizenet-google-pay.tsx):
+
+![Структура каталогов витрины Medusa после создания файла с кнопкой Google Pay](/static/authorizenet/storefront/src-modules-checkout-components-express-checkout-buttons-authorizenet-google-pay.webp)
+
+```tsx title="src/modules/checkout/components/express-checkout/buttons/authorizenet-google-pay.tsx" collapsibleLines="1-45,191-285"
+"use client"
+
+import GooglePayButton from "@google-pay/button-react"
+import {
+  quoteExpressShipping,
+  saveExpressContact,
+  startExpressPayment,
+} from "@lib/data/express-checkout"
+import type { AuthorizeNetConfig } from "@lib/data/authorizenet"
+import { convertToLocale } from "@lib/util/money"
+import { useAuthorizeNet } from "@modules/checkout/components/payment-wrapper/authorizenet-wrapper"
+import { unstable_rethrow } from "next/navigation"
+import { useLocale, useTranslations } from "next-intl"
+import { useEffect, useRef } from "react"
+import type { ExpressButtonProps } from "../registry"
+
+/** The data descriptor Authorize.net expects for a Google Pay token. */
+const GOOGLE_PAY_DATA_DESCRIPTOR = "COMMON.GOOGLE.INAPP.PAYMENT"
+
+/**
+ * True for the control-flow error a placed order's `redirect()` throws. The router follows the
+ * redirect on its own, so the handler reports success instead of a failure over the placed order.
+ */
+const isNavigation = (error: unknown) => {
+  try {
+    unstable_rethrow(error)
+    return false
+  } catch {
+    return true
+  }
+}
+
+const splitName = (name?: string | null) => {
+  const [first = "", ...rest] = (name ?? "").trim().split(/\s+/)
+  return { first_name: first, last_name: rest.join(" ") }
+}
+
+/** An amount as Google Pay takes it, with the currency's decimals: `"19.99"`. */
+const toPrice = (amount: number, currencyCode: string) => {
+  const digits = new Intl.NumberFormat("en", { style: "currency", currency: currencyCode })
+    .resolvedOptions().maximumFractionDigits ?? 2
+  return amount.toFixed(digits)
+}
+
+type GooglePaySettings = NonNullable<AuthorizeNetConfig["google_pay"]>
+
+/**
+ * Google Pay in the express checkout row. The sheet asks for the address, the row quotes the
+ * shipping for it, and the payment goes to Authorize.net as a Google Pay token through the same
+ * provider as the card form: the backend charges it while the order is placed.
+ */
+function GooglePayWalletButton({
+  cart,
+  providerId,
+  shippingOptionId,
+  onUnavailable,
+  onError,
+  onBusy,
+  placeOrder,
+  onClosed,
+  googlePay,
+}: ExpressButtonProps & { googlePay: GooglePaySettings }) {
+  const t = useTranslations("ExpressCheckout")
+  const te = useTranslations("Errors")
+  const locale = useLocale()
+  const currencyCode = cart.currency_code.toUpperCase()
+  // what the sheet showed last, so a total that grows after approval is refused
+  const shownTotal = useRef(cart.total ?? 0)
+  const optionId = useRef<string | null>(shippingOptionId)
+
+  const fail = (
+    error: Parameters<ExpressButtonProps["onError"]>[0],
+    message: string,
+    reason: google.payments.api.ErrorReason = "OTHER_ERROR"
+  ): google.payments.api.PaymentAuthorizationResult => {
+    onError(error)
+    onBusy(false)
+    onClosed()
+    return {
+      transactionState: "ERROR",
+      error: { intent: "PAYMENT_AUTHORIZATION", reason, message },
+    }
+  }
+
+  const onPaymentDataChanged: google.payments.api.PaymentDataChangedHandler = async (data) => {
+    if (data.callbackTrigger === "SHIPPING_OPTION") {
+      return {}
+    }
+    const address = data.shippingAddress
+    const quote = await quoteExpressShipping(
+      {
+        country_code: address?.countryCode ?? "",
+        province: address?.administrativeArea,
+        city: address?.locality,
+        postal_code: address?.postalCode,
+      },
+      optionId.current
+    )
+    if (!quote.ok) {
+      return {
+        error: {
+          intent: "SHIPPING_ADDRESS",
+          reason: "SHIPPING_ADDRESS_UNSERVICEABLE",
+          message: t("noShipping"),
+        },
+      }
+    }
+    optionId.current = quote.shipping_option_id
+    shownTotal.current = quote.total
+    return {
+      newTransactionInfo: {
+        totalPriceStatus: "FINAL",
+        totalPrice: toPrice(quote.total, currencyCode),
+        currencyCode,
+      },
+      newShippingOptionParameters: {
+        defaultSelectedOptionId: quote.shipping_option_id,
+        shippingOptions: [
+          {
+            id: quote.shipping_option_id,
+            label: quote.shipping_option_name,
+            description: convertToLocale({
+              amount: quote.shipping_total,
+              currency_code: quote.currency_code,
+              locale,
+            }),
+          },
+        ],
+      },
+    }
+  }
+
+  const onPaymentAuthorized: google.payments.api.PaymentAuthorizedHandler = async (paymentData) => {
+    onBusy(true)
+    onError(null)
+    const shipping = paymentData.shippingAddress
+    try {
+      const saved = await saveExpressContact(
+        {
+          email: paymentData.email,
+          phone: shipping?.phoneNumber,
+          shipping_address: shipping
+            ? {
+                ...splitName(shipping.name),
+                address_1: shipping.address1,
+                address_2: [shipping.address2, shipping.address3].filter(Boolean).join(" "),
+                city: shipping.locality,
+                province: shipping.administrativeArea,
+                postal_code: shipping.postalCode,
+                country_code: shipping.countryCode,
+              }
+            : null,
+        },
+        optionId.current,
+        shownTotal.current
+      )
+      if (!saved.ok) {
+        if (saved.reason === "totalChanged") {
+          const total = convertToLocale({ amount: saved.total, currency_code: saved.currency_code, locale })
+          return fail(
+            { code: "totalChanged", total: saved.total, currency_code: saved.currency_code },
+            t("totalChanged", { total })
+          )
+        }
+        return saved.reason === "noShipping"
+          ? fail({ code: "noShipping" }, t("noShipping"), "SHIPPING_ADDRESS_UNSERVICEABLE")
+          : fail({ code: "missingContact" }, t("missingContact"))
+      }
+
+      await startExpressPayment(providerId, {
+        opaque_data: {
+          dataDescriptor: GOOGLE_PAY_DATA_DESCRIPTOR,
+          dataValue: window.btoa(paymentData.paymentMethodData.tokenizationData.token),
+        },
+        express: true,
+      })
+      // the row shows why an order was not placed and resolves; a placed order redirects
+      await placeOrder()
+      return {
+        transactionState: "ERROR",
+        error: { intent: "PAYMENT_AUTHORIZATION", reason: "OTHER_ERROR", message: te("paymentFailed") },
+      }
+    } catch (err) {
+      if (isNavigation(err)) {
+        return { transactionState: "SUCCESS" }
+      }
+      return fail({ code: "failed", cause: err }, te("paymentFailed"))
+    }
+  }
+
+  const paymentRequest: google.payments.api.PaymentDataRequest = {
+    apiVersion: 2,
+    apiVersionMinor: 0,
+    allowedPaymentMethods: [
+      {
+        type: "CARD",
+        parameters: {
+          allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+          allowedCardNetworks: ["AMEX", "DISCOVER", "JCB", "MASTERCARD", "VISA"],
+          billingAddressRequired: true,
+          billingAddressParameters: { format: "FULL", phoneNumberRequired: true },
+        },
+        tokenizationSpecification: {
+          type: "PAYMENT_GATEWAY",
+          parameters: {
+            gateway: "authorizenet",
+            gatewayMerchantId: googlePay.gateway_merchant_id,
+          },
+        },
+      },
+    ],
+    // the types require merchantId, but the TEST environment works without one; the Admin
+    // refuses Google Pay in production without it
+    merchantInfo: {
+      ...(googlePay.merchant_id ? { merchantId: googlePay.merchant_id } : {}),
+      ...(process.env.NEXT_PUBLIC_SITE_NAME ? { merchantName: process.env.NEXT_PUBLIC_SITE_NAME } : {}),
+    } as google.payments.api.MerchantInfo,
+    transactionInfo: {
+      totalPriceStatus: "ESTIMATED",
+      totalPrice: toPrice(cart.total ?? 0, currencyCode),
+      currencyCode,
+    },
+    emailRequired: true,
+    shippingAddressRequired: true,
+    shippingAddressParameters: {
+      allowedCountryCodes: (cart.region?.countries ?? [])
+        .map((country) => country.iso_2?.toUpperCase())
+        .filter((code): code is string => Boolean(code)),
+      phoneNumberRequired: true,
+    },
+    shippingOptionRequired: true,
+    callbackIntents: ["SHIPPING_ADDRESS", "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"],
+  }
+
+  return (
+    // `isolate` keeps the Google Pay iframe under the checkout modals
+    <div className="isolate" data-testid="authorizenet-google-pay">
+      <GooglePayButton
+        environment={googlePay.environment}
+        paymentRequest={paymentRequest}
+        onPaymentDataChanged={onPaymentDataChanged}
+        onPaymentAuthorized={onPaymentAuthorized}
+        onReadyToPayChange={({ isReadyToPay }) => {
+          if (!isReadyToPay) onUnavailable()
+        }}
+        onCancel={() => {
+          onBusy(false)
+          onClosed()
+        }}
+        onError={(error) => {
+          onError({ code: "failed", cause: error })
+          onBusy(false)
+        }}
+        buttonType="pay"
+        buttonSizeMode="fill"
+        buttonLocale={locale}
+        style={{ width: "100%", height: 48 }}
+      />
+    </div>
+  )
+}
+
+/** Tells the row there is no Google Pay here, once, so it hides the button. */
+function Unavailable({ onMount }: { onMount: () => void }) {
+  useEffect(() => {
+    onMount()
+    // the row hides this button for good, so once is enough
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return null
+}
+
+/**
+ * The button exists only where the checkout loaded Authorize.net and Google Pay is on in the
+ * Admin. Anywhere else the row hides it.
+ */
+export default function AuthorizeNetGooglePayButton(props: ExpressButtonProps) {
+  const googlePay = useAuthorizeNet()?.config.google_pay
+
+  if (!googlePay) {
+    return <Unavailable onMount={props.onUnavailable} />
+  }
+
+  return <GooglePayWalletButton {...props} googlePay={googlePay} />
+}
+```
+
+Окно Google Pay запрашивает адрес, а `onPaymentDataChanged` отвечает доставкой и новым итогом из `quoteExpressShipping` или отклоняет адрес, куда магазин не доставляет. Когда покупатель платит, `onPaymentAuthorized` сохраняет контакты и адрес через `saveExpressContact`, отклоняя итог выше показанного в окне, запускает сессию с токеном и создаёт заказ. После создания заказа покупатель попадает на его страницу, а при отказе окно закрывается с ошибкой, и ряд показывает, что пошло не так. Токенизация идёт через шлюз `authorizenet` с Payment Gateway ID, который плагин получил у Authorize.net для вашего аккаунта.
+
+Откройте [`src/modules/checkout/components/express-checkout/registry.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/modules/checkout/components/express-checkout/registry.ts#L43-L48) и зарегистрируйте кнопку:
+
+![Структура каталогов витрины Medusa после изменения файла с реестром экспресс-оплаты](/static/authorizenet/storefront/src-modules-checkout-components-express-checkout-registry.webp)
+
+```ts title="src/modules/checkout/components/express-checkout/registry.ts"
+import { isAuthorizeNet } from "@lib/constants"
+import AuthorizeNetGooglePayButton from "./buttons/authorizenet-google-pay"
+// ...
+
+export const expressButtons: {
+  match: (providerId: string) => boolean
+  Component: ComponentType<ExpressButtonProps>
+}[] = [
+  { match: (providerId) => Boolean(isAuthorizeNet(providerId)), Component: AuthorizeNetGooglePayButton },
+]
+```
+
+Ряд показывает кнопку, когда в регионе корзины есть провайдер, который принимает `isAuthorizeNet`, а Google Pay включён в настройках.
+
+---
+
+## Шаг 10: Покажите карту на странице заказа
+
+Провайдер сохраняет в платеже бренд карты и её последние четыре цифры. Страница заказа уже показывает их для Stripe, и одно условие добавляет Authorize.net.
+
+Откройте [`src/modules/order/components/payment-details/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/src/modules/order/components/payment-details/index.tsx#L28-L30) и измените условие:
+
+![Структура каталогов витрины Medusa после изменения файла с данными платежа](/static/authorizenet/storefront/src-modules-order-components-payment-details-index.webp)
+
+```tsx title="src/modules/order/components/payment-details/index.tsx"
+import { isAuthorizeNet, isStripeLike, paymentInfoMap } from "@lib/constants"
+// ...
+
+  const card =
+    (isStripeLike(payment.provider_id) || isAuthorizeNet(payment.provider_id)) &&
+    payment.data?.card_last4
+```
+
+Теперь для заказа, оплаченного картой через Authorize.net, страница заказа показывает `•••• 1111` под способом оплаты.
+
+---
+
+## Шаг 11: Добавьте строки в локали витрины
+
+Добавьте `pp_authorizenet_authorizenet` и строки `AuthorizeNetCard` в [`messages/ru.json`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/apps/storefront/messages/ru.json) и в каждую другую локаль под `messages/`:
+
+```json title="messages/ru.json"
+{
+  "AuthorizeNetCard": {
+    "cardNumber": "Номер карты",
+    "expiry": "Срок действия (ММ / ГГ)",
+    "cvc": "Код безопасности",
+    "invalidNumber": "Проверьте номер карты.",
+    "invalidExpiry": "Проверьте срок действия.",
+    "invalidCvc": "Проверьте код безопасности.",
+    "insecure": "Для оплаты картой нужно защищённое соединение HTTPS.",
+    "tokenError": "Не удалось проверить карту. Попробуйте ещё раз или оплатите другой картой."
+  },
+  // ...
+  "PaymentMethods": {
+    "pp_authorizenet_authorizenet": {
+      "title": "Authorize.net",
+      "subtitle": "Карты"
+    },
+    // ...
+  }
+}
+```
+
+Если для локали нет записи в `PaymentMethods`, используются английские `title` и `subtitle` из `paymentInfoMap` в [Шаге 1](#шаг-1-настройте-платёжный-провайдер). У строк `AuthorizeNetCard` резервного значения нет, поэтому они нужны в каждой локали.
+
+---
+
+## Полный пример кода интеграции в витрину
+
+Полный код витрины находится в [`examples/payment-authorizenet/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-authorizenet/apps/storefront), собранной на основе [Medusa DTC Starter от Gorgo](https://github.com/gorgojs/medusa-dtc-starter). В [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-authorizenet/README.md#what-the-example-adds-to-the-starter) примера перечислены все файлы, из которых состоит интеграция, включая бэкенд.

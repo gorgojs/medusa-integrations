@@ -1,0 +1,172 @@
+---
+title: "Getting Started with Authorize.net Payment for Medusa"
+description: "Learn how to install and configure the Authorize.net payment provider for Medusa."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to install and configure the Authorize.net payment provider for Medusa, prepare your Authorize.net account, set up the webhook and Google Pay, and switch from the `payment-authorizenet-medusa` plugin.
+
+## Requirements
+
+- Medusa v2.17.2 or later
+- Node.js v22.23.4, v24.22.1, v26.12.1 or later
+- An Authorize.net account. Test with a free <a href="https://developer.authorize.net/hello_world/sandbox.html" target="_blank">sandbox account</a>, and take real payments with a production merchant account
+- [Integration Module](/medusa-modules/integration)
+
+---
+
+## Installation
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-authorizenet
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-authorizenet
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Configuration
+
+Add the configurations of the Integration Module provider and of the Medusa Payment Module in your `medusa-config.ts` file of the Medusa Admin application:
+
+```ts title="medusa-config.ts"
+// ...
+const AUTHORIZENET_INTEGRATION_ID = "authorizenet-1"
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-authorizenet/providers/integration-authorizenet",
+            id: AUTHORIZENET_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-authorizenet",
+      options: {},
+    },
+  ],
+  modules: [
+    // ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-authorizenet/providers/payment-authorizenet",
+            id: "authorizenet",
+            options: {
+              id: AUTHORIZENET_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+The payment provider registered this way gets the id `pp_authorizenet_authorizenet`, and its webhook route is `/hooks/payment/authorizenet_authorizenet`.
+
+Add environment variables with your secret `Encryption Key`:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Provider Options
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+The API Login ID, the Transaction Key and the other Authorize.net settings are not provider options. You enter them in Medusa Admin, as described in [Manage Authorize.net Settings in Medusa Admin](/medusa-integrations/authorizenet/settings).
+
+---
+
+## Account Setup
+
+The plugin needs three values from the Authorize.net Merchant Interface, and a fourth for webhooks. Take them from the sandbox account while you test, and from the production account for real payments:
+
+- **API Login ID** and **Transaction Key**, from **Account → Settings → API Credentials & Keys**
+- **Public Client Key**, from **Account → Settings → Security Settings → General Security Settings → Manage Public Client Key**. The storefront's card form sends the card to Authorize.net with it
+- **Signature Key**, from **Account → Settings → API Credentials & Keys**. The plugin verifies the webhooks with it
+
+Keep the sandbox account in Live Mode. In Test Mode, Authorize.net keeps no transactions and returns `0` for every transaction ID, so the plugin could not capture, refund or void them. **Test connection** in Medusa Admin fails while the account is in Test Mode.
+
+An Authorize.net account takes payments in one currency, set when the account is created. Add the provider only to the regions that use it, as described in [Add Payment Provider](/medusa-integrations/authorizenet/settings#add-payment-provider). **Test connection** shows the account's currencies.
+
+---
+
+## Webhook Setup
+
+To receive the payment notifications the plugin acts on, add a webhook for your store in Authorize.net:
+
+1. Open the webhooks in the Authorize.net Merchant Interface of the account whose keys you use, or create the webhook with `POST /rest/v1/webhooks` of the <a href="https://developer.authorize.net/api/reference/features/webhooks.html" target="_blank">Webhooks API</a>.
+
+2. Set the URL in the following format:
+    ```text title="Webhook URL"
+    https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/authorizenet_authorizenet
+    ```
+    Replace `{YOUR_MEDUSA_DOMAIN}` with your Medusa store domain.
+
+3. Subscribe it to `net.authorize.payment.fraud.approved`, `net.authorize.payment.fraud.declined` and `net.authorize.payment.priorAuthCapture.created`, and make it active.
+
+4. Enter the account's Signature Key in the **Signature Key** field of the Authorize.net settings in Medusa Admin. **Test connection** then checks that an active webhook whose URL contains `/hooks/payment/authorizenet_` exists and sends the three events.
+
+`fraud.approved` completes a payment that the Fraud Detection Suite held for review, `fraud.declined` is only written to the log, and `priorAuthCapture.created` records a capture made in the Merchant Interface. Authorize.net <a href="https://support.authorize.net/knowledgebase/article/000001542/" target="_blank">retries a failed delivery</a> up to 10 times over several days and then makes the webhook inactive. **Test connection** reports an inactive webhook as missing. During development, run the backend behind a tunnel with a public HTTPS address, as the example project does with `yarn dev:tunnel`.
+
+<Note type="warning">Without a Signature Key the plugin cannot verify Authorize.net's webhooks, so it ignores them. Card payments still go through, but an order whose payment the Fraud Detection Suite held keeps waiting for that payment after you approve it, and a capture made in the Merchant Interface does not reach Medusa.</Note>
+
+---
+
+## Google Pay Setup
+
+Google Pay appears in the express checkout row of the storefront once you switch it on in the **Express checkout** section of the Authorize.net settings. The plugin reads the Payment Gateway ID of your account from Authorize.net and passes it to Google Pay, so you don't enter it.
+
+In the sandbox, the button runs in Google Pay's test environment. In production, Google Pay needs your merchant ID from the <a href="https://pay.google.com/business/console/" target="_blank">Google Pay & Wallet Console</a>, and the settings refuse to switch Google Pay on without it. The button works on a page served over HTTPS and on `localhost`.
+
+---
+
+## Switch from the `payment-authorizenet-medusa` Plugin
+
+The plugin registers under the same provider id as `payment-authorizenet-medusa`, so it replaces it without a data migration. The payments the old plugin created stay in the database, and this plugin captures, refunds and voids them by their transaction ID.
+
+To switch:
+
+1. Replace `payment-authorizenet-medusa` in the `providers` of the Payment Module with `@gorgo/medusa-payment-authorizenet/providers/payment-authorizenet`, keeping `id: "authorizenet"`, and register the integration provider as shown in [Configuration](#configuration). Remove the old package, since only one provider can have `id: "authorizenet"`.
+
+2. Enter the keys and choose the **Environment** in Medusa Admin. The old plugin read `api_login_id`, `transaction_key` and `enviornment` from `medusa-config.ts`, and this plugin reads them from its settings.
+
+3. Set **Payment capture** in the settings. The old plugin only ever authorized. With `capture: true` it recorded the payment as captured, but the transaction stayed authorized in Authorize.net and expired after 30 days. Check such transactions in the Merchant Interface and capture the ones still waiting.
+
+4. Replace the storefront code. The old plugin took the card token, the addresses and the shipping from the session data the storefront sent. This plugin takes only the token from the storefront and reads the rest from the cart, as described in [Integrate Authorize.net Payment into Storefront](/medusa-integrations/authorizenet/storefront-integration).

@@ -1,0 +1,172 @@
+---
+title: "Начало работы с Authorize.net для Medusa"
+description: "Узнайте, как установить и настроить платёжный провайдер Authorize.net для Medusa."
+---
+
+# {frontmatter.title}
+
+В этом руководстве вы узнаете, как установить и настроить платёжный провайдер Authorize.net для Medusa, подготовить аккаунт Authorize.net, подключить вебхук и Google Pay и перейти с плагина `payment-authorizenet-medusa`.
+
+## Требования
+
+- Medusa v2.17.2 или новее
+- Node.js v22.23.4, v24.22.1, v26.12.1 или новее
+- Аккаунт Authorize.net. Для тестов подойдёт бесплатный <a href="https://developer.authorize.net/hello_world/sandbox.html" target="_blank">sandbox-аккаунт</a>, для настоящих платежей нужен мерчант-аккаунт в продакшене
+- [Модуль интеграций](/medusa-modules/integration)
+
+---
+
+## Установка
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-authorizenet
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-authorizenet
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Добавьте конфигурации провайдера Модуля интеграций и платёжного модуля Medusa в файл `medusa-config.ts` приложения Medusa Admin:
+
+```ts title="medusa-config.ts"
+// ...
+const AUTHORIZENET_INTEGRATION_ID = "authorizenet-1"
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-authorizenet/providers/integration-authorizenet",
+            id: AUTHORIZENET_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-authorizenet",
+      options: {},
+    },
+  ],
+  modules: [
+    // ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-authorizenet/providers/payment-authorizenet",
+            id: "authorizenet",
+            options: {
+              id: AUTHORIZENET_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Платёжный провайдер, зарегистрированный так, получает id `pp_authorizenet_authorizenet` и принимает вебхуки на роуте `/hooks/payment/authorizenet_authorizenet`.
+
+Добавьте переменную окружения с секретным ключом шифрования:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Параметры провайдера
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Суффикс в итоговом ключе `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+API Login ID, Transaction Key и остальные настройки Authorize.net не входят в параметры провайдера. Введите их в Medusa Admin, как описано в разделе [Управление настройками Authorize.net в Medusa Admin](/medusa-integrations/authorizenet/settings).
+
+---
+
+## Подготовка аккаунта
+
+Плагину нужны три значения из Merchant Interface Authorize.net и четвёртое для вебхуков. На время тестов берите их из sandbox-аккаунта, а для настоящих платежей из аккаунта в продакшене:
+
+- **API Login ID** и **Transaction Key** находятся в разделе **Account → Settings → API Credentials & Keys**
+- **Public Client Key** находится в разделе **Account → Settings → Security Settings → General Security Settings → Manage Public Client Key**. С ним форма карты на витрине отправляет карту в Authorize.net
+- **Signature Key** создаётся в разделе **Account → Settings → API Credentials & Keys**. По нему плагин проверяет вебхуки
+
+Держите sandbox-аккаунт в Live Mode. В Test Mode Authorize.net не сохраняет транзакции и возвращает `0` вместо ID транзакции, поэтому плагин не сможет их списать, вернуть или отменить. Пока аккаунт в Test Mode, **Проверить соединение** в Medusa Admin не проходит.
+
+Аккаунт Authorize.net принимает платежи в одной валюте, которую вы выбираете при создании аккаунта. Добавляйте провайдер только в регионы с этой валютой, как описано в разделе [Добавление платёжного провайдера](/medusa-integrations/authorizenet/settings#добавление-платёжного-провайдера). Валюты аккаунта показывает **Проверить соединение**.
+
+---
+
+## Настройка вебхуков
+
+Чтобы получать уведомления о платежах, на которые реагирует плагин, добавьте вебхук для вашего магазина в Authorize.net:
+
+1. Откройте вебхуки в Merchant Interface Authorize.net того аккаунта, чьи ключи вы используете, или создайте вебхук запросом `POST /rest/v1/webhooks` через <a href="https://developer.authorize.net/api/reference/features/webhooks.html" target="_blank">Webhooks API</a>.
+
+2. Укажите URL в следующем формате:
+    ```text title="Webhook URL"
+    https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/authorizenet_authorizenet
+    ```
+    Замените `{YOUR_MEDUSA_DOMAIN}` на домен вашего магазина Medusa.
+
+3. Подпишите его на события `net.authorize.payment.fraud.approved`, `net.authorize.payment.fraud.declined` и `net.authorize.payment.priorAuthCapture.created` и сделайте активным.
+
+4. Введите Signature Key аккаунта в поле **Ключ подписи** в настройках Authorize.net в Medusa Admin. После этого **Проверить соединение** проверяет, что есть активный вебхук с `/hooks/payment/authorizenet_` в URL, который отправляет все три события.
+
+`fraud.approved` завершает платёж, который Fraud Detection Suite задержал на проверку, `fraud.declined` только пишется в лог, а `priorAuthCapture.created` записывает в Medusa списание из Merchant Interface. Неудачную доставку Authorize.net <a href="https://support.authorize.net/knowledgebase/article/000001542/" target="_blank">повторяет</a> до 10 раз в течение нескольких дней, а затем делает вебхук неактивным. **Проверить соединение** считает такой вебхук отсутствующим. Во время разработки запускайте бэкенд за туннелем с публичным адресом по HTTPS, как это делает пример командой `yarn dev:tunnel`.
+
+<Note type="warning">Без ключа подписи плагин не может проверить вебхуки Authorize.net и пропускает их. Оплата картой при этом проходит, но заказ, чей платёж задержал Fraud Detection Suite, так и ждёт платежа после того, как вы его одобрите, а списание из Merchant Interface не попадает в Medusa.</Note>
+
+---
+
+## Настройка Google Pay
+
+Google Pay появляется в ряду экспресс-оплаты на витрине, когда вы включаете его в секции **Экспресс-оплата** настроек Authorize.net. Payment Gateway ID вашего аккаунта плагин сам получает у Authorize.net и передаёт в Google Pay, вводить его не нужно.
+
+В sandbox кнопка работает в тестовом окружении Google Pay. В продакшене Google Pay нужен ваш Merchant ID из <a href="https://pay.google.com/business/console/" target="_blank">Google Pay & Wallet Console</a>, и без него настройки не дадут включить Google Pay. Кнопка работает на странице с HTTPS и на `localhost`.
+
+---
+
+## Переход с плагина `payment-authorizenet-medusa`
+
+Плагин регистрируется под тем же id провайдера, что и `payment-authorizenet-medusa`, поэтому заменяет его без миграции данных. Платежи, созданные старым плагином, остаются в базе, и этот плагин списывает, возвращает и отменяет их по ID транзакции.
+
+Чтобы перейти:
+
+1. Замените `payment-authorizenet-medusa` в `providers` платёжного модуля на `@gorgo/medusa-payment-authorizenet/providers/payment-authorizenet`, сохранив `id: "authorizenet"`, и зарегистрируйте провайдер интеграции, как показано в разделе [Настройка](#настройка). Удалите старый пакет, потому что `id: "authorizenet"` может быть только у одного провайдера.
+
+2. Введите ключи и выберите **Окружение** в Medusa Admin. Старый плагин брал `api_login_id`, `transaction_key` и `enviornment` из `medusa-config.ts`, а этот берёт их из своих настроек.
+
+3. Выберите **Способ списания** в настройках. Старый плагин только авторизовал платежи. С `capture: true` он записывал платёж списанным, но транзакция в Authorize.net оставалась авторизованной и через 30 дней истекала. Найдите такие транзакции в Merchant Interface и спишите те, что ещё ждут списания.
+
+4. Замените код витрины. Старый плагин брал токен карты, адреса и доставку из данных сессии, которые присылала витрина. Этот плагин берёт у витрины только токен, а остальное получает из корзины, как описано в разделе [Интеграция Authorize.net в витрину](/medusa-integrations/authorizenet/storefront-integration).
