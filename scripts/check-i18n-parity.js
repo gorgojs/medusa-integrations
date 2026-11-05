@@ -32,6 +32,7 @@ const LOCALE_DIRS = [
   'packages/providers/erp-1c/src/admin/i18n/json',
   'packages/providers/feed-yandex/src/admin/i18n/translations',
   'packages/providers/fulfillment-apiship/src/admin/i18n/json',
+  'packages/providers/payment-authorizenet/src/admin/i18n/json',
   'packages/providers/payment-robokassa/src/admin/i18n/json',
   'packages/providers/payment-paypal/src/admin/i18n/json',
   'packages/providers/payment-stripe/src/admin/i18n/json',

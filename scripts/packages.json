@@ -62,6 +62,15 @@
       }
     ]
   },
+  "payment-authorizenet": {
+    "dir": "packages/providers/payment-authorizenet",
+    "examples": [
+      {
+        "dir": "examples/payment-authorizenet",
+        "it": "payment-authorizenet"
+      }
+    ]
+  },
   "payment-stripe": {
     "dir": "packages/providers/payment-stripe",
     "examples": [
