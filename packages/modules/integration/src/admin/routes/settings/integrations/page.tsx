@@ -24,6 +24,7 @@ import { IntegrationIcon } from "../../../components/integration-icon"
 import { toModuleProviderId } from "../../../lib/provider-id"
 import { LicenseLine } from "../../../components/license-line"
 import { useLicenseStatus } from "../../../lib/license"
+import { usePaginationTranslations } from "../../../lib/data-table"
 import type { AdminIntegrationListResponse, IntegrationOverviewItem } from "../../../../types"
 import type { LicenseStateEntry } from "../../../../modules/integration/types"
 
@@ -111,6 +112,7 @@ const columnHelper = createDataTableColumnHelper<IntegrationOverviewItem>()
 
 const IntegrationsPage = () => {
   const { t } = useTranslation()
+  const paginationLabels = usePaginationTranslations()
   const navigate = useNavigate()
   const qc = useQueryClient()
   const prompt = usePrompt()
@@ -351,7 +353,7 @@ const IntegrationsPage = () => {
             filtered: { heading: t("integration.list.emptyFiltered") },
           }}
         />
-        <DataTable.Pagination />
+        <DataTable.Pagination translations={paginationLabels} />
       </DataTable>
 
       <div className="flex items-center justify-center px-6 py-4">
