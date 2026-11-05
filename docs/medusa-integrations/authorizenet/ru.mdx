@@ -1,0 +1,55 @@
+---
+title: "Платежи Authorize.net для Medusa"
+description: "Плагин Medusa для приёма платежей через Authorize.net."
+---
+
+<div>
+  <img alt="Логотип Medusa-Authorize.net" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/assets/authorizenet-medusa-logo.svg" width="270"/>
+</div>
+
+# {frontmatter.title}
+
+Плагин Medusa для приёма платежей через Authorize.net.
+
+## Возможности плагина
+
+- **Полная интеграция с Authorize.net:** Подключение к платёжному шлюзу Authorize.net для надёжной обработки платежей.
+- **Одно- и двухстадийная оплата:** Автосписание или авторизация с холдированием.
+- **Возвраты и отмены:** Возврат средств и отмена заказов.
+- **Вебхук-уведомления:** Статусы платежей в реальном времени с проверкой подписи.
+- **Экспресс-оплата:** Кнопка Google Pay для витрины. Покупатель платит без заполнения формы оформления заказа, адрес подставляется из его кошелька, а стоимость доставки пересчитывается под этот адрес.
+- **Подробное логирование:** Логи запросов и ответов для отладки и поддержки в режиме разработки.
+- **Полное тестовое покрытие:** Юнит- и интеграционные тесты, покрывающие основные сценарии и граничные случаи.
+- **Пример витрины магазина:** Готовый <a href="https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-authorizenet/apps/storefront" target="_blank">пример витрины на Next.js</a> для использования как референс.
+- **[Модуль интеграций](/medusa-modules/integration)**<AccentBadge badge="New" />: Настройте плагин прямо в приложении Medusa Admin – без редактирования конфигурационных файлов и повторного развёртывания магазина.
+
+<Note type="default" title="Что такое Модуль интеграций?">Модуль интеграций позволяет любому плагину описывать свои параметры в виде схемы и даёт администратору магазина настраивать их в Medusa Admin, без правок `medusa-config` и без повторного развёртывания. UI, хранение, шифрование и валидацию модуль берёт на себя. Читайте подробнее в [этой документации](/medusa-modules/integration).</Note>
+
+---
+
+## Что такое Authorize.net
+
+Authorize.net - платёжный шлюз Visa. Позволяет интернет-магазинам принимать оплату картами, платежи с банковского счёта через eCheck.Net и оплату из цифровых кошельков. Подробнее на <a href="https://www.authorize.net/" target="_blank">сайте Authorize.net</a>.
+
+---
+
+## Разработчикам
+
+<CardList items={[
+  {
+    title: "Развертывание окружения для разработки",
+    href: "https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-authorizenet"
+  },
+  {
+    title: "История изменений",
+    href: "/medusa-integrations/authorizenet/changelog"
+  }
+]}/>
+
+---
+
+## 💬  Поддержка и сообщество
+
+Есть вопросы по плагину или идеи? Пишите в чат поддержки в Telegram – [@gorgojs_chat](https://t.me/gorgojs_chat)
+
+Общайтесь с другими разработчиками Medusa в Telegram – [@medusajs_chat](https://t.me/medusajs_chat)
