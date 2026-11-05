@@ -203,10 +203,13 @@ const HistoryPage = () => {
           </div>
         ),
       }),
-      columnHelper.display({
-        id: "fields",
+      columnHelper.accessor("diff", {
         header: t("integration.history.columns.fields"),
-        cell: ({ row }) => <FieldBadges diff={row.original.diff} fields={NO_FIELDS} className="flex-nowrap" />,
+        size: 280,
+        // The badges fold what does not fit into "+N" with its own tooltip; the table's tooltip
+        // for clipped text would open next to it with every label run together.
+        truncateTooltip: false,
+        cell: ({ row }) => <FieldBadges diff={row.original.diff} fields={NO_FIELDS} fit />,
       }),
     ]
   }, [t, time, byProvider])
