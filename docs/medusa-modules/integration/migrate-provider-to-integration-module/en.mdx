@@ -342,6 +342,14 @@ upsertIntegrationWorkflow.runAsStep({
 })
 ```
 
+The same workflow records the change in the [change history](/medusa-modules/integration/manage-integrations#change-history). The input in the example has no `actor`, so the author of the record is **System**. When the write follows an action of a Medusa Admin user, pass `actor` in the input with the `type` and `id` from your route's `req.auth_context`, and the history names that user as the author.
+
+<Note type="warning">
+
+Don't write options straight through the methods of the Integration Module's service, such as `updateIntegrations`. Such a write skips the workflow. The values aren't validated, secrets are stored unencrypted, and the `integration.updated` event isn't emitted, so the provider keeps getting its previous options from the cache. The change doesn't reach the change history either.
+
+</Note>
+
 The module hands the widget a ready-made instance key via `data.providerId`, so you can pass it straight into your own hooks and requests. As a result, a single ApiShip settings page combines the generated sections and the custom UI.
 
 ---
