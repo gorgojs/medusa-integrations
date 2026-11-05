@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Fortsæt med at handle",
+    "haveAccount": "Har du allerede en konto? Gå til",
+    "item": "Vare",
+    "myOrders": "Mine ordrer",
+    "orCall": "eller ring på",
+    "orderSummary": "Ordreoversigt",
+    "questionsPrefix": "Har du spørgsmål, så skriv til os på",
+    "shipping": "Levering",
+    "total": "I alt",
+    "trackOrder": "Spor ordre",
+    "viewOrder": "Se ordre"
+  },
+  "Delivery": {
+    "bodyOrder": "Ordre <strong>#{id}</strong> er leveret. Vi håber, at alt kom godt frem.",
+    "headingAnon": "Din ordre er leveret",
+    "headingWithName": "{name}, din ordre er leveret",
+    "preview": "Ordre #{id} leveret",
+    "somethingWrong": "Er noget galt, så skriv til os inden for 14 dage, så løser vi det.",
+    "subject": "Ordre #{id} leveret",
+    "textFallback": "Ordre #{id} er leveret."
+  },
+  "Fulfillment": {
+    "bodyOrder": "Ordre <strong>#{id}</strong> er pakket og venter på at blive afleveret til fragtfirmaet.",
+    "deliveryCity": "Leveres til {city}.",
+    "headingAnon": "Vi gør din ordre klar",
+    "headingWithName": "{name}, vi gør din ordre klar",
+    "nextStep": "Vi sender dig track and trace-nummeret, så snart pakken er på vej.",
+    "preview": "Ordre #{id} gøres klar",
+    "subject": "Ordre #{id} gøres klar",
+    "textFallback": "Ordre #{id} er pakket."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. Alle rettigheder forbeholdes."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "Ordre <strong>#{id}</strong> er annulleret.",
+    "headingAnon": "Din ordre er annulleret",
+    "headingWithName": "{name}, din ordre er annulleret",
+    "preview": "Ordre #{id} annulleret",
+    "refundNote": "Var ordren betalt, går pengene tilbage til samme kort. Banker bruger typisk op til 10 hverdage.",
+    "subject": "Ordre #{id} annulleret",
+    "textFallback": "Ordre #{id} er annulleret."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "Ordre <strong>#{id}</strong> er gennemført. Tak fordi du valgte os!",
+    "bodyPromo": "Vi ser dig gerne igen. Se de nye varer i vores butik.",
+    "deliveryCity": "Leveret til {city}.",
+    "headingAnon": "Din ordre er gennemført!",
+    "headingWithName": "{name}, din ordre er gennemført!",
+    "preview": "Ordre #{id} er gennemført. Tak for dit køb!",
+    "subject": "Ordre #{id} gennemført",
+    "textFallback": "Ordre #{id} gennemført. Tak for dit køb!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "Ordre <strong>#{id}</strong> er afgivet.",
+    "deliveryCity": "Levering til {city}.",
+    "headingAnon": "Din ordre er afgivet!",
+    "headingWithName": "{name}, din ordre er afgivet!",
+    "preview": "Ordre #{id} er afgivet",
+    "subject": "Ordre #{id} afgivet",
+    "textFallback": "Ordre #{id} er afgivet.\n\nVi gør din ordre klar og sender den snarest.",
+    "watchStatus": "Du kan følge din ordres status på din konto."
+  },
+  "OrderTransfer": {
+    "body": "Der er anmodet om at overføre ordre <strong>#{id}</strong> til en anden konto. Hvis det var dig, skal du bekræfte overførslen med knappen nedenfor. Ellers kan du blot ignorere denne mail.",
+    "button": "Gennemgå anmodning",
+    "heading": "Anmodning om overførsel af ordre",
+    "hint": "Ordren overføres først efter din bekræftelse. Hvis du ikke har anmodet om en overførsel, sker der ikke noget med din ordre.",
+    "preview": "Anmodning om overførsel af ordre #{id}",
+    "subject": "Anmodning om overførsel af ordre #{id}",
+    "textFallback": "Anmodning om overførsel af ordre #{id}\n\nFølg linket for at gennemgå anmodningen:\n{url}\n\nHvis du ikke har anmodet om en overførsel, kan du blot ignorere denne mail."
+  },
+  "PasswordReset": {
+    "body": "Vi har modtaget en anmodning om at nulstille adgangskoden for <strong>{email}</strong>. Klik på knappen nedenfor for at vælge en ny adgangskode.",
+    "button": "Nulstil adgangskode",
+    "heading": "Nulstil adgangskode",
+    "hint": "Linket gælder i <strong>15 minutter</strong>. Hvis du ikke har bedt om at nulstille din adgangskode, kan du blot ignorere denne mail.",
+    "preview": "Nulstil adgangskode, linket gælder i 15 minutter",
+    "subject": "Nulstil adgangskode",
+    "textFallback": "Nulstil adgangskode\n\nFølg linket for at nulstille din adgangskode (gælder i 15 minutter):\n{url}\n\nHvis du ikke har bedt om at nulstille din adgangskode, kan du blot ignorere denne mail."
+  },
+  "Payment": {
+    "bodyOrder": "Ordre <strong>#{id}</strong> er betalt. Vi gør den nu klar til forsendelse.",
+    "headingAnon": "Din ordre er betalt!",
+    "headingWithName": "{name}, din ordre er betalt!",
+    "preview": "Ordre #{id} er betalt",
+    "subject": "Ordre #{id} betalt",
+    "textFallback": "Ordre #{id} er betalt.\n\nVi gør din ordre klar og sender den snarest.",
+    "watchStatus": "Du kan følge din ordres status på din konto."
+  },
+  "Shipment": {
+    "bodyOrder": "Ordre <strong>#{id}</strong> er overdraget til fragtfirmaet.",
+    "deliveryCity": "Levering til {city}.",
+    "deliveryTime": "Den normale leveringstid er 1-7 hverdage afhængigt af din region.",
+    "headingAnon": "Din ordre er på vej!",
+    "headingWithName": "{name}, din ordre er på vej!",
+    "noTracking": "Sporingsnummeret tilføjes til din ordre på din konto, så snart pakken er overdraget til fragtfirmaet.",
+    "preview": "Ordre #{id} er afsendt",
+    "subject": "Ordre #{id} afsendt",
+    "textDelivery": "Den normale leveringstid er 1-7 hverdage.",
+    "textFallback": "Ordre #{id} er afsendt.",
+    "textTracking": "Sporingsnummer: {numbers}",
+    "trackLabel": "Sporingsnummer:",
+    "trackingTitle": "Sporingsoplysninger"
+  },
+  "Welcome": {
+    "body": "Tak for din tilmelding! Din konto er klar. Nu kan du handle hurtigere, følge dine ordrer og gemme leveringsadresser på din konto.",
+    "button": "Begynd at handle",
+    "claimOrders": "Har du bestilt før uden konto? De ordrer kan knyttes til den under",
+    "claimOrdersLink": "dine ordrer",
+    "headingAnon": "Velkommen!",
+    "headingWithName": "Velkommen, {name}!",
+    "preview": "Velkommen til {store}!",
+    "subject": "Velkommen!",
+    "textFallback": "Velkommen!\n\nTak for din tilmelding. Din konto er klar.\nBegynd at handle: {url}"
+  }
+}

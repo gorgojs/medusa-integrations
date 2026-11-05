@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "Continue shopping",
+    "haveAccount": "Already have an account? Go to",
+    "item": "Item",
+    "myOrders": "My orders",
+    "orCall": "or call",
+    "orderSummary": "Order summary",
+    "questionsPrefix": "If you have any questions, write to us at",
+    "shipping": "Shipping",
+    "total": "Total",
+    "trackOrder": "Track order",
+    "viewOrder": "View order"
+  },
+  "Delivery": {
+    "bodyOrder": "Order <strong>#{id}</strong> has been delivered. We hope everything arrived in good shape.",
+    "headingAnon": "Your order has been delivered",
+    "headingWithName": "{name}, your order has been delivered",
+    "preview": "Order #{id} delivered",
+    "somethingWrong": "If anything is wrong with the order, tell us within 14 days and we will sort it out.",
+    "subject": "Order #{id} delivered",
+    "textFallback": "Order #{id} has been delivered."
+  },
+  "Fulfillment": {
+    "bodyOrder": "Order <strong>#{id}</strong> has been packed and is waiting to be handed to the carrier.",
+    "deliveryCity": "Delivering to {city}.",
+    "headingAnon": "Your order is being prepared",
+    "headingWithName": "{name}, your order is being prepared",
+    "nextStep": "We will send you the tracking number as soon as the parcel is on its way.",
+    "preview": "Order #{id} is being prepared",
+    "subject": "Order #{id} is being prepared",
+    "textFallback": "Order #{id} has been packed."
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. All rights reserved."
+  },
+  "OrderCanceled": {
+    "bodyOrder": "Order <strong>#{id}</strong> has been canceled.",
+    "headingAnon": "Your order has been canceled",
+    "headingWithName": "{name}, your order has been canceled",
+    "preview": "Order #{id} canceled",
+    "refundNote": "If the order was paid for, the money goes back to the card it was paid with. Banks usually need up to 10 business days to show it.",
+    "subject": "Order #{id} canceled",
+    "textFallback": "Order #{id} has been canceled."
+  },
+  "OrderCompleted": {
+    "bodyOrder": "Order <strong>#{id}</strong> has been completed. Thank you for choosing us!",
+    "bodyPromo": "We'd love to see you again. Check out new arrivals in our store.",
+    "deliveryCity": "Delivered to {city}.",
+    "headingAnon": "Your order is complete!",
+    "headingWithName": "{name}, your order is complete!",
+    "preview": "Order #{id} completed. Thank you for your purchase!",
+    "subject": "Order #{id} completed",
+    "textFallback": "Order #{id} completed. Thank you for your purchase!"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "Order <strong>#{id}</strong> has been successfully placed.",
+    "deliveryCity": "Delivering to {city}.",
+    "headingAnon": "Your order is placed!",
+    "headingWithName": "{name}, your order is placed!",
+    "preview": "Order #{id} successfully placed",
+    "subject": "Order #{id} placed",
+    "textFallback": "Order #{id} has been placed.\n\nWe are preparing your order and will dispatch it shortly.",
+    "watchStatus": "You can track your order status in your account."
+  },
+  "OrderTransfer": {
+    "body": "A request was made to transfer order <strong>#{id}</strong> to another account. If this was you, confirm the transfer using the button below. If not, ignore this email.",
+    "button": "Review request",
+    "heading": "Order transfer request",
+    "hint": "The order will only be transferred after your confirmation. If you didn't request a transfer, nothing will happen to your order.",
+    "preview": "Order #{id} transfer request",
+    "subject": "Order #{id} transfer request",
+    "textFallback": "Order #{id} transfer request\n\nTo review the request, follow the link:\n{url}\n\nIf you didn't request a transfer, ignore this email."
+  },
+  "PasswordReset": {
+    "body": "We received a request to reset the password for <strong>{email}</strong>. Click the button below to set a new password.",
+    "button": "Reset password",
+    "heading": "Password reset",
+    "hint": "The link is valid for <strong>15 minutes</strong>. If you didn't request a password reset, ignore this email.",
+    "preview": "Password reset, link valid for 15 minutes",
+    "subject": "Password reset",
+    "textFallback": "Password reset\n\nTo reset your password, follow the link (valid for 15 minutes):\n{url}\n\nIf you didn't request a password reset, ignore this email."
+  },
+  "Payment": {
+    "bodyOrder": "Order <strong>#{id}</strong> has been successfully paid. We are now preparing it for dispatch.",
+    "headingAnon": "Your order is paid!",
+    "headingWithName": "{name}, your order is paid!",
+    "preview": "Order #{id} successfully paid",
+    "subject": "Order #{id} paid",
+    "textFallback": "Order #{id} has been paid.\n\nWe are preparing your order and will dispatch it shortly.",
+    "watchStatus": "You can track your order status in your account."
+  },
+  "Shipment": {
+    "bodyOrder": "Order <strong>#{id}</strong> has been handed to the delivery service.",
+    "deliveryCity": "Delivering to {city}.",
+    "deliveryTime": "Standard delivery takes 1-7 business days depending on your region.",
+    "headingAnon": "Your order is on its way!",
+    "headingWithName": "{name}, your order is on its way!",
+    "noTracking": "The tracking number will be added to your order in your account once the parcel is handed to the carrier.",
+    "preview": "Order #{id} shipped",
+    "subject": "Order #{id} shipped",
+    "textDelivery": "Standard delivery takes 1-7 business days.",
+    "textFallback": "Order #{id} has been shipped.",
+    "textTracking": "Tracking number: {numbers}",
+    "trackLabel": "Tracking number:",
+    "trackingTitle": "Tracking information"
+  },
+  "Welcome": {
+    "body": "Thanks for signing up! Your account is ready. Now you can check out faster, track your orders and save delivery addresses in your account.",
+    "button": "Start shopping",
+    "claimOrders": "Ordered before without an account? Those orders can be linked to this one from",
+    "claimOrdersLink": "your orders",
+    "headingAnon": "Welcome!",
+    "headingWithName": "Welcome, {name}!",
+    "preview": "Welcome to {store}!",
+    "subject": "Welcome!",
+    "textFallback": "Welcome!\n\nThanks for signing up. Your account is ready.\nStart shopping: {url}"
+  }
+}
