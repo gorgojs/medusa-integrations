@@ -1,0 +1,148 @@
+# Authorize.net — payment provider, authored by Gorgo.
+# See example.yml for the fully-annotated template.
+
+identifier: "authorizenet"
+npm: "@gorgo/medusa-payment-authorizenet"
+category: "payment"
+author: "gorgo"
+displayName:
+  en: "Authorize.net"
+  ru: "Authorize.net"
+shortDescription:
+  en: "Authorize.net payment gateway with Accept.js and Google Pay"
+  ru: "Платёжный шлюз Authorize.net с Accept.js и Google Pay"
+icon: "authorizenet.svg"
+repository: "https://github.com/gorgojs/medusa-integrations"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/authorizenet"
+docsSnippet:
+  en: |
+    ## Install
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-authorizenet
+    # or with yarn
+    yarn add @gorgo/medusa-payment-authorizenet
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-authorizenet
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    const AUTHORIZENET_INTEGRATION_ID = "authorizenet-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-authorizenet/providers/integration-authorizenet",
+                id: AUTHORIZENET_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-authorizenet",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-authorizenet/providers/payment-authorizenet",
+                id: "authorizenet",
+                options: { id: AUTHORIZENET_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Then restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → Authorize.net**.
+    2. Under **Credentials**, choose the environment and enter the API Login ID, Transaction Key and Public Client Key.
+    3. Enter the Signature Key to verify webhooks. In the Merchant Interface, point the webhook at `/hooks/payment/authorizenet_authorizenet` on your backend and subscribe it to `net.authorize.payment.fraud.approved`, `net.authorize.payment.fraud.declined` and `net.authorize.payment.priorAuthCapture.created`.
+    4. Under **Behavior**, choose **Payment capture**: **Capture right away** or **Authorize only**.
+    5. Under **Express checkout**, turn on **Google Pay** to show its button. In production, add your Google merchant ID.
+  ru: |
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-authorizenet
+    # or with yarn
+    yarn add @gorgo/medusa-payment-authorizenet
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-authorizenet
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    const AUTHORIZENET_INTEGRATION_ID = "authorizenet-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-authorizenet/providers/integration-authorizenet",
+                id: AUTHORIZENET_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-authorizenet",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-authorizenet/providers/payment-authorizenet",
+                id: "authorizenet",
+                options: { id: AUTHORIZENET_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Затем перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → Authorize.net**.
+    2. В разделе **Доступы** выберите окружение и введите API Login ID, ключ транзакций и публичный ключ клиента.
+    3. Введите ключ подписи, чтобы проверять вебхуки. В Merchant Interface направьте вебхук на `/hooks/payment/authorizenet_authorizenet` вашего бэкенда и подпишите его на события `net.authorize.payment.fraud.approved`, `net.authorize.payment.fraud.declined` и `net.authorize.payment.priorAuthCapture.created`.
+    4. В разделе **Поведение** выберите **Способ списания**: **Списать сразу** или **Только заблокировать**.
+    5. В разделе **Экспресс-оплата** включите **Google Pay**, чтобы показать его кнопку. В продакшене добавьте ID продавца в Google Pay.
+active: true
