@@ -1,5 +1,11 @@
 # @gorgo/medusa-payment-authorizenet
 
+## 2.0.1
+
+### Documentation
+
+- add the configuration section and the maintenance link to the readme by [@gorgohead](https://github.com/gorgohead) in [`ed24927`](https://github.com/gorgojs/medusa-integrations/commit/ed24927c14b6a3bfbba771f92fe5ab4f59be9cdf)
+
 ## 2.0.0
 
 ### Highlights
