@@ -64,6 +64,8 @@ Got questions or ideas about the plugin? Join the Telegram support chat, [@gorgo
 
 Connect with other Medusa developers on Telegram in [@medusajs_chat](https://t.me/medusajs_chat).
 
+The [Maintenance](https://docs.gorgojs.com/resources/maintenance) page explains how we test, update and fix the plugin.
+
 ## Requirements
 
 - Medusa v2.17.2 or later
@@ -78,6 +80,54 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-payment-authorizenet
 # or
 npm install @gorgo/medusa-integration @gorgo/medusa-payment-authorizenet
 ```
+
+## Configuration
+
+Register the plugin and the Integration Module in `medusa-config.ts`:
+
+```ts
+const AUTHORIZENET_INTEGRATION_ID = "authorizenet-1"
+
+module.exports = defineConfig({
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-authorizenet/providers/integration-authorizenet",
+            id: AUTHORIZENET_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-authorizenet",
+      options: {},
+    },
+  ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-authorizenet/providers/payment-authorizenet",
+            id: "authorizenet",
+            options: { id: AUTHORIZENET_INTEGRATION_ID },
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Set `INTEGRATION_ENCRYPTION_KEY` to a long random string, for example the output of `openssl rand -hex 32`. The Integration Module derives the key that encrypts secret settings, such as the Transaction Key, from it.
+
+Then restart the server and configure the integration in Medusa Admin under **Settings → Integrations → Authorize.net**.
 
 ## Replacing the payment-authorizenet-medusa Plugin
 
