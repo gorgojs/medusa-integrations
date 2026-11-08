@@ -1,0 +1,566 @@
+---
+title: "RetailCRM Workflow Hooks"
+description: "How to change what the plugin sends to RetailCRM and what it applies from the CRM without changing the plugin's code."
+---
+
+# {frontmatter.title}
+
+The exchange with RetailCRM runs as Medusa workflows, and every one of them exposes a hook. A hook handler receives what the plugin is about to send to the CRM or apply in Medusa, and returns a corrected version. That's how you set an order method, keep some orders out of the CRM, pass a custom field, or stop a CRM change from reaching Medusa, without changing the plugin's code.
+
+<Note type="info" title="What Is a Workflow Hook">
+
+A workflow hook is a point inside a Medusa workflow where you plug in your own function. Medusa calls it while the workflow runs and passes it data, and the workflow uses whatever the function returns. Read more in the [Medusa documentation](https://docs.medusajs.com/learn/fundamentals/workflows/workflow-hooks).
+
+</Note>
+
+---
+
+## Available Hooks
+
+| Workflow | Hook | When It Runs | What It Changes |
+| --- | --- | --- | --- |
+| `exportRetailcrmOrdersWorkflow` | [`setOrders`](#setorders) | once per send, before the request to the CRM | the order bodies that go to the CRM |
+| `exportRetailcrmCustomersWorkflow` | [`setCustomers`](#setcustomers) | once per send, before the request to the CRM | the customer bodies that go to the CRM |
+| `exportRetailcrmPaymentsWorkflow` | [`setPayments`](#setpayments) | once per send, before the request to the CRM | the payment bodies that go to the CRM |
+| `importRetailcrmHistoryWorkflow` | [`setOrders`](#setorders-on-import) | once per history run, after the records are planned | the changes applied to Medusa orders and the orders created from the CRM |
+| `importRetailcrmHistoryWorkflow` | [`setCustomers`](#setcustomers-on-import) | once per history run, after the records are planned | the changes applied to Medusa customers |
+
+Import the workflows from `@gorgo-store/medusa-crm-retailcrm/workflows` and the hook input, element and result types from `@gorgo-store/medusa-crm-retailcrm/hooks`.
+
+---
+
+## Register a Handler
+
+Register the handler in a file under `src/workflows/hooks` in your Medusa project, and Medusa loads it when the server starts. For example, this handler sets the order method the CRM shows for every order from the store:
+
+```ts title="src/workflows/hooks/retailcrm-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmOrdersWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+exportRetailcrmOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.map((item) => ({
+      ...item,
+      order: { ...item.order, orderMethod: "shopping-cart" },
+    })),
+  })
+})
+```
+
+The handler receives the planned elements, returns them in a `StepResponse`, and the plugin sends what the handler returned. The element's `order` is the body in the CRM's own format, so any field of the CRM order can be set here.
+
+---
+
+## How an Element Is Built
+
+Every hook receives an array of elements. An element brings together what the handler needs to decide:
+
+- `source` – what the element is built from. On export, it's the Medusa order, customer or payment. On import, it's the history records of one CRM order or customer.
+- `existing` – on import only, the Medusa order or customer the records belong to, or `null` for an order or customer created in the CRM.
+- `crm` – on import only, the CRM order or customer read in full, when the records required it.
+- The target field – what the plugin sends or applies. It's `order`, `customer` or `payment` on export, and `order` or `customer` with the desired changes on import.
+- `action` – what the plugin is going to do with the element: `create`, `edit` or `skip` on export, `apply`, `create` or `skip` on import. A skipped element carries `skipReason`.
+
+---
+
+## Result Rules
+
+- **Return `new StepResponse({ <array> })`.** The plugin uses only the array.
+- **Remove an element to leave that record alone in this run.** An order removed from the export doesn't get the CRM mark and goes out with the next resend job. A CRM change removed on import isn't applied, and the history cursor still moves past it.
+- **Set `action: "skip"` with a `skipReason` to the same effect**, with the reason in the log.
+- **Don't add elements or change `externalId`.** The CRM recognizes an order, a customer and a payment by their `externalId`, and the plugin stops the run with an error naming the hook if a handler changes it or returns an element that wasn't planned.
+- **Return the same result for the same input.** The plugin compares the body with the one it sent last time, and a handler that changes the body on every call sends every repeated event to the CRM.
+
+<Note type="default" title="">
+
+If a handler returns a plain object or nothing, the run stops with an error like `exportRetailcrmOrdersWorkflow.hooks.setOrders handler must return new StepResponse({ orders }), it returned nothing usable`. Medusa passes the plugin only what's inside the `StepResponse`.
+
+</Note>
+
+---
+
+## setOrders
+
+A hook of the `exportRetailcrmOrdersWorkflow` workflow (`export-retailcrm-orders`). It runs once per send, after the plugin has made sure the customers exist in the CRM and built the bodies, and before the requests to the CRM.
+
+```ts title="src/workflows/hooks/retailcrm-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmOrdersWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+exportRetailcrmOrdersWorkflow.hooks.setOrders(async ({ orders }, { container }) => {
+  // ...
+
+  return new StepResponse({ orders })
+})
+```
+
+<MedusaTypeList
+  sectionTitle="SetOrdersToExportInput"
+  types={[
+    {
+      name: "orders",
+      type: "OrderToExport[]",
+      description: "One element per Medusa order in the send.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "MedusaOrderForExport",
+          description: "The Medusa order with its items, shipping methods, addresses, customer and payments, as the plugin loaded it. Don't change it.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "order",
+          type: "SerializedOrder",
+          description: "The body in the CRM format: `externalId`, `number`, `customer`, `firstName`, `lastName`, `phone`, `email`, `items`, `delivery`, `status`, and `payments` and `createdAt` on create. Any field of the CRM order can be set, for example `orderMethod`, `orderType`, `managerComment` or `customFields`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "action",
+          type: "\"create\" | \"edit\" | \"skip\"",
+          description: "`create` for an order the CRM doesn't have yet, `edit` for one it has, `skip` for one that isn't sent. Set `skip` to keep the order out.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "skipReason",
+          type: "string",
+          description: "Why the order is skipped. Goes to the log.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "notes",
+          type: "string[]",
+          description: "What the plugin noticed while building the body, such as a payment without a type. Written to the log as warnings.",
+          optional: false,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Return `new StepResponse({ orders })`.
+
+---
+
+## setCustomers
+
+A hook of the `exportRetailcrmCustomersWorkflow` workflow (`export-retailcrm-customers`). It runs once per send of customers with an account.
+
+```ts title="src/workflows/hooks/retailcrm-customers.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmCustomersWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+exportRetailcrmCustomersWorkflow.hooks.setCustomers(async ({ customers }, { container }) => {
+  // ...
+
+  return new StepResponse({ customers })
+})
+```
+
+<MedusaTypeList
+  sectionTitle="SetCustomersToExportInput"
+  types={[
+    {
+      name: "customers",
+      type: "CustomerToExport[]",
+      description: "One element per Medusa customer in the send.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "MedusaCustomerForExport",
+          description: "The Medusa customer with its addresses. Don't change it.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "customer",
+          type: "SerializedCustomer",
+          description: "The body in the CRM format: `externalId`, `firstName`, `lastName`, `email`, `phones`, `address`, `subscribed`. Any field of the CRM customer can be set, for example `tags` or `customFields`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "action",
+          type: "\"create\" | \"edit\" | \"skip\"",
+          description: "A guest comes as `skip`, because guests go to the CRM with their orders.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "skipReason",
+          type: "string",
+          description: "Why the customer is skipped.",
+          optional: true,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Return `new StepResponse({ customers })`.
+
+---
+
+## setPayments
+
+A hook of the `exportRetailcrmPaymentsWorkflow` workflow (`export-retailcrm-payments`). It runs once per send, on capture or refund.
+
+```ts title="src/workflows/hooks/retailcrm-payments.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmPaymentsWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+exportRetailcrmPaymentsWorkflow.hooks.setPayments(async ({ payments }, { container }) => {
+  // ...
+
+  return new StepResponse({ payments })
+})
+```
+
+<MedusaTypeList
+  sectionTitle="SetPaymentsToExportInput"
+  types={[
+    {
+      name: "payments",
+      type: "PaymentToExport[]",
+      description: "One element per Medusa payment in the send.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "MedusaPaymentForExport",
+          description: "The Medusa payment with its captures, refunds and the order of its payment collection. Don't change it.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "payment",
+          type: "SerializedPayment2",
+          description: "The body of the CRM payment edit: `externalId`, `amount`, `status`, `paidAt`, `comment`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "type",
+          type: "string",
+          description: "The CRM payment type the plugin creates the payment with if the CRM doesn't have it.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "orderId",
+          type: "string",
+          description: "The Medusa order the payment belongs to.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "action",
+          type: "\"edit\" | \"skip\"",
+          description: "`skip` for a payment of an order that isn't in the CRM yet, a provider mapped to do not send, or a CRM payment type that belongs to a CRM payment module.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "skipReason",
+          type: "string",
+          description: "Why the payment is skipped.",
+          optional: true,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Return `new StepResponse({ payments })`.
+
+---
+
+## setOrders on Import
+
+A hook of the `importRetailcrmHistoryWorkflow` workflow (`import-retailcrm-history`). It runs once per history run, after the plugin has grouped the records by order, read the changed orders from the CRM and found the Medusa orders, and before anything is applied.
+
+```ts title="src/workflows/hooks/retailcrm-history.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importRetailcrmHistoryWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+importRetailcrmHistoryWorkflow.hooks.setOrders(async ({ orders }, { container }) => {
+  // ...
+
+  return new StepResponse({ orders })
+})
+```
+
+<MedusaTypeList
+  sectionTitle="SetOrdersToImportInput"
+  types={[
+    {
+      name: "orders",
+      type: "OrderToImport[]",
+      description: "One element per CRM order with changes in this run.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "OrderHistory[]",
+          description: "The history records of this order, as the CRM returned them.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "crmOrderId",
+          type: "number",
+          description: "The CRM order ID.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "existing",
+          type: "ExistingOrderForImport | null",
+          description: "The Medusa order with its items, shipping methods, fulfillments and payments, or `null` for an order created in the CRM. Don't change it.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "crm",
+          type: "object",
+          description: "The CRM order read in full, present when the records touched items, delivery, address, customer or payments, and for an order created in the CRM.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "order",
+          type: "OrderChanges",
+          description: "The changes to apply: `status` with its `code` and `group`, `payments`, `items` as a list of `add`, `quantity` and `price` actions, `shipping`, `shippingAddress`, `email`, `customerId`, `fields` that go to the metadata, and `deleted`. Delete a key to leave that part alone.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "action",
+          type: "\"apply\" | \"create\" | \"skip\"",
+          description: "`apply` for a Medusa order, `create` for an order created in the CRM that the plugin is about to create in Medusa, `skip` for one it leaves alone.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "skipReason",
+          type: "string",
+          description: "Why the order is skipped.",
+          optional: true,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Return `new StepResponse({ orders })`. The order of application is fixed: metadata, then the order edit, then the address, then cancellation or completion, then payment capture. A handler can't change it, but it can remove any part by deleting the key from `order`.
+
+---
+
+## setCustomers on Import
+
+A hook of the `importRetailcrmHistoryWorkflow` workflow. It runs once per history run, after the customer records are planned.
+
+```ts title="src/workflows/hooks/retailcrm-history.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importRetailcrmHistoryWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+importRetailcrmHistoryWorkflow.hooks.setCustomers(async ({ customers }, { container }) => {
+  // ...
+
+  return new StepResponse({ customers })
+})
+```
+
+<MedusaTypeList
+  sectionTitle="SetCustomersToImportInput"
+  types={[
+    {
+      name: "customers",
+      type: "CustomerToImport[]",
+      description: "One element per CRM customer with changes in this run.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "CustomerHistory[]",
+          description: "The history records of this customer.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "crmCustomerId",
+          type: "number",
+          description: "The CRM customer ID.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "existing",
+          type: "ExistingCustomerForImport | null",
+          description: "The Medusa customer with its addresses, or `null` for a customer created in the CRM.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "crm",
+          type: "object",
+          description: "The CRM customer read in full, present when the records touched the address or phones, and for a customer created in the CRM.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "customer",
+          type: "CustomerChanges",
+          description: "The changes to apply: `first_name`, `last_name`, `phone`, `address` and `fields` that go to the metadata.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "create",
+          type: "object",
+          description: "For a customer created in the CRM, the `email`, `first_name`, `last_name`, `phone` and `metadata` the plugin creates the Medusa customer with.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "action",
+          type: "\"apply\" | \"create\" | \"skip\"",
+          description: "What the plugin is about to do with the customer.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "skipReason",
+          type: "string",
+          description: "Why the customer is skipped.",
+          optional: true,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Return `new StepResponse({ customers })`.
+
+---
+
+## Examples
+
+### Orders of One Channel Stay Out of the CRM
+
+The store sells on a marketplace through a second sales channel, and those orders have their own CRM. The handler skips them. Every element already carries the order, so the handler makes no database queries.
+
+```ts title="src/workflows/hooks/retailcrm-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmOrdersWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+const MARKETPLACE_CHANNEL = "sc_01J…"
+
+exportRetailcrmOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.filter(({ source }) => source.sales_channel_id !== MARKETPLACE_CHANNEL),
+  })
+})
+```
+
+An order removed here gets no CRM mark, so the resend job offers it to the handler again every hour, and the handler skips it again. That's cheaper than it sounds: the job reads the orders of the last day only.
+
+### A Custom Field from the Order Metadata
+
+The storefront saves the delivery wishes of the buyer in the order metadata, and the CRM has a custom field for them. The handler copies the value.
+
+```ts title="src/workflows/hooks/retailcrm-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmOrdersWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+exportRetailcrmOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.map((item) => {
+      const wishes = item.source.metadata?.delivery_wishes
+      if (typeof wishes !== "string") return item
+      return { ...item, order: { ...item.order, customFields: { ...item.order.customFields, delivery_wishes: wishes } } }
+    }),
+  })
+})
+```
+
+### A CRM Status That Doesn't Cancel
+
+The CRM has a status in the `cancel` group that managers use to park an order, and the store doesn't want it to cancel the Medusa order even with **Cancel orders from the CRM** on. The handler drops the status from the changes and keeps the rest.
+
+```ts title="src/workflows/hooks/retailcrm-history.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importRetailcrmHistoryWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+importRetailcrmHistoryWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.map((item) => {
+      if (item.order?.status?.code !== "cancel-parked") return item
+      const { status: _status, ...rest } = item.order
+      return { ...item, order: rest }
+    }),
+  })
+})
+```
+
+The status still lands in `metadata.retailcrm.status`, because `fields` keeps it. To hide it there as well, delete `status` and `status_group` from `fields`.
+
+---
+
+## Next Steps
+
+<CardList items={[
+  {
+    title: "What Goes to RetailCRM and What Comes Back",
+    href: "/medusa-integrations/retailcrm/usage"
+  },
+  {
+    title: "Manage RetailCRM Settings in the Medusa Admin",
+    href: "/medusa-integrations/retailcrm/settings"
+  }
+]}/>

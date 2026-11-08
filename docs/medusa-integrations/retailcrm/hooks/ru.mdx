@@ -1,0 +1,566 @@
+---
+title: "Хуки воркфлоу RetailCRM"
+description: "Как менять то, что плагин отправляет в RetailCRM и применяет из CRM, не меняя код плагина."
+---
+
+# {frontmatter.title}
+
+Обмен с RetailCRM работает как воркфлоу Medusa, и у каждого из них есть хук. Обработчик хука получает то, что плагин собирается отправить в CRM или применить в Medusa, и возвращает исправленную версию. Так вы задаёте способ оформления, оставляете часть заказов вне CRM, передаёте пользовательское поле или не даёте изменению из CRM дойти до Medusa, не меняя код плагина.
+
+<Note type="info" title="Что такое хук воркфлоу">
+
+Хук воркфлоу это точка внутри воркфлоу Medusa, куда вы подключаете собственную функцию. Medusa вызывает её во время выполнения воркфлоу, передаёт ей данные, а воркфлоу использует то, что функция вернула. Подробнее в [документации Medusa](https://docs.medusajs.com/learn/fundamentals/workflows/workflow-hooks).
+
+</Note>
+
+---
+
+## Доступные хуки
+
+| Воркфлоу | Хук | Когда выполняется | Что меняет |
+| --- | --- | --- | --- |
+| `exportRetailcrmOrdersWorkflow` | [`setOrders`](#setorders) | один раз на отправку, до запроса к CRM | тела заказов, которые уходят в CRM |
+| `exportRetailcrmCustomersWorkflow` | [`setCustomers`](#setcustomers) | один раз на отправку, до запроса к CRM | тела покупателей, которые уходят в CRM |
+| `exportRetailcrmPaymentsWorkflow` | [`setPayments`](#setpayments) | один раз на отправку, до запроса к CRM | тела платежей, которые уходят в CRM |
+| `importRetailcrmHistoryWorkflow` | [`setOrders`](#setorders-при-импорте) | один раз на проход истории, после разбора записей | изменения, применяемые к заказам Medusa, и заказы, создаваемые из CRM |
+| `importRetailcrmHistoryWorkflow` | [`setCustomers`](#setcustomers-при-импорте) | один раз на проход истории, после разбора записей | изменения, применяемые к покупателям Medusa |
+
+Импортируйте воркфлоу из `@gorgo-store/medusa-crm-retailcrm/workflows`, а типы входа, элемента и результата хуков из `@gorgo-store/medusa-crm-retailcrm/hooks`.
+
+---
+
+## Регистрация обработчика
+
+Зарегистрируйте обработчик в файле в папке `src/workflows/hooks` проекта Medusa, и Medusa загрузит его при старте сервера. Например, этот обработчик задаёт способ оформления, который CRM показывает у каждого заказа из магазина:
+
+```ts title="src/workflows/hooks/retailcrm-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmOrdersWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+exportRetailcrmOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.map((item) => ({
+      ...item,
+      order: { ...item.order, orderMethod: "shopping-cart" },
+    })),
+  })
+})
+```
+
+Обработчик получает запланированные элементы, возвращает их в `StepResponse`, и плагин отправляет то, что обработчик вернул. Поле `order` элемента это тело в формате самой CRM, поэтому здесь можно задать любое поле заказа CRM.
+
+---
+
+## Как устроен элемент
+
+Каждый хук получает массив элементов. Элемент собирает всё, что нужно обработчику для решения:
+
+- `source` – из чего собран элемент. При отправке это заказ, покупатель или платёж Medusa. При импорте это записи истории одного заказа или покупателя CRM.
+- `existing` – только при импорте, заказ или покупатель Medusa, к которому относятся записи, или `null` для заказа или покупателя, заведённого в CRM.
+- `crm` – только при импорте, заказ или покупатель CRM, прочитанный целиком, когда записи этого требовали.
+- Целевое поле – что плагин отправляет или применяет. При отправке это `order`, `customer` или `payment`, при импорте `order` или `customer` с желаемыми изменениями.
+- `action` – что плагин собирается сделать с элементом: `create`, `edit` или `skip` при отправке, `apply`, `create` или `skip` при импорте. У пропущенного элемента есть `skipReason`.
+
+---
+
+## Правила результата
+
+- **Возвращайте `new StepResponse({ <массив> })`.** Плагин использует только массив.
+- **Уберите элемент, чтобы в этом проходе запись осталась как есть.** Заказ, убранный из отправки, не получает отметку CRM и уходит со следующим запуском задачи повторной отправки. Изменение из CRM, убранное при импорте, не применяется, а курсор истории всё равно проходит дальше.
+- **Поставьте `action: "skip"` с `skipReason` с тем же результатом**, но с причиной в журнале.
+- **Не добавляйте элементы и не меняйте `externalId`.** CRM узнаёт заказ, покупателя и платёж по `externalId`, и плагин останавливает проход с ошибкой, называющей хук, если обработчик его изменил или вернул элемент, которого не было в плане.
+- **Возвращайте один и тот же результат для одного и того же входа.** Плагин сравнивает тело с отправленным в прошлый раз, и обработчик, который меняет тело при каждом вызове, отправляет в CRM каждое повторное событие.
+
+<Note type="default" title="">
+
+Если обработчик вернул обычный объект или ничего, проход останавливается с ошибкой вида `exportRetailcrmOrdersWorkflow.hooks.setOrders handler must return new StepResponse({ orders }), it returned nothing usable`. Medusa передаёт плагину только то, что находится внутри `StepResponse`.
+
+</Note>
+
+---
+
+## setOrders
+
+Хук воркфлоу `exportRetailcrmOrdersWorkflow` (`export-retailcrm-orders`). Выполняется один раз на отправку, после того как плагин убедился, что покупатели есть в CRM, и собрал тела, и до запросов к CRM.
+
+```ts title="src/workflows/hooks/retailcrm-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmOrdersWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+exportRetailcrmOrdersWorkflow.hooks.setOrders(async ({ orders }, { container }) => {
+  // ...
+
+  return new StepResponse({ orders })
+})
+```
+
+<MedusaTypeList
+  sectionTitle="SetOrdersToExportInput"
+  types={[
+    {
+      name: "orders",
+      type: "OrderToExport[]",
+      description: "По элементу на заказ Medusa в отправке.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "MedusaOrderForExport",
+          description: "Заказ Medusa с позициями, способами доставки, адресами, покупателем и платежами, как его загрузил плагин. Не меняйте его.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "order",
+          type: "SerializedOrder",
+          description: "Тело в формате CRM: `externalId`, `number`, `customer`, `firstName`, `lastName`, `phone`, `email`, `items`, `delivery`, `status`, а при создании ещё `payments` и `createdAt`. Можно задать любое поле заказа CRM, например `orderMethod`, `orderType`, `managerComment` или `customFields`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "action",
+          type: "\"create\" | \"edit\" | \"skip\"",
+          description: "`create` для заказа, которого в CRM ещё нет, `edit` для существующего, `skip` для того, который не отправляется. Поставьте `skip`, чтобы оставить заказ вне CRM.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "skipReason",
+          type: "string",
+          description: "Почему заказ пропущен. Уходит в журнал.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "notes",
+          type: "string[]",
+          description: "Что плагин заметил при сборке тела, например платёж без типа. Пишется в журнал предупреждениями.",
+          optional: false,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Возвращайте `new StepResponse({ orders })`.
+
+---
+
+## setCustomers
+
+Хук воркфлоу `exportRetailcrmCustomersWorkflow` (`export-retailcrm-customers`). Выполняется один раз на отправку покупателей с аккаунтом.
+
+```ts title="src/workflows/hooks/retailcrm-customers.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmCustomersWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+exportRetailcrmCustomersWorkflow.hooks.setCustomers(async ({ customers }, { container }) => {
+  // ...
+
+  return new StepResponse({ customers })
+})
+```
+
+<MedusaTypeList
+  sectionTitle="SetCustomersToExportInput"
+  types={[
+    {
+      name: "customers",
+      type: "CustomerToExport[]",
+      description: "По элементу на покупателя Medusa в отправке.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "MedusaCustomerForExport",
+          description: "Покупатель Medusa с адресами. Не меняйте его.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "customer",
+          type: "SerializedCustomer",
+          description: "Тело в формате CRM: `externalId`, `firstName`, `lastName`, `email`, `phones`, `address`, `subscribed`. Можно задать любое поле покупателя CRM, например `tags` или `customFields`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "action",
+          type: "\"create\" | \"edit\" | \"skip\"",
+          description: "Гость приходит как `skip`, потому что гости уходят в CRM вместе со своими заказами.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "skipReason",
+          type: "string",
+          description: "Почему покупатель пропущен.",
+          optional: true,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Возвращайте `new StepResponse({ customers })`.
+
+---
+
+## setPayments
+
+Хук воркфлоу `exportRetailcrmPaymentsWorkflow` (`export-retailcrm-payments`). Выполняется один раз на отправку, при захвате или возврате.
+
+```ts title="src/workflows/hooks/retailcrm-payments.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmPaymentsWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+exportRetailcrmPaymentsWorkflow.hooks.setPayments(async ({ payments }, { container }) => {
+  // ...
+
+  return new StepResponse({ payments })
+})
+```
+
+<MedusaTypeList
+  sectionTitle="SetPaymentsToExportInput"
+  types={[
+    {
+      name: "payments",
+      type: "PaymentToExport[]",
+      description: "По элементу на платёж Medusa в отправке.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "MedusaPaymentForExport",
+          description: "Платёж Medusa с захватами, возвратами и заказом его платёжной коллекции. Не меняйте его.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "payment",
+          type: "SerializedPayment2",
+          description: "Тело правки платежа CRM: `externalId`, `amount`, `status`, `paidAt`, `comment`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "type",
+          type: "string",
+          description: "Тип оплаты CRM, с которым плагин создаст платёж, если в CRM его нет.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "orderId",
+          type: "string",
+          description: "Заказ Medusa, к которому относится платёж.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "action",
+          type: "\"edit\" | \"skip\"",
+          description: "`skip` для платежа заказа, которого в CRM ещё нет, провайдера, сопоставленного с «не отправлять», или типа оплаты, который принадлежит платёжному модулю CRM.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "skipReason",
+          type: "string",
+          description: "Почему платёж пропущен.",
+          optional: true,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Возвращайте `new StepResponse({ payments })`.
+
+---
+
+## setOrders при импорте
+
+Хук воркфлоу `importRetailcrmHistoryWorkflow` (`import-retailcrm-history`). Выполняется один раз на проход истории, после того как плагин сгруппировал записи по заказам, прочитал изменённые заказы из CRM и нашёл заказы Medusa, и до того, как что-либо применяется.
+
+```ts title="src/workflows/hooks/retailcrm-history.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importRetailcrmHistoryWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+importRetailcrmHistoryWorkflow.hooks.setOrders(async ({ orders }, { container }) => {
+  // ...
+
+  return new StepResponse({ orders })
+})
+```
+
+<MedusaTypeList
+  sectionTitle="SetOrdersToImportInput"
+  types={[
+    {
+      name: "orders",
+      type: "OrderToImport[]",
+      description: "По элементу на заказ CRM с изменениями в этом проходе.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "OrderHistory[]",
+          description: "Записи истории этого заказа, как их вернула CRM.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "crmOrderId",
+          type: "number",
+          description: "Идентификатор заказа CRM.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "existing",
+          type: "ExistingOrderForImport | null",
+          description: "Заказ Medusa с позициями, способами доставки, отгрузками и платежами или `null` для заказа, заведённого в CRM. Не меняйте его.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "crm",
+          type: "object",
+          description: "Заказ CRM, прочитанный целиком. Есть, когда записи касались позиций, доставки, адреса, покупателя или платежей, и у заказа, заведённого в CRM.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "order",
+          type: "OrderChanges",
+          description: "Изменения к применению: `status` с `code` и `group`, `payments`, `items` списком действий `add`, `quantity` и `price`, `shipping`, `shippingAddress`, `email`, `customerId`, `fields`, которые уходят в метаданные, и `deleted`. Удалите ключ, чтобы эту часть не трогать.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "action",
+          type: "\"apply\" | \"create\" | \"skip\"",
+          description: "`apply` для заказа Medusa, `create` для заказа, заведённого в CRM, который плагин собирается создать в Medusa, `skip` для того, который он не трогает.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "skipReason",
+          type: "string",
+          description: "Почему заказ пропущен.",
+          optional: true,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Возвращайте `new StepResponse({ orders })`. Порядок применения фиксирован: метаданные, затем правка заказа, затем адрес, затем отмена или завершение, затем захват платежей. Обработчик не может его изменить, но может убрать любую часть, удалив ключ из `order`.
+
+---
+
+## setCustomers при импорте
+
+Хук воркфлоу `importRetailcrmHistoryWorkflow`. Выполняется один раз на проход истории, после разбора записей покупателей.
+
+```ts title="src/workflows/hooks/retailcrm-history.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importRetailcrmHistoryWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+importRetailcrmHistoryWorkflow.hooks.setCustomers(async ({ customers }, { container }) => {
+  // ...
+
+  return new StepResponse({ customers })
+})
+```
+
+<MedusaTypeList
+  sectionTitle="SetCustomersToImportInput"
+  types={[
+    {
+      name: "customers",
+      type: "CustomerToImport[]",
+      description: "По элементу на покупателя CRM с изменениями в этом проходе.",
+      optional: false,
+      expandable: false,
+      children: [
+        {
+          name: "source",
+          type: "CustomerHistory[]",
+          description: "Записи истории этого покупателя.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "crmCustomerId",
+          type: "number",
+          description: "Идентификатор покупателя CRM.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "existing",
+          type: "ExistingCustomerForImport | null",
+          description: "Покупатель Medusa с адресами или `null` для покупателя, заведённого в CRM.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "crm",
+          type: "object",
+          description: "Покупатель CRM, прочитанный целиком. Есть, когда записи касались адреса или телефонов, и у покупателя, заведённого в CRM.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "customer",
+          type: "CustomerChanges",
+          description: "Изменения к применению: `first_name`, `last_name`, `phone`, `address` и `fields`, которые уходят в метаданные.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "create",
+          type: "object",
+          description: "Для покупателя, заведённого в CRM: `email`, `first_name`, `last_name`, `phone` и `metadata`, с которыми плагин создаёт покупателя Medusa.",
+          optional: true,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "action",
+          type: "\"apply\" | \"create\" | \"skip\"",
+          description: "Что плагин собирается сделать с покупателем.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "skipReason",
+          type: "string",
+          description: "Почему покупатель пропущен.",
+          optional: true,
+          expandable: false,
+          children: []
+        }
+      ]
+    }
+  ]}
+/>
+
+Возвращайте `new StepResponse({ customers })`.
+
+---
+
+## Примеры
+
+### Заказы одного канала остаются вне CRM
+
+Магазин продаёт на маркетплейсе через второй канал продаж, и у тех заказов своя CRM. Обработчик их пропускает. Заказ уже есть в каждом элементе, поэтому обработчик не делает запросов к базе.
+
+```ts title="src/workflows/hooks/retailcrm-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmOrdersWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+const MARKETPLACE_CHANNEL = "sc_01J…"
+
+exportRetailcrmOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.filter(({ source }) => source.sales_channel_id !== MARKETPLACE_CHANNEL),
+  })
+})
+```
+
+Убранный здесь заказ не получает отметку CRM, так что задача повторной отправки раз в час предлагает его обработчику снова, и обработчик снова его пропускает. Это дешевле, чем кажется: задача читает только заказы за последние сутки.
+
+### Пользовательское поле из метаданных заказа
+
+Витрина сохраняет пожелания покупателя к доставке в метаданных заказа, а в CRM для них есть пользовательское поле. Обработчик копирует значение.
+
+```ts title="src/workflows/hooks/retailcrm-orders.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { exportRetailcrmOrdersWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+exportRetailcrmOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.map((item) => {
+      const wishes = item.source.metadata?.delivery_wishes
+      if (typeof wishes !== "string") return item
+      return { ...item, order: { ...item.order, customFields: { ...item.order.customFields, delivery_wishes: wishes } } }
+    }),
+  })
+})
+```
+
+### Статус CRM, который не отменяет заказ
+
+В CRM есть статус из группы `cancel`, которым менеджеры откладывают заказ, и магазин не хочет, чтобы он отменял заказ Medusa даже при включённом переключателе **Отменять заказы из CRM**. Обработчик убирает статус из изменений и оставляет остальное.
+
+```ts title="src/workflows/hooks/retailcrm-history.ts"
+import { StepResponse } from "@medusajs/framework/workflows-sdk"
+import { importRetailcrmHistoryWorkflow } from "@gorgo-store/medusa-crm-retailcrm/workflows"
+
+importRetailcrmHistoryWorkflow.hooks.setOrders(async ({ orders }) => {
+  return new StepResponse({
+    orders: orders.map((item) => {
+      if (item.order?.status?.code !== "cancel-parked") return item
+      const { status: _status, ...rest } = item.order
+      return { ...item, order: rest }
+    }),
+  })
+})
+```
+
+Статус всё равно попадает в `metadata.retailcrm.status`, потому что `fields` его сохраняет. Чтобы скрыть его и там, удалите `status` и `status_group` из `fields`.
+
+---
+
+## Дальнейшие шаги
+
+<CardList items={[
+  {
+    title: "Что уходит в RetailCRM и что возвращается",
+    href: "/medusa-integrations/retailcrm/usage"
+  },
+  {
+    title: "Управление настройками RetailCRM в Medusa Admin",
+    href: "/medusa-integrations/retailcrm/settings"
+  }
+]}/>

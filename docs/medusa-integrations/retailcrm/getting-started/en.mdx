@@ -1,0 +1,183 @@
+---
+title: "Getting Started with RetailCRM for Medusa"
+description: "Learn how to install the RetailCRM plugin, register it in Medusa and connect it to your CRM account."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to install the RetailCRM plugin, register it in Medusa and connect it to your CRM account.
+
+<Note type="success" title="The plugin is available by subscription">
+
+The plugin is published to Gorgo's private package registry. To get access, write to the support chat [@gorgojs_chat](https://t.me/gorgojs_chat). You get a license key that gives you access to the registry.
+
+</Note>
+
+## Prerequisites
+
+- Medusa v2.22.4 or later
+- Node.js v20 or later
+- [Integration Module](/medusa-modules/integration) v0.3.0 or later
+- A Gorgo license key
+- A RetailCRM or Simla.com account with an API key that has the `order_read`, `order_write`, `customer_read`, `customer_write` and `reference_read` scopes
+- A Redis event bus and a running worker, if your Medusa server and worker run as separate processes
+
+---
+
+## Installation
+
+[Install a Paid Plugin](/licensing/install) explains how to issue a project key in the dashboard and set the domains of your environments.
+
+`@gorgo-store` packages are published to the `registry.gorgojs.com` registry, not the public npm registry. Point your package manager at this registry for `@gorgo-store` packages and pass it your license key. Yarn 2 and later reads its settings from `.yarnrc.yml`, npm and pnpm from `.npmrc`:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```yaml title=".yarnrc.yml"
+    npmScopes:
+      gorgo-store:
+        npmRegistryServer: "https://registry.gorgojs.com"
+        npmAuthToken: "${GORGO_LICENSE}"
+    ```
+  </CodeTab>
+  <CodeTab label="pnpm" value="pnpm">
+    ```text title=".npmrc"
+    @gorgo-store:registry=https://registry.gorgojs.com/
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```text title=".npmrc"
+    @gorgo-store:registry=https://registry.gorgojs.com/
+    //registry.gorgojs.com/:_authToken=${GORGO_LICENSE}
+    ```
+  </CodeTab>
+</CodeTabs>
+
+For Yarn and npm, the license key comes from the `GORGO_LICENSE` environment variable, so the key itself stays out of your project's repository. Set this variable on your machine and in CI, wherever dependencies get installed.
+
+Since version 11.5.3, pnpm doesn't expand environment variables in registry URLs and credentials from the project `.npmrc`. That's why the pnpm `.npmrc` holds only the registry URL, and you save the key in your user-level pnpm settings instead. Run this command on your machine and in CI before installing dependencies:
+
+```bash
+pnpm config set //registry.gorgojs.com/:_authToken "$GORGO_LICENSE"
+```
+
+Install the plugin together with the Integration Module:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration @gorgo-store/medusa-crm-retailcrm
+    ```
+  </CodeTab>
+  <CodeTab label="pnpm" value="pnpm">
+    ```bash
+    pnpm add @gorgo/medusa-integration @gorgo-store/medusa-crm-retailcrm
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration @gorgo-store/medusa-crm-retailcrm
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Configuration
+
+Register the plugin and its integration provider in the `medusa-config.ts` file of your Medusa application:
+
+```ts title="medusa-config.ts"
+// ...
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo-store/medusa-crm-retailcrm/providers/integration-retailcrm",
+            id: "retailcrm-1",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo-store/medusa-crm-retailcrm",
+      options: {},
+    },
+  ],
+})
+```
+
+The configuration registers two things:
+
+- The integration provider in `@gorgo/medusa-integration`. It brings the RetailCRM settings into the Medusa Admin under **Settings → Integrations → RetailCRM**. One provider entry is one CRM store. To connect a second store, add a second entry with its own `id`.
+- The plugin itself. It adds the subscribers that send orders, payments and customers, the scheduled jobs that read the CRM history and resend what didn't arrive, the admin widgets and the workflows.
+
+The Integration Module encrypts the API key with a key from the environment. Add it to the `.env` file of your Medusa backend:
+
+```bash title=".env"
+INTEGRATION_ENCRYPTION_KEY=<64 hex characters>
+```
+
+Then run the migrations, because the plugin stores the history cursors of every instance in its own table:
+
+```bash
+npx medusa db:migrate
+```
+
+<Note type="warning">
+
+The plugin talks to the CRM from subscribers and scheduled jobs. Medusa runs them on the worker. If your server and worker are separate processes, configure the Redis event bus, otherwise the subscribers never receive the order events and nothing reaches the CRM.
+
+</Note>
+
+---
+
+## Provider Options
+
+The provider accepts these options in `medusa-config.ts`. Everything else, from the account address to the status mapping, you set in the Medusa Admin, as described in [Manage RetailCRM Settings](/medusa-integrations/retailcrm/settings).
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "The instance ID. It's part of the provider ID `int_retailcrm_<id>` under which the settings are stored. Use a different `id` for every CRM store you connect.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+---
+
+## Connect the Account
+
+Start the Medusa application and open **Settings → Integrations → RetailCRM**. Enter the account address, the API key, the code of the CRM store and the sales channel whose orders go to this store, then test the connection and enable the integration. The [Manage RetailCRM Settings](/medusa-integrations/retailcrm/settings) page walks through every field.
+
+---
+
+## Next Steps
+
+<CardList items={[
+  {
+    title: "Manage RetailCRM Settings in the Medusa Admin",
+    href: "/medusa-integrations/retailcrm/settings"
+  },
+  {
+    title: "What Goes to RetailCRM and What Comes Back",
+    href: "/medusa-integrations/retailcrm/usage"
+  },
+  {
+    title: "RetailCRM Workflow Hooks",
+    href: "/medusa-integrations/retailcrm/hooks"
+  }
+]}/>

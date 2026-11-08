@@ -1,0 +1,183 @@
+---
+title: "Начало работы с RetailCRM для Medusa"
+description: "Узнайте, как установить плагин RetailCRM, подключить его к Medusa и связать с аккаунтом CRM."
+---
+
+# {frontmatter.title}
+
+В этом руководстве вы узнаете, как установить плагин RetailCRM, подключить его к Medusa и связать с аккаунтом CRM.
+
+<Note type="success" title="Плагин доступен по подписке">
+
+Плагин опубликован в закрытом реестре пакетов Gorgo. Чтобы получить доступ, напишите в чат поддержки [@gorgojs_chat](https://t.me/gorgojs_chat). Вы получите лицензионный ключ для доступа к реестру.
+
+</Note>
+
+## Требования
+
+- Medusa v2.22.4 или новее
+- Node.js v20 или новее
+- [Модуль интеграций](/medusa-modules/integration) v0.3.0 или новее
+- Лицензионный ключ Gorgo
+- Аккаунт RetailCRM или Simla.com с ключом API, у которого есть права `order_read`, `order_write`, `customer_read`, `customer_write` и `reference_read`
+- Redis-шина событий и работающий воркер, если сервер и воркер Medusa запущены отдельными процессами
+
+---
+
+## Установка
+
+Как выпустить ключ проекта в кабинете и указать домены окружений, описано в руководстве [Установка платного плагина](/licensing/install).
+
+Пакеты `@gorgo-store` опубликованы не в общем реестре npm, а в реестре `registry.gorgojs.com`. Укажите менеджеру пакетов этот реестр для пакетов `@gorgo-store` и передайте ему лицензионный ключ. Yarn 2 и новее читает настройки из `.yarnrc.yml`, npm и pnpm из `.npmrc`:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```yaml title=".yarnrc.yml"
+    npmScopes:
+      gorgo-store:
+        npmRegistryServer: "https://registry.gorgojs.com"
+        npmAuthToken: "${GORGO_LICENSE}"
+    ```
+  </CodeTab>
+  <CodeTab label="pnpm" value="pnpm">
+    ```text title=".npmrc"
+    @gorgo-store:registry=https://registry.gorgojs.com/
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```text title=".npmrc"
+    @gorgo-store:registry=https://registry.gorgojs.com/
+    //registry.gorgojs.com/:_authToken=${GORGO_LICENSE}
+    ```
+  </CodeTab>
+</CodeTabs>
+
+Для Yarn и npm лицензионный ключ берётся из переменной окружения `GORGO_LICENSE`, так что сам ключ не попадает в репозиторий проекта. Задайте эту переменную на своей машине и в CI, везде, где устанавливаются зависимости.
+
+Начиная с версии 11.5.3 pnpm не подставляет переменные окружения в адреса реестров и учётные данные из `.npmrc` проекта. Поэтому в `.npmrc` для pnpm остаётся только адрес реестра, а ключ вы сохраняете в пользовательских настройках pnpm. Выполните эту команду на своей машине и в CI перед установкой зависимостей:
+
+```bash
+pnpm config set //registry.gorgojs.com/:_authToken "$GORGO_LICENSE"
+```
+
+Установите плагин вместе с Модулем интеграций:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration @gorgo-store/medusa-crm-retailcrm
+    ```
+  </CodeTab>
+  <CodeTab label="pnpm" value="pnpm">
+    ```bash
+    pnpm add @gorgo/medusa-integration @gorgo-store/medusa-crm-retailcrm
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration @gorgo-store/medusa-crm-retailcrm
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Зарегистрируйте плагин и его провайдер интеграции в файле `medusa-config.ts` приложения Medusa:
+
+```ts title="medusa-config.ts"
+// ...
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo-store/medusa-crm-retailcrm/providers/integration-retailcrm",
+            id: "retailcrm-1",
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo-store/medusa-crm-retailcrm",
+      options: {},
+    },
+  ],
+})
+```
+
+Конфигурация регистрирует две вещи:
+
+- Провайдер интеграции в `@gorgo/medusa-integration`. Он выводит настройки RetailCRM в Medusa Admin в разделе **Настройки → Интеграции → RetailCRM**. Одна запись провайдера это один магазин CRM. Чтобы подключить второй магазин, добавьте вторую запись со своим `id`.
+- Сам плагин. Он добавляет подписчиков, которые отправляют заказы, платежи и покупателей, запланированные задачи, которые читают историю CRM и повторно отправляют то, что не дошло, admin-виджеты и воркфлоу.
+
+Модуль интеграций шифрует ключ API ключом из окружения. Добавьте его в файл `.env` бэкенда Medusa:
+
+```bash title=".env"
+INTEGRATION_ENCRYPTION_KEY=<64 шестнадцатеричных символа>
+```
+
+Затем выполните миграции, потому что плагин хранит курсоры истории каждого инстанса в своей таблице:
+
+```bash
+npx medusa db:migrate
+```
+
+<Note type="warning">
+
+Плагин обращается к CRM из подписчиков и запланированных задач. Medusa выполняет их на воркере. Если сервер и воркер запущены отдельными процессами, настройте Redis-шину событий, иначе подписчики не получат события заказов и в CRM ничего не уйдёт.
+
+</Note>
+
+---
+
+## Параметры провайдера
+
+Провайдер принимает эти параметры в `medusa-config.ts`. Всё остальное, от адреса аккаунта до соответствия статусов, вы задаёте в Medusa Admin, как описано в руководстве [Управление настройками RetailCRM](/medusa-integrations/retailcrm/settings).
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Идентификатор инстанса. Он входит в идентификатор провайдера `int_retailcrm_<id>`, под которым хранятся настройки. Задайте свой `id` каждому подключаемому магазину CRM.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+---
+
+## Подключение аккаунта
+
+Запустите приложение Medusa и откройте **Настройки → Интеграции → RetailCRM**. Укажите адрес аккаунта, ключ API, код магазина CRM и канал продаж, заказы которого уходят в этот магазин, затем проверьте соединение и включите интеграцию. Каждое поле описано на странице [Управление настройками RetailCRM](/medusa-integrations/retailcrm/settings).
+
+---
+
+## Дальнейшие шаги
+
+<CardList items={[
+  {
+    title: "Управление настройками RetailCRM в Medusa Admin",
+    href: "/medusa-integrations/retailcrm/settings"
+  },
+  {
+    title: "Что уходит в RetailCRM и что возвращается",
+    href: "/medusa-integrations/retailcrm/usage"
+  },
+  {
+    title: "Хуки воркфлоу RetailCRM",
+    href: "/medusa-integrations/retailcrm/hooks"
+  }
+]}/>

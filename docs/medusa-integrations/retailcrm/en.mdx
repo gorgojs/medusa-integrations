@@ -1,0 +1,78 @@
+---
+title: "RetailCRM Integration with Medusa"
+description: "Paid plugin that keeps orders, payments and customers in sync between Medusa and RetailCRM in both directions."
+---
+
+<div>
+  <img alt="RetailCRM logo" src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/retailcrm.svg" width="96"/>
+</div>
+
+# {frontmatter.title}
+
+A paid Medusa plugin that connects a Medusa store to RetailCRM, the CRM that is also sold outside Russia as Simla.com. Orders, payments and customers go to the CRM as they happen in Medusa, and what managers change in the CRM comes back to Medusa through the CRM's change history.
+
+<Note type="success" title="The plugin is available by subscription">
+
+The plugin is published to Gorgo's private package registry. To get access, write to the support chat [@gorgojs_chat](https://t.me/gorgojs_chat).
+
+</Note>
+
+---
+
+## Plugin Features
+
+- **Orders to the CRM:** An order appears in the CRM seconds after checkout with the customer, items, delivery and payments. Cancellation and completion in Medusa change its CRM status.
+- **Payments to the CRM:** A capture in Medusa marks the CRM payment as paid, and a full refund marks it as unpaid.
+- **Customers to the CRM:** Registration and profile changes of customers with an account go to the CRM. Guests go together with their orders.
+- **Changes from the CRM:** Statuses, payments, items, delivery, addresses, manager, comments and custom fields come back to Medusa. Items and delivery become an order edit, so stock and the amount due stay right.
+- **Orders from the CRM:** An order a manager creates in the CRM appears in Medusa, and the CRM gets its Medusa ID back.
+- **Several stores:** One plugin instance per CRM store, each bound to a sales channel.
+- **Resend when the CRM is down:** A scheduled job sends the orders and customers that didn't reach the CRM within an hour.
+- **Workflow Hooks:** Your own code changes what the plugin sends and what it applies, without forking the plugin.
+- **Detailed Logging:** Every call to the CRM and every applied change in the Medusa log, with the request details at the `debug` level and never the API key.
+- **[Integration Module](/medusa-modules/integration)**<AccentBadge badge="New" />: Configure this plugin directly in the Medusa Admin, with no configuration files to edit and no store redeploy.
+
+<Note type="info" title="What Is the Integration Module">
+
+The Integration Module lets any plugin declare its options as a schema, so a store administrator can configure them in the Medusa Admin, with no `medusa-config` edits and no redeploy. The module takes care of the UI, storage, encryption and validation. Read more in [this documentation](/medusa-modules/integration).
+
+</Note>
+
+---
+
+## What Is RetailCRM
+
+RetailCRM is a CRM for online stores. Managers process orders in it, call customers, assign couriers and watch payments, and the CRM keeps every order and customer of the store with their full history. A store talks to it over the REST API v5, and the CRM reports its own changes through the change history that the plugin polls. Learn more at the <a href="https://www.retailcrm.ru/" target="_blank">RetailCRM website</a>.
+
+---
+
+## 💬  Support & Community
+
+Got questions or ideas about the plugin? Join the Telegram support chat [@gorgojs_chat](https://t.me/gorgojs_chat).
+
+Connect with other Medusa developers on Telegram in [@medusajs_chat](https://t.me/medusajs_chat).
+
+The [Maintenance](/resources/maintenance) page explains how we test, update and fix the plugin.
+
+---
+
+## Next Steps
+
+<CardList items={[
+  {
+    title: "Getting Started with RetailCRM for Medusa",
+    href: "/medusa-integrations/retailcrm/getting-started"
+  },
+  {
+    title: "Manage RetailCRM Settings in the Medusa Admin",
+    href: "/medusa-integrations/retailcrm/settings"
+  },
+  {
+    title: "What Goes to RetailCRM and What Comes Back",
+    href: "/medusa-integrations/retailcrm/usage"
+  },
+  {
+    title: "RetailCRM Workflow Hooks",
+    href: "/medusa-integrations/retailcrm/hooks"
+  }
+]}/>
