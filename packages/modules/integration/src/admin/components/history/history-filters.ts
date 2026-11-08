@@ -1,5 +1,5 @@
 import type { IntegrationChangesQuery } from "../../lib/changes"
-import type { IntegrationChangeField } from "../../../types"
+import type { IntegrationChangeField, IntegrationOverviewItem } from "../../../types"
 
 export const HISTORY_PAGE_SIZE = 20
 
@@ -64,14 +64,17 @@ export function writeFilters(params: URLSearchParams, filters: HistoryFilters, o
   return next
 }
 
+/** What the search matched in the admin: options from `fieldsMatching`, integrations from `providersMatching`. */
+export type SearchMatches = { fields?: string[]; providers?: string[] }
+
 /**
- * The API query for the filters. The end of the period is the end of that day. `qFields` are the
- * options the search matched, from `fieldsMatching`; they go only with the search.
+ * The API query for the filters. The end of the period is the end of that day. What the search
+ * matched in the admin goes only with the search.
  */
 export function buildChangesQuery(
   filters: HistoryFilters,
   offset: number,
-  qFields: string[] = []
+  { fields = [], providers = [] }: SearchMatches = {}
 ): IntegrationChangesQuery {
   const query: IntegrationChangesQuery = { limit: HISTORY_PAGE_SIZE, offset }
   if (filters.provider_id.length) query.provider_id = filters.provider_id
@@ -87,7 +90,8 @@ export function buildChangesQuery(
   }
   const q = filters.q.trim()
   if (q) query.q = q
-  if (q && qFields.length) query.q_fields = qFields
+  if (q && fields.length) query.q_fields = fields
+  if (q && providers.length) query.q_providers = providers
   if (filters.order) query.order = filters.order
   return query
 }
@@ -109,6 +113,21 @@ export function fieldsMatching(
       labelOf(field).toLocaleLowerCase().includes(needle) || field.field.toLocaleLowerCase().includes(needle)
   )
   return [...new Set(matched.map((field) => field.label ?? field.field))]
+}
+
+/**
+ * The integrations whose name, as the table shows it, contains the search, by `provider_id`. The
+ * API matches the identifier and the instance in `provider_id` itself, but not the name, which it
+ * has only as a translation key.
+ */
+export function providersMatching(
+  q: string,
+  integrations: IntegrationOverviewItem[],
+  nameOf: (item: IntegrationOverviewItem) => string
+): string[] {
+  const needle = q.trim().toLocaleLowerCase()
+  if (!needle) return []
+  return integrations.filter((item) => nameOf(item).toLocaleLowerCase().includes(needle)).map((item) => item.provider_id)
 }
 
 function endOfDay(iso: string): string {

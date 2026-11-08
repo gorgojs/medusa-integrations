@@ -1,4 +1,5 @@
 import { describe, expect, it } from "@jest/globals"
+import type { IntegrationOverviewItem } from "../../../../types"
 import {
   buildChangesQuery,
   emptyFilters,
@@ -7,6 +8,7 @@ import {
   hasFilters,
   isEmptyFilterValue,
   orderFromSorting,
+  providersMatching,
   readFilters,
   readOffset,
   sortingFromOrder,
@@ -90,11 +92,16 @@ describe("buildChangesQuery", () => {
     })
   })
 
-  it("sends the options the search matched, and only with the search", () => {
-    const query = buildChangesQuery(readFilters(new URLSearchParams("q=key")), 0, ["demo.apiKey"])
-    expect(query).toMatchObject({ q: "key", q_fields: ["demo.apiKey"] })
-    expect(buildChangesQuery(readFilters(new URLSearchParams()), 0, ["demo.apiKey"])).not.toHaveProperty("q_fields")
-    expect(buildChangesQuery(readFilters(new URLSearchParams("q=key")), 0, [])).not.toHaveProperty("q_fields")
+  it("sends the options and integrations the search matched, and only with the search", () => {
+    const matches = { fields: ["demo.apiKey"], providers: ["pp_demo_demo"] }
+    const query = buildChangesQuery(readFilters(new URLSearchParams("q=key")), 0, matches)
+    expect(query).toMatchObject({ q: "key", q_fields: ["demo.apiKey"], q_providers: ["pp_demo_demo"] })
+    const noSearch = buildChangesQuery(readFilters(new URLSearchParams()), 0, matches)
+    expect(noSearch).not.toHaveProperty("q_fields")
+    expect(noSearch).not.toHaveProperty("q_providers")
+    const nothingMatched = buildChangesQuery(readFilters(new URLSearchParams("q=key")), 0, { fields: [], providers: [] })
+    expect(nothingMatched).not.toHaveProperty("q_fields")
+    expect(nothingMatched).not.toHaveProperty("q_providers")
   })
 
   it("sends the authors, System among them", () => {
@@ -188,5 +195,23 @@ describe("fieldsMatching", () => {
   it("matches nothing for an empty search or an unknown word", () => {
     expect(fieldsMatching(" ", fields, labelOf)).toEqual([])
     expect(fieldsMatching("price", fields, labelOf)).toEqual([])
+  })
+})
+
+describe("providersMatching", () => {
+  const item = (provider_id: string, display_name: string) =>
+    ({ provider_id, display_name, identifier: provider_id.split("_")[1] }) as IntegrationOverviewItem
+  const integrations = [item("pp_yookassa_yookassa", "yookassa.name"), item("pp_tkassa_tkassa", "tkassa.name")]
+  const shown: Record<string, string> = { "yookassa.name": "ЮKassa", "tkassa.name": "Т-Касса" }
+  const nameOf = (i: IntegrationOverviewItem) => shown[i.display_name] ?? i.display_name
+
+  it("matches the name as shown, case-insensitively, and sends the provider_id", () => {
+    expect(providersMatching(" юk ", integrations, nameOf)).toEqual(["pp_yookassa_yookassa"])
+    expect(providersMatching("касса", integrations, nameOf)).toEqual(["pp_tkassa_tkassa"])
+  })
+
+  it("matches neither the translation key nor anything for an empty search", () => {
+    expect(providersMatching("name", integrations, nameOf)).toEqual([])
+    expect(providersMatching(" ", integrations, nameOf)).toEqual([])
   })
 })

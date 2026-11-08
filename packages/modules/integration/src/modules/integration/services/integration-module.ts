@@ -200,12 +200,12 @@ export default class IntegrationModuleService extends MedusaService({
     let filtered = all
     if (query.category) filtered = filtered.filter((i) => i.category === query.category)
 
+    // The name and the description are translation keys, so `q` matches only the identifier and the
+    // instance. The admin loads the whole list and searches the translated text itself.
     const q = query.q?.trim().toLowerCase()
     if (q) {
       filtered = filtered.filter((i) =>
-        [i.display_name, i.identifier, i.instance_id, i.description]
-          .filter(Boolean)
-          .some((s) => String(s).toLowerCase().includes(q))
+        [i.identifier, i.instance_id].filter(Boolean).some((s) => String(s).toLowerCase().includes(q))
       )
     }
 

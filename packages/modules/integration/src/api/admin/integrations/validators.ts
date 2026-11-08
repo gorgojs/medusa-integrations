@@ -18,6 +18,7 @@ export const AdminSetIntegrationEnabled = z.object({
 
 export type AdminGetIntegrationsParamsType = z.infer<typeof AdminGetIntegrationsParams>
 export const AdminGetIntegrationsParams = z.object({
+  // The identifier or the instance, see `listIntegrationsOverview`.
   q: z.string().optional(),
   category: z.string().optional(),
   limit: z.coerce.number().int().min(1).max(1000).optional(),
@@ -50,6 +51,7 @@ export const AdminGetIntegrationChangesParams = createFindParams({
       // Free text over the author, the integration and the options changed, see `changeFilters`.
       q: z.string().trim().min(1).optional(),
       q_fields: stringOrArray.optional(),
+      q_providers: stringOrArray.optional(),
       created_at: createOperatorMap().optional(),
     })
   )
