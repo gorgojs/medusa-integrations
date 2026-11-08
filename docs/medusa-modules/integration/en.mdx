@@ -30,16 +30,74 @@ The Integration Module is a good fit for Medusa developers building plugins, pro
 
 ## Features
 
-- **Settings management in Admin:** Set in the **Settings → Integrations** section, no `medusa-config` edits and no redeploys.
-- **Any plugin, provider, or module:** Works across payment, fulfillment, ERP, notification, content, and other extensions.
-- **Declarative descriptor (`defineIntegration`):** A single description of the options, settings sections, validation, and connection test.
-- **Flexible typing and validation:** Typed fields (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) with per-option and cross-section rules, conditional visibility, and read-only fields. At runtime, the plugin gets a typed, decrypted object. Incomplete or disabled settings never resolve, so the plugin never gets an unfilled draft.
-- **Encrypted secrets:** The module encrypts fields marked `secret` (AES-256-GCM) and never sends them to the browser.
-- **Multiple instances:** Register the same provider more than once, for example for several accounts in the same third-party service.
-- **Connection test:** Verify credentials against the third-party service right from the Admin.
-- **Change history:** The module records who changed which fields of an integration's settings and when. You can search and filter the history in the Admin, and secret values never reach it. See [Change History](/medusa-modules/integration/manage-integrations#change-history).
-- **Extensible UI:** Sections can be reordered ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). If the generated sections aren't enough, you can implement any UI for your options using custom widgets.
-- **Integration catalog:** Available integrations are shown in the Admin.
+- **[Settings management in Admin](/medusa-modules/integration/manage-integrations)** – Store admins set options in the **Settings → Integrations** section, with no `medusa-config` edits and no redeploys.
+- **Any plugin, provider, or module** – Works across payment, fulfillment, ERP, notification, content, and other extensions.
+- **[Declarative descriptor](/medusa-modules/integration/descriptor)** – A single description (`defineIntegration`) of the options, settings sections, validation, and connection test.
+- **[Flexible typing and validation](/medusa-modules/integration/validation)** – Typed fields (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) with per-option and cross-section rules, conditional visibility, and read-only fields. At runtime, the plugin gets a typed, decrypted object. Incomplete or disabled settings never resolve, so the plugin never gets an unfilled draft.
+- **[Encrypted secrets](/medusa-modules/integration/descriptor#secrets-and-encryption)** – The module encrypts fields marked `secret` (AES-256-GCM) and never sends them to the browser.
+- **[Multiple instances](/medusa-modules/integration/concepts#identifiers-and-instances)** – Register the same provider more than once, for example for several accounts in the same third-party service.
+- **[Connection test](/medusa-modules/integration/descriptor#connection-test)** – Verify credentials against the third-party service right from the Admin, and let the module re-test them daily.
+- **[Change history](/medusa-modules/integration/change-history)** – The module records who changed which fields of an integration's settings and when. You can search and filter the history in the Admin, and secret values never reach it.
+- **[Extensible UI](/medusa-modules/integration/custom-sections)** – Sections can be reordered ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). If the generated sections aren't enough, you can implement any UI for your options using custom widgets.
+- **[Localization](/medusa-modules/integration/localization)** – The settings UI speaks the admin user's language, with the translations your plugin ships.
+- **[Integration catalog](/medusa-modules/integration/browse-integrations)** – Available integrations are shown in the Admin, with a setup guide for each.
+
+---
+
+## Installation
+
+The Integration Module requires Medusa v2.17.2 or later. Install it in your Medusa application:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration
+    ```
+  </CodeTab>
+</CodeTabs>
+
+Then register it as a plugin in `medusa-config.ts`, together with the providers of the integrations you install:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          // the providers of your integrations
+        ],
+      },
+    },
+  ],
+})
+```
+
+Each provider in `providers` appears in Medusa Admin under **Settings → Integrations**. See [Integration Module Options](/medusa-modules/integration/module-options) for `encryptionKey` and the other options.
+
+The module keeps integrations and their change history in its own tables. Run the migrations after you install or update it:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn medusa db:migrate
+    ```
+  </CodeTab>
+  <CodeTab label="npx" value="npx">
+    ```bash
+    npx medusa db:migrate
+    ```
+  </CodeTab>
+</CodeTabs>
+
+Once the migrations run, restart the server, and the registered integrations are ready to configure.
 
 ---
 
@@ -72,6 +130,27 @@ The Integration Module is a good fit for Medusa developers building plugins, pro
     icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/robokassa.svg",
     label: "Robokassa",
     href: "/medusa-integrations/robokassa",
+    categoryLabel: "Payment"
+  },
+  {
+    slug: "stripe",
+    icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/stripe.svg",
+    label: "Stripe",
+    href: "/medusa-integrations/stripe",
+    categoryLabel: "Payment"
+  },
+  {
+    slug: "paypal",
+    icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/paypal.svg",
+    label: "PayPal",
+    href: "/medusa-integrations/paypal",
+    categoryLabel: "Payment"
+  },
+  {
+    slug: "authorizenet",
+    icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/authorizenet.svg",
+    label: "Authorize.net",
+    href: "/medusa-integrations/authorizenet",
     categoryLabel: "Payment"
   },
   {
@@ -114,16 +193,36 @@ The [Maintenance](/resources/maintenance) page explains how we test, update and 
     href: "/medusa-modules/integration/concepts"
   },
   {
+    title: "Integration Module Provider",
+    href: "/medusa-modules/integration/integration-module-provider"
+  },
+  {
+    title: "Settings Change History",
+    href: "/medusa-modules/integration/change-history"
+  },
+  {
     title: "Integration Module Options",
     href: "/medusa-modules/integration/module-options"
   },
   {
-    title: "Create an Integration Module Provider",
+    title: "How to Create an Integration Module Provider",
     href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Validate Integration Options",
+    href: "/medusa-modules/integration/validation"
   },
   {
     title: "Reading Options",
     href: "/medusa-modules/integration/reading-options"
+  },
+  {
+    title: "Custom Sections with Widgets",
+    href: "/medusa-modules/integration/custom-sections"
+  },
+  {
+    title: "Localize an Integration",
+    href: "/medusa-modules/integration/localization"
   },
   {
     title: "Migrate an Existing Medusa Provider to the Integration Module",
@@ -132,5 +231,45 @@ The [Maintenance](/resources/maintenance) page explains how we test, update and 
   {
     title: "Manage Integrations in Medusa Admin",
     href: "/medusa-modules/integration/manage-integrations"
+  },
+  {
+    title: "Browse and Add Integrations in Medusa Admin",
+    href: "/medusa-modules/integration/browse-integrations"
+  },
+  {
+    title: "View the Change History in Medusa Admin",
+    href: "/medusa-modules/integration/view-change-history"
+  },
+  {
+    title: "Integration Provider Descriptor",
+    href: "/medusa-modules/integration/descriptor"
+  },
+  {
+    title: "Integration Module Workflows",
+    href: "/medusa-modules/integration/workflows"
+  },
+  {
+    title: "Admin API Routes",
+    href: "/medusa-modules/integration/admin-api"
+  },
+  {
+    title: "Admin Widget Injection Zones",
+    href: "/medusa-modules/integration/admin-widget-zones"
+  },
+  {
+    title: "Integration Module Service",
+    href: "/medusa-modules/integration/service"
+  },
+  {
+    title: "Integration Module Data Models",
+    href: "/medusa-modules/integration/data-models"
+  },
+  {
+    title: "Integration Module Events",
+    href: "/medusa-modules/integration/events"
+  },
+  {
+    title: "Changelog @gorgo/medusa-integration",
+    href: "/medusa-modules/integration/changelog"
   }
 ]}/>

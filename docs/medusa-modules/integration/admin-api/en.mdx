@@ -1,0 +1,284 @@
+---
+title: "Admin API Routes"
+description: "Reference of the Admin API routes the Integration Module adds under /admin/integrations: integrations, the change history, the catalog, and licenses."
+---
+
+# {frontmatter.title}
+
+This reference lists the API routes the Integration Module adds under `/admin/integrations`. Medusa Admin uses them for every integration page, and your scripts and [custom widgets](/medusa-modules/integration/custom-sections) can use them too.
+
+Like every Medusa `/admin` route, they require an authenticated admin user or a secret API key. Routes that take `:provider_id` respond with `404` when no provider is registered under that key.
+
+## Integrations
+
+| Method | Path | What it does |
+| --- | --- | --- |
+| `GET` | `/admin/integrations` | Lists every registered instance with its state. |
+| `GET` | `/admin/integrations/:provider_id` | Returns one instance's descriptor, stored settings, and package details. |
+| `POST` | `/admin/integrations/:provider_id` | Saves option values, through [`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow). |
+| `DELETE` | `/admin/integrations/:provider_id` | Deletes the stored settings, through [`deleteIntegrationWorkflow`](/medusa-modules/integration/workflows#deleteintegrationworkflow). |
+| `POST` | `/admin/integrations/:provider_id/enable` | Enables or disables the integration, through [`setIntegrationEnabledWorkflow`](/medusa-modules/integration/workflows#setintegrationenabledworkflow). |
+| `POST` | `/admin/integrations/:provider_id/test-connection` | Runs the connection test, through [`testIntegrationConnectionWorkflow`](/medusa-modules/integration/workflows#testintegrationconnectionworkflow). |
+
+The routes that change settings pass the authenticated actor and the request's IP address, client, and ID to the workflow, so the [change history](/medusa-modules/integration/change-history) names the author.
+
+### List Integrations
+
+`GET /admin/integrations` accepts these query parameters:
+
+- `q` – matches the provider's identifier or the instance id. The Admin searches translated names on its side.
+- `category` – one category, such as `payment`.
+- `limit` – from 1 to 1000, `20` by default.
+- `offset` – `0` by default.
+
+It returns `{ integrations, count, limit, offset, categories }`. Each item of `integrations` holds the instance's `provider_id`, `identifier`, `instance_id`, `category`, the i18n keys `display_name` and `description`, `icon`, the package's `version`, `author`, and `author_url`, the flags `supports_multiple_instances`, `has_test_connection`, `is_configured`, `is_enabled`, and `is_complete`, and `last_test_status`. `categories` lists the categories of every registered instance, whatever the filters.
+
+### Save Option Values
+
+`POST /admin/integrations/:provider_id` takes a body with these fields:
+
+- `values` – the option values to save, keyed by option id.
+- `section_id` – optional. With it, only that section's options are written. Without it, every submitted key the descriptor declares is written.
+- `title` – optional. A title for the stored record, or `null` to clear it.
+
+For example, to save the credentials section of the integration `int_my`:
+
+```bash
+curl -X POST "http://localhost:9000/admin/integrations/int_my" \
+  -H "Authorization: Bearer {token}" \
+  -H "Content-Type: application/json" \
+  --data '{ "section_id": "credentials", "values": { "apiKey": "sk_test_123", "sandbox": true } }'
+```
+
+The response is `{ integration }`, the stored record without its secrets. `apiKey` from the request appears only by name, in `configured_secrets`. A value that fails validation gets a `400` response whose message lists every problem as `<option id>: <message>`.
+
+### The Integration Object
+
+`GET`, `POST`, and the `enable` route return the stored record in this shape. Secret values never leave the server.
+
+<MedusaTypeList
+  sectionTitle="integration"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "The record's own id, not the instance key.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "provider_id",
+      type: "string",
+      description: "The instance's key, `int_<identifier>[_<instanceId>]`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "category",
+      type: "string",
+      description: "The integration's category from the descriptor.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "title",
+      type: "string | null",
+      description: "The record's title, `null` unless set through the API.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "is_enabled",
+      type: "boolean",
+      description: "Whether the integration is enabled.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "values",
+      type: "Record<string, unknown>",
+      description: "The stored values of every option that isn't secret.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "configured_secrets",
+      type: "string[]",
+      description: "The ids of the secret options that have a stored value.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "last_test_status",
+      type: "string | null",
+      description: "The status of the last connection test, `passed`, `failed`, or `skipped`, or `null` if it never ran.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+`GET /admin/integrations/:provider_id` wraps it as `{ descriptor, integration, is_complete, version, author, author_url }`. `integration` is `null` until the first save, and `descriptor` is the descriptor prepared for the Admin, with its sections, fields, and layout.
+
+---
+
+## Change History
+
+| Method | Path | What it does |
+| --- | --- | --- |
+| `GET` | `/admin/integrations/changes` | Lists the changes of every integration. |
+| `GET` | `/admin/integrations/:provider_id/changes` | Lists the changes of one integration. |
+| `GET` | `/admin/integrations/changes/:id` | Returns one change. |
+| `GET` | `/admin/integrations/changes/actors` | Lists the authors of the history, for the author filter. |
+| `GET` | `/admin/integrations/changes/fields` | Lists the options the history names, for the search. |
+
+The history is read-only, and these routes accept nothing but `GET`.
+
+### List Changes
+
+Both list routes accept these query parameters:
+
+- `limit` – from 1 to 100, `20` by default.
+- `offset` – `0` by default.
+- `order` – a field to sort by, with `-` in front for descending order. `-created_at` by default.
+- `provider_id` – one or more instance keys. The route for one integration ignores it.
+- `change_type` – one or more of `created`, `updated`, `enabled`, `disabled`, and `deleted`.
+- `actor_id` – one or more user ids. `system` stands for every change made by anything but an admin user.
+- `created_at` – a date range, with operators such as `$gte` and `$lte`.
+- `q` – matches the author's email or API key title and the `provider_id`.
+- `q_fields`, `q_providers` – with `q`, also match the changes that touched one of these option ids or label keys, or that belong to one of these instances. The Admin fills them in with what matches `q` in translated names.
+
+They return `{ integration_changes, count, offset, limit }`, newest first by default.
+
+### The Change Object
+
+<MedusaTypeList
+  sectionTitle="integration_change"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "The change's id.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "created_at",
+      type: "string",
+      description: "When the change was made.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "provider_id",
+      type: "string",
+      description: "The key of the integration instance that changed.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "change_type",
+      type: "string",
+      description: "One of `created`, `updated`, `enabled`, `disabled`, or `deleted`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_type",
+      type: "string",
+      description: "The kind of author, such as `user`, `api-key`, or `system`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_id",
+      type: "string | null",
+      description: "The author's id, `null` for a change without one.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_label",
+      type: "string | null",
+      description: "The user's email or the API key's title at the time of the change.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "diff",
+      type: "object[]",
+      description: "The changed fields. A plain option is `{ field, label?, from, to, truncated? }`, and a secret option is `{ field, label?, secret: true, op }`, where `op` is `set`, `replaced`, `removed`, or `hidden`. A change of the record's title has the `field` `@title`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "ip",
+      type: "string | null",
+      description: "The IP address of the request. Returned by `GET /admin/integrations/changes/:id`, and by the list routes only when you request it with `fields`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "user_agent",
+      type: "string | null",
+      description: "The client of the request. Returned by `GET /admin/integrations/changes/:id`, and by the list routes only when you request it with `fields`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "request_id",
+      type: "string | null",
+      description: "The ID of the request. Returned by `GET /admin/integrations/changes/:id`, and by the list routes only when you request it with `fields`.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+All the routes check `diff` against the current descriptor. The value of an option that has become secret since the change was recorded comes back as `{ secret: true, op: "hidden" }`. The changes of a provider that is no longer registered come back as stored.
+
+---
+
+## Catalog and Licenses
+
+| Method | Path | What it does |
+| --- | --- | --- |
+| `GET` | `/admin/integrations/catalog` | Returns the [integration catalog](/medusa-modules/integration/browse-integrations), with `installed` and `provider_id` for every entry registered in the project. |
+| `GET` | `/admin/integrations/license-status` | Returns the latest license check result of every paid Gorgo integration, as `{ packages }`. |
+| `POST` | `/admin/integrations/license-status/recheck` | Checks the licenses right away and returns the fresh results in the same shape. |
+
+## References
+
+<CardList items={[
+  {
+    title: "Integration Module Workflows",
+    href: "/medusa-modules/integration/workflows"
+  },
+  {
+    title: "Settings Change History",
+    href: "/medusa-modules/integration/change-history"
+  },
+  {
+    title: "Custom Sections with Widgets",
+    href: "/medusa-modules/integration/custom-sections"
+  }
+]}/>

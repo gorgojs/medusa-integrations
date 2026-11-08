@@ -1,0 +1,85 @@
+---
+title: "Localize an Integration"
+description: "Learn how to translate an integration's settings UI in Medusa Admin: which descriptor fields are i18n keys, where the translations go, and how a missing key falls back."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to translate an integration's settings UI in Medusa Admin.
+
+The descriptor holds no display text, only i18n keys. The Admin resolves each key against the admin user's language, so one descriptor serves every language your integration ships translations for.
+
+## Which Fields Are i18n Keys
+
+These descriptor fields take an i18n key rather than text:
+
+- `displayName` and `description` of the integration;
+- `title` of every section;
+- `label`, `hint`, and `placeholder` of every option;
+- `valueLabels` of an `enum` option, one key per value.
+
+The module translates everything else on the page by itself, including the category badge, statuses, and actions. Its own interface comes in 34 of the languages Medusa Admin supports.
+
+## Add the Translations
+
+The Integration Module builds on [Medusa's admin translations](https://docs.medusajs.com/learn/fundamentals/admin/translations), so the translations go where Medusa expects them in any plugin, `src/admin/i18n/index.ts`.
+
+Keep one JSON file per language, with the same keys you used in the descriptor:
+
+```json title="src/admin/i18n/json/en.json"
+{
+  "my": {
+    "name": "My Payments",
+    "credentials": "Credentials",
+    "apiKey": "API key",
+    "sandbox": "Sandbox mode"
+  }
+}
+```
+
+The nesting is up to you. A key such as `my.apiKey` points into nested objects, `"my": { "apiKey": ... }` here, the same way `t("my.apiKey")` reads it.
+
+Then export every language from `src/admin/i18n/index.ts`:
+
+```ts title="src/admin/i18n/index.ts"
+import en from "./json/en.json" with { type: "json" }
+import ru from "./json/ru.json" with { type: "json" }
+
+export default {
+  en: { translation: en },
+  ru: { translation: ru },
+}
+```
+
+Medusa merges these translations with the Admin's own when it builds the dashboard, so the descriptor's keys, the generated sections, and your [custom widgets](/medusa-modules/integration/custom-sections) all read from the same translations. In a widget, call `t()` from `useTranslation` with the same keys.
+
+## How a Missing Key Falls Back
+
+When a key has no translation in the admin user's language, the Admin shows its English translation. When English has no translation either, it shows the key itself, such as `my.apiKey`, so a missing translation shows on the page.
+
+## What Isn't Translated
+
+The `message` your [validation rules](/medusa-modules/integration/validation) pass to `addIssue` is plain text, and the Admin shows it as it is. The same goes for the `message` that `testConnection` returns. Write them in the language your store admins read, or keep them short and technical.
+
+## Translations and Search
+
+The Admin searches the integrations list by the translated name and description, and the change history by the translated names of integrations and fields. A key without a translation is searched as the key itself.
+
+The change history stores each field's label key with the change. A field you later remove from the descriptor keeps its readable name in the history as long as its translation stays in your plugin.
+
+## References
+
+<CardList items={[
+  {
+    title: "Integration Provider Descriptor",
+    href: "/medusa-modules/integration/descriptor"
+  },
+  {
+    title: "Custom Sections with Widgets",
+    href: "/medusa-modules/integration/custom-sections"
+  },
+  {
+    title: "General Concepts",
+    href: "/medusa-modules/integration/concepts"
+  }
+]}/>

@@ -172,7 +172,7 @@ A consumer resolves options by identifier and instance, so the same code can tar
 
 An integration's options move through a predictable path. An author declares them in the descriptor, an admin configures them, the module validates them, they become live once the integration is enabled and complete, and a consumer resolves them at runtime. A connection test can check them against the third-party service along the way.
 
-See [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every option field, by type, along with validation, secrets, and the connection test.
+See [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every option field, by type, along with secrets and the connection test. [Validate Integration Options](/medusa-modules/integration/validation) explains which rules run when a section is saved and which run before the options go live, and [Reading Options](/medusa-modules/integration/reading-options) covers the consumer's side.
 
 ## UI Generation
 
@@ -184,13 +184,21 @@ Options are grouped into settings sections and rendered with Medusa's [LayoutCom
 
 ### Custom Sections
 
-When the generated UI is not enough, you can build any UI for your options with custom admin widgets. These are standard Medusa admin widgets built on the same `defineWidgetConfig` and injection-zone mechanism you already use elsewhere, so there's nothing new to learn. The module exposes injection zones on each integration's page (for example `gorgo.integration.<identifier>.main.after`), and a widget targeting one of them receives the resolved `providerId` and reads and writes the integration's options directly.
+When the generated UI is not enough, you can build any UI for your options with custom admin widgets. These are standard Medusa admin widgets built with `defineWidgetConfig`. The module exposes an injection zone for each column of an integration's page, `gorgo.integration.<identifier>` and `gorgo.integration.<identifier>.side`. A widget in one of them sits next to the generated sections and receives the instance's `providerId` and its non-secret values.
+
+See [Custom Sections with Widgets](/medusa-modules/integration/custom-sections) for how to build one, and [Admin Widget Injection Zones](/medusa-modules/integration/admin-widget-zones) for the zones themselves.
 
 ### Localization
 
-Descriptor labels, hints, and titles are i18n keys. Ship translations with your integration and the settings UI is localized automatically.
+Descriptor labels, hints, and titles are i18n keys. Ship translations with your integration and the settings UI is localized automatically. This builds on Medusa's standard admin i18n, and custom widgets localize the same way, with the same translations as the generated form.
 
-This builds on Medusa's standard i18n, so there's nothing new to learn. Register your translations the usual way and the keys resolve against the admin's active language, falling back to English when a key is missing. Custom widgets localize the same way, using the same message catalog as the generated form.
+See [Localize an Integration](/medusa-modules/integration/localization) for where translations go and how a missing key falls back.
+
+## Change History
+
+The module records every change to an integration's settings, with its author, time, and the fields it changed. Secret values never reach the history, and the history outlives the integration it describes. Store admins browse it in Medusa Admin, and your code can read it through the Admin API or the module's service.
+
+See [Settings Change History](/medusa-modules/integration/change-history) for what gets recorded and how to attribute your own code's changes to the right author.
 
 ## Next Steps
 
@@ -200,8 +208,24 @@ This builds on Medusa's standard i18n, so there's nothing new to learn. Register
     href: "/medusa-modules/integration/descriptor"
   },
   {
+    title: "Validate Integration Options",
+    href: "/medusa-modules/integration/validation"
+  },
+  {
     title: "Reading Options",
     href: "/medusa-modules/integration/reading-options"
+  },
+  {
+    title: "Custom Sections with Widgets",
+    href: "/medusa-modules/integration/custom-sections"
+  },
+  {
+    title: "Localize an Integration",
+    href: "/medusa-modules/integration/localization"
+  },
+  {
+    title: "Settings Change History",
+    href: "/medusa-modules/integration/change-history"
   },
   {
     title: "Migrate an Existing Medusa Provider to the Integration Module",

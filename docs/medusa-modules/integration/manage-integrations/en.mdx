@@ -1,6 +1,6 @@
 ---
 title: "Manage Integrations in Medusa Admin"
-description: "Learn how to view, add, configure, test the connection, edit, enable, disable, and delete integrations in Medusa Admin, and how to browse their change history."
+description: "Learn how to view, configure, test the connection, edit, enable, disable, and delete integrations in Medusa Admin."
 ---
 
 # {frontmatter.title}
@@ -14,9 +14,11 @@ To view the integrations list:
 1. Open Medusa Admin.
 2. Go to **Settings → Integrations**.
 
-This opens the list of every integration registered in the project: the provider's name and icon, the package author, its description, and category. Each integration shows a status. You can filter the list by category and search by name.
+This opens the list of every integration registered in the project: the provider's name and icon, the package version and author, its description, and category. Each integration shows a status. You can filter the list by category and search it by the integration's name, description, or identifier.
 
 ![Integrations list](/static/integration/en/integrations-overview.webp)
+
+The action menu at the end of a row enables, disables, tests, or deletes a configured integration without opening its page. To open the integration's page, click its row.
 
 ### Integration Statuses
 
@@ -26,8 +28,8 @@ The lifecycle status is always shown, and can be one of the following:
 | --- | --- |
 | Not configured | No section of the settings has been saved yet. |
 | Incomplete | Some sections are saved, but not all required fields are filled in, or the values entered don't pass validation. |
-| Enabled | The integration is fully configured and enabled: the provider receives its options at runtime. |
-| Disabled | The integration is fully configured, but disabled: the provider stops receiving its options, as if it weren't configured. |
+| Enabled | The integration is fully configured and enabled. The provider receives its options at runtime. |
+| Disabled | The integration is fully configured, but disabled. The provider stops receiving its options, as if it weren't configured. |
 
 If the provider supports connection testing, a separate status is shown alongside the lifecycle status, based on the result of the last test:
 
@@ -38,30 +40,21 @@ If the provider supports connection testing, a separate status is shown alongsid
 
 While the connection test hasn't been run yet, this status isn't shown.
 
+For a paid Gorgo integration, the list and the integration's page also show the result of its license check. See [Paid Plugin Licensing](/licensing) for how paid plugins are licensed.
+
 ---
 
 ## Browse and Add an Integration
 
-The catalog lists integrations that aren't registered in the project yet, alongside the ones that already are.
+The catalog lists the integrations available for Medusa, both the ones already registered in the project and the ones you can still add. To open it, click **Browse Integrations** above the list.
 
-To add a new integration:
-
-1. Go to **Settings → Integrations**.
-2. Click **Browse Integrations**.
-3. Find the integration you want to add.
-4. Click **Add**.
-5. Follow the setup guide in the modal that opens: it walks through the install command, the `medusa-config.ts` registration snippet, and the configuration steps to complete once the server is back up. Each code block has its own copy button.
-6. Restart the server.
-
-The integration then appears in the list as **Not configured**, ready to configure.
-
-![Browse integrations](/static/integration/en/browse-integrations.png)
+See [Browse and Add Integrations in Medusa Admin](/medusa-modules/integration/browse-integrations) for how to find an integration in the catalog and add it to the project.
 
 ---
 
 ## Configure an Integration
 
-Until an integration is configured, its page shows sections with empty required fields. There's no separate action for the initial setup: saving any section with its fields filled in creates the configuration.
+Until an integration is configured, its page shows sections with empty required fields. There's no separate action for the initial setup. Saving any section with its fields filled in creates the configuration.
 
 To configure an integration:
 
@@ -74,11 +67,13 @@ To configure an integration:
 
 ![Configuring an integration](/static/integration/en/configure-integration.png)
 
+The module checks the section's values before saving them. A new integration is enabled by default, so its status changes from **Incomplete** to **Enabled** as soon as the saved values pass validation in full. See [Validate Integration Options](/medusa-modules/integration/validation) for the rules a provider can declare.
+
 ---
 
 ## Test Connection
 
-Some providers support connection testing, which confirms the values you entered are actually accepted by the provider before the integration is used for real. If a provider doesn't support this, the action won't appear in the menu.
+Some providers support connection testing, which confirms that the provider accepts the values you entered before the integration is used for real. The action appears only for a provider that supports it, and only while the integration is enabled and complete.
 
 To test the connection:
 
@@ -91,11 +86,13 @@ The result appears in a notification.
 
 ![Test Connection](/static/integration/en/test-connection.png)
 
+Besides the manual test, the module re-tests every enabled integration whose provider supports it once a day, at 03:00 by the server's clock. The connection status shows the result of the latest test, manual or scheduled. An enabled integration that is still incomplete fails the scheduled test with `Not configured`, so it shows **Connection failed** until you finish the setup.
+
 ---
 
 ## Edit a Section
 
-Sections of an already configured integration are edited the same way as during initial setup.
+You edit the sections of an already configured integration the same way as during initial setup.
 
 To edit a section:
 
@@ -105,6 +102,8 @@ To edit a section:
 4. Choose **Edit**.
 5. Update the field values in the side panel that opens.
 6. Click **Save**.
+
+A field holding a secret, such as an API key, shows only that a value is set. Leave it blank to keep the stored value, or type a new value to replace it.
 
 ---
 
@@ -123,9 +122,9 @@ To enable or disable an integration:
 
 ## Delete an Integration
 
-Deleting an integration only erases its stored data: the token and the rest of its section values. The provider itself isn't removed as a source of the integration. It stays registered in `medusa-config.ts` and reappears in the list as not configured. To remove the provider entirely, delete its entry from `providers` in `medusa-config.ts`.
+Deleting an integration erases only its stored data, such as tokens and the rest of its section values. The provider itself stays registered in `medusa-config.ts` and reappears in the list as not configured. To remove the provider entirely, delete its entry from `providers` in `medusa-config.ts`.
 
-The deletion goes into the [change history](/medusa-modules/integration/manage-integrations#change-history) with a snapshot of the values that were configured.
+The deletion goes into the [change history](/medusa-modules/integration/change-history) with a snapshot of the values that were configured.
 
 To delete an integration:
 
@@ -139,76 +138,23 @@ To delete an integration:
 
 ## Change History
 
-The module records every change to an integration's settings, with its author, time, and the fields it changed. The history is kept indefinitely and stays after the integration is deleted, so it still shows how the integration was configured before the deletion.
+The module records every change to an integration's settings with its author, time, and the fields it changed. An integration's page shows its latest changes, and the **Change History** button above the list opens the changes of every integration in one table.
 
-### What Gets Recorded
+See [View the Change History in Medusa Admin](/medusa-modules/integration/view-change-history) for how to search, filter, and open a change.
 
-| Event | When it's recorded |
-| --- | --- |
-| Fields set | The first save of any section, while the integration has no settings. The record lists every saved field. |
-| Fields changed | Every later save of a section. The record lists only the fields whose value changed. A save without changes isn't recorded. |
-| Integration enabled | Enabling a disabled integration. |
-| Integration disabled | Disabling an enabled integration. |
-| Settings deleted | Deleting the integration. The record holds a snapshot of every value that was configured. |
+## References
 
-Connection tests aren't recorded, and neither are changes a plugin writes straight through the module's service instead of its workflows.
-
-The author of a record is the Medusa Admin user who saved the change. Their email is stored with the record, so changes by a deleted user stay attributed. When code on the server changes settings without a user, a seed script for example, the author is **System**.
-
-Values of options marked `secret` never reach the history. For them, the history shows only what happened to the value, such as **Value set**, **Value replaced**, or **Value removed**. If an option became secret after a change was recorded, its earlier values show as **Value hidden**.
-
-Values longer than 512 characters are stored shortened and marked **(shortened)**.
-
-### Integration History
-
-The **Change History** section on an integration's page shows that integration's five latest changes. The section stays on the page after the integration is deleted.
-
-To view an integration's history:
-
-1. Go to **Settings → Integrations**.
-2. Open the integration you want to check.
-3. Find the **Change History** section.
-
-To see all of this integration's changes in a table, click **View All** below the list.
-
-![Change History section on the YooKassa integration page](/static/integration/en/history-section.webp)
-
-### All Changes
-
-The **Change History** page lists the changes of every integration in one table, with the time, integration, event, author, and changed fields.
-
-To open the history of all integrations:
-
-1. Go to **Settings → Integrations**.
-2. Click **Change History**.
-
-The search finds a change by any of the following:
-
-- the author's email;
-- the integration's identifier (`provider_id`);
-- the name of a changed field in the interface language, or its id in the descriptor.
-
-**Add filter** adds one of these filters:
-
-- **Integration**;
-- **Event** – one of the record types in the table above;
-- **Author** – the users who changed settings, and **System**;
-- **Date** – a period.
-
-Sort the table by time, integration, event, or author from the sort menu, or by clicking a column header. A second click reverses the order.
-
-The search, filters, and sorting are kept in the page address, so you can share a link to a filtered history.
-
-![Change History page with the changes of every integration](/static/integration/en/history-table.webp)
-
-### Change Details
-
-Click a change in the table or in an integration's section to open the **Change details** side panel. It has three blocks:
-
-- **General** – the integration, author, and time of the change.
-- **Metadata** – the IP address, the client (the browser or program that sent the request), and the request ID. This block is collapsed by default.
-- **Changes** – each changed field as "before → after". Enabling and disabling have no such block.
-
-**Copy as JSON** copies the whole change, without secret values. The page address with the panel open leads straight to this change.
-
-![Change details panel with the changed fields](/static/integration/en/change-details.webp)
+<CardList items={[
+  {
+    title: "Browse and Add Integrations in Medusa Admin",
+    href: "/medusa-modules/integration/browse-integrations"
+  },
+  {
+    title: "View the Change History in Medusa Admin",
+    href: "/medusa-modules/integration/view-change-history"
+  },
+  {
+    title: "Settings Change History",
+    href: "/medusa-modules/integration/change-history"
+  }
+]}/>

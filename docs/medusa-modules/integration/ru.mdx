@@ -30,16 +30,74 @@ description: "Модуль Medusa: плагин описывает свои па
 
 ## Возможности
 
-- **Управление настройками в Admin:** Задайте настройки в разделе **Настройки → Интеграции**, без правок `medusa-config` и без повторного развёртывания приложения Medusa.
-- **Любой плагин, провайдер или модуль:** Подходит для платежей, доставки, ERP, уведомлений, контента и других расширений.
-- **Декларативный дескриптор (`defineIntegration`):** Единое описание параметров, секций настроек, валидации и проверки соединения.
-- **Гибкая типизация и валидация:** Типизированные поля (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) с правилами на уровне параметров и между секциями, условной видимостью и read-only-полями. Во время выполнения плагин получает типизированный расшифрованный объект. Неполные или отключённые настройки никогда не отдают параметры, поэтому плагин не получит незаполненный черновик.
-- **Шифрование секретов:** Модуль шифрует поля с пометкой `secret` (AES-256-GCM) и никогда не отправляет их в браузер.
-- **Несколько инстансов:** Зарегистрируйте один и тот же провайдер несколько раз, например для нескольких аккаунтов в одном стороннем сервисе.
-- **Проверка соединения:** Тестирование подключения к сторонним сервисам из Admin.
-- **История изменений:** Модуль записывает, кто, когда и какие поля изменил в настройках интеграции. В Admin историю можно искать и фильтровать, а значения секретов в неё не попадают. Подробнее в разделе [История изменений](/medusa-modules/integration/manage-integrations#история-изменений).
-- **Расширяемый UI:** Секции можно менять местами ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). Если готовых секций недостаточно, можно реализовать любой UI для своих параметров с помощью собственных виджетов.
-- **Каталог интеграций:** Доступные интеграции отображаются в Admin.
+- **[Управление настройками в Admin](/medusa-modules/integration/manage-integrations)** – Администраторы магазина задают параметры в разделе **Настройки → Интеграции**, без правок `medusa-config` и без повторного развёртывания приложения Medusa.
+- **Любой плагин, провайдер или модуль** – Подходит для платежей, доставки, ERP, уведомлений, контента и других расширений.
+- **[Декларативный дескриптор](/medusa-modules/integration/descriptor)** – Единое описание (`defineIntegration`) параметров, секций настроек, валидации и проверки соединения.
+- **[Гибкая типизация и валидация](/medusa-modules/integration/validation)** – Типизированные поля (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) с правилами на уровне параметров и между секциями, условной видимостью и read-only-полями. Во время выполнения плагин получает типизированный расшифрованный объект. Неполные или выключенные настройки никогда не отдают параметры, поэтому плагин не получит незаполненный черновик.
+- **[Шифрование секретов](/medusa-modules/integration/descriptor#секреты-и-шифрование)** – Модуль шифрует поля с пометкой `secret` (AES-256-GCM) и никогда не отправляет их в браузер.
+- **[Несколько инстансов](/medusa-modules/integration/concepts#инстансы-и-их-идентификаторы)** – Зарегистрируйте один и тот же провайдер несколько раз, например для нескольких аккаунтов в одном стороннем сервисе.
+- **[Проверка соединения](/medusa-modules/integration/descriptor#проверка-соединения)** – Проверяйте подключение к стороннему сервису прямо из Admin, а модуль будет перепроверять его ежедневно.
+- **[История изменений](/medusa-modules/integration/change-history)** – Модуль записывает, кто, когда и какие поля изменил в настройках интеграции. В Admin историю можно искать и фильтровать, а значения секретов в неё не попадают.
+- **[Расширяемый UI](/medusa-modules/integration/custom-sections)** – Секции можно менять местами ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). Если готовых секций недостаточно, можно реализовать любой UI для своих параметров с помощью собственных виджетов.
+- **[Локализация](/medusa-modules/integration/localization)** – UI настроек показывается на языке пользователя Admin, с переводами, которые поставляет ваш плагин.
+- **[Каталог интеграций](/medusa-modules/integration/browse-integrations)** – Доступные интеграции отображаются в Admin вместе с инструкцией по установке каждой.
+
+---
+
+## Установка
+
+Модулю интеграций нужна Medusa v2.17.2 или новее. Установите его в приложение Medusa:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration
+    ```
+  </CodeTab>
+</CodeTabs>
+
+Затем зарегистрируйте его как плагин в `medusa-config.ts` вместе с провайдерами интеграций, которые вы устанавливаете:
+
+```ts title="medusa-config.ts"
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          // провайдеры ваших интеграций
+        ],
+      },
+    },
+  ],
+})
+```
+
+Каждый провайдер из `providers` появляется в Medusa Admin в разделе **Настройки → Интеграции**. Про `encryptionKey` и остальные параметры читайте на странице [Параметры Модуля интеграций](/medusa-modules/integration/module-options).
+
+Модуль хранит интеграции и их историю изменений в собственных таблицах. Выполните миграции после установки или обновления модуля:
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn medusa db:migrate
+    ```
+  </CodeTab>
+  <CodeTab label="npx" value="npx">
+    ```bash
+    npx medusa db:migrate
+    ```
+  </CodeTab>
+</CodeTabs>
+
+Когда миграции выполнены, перезапустите сервер, и зарегистрированные интеграции будут готовы к настройке.
 
 ---
 
@@ -75,6 +133,27 @@ description: "Модуль Medusa: плагин описывает свои па
     categoryLabel: "Платежи"
   },
   {
+    slug: "stripe",
+    icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/stripe.svg",
+    label: "Stripe",
+    href: "/medusa-integrations/stripe",
+    categoryLabel: "Платежи"
+  },
+  {
+    slug: "paypal",
+    icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/paypal.svg",
+    label: "PayPal",
+    href: "/medusa-integrations/paypal",
+    categoryLabel: "Платежи"
+  },
+  {
+    slug: "authorizenet",
+    icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/authorizenet.svg",
+    label: "Authorize.net",
+    href: "/medusa-integrations/authorizenet",
+    categoryLabel: "Платежи"
+  },
+  {
     slug: "1c-enterprise",
     icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/1c.svg",
     label: "1С:Предприятие",
@@ -100,9 +179,9 @@ description: "Модуль Medusa: плагин описывает свои па
 
 ## 💬 Поддержка и сообщество
 
-Есть вопросы по плагину или идеи? Пишите в чат поддержки в Telegram — [@gorgojs_chat](https://t.me/gorgojs_chat)
+Есть вопросы по плагину или идеи? Пишите в чат поддержки в Telegram [@gorgojs_chat](https://t.me/gorgojs_chat)
 
-Общайтесь с другими разработчиками Medusa в Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
+Общайтесь с другими разработчиками Medusa в Telegram [@medusajs_chat](https://t.me/medusajs_chat)
 
 Как мы тестируем, обновляем и исправляем модуль, читайте на странице [Сопровождение](/resources/maintenance).
 
@@ -114,16 +193,36 @@ description: "Модуль Medusa: плагин описывает свои па
     href: "/medusa-modules/integration/concepts"
   },
   {
+    title: "Провайдер Модуля интеграций",
+    href: "/medusa-modules/integration/integration-module-provider"
+  },
+  {
+    title: "История изменений настроек",
+    href: "/medusa-modules/integration/change-history"
+  },
+  {
     title: "Параметры Модуля интеграций",
     href: "/medusa-modules/integration/module-options"
   },
   {
-    title: "Создание провайдера Модуля интеграций",
+    title: "Как создать провайдер Модуля интеграций",
     href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Валидация параметров интеграции",
+    href: "/medusa-modules/integration/validation"
   },
   {
     title: "Чтение параметров",
     href: "/medusa-modules/integration/reading-options"
+  },
+  {
+    title: "Собственные секции на виджетах",
+    href: "/medusa-modules/integration/custom-sections"
+  },
+  {
+    title: "Локализация интеграции",
+    href: "/medusa-modules/integration/localization"
   },
   {
     title: "Миграция существующего провайдера Medusa на Модуль интеграций",
@@ -132,5 +231,45 @@ description: "Модуль Medusa: плагин описывает свои па
   {
     title: "Управление интеграциями в Medusa Admin",
     href: "/medusa-modules/integration/manage-integrations"
+  },
+  {
+    title: "Поиск и добавление интеграций в Medusa Admin",
+    href: "/medusa-modules/integration/browse-integrations"
+  },
+  {
+    title: "Просмотр истории изменений в Medusa Admin",
+    href: "/medusa-modules/integration/view-change-history"
+  },
+  {
+    title: "Дескриптор провайдера интеграций",
+    href: "/medusa-modules/integration/descriptor"
+  },
+  {
+    title: "Воркфлоу Модуля интеграций",
+    href: "/medusa-modules/integration/workflows"
+  },
+  {
+    title: "API-роуты Admin",
+    href: "/medusa-modules/integration/admin-api"
+  },
+  {
+    title: "Зоны виджетов в Admin",
+    href: "/medusa-modules/integration/admin-widget-zones"
+  },
+  {
+    title: "Сервис Модуля интеграций",
+    href: "/medusa-modules/integration/service"
+  },
+  {
+    title: "Модели данных Модуля интеграций",
+    href: "/medusa-modules/integration/data-models"
+  },
+  {
+    title: "События Модуля интеграций",
+    href: "/medusa-modules/integration/events"
+  },
+  {
+    title: "История изменений @gorgo/medusa-integration",
+    href: "/medusa-modules/integration/changelog"
   }
 ]}/>

@@ -1,0 +1,65 @@
+---
+title: "Browse and Add Integrations in Medusa Admin"
+description: "Learn how to find an integration in the catalog in Medusa Admin and add it to your Medusa project."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to find an integration in the catalog and add it to your project.
+
+The catalog lists the integrations published for the Integration Module, both the ones already registered in the project and the ones you can still add. Each card shows the integration's icon, name, author, short description, and whether it's installed.
+
+## Open the Catalog
+
+To open the catalog:
+
+1. Go to **Settings → Integrations**.
+2. Click **Browse Integrations**.
+
+![Browse integrations](/static/integration/en/browse-integrations.png)
+
+Filter the catalog by category with the tabs above it, or search it by the integration's name, description, or npm package. An installed integration has the **Installed** badge and a **Settings** button that opens its page.
+
+---
+
+## Add an Integration
+
+The catalog doesn't install packages by itself. Adding an integration means installing its package and registering its provider in `medusa-config.ts`, and the catalog shows the setup guide for both.
+
+To add a new integration:
+
+1. Go to **Settings → Integrations**.
+2. Click **Browse Integrations**.
+3. Find the integration you want to add.
+4. Click **Add**.
+5. Follow the setup guide in the side panel that opens. It walks through the install command, the `medusa-config.ts` registration snippet, and the configuration steps to complete once the server is back up. Each code block has its own copy button, and **Read docs** opens the integration's full documentation.
+6. Restart the server.
+
+The integration then appears in the list as **Not configured**. See [Configure an Integration](/medusa-modules/integration/manage-integrations#configure-an-integration) for the next step.
+
+---
+
+## Where the Catalog Comes From
+
+The module loads the catalog from `gorgojs.com` and keeps it in memory for an hour. When `gorgojs.com` can't be reached, the module shows the last catalog it loaded, or, before the first successful load, the copy bundled with the installed version of `@gorgo/medusa-integration`. The page works offline too.
+
+An integration counts as installed when a provider with the same identifier is registered in `medusa-config.ts`.
+
+<Note type="success" title="">
+
+**Want to add your integration to the catalog?** Make a [Pull Request](https://github.com/gorgojs/medusa-integrations#contribution) or write to [support chat](https://t.me/gorgojs_bot) on Telegram.
+
+</Note>
+
+## References
+
+<CardList items={[
+  {
+    title: "Manage Integrations in Medusa Admin",
+    href: "/medusa-modules/integration/manage-integrations"
+  },
+  {
+    title: "How to Create an Integration Module Provider",
+    href: "/medusa-modules/integration/create-integration-module-provider"
+  }
+]}/>

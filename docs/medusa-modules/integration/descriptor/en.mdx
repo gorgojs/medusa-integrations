@@ -1,6 +1,6 @@
 ---
 title: "Integration Provider Descriptor"
-description: "The full reference for an integration provider's descriptor: defineIntegration, every option field by type, validation, secrets, and the connection test."
+description: "The full reference for an integration provider's descriptor: defineIntegration and its properties, sections, every option field by type, secrets, and the connection test."
 ---
 
 # {frontmatter.title}
@@ -58,6 +58,151 @@ export class MyIntegration extends AbstractIntegrationProvider {
 
 This descriptor declares `apiKey` and `sandbox`, grouped into a single `credentials` section. `defineIntegration` fails fast at load time in two cases: a section referencing an option id that isn't in `options`, and an `enum` option whose `values` mixes strings and numbers.
 
+## Descriptor Properties
+
+`defineIntegration` accepts the following properties:
+
+<MedusaTypeList
+  sectionTitle="defineIntegration"
+  types={[
+    {
+      name: "category",
+      type: "enum",
+      description: "Which kind of integration this is. The Admin groups and filters integrations by it:\n- `payment`\n- `fulfillment`\n- `notification`\n- `search`\n- `content`\n- `analytics`\n- `authentication`\n- `erp`\n- `crm`\n- `pim`\n- `marketplace`\n- `feed`\n- `file_providers`\n- `other`",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "displayName",
+      type: "string",
+      description: "The i18n key of the integration's name, shown in the list, on its page, and in the change history.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "description",
+      type: "string",
+      description: "The i18n key of a short description, shown in the list and under the name on the integration's page.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "icon",
+      type: "string",
+      description: "The integration's icon, any value an `<img src>` accepts, such as a data URI or a URL.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "docsUrl",
+      type: "string",
+      description: "A link to the integration's documentation. The Admin API returns it with the descriptor, and the Admin doesn't show it.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "supportsMultipleInstances",
+      type: "boolean",
+      description: "Declares that the provider can be registered more than once. The Admin API returns it as `supports_multiple_instances`. The module registers every entry in `providers` either way.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "preferredLayoutId",
+      type: "enum",
+      description: "The layout of the integration's page in the Admin:\n- `core:single-column`\n- `core:two-column`\nOnly the two-column layout renders sections with `column: \"side\"`.",
+      optional: true,
+      defaultValue: "core:single-column",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "options",
+      type: "object",
+      description: "The catalog of options, keyed by option id. Each value is an option definition, see [Option Fields](#option-fields).",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "sections",
+      type: "object[]",
+      description: "The settings sections of the integration's page, in display order, see [Sections](#sections).",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "validate",
+      type: "function",
+      description: "A rule over the whole assembled configuration, `(full, { addIssue }) => void`. Runs only during full validation, see [Validate Integration Options](/medusa-modules/integration/validation#cross-section-rules).",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "testConnection",
+      type: "function",
+      description: "The connection test, `({ options }) => Promise<{ status, message? }>`, see [Connection Test](#connection-test).",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+The provider's `static identifier` isn't part of the descriptor. The module adds it from the provider class when it registers the provider.
+
+## Sections
+
+Each entry of `sections` is a card on the integration's page, with its own **Edit** action. A section references options by id, and an option can stay out of every section, for example when a [custom section](/medusa-modules/integration/custom-sections) edits it instead.
+
+<MedusaTypeList
+  sectionTitle="Sections"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "The section's id. The Admin sends it as `section_id` when the section is saved.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "title",
+      type: "string",
+      description: "The i18n key of the section's title.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "options",
+      type: "string[]",
+      description: "The ids of the options the section shows, in display order. Every id must exist in `options`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "column",
+      type: "enum",
+      description: "The column the section renders in:\n- `main`\n- `side`\nThe side column exists only with `preferredLayoutId: \"core:two-column\"`.",
+      optional: true,
+      defaultValue: "main",
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
 ## Option Fields
 
 Each option in `options` is an object shaped `{ type, ... }`. The `type` field determines the available values and the remaining fields that are common to every type:
@@ -92,7 +237,7 @@ Each option in `options` is an object shaped `{ type, ... }`. The `type` field d
     {
       name: "default",
       type: "string | number | boolean | unknown",
-      description: "The default value; its type matches the option's `type`. A `default` makes the option effectively always present in resolved options, even without `required`.",
+      description: "The default value; its type matches the option's `type`. A `default` makes the option always present in resolved options, even without `required`. The edit form starts from it. The default of a `secret` option never reaches the browser.",
       optional: true,
       expandable: false,
       children: []
@@ -134,7 +279,7 @@ Each option in `options` is an object shaped `{ type, ... }`. The `type` field d
     {
       name: "readonly",
       type: "boolean",
-      description: "Renders the field as non-editable in the Admin.",
+      description: "Renders the field as non-editable in the Admin, showing the stored value or the `default`. The Admin API doesn't enforce it.",
       optional: true,
       expandable: false,
       children: []
@@ -150,7 +295,7 @@ Each option in `options` is an object shaped `{ type, ... }`. The `type` field d
     {
       name: "validate",
       type: "function",
-      description: "A custom check for this option's value, run alongside the type's built-in schema.",
+      description: "A custom check, `(value, { options, addIssue }) => void`, run after the type's built-in rules. See [Validate Integration Options](/medusa-modules/integration/validation#option-rules).",
       optional: true,
       expandable: false,
       children: []
@@ -273,20 +418,7 @@ Some types have extra fields on top of the common ones:
 
 The module generates the CRUD API from the descriptor and validates every write. Validation covers per-option rules, such as types, ranges, and patterns, along with cross-section rules that span the whole configuration. There is nothing to build for each integration.
 
-Cross-section rules are declared through the descriptor's `validate`. Unlike a single option's `validate`, it receives the whole assembled config and can flag an issue on any field:
-
-```ts title="providers/integration-my/services/my-integration.ts"
-const descriptor = defineIntegration({
-  // ...
-  validate: (full, { addIssue }) => {
-    if (full.mode === "webhook" && !full.webhookSecret) {
-      addIssue({ path: ["webhookSecret"], message: "Required when mode is \"webhook\"" })
-    }
-  },
-})
-```
-
-Unlike `required` or an option's own `validate`, this rule only runs during full validation (checking whether the integration is ready to be enabled), not when a single section is saved.
+See [Validate Integration Options](/medusa-modules/integration/validation) for when each rule runs and how to test the descriptor's rules, and [Admin API Routes](/medusa-modules/integration/admin-api) for the generated routes.
 
 ## Enabled and Complete
 
@@ -296,7 +428,7 @@ Options become live only when the integration is both enabled and complete, mean
 
 Options marked `secret` are encrypted at rest with AES-256-GCM and never reach the browser. The CRUD API masks them and reports only whether each one is set. Saving a secret as blank keeps its stored value instead of clearing it.
 
-Secret values don't reach the [change history](/medusa-modules/integration/manage-integrations#change-history) either. For a secret option, the history shows only that its value was set, replaced, or removed. It keeps the values of every other option as they are.
+Secret values don't reach the [change history](/medusa-modules/integration/change-history) either. For a secret option, the history shows only that its value was set, replaced, or removed. It keeps the values of every other option as they are.
 
 <Note type="warning">
 
@@ -308,7 +440,7 @@ Encryption needs a key, set as `encryptionKey` when you register the module. See
 
 ## Connection Test
 
-A descriptor can declare an optional connection test that checks credentials against the third-party service. Admins run it on demand, and a scheduled job re-checks configured integrations daily.
+A descriptor can declare an optional connection test that checks credentials against the third-party service. Store admins run it on demand, and a scheduled job re-tests every enabled integration once a day, at 03:00 by the server's clock.
 
 Add `testConnection` to the descriptor. It receives the already-resolved (decrypted) options and returns a status:
 
@@ -329,11 +461,13 @@ const descriptor = defineIntegration({
 })
 ```
 
-`status` is one of `passed`, `failed`, or `skipped`; the optional `message` is shown to the admin in the Admin next to the test result.
+`status` is one of `passed`, `failed`, or `skipped`, and the optional `message` is shown to the store admin in the Admin next to the test result. The module stores the status as the integration's `last_test_status` and emits the [`integration.tested` event](/medusa-modules/integration/events).
+
+The test runs only against options that resolve. When the integration is disabled or incomplete, the module reports `failed` with the message `Not configured` without calling `testConnection`. When `testConnection` throws, the module reports `failed` with the error's message.
 
 ## Runtime Options Resolution
 
-Consumers read typed, validated, and decrypted options, with descriptor defaults applied. An incomplete or disabled integration resolves to nothing rather than partial data. Resolved options are cached briefly and refreshed whenever the configuration changes.
+Consumers read typed, validated, and decrypted options, with descriptor defaults applied. An incomplete or disabled integration resolves to nothing rather than partial data. See [Reading Options](/medusa-modules/integration/reading-options) for the ways to read them and how long the module caches them.
 
 ## References
 
@@ -343,8 +477,12 @@ Consumers read typed, validated, and decrypted options, with descriptor defaults
     href: "/medusa-modules/integration/concepts"
   },
   {
-    title: "Create an Integration Module Provider",
+    title: "How to Create an Integration Module Provider",
     href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Validate Integration Options",
+    href: "/medusa-modules/integration/validation"
   },
   {
     title: "Integration Module Options",

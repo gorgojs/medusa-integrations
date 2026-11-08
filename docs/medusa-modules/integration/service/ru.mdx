@@ -1,0 +1,106 @@
+---
+title: "Сервис Модуля интеграций"
+description: "Справочник по основному сервису Модуля интеграций: методы, которые получают параметры, находят провайдеры и сохранённые интеграции и читают историю изменений."
+---
+
+# {frontmatter.title}
+
+В этом справочнике перечислены методы `IntegrationModuleService`, основного сервиса Модуля интеграций. Код с доступом к контейнеру Medusa, например API-роут, подписчик, запланированная задача или шаг воркфлоу, получает его по ключу `INTEGRATION_MODULE`:
+
+```ts title="src/api/admin/my-integration/route.ts"
+import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
+
+export async function GET(req: MedusaRequest, res: MedusaResponse) {
+  const integrationModuleService: IntegrationModuleService = req.scope.resolve(INTEGRATION_MODULE)
+
+  const { integrations } = await integrationModuleService.listIntegrationsOverview({ category: "payment" })
+
+  res.json({ provider_ids: integrations.map((integration) => integration.provider_id) })
+}
+```
+
+`listIntegrationsOverview` возвращает все зарегистрированные платёжные инстансы с их состоянием, а роут отдаёт их ключи. Провайдер в изолированном контейнере своего модуля так получить сервис не может, поэтому читает параметры через `resolveIntegrationOptions`, подробнее в руководстве [Чтение параметров](/medusa-modules/integration/reading-options).
+
+<Note type="warning">
+
+Меняйте настройки только через [воркфлоу](/medusa-modules/integration/workflows) модуля. Методы управления данными сервиса, например `updateIntegrations`, записывают данные как есть. Они не проверяют значения и не шифруют секреты, не отправляют событие `integration.updated`, поэтому потребители продолжают получать параметры из кэша, и не оставляют записи в истории изменений.
+
+</Note>
+
+## Получение параметров
+
+| Метод | Возвращает | Описание |
+| --- | --- | --- |
+| `getResolvedOptions(identifier, instanceId?)` | `Promise<ResolvedOptions \| null>` | Расшифрованные и проверенные параметры инстанса с подставленными значениями по умолчанию в виде `{ options, meta }` или `null`, если интеграция не настроена, выключена или не заполнена. Бросает исключение, если под этими идентификатором и инстансом не зарегистрирован ни один провайдер. Результат кэшируется на срок до 60 секунд. |
+| `clearOptionsCache(providerId?)` | `void` | Сбрасывает кэш параметров одного инстанса или, без аргумента, всех инстансов. |
+
+## Зарегистрированные провайдеры
+
+| Метод | Возвращает | Описание |
+| --- | --- | --- |
+| `hasProviderId(providerId)` | `boolean` | Зарегистрирован ли провайдер под этим ключом инстанса. |
+| `getProviderDescriptor(providerId)` | `IntegrationDescriptor \| undefined` | Дескриптор провайдера вместе с `identifier` и `instanceId`. |
+| `getProviderUiDescriptor(providerId)` | `UiDescriptor \| undefined` | Дескриптор, подготовленный для Admin, с секциями, полями и раскладкой. |
+| `listUiDescriptors()` | `UiDescriptor[]` | То же для всех зарегистрированных инстансов. |
+| `getSecretKeys(providerId)` | `string[]` | Идентификаторы секретных параметров провайдера. |
+| `getPackageMeta(providerId)` | `{ version, author, author_url }` | Данные npm-пакета, из которого пришёл провайдер, или значения `null`, если их не удалось найти. |
+
+## Сохранённые интеграции
+
+| Метод | Возвращает | Описание |
+| --- | --- | --- |
+| `listIntegrationsOverview(query?)` | `Promise<{ integrations, count, categories }>` | Все зарегистрированные инстансы вместе с сохранённым состоянием, как их показывает список интеграций в Admin. `query` принимает `q`, `category`, `limit` и `offset`, как и [`GET /admin/integrations`](/medusa-modules/integration/admin-api#список-интеграций). Без `limit` метод возвращает все инстансы. |
+| `findByProviderId(providerId)` | `Promise<Integration \| undefined>` | Сохранённая запись инстанса или `undefined` до первого сохранения. |
+| `isComplete(record)` | `boolean` | Проходит ли сохранённая запись полную валидацию по дескриптору своего провайдера. |
+| `getStoredValues(providerId)` | `Promise<Record<string, unknown>>` | Вся сохранённая конфигурация с расшифрованными секретами, без валидации и значений по умолчанию. Никогда не отправляйте её в браузер. |
+
+## Проверка соединения
+
+| Метод | Возвращает | Описание |
+| --- | --- | --- |
+| `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Выполняет проверку соединения провайдера с итоговыми параметрами. Не сохраняет `last_test_status` и не отправляет `integration.tested`. Оба действия выполняет [`testIntegrationConnectionWorkflow`](/medusa-modules/integration/workflows#testintegrationconnectionworkflow). |
+
+## История изменений
+
+| Метод | Возвращает | Описание |
+| --- | --- | --- |
+| `listChangeActors()` | `Promise<{ users, system }>` | Пользователи Admin, которые вносили изменения, с email из их последнего изменения, и признак того, вносил ли изменения кто-то ещё. |
+| `listChangeFields()` | `Promise<{ field, label }[]>` | Все идентификаторы и ключи меток параметров, которые упоминаются в истории, включая параметры и интеграции, которых уже нет. |
+| `recordChange(input)` | `Promise<string \| null>` | Сохраняет одну запись истории и возвращает её идентификатор. Никогда не бросает исключений. При ошибке пишет предупреждение в лог и возвращает `null`. Воркфлоу модуля вызывают его через `recordIntegrationChangeStep`. |
+
+Чтобы прочитать сами записи, используйте сгенерированные методы `IntegrationChange` ниже. Они возвращают сохранённые строки как есть. В отличие от [API-роутов Admin](/medusa-modules/integration/admin-api#история-изменений), они не скрывают значения параметров, которые стали секретными после записи изменения.
+
+## Каталог и лицензии
+
+| Метод | Возвращает | Описание |
+| --- | --- | --- |
+| `getCatalog()` | `Promise<CatalogItem[]>` | [Каталог интеграций](/medusa-modules/integration/browse-integrations) с `installed` и `provider_id` для каждой записи, зарегистрированной в проекте. |
+| `listLicenseStates()` | `LicenseStateEntry[]` | Последний результат проверки лицензии каждой платной интеграции Gorgo. |
+| `recheckLicenseStates()` | `Promise<LicenseStateEntry[]>` | Сразу проверяет лицензии и возвращает свежие результаты. |
+
+## Сгенерированные методы управления данными
+
+Сервис расширяет `MedusaService` из Medusa, который генерирует методы управления данными для обеих [моделей данных](/medusa-modules/integration/data-models):
+
+- для `Integration`: `listIntegrations`, `listAndCountIntegrations`, `retrieveIntegration`, `createIntegrations`, `updateIntegrations`, `deleteIntegrations`, `softDeleteIntegrations` и `restoreIntegrations`;
+- для `IntegrationChange`: `listIntegrationChanges`, `listAndCountIntegrationChanges`, `retrieveIntegrationChange`, `createIntegrationChanges`, `updateIntegrationChanges`, `deleteIntegrationChanges`, `softDeleteIntegrationChanges` и `restoreIntegrationChanges`.
+
+Для чтения используйте методы `list` и `retrieve`. В сохранённых `options` записи `Integration` секреты хранятся зашифрованными. Параметры этих методов описаны в [справочнике по фабрике сервисов](https://docs.medusajs.com/resources/service-factory-reference) Medusa.
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Воркфлоу Модуля интеграций",
+    href: "/medusa-modules/integration/workflows"
+  },
+  {
+    title: "Модели данных Модуля интеграций",
+    href: "/medusa-modules/integration/data-models"
+  },
+  {
+    title: "Чтение параметров",
+    href: "/medusa-modules/integration/reading-options"
+  }
+]}/>

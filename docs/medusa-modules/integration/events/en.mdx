@@ -1,0 +1,98 @@
+---
+title: "Integration Module Events"
+description: "Reference of the events the Integration Module emits when integration settings change and when a connection test runs, with their payloads."
+---
+
+# {frontmatter.title}
+
+This reference lists the events the Integration Module emits through Medusa's event bus. Subscribe to them to react when an integration's settings change or a connection test runs.
+
+## Events
+
+| Event | Emitted when |
+| --- | --- |
+| `integration.updated` | A store admin or your code saves option values, enables, disables, or deletes an integration. |
+| `integration.tested` | A connection test runs, from the Admin, the Admin API, or the module's daily scheduled job. |
+
+### integration.updated
+
+[`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow), [`setIntegrationEnabledWorkflow`](/medusa-modules/integration/workflows#setintegrationenabledworkflow), and [`deleteIntegrationWorkflow`](/medusa-modules/integration/workflows#deleteintegrationworkflow) emit it on every run, even when nothing changed. The module's own subscriber clears the [options cache](/medusa-modules/integration/reading-options#caching-and-freshness) of the instance when it receives the event.
+
+The payload has this shape:
+
+```ts
+{
+  provider_id: string
+  change: "update" | "enabled" | "delete"
+  actor: { type: string, id: string | null } | null
+  fields?: string[]
+}
+```
+
+`change` names the workflow, and `"enabled"` stands for both enabling and disabling. `actor` is the workflow's `actor`, or `null` when it ran without one. Only an `"update"` carries `fields`, the ids of the options that changed, with `@title` for the record's title. The values themselves stay in the [change history](/medusa-modules/integration/change-history), and secrets reach neither.
+
+### integration.tested
+
+[`testIntegrationConnectionWorkflow`](/medusa-modules/integration/workflows#testintegrationconnectionworkflow) emits it after every connection test. Connection tests don't go into the change history, so this event is the way to follow them.
+
+The payload has this shape:
+
+```ts
+{
+  provider_id: string
+  status: "passed" | "failed" | "skipped"
+  message?: string
+  actor: { type: string, id: string | null } | null
+}
+```
+
+`status` and `message` are the test's result. A test from the Admin carries the admin user as `actor`. The daily test carries `{ type: "job", id: "test-integration-connections-daily" }`.
+
+## Subscribe to an Event
+
+For example, a subscriber that logs every failed connection test, so the daily test's failures reach your monitoring:
+
+```ts title="src/subscribers/integration-tested.ts"
+import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework"
+
+type IntegrationTestedData = {
+  provider_id: string
+  status: "passed" | "failed" | "skipped"
+  message?: string
+}
+
+export default async function integrationTestedHandler({
+  event: { data },
+  container,
+}: SubscriberArgs<IntegrationTestedData>) {
+  if (data.status !== "failed") {
+    return
+  }
+
+  const logger = container.resolve("logger")
+  logger.warn(`Integration ${data.provider_id} failed its connection test: ${data.message ?? "no message"}`)
+}
+
+export const config: SubscriberConfig = {
+  event: "integration.tested",
+}
+```
+
+The subscriber reads only the fields it needs from the payload. The daily test also runs for an enabled integration that is still incomplete and reports it as `failed` with the message `Not configured`, so check `message` if you only want failed credentials. Medusa runs subscribers in the `shared` and `worker` modes, so in a deployment with a separate worker, this one runs in the worker. See Medusa's [Events and Subscribers](https://docs.medusajs.com/learn/fundamentals/events-and-subscribers) for more on subscribers.
+
+## References
+
+<CardList items={[
+  {
+    title: "Integration Module Workflows",
+    href: "/medusa-modules/integration/workflows"
+  },
+  {
+    title: "Settings Change History",
+    href: "/medusa-modules/integration/change-history"
+  },
+  {
+    title: "Reading Options",
+    href: "/medusa-modules/integration/reading-options"
+  }
+]}/>

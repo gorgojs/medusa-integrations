@@ -1,0 +1,202 @@
+---
+title: "Integration Module Data Models"
+description: "Reference of the Integration Module's data models: Integration, which stores an instance's settings, and IntegrationChange, which stores the change history."
+---
+
+# {frontmatter.title}
+
+This reference lists the data models of the Integration Module. Like any Medusa data model, each one also has `created_at`, `updated_at`, and `deleted_at`.
+
+<Note type="default" title="">
+
+Read these models through the module's [service](/medusa-modules/integration/service) or the [Admin API](/medusa-modules/integration/admin-api), and change them only through its [workflows](/medusa-modules/integration/workflows).
+
+</Note>
+
+## Integration
+
+The stored settings of one integration instance. The module creates the record on the first save of any section and deletes it when the store admin deletes the integration. A registered provider without a record is **Not configured**.
+
+<MedusaTypeList
+  sectionTitle="Integration"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "The record's own id, with the `int` prefix. It isn't the instance key, see `provider_id`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "provider_id",
+      type: "string",
+      description: "The instance's key, `int_<identifier>[_<instanceId>]`. Unique. The module, the Admin API, and the Admin look records up by it.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "category",
+      type: "enum",
+      description: "The integration's category, copied from the descriptor's `category` on every save.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "title",
+      type: "string",
+      description: "A title set through the Admin API's `title` field. The Admin doesn't set it.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "options",
+      type: "json",
+      description: "The settings the store admin saved, keyed by option id. Secret options are stored encrypted, each as a base64 string.",
+      optional: false,
+      defaultValue: "{}",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "is_enabled",
+      type: "boolean",
+      description: "Whether the integration is enabled. A new record is enabled.",
+      optional: false,
+      defaultValue: "true",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "last_test_status",
+      type: "enum",
+      description: "The status of the last connection test, `passed`, `failed`, or `skipped`. Empty until a test runs.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+Whether the integration is complete isn't stored. The module checks it against the provider's current descriptor whenever it's needed, so it can't go stale when the descriptor changes.
+
+## IntegrationChange
+
+One record of the [change history](/medusa-modules/integration/change-history). It has no relation to `Integration`, so it stays after the integration is deleted.
+
+<MedusaTypeList
+  sectionTitle="IntegrationChange"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "The record's id, with the `intch` prefix.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "provider_id",
+      type: "string",
+      description: "The key of the integration instance that changed. Plain text, not a relation.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "change_type",
+      type: "string",
+      description: "One of `created`, `updated`, `enabled`, `disabled`, or `deleted`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_type",
+      type: "string",
+      description: "The kind of author, which is Medusa's actor type of the request, such as `user` or `api-key`, or `system` for a change made without one.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_id",
+      type: "string",
+      description: "The author's id.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_label",
+      type: "string",
+      description: "The user's email or the API key's title at the time of the change.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "diff",
+      type: "json",
+      description: "The changed fields, without the values of secret options. See [The Change Object](/medusa-modules/integration/admin-api#the-change-object) for the shape of an entry.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "diff_fields",
+      type: "string[]",
+      description: "The option ids and label keys from `diff`, for the search. The Admin API returns it only when you request it with `fields`.",
+      optional: false,
+      defaultValue: "[]",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "ip",
+      type: "string",
+      description: "The IP address of the request that made the change.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "user_agent",
+      type: "string",
+      description: "The client of the request that made the change.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "request_id",
+      type: "string",
+      description: "The ID of the request that made the change.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+`created_at` is the time of the change, since the record is written in the same workflow that makes it.
+
+## References
+
+<CardList items={[
+  {
+    title: "Integration Module Service",
+    href: "/medusa-modules/integration/service"
+  },
+  {
+    title: "Settings Change History",
+    href: "/medusa-modules/integration/change-history"
+  },
+  {
+    title: "Integration Module Provider",
+    href: "/medusa-modules/integration/integration-module-provider"
+  }
+]}/>

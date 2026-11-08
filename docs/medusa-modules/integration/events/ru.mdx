@@ -1,0 +1,98 @@
+---
+title: "События Модуля интеграций"
+description: "Справочник по событиям, которые Модуль интеграций отправляет при изменении настроек интеграций и при проверке соединения, с их данными."
+---
+
+# {frontmatter.title}
+
+В этом справочнике перечислены события, которые Модуль интеграций отправляет через шину событий Medusa. Подпишитесь на них, чтобы реагировать на изменение настроек интеграции или проверку соединения.
+
+## События
+
+| Событие | Когда отправляется |
+| --- | --- |
+| `integration.updated` | Администратор магазина или ваш код сохраняет значения параметров, включает, выключает или удаляет интеграцию. |
+| `integration.tested` | Выполняется проверка соединения из Admin, через Admin API или ежедневной запланированной задачей модуля. |
+
+### integration.updated
+
+Событие отправляют [`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow), [`setIntegrationEnabledWorkflow`](/medusa-modules/integration/workflows#setintegrationenabledworkflow) и [`deleteIntegrationWorkflow`](/medusa-modules/integration/workflows#deleteintegrationworkflow) при каждом запуске, даже если ничего не изменилось. Собственный подписчик модуля, получив событие, сбрасывает [кэш параметров](/medusa-modules/integration/reading-options#кэширование-и-актуальность) инстанса.
+
+Данные события выглядят так:
+
+```ts
+{
+  provider_id: string
+  change: "update" | "enabled" | "delete"
+  actor: { type: string, id: string | null } | null
+  fields?: string[]
+}
+```
+
+`change` называет воркфлоу, причём `"enabled"` обозначает и включение, и выключение. `actor` содержит `actor` воркфлоу или `null`, если воркфлоу запустили без него. `fields` есть только у `"update"`. Это идентификаторы изменившихся параметров, а изменение названия записи обозначается как `@title`. Сами значения остаются в [истории изменений](/medusa-modules/integration/change-history), а секреты не попадают ни туда, ни сюда.
+
+### integration.tested
+
+Событие отправляет [`testIntegrationConnectionWorkflow`](/medusa-modules/integration/workflows#testintegrationconnectionworkflow) после каждой проверки соединения. Проверки соединения в историю изменений не попадают, поэтому следить за ними можно через это событие.
+
+Данные события выглядят так:
+
+```ts
+{
+  provider_id: string
+  status: "passed" | "failed" | "skipped"
+  message?: string
+  actor: { type: string, id: string | null } | null
+}
+```
+
+`status` и `message` содержат результат проверки. У проверки из Admin в `actor` указан пользователь Admin. У ежедневной проверки `actor` равен `{ type: "job", id: "test-integration-connections-daily" }`.
+
+## Подписка на событие
+
+Например, подписчик, который пишет в лог каждую неудачную проверку соединения, чтобы сбои ежедневной проверки попадали в ваш мониторинг:
+
+```ts title="src/subscribers/integration-tested.ts"
+import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework"
+
+type IntegrationTestedData = {
+  provider_id: string
+  status: "passed" | "failed" | "skipped"
+  message?: string
+}
+
+export default async function integrationTestedHandler({
+  event: { data },
+  container,
+}: SubscriberArgs<IntegrationTestedData>) {
+  if (data.status !== "failed") {
+    return
+  }
+
+  const logger = container.resolve("logger")
+  logger.warn(`Integration ${data.provider_id} failed its connection test: ${data.message ?? "no message"}`)
+}
+
+export const config: SubscriberConfig = {
+  event: "integration.tested",
+}
+```
+
+Подписчик читает из данных события только нужные ему поля. Ежедневная проверка запускается и для включённой, но ещё не завершённой интеграции и сообщает о ней `failed` с текстом `Not configured`, поэтому проверяйте `message`, если вас интересуют только отклонённые учётные данные. Medusa запускает подписчиков в режимах `shared` и `worker`, поэтому при отдельном воркере этот подписчик выполняется в воркере. Подробнее о подписчиках читайте в [руководстве Medusa по событиям и подписчикам](https://docs.medusajs.com/learn/fundamentals/events-and-subscribers).
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Воркфлоу Модуля интеграций",
+    href: "/medusa-modules/integration/workflows"
+  },
+  {
+    title: "История изменений настроек",
+    href: "/medusa-modules/integration/change-history"
+  },
+  {
+    title: "Чтение параметров",
+    href: "/medusa-modules/integration/reading-options"
+  }
+]}/>

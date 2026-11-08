@@ -1,0 +1,192 @@
+---
+title: "Custom Sections with Widgets"
+description: "Learn how to add your own section to an integration's page in Medusa Admin with a widget, for options the generated sections can't edit."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to add your own section to an integration's page in Medusa Admin with a widget.
+
+## When You Need a Custom Section
+
+The module generates a section for every group of options in the descriptor, with one control per option. That covers scalar settings, such as a key, a switch, or a choice from a list. An option that holds a list of records, such as several webhooks or courier-service connections, has no suitable control, so it gets a section of your own.
+
+A custom section is a standard Medusa admin widget built with `defineWidgetConfig`. The module renders it on the integration's page next to the generated sections, and the store admin can move it like any other section.
+
+## Example
+
+The [ApiShip fulfillment provider](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/fulfillment-apiship) keeps its courier-service connections in a `json` option and edits them in its own widget, `src/admin/widgets/apiship-integration-main.tsx`. The steps below build a smaller widget of the same kind, a list of webhook URLs.
+
+---
+
+## Step 1: Declare the Option
+
+Declare the option the widget manages in the descriptor, and leave it out of `sections`, so no generated section shows it:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  options: {
+    // ...
+    webhooks: {
+      type: "json",
+      default: [],
+      label: "my.webhooks.title",
+      validate: (value, { addIssue }) => {
+        if (!Array.isArray(value) || !value.every((url) => typeof url === "string")) {
+          addIssue({ message: "Expected a list of URLs" })
+        }
+      },
+    },
+  },
+})
+```
+
+The module checks `json` values only through the option's own `validate`, so the rule above is what keeps the list well-formed. The option is still part of the descriptor, so its value is validated, can be marked `secret`, resolves at runtime along with the rest, and goes into the [change history](/medusa-modules/integration/change-history).
+
+## Step 2: Declare the Zone
+
+The module exposes two injection zones on an integration's page, named after the provider's `static identifier`:
+
+- `gorgo.integration.<identifier>` – the main column;
+- `gorgo.integration.<identifier>.side` – the side column, rendered only when the descriptor sets `preferredLayoutId: "core:two-column"`.
+
+Medusa builds a widget in a custom zone, but `defineWidgetConfig` only knows Medusa's own zones by type. Declare yours by augmenting `InjectionZoneRegistry` in an `index.d.ts` at the root of your plugin:
+
+```ts title="index.d.ts"
+export {}
+
+declare module "@medusajs/admin-shared" {
+  interface InjectionZoneRegistry {
+    "gorgo.integration.my": true,
+    "gorgo.integration.my.side": true
+  }
+}
+```
+
+Then publish the file with the plugin and point its types at it in `package.json`:
+
+```json title="package.json"
+{
+  "files": [
+    ".medusa/server",
+    "index.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    }
+  }
+}
+```
+
+Keep the rest of your `exports` as they are. With the declaration in place, `defineWidgetConfig` accepts `"gorgo.integration.my"`, and a project that installs your plugin sees the same zones. See [Admin Widget Injection Zones](/medusa-modules/integration/admin-widget-zones) for the full list.
+
+## Step 3: Create the Widget
+
+Create the widget in your plugin's `src/admin/widgets` directory. It reads and writes the option through the module's own [Admin API routes](/medusa-modules/integration/admin-api):
+
+```tsx title="src/admin/widgets/my-integration-webhooks.tsx"
+import { defineWidgetConfig } from "@medusajs/admin-sdk"
+import { Button, Container, Heading, Input, Text, toast } from "@medusajs/ui"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import type { IntegrationSectionData } from "@gorgo/medusa-integration"
+import { sdk } from "../lib/sdk"
+
+type IntegrationResponse = { integration: { values: Record<string, unknown> } | null }
+
+const MyWebhooksWidget = ({ data }: { data: IntegrationSectionData }) => {
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const queryKey = ["my-webhooks", data.providerId]
+  const [url, setUrl] = useState("")
+
+  const { data: stored } = useQuery({
+    queryKey,
+    queryFn: () => sdk.client.fetch<IntegrationResponse>(`/admin/integrations/${data.providerId}`),
+  })
+  const webhooks = (stored?.integration?.values.webhooks as string[] | undefined) ?? []
+
+  const save = useMutation({
+    mutationFn: (next: string[]) =>
+      sdk.client.fetch(`/admin/integrations/${data.providerId}`, {
+        method: "POST",
+        body: { values: { webhooks: next } },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey })
+      setUrl("")
+    },
+    onError: (error: Error) => toast.error(error.message),
+  })
+
+  return (
+    <Container className="divide-y p-0">
+      <div className="px-6 py-4">
+        <Heading level="h2">{t("my.webhooks.title")}</Heading>
+      </div>
+      {webhooks.map((webhook) => (
+        <Text key={webhook} size="small" className="px-6 py-4">
+          {webhook}
+        </Text>
+      ))}
+      <div className="flex gap-x-2 px-6 py-4">
+        <Input value={url} onChange={(event) => setUrl(event.target.value)} />
+        <Button size="small" variant="secondary" onClick={() => save.mutate([...webhooks, url])}>
+          {t("my.webhooks.add")}
+        </Button>
+      </div>
+    </Container>
+  )
+}
+
+export const config = defineWidgetConfig({
+  zone: "gorgo.integration.my",
+})
+
+export default MyWebhooksWidget
+```
+
+The widget receives `data` of type `IntegrationSectionData` from the page:
+
+- `providerId` – the instance's key, such as `int_my` or `int_my_eu`. One zone serves every instance of the provider, so pass `providerId` to every request.
+- `identifier` – the provider's `static identifier`.
+- `values` – the instance's stored options, without secrets.
+- `isComplete` – whether the stored configuration passes full validation. Use it to hold back actions that need working settings.
+
+`data.values` comes from the page's own request and doesn't refresh after the widget saves. That's why the widget keeps its own copy of the integration under its own query key and refreshes it after each save.
+
+The `POST` request has no `section_id`, so the module writes exactly the submitted options the descriptor declares and drops any other key. It validates them, encrypts secrets, emits `integration.updated` to clear the options cache, and records the change with the current admin user as its author.
+
+`sdk` is the JS SDK client from `src/admin/lib/sdk.ts`, set up the same way as in Medusa's own admin customization guides.
+
+<Note type="default" title="">
+
+Secrets never reach the browser, neither through `data` nor through `GET /admin/integrations/:provider_id`. When a widget needs a secret, or per-record operations with their own checks, add your own admin API route and run [`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow) from it. Pass the request's actor as `actor`, as shown in [Settings Change History](/medusa-modules/integration/change-history#who-made-the-change), so the history keeps the right author.
+
+</Note>
+
+The widget's labels are i18n keys, the same as the descriptor's. See [Localize an Integration](/medusa-modules/integration/localization) for where their translations go.
+
+## References
+
+<CardList items={[
+  {
+    title: "Admin Widget Injection Zones",
+    href: "/medusa-modules/integration/admin-widget-zones"
+  },
+  {
+    title: "Admin API Routes",
+    href: "/medusa-modules/integration/admin-api"
+  },
+  {
+    title: "Localize an Integration",
+    href: "/medusa-modules/integration/localization"
+  },
+  {
+    title: "Migrate an Existing Medusa Provider to the Integration Module",
+    href: "/medusa-modules/integration/migrate-provider-to-integration-module"
+  }
+]}/>

@@ -1,0 +1,93 @@
+---
+title: "View the Change History in Medusa Admin"
+description: "Learn how to view, search, and filter the change history of integration settings in Medusa Admin, and how to open the details of a change."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to view the change history of integration settings in Medusa Admin.
+
+The module records every change to an integration's settings with its author, time, and the fields it changed. The history is kept indefinitely and stays after the integration is deleted, so it still shows how the integration was configured before the deletion.
+
+<Note type="default" title="">
+
+For what the module records, who counts as the author, and how secrets are kept out of the history, see [Settings Change History](/medusa-modules/integration/change-history).
+
+</Note>
+
+## Integration History
+
+The **Change History** section on an integration's page shows that integration's five latest changes. The section stays on the page after the integration is deleted.
+
+To view an integration's history:
+
+1. Go to **Settings → Integrations**.
+2. Open the integration you want to check.
+3. Find the **Change History** section.
+
+To see all of this integration's changes in a table, click **View All** below the list. It opens the [change history of every integration](#all-changes) filtered by this one.
+
+![Change History section on the YooKassa integration page](/static/integration/en/history-section.webp)
+
+---
+
+## All Changes
+
+The **Change History** page lists the changes of every integration in one table, with the time, integration, event, author, and changed fields.
+
+To open the history of all integrations:
+
+1. Go to **Settings → Integrations**.
+2. Click **Change History**.
+
+![Change History page with the changes of every integration](/static/integration/en/history-table.webp)
+
+### Search
+
+The search finds a change by any of the following:
+
+- the author's email, or the title of the API key that made the change;
+- the integration's name in the interface language, or its identifier (`provider_id`);
+- the name of a changed field in the interface language, or its id in the descriptor.
+
+### Filters
+
+**Add filter** adds one of these filters:
+
+- **Integration**;
+- **Event** – one of the record types listed in [What Gets Recorded](/medusa-modules/integration/change-history#what-gets-recorded);
+- **Author** – the users who changed settings, and **System**;
+- **Date** – a period.
+
+### Sorting
+
+Sort the table by time, integration, event, or author from the sort menu, or by clicking a column header. A second click reverses the order. By default, the newest changes come first.
+
+The page address holds the search, filters, and sorting, so you can share a link to a filtered history.
+
+---
+
+## Change Details
+
+Click a change in the table or in an integration's section to open the **Change details** side panel. It has three blocks:
+
+- **General** – the integration, author, and time of the change.
+- **Metadata** – the IP address, the client (the browser or program that sent the request), and the request ID. This block is collapsed by default.
+- **Changes** – each changed field as "before → after". Enabling and disabling have no such block.
+
+**Copy as JSON** copies the whole change, without secret values. The page address with the panel open leads straight to this change.
+
+![Change details panel with the changed fields](/static/integration/en/change-details.webp)
+
+## References
+
+<CardList items={[
+  {
+    title: "Settings Change History",
+    href: "/medusa-modules/integration/change-history"
+  },
+  {
+    title: "Manage Integrations in Medusa Admin",
+    href: "/medusa-modules/integration/manage-integrations"
+  }
+]}/>
