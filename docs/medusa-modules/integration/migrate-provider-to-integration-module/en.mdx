@@ -258,7 +258,7 @@ Previously the fulfillment-module provider read its options from `store.metadata
 // ...
 import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
 import { ProviderKeys } from "../../../types"
-import { ApishipOptions } from "../../integration-apiship/services/apiship-integration"
+import type { ApishipIntegrationOptions } from "../../integration-apiship/services/apiship-integration"
 
 
 class ApishipBase extends AbstractFulfillmentProviderService {
@@ -270,8 +270,8 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     this.instanceId_ = (options?.id as string | undefined) ?? null
   }
 
-  private async getApishipOptions_(): Promise<ApishipOptions> {
-    const options = await resolveIntegrationOptions<ApishipOptions>({
+  private async getApishipOptions_(): Promise<ApishipIntegrationOptions> {
+    const options = await resolveIntegrationOptions<ApishipIntegrationOptions>({
       identifier: ProviderKeys.APISHIP,
       instance_id: this.instanceId_,
     })
@@ -288,7 +288,7 @@ class ApishipBase extends AbstractFulfillmentProviderService {
 
 ApiShip used to have its own settings page in the Admin. Now the Integration Module builds the integration page from the descriptor: credentials, payment and VAT, product dimensions, and the sender are generated as sections.
 
-The only settings section that stays custom is the courier-service connections list. It plugs into the same page as a widget through the `gorgo.integration.apiship.main.after` extension zone. The widget receives the instance key from the Integration Module via `data.providerId` and passes it into all its hooks and requests:
+The only settings section that stays custom is the courier-service connections list. It plugs into the same page as a widget through the `gorgo.integration.apiship` injection zone, which renders it in the main column below the generated sections. See [Custom Sections with Widgets](/medusa-modules/integration/custom-sections) for the zones and how to declare them for TypeScript. The widget receives the instance key from the Integration Module via `data.providerId` and passes it into all its hooks and requests:
 
 ```tsx title="admin/widgets/apiship-integration-main.tsx"
 // ...
@@ -313,7 +313,7 @@ const ApishipIntegrationWidget = ({ data }: { data: IntegrationSectionData }) =>
 
 export const config = defineWidgetConfig({
   // module extension zone: the widget sits below the generated sections
-  zone: "gorgo.integration.apiship.main.after",
+  zone: "gorgo.integration.apiship",
 })
 
 export default ApishipIntegrationWidget
@@ -327,7 +327,7 @@ export default ApishipIntegrationWidget
 
 </Note>
 
-Write option values the same way. Compose the new value of your `json` option and pass it to the Integration Module's `upsertIntegrationWorkflow`. It scopes the write to declared options, merges them with the stored values, validates, encrypts secrets, and emits the `integration.updated` event to invalidate the resolver's cache:
+Write option values the same way. Compose the new value of your `json` option and pass it to the Integration Module's [`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow). It scopes the write to declared options, merges them with the stored values, validates, encrypts secrets, and emits the `integration.updated` event to invalidate the resolver's cache:
 
 ```ts title="workflows/update-apiship-options.ts"
 import { upsertIntegrationWorkflow } from "@gorgo/medusa-integration"
@@ -342,7 +342,7 @@ upsertIntegrationWorkflow.runAsStep({
 })
 ```
 
-The same workflow records the change in the [change history](/medusa-modules/integration/manage-integrations#change-history). The input in the example has no `actor`, so the author of the record is **System**. When the write follows an action of a Medusa Admin user, pass `actor` in the input with the `type` and `id` from your route's `req.auth_context`, and the history names that user as the author.
+The same workflow records the change in the [change history](/medusa-modules/integration/change-history#who-made-the-change). The input in the example has no `actor`, so the author of the record is **System**. When the write follows an action of a Medusa Admin user, pass `actor` in the input with the `type` and `id` from your route's `req.auth_context`, and the history names that user as the author.
 
 <Note type="warning">
 
@@ -368,7 +368,7 @@ The full code of the ApiShip fulfillment-module provider after migration is avai
     href: "/medusa-modules/integration/concepts"
   },
   {
-    title: "Create an Integration Module Provider",
+    title: "How to Create an Integration Module Provider",
     href: "/medusa-modules/integration/create-integration-module-provider"
   },
   {

@@ -64,7 +64,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 
 <Note type="default" title="">
 
-Общий обзор дескриптора смотрите в разделе [Основные концепции](/medusa-modules/integration/concepts#дескриптор). Полный справочник по каждому полю `options` (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate` и другие), по типу, приведён в разделе [Дескриптор провайдера интеграций](/medusa-modules/integration/descriptor).
+Общий обзор дескриптора смотрите в разделе [Основные концепции](/medusa-modules/integration/concepts#дескриптор). Полный справочник по каждому полю `options` (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate` и другие), по типу, приведён в разделе [Дескриптор провайдера интеграций](/medusa-modules/integration/descriptor). Какие правила можно объявить, описывает руководство [Валидация параметров интеграции](/medusa-modules/integration/validation), а переводы для i18n-ключей `my.*` описаны в руководстве [Локализация интеграции](/medusa-modules/integration/localization).
 
 </Note>
 
@@ -143,7 +143,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 
 ### testConnection
 
-В отличие от `validateOptions`, который проверяет конфигурацию провайдера в `medusa-config.ts`, `testConnection` проверяет сами параметры интеграции (например, API-ключ), обращаясь к стороннему сервису. Администратор запускает эту проверку из Admin, а запланированная задача ежедневно перепроверяет настроенные интеграции. Объявите её прямо в дескрипторе.
+В отличие от `validateOptions`, который проверяет конфигурацию провайдера в `medusa-config.ts`, `testConnection` проверяет сами параметры интеграции (например, API-ключ), обращаясь к стороннему сервису. Администратор магазина запускает эту проверку из Admin, а запланированная задача раз в сутки заново проверяет каждую включённую интеграцию. Объявите её прямо в дескрипторе.
 
 #### Пример
 
@@ -162,7 +162,7 @@ const descriptor = defineIntegration({
 })
 ```
 
-`status` принимает одно из значений `"passed" | "failed" | "skipped"`. Возврат `{ status: "failed", message }` считается обычным результатом, а не ошибкой. Если провайдер выбросит исключение, ежедневная задача учтёт его отдельно, как `status: "errored"`.
+`status` принимает одно из значений `"passed" | "failed" | "skipped"`. Возврат `{ status: "failed", message }` считается обычным результатом, а не ошибкой. Если `testConnection` выбросит исключение, модуль запишет проверку как `failed` с текстом ошибки, поэтому администратор магазина увидит результат в Admin в любом случае.
 
 ## 3. Создайте файл определения модуля провайдера
 
@@ -224,7 +224,7 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
 
 ## 5. Протестируйте
 
-Запустите сервер и откройте **Настройки → Интеграции** в Medusa Admin. Интеграция появится в списке. Заполните параметры и нажмите **Проверить соединение**, чтобы вызвать `testConnection`.
+Запустите сервер и откройте **Настройки → Интеграции** в Medusa Admin. Интеграция появится в списке. Заполните параметры, затем выберите **Проверить соединение** в меню действий у названия интеграции, чтобы вызвать `testConnection`.
 
 Чтобы прочитать сохранённые параметры, используйте `resolveIntegrationOptions`, передав тот же `identifier`, который объявляет ваш класс провайдера:
 
@@ -253,8 +253,20 @@ const options = await resolveIntegrationOptions<MyOptions>({
     href: "/medusa-modules/integration/concepts"
   },
   {
+    title: "Дескриптор провайдера интеграций",
+    href: "/medusa-modules/integration/descriptor"
+  },
+  {
+    title: "Валидация параметров интеграции",
+    href: "/medusa-modules/integration/validation"
+  },
+  {
     title: "Чтение параметров",
     href: "/medusa-modules/integration/reading-options"
+  },
+  {
+    title: "Собственные секции на виджетах",
+    href: "/medusa-modules/integration/custom-sections"
   },
   {
     title: "Миграция существующего провайдера Medusa на Модуль интеграций",

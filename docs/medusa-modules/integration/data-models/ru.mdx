@@ -1,0 +1,202 @@
+---
+title: "Модели данных Модуля интеграций"
+description: "Справочник по моделям данных Модуля интеграций: Integration хранит настройки инстанса, а IntegrationChange хранит историю изменений."
+---
+
+# {frontmatter.title}
+
+В этом справочнике перечислены модели данных Модуля интеграций. Как у любой модели данных Medusa, у каждой из них есть ещё поля `created_at`, `updated_at` и `deleted_at`.
+
+<Note type="default" title="">
+
+Читайте эти модели через [сервис](/medusa-modules/integration/service) модуля или [Admin API](/medusa-modules/integration/admin-api), а меняйте только через его [воркфлоу](/medusa-modules/integration/workflows).
+
+</Note>
+
+## Integration
+
+Сохранённые настройки одного инстанса интеграции. Модуль создаёт запись при первом сохранении любой секции и удаляет её, когда администратор магазина удаляет интеграцию. Зарегистрированный провайдер без записи получает статус **Не настроено**.
+
+<MedusaTypeList
+  sectionTitle="Integration"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Собственный идентификатор записи с префиксом `int`. Это не ключ инстанса, его хранит `provider_id`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "provider_id",
+      type: "string",
+      description: "Ключ инстанса, `int_<identifier>[_<instanceId>]`. Уникальный. По нему модуль, Admin API и Admin находят запись.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "category",
+      type: "enum",
+      description: "Категория интеграции, которая копируется из `category` дескриптора при каждом сохранении.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "title",
+      type: "string",
+      description: "Название, заданное через поле `title` в Admin API. Admin его не задаёт.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "options",
+      type: "json",
+      description: "Настройки, сохранённые администратором магазина, где ключом служит идентификатор параметра. Секретные параметры хранятся зашифрованными, каждый в виде строки base64.",
+      optional: false,
+      defaultValue: "{}",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "is_enabled",
+      type: "boolean",
+      description: "Включена ли интеграция. Новая запись создаётся включённой.",
+      optional: false,
+      defaultValue: "true",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "last_test_status",
+      type: "enum",
+      description: "Статус последней проверки соединения, `passed`, `failed` или `skipped`. Пустой, пока проверка не запускалась.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+Признак полной настройки интеграции не хранится. Модуль проверяет его по текущему дескриптору провайдера каждый раз, когда он нужен, поэтому признак не устаревает при изменении дескриптора.
+
+## IntegrationChange
+
+Одна запись [истории изменений](/medusa-modules/integration/change-history). Она не связана с `Integration`, поэтому остаётся после удаления интеграции.
+
+<MedusaTypeList
+  sectionTitle="IntegrationChange"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Идентификатор записи с префиксом `intch`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "provider_id",
+      type: "string",
+      description: "Ключ инстанса интеграции, который изменился. Обычный текст, а не связь.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "change_type",
+      type: "string",
+      description: "Одно из значений `created`, `updated`, `enabled`, `disabled` или `deleted`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_type",
+      type: "string",
+      description: "Тип автора, то есть тип субъекта запроса в Medusa, например `user` или `api-key`, или `system` для изменения без запроса.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_id",
+      type: "string",
+      description: "Идентификатор автора.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_label",
+      type: "string",
+      description: "Email пользователя или название ключа API на момент изменения.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "diff",
+      type: "json",
+      description: "Изменённые поля без значений секретных параметров. Структура элемента описана в разделе [Объект изменения](/medusa-modules/integration/admin-api#объект-изменения).",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "diff_fields",
+      type: "string[]",
+      description: "Идентификаторы и ключи меток параметров из `diff` для поиска. Admin API возвращает его только по запросу через `fields`.",
+      optional: false,
+      defaultValue: "[]",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "ip",
+      type: "string",
+      description: "IP-адрес запроса, который внёс изменение.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "user_agent",
+      type: "string",
+      description: "Клиент, который отправил запрос с изменением.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "request_id",
+      type: "string",
+      description: "ID запроса, который внёс изменение.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+`created_at` совпадает со временем изменения, потому что запись создаётся в том же воркфлоу, что и изменение.
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Сервис Модуля интеграций",
+    href: "/medusa-modules/integration/service"
+  },
+  {
+    title: "История изменений настроек",
+    href: "/medusa-modules/integration/change-history"
+  },
+  {
+    title: "Провайдер Модуля интеграций",
+    href: "/medusa-modules/integration/integration-module-provider"
+  }
+]}/>

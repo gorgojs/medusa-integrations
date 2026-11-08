@@ -1,0 +1,257 @@
+---
+title: "Воркфлоу Модуля интеграций"
+description: "Справочник по воркфлоу и шагам, которые экспортирует Модуль интеграций: их входные данные, что они делают и что возвращают."
+---
+
+# {frontmatter.title}
+
+В этом справочнике перечислены воркфлоу и шаги, которые экспортирует Модуль интеграций. Их запускают собственные [API-роуты Admin](/medusa-modules/integration/admin-api) модуля, и ваш код тоже может их запускать, например из API-роута, подписчика или собственного воркфлоу.
+
+<Note type="warning">
+
+Меняйте настройки интеграций только через эти воркфлоу. Запись через сервис модуля обходит валидацию, шифрование, сброс кэша и историю изменений, подробнее на странице [Сервис Модуля интеграций](/medusa-modules/integration/service).
+
+</Note>
+
+## Пути импорта
+
+`upsertIntegrationWorkflow`, `getResolvedIntegrationOptionsWorkflow` и `getResolvedIntegrationOptionsStep` экспортируются из корня пакета. Все воркфлоу и шаги с этой страницы экспортируются из подпути `@gorgo/medusa-integration/workflows`.
+
+Например, собственный воркфлоу, который одним из шагов выключает интеграцию:
+
+```ts title="src/workflows/disable-my-integration.ts"
+import { createWorkflow, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+import { setIntegrationEnabledWorkflow } from "@gorgo/medusa-integration/workflows"
+
+export const disableMyIntegrationWorkflow = createWorkflow(
+  "disable-my-integration",
+  () => {
+    const integration = setIntegrationEnabledWorkflow.runAsStep({
+      input: { provider_id: "int_my", is_enabled: false },
+    })
+
+    return new WorkflowResponse(integration)
+  }
+)
+```
+
+`runAsStep` запускает воркфлоу модуля как шаг вашего. Во входных данных нет `actor`, поэтому история изменений запишет изменение с типом автора `system`. Если следующий шаг вашего воркфлоу упадёт, интеграция вернётся в прежнее состояние, а её запись в истории будет удалена.
+
+---
+
+## Воркфлоу
+
+### upsertIntegrationWorkflow
+
+Сохраняет значения параметров инстанса интеграции. При первом сохранении создаёт запись, а дальше обновляет её. Именно этот воркфлоу выполняется, когда в Admin сохраняют секцию.
+
+<MedusaTypeList
+  sectionTitle="Input"
+  types={[
+    {
+      name: "provider_id",
+      type: "string",
+      description: "Ключ инстанса, `int_<identifier>[_<instanceId>]`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "values",
+      type: "Record<string, unknown>",
+      description: "Значения параметров для сохранения, где ключом служит идентификатор параметра. Значения остальных параметров остаются как сохранены, а пустой секрет сохраняет прежнее значение.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "section_id",
+      type: "string | null",
+      description: "Идентификатор секции дескриптора. С ним записываются только параметры этой секции. Без него записываются все отправленные ключи, которые объявлены в дескрипторе, а необъявленные отбрасываются.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "title",
+      type: "string | null",
+      description: "Название сохранённой записи. Не передавайте его, чтобы оставить прежнее название, или передайте `null`, чтобы очистить его.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor",
+      type: "IntegrationChangeActor",
+      description: "Автор изменения для истории изменений в виде `{ type, id?, ip?, user_agent?, request_id? }`. Без него изменение записывается с типом автора `system`.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+Воркфлоу проверяет записываемые параметры по сохранённой конфигурации с наложенными новыми значениями, шифрует секреты и сохраняет запись. Затем он записывает в историю изменение `created` или `updated`, если что-то изменилось, и отправляет событие `integration.updated`. Возвращает сохранённую запись `Integration`, в `options` которой секреты зашифрованы.
+
+Воркфлоу завершается ошибкой `not_found`, если под `provider_id` не зарегистрирован ни один провайдер, и ошибкой `invalid_data` для неизвестного `section_id` или значений, которые не прошли валидацию.
+
+### setIntegrationEnabledWorkflow
+
+Включает или выключает настроенную интеграцию.
+
+<MedusaTypeList
+  sectionTitle="Input"
+  types={[
+    {
+      name: "provider_id",
+      type: "string",
+      description: "Ключ инстанса, `int_<identifier>[_<instanceId>]`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "is_enabled",
+      type: "boolean",
+      description: "`true`, чтобы включить интеграцию, `false`, чтобы выключить.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor",
+      type: "IntegrationChangeActor",
+      description: "Автор изменения для истории изменений. Без него изменение записывается с типом автора `system`.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+Воркфлоу меняет `is_enabled` у сохранённой записи, записывает в историю изменение `enabled` или `disabled`, если интеграция ещё не была в этом состоянии, и отправляет событие `integration.updated`. Возвращает обновлённую запись. Завершается ошибкой `not_found`, если у интеграции ещё нет сохранённой записи, потому что до первого сохранения включать нечего. Если следующий шаг падает, прежнее состояние восстанавливается.
+
+### deleteIntegrationWorkflow
+
+Удаляет сохранённые настройки инстанса интеграции. Провайдер остаётся зарегистрированным, а интеграция снова показывается как ненастроенная.
+
+<MedusaTypeList
+  sectionTitle="Input"
+  types={[
+    {
+      name: "provider_id",
+      type: "string",
+      description: "Ключ инстанса, `int_<identifier>[_<instanceId>]`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor",
+      type: "IntegrationChangeActor",
+      description: "Автор изменения для истории изменений. Без него изменение записывается с типом автора `system`.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+Воркфлоу удаляет сохранённую запись, записывает в историю изменение `deleted` со снимком настроенных значений и отправляет событие `integration.updated`. Возвращает `{ deleted, diff }`, где `deleted` равно `false`, если удалять было нечего. Сохранённые секреты он не расшифровывает, поэтому работает даже после смены ключа шифрования.
+
+### testIntegrationConnectionWorkflow
+
+Запускает проверку соединения, которую объявляет дескриптор провайдера.
+
+<MedusaTypeList
+  sectionTitle="Input"
+  types={[
+    {
+      name: "provider_id",
+      type: "string",
+      description: "Ключ инстанса, `int_<identifier>[_<instanceId>]`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor",
+      type: "IntegrationChangeActor",
+      description: "Кто запускает проверку. Передаётся дальше в событии `integration.tested`, а сама проверка в историю изменений не записывается.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+Воркфлоу выполняет проверку с итоговыми параметрами, сохраняет результат в `last_test_status` записи и отправляет событие `integration.tested`. Возвращает `{ status, message? }`. Выключенная или незаполненная интеграция получает `failed` без вызова проверки, подробнее в разделе [Проверка соединения](/medusa-modules/integration/descriptor#проверка-соединения).
+
+Запланированная задача модуля `test-integration-connections-daily` запускает этот воркфлоу каждый день в 03:00 для каждой включённой интеграции, провайдер которой объявляет проверку, с автором `{ type: "job", id: "test-integration-connections-daily" }`. В их число входит и включённая, но ещё не завершённая интеграция, которая получает `failed` с текстом `Not configured`.
+
+### getResolvedIntegrationOptionsWorkflow
+
+Получает параметры инстанса интеграции так же, как `resolveIntegrationOptions` и метод сервиса `getResolvedOptions`.
+
+<MedusaTypeList
+  sectionTitle="Input"
+  types={[
+    {
+      name: "identifier",
+      type: "string",
+      description: "`static identifier` провайдера.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "instance_id",
+      type: "string | null",
+      description: "`id` регистрации. Не передавайте его или передайте `null` для единственного инстанса по умолчанию.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+Воркфлоу возвращает `{ options, meta }` или `null`, если интеграция не настроена, выключена или не заполнена. Если под этими идентификатором и инстансом не зарегистрирован ни один провайдер, он бросает исключение. Когда его использовать, читайте в руководстве [Чтение параметров](/medusa-modules/integration/reading-options).
+
+---
+
+## Шаги
+
+Воркфлоу выше собраны из этих шагов. Используйте их в собственном воркфлоу, когда нужна только часть того, что делает воркфлоу модуля.
+
+| Шаг | Входные данные | Что делает |
+| --- | --- | --- |
+| `getResolvedIntegrationOptionsStep` | `{ identifier, instance_id? }` | Возвращает итоговые параметры или `null`. |
+| `getIntegrationStateStep` | `{ provider_id }` | Возвращает `{ existed, title, is_enabled }` сохранённой записи до изменения. |
+| `applyIntegrationSectionStep` | `{ provider_id, section_id?, values }` | Выбирает параметры для записи, проверяет их и возвращает `{ category, options, diff }`, где `options` содержит полную конфигурацию, готовую к сохранению, с зашифрованными секретами. Сам ничего не сохраняет. |
+| `upsertIntegrationRecordStep` | `{ provider_id, category, options, title? }` | Создаёт или обновляет сохранённую запись. |
+| `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Меняет `is_enabled` у сохранённой записи и восстанавливает прежнее значение при откате. |
+| `deleteIntegrationRecordStep` | `{ provider_id }` | Удаляет сохранённую запись и возвращает `{ deleted, diff }`. |
+| `runTestConnectionStep` | `{ provider_id }` | Выполняет проверку соединения и сохраняет её статус в `last_test_status`. |
+| `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, skip? }` | Создаёт запись в истории изменений или ничего не делает, если `skip` равно `true` или у изменения `updated` нет полей. Никогда не роняет воркфлоу и удаляет запись при откате. |
+| `emitIntegrationEventStep` | `{ name, data }` | Отправляет событие через шину событий Medusa. |
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "API-роуты Admin",
+    href: "/medusa-modules/integration/admin-api"
+  },
+  {
+    title: "События Модуля интеграций",
+    href: "/medusa-modules/integration/events"
+  },
+  {
+    title: "История изменений настроек",
+    href: "/medusa-modules/integration/change-history"
+  },
+  {
+    title: "Чтение параметров",
+    href: "/medusa-modules/integration/reading-options"
+  }
+]}/>

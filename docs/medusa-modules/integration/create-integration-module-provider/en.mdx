@@ -64,7 +64,7 @@ The provider class must implement the `descriptor` property. The descriptor hold
 
 <Note type="default" title="">
 
-See [General Concepts](/medusa-modules/integration/concepts#descriptor) for an overview of the descriptor, and [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every `options` field (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate`, and others), by type.
+See [General Concepts](/medusa-modules/integration/concepts#descriptor) for an overview of the descriptor, and [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every `options` field (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate`, and others), by type. [Validate Integration Options](/medusa-modules/integration/validation) covers the rules you can declare, and [Localize an Integration](/medusa-modules/integration/localization) covers the translations for the `my.*` i18n keys.
 
 </Note>
 
@@ -143,7 +143,7 @@ In practice, `options.providers[].options` is almost always `{}` for an Integrat
 
 ### testConnection
 
-Unlike `validateOptions`, which checks the provider's configuration in `medusa-config.ts`, `testConnection` checks the integration's own options, such as an API key, against the third-party service. The store admin runs it from the Admin, and a scheduled job re-checks configured integrations daily. You declare it directly in the descriptor.
+Unlike `validateOptions`, which checks the provider's configuration in `medusa-config.ts`, `testConnection` checks the integration's own options, such as an API key, against the third-party service. The store admin runs it from the Admin, and a scheduled job re-tests every enabled integration once a day. You declare it directly in the descriptor.
 
 #### Example
 
@@ -162,7 +162,7 @@ const descriptor = defineIntegration({
 })
 ```
 
-`status` is one of `"passed" | "failed" | "skipped"`. Returning `{ status: "failed", message }` counts as a normal result, not an error. If the provider throws, the daily job counts it separately, as `errored`.
+`status` is one of `"passed" | "failed" | "skipped"`. Returning `{ status: "failed", message }` counts as a normal result, not an error. If `testConnection` throws, the module reports the test as `failed` with the error's message, so the store admin sees it in the Admin either way.
 
 ## 3. Create Module Provider Definition File
 
@@ -224,7 +224,7 @@ Any non-empty value works. The module derives it via SHA-256 into a 32-byte AES-
 
 ## 5. Test It Out
 
-Start the server and open **Settings → Integrations** in Medusa Admin. Your integration appears in the list. Fill in the options and click **Test connection** to run `testConnection`.
+Start the server and open **Settings → Integrations** in Medusa Admin. Your integration appears in the list. Fill in the options, then choose **Test connection** in the action menu next to the integration's name to run `testConnection`.
 
 To read the saved options, use `resolveIntegrationOptions` and pass the same `identifier` your provider class declares:
 
@@ -253,8 +253,20 @@ See [Reading Options](/medusa-modules/integration/reading-options) for how to re
     href: "/medusa-modules/integration/concepts"
   },
   {
+    title: "Integration Provider Descriptor",
+    href: "/medusa-modules/integration/descriptor"
+  },
+  {
+    title: "Validate Integration Options",
+    href: "/medusa-modules/integration/validation"
+  },
+  {
     title: "Reading Options",
     href: "/medusa-modules/integration/reading-options"
+  },
+  {
+    title: "Custom Sections with Widgets",
+    href: "/medusa-modules/integration/custom-sections"
   },
   {
     title: "Migrate an Existing Medusa Provider to the Integration Module",

@@ -1,0 +1,181 @@
+---
+title: "Validate Integration Options"
+description: "Learn how to declare validation rules for an integration's options, when the Integration Module runs each of them, and how to test them."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to declare validation rules for an integration's options, when the Integration Module runs each of them, and how to test them.
+
+<Note type="default" title="">
+
+Every rule here lives in the provider's descriptor. For the full list of option fields, see [Integration Provider Descriptor](/medusa-modules/integration/descriptor).
+
+</Note>
+
+## When the Module Validates
+
+The module validates options at two moments, and each checks a different scope:
+
+- **On save.** When a store admin saves a section, or your code submits option values, the module checks only the submitted options. It runs their rules against the stored configuration with the submitted values on top, so a rule can read options from other sections. A failing rule rejects the save, and nothing is stored.
+- **Full validation.** The module checks the whole assembled configuration, with defaults applied, against every rule of every option and the descriptor's cross-section rule. The result decides whether the integration is complete. Full validation runs whenever a consumer resolves the options and whenever the Admin shows the integration's status. It never blocks a save.
+
+Saving is per section, so a configuration can be valid section by section and still incomplete as a whole. Such an integration shows the **Incomplete** status, and consumers don't get its options until the store admin fills in what's missing.
+
+| Rule | On save | Full validation |
+| --- | --- | --- |
+| [Built-in rules](#built-in-rules) of the option's type and `required` | Submitted options only | Every option |
+| [An option's `validate`](#option-rules) | Submitted options only | Every option |
+| [The descriptor's `validate`](#cross-section-rules) | Never | Always |
+
+---
+
+## Built-In Rules
+
+Each option's `type` comes with its own rules, such as a URL format for `url` or the allowed `values` for `enum`. Type-specific fields add more, such as `minLength` and `pattern` for `string` or `min`, `max`, and `int` for `number`. See [Type-Specific Fields](/medusa-modules/integration/descriptor#type-specific-fields) for every one of them.
+
+`required: true` rejects an option without a value. For every type except `string` and `json`, an empty string counts as no value, and so does `null` for every type. An option with a `default` never fails `required`, because the default fills the gap.
+
+The Admin form also marks required fields and doesn't submit them empty, except a secret that already has a stored value, which stays as it is when left blank.
+
+---
+
+## Option Rules
+
+When an option's built-in rules aren't enough, add a `validate` function to the option. It receives the option's value and a context with two members:
+
+- `options` – the configuration the rule is checked against, with the option's siblings from every section;
+- `addIssue({ message, path? })` – reports a problem. Without `path`, the issue points at the option itself.
+
+For example, a VAT code is required only while receipts are enabled:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import { defineIntegration } from "@gorgo/medusa-integration"
+import type { OptionValidateContext } from "@gorgo/medusa-integration"
+
+const requiredWhenReceipt = (value: number | undefined, ctx: OptionValidateContext) => {
+  if (ctx.options.useReceipt && value == null) {
+    ctx.addIssue({ message: "Required when receipts are enabled" })
+  }
+}
+
+const descriptor = defineIntegration({
+  category: "payment",
+  displayName: "my.name",
+  options: {
+    apiKey: {
+      type: "string",
+      control: "secret",
+      secret: true,
+      required: true,
+      label: "my.apiKey"
+    },
+    useReceipt: {
+      type: "boolean",
+      default: false,
+      label: "my.useReceipt"
+    },
+    vatCode: {
+      type: "enum",
+      values: [1, 2, 3, 4, 5, 6],
+      label: "my.vatCode",
+      visibleWhen: { field: "useReceipt", equals: true },
+      validate: requiredWhenReceipt,
+    },
+  },
+  sections: [
+    {
+      id: "credentials",
+      title: "my.credentials",
+      options: ["apiKey"]
+    },
+    {
+      id: "receipts",
+      title: "my.receipts",
+      options: ["useReceipt", "vatCode"]
+    },
+  ],
+})
+```
+
+`vatCode` isn't `required`, so a store that doesn't send receipts never has to fill it in. `visibleWhen` only hides the field in the Admin until `useReceipt` is on, and `requiredWhenReceipt` is what makes the module enforce it. The rule reads `useReceipt` from `ctx.options`. That object is the configuration with the submitted values on top, so the rule sees the switch whether or not it was saved together with `vatCode`.
+
+<Note type="default" title="">
+
+An option's rule runs on save only when that option is submitted. If `useReceipt` lived in another section, turning it on would save fine, and full validation would then keep the integration **Incomplete** until the store admin fills in `vatCode`.
+
+</Note>
+
+---
+
+## Cross-Section Rules
+
+A rule that compares several options and doesn't belong to any single one goes into the descriptor's own `validate`. It receives the whole assembled configuration and `addIssue`, which can point at any option through `path`:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  validate: (full, { addIssue }) => {
+    if (full.mode === "webhook" && !full.webhookSecret) {
+      addIssue({ path: ["webhookSecret"], message: "Required when mode is \"webhook\"" })
+    }
+  },
+})
+```
+
+This rule runs only during full validation. A save of the section holding `mode` succeeds either way, and the integration stays **Incomplete** while the rule reports an issue. When a rule is really about one option, put it on that option's `validate` instead, so the store admin learns about the problem when saving.
+
+---
+
+## What the Store Admin Sees
+
+A save that fails validation returns a `400` error, and the Admin shows its message in a notification. The message lists each problem as `<option id>: <message>`, for example `vatCode: Required when receipts are enabled`.
+
+A configuration that fails full validation shows the **Incomplete** status in the list and on the integration's page. The Admin doesn't list the issues of full validation, so write the messages of cross-section rules for the developer who tests the descriptor rather than for the store admin.
+
+---
+
+## Test Your Rules
+
+`@gorgo/medusa-integration` exports the module's own full validation, so a unit test can check the descriptor without a running Medusa application:
+
+- `collectValidationIssues(descriptor, config)` returns every issue as `{ path, message }`, and an empty array for a complete configuration;
+- `isDescriptorComplete(descriptor, config)` returns `true` when there are no issues.
+
+For example, a test for the descriptor above:
+
+```ts title="providers/integration-my/__tests__/descriptor.unit.spec.ts"
+import { collectValidationIssues } from "@gorgo/medusa-integration"
+import MyIntegrationProvider from "../services/my-integration"
+
+const descriptor = new MyIntegrationProvider().descriptor
+
+describe("my integration descriptor", () => {
+  it("requires a VAT code once receipts are on", () => {
+    expect(
+      collectValidationIssues(descriptor, { apiKey: "key", useReceipt: true })
+    ).toEqual([
+      { path: "vatCode", message: "Required when receipts are enabled" },
+    ])
+  })
+})
+```
+
+`collectValidationIssues` runs the same checks the module runs before options go live. It applies the descriptor's defaults, then runs the built-in rules, every option's `validate`, and the descriptor's `validate`. `path` joins the option id and any nested keys with dots.
+
+## References
+
+<CardList items={[
+  {
+    title: "Integration Provider Descriptor",
+    href: "/medusa-modules/integration/descriptor"
+  },
+  {
+    title: "How to Create an Integration Module Provider",
+    href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Reading Options",
+    href: "/medusa-modules/integration/reading-options"
+  }
+]}/>

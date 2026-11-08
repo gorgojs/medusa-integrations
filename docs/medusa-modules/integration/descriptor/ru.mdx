@@ -1,6 +1,6 @@
 ---
 title: "Дескриптор провайдера интеграций"
-description: "Полный справочник по дескриптору провайдера интеграций: defineIntegration, все поля параметров по типу, валидация, секреты и проверка соединения."
+description: "Полный справочник по дескриптору провайдера интеграций: defineIntegration и его свойства, секции, все поля параметров по типу, секреты и проверка соединения."
 ---
 
 # {frontmatter.title}
@@ -58,6 +58,151 @@ export class MyIntegration extends AbstractIntegrationProvider {
 
 Этот дескриптор объявляет `apiKey` и `sandbox`, сгруппированные в одну секцию `credentials`. `defineIntegration` сразу выбрасывает ошибку при загрузке в двух случаях: если секция ссылается на id параметра, которого нет в `options`, и если `values` параметра типа `enum` смешивает строки и числа.
 
+## Свойства дескриптора
+
+`defineIntegration` принимает следующие свойства:
+
+<MedusaTypeList
+  sectionTitle="defineIntegration"
+  types={[
+    {
+      name: "category",
+      type: "enum",
+      description: "Вид интеграции. По нему Admin группирует и фильтрует интеграции:\n- `payment`\n- `fulfillment`\n- `notification`\n- `search`\n- `content`\n- `analytics`\n- `authentication`\n- `erp`\n- `crm`\n- `pim`\n- `marketplace`\n- `feed`\n- `file_providers`\n- `other`",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "displayName",
+      type: "string",
+      description: "i18n-ключ названия интеграции. Название показывается в списке, на странице интеграции и в истории изменений.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "description",
+      type: "string",
+      description: "i18n-ключ краткого описания. Описание показывается в списке и под названием на странице интеграции.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "icon",
+      type: "string",
+      description: "Иконка интеграции, любое значение, которое принимает `<img src>`, например data URI или URL.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "docsUrl",
+      type: "string",
+      description: "Ссылка на документацию интеграции. Admin API возвращает её вместе с дескриптором, а Admin её не показывает.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "supportsMultipleInstances",
+      type: "boolean",
+      description: "Сообщает, что провайдер можно зарегистрировать несколько раз. Admin API возвращает его как `supports_multiple_instances`. Модуль в любом случае регистрирует каждую запись в `providers`.",
+      optional: true,
+      defaultValue: "false",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "preferredLayoutId",
+      type: "enum",
+      description: "Раскладка страницы интеграции в Admin:\n- `core:single-column`\n- `core:two-column`\nСекции с `column: \"side\"` отрисовываются только в раскладке с двумя колонками.",
+      optional: true,
+      defaultValue: "core:single-column",
+      expandable: false,
+      children: []
+    },
+    {
+      name: "options",
+      type: "object",
+      description: "Каталог параметров с идентификатором параметра в качестве ключа. Каждое значение описывает параметр, подробнее в разделе [Поля параметра](#поля-параметра).",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "sections",
+      type: "object[]",
+      description: "Секции настроек на странице интеграции в порядке показа, подробнее в разделе [Секции](#секции).",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "validate",
+      type: "function",
+      description: "Правило для всей собранной конфигурации, `(full, { addIssue }) => void`. Выполняется только при полной валидации, подробнее в руководстве [Валидация параметров интеграции](/medusa-modules/integration/validation#правила-для-нескольких-секций).",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "testConnection",
+      type: "function",
+      description: "Проверка соединения, `({ options }) => Promise<{ status, message? }>`, подробнее в разделе [Проверка соединения](#проверка-соединения).",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+`static identifier` провайдера в дескриптор не входит. Модуль добавляет его из класса провайдера, когда регистрирует провайдер.
+
+## Секции
+
+Каждый элемент `sections` становится карточкой на странице интеграции с собственным действием **Редактировать**. Секция ссылается на параметры по идентификатору, а параметр может не входить ни в одну секцию, например если его редактирует [собственная секция](/medusa-modules/integration/custom-sections).
+
+<MedusaTypeList
+  sectionTitle="Sections"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Идентификатор секции. Admin отправляет его как `section_id`, когда секция сохраняется.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "title",
+      type: "string",
+      description: "i18n-ключ заголовка секции.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "options",
+      type: "string[]",
+      description: "Идентификаторы параметров, которые показывает секция, в порядке показа. Каждый идентификатор должен быть в `options`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "column",
+      type: "enum",
+      description: "Колонка, в которой отрисовывается секция:\n- `main`\n- `side`\nБоковая колонка есть только при `preferredLayoutId: \"core:two-column\"`.",
+      optional: true,
+      defaultValue: "main",
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
 ## Поля параметра
 
 Каждый параметр в `options` представляет собой объект вида `{ type, ... }`. Поле `type` определяет доступные значения и остальные поля, общие для всех типов:
@@ -92,7 +237,7 @@ export class MyIntegration extends AbstractIntegrationProvider {
     {
       name: "default",
       type: "string | number | boolean | unknown",
-      description: "Значение по умолчанию; тип соответствует `type` параметра. Наличие `default` делает параметр фактически всегда присутствующим в итоговых параметрах, даже если `required` не задан.",
+      description: "Значение по умолчанию; тип соответствует `type` параметра. Наличие `default` делает параметр всегда присутствующим в итоговых параметрах, даже если `required` не задан. С него начинается форма редактирования. Значение по умолчанию параметра с `secret` в браузер не попадает.",
       optional: true,
       expandable: false,
       children: []
@@ -134,7 +279,7 @@ export class MyIntegration extends AbstractIntegrationProvider {
     {
       name: "readonly",
       type: "boolean",
-      description: "Рендерит поле как нередактируемое в Admin.",
+      description: "Показывает поле в Admin без возможности редактирования, с сохранённым значением или `default`. Admin API это ограничение не проверяет.",
       optional: true,
       expandable: false,
       children: []
@@ -150,7 +295,7 @@ export class MyIntegration extends AbstractIntegrationProvider {
     {
       name: "validate",
       type: "function",
-      description: "Кастомная проверка значения этого параметра, вызывается вместе со встроенной схемой типа.",
+      description: "Собственная проверка, `(value, { options, addIssue }) => void`, выполняется после встроенных правил типа. Подробнее в руководстве [Валидация параметров интеграции](/medusa-modules/integration/validation#правила-параметра).",
       optional: true,
       expandable: false,
       children: []
@@ -273,20 +418,7 @@ export class MyIntegration extends AbstractIntegrationProvider {
 
 Модуль генерирует CRUD API из дескриптора и валидирует каждую запись. Валидация покрывает правила на уровне отдельного параметра (типы, диапазоны, паттерны) вместе с правилами между секциями, охватывающими всю конфигурацию. Ничего писать под каждую интеграцию не нужно.
 
-Правила между секциями объявляются через `validate` дескриптора. В отличие от `validate` отдельного параметра, он получает всю собранную конфигурацию и может пометить проблемой любое поле:
-
-```ts title="providers/integration-my/services/my-integration.ts"
-const descriptor = defineIntegration({
-  // ...
-  validate: (full, { addIssue }) => {
-    if (full.mode === "webhook" && !full.webhookSecret) {
-      addIssue({ path: ["webhookSecret"], message: "Required when mode is \"webhook\"" })
-    }
-  },
-})
-```
-
-В отличие от `required` или `validate` конкретного параметра, это правило запускается только при полной валидации (проверке готовности интеграции к включению), а не при сохранении отдельной секции.
+Когда срабатывает каждое правило и как тестировать правила дескриптора, читайте в руководстве [Валидация параметров интеграции](/medusa-modules/integration/validation), а сгенерированные роуты описаны в справочнике [API-роуты Admin](/medusa-modules/integration/admin-api).
 
 ## Включена и заполнена
 
@@ -296,7 +428,7 @@ const descriptor = defineIntegration({
 
 Параметры с пометкой `secret` шифруются при хранении алгоритмом AES-256-GCM и никогда не попадают в браузер. CRUD API маскирует их и сообщает лишь, задано значение или нет. Сохранение секрета пустым оставляет прежнее хранимое значение, а не стирает его.
 
-Значения секретных параметров не попадают и в [историю изменений](/medusa-modules/integration/manage-integrations#история-изменений). Для них история показывает только, что значение задано, заменено или удалено. Значения остальных параметров она хранит как есть.
+Значения секретных параметров не попадают и в [историю изменений](/medusa-modules/integration/change-history). Для них история показывает только, что значение задано, заменено или удалено. Значения остальных параметров она хранит как есть.
 
 <Note type="warning">
 
@@ -308,7 +440,7 @@ const descriptor = defineIntegration({
 
 ## Проверка соединения
 
-Дескриптор может объявить необязательную проверку соединения, которая сверяет учётные данные со сторонним сервисом. Администраторы запускают её по требованию, а запланированная задача ежедневно перепроверяет настроенные интеграции.
+Дескриптор может объявить необязательную проверку соединения, которая сверяет учётные данные со сторонним сервисом. Администраторы магазина запускают её по требованию, а запланированная задача раз в сутки, в 03:00 по часам сервера, заново проверяет каждую включённую интеграцию.
 
 Добавьте `testConnection` в дескриптор. Он получает уже итоговые (расшифрованные) параметры и возвращает статус:
 
@@ -329,11 +461,13 @@ const descriptor = defineIntegration({
 })
 ```
 
-`status` принимает одно из значений: `passed`, `failed` или `skipped`; необязательное `message` отображается в Admin рядом с результатом проверки.
+`status` принимает одно из значений `passed`, `failed` или `skipped`, а необязательное `message` Admin показывает администратору магазина рядом с результатом проверки. Модуль сохраняет статус в `last_test_status` интеграции и отправляет [событие `integration.tested`](/medusa-modules/integration/events).
+
+Проверка выполняется только с параметрами, которые удалось получить. Если интеграция выключена или не завершена, модуль сообщает `failed` с текстом `Not configured` и `testConnection` не вызывает. Если `testConnection` выбрасывает исключение, модуль сообщает `failed` с текстом ошибки.
 
 ## Получение параметров во время выполнения
 
-Потребители читают типизированные, проверенные и расшифрованные параметры с применёнными значениями по умолчанию из дескриптора. Незаполненная или выключенная интеграция возвращает пустой результат, а не частичные данные. Итоговые параметры кэшируются ненадолго и обновляются при каждом изменении конфигурации.
+Потребители читают типизированные, проверенные и расшифрованные параметры с применёнными значениями по умолчанию из дескриптора. Незаполненная или выключенная интеграция возвращает пустой результат, а не частичные данные. Способы чтения параметров и то, как долго модуль их кэширует, описаны в руководстве [Чтение параметров](/medusa-modules/integration/reading-options).
 
 ## Материалы
 
@@ -343,8 +477,12 @@ const descriptor = defineIntegration({
     href: "/medusa-modules/integration/concepts"
   },
   {
-    title: "Создание провайдера Модуля интеграций",
+    title: "Как создать провайдер Модуля интеграций",
     href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Валидация параметров интеграции",
+    href: "/medusa-modules/integration/validation"
   },
   {
     title: "Параметры Модуля интеграций",

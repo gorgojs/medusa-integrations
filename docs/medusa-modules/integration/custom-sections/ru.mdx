@@ -1,0 +1,192 @@
+---
+title: "Собственные секции на виджетах"
+description: "Узнайте, как добавить на страницу интеграции в Medusa Admin собственную секцию на виджете для параметров, которые сгенерированные секции редактировать не умеют."
+---
+
+# {frontmatter.title}
+
+В этом руководстве вы узнаете, как добавить на страницу интеграции в Medusa Admin собственную секцию на виджете.
+
+## Когда нужна собственная секция
+
+Модуль генерирует секцию для каждой группы параметров в дескрипторе, по одному элементу управления на параметр. Этого хватает для скалярных настроек, например ключа, переключателя или выбора из списка. Для параметра со списком записей, например нескольких вебхуков или подключений служб доставки, подходящего элемента управления нет, поэтому для него нужна собственная секция.
+
+Собственная секция строится как обычный admin-виджет Medusa на `defineWidgetConfig`. Модуль отрисовывает его на странице интеграции рядом со сгенерированными секциями, и администратор магазина может перемещать его, как любую другую секцию.
+
+## Пример
+
+[Провайдер доставки ApiShip](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/fulfillment-apiship) хранит подключения служб доставки в параметре типа `json` и редактирует их в собственном виджете `src/admin/widgets/apiship-integration-main.tsx`. В шагах ниже вы построите такой же виджет, только проще, со списком адресов вебхуков.
+
+---
+
+## Шаг 1: Объявите параметр
+
+Объявите в дескрипторе параметр, которым управляет виджет, и не включайте его в `sections`, чтобы его не показывала ни одна сгенерированная секция:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+const descriptor = defineIntegration({
+  // ...
+  options: {
+    // ...
+    webhooks: {
+      type: "json",
+      default: [],
+      label: "my.webhooks.title",
+      validate: (value, { addIssue }) => {
+        if (!Array.isArray(value) || !value.every((url) => typeof url === "string")) {
+          addIssue({ message: "Expected a list of URLs" })
+        }
+      },
+    },
+  },
+})
+```
+
+Значения типа `json` модуль проверяет только через собственный `validate` параметра, поэтому корректность списка обеспечивает правило выше. Параметр по-прежнему входит в дескриптор, поэтому его значение проходит валидацию, может быть помечено `secret`, отдаётся во время выполнения вместе с остальными и попадает в [историю изменений](/medusa-modules/integration/change-history).
+
+## Шаг 2: Объявите зону
+
+На странице интеграции модуль предоставляет две зоны внедрения, названные по `static identifier` провайдера:
+
+- `gorgo.integration.<identifier>` – основная колонка;
+- `gorgo.integration.<identifier>.side` – боковая колонка, которая отрисовывается, только если дескриптор задаёт `preferredLayoutId: "core:two-column"`.
+
+Medusa собирает виджет и в собственной зоне, но типы `defineWidgetConfig` знают только её зоны. Объявите свои, дополнив `InjectionZoneRegistry` в файле `index.d.ts` в корне плагина:
+
+```ts title="index.d.ts"
+export {}
+
+declare module "@medusajs/admin-shared" {
+  interface InjectionZoneRegistry {
+    "gorgo.integration.my": true,
+    "gorgo.integration.my.side": true
+  }
+}
+```
+
+Затем опубликуйте этот файл вместе с плагином и укажите его как типы плагина в `package.json`:
+
+```json title="package.json"
+{
+  "files": [
+    ".medusa/server",
+    "index.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    }
+  }
+}
+```
+
+Остальные записи `exports` оставьте как есть. После этого `defineWidgetConfig` примет `"gorgo.integration.my"`, а проект, который установит ваш плагин, увидит те же зоны. Полный список зон смотрите в справочнике [Зоны виджетов в Admin](/medusa-modules/integration/admin-widget-zones).
+
+## Шаг 3: Создайте виджет
+
+Создайте виджет в директории `src/admin/widgets` плагина. Он читает и записывает параметр через [API-роуты Admin](/medusa-modules/integration/admin-api) самого модуля:
+
+```tsx title="src/admin/widgets/my-integration-webhooks.tsx"
+import { defineWidgetConfig } from "@medusajs/admin-sdk"
+import { Button, Container, Heading, Input, Text, toast } from "@medusajs/ui"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import type { IntegrationSectionData } from "@gorgo/medusa-integration"
+import { sdk } from "../lib/sdk"
+
+type IntegrationResponse = { integration: { values: Record<string, unknown> } | null }
+
+const MyWebhooksWidget = ({ data }: { data: IntegrationSectionData }) => {
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const queryKey = ["my-webhooks", data.providerId]
+  const [url, setUrl] = useState("")
+
+  const { data: stored } = useQuery({
+    queryKey,
+    queryFn: () => sdk.client.fetch<IntegrationResponse>(`/admin/integrations/${data.providerId}`),
+  })
+  const webhooks = (stored?.integration?.values.webhooks as string[] | undefined) ?? []
+
+  const save = useMutation({
+    mutationFn: (next: string[]) =>
+      sdk.client.fetch(`/admin/integrations/${data.providerId}`, {
+        method: "POST",
+        body: { values: { webhooks: next } },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey })
+      setUrl("")
+    },
+    onError: (error: Error) => toast.error(error.message),
+  })
+
+  return (
+    <Container className="divide-y p-0">
+      <div className="px-6 py-4">
+        <Heading level="h2">{t("my.webhooks.title")}</Heading>
+      </div>
+      {webhooks.map((webhook) => (
+        <Text key={webhook} size="small" className="px-6 py-4">
+          {webhook}
+        </Text>
+      ))}
+      <div className="flex gap-x-2 px-6 py-4">
+        <Input value={url} onChange={(event) => setUrl(event.target.value)} />
+        <Button size="small" variant="secondary" onClick={() => save.mutate([...webhooks, url])}>
+          {t("my.webhooks.add")}
+        </Button>
+      </div>
+    </Container>
+  )
+}
+
+export const config = defineWidgetConfig({
+  zone: "gorgo.integration.my",
+})
+
+export default MyWebhooksWidget
+```
+
+Виджет получает от страницы `data` типа `IntegrationSectionData`:
+
+- `providerId` – ключ инстанса, например `int_my` или `int_my_eu`. Одна зона обслуживает все инстансы провайдера, поэтому передавайте `providerId` в каждый запрос.
+- `identifier` – `static identifier` провайдера.
+- `values` – сохранённые параметры инстанса без секретов.
+- `isComplete` – проходит ли сохранённая конфигурация полную валидацию. Используйте его, чтобы блокировать действия, которым нужны рабочие настройки.
+
+`data.values` приходит из собственного запроса страницы и не обновляется после сохранения в виджете. Поэтому виджет хранит свою копию интеграции под своим ключом запроса и обновляет её после каждого сохранения.
+
+В запросе `POST` нет `section_id`, поэтому модуль записывает ровно те отправленные параметры, которые объявлены в дескрипторе, и отбрасывает остальные ключи. Он проверяет значения, шифрует секреты, отправляет событие `integration.updated`, которое сбрасывает кэш параметров, и записывает изменение в историю с текущим пользователем Admin в качестве автора.
+
+`sdk` здесь клиент JS SDK из `src/admin/lib/sdk.ts`, настроенный так же, как в руководствах Medusa по кастомизации панели администратора.
+
+<Note type="default" title="">
+
+Секреты не попадают в браузер ни через `data`, ни через `GET /admin/integrations/:provider_id`. Если виджету нужен секрет или операции над отдельными записями со своими проверками, добавьте собственный API-роут Admin и запускайте из него [`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow). Передайте в `actor` автора запроса, как показано на странице [История изменений настроек](/medusa-modules/integration/change-history#кто-внёс-изменение), чтобы история сохранила правильного автора.
+
+</Note>
+
+Метки виджета задаются i18n-ключами, как и в дескрипторе. Где находятся их переводы, читайте в руководстве [Локализация интеграции](/medusa-modules/integration/localization).
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Зоны виджетов в Admin",
+    href: "/medusa-modules/integration/admin-widget-zones"
+  },
+  {
+    title: "API-роуты Admin",
+    href: "/medusa-modules/integration/admin-api"
+  },
+  {
+    title: "Локализация интеграции",
+    href: "/medusa-modules/integration/localization"
+  },
+  {
+    title: "Миграция существующего провайдера Medusa на Модуль интеграций",
+    href: "/medusa-modules/integration/migrate-provider-to-integration-module"
+  }
+]}/>

@@ -67,6 +67,8 @@ The Integration Module accepts a `providers` option, where you configure the pro
 
 When the Medusa application starts, the Integration Module registers every provider listed in its `providers` option. For each entry, it combines the provider class's `static identifier` with the entry's own `id` into the key `int_<identifier>[_<id>]`, the same format used for that instance's `provider_id` in the database, then constructs the provider with `new ProviderClass(container, options, instanceId)`.
 
+Once every provider is registered, the module logs a warning for each option whose name looks like a credential but isn't marked `secret: true`, see [Secrets and Encryption](/medusa-modules/integration/descriptor#secrets-and-encryption).
+
 ### The `Integration` Data Model
 
 A registered Integration Module Provider's instance is represented by the `Integration` data model in the Medusa application.
@@ -77,18 +79,13 @@ The model's own `id` is just its internal record id, generated like on any other
 
 </Note>
 
-| Property | Description |
-| --- | --- |
-| `provider_id` | The instance's key, `int_<identifier>[_<id>]`. Unique. The CRUD API, the resolver, and the Admin all look up a row by this column. |
-| `category` | The integration's category, for example `payment` or `fulfillment`, set from the descriptor's `category`. |
-| `title` | The integration's display title, or `null` when the descriptor doesn't set one. |
-| `options` | The integration's non-secret settings, as saved by the store admin. |
-| `is_enabled` | `true` by default. Toggled from the Admin, see [Enable and Disable an Integration](/medusa-modules/integration/manage-integrations#enable-and-disable-an-integration). |
-| `last_test_status` | The result of the last connection test, `passed`, `failed`, or `skipped`, or `null` if it was never run. |
+The record holds the instance's `provider_id`, its `category`, the store admin's settings in `options` with secret options encrypted, the `is_enabled` flag, and the result of the last connection test. The module creates the record on the first save of any section, so a registered provider without a record shows as **Not configured** in the Admin. See [Integration Module Data Models](/medusa-modules/integration/data-models#integration) for every property.
+
+The change history of the instance lives in a separate data model, `IntegrationChange`, which isn't related to `Integration` and outlives it. See [Settings Change History](/medusa-modules/integration/change-history).
 
 ### Removing an Integration Module Provider
 
-You can remove a registered Integration Module Provider by deleting its entry from the `providers` option in `medusa-config.ts`. Unlike disabling an integration from the Admin, this doesn't touch the stored row. It only stops the provider from being registered, so the module can no longer look up its `Integration` row by `provider_id`. The integration disappears from the list in the Admin, and its stored data becomes unreachable through the Integration Module's own admin routes.
+You can remove a registered Integration Module Provider by deleting its entry from the `providers` option in `medusa-config.ts`. Unlike disabling an integration from the Admin, this doesn't touch the stored row. It only stops the provider from being registered, so the module can no longer look up its `Integration` row by `provider_id`. The integration disappears from the list in the Admin, and its stored data becomes unreachable through the Integration Module's own admin routes. Its records stay in the change history of all integrations.
 
 <Note type="warning">
 
@@ -96,7 +93,7 @@ Delete the integration from the Admin before removing the provider from `medusa-
 
 </Note>
 
-To stop a provider from being used while keeping its configuration intact and easy to bring back, disable it from the Admin instead of removing it from `medusa-config.ts`. See [Enable and Disable an Integration](/medusa-modules/integration/manage-integrations#enable-and-disable-an-integration).
+To stop a provider from being used while keeping its configuration intact, so you can bring it back later, disable it from the Admin instead of removing it from `medusa-config.ts`. See [Enable and Disable an Integration](/medusa-modules/integration/manage-integrations#enable-and-disable-an-integration).
 
 ## References
 
@@ -112,6 +109,10 @@ To stop a provider from being used while keeping its configuration intact and ea
   {
     title: "How to Create an Integration Module Provider",
     href: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    title: "Integration Module Data Models",
+    href: "/medusa-modules/integration/data-models"
   },
   {
     title: "Reading Options",

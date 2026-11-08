@@ -1,0 +1,284 @@
+---
+title: "API-роуты Admin"
+description: "Справочник по API-роутам Admin, которые Модуль интеграций добавляет в /admin/integrations: интеграции, история изменений, каталог и лицензии."
+---
+
+# {frontmatter.title}
+
+В этом справочнике перечислены API-роуты, которые Модуль интеграций добавляет в `/admin/integrations`. Medusa Admin пользуется ими на всех страницах интеграций, а ваши скрипты и [собственные виджеты](/medusa-modules/integration/custom-sections) тоже могут ими пользоваться.
+
+Как и любые роуты Medusa в `/admin`, они требуют аутентифицированного пользователя Admin или секретный ключ API. Роуты с `:provider_id` отвечают `404`, если под этим ключом не зарегистрирован ни один провайдер.
+
+## Интеграции
+
+| Метод | Путь | Что делает |
+| --- | --- | --- |
+| `GET` | `/admin/integrations` | Возвращает все зарегистрированные инстансы с их состоянием. |
+| `GET` | `/admin/integrations/:provider_id` | Возвращает дескриптор инстанса, его сохранённые настройки и данные пакета. |
+| `POST` | `/admin/integrations/:provider_id` | Сохраняет значения параметров через [`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow). |
+| `DELETE` | `/admin/integrations/:provider_id` | Удаляет сохранённые настройки через [`deleteIntegrationWorkflow`](/medusa-modules/integration/workflows#deleteintegrationworkflow). |
+| `POST` | `/admin/integrations/:provider_id/enable` | Включает или выключает интеграцию через [`setIntegrationEnabledWorkflow`](/medusa-modules/integration/workflows#setintegrationenabledworkflow). |
+| `POST` | `/admin/integrations/:provider_id/test-connection` | Запускает проверку соединения через [`testIntegrationConnectionWorkflow`](/medusa-modules/integration/workflows#testintegrationconnectionworkflow). |
+
+Роуты, которые меняют настройки, передают в воркфлоу аутентифицированного автора, а также IP-адрес, клиент и ID запроса, чтобы в [истории изменений](/medusa-modules/integration/change-history) был указан автор.
+
+### Список интеграций
+
+`GET /admin/integrations` принимает такие параметры запроса:
+
+- `q` – ищет по идентификатору провайдера или инстанса. Переведённые названия Admin ищет на своей стороне.
+- `category` – одна категория, например `payment`.
+- `limit` – от 1 до 1000, по умолчанию `20`.
+- `offset` – по умолчанию `0`.
+
+Роут возвращает `{ integrations, count, limit, offset, categories }`. Каждый элемент `integrations` содержит `provider_id`, `identifier`, `instance_id` и `category` инстанса, i18n-ключи `display_name` и `description`, `icon`, данные пакета `version`, `author` и `author_url`, флаги `supports_multiple_instances`, `has_test_connection`, `is_configured`, `is_enabled` и `is_complete`, а также `last_test_status`. `categories` перечисляет категории всех зарегистрированных инстансов независимо от фильтров.
+
+### Сохранение значений параметров
+
+`POST /admin/integrations/:provider_id` принимает тело с такими полями:
+
+- `values` – значения параметров для сохранения, где ключом служит идентификатор параметра.
+- `section_id` – необязательный. С ним записываются только параметры этой секции. Без него записываются все отправленные ключи, которые объявлены в дескрипторе.
+- `title` – необязательный. Название сохранённой записи или `null`, чтобы очистить его.
+
+Например, чтобы сохранить секцию с учётными данными интеграции `int_my`:
+
+```bash
+curl -X POST "http://localhost:9000/admin/integrations/int_my" \
+  -H "Authorization: Bearer {token}" \
+  -H "Content-Type: application/json" \
+  --data '{ "section_id": "credentials", "values": { "apiKey": "sk_test_123", "sandbox": true } }'
+```
+
+В ответ приходит `{ integration }`, сохранённая запись без секретов. `apiKey` из запроса упоминается в ней только по имени, в `configured_secrets`. Если значение не проходит валидацию, роут отвечает `400`, а в сообщении каждая проблема записана как `<идентификатор параметра>: <сообщение>`.
+
+### Объект интеграции
+
+`GET`, `POST` и роут `enable` возвращают сохранённую запись в таком виде. Значения секретов сервер никогда не отдаёт.
+
+<MedusaTypeList
+  sectionTitle="integration"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Собственный идентификатор записи, а не ключ инстанса.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "provider_id",
+      type: "string",
+      description: "Ключ инстанса, `int_<identifier>[_<instanceId>]`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "category",
+      type: "string",
+      description: "Категория интеграции из дескриптора.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "title",
+      type: "string | null",
+      description: "Название записи, `null`, если его не задали через API.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "is_enabled",
+      type: "boolean",
+      description: "Включена ли интеграция.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "values",
+      type: "Record<string, unknown>",
+      description: "Сохранённые значения всех несекретных параметров.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "configured_secrets",
+      type: "string[]",
+      description: "Идентификаторы секретных параметров, у которых есть сохранённое значение.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "last_test_status",
+      type: "string | null",
+      description: "Статус последней проверки соединения, `passed`, `failed` или `skipped`, либо `null`, если проверка не запускалась.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+`GET /admin/integrations/:provider_id` оборачивает её в `{ descriptor, integration, is_complete, version, author, author_url }`. `integration` равно `null` до первого сохранения, а `descriptor` содержит дескриптор, подготовленный для Admin, с секциями, полями и раскладкой.
+
+---
+
+## История изменений
+
+| Метод | Путь | Что делает |
+| --- | --- | --- |
+| `GET` | `/admin/integrations/changes` | Возвращает изменения всех интеграций. |
+| `GET` | `/admin/integrations/:provider_id/changes` | Возвращает изменения одной интеграции. |
+| `GET` | `/admin/integrations/changes/:id` | Возвращает одно изменение. |
+| `GET` | `/admin/integrations/changes/actors` | Возвращает авторов изменений для фильтра по автору. |
+| `GET` | `/admin/integrations/changes/fields` | Возвращает параметры, которые упоминаются в истории, для поиска. |
+
+История доступна только для чтения, и эти роуты принимают только `GET`.
+
+### Список изменений
+
+Оба роута со списком принимают такие параметры запроса:
+
+- `limit` – от 1 до 100, по умолчанию `20`.
+- `offset` – по умолчанию `0`.
+- `order` – поле для сортировки, с `-` впереди для обратного порядка. По умолчанию `-created_at`.
+- `provider_id` – один или несколько ключей инстансов. Роут одной интеграции его игнорирует.
+- `change_type` – одно или несколько значений из `created`, `updated`, `enabled`, `disabled` и `deleted`.
+- `actor_id` – один или несколько идентификаторов пользователей. `system` обозначает все изменения, сделанные не пользователем Admin.
+- `created_at` – диапазон дат с операторами вроде `$gte` и `$lte`.
+- `q` – ищет по email автора или названию ключа API и по `provider_id`.
+- `q_fields`, `q_providers` – вместе с `q` находят ещё и изменения, которые затронули один из этих идентификаторов или ключей меток параметров или относятся к одному из этих инстансов. Admin заполняет их тем, что совпало с `q` в переведённых названиях.
+
+Роуты возвращают `{ integration_changes, count, offset, limit }`, по умолчанию сначала новые.
+
+### Объект изменения
+
+<MedusaTypeList
+  sectionTitle="integration_change"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Идентификатор изменения.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "created_at",
+      type: "string",
+      description: "Время изменения.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "provider_id",
+      type: "string",
+      description: "Ключ инстанса интеграции, который изменился.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "change_type",
+      type: "string",
+      description: "Одно из значений `created`, `updated`, `enabled`, `disabled` или `deleted`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_type",
+      type: "string",
+      description: "Тип автора, например `user`, `api-key` или `system`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_id",
+      type: "string | null",
+      description: "Идентификатор автора, `null` для изменения без него.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "actor_label",
+      type: "string | null",
+      description: "Email пользователя или название ключа API на момент изменения.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "diff",
+      type: "object[]",
+      description: "Изменённые поля. Обычный параметр выглядит как `{ field, label?, from, to, truncated? }`, а секретный как `{ field, label?, secret: true, op }`, где `op` равно `set`, `replaced`, `removed` или `hidden`. Изменение названия записи имеет `field` со значением `@title`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "ip",
+      type: "string | null",
+      description: "IP-адрес запроса. Его возвращает `GET /admin/integrations/changes/:id`, а роуты со списком только по запросу через `fields`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "user_agent",
+      type: "string | null",
+      description: "Клиент, который отправил запрос. Его возвращает `GET /admin/integrations/changes/:id`, а роуты со списком только по запросу через `fields`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "request_id",
+      type: "string | null",
+      description: "ID запроса. Его возвращает `GET /admin/integrations/changes/:id`, а роуты со списком только по запросу через `fields`.",
+      optional: true,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+Все роуты сверяют `diff` с текущим дескриптором. Значение параметра, который стал секретным после записи изменения, возвращается как `{ secret: true, op: "hidden" }`. Изменения провайдера, который больше не зарегистрирован, возвращаются в том виде, в каком были сохранены.
+
+---
+
+## Каталог и лицензии
+
+| Метод | Путь | Что делает |
+| --- | --- | --- |
+| `GET` | `/admin/integrations/catalog` | Возвращает [каталог интеграций](/medusa-modules/integration/browse-integrations) с `installed` и `provider_id` для каждой записи, зарегистрированной в проекте. |
+| `GET` | `/admin/integrations/license-status` | Возвращает последний результат проверки лицензии каждой платной интеграции Gorgo в виде `{ packages }`. |
+| `POST` | `/admin/integrations/license-status/recheck` | Сразу проверяет лицензии и возвращает свежие результаты в том же виде. |
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Воркфлоу Модуля интеграций",
+    href: "/medusa-modules/integration/workflows"
+  },
+  {
+    title: "История изменений настроек",
+    href: "/medusa-modules/integration/change-history"
+  },
+  {
+    title: "Собственные секции на виджетах",
+    href: "/medusa-modules/integration/custom-sections"
+  }
+]}/>

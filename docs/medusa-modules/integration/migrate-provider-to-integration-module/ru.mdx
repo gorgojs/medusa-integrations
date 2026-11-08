@@ -258,7 +258,7 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
 // ...
 import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
 import { ProviderKeys } from "../../../types"
-import { ApishipOptions } from "../../integration-apiship/services/apiship-integration"
+import type { ApishipIntegrationOptions } from "../../integration-apiship/services/apiship-integration"
 
 
 class ApishipBase extends AbstractFulfillmentProviderService {
@@ -270,8 +270,8 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     this.instanceId_ = (options?.id as string | undefined) ?? null
   }
 
-  private async getApishipOptions_(): Promise<ApishipOptions> {
-    const options = await resolveIntegrationOptions<ApishipOptions>({
+  private async getApishipOptions_(): Promise<ApishipIntegrationOptions> {
+    const options = await resolveIntegrationOptions<ApishipIntegrationOptions>({
       identifier: ProviderKeys.APISHIP,
       instance_id: this.instanceId_,
     })
@@ -286,9 +286,9 @@ class ApishipBase extends AbstractFulfillmentProviderService {
 
 ## Шаг 4: Перенесите собственный UI
 
-Раньше у ApiShip была своя страница настроек в Admin. Теперь эту страницу интеграции формирует Модуль интеграции по дескриптору: доступы, оплата и НДС, габариты товара и отправитель генерируются как секции.
+Раньше у ApiShip была своя страница настроек в Admin. Теперь эту страницу интеграции формирует Модуль интеграций по дескриптору: доступы, оплата и НДС, габариты товара и отправитель генерируются как секции.
 
-Список подключений к курьерским службам встраивается в ту же страницу виджетом через зону расширения `gorgo.integration.apiship.main.after`. Виджет получает ключ инстанса от Модуля интеграций через `data.providerId` и передаёт его во все свои хуки и запросы:
+Список подключений к курьерским службам встраивается в ту же страницу виджетом через зону внедрения `gorgo.integration.apiship`, которая отрисовывает его в основной колонке под сгенерированными секциями. Какие есть зоны и как объявить их для TypeScript, читайте в руководстве [Собственные секции на виджетах](/medusa-modules/integration/custom-sections). Виджет получает ключ инстанса от Модуля интеграций через `data.providerId` и передаёт его во все свои хуки и запросы:
 
 ```tsx title="admin/widgets/apiship-integration-main.tsx"
 // ...
@@ -313,7 +313,7 @@ const ApishipIntegrationWidget = ({ data }: { data: IntegrationSectionData }) =>
 
 export const config = defineWidgetConfig({
   // зона расширения модуля: виджет встанет под сгенерированными секциями
-  zone: "gorgo.integration.apiship.main.after",
+  zone: "gorgo.integration.apiship",
 })
 
 export default ApishipIntegrationWidget
@@ -327,7 +327,7 @@ export default ApishipIntegrationWidget
 
 </Note>
 
-Записывать значения параметров нужно так же. Соберите новое значение своего `json`-параметра и передайте в воркфлоу `upsertIntegrationWorkflow` Модуля интеграций. Он ограничит запись объявленными параметрами, объединит их с сохранёнными значениями, проверит их, зашифрует секреты и отправит событие `integration.updated`, чтобы сбросить кэш:
+Записывать значения параметров нужно так же. Соберите новое значение своего `json`-параметра и передайте в воркфлоу [`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow) Модуля интеграций. Он ограничит запись объявленными параметрами, объединит их с сохранёнными значениями, проверит их, зашифрует секреты и отправит событие `integration.updated`, чтобы сбросить кэш:
 
 ```ts title="workflows/update-apiship-options.ts"
 import { upsertIntegrationWorkflow } from "@gorgo/medusa-integration"
@@ -342,7 +342,7 @@ upsertIntegrationWorkflow.runAsStep({
 })
 ```
 
-Этот же воркфлоу записывает изменение в [историю изменений](/medusa-modules/integration/manage-integrations#история-изменений). В примере у входа нет поля `actor`, поэтому автором записи будет **Система**. Если запись делается по действию пользователя в Medusa Admin, передайте во входе `actor` с `type` и `id` из `req.auth_context` вашего роута, и автором в истории станет этот пользователь.
+Этот же воркфлоу записывает изменение в [историю изменений](/medusa-modules/integration/change-history#кто-внёс-изменение). В примере у входа нет поля `actor`, поэтому автором записи будет **Система**. Если запись делается по действию пользователя в Medusa Admin, передайте во входе `actor` с `type` и `id` из `req.auth_context` вашего роута, и автором в истории станет этот пользователь.
 
 <Note type="warning">
 
@@ -368,7 +368,7 @@ upsertIntegrationWorkflow.runAsStep({
     href: "/medusa-modules/integration/concepts"
   },
   {
-    title: "Создание провайдера Модуля интеграций",
+    title: "Как создать провайдер Модуля интеграций",
     href: "/medusa-modules/integration/create-integration-module-provider"
   },
   {

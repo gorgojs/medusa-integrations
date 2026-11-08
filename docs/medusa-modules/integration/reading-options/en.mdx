@@ -88,6 +88,12 @@ if (!options) {
 
 With `{ optional: true }`, a missing, disabled, or incomplete integration resolves to `null` here instead of throwing, which is what the `if (!options)` check above is guarding against.
 
+<Note type="default" title="">
+
+`{ optional: true }` covers an integration that isn't set up yet, not one that isn't registered. When no provider is registered under the identifier and instance you pass, the helper throws in either case, since that points to a mistake in `medusa-config.ts`, such as a wrong `id`.
+
+</Note>
+
 ## The `getResolvedOptions` Service Method
 
 When your code already has the container, resolve the module and call `getResolvedOptions` directly. This suits API routes, subscribers, scheduled jobs, and loaders, and no workflow is involved. For example, in an API route:
@@ -109,7 +115,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 }
 ```
 
-`getResolvedOptions(identifier, instanceId?)` returns `ResolvedOptions | null`. A value is `{ options, meta }`, where `meta` holds `provider_id`, `category`, and `is_enabled`. A `null` result means the integration is not configured, disabled, or incomplete.
+`getResolvedOptions(identifier, instanceId?)` returns `ResolvedOptions | null`. A value is `{ options, meta }`, where `meta` holds `provider_id`, `category`, and `is_enabled`. A `null` result means the integration is not configured, disabled, or incomplete. When no provider is registered under that identifier and instance, the method throws instead. See [Integration Module Service](/medusa-modules/integration/service) for the module's other methods.
 
 ## Resolving Inside a Workflow
 
@@ -141,7 +147,15 @@ If the integration is not configured, disabled, or incomplete, it resolves to `n
 
 ## Caching and Freshness
 
-Resolved options are cached in memory for a short time, so hot paths do not re-read and decrypt on every call. The cache is invalidated whenever the integration changes, whether it is saved, enabled, disabled, or deleted, so consumers pick up new configuration without a redeploy.
+Resolved options are cached in the memory of each Medusa process for up to 60 seconds, so hot paths do not re-read and decrypt on every call. A disabled or incomplete integration is cached too, as `null`.
+
+Whenever the integration changes, whether it is saved, enabled, disabled, or deleted, the module emits the [`integration.updated` event](/medusa-modules/integration/events), and its subscriber clears the cached entry. Consumers pick up new configuration without a redeploy.
+
+<Note type="default" title="">
+
+Medusa runs subscribers only in the `shared` and `worker` [worker modes](https://docs.medusajs.com/learn/production/worker-mode). When you deploy the server and the worker as separate processes, the event clears the cache in the worker, and a server process picks up the change once its cached entry expires, within 60 seconds.
+
+</Note>
 
 ## References
 
@@ -151,11 +165,19 @@ Resolved options are cached in memory for a short time, so hot paths do not re-r
     href: "/medusa-modules/integration/concepts"
   },
   {
-    title: "Create an Integration Module Provider",
+    title: "How to Create an Integration Module Provider",
     href: "/medusa-modules/integration/create-integration-module-provider"
   },
   {
     title: "Migrate an Existing Medusa Provider to the Integration Module",
     href: "/medusa-modules/integration/migrate-provider-to-integration-module"
+  },
+  {
+    title: "Integration Module Service",
+    href: "/medusa-modules/integration/service"
+  },
+  {
+    title: "Integration Module Workflows",
+    href: "/medusa-modules/integration/workflows"
   }
 ]}/>

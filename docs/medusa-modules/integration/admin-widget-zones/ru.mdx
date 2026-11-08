@@ -1,0 +1,92 @@
+---
+title: "Зоны виджетов в Admin"
+description: "Справочник по зонам внедрения, которые Модуль интеграций предоставляет на странице интеграции в Medusa Admin, и по свойствам, которые получает виджет в этих зонах."
+---
+
+# {frontmatter.title}
+
+В этом справочнике перечислены зоны внедрения, которые Модуль интеграций предоставляет в Medusa Admin, и свойства, которые получает виджет в этих зонах.
+
+<Note type="default" title="">
+
+Пошаговое руководство по созданию виджета для этих зон смотрите на странице [Собственные секции на виджетах](/medusa-modules/integration/custom-sections).
+
+</Note>
+
+## Зоны страницы интеграции
+
+Страница интеграции отрисовывает секции через [LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer) Medusa, а зоны названы по `static identifier` провайдера:
+
+| Зона | Где отрисовывается виджет |
+| --- | --- |
+| `gorgo.integration.<identifier>` | Основная колонка страницы. |
+| `gorgo.integration.<identifier>.side` | Боковая колонка страницы. Она есть, только если дескриптор задаёт `preferredLayoutId: "core:two-column"`. |
+
+Например, виджет для провайдера ApiShip с идентификатором `apiship` размещается в зоне `gorgo.integration.apiship`.
+
+Зона охватывает страницы всех инстансов провайдера, поэтому один и тот же виджет отрисовывается и на странице `int_apiship`, и на странице `int_apiship_eu`. Различайте инстансы по `data.providerId`.
+
+По умолчанию виджет отрисовывается после сгенерированных секций своей колонки. Если администратор магазина уже сохранил собственную раскладку страницы, новый виджет появляется вверху своей колонки. Администратор магазина может переместить или скрыть его, как любую другую секцию.
+
+Суффикс `.before` или `.after` в названии зоны Medusa считает устаревшим и игнорирует. Виджет в `gorgo.integration.apiship.main.after` отрисовывается в основной колонке, как и виджет в `gorgo.integration.apiship`.
+
+На остальных страницах модуля, в списке интеграций, каталоге и истории изменений, зон нет.
+
+## Свойства виджета
+
+Виджет в одной из этих зон получает `data` типа `IntegrationSectionData`, который экспортируется из `@gorgo/medusa-integration`:
+
+<MedusaTypeList
+  sectionTitle="IntegrationSectionData"
+  types={[
+    {
+      name: "providerId",
+      type: "string",
+      description: "Ключ инстанса, `int_<identifier>[_<instanceId>]`. Передавайте его в каждый запрос виджета.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "identifier",
+      type: "string",
+      description: "`static identifier` провайдера.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "values",
+      type: "Record<string, unknown>",
+      description: "Сохранённые параметры инстанса без секретов или пустой объект до первого сохранения.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "isComplete",
+      type: "boolean",
+      description: "Проходит ли сохранённая конфигурация полную валидацию.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+## Типы зон
+
+`defineWidgetConfig` принимает только те зоны, которые знают его типы. Объявите зоны своего провайдера, дополнив `InjectionZoneRegistry` из `@medusajs/admin-shared` в файле `index.d.ts` плагина, как показано в [шаге 2 руководства «Собственные секции на виджетах»](/medusa-modules/integration/custom-sections#шаг-2-объявите-зону).
+
+## Материалы
+
+<CardList items={[
+  {
+    title: "Собственные секции на виджетах",
+    href: "/medusa-modules/integration/custom-sections"
+  },
+  {
+    title: "API-роуты Admin",
+    href: "/medusa-modules/integration/admin-api"
+  }
+]}/>
