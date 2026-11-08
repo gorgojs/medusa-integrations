@@ -1,0 +1,121 @@
+# RetailCRM, the paid CRM integration authored by Gorgo. It sends orders, payments and customers to
+# the CRM and applies the CRM's change history back in Medusa. See example.yml for the
+# fully-annotated template.
+#
+# `identifier` equals the provider's `static identifier`, which is how the catalog tells that the
+# integration is installed.
+
+identifier: "retailcrm"
+npm: "@gorgo-store/medusa-crm-retailcrm"
+category: "crm"
+author: "gorgo"
+displayName:
+  en: "RetailCRM"
+  ru: "RetailCRM"
+shortDescription:
+  en: "Orders, payments and customers in both directions between Medusa and RetailCRM"
+  ru: "Заказы, платежи и покупатели в обе стороны между Medusa и RetailCRM"
+icon: "retailcrm.svg"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/retailcrm"
+docsSnippet:
+  en: |
+    ## Get Access
+
+    The plugin is available by subscription and is published to Gorgo's private package registry. To get access, write to the support chat [@gorgojs_chat](https://t.me/gorgojs_chat). You get an access token for the registry.
+
+    ## Install
+
+    ```bash
+    # with npm
+    npm install @gorgo-store/medusa-crm-retailcrm
+    # or with yarn
+    yarn add @gorgo-store/medusa-crm-retailcrm
+    # or with pnpm
+    pnpm add @gorgo-store/medusa-crm-retailcrm
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo-store/medusa-crm-retailcrm/providers/integration-retailcrm",
+                id: "retailcrm-1",
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo-store/medusa-crm-retailcrm",
+          options: {},
+        },
+      ],
+    })
+    ```
+
+    Then run the migrations and restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → RetailCRM**.
+    2. Enter the account address, the API key, the store code and the sales channel, then test the connection.
+  ru: |
+    ## Получение доступа
+
+    Плагин доступен по подписке и публикуется в закрытом реестре пакетов Gorgo. Чтобы получить доступ, напишите в чат поддержки [@gorgojs_chat](https://t.me/gorgojs_chat). Вы получите токен доступа к реестру.
+
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @gorgo-store/medusa-crm-retailcrm
+    # or with yarn
+    yarn add @gorgo-store/medusa-crm-retailcrm
+    # or with pnpm
+    pnpm add @gorgo-store/medusa-crm-retailcrm
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo-store/medusa-crm-retailcrm/providers/integration-retailcrm",
+                id: "retailcrm-1",
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo-store/medusa-crm-retailcrm",
+          options: {},
+        },
+      ],
+    })
+    ```
+
+    Затем выполните миграции и перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → RetailCRM**.
+    2. Укажите адрес аккаунта, ключ API, код магазина и канал продаж, затем проверьте соединение.
+active: true
