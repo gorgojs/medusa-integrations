@@ -165,6 +165,20 @@ medusaIntegrationTestRunner({
         expect(await count(`q=key&q_fields=apiKey&provider_id=${A}`)).toBe(0)
       })
 
+      it("finds a change by its integration's name, as the admin matched it in q_providers", async () => {
+        await record(A, day(1))
+        await record(B, day(2))
+
+        const count = async (qs: string) => (await call(`/admin/integrations/changes?${qs}`)).data.count
+        // The server has the name only as a translation key, so nothing else matches "kassa".
+        expect(await count("q=kassa")).toBe(0)
+        expect(await count(`q=kassa&q_providers=${A}`)).toBe(1)
+        // Still a search: it narrows nothing without q and ORs with the other columns.
+        expect(await count(`q_providers=${A}`)).toBe(2)
+        expect(await count(`q=it.test&q_providers=${A}`)).toBe(2)
+        expect(await count(`q=kassa&q_providers=${A}&provider_id=${B}`)).toBe(0)
+      })
+
       it("sorts by the author", async () => {
         await record(A, day(1), { actor_label: "b@it.test" })
         await record(A, day(2), { actor_label: "a@it.test" })

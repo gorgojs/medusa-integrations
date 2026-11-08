@@ -71,6 +71,13 @@ medusaIntegrationTestRunner({
         expect(res.data.integrations.every((i: any) => i.identifier.includes("test"))).toBe(true)
       })
 
+      it("leaves the name and the description to the admin: q matches no translation key", async () => {
+        // The test provider's name is the key "test.name"; the admin searches the translation.
+        const res = await api.get("/admin/integrations?q=name", headers)
+        expect(res.status).toBe(200)
+        expect(res.data.count).toBe(0)
+      })
+
       it("paginates via limit/offset while count reflects the full set", async () => {
         const res = await api.get("/admin/integrations?limit=1&offset=0", headers)
         expect(res.status).toBe(200)
