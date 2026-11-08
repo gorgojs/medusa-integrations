@@ -17,6 +17,15 @@
       }
     ]
   },
+  "crm-retailcrm": {
+    "dir": "packages/providers/crm-retailcrm",
+    "examples": [
+      {
+        "dir": "examples/crm-retailcrm",
+        "it": "crm-retailcrm"
+      }
+    ]
+  },
   "feed-yandex": {
     "dir": "packages/providers/feed-yandex",
     "examples": [

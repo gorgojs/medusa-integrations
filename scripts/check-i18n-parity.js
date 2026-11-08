@@ -30,6 +30,7 @@
 const LOCALE_DIRS = [
   'packages/modules/integration/src/admin/i18n/json',
   'packages/providers/erp-1c/src/admin/i18n/json',
+  'packages/providers/crm-retailcrm/src/admin/i18n/json',
   'packages/providers/feed-yandex/src/admin/i18n/translations',
   'packages/providers/fulfillment-apiship/src/admin/i18n/json',
   'packages/providers/payment-authorizenet/src/admin/i18n/json',
