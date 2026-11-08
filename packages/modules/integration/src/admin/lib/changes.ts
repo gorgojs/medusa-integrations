@@ -24,6 +24,8 @@ export type IntegrationChangesQuery = {
   q?: string
   /** Ids and label keys of the options whose label contains `q`, see `fieldsMatching`. */
   q_fields?: string[]
+  /** `provider_id` of the integrations whose name contains `q`, see `providersMatching`. */
+  q_providers?: string[]
   /** A column, `-` in front for descending. The API defaults to `-created_at`. */
   order?: string
 }

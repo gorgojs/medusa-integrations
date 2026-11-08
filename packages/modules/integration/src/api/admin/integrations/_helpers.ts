@@ -74,15 +74,17 @@ const strings = (value: unknown) => [value].flat().filter((v): v is string => ty
  * The list filters of the change history. `q` is not a column: it becomes a case-insensitive
  * match on the author (email or API key title) and the `provider_id`, which holds the provider's
  * identifier and instance.
- * The options a change touched are matched by the admin, which alone has their translated labels:
- * it sends the ids and label keys whose label contains `q` as `q_fields`, and a change that
- * touched any of them matches too. Without `q`, `q_fields` is ignored.
+ * The options a change touched and the integration's name are matched by the admin, which alone has
+ * their translations: it sends the ids and label keys whose label contains `q` as `q_fields`, and
+ * the `provider_id` of the integrations whose name contains it as `q_providers`. A change that
+ * touched any of those options, or belongs to any of those integrations, matches too. Without `q`,
+ * both are ignored.
  *
  * `actor_id` also takes `system`, for the changes the admin shows as System: made by an API key,
  * by code without a request, by anything but an admin user.
  */
 export function changeFilters(filterable: Record<string, unknown>): Record<string, unknown> {
-  const { q, q_fields, actor_id, ...filters } = filterable
+  const { q, q_fields, q_providers, actor_id, ...filters } = filterable
   const conditions: Record<string, unknown>[] = []
 
   const actors = strings(actor_id)
@@ -104,11 +106,13 @@ export function changeFilters(filterable: Record<string, unknown>): Record<strin
   if (typeof q === "string" && q) {
     const like = { $ilike: `%${q.replace(/[\\%_]/g, "\\$&")}%` }
     const fields = strings(q_fields)
+    const providers = strings(q_providers)
     conditions.push({
       $or: [
         { actor_label: like },
         { provider_id: like },
         ...(fields.length ? [{ diff_fields: { $overlap: fields } }] : []),
+        ...(providers.length ? [{ provider_id: providers }] : []),
       ],
     })
   }

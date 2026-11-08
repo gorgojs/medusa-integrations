@@ -11,11 +11,9 @@ import {
   createDataTableFilterHelper,
   type DataTableFilteringState,
 } from "@medusajs/ui"
-import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useSearchParams } from "react-router-dom"
-import { sdk } from "../../../../lib/sdk"
 import {
   useChangeActors,
   useChangeFields,
@@ -23,6 +21,7 @@ import {
   useIntegrationChanges,
 } from "../../../../lib/changes"
 import { usePaginationTranslations } from "../../../../lib/data-table"
+import { useIntegrationOverview } from "../../../../lib/integrations"
 import { IntegrationIcon } from "../../../../components/integration-icon"
 import { ChangeActor } from "../../../../components/history/change-actor"
 import { ChangeDrawer, useChangeParam } from "../../../../components/history/change-drawer"
@@ -39,6 +38,7 @@ import {
   filtersFromState,
   hasFilters,
   orderFromSorting,
+  providersMatching,
   readFilters,
   readOffset,
   sortingFromOrder,
@@ -47,7 +47,6 @@ import {
 } from "../../../../components/history/history-filters"
 import type {
   AdminIntegrationChange,
-  AdminIntegrationListResponse,
   IntegrationOverviewItem,
   UiField,
 } from "../../../../../types"
@@ -99,11 +98,19 @@ const HistoryPage = () => {
   const offset = readOffset(params)
   const pageIndex = Math.floor(offset / HISTORY_PAGE_SIZE)
 
-  // The search also finds a change by the options it touched, by their labels as the rows show them.
+  // Registered integrations: names and icons for the rows and the options of the integration filter.
+  const { data: overview } = useIntegrationOverview()
+  const integrations = overview?.integrations
+
+  // The search also finds a change by the options it touched and by the integration's name, both
+  // as the rows show them.
   const labelOf = useDiffLabel(NO_FIELDS)
   const { data: changeFields } = useChangeFields()
-  const qFields = fieldsMatching(filters.q, changeFields?.fields ?? [], labelOf)
-  const { data, isLoading } = useIntegrationChanges(null, buildChangesQuery(filters, offset, qFields))
+  const matches = {
+    fields: fieldsMatching(filters.q, changeFields?.fields ?? [], labelOf),
+    providers: providersMatching(filters.q, integrations ?? [], (item) => t(item.display_name)),
+  }
+  const { data, isLoading } = useIntegrationChanges(null, buildChangesQuery(filters, offset, matches))
 
   // Search, sorting and filters all start again from the first page.
   const update = (patch: Partial<HistoryFilters>) =>
@@ -111,14 +118,6 @@ const HistoryPage = () => {
   const sorting = sortingFromOrder(filters.order)
   const changes = data?.integration_changes ?? []
 
-  // Registered integrations: names and icons for the rows and the options of the integration filter.
-  const { data: overview } = useQuery({
-    queryKey: ["integration-overview", "history"],
-    queryFn: () =>
-      sdk.client.fetch<AdminIntegrationListResponse>("/admin/integrations", { query: { limit: 1000 } }),
-    placeholderData: keepPreviousData,
-  })
-  const integrations = overview?.integrations
   const byProvider = useMemo(() => {
     const map = new Map<string, IntegrationOverviewItem>()
     for (const item of integrations ?? []) map.set(item.provider_id, item)

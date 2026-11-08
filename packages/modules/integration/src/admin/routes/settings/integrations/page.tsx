@@ -15,7 +15,7 @@ import {
   usePrompt,
   type DataTableAction,
 } from "@medusajs/ui"
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
@@ -25,7 +25,9 @@ import { toModuleProviderId } from "../../../lib/provider-id"
 import { LicenseLine } from "../../../components/license-line"
 import { useLicenseStatus } from "../../../lib/license"
 import { usePaginationTranslations } from "../../../lib/data-table"
-import type { AdminIntegrationListResponse, IntegrationOverviewItem } from "../../../../types"
+import { useIntegrationOverview } from "../../../lib/integrations"
+import { integrationMatches } from "../../../lib/integration-search"
+import type { IntegrationOverviewItem } from "../../../../types"
 import type { LicenseStateEntry } from "../../../../modules/integration/types"
 
 const PAGE_SIZE = 20
@@ -121,20 +123,18 @@ const IntegrationsPage = () => {
   const [search, setSearch] = useState("")
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: PAGE_SIZE })
 
+  // The whole list, searched and paged here: the search matches the names and descriptions in the
+  // admin's language, which only the admin has.
+  const { data, isLoading } = useIntegrationOverview()
   const category = activeTab === "all" ? undefined : activeTab
-  const queryParams = {
-    q: search || undefined,
-    category,
-    limit: pagination.pageSize,
-    offset: pagination.pageIndex * pagination.pageSize,
-  }
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["integration-overview", queryParams],
-    queryFn: () =>
-      sdk.client.fetch<AdminIntegrationListResponse>("/admin/integrations", { query: queryParams }),
-    placeholderData: keepPreviousData,
-  })
+  const matching = useMemo(
+    () =>
+      (data?.integrations ?? []).filter(
+        (item) => (!category || item.category === category) && integrationMatches(item, search, (key) => t(key))
+      ),
+    [data, category, search, t]
+  )
+  const start = pagination.pageIndex * pagination.pageSize
 
   const { data: licenseData } = useLicenseStatus()
 
@@ -146,8 +146,8 @@ const IntegrationsPage = () => {
     return map
   }, [licenseData])
 
-  const integrations = data?.integrations ?? []
-  const count = data?.count ?? 0
+  const integrations = matching.slice(start, start + pagination.pageSize)
+  const count = matching.length
   const categories = data?.categories ?? []
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["integration-overview"] })
@@ -300,7 +300,13 @@ const IntegrationsPage = () => {
       const item = (row as unknown as { original: IntegrationOverviewItem }).original
       navigate(`/settings/integrations/${item.provider_id}`)
     },
-    search: { state: search, onSearchChange: setSearch },
+    search: {
+      state: search,
+      onSearchChange: (value) => {
+        setSearch(value)
+        setPagination((p) => ({ ...p, pageIndex: 0 }))
+      },
+    },
     pagination: { state: pagination, onPaginationChange: setPagination },
   })
 
