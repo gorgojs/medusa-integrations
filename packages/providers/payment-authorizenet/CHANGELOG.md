@@ -1,5 +1,11 @@
 # @gorgo/medusa-payment-authorizenet
 
+## 2.0.2
+
+### Documentation
+
+- add the demo video to the docs and the readme by [@ttokyose](https://github.com/ttokyose) in [#527](https://github.com/gorgojs/medusa-integrations/pull/527) ([`3400aeb`](https://github.com/gorgojs/medusa-integrations/commit/3400aeb5a57f1954b9d31ba0c2acfb9e91f39b2e))
+
 ## 2.0.1
 
 ### Documentation

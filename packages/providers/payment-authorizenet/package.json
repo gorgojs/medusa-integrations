@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-authorizenet",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Authorize.net payment provider for Medusa",
   "license": "MIT",
   "files": [
