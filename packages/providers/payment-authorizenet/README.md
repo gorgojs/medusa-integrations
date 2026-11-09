@@ -40,6 +40,16 @@ Authorize.net Payments for Medusa
   </a>
 </p>
 
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/payment-authorizenet/demo/payment-authorizenet-demo-en.ecd97419.mp4">
+    <img src="https://static.gorgojs.com/videos/payment-authorizenet/demo/payment-authorizenet-demo-en-poster-play.40228cc8.webp" alt="Watch the Authorize.net plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/payment-authorizenet/demo/payment-authorizenet-demo-en.ecd97419.mp4">▶ Watch the demo video</a>
+</p>
+
 ## Plugin Features
 
 - **Full Integration with Authorize.net:** Connect your store to the Authorize.net payment gateway for secure and reliable payments.
