@@ -40,6 +40,16 @@ Mollie Payments for Medusa
   </a>
 </p>
 
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/payment-mollie/demo/payment-mollie-demo-en.cccb587f.mp4">
+    <img src="https://static.gorgojs.com/videos/payment-mollie/demo/payment-mollie-demo-en-poster-play.4392c518.webp" alt="Watch the Mollie plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://static.gorgojs.com/videos/payment-mollie/demo/payment-mollie-demo-en.cccb587f.mp4">▶ Watch the demo video</a>
+</p>
+
 ## Plugin Features
 
 - **Full Integration with Mollie:** Connect your store to Mollie and accept payments on Mollie's hosted payment page.
