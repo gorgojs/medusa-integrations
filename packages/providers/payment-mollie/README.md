@@ -89,6 +89,56 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-payment-mollie
 npm install @gorgo/medusa-integration @gorgo/medusa-payment-mollie
 ```
 
+## Configuration
+
+Register the plugin and the Integration Module in `medusa-config.ts`:
+
+```ts
+const MOLLIE_INTEGRATION_ID = "mollie-1"
+
+module.exports = defineConfig({
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-mollie/providers/integration-mollie",
+            id: MOLLIE_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-mollie",
+      options: {},
+    },
+  ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-mollie/providers/payment-mollie",
+            id: "mollie",
+            options: { id: MOLLIE_INTEGRATION_ID },
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+The payment provider registered this way gets the ID `pp_mollie_mollie`, and its webhook route is `/hooks/payment/mollie_mollie`.
+
+Set `INTEGRATION_ENCRYPTION_KEY` to a long random string, for example the output of `openssl rand -hex 32`. The Integration Module derives the key that encrypts secret settings, such as the API key, from it.
+
+Then restart the server and configure the integration in Medusa Admin under **Settings → Integrations → Mollie**.
+
 ## Documentation
 
 The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-integrations/mollie).
