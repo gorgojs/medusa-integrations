@@ -71,6 +71,15 @@
       }
     ]
   },
+  "payment-mollie": {
+    "dir": "packages/providers/payment-mollie",
+    "examples": [
+      {
+        "dir": "examples/payment-mollie",
+        "it": "payment-mollie"
+      }
+    ]
+  },
   "payment-stripe": {
     "dir": "packages/providers/payment-stripe",
     "examples": [
