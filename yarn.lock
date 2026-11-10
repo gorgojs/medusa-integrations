@@ -2426,6 +2426,47 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gorgo/medusa-payment-mollie@workspace:*, @gorgo/medusa-payment-mollie@workspace:packages/providers/payment-mollie":
+  version: 0.0.0-use.local
+  resolution: "@gorgo/medusa-payment-mollie@workspace:packages/providers/payment-mollie"
+  dependencies:
+    "@gorgo/medusa-integration": "npm:^0.2.9"
+    "@gorgo/telemetry": "npm:^1.4.1"
+    "@medusajs/admin-sdk": "npm:^2.17.2"
+    "@medusajs/cli": "npm:^2.17.2"
+    "@medusajs/framework": "npm:^2.17.2"
+    "@medusajs/icons": "npm:^2.17.2"
+    "@medusajs/medusa": "npm:^2.17.2"
+    "@medusajs/test-utils": "npm:^2.17.2"
+    "@medusajs/ui": "npm:^4.1.15"
+    "@swc/core": "npm:^1.7.28"
+    "@swc/jest": "npm:^0.2.36"
+    "@types/jest": "npm:^29.5.13"
+    "@types/node": "npm:^22.13.11"
+    "@types/react": "npm:^18.3.2"
+    "@types/react-dom": "npm:^18.2.25"
+    jest: "npm:^29.7.0"
+    mollie-api-typescript: "npm:1.12.44"
+    msw: "npm:^2.7.0"
+    prop-types: "npm:^15.8.1"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.8.2"
+    vite: "npm:^7.3.6"
+    yalc: "npm:^1.0.0-pre.53"
+  peerDependencies:
+    "@gorgo/medusa-integration": ">=0.1.5 <1.0.0"
+    "@medusajs/admin-sdk": ^2.17.2
+    "@medusajs/cli": ^2.17.2
+    "@medusajs/framework": ^2.17.2
+    "@medusajs/icons": ^2.17.2
+    "@medusajs/medusa": ^2.17.2
+    "@medusajs/test-utils": ^2.17.2
+    "@medusajs/ui": ^4.1.16
+  languageName: unknown
+  linkType: soft
+
 "@gorgo/medusa-payment-paypal@workspace:*, @gorgo/medusa-payment-paypal@workspace:packages/providers/payment-paypal":
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-payment-paypal@workspace:packages/providers/payment-paypal"
@@ -15589,12 +15630,12 @@ __metadata:
   linkType: hard
 
 "minimatch@npm:^11.0.0":
-  version: 11.0.5
-  resolution: "minimatch@npm:11.0.5"
+  version: 11.0.6
+  resolution: "minimatch@npm:11.0.6"
   dependencies:
     "@isaacs/nonrecursive-glob-match": "npm:^1.1.0"
     brace-expansion: "npm:^5.0.12"
-  checksum: 10c0/398cbb80d0faf4d9714d62b9d8a55af4df27d885144317416a6efc1c673705210cbc9b17d263b368b19a91749df9b4769a18fafd5e88eb43326f502267145fc0
+  checksum: 10c0/dff8ab424f837689b77e277bdb301a32bed227f5dc225dc687e894f52574db3efe15998ea11ebe5dd2b0aedc97955485b9920f4f49c6f195df4c5d9bbf3b0de9
   languageName: node
   linkType: hard
 
@@ -15655,6 +15696,15 @@ __metadata:
   version: 1.0.4
   resolution: "module-details-from-path@npm:1.0.4"
   checksum: 10c0/10863413e96dab07dee917eae07afe46f7bf853065cc75a7d2a718adf67574857fb64f8a2c0c9af12ac733a9a8cf652db7ed39b95f7a355d08106cb9cc50c83b
+  languageName: node
+  linkType: hard
+
+"mollie-api-typescript@npm:1.12.44":
+  version: 1.12.44
+  resolution: "mollie-api-typescript@npm:1.12.44"
+  dependencies:
+    zod: "npm:^3.25.0 || ^4.0.0"
+  checksum: 10c0/a4f043f194635394eeb63905e293b1182428b430238981bc95fc1e996d9eacad9ce3b457a7a82ff7bc4d10d3c5e3e0c6dbecd56ab67e3da8a0e2570975e260d9
   languageName: node
   linkType: hard
 
@@ -20087,5 +20137,12 @@ __metadata:
   version: 4.6.6
   resolution: "zod@npm:4.6.6"
   checksum: 10c0/447a3113bb743c54ab839213ff95e9e8c197cc1206f65270c18aac35aa70c47a5c8cab753be911b574df9a8a9801ea74ed6be776575232cae0084e51dab3e970
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.25.0 || ^4.0.0":
+  version: 4.6.7
+  resolution: "zod@npm:4.6.7"
+  checksum: 10c0/4ce2eb14034317b7254e347ca37b5ad591cf8333147030cf05b9b5d31692d45073f7f2747aa50cf8c6b29012194d2b22978cecc89969cf34a0d18e89d0ee7d7b
   languageName: node
   linkType: hard
