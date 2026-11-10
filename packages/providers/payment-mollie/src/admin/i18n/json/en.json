@@ -1,0 +1,26 @@
+{
+  "mollie": {
+    "name": "Mollie",
+    "description": "Mollie payment service",
+    "sections": {
+      "credentials": "Credentials",
+      "behavior": "Behavior"
+    },
+    "fields": {
+      "apiKey": "API key",
+      "webhookUrl": "Webhook URL",
+      "capture": "Payment capture",
+      "paymentDescription": "Payment description"
+    },
+    "hints": {
+      "apiKey": "The standard API key of your website profile, test_… or live_…",
+      "webhookUrl": "Your backend's https address plus /hooks/payment/mollie_<id>, nothing to set up in Mollie",
+      "capture": "Capture right away charges at once, Authorize only holds the amount until you capture it",
+      "paymentDescription": "Shown on Mollie's page and the bank statement. Empty means Cart and the cart ID"
+    },
+    "captures": {
+      "automatic": "Capture right away",
+      "manual": "Authorize only"
+    }
+  }
+}

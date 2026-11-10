@@ -1,0 +1,26 @@
+{
+  "mollie": {
+    "name": "Mollie",
+    "description": "Платёжный сервис Mollie",
+    "sections": {
+      "credentials": "Доступы",
+      "behavior": "Поведение"
+    },
+    "fields": {
+      "apiKey": "API-ключ",
+      "webhookUrl": "Адрес вебхука",
+      "capture": "Способ списания",
+      "paymentDescription": "Описание платежа"
+    },
+    "hints": {
+      "apiKey": "Стандартный API-ключ профиля сайта, test_… или live_…",
+      "webhookUrl": "https-адрес бэкенда с путём /hooks/payment/mollie_<id>, без настройки в Mollie",
+      "capture": "Списать сразу при оплате или заблокировать сумму до списания в Medusa",
+      "paymentDescription": "Видно на странице Mollie и в выписке. Если пусто, Cart и ID корзины"
+    },
+    "captures": {
+      "automatic": "Списать сразу",
+      "manual": "Только заблокировать"
+    }
+  }
+}
