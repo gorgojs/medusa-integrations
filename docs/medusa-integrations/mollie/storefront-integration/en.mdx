@@ -1,0 +1,472 @@
+---
+title: "Integrate Mollie Payment into Storefront"
+description: "Learn how to integrate the Mollie payment provider into a Next.js storefront built with Medusa."
+---
+
+# {frontmatter.title}
+
+To integrate the Mollie payment provider into the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter) storefront, start by adding the required UI components, so the provider is displayed on the checkout page alongside other available payment methods.
+
+Picking Mollie makes no request. When the customer clicks the payment button, it starts a payment session, the provider creates the payment in Mollie and returns the address of Mollie's payment page, and the button sends the customer there, where they pay with a card, iDEAL, PayPal or another method enabled in your Mollie profile.
+
+Once the payment is completed, Mollie calls the webhook and sends the customer back to the storefront. Whichever event arrives first completes the cart and creates a new order in Medusa.
+
+For the storefront on Next.js, you need to make the following changes:
+
+## Step 1: Configure Payment Provider
+
+To make Mollie available as a payment method on the storefront checkout page, add its configuration to the payment provider mapping in your storefront's constants file. This mapping determines how each payment provider is displayed in the UI.
+
+Open [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-mollie/apps/storefront/src/lib/constants.tsx#L55-L59) and add the following code:
+
+![Directory structure in the Medusa Storefront after updating the file for constants](/static/mollie/storefront/src-lib-constants.webp)
+
+```tsx title="src/lib/constants.tsx"
+export const paymentInfoMap: Record<string, PaymentInfo> = {
+  // ...
+  pp_mollie_mollie: {
+    title: "Mollie",
+    subtitle: "Cards, iDEAL, PayPal",
+    icon: <CreditCard />,
+  },
+  // Add more payment providers here
+}
+
+// ...
+
+export const isMollie = (providerId?: string) => {
+  return providerId?.startsWith("pp_mollie_")
+}
+```
+
+You extend the `paymentInfoMap` object with a `pp_mollie_mollie` entry. It defines the title, the subtitle and the icon shown for Mollie on the checkout page, and serves as the fallback when a locale carries no translation. Mollie takes many payment methods, so the entry uses the starter's generic `CreditCard` icon.
+
+The helper function `isMollie` checks whether a given `providerId` belongs to Mollie. The payment button dispatcher and the order page use it in the steps below.
+
+---
+
+## Step 2: Initialize Payment Session
+
+To send a customer to Mollie, the payment session needs the address the customer returns to after paying and the language of Mollie's page.
+
+Open the same [`src/lib/constants.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-mollie/apps/storefront/src/lib/constants.tsx#L1-L2) and import the default locale and the storefront's base URL at the top of the file:
+
+![Directory structure in the Medusa Storefront after updating the file for constants](/static/mollie/storefront/src-lib-constants.webp)
+
+```tsx title="src/lib/constants.tsx"
+import { defaultLocale } from "@i18n/config"
+import { getBaseURL } from "@lib/util/env"
+```
+
+Then add the page language, the return address and the session data builder [below the payment provider mapping](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-mollie/apps/storefront/src/lib/constants.tsx#L70-L121):
+
+```tsx title="src/lib/constants.tsx"
+/**
+ * The language of the page. `<html lang>` carries the locale the checkout was
+ * rendered in, which a provider with its own payment page takes to show that
+ * page in the customer's language.
+ */
+const pageLocale = () =>
+  typeof document === "undefined"
+    ? defaultLocale
+    : document.documentElement.lang || defaultLocale
+
+/**
+ * The address the customer comes back to after paying on the provider's own
+ * page, in the language they left the shop with.
+ */
+const paymentReturnUrl = (providerId: string, cartId: string) => {
+  const origin =
+    typeof window === "undefined" ? getBaseURL() : window.location.origin
+
+  return `${origin}/api/payment-return?provider=${providerId}&cart_id=${cartId}&locale=${pageLocale()}`
+}
+
+const paymentSessionDataBuilders: Array<{
+  test: (providerId?: string) => boolean | undefined
+  isReady?: (cart: HttpTypes.StoreCart) => boolean
+  build: (cart: HttpTypes.StoreCart) => Record<string, unknown>
+  /**
+   * The provider's own pay button starts the payment session when the customer
+   * pays, so the checkout does not start one when the method is picked or the
+   * cart changes. `isReady` still gates the pay button.
+   */
+  deferred?: boolean
+}> = [
+  {
+    test: (providerId) => isMollie(providerId),
+    // A Mollie payment is created with the session, and Mollie neither changes
+    // its amount nor cancels it while it is open, so a session replaced at the
+    // payment step would leave a payable page behind. The pay button starts the
+    // session, once the checkout has the email, the address and the shipping
+    // method the payment is created with.
+    deferred: true,
+    isReady: (cart) =>
+      Boolean(
+        cart.email &&
+          cart.shipping_address &&
+          (cart.shipping_methods?.length ?? 0) > 0
+      ),
+    build: (cart) => ({
+      redirect_url: paymentReturnUrl("mollie", cart.id),
+      locale: pageLocale(),
+    }),
+  },
+]
+```
+
+Below `buildPaymentSessionData`, add the helper that tells the checkout whether a method starts its session from the payment button:
+
+```tsx title="src/lib/constants.tsx"
+export const isPaymentSessionDeferred = (providerId: string | undefined) => {
+  return !!paymentSessionDataBuilders.find((b) => b.test(providerId))?.deferred
+}
+```
+
+When initiating a payment for Mollie, `build` passes `redirect_url`, the absolute address the customer comes back to, and `locale`, the language of the page. The provider creates the Mollie payment with them and stores the address of Mollie's payment page in the session as `checkout_url`. It turns a bare language such as `de` into Mollie's `de_DE`, and for a language Mollie does not have it leaves the choice to the customer's browser.
+
+The `redirect_url` points back to your storefront's `/api/payment-return` route and is used for paid, canceled and failed payments alike. The route finds the cart by its `cart_id`.
+
+With `deferred: true`, picking Mollie or changing the cart starts no session, and `isReady` keeps the payment button disabled until the cart carries an email, a shipping address and a shipping method. The provider creates the Mollie payment as soon as the session starts, with the cart's total and the buyer's addresses. Mollie neither changes the amount of that payment nor cancels it while it is open, so a session started when the method is picked and replaced later would leave a payable Mollie page behind.
+
+---
+
+## Step 3: Start the Payment Session from the Pay Button
+
+The starter's checkout starts a payment session when the customer picks a method, when the cart changes and when the session disappears. For Mollie, the payment button starts it instead.
+
+Open [`src/modules/checkout/components/checkout-payment-section/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-mollie/apps/storefront/src/modules/checkout/components/checkout-payment-section/index.tsx#L49-L121) and skip a deferred method in those three places:
+
+![Directory structure in the Medusa Storefront after updating the file for the payment section](/static/mollie/storefront/src-modules-checkout-components-checkout-payment-section-index.webp)
+
+```tsx title="src/modules/checkout/components/checkout-payment-section/index.tsx"
+import {
+  // ...
+  isPaymentSessionDeferred,
+  isPaymentSessionReady,
+  // ...
+} from "@lib/constants"
+
+// ...
+
+  // Re-initiate payment session when it gets cleared (e.g. after promo code change)
+  useEffect(() => {
+    if (
+      selectedPaymentMethod &&
+      !latestSession &&
+      !paidByGiftcard &&
+      !isPaymentSessionDeferred(selectedPaymentMethod) &&
+      isPaymentSessionReady(selectedPaymentMethod, cart)
+      // ...
+
+// ...
+
+    if (
+      !selectedPaymentMethod ||
+      paidByGiftcard ||
+      isPaymentSessionDeferred(selectedPaymentMethod)
+    ) {
+      return
+    }
+
+// ...
+
+  const handleSelectPayment = async (providerId: string) => {
+    setSelectedPaymentMethod(providerId)
+
+    // a deferred provider's pay button starts the session when the customer pays
+    if (
+      isPaymentSessionDeferred(providerId) ||
+      !isPaymentSessionReady(providerId, cart)
+    ) {
+      return
+    }
+```
+
+The effect that restarts a cleared session, the effect that starts one again when the addresses, the email, the shipping or the region change, and the handler of the method picker now leave a deferred method alone. The checkout still shows Mollie as selected, and the payment button decides when the payment is created.
+
+---
+
+## Step 4: Create Payment Button
+
+The storefront needs a dedicated payment button component for each payment provider. Using the payment session data, it sends the customer to Mollie's payment page. The order itself is placed later, when the customer comes back through `/api/payment-return`, or earlier through the webhook if that arrives first.
+
+Create [`src/modules/checkout/components/payment-button/providers/mollie.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-mollie/apps/storefront/src/modules/checkout/components/payment-button/providers/mollie.tsx) and add the following code:
+
+![Directory structure in the Medusa Storefront after creating the file for the Mollie payment button](/static/mollie/storefront/src-modules-checkout-components-payment-button-providers-mollie.webp)
+
+```tsx title="src/modules/checkout/components/payment-button/providers/mollie.tsx"
+"use client"
+
+import { buildPaymentSessionData } from "@lib/constants"
+import { initiatePaymentSession } from "@lib/data/cart"
+import type { HttpTypes } from "@medusajs/types"
+import { useTranslations } from "next-intl"
+import { useState } from "react"
+import { PaymentButtonShell, type PaymentProviderButtonProps } from "../shared"
+
+const MOLLIE_PROVIDER_ID = "pp_mollie_mollie"
+
+const findSession = (payment_collection?: HttpTypes.StorePaymentCollection | null) =>
+  payment_collection?.payment_sessions?.find((s) =>
+    s.provider_id.startsWith("pp_mollie_")
+  )
+
+/**
+ * The address of the payment page of a session started earlier, unless it is
+ * missing or Mollie has let the payment expire. A customer who went back from
+ * Mollie's page without paying returns to the same page this way, instead of a
+ * second payment Mollie would refuse to cancel. A card payment expires after
+ * 30 minutes.
+ */
+const liveCheckoutUrl = (session?: HttpTypes.StorePaymentSession) => {
+  const url = session?.data?.checkout_url
+  const expiresAt = session?.data?.expires_at
+
+  if (typeof url !== "string" || !url) {
+    return null
+  }
+
+  if (typeof expiresAt === "string" && Date.parse(expiresAt) <= Date.now()) {
+    return null
+  }
+
+  return url
+}
+
+/**
+ * Mollie collects the payment on its own page. This button starts the payment
+ * session, which creates the Mollie payment, and sends the customer to its
+ * page; the order is placed once they come back through `/api/payment-return`,
+ * or by the webhook if that arrives first. A session started before, whose
+ * payment is still open, is reused.
+ */
+const MolliePaymentButton = ({
+  cart,
+  notReady,
+  label,
+  cartUpdating,
+  "data-testid": dataTestId,
+}: PaymentProviderButtonProps) => {
+  const t = useTranslations("Errors")
+  const [submitting, setSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const handlePayment = async () => {
+    setSubmitting(true)
+    setErrorMessage(null)
+
+    try {
+      const session = findSession(cart.payment_collection)
+      let url = liveCheckoutUrl(session)
+
+      if (!url) {
+        const providerId = session?.provider_id ?? MOLLIE_PROVIDER_ID
+        const { payment_collection } = await initiatePaymentSession(cart, {
+          provider_id: providerId,
+          data: buildPaymentSessionData(providerId, cart),
+        })
+
+        url = liveCheckoutUrl(findSession(payment_collection))
+      }
+
+      if (!url) {
+        throw new Error(t("paymentFailed"))
+      }
+
+      window.location.assign(url)
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : t("paymentFailed"))
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <PaymentButtonShell
+      label={label}
+      onClick={handlePayment}
+      disabled={notReady || cartUpdating}
+      loading={submitting}
+      errorMessage={errorMessage}
+      errorTestId="mollie-payment-error-message"
+      data-testid={dataTestId ?? "submit-order-button"}
+    />
+  )
+}
+
+export default MolliePaymentButton
+```
+
+When the customer clicks the payment button, the component starts a payment session with the data from `buildPaymentSessionData`, reads `data.checkout_url` from the new Mollie session and sends the customer to this address to pay on Mollie's page.
+
+A customer who went back from Mollie's page without paying already has a session with an open payment. The button sends them to the same page again unless its `data.expires_at` has passed, since a card payment expires after 30 minutes, and only then starts a new session. A second open payment for the same cart is what the deferred session avoids, because Mollie refuses to cancel the first one. If no address comes back, the button shows an error message instead of navigating anywhere.
+
+---
+
+## Step 5: Register Payment Button
+
+Import the button and `isMollie` in [`src/modules/checkout/components/payment-button/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-mollie/apps/storefront/src/modules/checkout/components/payment-button/index.tsx#L86-L99), then add a `case` for it in the dispatcher's `switch`:
+
+![Directory structure in the Medusa Storefront after updating the file for payment button component](/static/mollie/storefront/src-modules-checkout-components-payment-button-index.webp)
+
+```tsx title="src/modules/checkout/components/payment-button/index.tsx"
+import {
+  isManual,
+  isMollie,
+  // ...
+} from "@lib/constants"
+// ...
+import MolliePaymentButton from "./providers/mollie"
+
+// ...
+
+  switch (true) {
+    // ...
+    case isMollie(activePaymentMethod):
+      return <MolliePaymentButton {...providerProps} />
+    // ...
+  }
+```
+
+The parent `PaymentButton` uses `isMollie` to determine whether to display `MolliePaymentButton` for the current session; otherwise it falls through to the next case.
+
+---
+
+## Step 6: Handle Payment Return
+
+After the customer pays, cancels or fails on Mollie's page, Mollie sends them back to the storefront. Mollie reports the payment status through both this redirect and a webhook, so the shared route checks the cart for an order before placing one itself.
+
+Open [`src/app/api/payment-return/route.ts`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-mollie/apps/storefront/src/app/api/payment-return/route.ts#L15-L80) and add the following code:
+
+![Directory structure in the Medusa Storefront after updating the file for API route](/static/mollie/storefront/src-app-api-payment-return-route.webp)
+
+```ts title="src/app/api/payment-return/route.ts"
+type ReturnContext = {
+  cartId: string
+  locale: string
+  origin: string
+}
+
+/**
+ * Comes back from a provider that takes the customer to its own payment page
+ * and returns them with nothing but the cart id, as Mollie and YooKassa do.
+ *
+ * The provider's webhook and this redirect race each other, and whichever
+ * arrives first places the order, so the cart is checked for an order before
+ * one is placed.
+ */
+async function redirectProviderReturn({
+  cartId,
+  locale,
+  origin,
+}: ReturnContext) {
+  const cart = await sdk.client
+    .fetch<HttpTypes.StoreCartResponse>(`/store/carts/${cartId}`, {
+      method: "GET",
+      query: { fields: "id,order_link.order_id" },
+      headers: { ...(await getAuthHeaders()) },
+      cache: "no-store",
+    })
+    .then(({ cart }) => cart)
+    .catch(() => null)
+
+  if (!cart) {
+    return NextResponse.redirect(
+      `${origin}/${locale}/cart?error=payment_failed`
+    )
+  }
+
+  const orderId = (cart as unknown as { order_link?: { order_id?: string } })
+    .order_link?.order_id
+
+  if (orderId) {
+    const orderCacheTag = await getCacheTag("orders")
+    revalidateTag(orderCacheTag)
+    await removeCartId()
+
+    return NextResponse.redirect(
+      `${origin}/${locale}/order/${orderId}/confirmed`
+    )
+  }
+
+  // The customer backed out or the payment was declined, so they land back on
+  // the checkout with their cart intact and can pick a method again.
+  await setCartId(cartId)
+
+  try {
+    await placeOrder(cartId)
+  } catch (error) {
+    unstable_rethrow(error)
+
+    return NextResponse.redirect(
+      `${origin}/${locale}/checkout?error=payment_failed`
+    )
+  }
+
+  return NextResponse.redirect(
+    `${origin}/${locale}/checkout?error=payment_failed`
+  )
+}
+```
+
+Then route Mollie's return to `redirectProviderReturn`, in `GET`:
+
+```ts title="src/app/api/payment-return/route.ts"
+  if (provider === "mollie") {
+    return redirectProviderReturn({ cartId, locale, origin })
+  }
+```
+
+This route handles the return from Mollie after a payment attempt. It always fetches the cart's latest state, uncached, so it doesn't miss changes made during payment.
+
+If the cart already has an order, the confirmation already arrived through the webhook. The route revalidates the order cache, removes the cart cookie, and sends the customer to the confirmation page.
+
+Otherwise the route tries to place the order itself. If successful, the customer ends up on the order confirmation page. If the customer canceled on Mollie's page or the payment failed, placing the order fails, and the customer is sent back to the checkout with `error=payment_failed` so they can pick a method again.
+
+---
+
+## Step 7: Show the Card on the Order Page
+
+For a card payment, the provider keeps the card's last four digits in the payment data as `card_last4`, the way Gorgo's Stripe and Authorize.net providers do. The order page of the starter shows them for Stripe only.
+
+Open [`src/modules/order/components/payment-details/index.tsx`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-mollie/apps/storefront/src/modules/order/components/payment-details/index.tsx#L27-L33) and change the condition:
+
+![Directory structure in the Medusa Storefront after updating the file for the payment details](/static/mollie/storefront/src-modules-order-components-payment-details-index.webp)
+
+```tsx title="src/modules/order/components/payment-details/index.tsx"
+  const { title, subtitle } = paymentMethodLabel(tm, payment.provider_id)
+  const card =
+    (isStripeLike(payment.provider_id) || isMollie(payment.provider_id)) &&
+    payment.data?.card_last4
+  // The card the order was actually paid with says more than the schemes the
+  // method accepts, so it takes the subtitle when the payment carries one.
+  const methodSubtitle = card ? `•••• ${card}` : subtitle
+```
+
+The order page now shows `•••• 1234` under Mollie for a card payment. For iDEAL, PayPal and the other methods, it keeps the subtitle from the locale.
+
+---
+
+## Step 8: Add Provider Labels to Storefront Locales
+
+Add `pp_mollie_mollie` to [`messages/en.json`](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-mollie/apps/storefront/messages/en.json#L510-L513) and to every other locale under `messages/`:
+
+```json title="messages/en.json"
+{
+  "PaymentMethods": {
+    // ...
+    "pp_mollie_mollie": {
+      "title": "Mollie",
+      "subtitle": "Cards, iDEAL, PayPal"
+    }
+  }
+}
+```
+
+A locale missing an entry falls back to the English `title` and `subtitle` from `paymentInfoMap` in [Step 1](#step-1-configure-payment-provider).
+
+---
+
+## Full Storefront Integration Code Example
+
+The complete storefront is located at [`examples/payment-mollie/apps/storefront`](https://github.com/gorgojs/medusa-integrations/tree/main/examples/payment-mollie/apps/storefront), built on the [Medusa DTC Starter by Gorgo](https://github.com/gorgojs/medusa-dtc-starter). The example's own [README](https://github.com/gorgojs/medusa-integrations/blob/main/examples/payment-mollie/README.md#what-the-example-adds-to-the-starter) lists every file the integration consists of, backend included.

@@ -1,0 +1,160 @@
+---
+title: "Начало работы с Mollie для Medusa"
+description: "Узнайте, как установить и настроить платёжный провайдер Mollie для Medusa."
+---
+
+# {frontmatter.title}
+
+В этом руководстве вы узнаете, как установить и настроить платёжный провайдер Mollie для Medusa, подготовить аккаунт Mollie, подключить вебхук и перейти с плагина Mollie от сообщества.
+
+## Требования
+
+- Medusa v2.17.2 или новее
+- Node.js v22.23.4, v24.22.1, v26.12.1 или новее
+- Аккаунт Mollie с профилем сайта. Для тестов подойдёт тестовый API-ключ профиля, для настоящих платежей нужен его live-ключ
+- [Модуль интеграций](/medusa-modules/integration)
+
+---
+
+## Установка
+
+<CodeTabs>
+  <CodeTab label="yarn" value="yarn">
+    ```bash
+    yarn add @gorgo/medusa-integration @gorgo/medusa-payment-mollie
+    ```
+  </CodeTab>
+  <CodeTab label="npm" value="npm">
+    ```bash
+    npm install @gorgo/medusa-integration @gorgo/medusa-payment-mollie
+    ```
+  </CodeTab>
+</CodeTabs>
+
+---
+
+## Настройка
+
+Добавьте конфигурацию провайдера Модуля интеграций и Платёжного модуля Medusa в файл `medusa-config.ts` приложения Medusa Admin:
+
+```ts title="medusa-config.ts"
+// ...
+const MOLLIE_INTEGRATION_ID = "mollie-1"
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    // ...
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-mollie/providers/integration-mollie",
+            id: MOLLIE_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@gorgo/medusa-payment-mollie",
+      options: {},
+    },
+  ],
+  modules: [
+    // ...
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-mollie/providers/payment-mollie",
+            id: "mollie",
+            options: {
+              id: MOLLIE_INTEGRATION_ID
+            }
+          },
+        ],
+      },
+    },
+  ],
+})
+```
+
+Платёжный провайдер, зарегистрированный так, получает id `pp_mollie_mollie` и принимает вебхуки на роуте `/hooks/payment/mollie_mollie`.
+
+Добавьте переменную окружения с секретным ключом шифрования:
+
+```text title=".env"
+INTEGRATION_ENCRYPTION_KEY=supersecret
+```
+
+---
+
+## Параметры провайдера
+
+<MedusaTypeList
+  sectionTitle="ProviderOptions"
+  types={[
+    {
+      name: "id",
+      type: "string",
+      description: "Суффикс в итоговом ключе `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+  ]}
+/>
+
+API-ключ, адрес вебхука и остальные настройки Mollie не входят в параметры провайдера. Введите их в Medusa Admin, как описано в разделе [Управление настройками Mollie в Medusa Admin](/medusa-integrations/mollie/settings).
+
+---
+
+## Подготовка аккаунта
+
+У каждого профиля сайта в аккаунте Mollie два API-ключа. Тестовый начинается с `test_` и работает в тестовом режиме, live-ключ начинается с `live_` и создаёт настоящие платежи. Скопируйте нужный ключ в разделе **Developers → API keys** в <a href="https://my.mollie.com/" target="_blank">Mollie Web App</a>, выбрав профиль сайта вашего магазина.
+
+Покупатель платит на платёжной странице Mollie и видит там только способы оплаты, включённые в профиле. Включите нужные способы в Mollie Web App. В тестовом режиме способ работает сразу после включения, даже если Mollie ещё показывает его на проверке.
+
+Тестовый режим принимает только EUR. Для тестов добавьте провайдер в регион с евро, как описано в разделе [Добавление платёжного провайдера](/medusa-integrations/mollie/settings#добавление-платёжного-провайдера). В live-режиме набор способов оплаты, доступных покупателю, зависит от валюты корзины.
+
+---
+
+## Настройка вебхуков
+
+Mollie вызывает вебхук при каждом изменении платежа. Адрес вебхука плагин передаёт с каждым созданным платежом, поэтому регистрировать что-либо в Mollie не нужно. Укажите адрес в поле **Адрес вебхука** настроек Mollie в Medusa Admin в следующем формате:
+
+```text title="Webhook URL"
+https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/mollie_mollie
+```
+
+Замените `{YOUR_MEDUSA_DOMAIN}` на домен вашего магазина Medusa. Настройки принимают только адрес на `https://`, в пути которого есть `/hooks/payment/mollie_`.
+
+Вебхук Mollie содержит только ID платежа и не подписан. Плагин перечитывает платёж в Mollie вашим API-ключом и действует только по ответу Mollie, поэтому поддельное уведомление заказ не изменит. Когда платёж оплачен, плагин создаёт заказ, даже если покупатель закрыл вкладку на платёжной странице Mollie. Уведомление о платеже, которого нет в вашем аккаунте, плагин пропускает.
+
+Открытый платёж, в котором покупатель ещё не выбрал способ оплаты, Mollie не отменяет. Поэтому платёж, чья сессия в Medusa была заменена, остаётся доступным для оплаты на странице Mollie, пока не истечёт. Если покупатель всё же его оплатит, заказ для него создать нельзя, и плагин возвращает платёж целиком и пишет предупреждение в лог. Заблокированную сумму такой сессии плагин вместо возврата разблокирует.
+
+Mollie <a href="https://docs.mollie.com/docs/webhooks" target="_blank">повторяет неудачную доставку</a> до 10 раз в течение примерно 26 часов. Адрес на `localhost` Mollie не принимает. На время разработки запускайте бэкенд за туннелем с публичным HTTPS-адресом, как это делает пример проекта командой `yarn dev:tunnel`.
+
+<Note type="warning">Не трогайте раздел **Developers → Webhooks** в Mollie Web App. В нём настраиваются вебхуки нового поколения (next-gen), а этот плагин их не использует. Уведомления о платежах приходят плагину на адрес, который он передаёт с каждым платежом.</Note>
+
+---
+
+## Переход с плагина Mollie от сообщества
+
+Плагины сообщества вроде `@variablevic/mollie-payments-medusa` регистрируют отдельный провайдер для каждого способа оплаты, с id вроде `pp_mollie-card_mollie` и `pp_mollie-ideal_mollie`. Этот плагин регистрирует один провайдер, `pp_mollie_mollie`, а способ оплаты покупатель выбирает на странице Mollie. Списание и возврат платежа Medusa отправляет тому провайдеру, который его создал, поэтому платежи старого плагина к этому не переходят.
+
+Чтобы перейти:
+
+1. Спишите или отмените платежи, авторизованные через старый плагин. Возврат по такому заказу делайте в Mollie Web App, потому что старого провайдера уже не будет.
+
+2. Замените старые провайдеры в `providers` Платёжного модуля на `@gorgo/medusa-payment-mollie/providers/payment-mollie` и зарегистрируйте провайдер интеграции, как показано в разделе [Настройка](#настройка). Удалите старый пакет.
+
+3. Введите API-ключ и адрес вебхука в Medusa Admin. Старые плагины читали `apiKey`, `redirectUrl` и `medusaUrl` из `medusa-config.ts`, а этот плагин берёт ключ и адрес вебхука из своих настроек.
+
+4. Добавьте **Mollie (MOLLIE)** в регионы вместо старых провайдеров, как описано в разделе [Добавление платёжного провайдера](/medusa-integrations/mollie/settings#добавление-платёжного-провайдера).
+
+5. Замените код витрины. Теперь витрина передаёт с каждой платёжной сессией адрес, на который покупатель вернётся, как описано в разделе [Интеграция оплаты Mollie в витрину](/medusa-integrations/mollie/storefront-integration).

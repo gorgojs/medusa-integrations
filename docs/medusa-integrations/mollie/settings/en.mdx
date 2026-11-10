@@ -1,0 +1,89 @@
+---
+title: "Manage Mollie Settings in Medusa Admin"
+description: "Learn how to view and edit Mollie integration settings in Medusa Admin through the Integration Module."
+---
+
+# {frontmatter.title}
+
+In this guide, you'll learn how to view and edit Mollie integration settings in Medusa Admin via the [Integration Module](/medusa-modules/integration).
+
+## View Mollie Details
+
+To view the Mollie details:
+
+1. Open Medusa Admin.
+2. Go to **Settings → Integrations → Mollie**.
+
+This opens the Mollie settings page where you can review the credential details, the payment capture and the payment description.
+
+![Mollie settings overview](/static/mollie/en/settings-overview.webp)
+
+---
+
+## Edit Mollie Credential Parameters
+
+You can update the API key and the webhook URL from the first section on the Mollie settings page. A key starting with `test_` creates test payments, and one starting with `live_` creates real ones. Where the key comes from is described in [Account Setup](/medusa-integrations/mollie/getting-started#account-setup).
+
+To edit the credential parameters:
+
+1. Go to **Settings → Integrations → Mollie**.
+2. In the **Credentials** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the API key and the webhook URL. See [Webhook Setup](/medusa-integrations/mollie/getting-started#webhook-setup) for the URL's format.
+5. Click **Save**.
+
+![Edit Mollie credential details](/static/mollie/en/edit-credential.webp)
+
+Then click **Test connection**. It reads from Mollie the website profile the API key belongs to, so a wrong or revoked key fails here. It also fails for a webhook URL that does not start with `https://` or does not contain `/hooks/payment/mollie_`. A passed check shows the key's mode, `test` or `live`, and the profile's name, ID and status.
+
+---
+
+## Edit Behavior Type
+
+The **Behavior** section determines the payments processing type and what the buyer reads about the payment.
+
+If **Capture right away** is selected, one-step payment is used. If **Authorize only** is selected, two-step payment is used, and you capture the held amount from the order in Medusa Admin. Only cards, Klarna, Billie, Riverty and a few other methods can hold an amount. A card authorization expires after 7 to 30 days, depending on the card brand, and Mollie does not extend it.
+
+**Payment description** is what the buyer sees on Mollie's payment page and on the bank statement, up to 255 characters. When it is empty, the plugin uses the word Cart and the cart's ID.
+
+To edit the payment behavior:
+
+1. Go to **Settings → Integrations → Mollie**.
+2. In the **Behavior** section, click the action menu in the section's header.
+3. Choose **Edit**.
+4. In the side panel that opens, update the payment capture and the payment description.
+5. Click **Save**.
+
+![Edit behavior type](/static/mollie/en/edit-behavior.webp)
+
+<Note type="warning">A capture always takes the whole authorized amount. Medusa does not pass the amount of a capture to the plugin, so capturing part of a payment in Medusa Admin still captures all of it in Mollie. Capture the full amount, and refund the difference if you need to.</Note>
+
+---
+
+## Add Payment Provider
+
+To add a payment provider displayed in the Storefront for Mollie:
+
+1. Go to **Settings → Regions**.
+2. Choose your region.
+3. In the first section, click the action menu in the section's header.
+4. Choose **Edit**.
+5. In the modal that opens, add **Mollie (MOLLIE)** to Payment Providers.
+6. Click **Save**.
+
+![Add payment provider](/static/mollie/en/add-payment-provider.webp)
+
+Mollie's test mode accepts only EUR, so test in a region in euros. In live mode, Mollie's payment page offers only the methods that accept the cart's currency.
+
+---
+
+## Refunds and Cancellations
+
+Make refunds and cancellations from the order in Medusa Admin. The plugin handles them depending on the payment's state in Mollie:
+
+- **Refund.** A paid payment can be refunded in several parts, up to the amount paid. Mollie pays a refund back from your Mollie balance, asynchronously, and queues it while the balance is too low. If Mollie later reports a refund as failed, the plugin writes a warning to the log, and the order in Medusa still shows the refund. Gift cards and paysafecard payments cannot be refunded.
+- **Cancellation of an authorized payment.** The plugin asks Mollie to release the held amount. Mollie releases it asynchronously.
+- **Cancellation of an open payment.** Mollie does not cancel a payment the buyer has not chosen a method for. The plugin leaves it open with a warning in the log, and Mollie lets it expire.
+- **Cancellation of a paid payment.** The plugin refuses it with a message to refund the payment instead.
+
+A refund or a cancellation made in the Mollie Web App does not reach Medusa, and the order keeps its amounts.
