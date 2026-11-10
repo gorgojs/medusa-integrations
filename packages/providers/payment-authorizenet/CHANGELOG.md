@@ -1,5 +1,11 @@
 # @gorgo/medusa-payment-authorizenet
 
+## 2.0.3
+
+### Documentation
+
+- drop the migration section from the readme and the docs by [@gorgohead](https://github.com/gorgohead) in [`848780b`](https://github.com/gorgojs/medusa-integrations/commit/848780be9d0f7d2f25bfec2087f2a7f948c685a0)
+
 ## 2.0.2
 
 ### Documentation
