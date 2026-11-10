@@ -1,0 +1,148 @@
+# Mollie — payment provider, authored by Gorgo.
+# See example.yml for the fully-annotated template.
+
+identifier: "mollie"
+npm: "@gorgo/medusa-payment-mollie"
+category: "payment"
+author: "gorgo"
+displayName:
+  en: "Mollie"
+  ru: "Mollie"
+shortDescription:
+  en: "Accept payments on Mollie's hosted payment page"
+  ru: "Приём платежей на платёжной странице Mollie"
+icon: "mollie.svg"
+repository: "https://github.com/gorgojs/medusa-integrations"
+docsUrl: "https://docs.gorgojs.com/medusa-integrations/mollie"
+docsSnippet:
+  en: |
+    ## Install
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-mollie
+    # or with yarn
+    yarn add @gorgo/medusa-payment-mollie
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-mollie
+    ```
+
+    ## Use
+
+    Add the following to your Medusa configuration:
+
+    ```medusa-config.ts
+    const MOLLIE_INTEGRATION_ID = "mollie-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-mollie/providers/integration-mollie",
+                id: MOLLIE_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-mollie",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-mollie/providers/payment-mollie",
+                id: "mollie",
+                options: { id: MOLLIE_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Then restart the server.
+
+    ## Set up
+
+    1. Open **Settings → Integrations → Mollie**.
+    2. Under **Credentials**, enter the API key of your Mollie website profile, from **Developers → API keys** in the Mollie Web App.
+    3. Enter the **Webhook URL**, `https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/mollie_mollie`. Nothing has to be set up in Mollie, since the plugin sends the URL with every payment.
+    4. Under **Behavior**, set **Payment capture** to **Capture right away** or **Authorize only**.
+    5. Add **Mollie (MOLLIE)** to your regions. Mollie's test mode accepts only EUR.
+  ru: |
+    ## Установка
+
+    ```bash
+    # with npm
+    npm install @gorgo/medusa-payment-mollie
+    # or with yarn
+    yarn add @gorgo/medusa-payment-mollie
+    # or with pnpm
+    pnpm add @gorgo/medusa-payment-mollie
+    ```
+
+    ## Подключение
+
+    Добавьте следующий код в конфигурацию Medusa:
+
+    ```medusa-config.ts
+    const MOLLIE_INTEGRATION_ID = "mollie-1"
+
+    module.exports = defineConfig({
+      plugins: [
+        {
+          resolve: "@gorgo/medusa-integration",
+          options: {
+            encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-mollie/providers/integration-mollie",
+                id: MOLLIE_INTEGRATION_ID,
+                options: {},
+              },
+            ],
+          },
+        },
+        {
+          resolve: "@gorgo/medusa-payment-mollie",
+          options: {},
+        },
+      ],
+      modules: [
+        {
+          resolve: "@medusajs/medusa/payment",
+          options: {
+            providers: [
+              {
+                resolve: "@gorgo/medusa-payment-mollie/providers/payment-mollie",
+                id: "mollie",
+                options: { id: MOLLIE_INTEGRATION_ID },
+              },
+            ],
+          },
+        },
+      ],
+    })
+    ```
+
+    Затем перезапустите сервер.
+
+    ## Настройка
+
+    1. Откройте **Настройки → Интеграции → Mollie**.
+    2. В разделе **Доступы** введите API-ключ профиля сайта Mollie из раздела **Developers → API keys** в Mollie Web App.
+    3. Введите **Адрес вебхука**, `https://{YOUR_MEDUSA_DOMAIN}/hooks/payment/mollie_mollie`. В Mollie ничего настраивать не нужно, плагин передаёт адрес с каждым платежом.
+    4. В разделе **Поведение** выберите в поле **Способ списания** вариант **Списать сразу** или **Только заблокировать**.
+    5. Добавьте **Mollie (MOLLIE)** в регионы. Тестовый режим Mollie принимает только EUR.
+active: true
