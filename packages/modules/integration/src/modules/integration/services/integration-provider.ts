@@ -1,10 +1,10 @@
 import { IntegrationProviderRegistrationPrefix } from "../types"
 import { integrationProviderKey } from "../utils/provider-id"
-import type { AbstractIntegrationProvider } from "../utils/abstract-integration-provider"
+import type { AbstractIntegrationProviderService } from "../utils/abstract-integration-provider"
 import type { IntegrationDescriptor } from "../descriptor/define"
 
 type InjectedDependencies = {
-  [key: `${typeof IntegrationProviderRegistrationPrefix}${string}`]: AbstractIntegrationProvider
+  [key: `${typeof IntegrationProviderRegistrationPrefix}${string}`]: AbstractIntegrationProviderService
 }
 
 /** A single registered provider = one integration *instance*. */
@@ -13,7 +13,7 @@ export type ProviderRegistration = {
   key: string
   identifier: string
   instanceId: string | null
-  provider: AbstractIntegrationProvider
+  provider: AbstractIntegrationProviderService
 }
 
 /**
@@ -39,7 +39,7 @@ export default class IntegrationProviderService {
   }
 
   /** All registered provider instances. */
-  listProviders(): AbstractIntegrationProvider[] {
+  listProviders(): AbstractIntegrationProviderService[] {
     return Object.keys(this.dependencies_)
       .filter((k) => k.startsWith(IntegrationProviderRegistrationPrefix))
       .map((k) => this.dependencies_[k as keyof InjectedDependencies])
@@ -61,7 +61,7 @@ export default class IntegrationProviderService {
   }
 
   /** Resolve a provider by its exact container key. */
-  retrieveByKey(key: string): AbstractIntegrationProvider {
+  retrieveByKey(key: string): AbstractIntegrationProviderService {
     const provider = this.dependencies_[key as keyof InjectedDependencies]
     if (!provider) {
       throw new Error(
@@ -72,7 +72,7 @@ export default class IntegrationProviderService {
   }
 
   /** Resolve the provider for a `(identifier, instanceId)` pair. */
-  retrieveProvider(identifier: string, instanceId?: string | null): AbstractIntegrationProvider {
+  retrieveProvider(identifier: string, instanceId?: string | null): AbstractIntegrationProviderService {
     return this.retrieveByKey(IntegrationProviderService.key(identifier, instanceId))
   }
 

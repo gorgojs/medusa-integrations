@@ -6,7 +6,7 @@
 
 # Stable id for the integration. Unique across the catalog; lowercase-kebab;
 # matches the icon basename by convention. For integrations built on
-# AbstractIntegrationProvider, use the provider's `static identifier`.
+# AbstractIntegrationProviderService, use the provider's `static identifier`.
 identifier: "example"
 
 # npm package that ships the integration.

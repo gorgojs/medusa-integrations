@@ -31,17 +31,17 @@ Create the file `src/providers/integration-my/services/my-integration.ts`, which
 
 ```ts title="providers/integration-my/services/my-integration.ts"
 import {
-  AbstractIntegrationProvider
+  AbstractIntegrationProviderService
 } from "@gorgo/medusa-integration"
 
-class MyIntegrationProvider extends AbstractIntegrationProvider {
+class MyIntegrationProvider extends AbstractIntegrationProviderService {
   // TODO add methods
 }
 
 export default MyIntegrationProvider
 ```
 
-The parent class you're extending here, `AbstractIntegrationProvider`, is abstract, so the subclass must implement its `descriptor` property (declared as a `get`). The class also needs a `static identifier`, which the loader relies on.
+The parent class you're extending here, `AbstractIntegrationProviderService`, is abstract, so the subclass must implement its `descriptor` property (declared as a `get`). The class also needs a `static identifier`, which the loader relies on.
 
 ### identifier
 
@@ -50,7 +50,7 @@ Every Integration Module provider has a unique identifier. The store admin confi
 #### Example
 
 ```ts title="providers/integration-my/services/my-integration.ts"
-class MyIntegrationProvider extends AbstractIntegrationProvider {
+class MyIntegrationProvider extends AbstractIntegrationProviderService {
   static identifier = "my"
   // ...
 }
@@ -72,7 +72,7 @@ See [General Concepts](/medusa-modules/integration/concepts#descriptor) for an o
 
 ```ts title="providers/integration-my/services/my-integration.ts"
 import {
-  AbstractIntegrationProvider,
+  AbstractIntegrationProviderService,
   defineIntegration,
   z
 } from "@gorgo/medusa-integration"
@@ -106,7 +106,7 @@ const descriptor = defineIntegration({
 
 export type MyOptions = z.infer<typeof descriptor.optionsSchema>
 
-export class MyIntegrationProvider extends AbstractIntegrationProvider {
+export class MyIntegrationProvider extends AbstractIntegrationProviderService {
   // ...
   get descriptor() {
     return descriptor
@@ -125,7 +125,7 @@ Like other Medusa providers, an Integration Module provider can declare a static
 #### Example
 
 ```ts title="providers/integration-my/services/my-integration.ts"
-class MyIntegrationProvider extends AbstractIntegrationProvider {
+class MyIntegrationProvider extends AbstractIntegrationProviderService {
   // ...
   static validateOptions(options: Record<string, unknown>) {
     // optional fail-fast check of options.providers[].options

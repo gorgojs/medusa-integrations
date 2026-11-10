@@ -31,17 +31,17 @@ description: "Узнайте, как создать провайдер для Me
 
 ```ts title="providers/integration-my/services/my-integration.ts"
 import {
-  AbstractIntegrationProvider
+  AbstractIntegrationProviderService
 } from "@gorgo/medusa-integration"
 
-class MyIntegrationProvider extends AbstractIntegrationProvider {
+class MyIntegrationProvider extends AbstractIntegrationProviderService {
   // TODO add methods
 }
 
 export default MyIntegrationProvider
 ```
 
-Родительский класс, который вы расширяете здесь, `AbstractIntegrationProvider`, абстрактный, поэтому подкласс обязан реализовать его свойство `descriptor` (объявленное через `get`). Классу также нужен `static identifier`: на него рассчитывает загрузчик.
+Родительский класс, который вы расширяете здесь, `AbstractIntegrationProviderService`, абстрактный, поэтому подкласс обязан реализовать его свойство `descriptor` (объявленное через `get`). Классу также нужен `static identifier`: на него рассчитывает загрузчик.
 
 ### identifier
 
@@ -50,7 +50,7 @@ export default MyIntegrationProvider
 #### Пример
 
 ```ts title="providers/integration-my/services/my-integration.ts"
-class MyIntegrationProvider extends AbstractIntegrationProvider {
+class MyIntegrationProvider extends AbstractIntegrationProviderService {
   static identifier = "my"
   // ...
 }
@@ -72,7 +72,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 
 ```ts title="providers/integration-my/services/my-integration.ts"
 import {
-  AbstractIntegrationProvider,
+  AbstractIntegrationProviderService,
   defineIntegration,
   z
 } from "@gorgo/medusa-integration"
@@ -106,7 +106,7 @@ const descriptor = defineIntegration({
 
 export type MyOptions = z.infer<typeof descriptor.optionsSchema>
 
-export class MyIntegrationProvider extends AbstractIntegrationProvider {
+export class MyIntegrationProvider extends AbstractIntegrationProviderService {
   // ...
   get descriptor() {
     return descriptor
@@ -125,7 +125,7 @@ export default MyIntegrationProvider
 #### Пример
 
 ```ts title="providers/integration-my/services/my-integration.ts"
-class MyIntegrationProvider extends AbstractIntegrationProvider {
+class MyIntegrationProvider extends AbstractIntegrationProviderService {
   // ...
   static validateOptions(options: Record<string, unknown>) {
     // необязательная fail-fast проверка options.providers[].options

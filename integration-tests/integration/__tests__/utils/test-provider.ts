@@ -1,4 +1,4 @@
-import { AbstractIntegrationProvider, defineIntegration, INTEGRATION_MODULE } from "@gorgo/medusa-integration"
+import { AbstractIntegrationProviderService, defineIntegration, INTEGRATION_MODULE } from "@gorgo/medusa-integration"
 import type { IntegrationDescriptorInput } from "@gorgo/medusa-integration"
 import { ModuleProvider } from "@medusajs/framework/utils"
 
@@ -23,7 +23,7 @@ const descriptor = defineIntegration({
   },
 })
 
-class TestIntegrationProvider extends AbstractIntegrationProvider {
+class TestIntegrationProvider extends AbstractIntegrationProviderService {
   static identifier = "test"
   get descriptor(): IntegrationDescriptorInput {
     return descriptor

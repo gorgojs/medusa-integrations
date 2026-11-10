@@ -135,16 +135,16 @@ for (const name of providers()) {
   }
 
   // 4. A catalog entry, but only for a provider built on the integration module. A provider that
-  //    does not extend AbstractIntegrationProvider is not configurable from Admin, so it has
+  //    does not extend AbstractIntegrationProviderService is not configurable from Admin, so it has
   //    nothing to show there. feed-yandex is the current example.
   const usesModule = usesIntegrationModule(name)
   const entry = entries.find(e => e.npm === npmName)
 
   if (usesModule && !entry) {
-    add(name, 'catalog', `extends AbstractIntegrationProvider but no catalog entry has npm: ${npmName}`)
+    add(name, 'catalog', `extends AbstractIntegrationProviderService but no catalog entry has npm: ${npmName}`)
   }
   if (!usesModule && entry) {
-    add(name, 'catalog', `has catalog entry ${entry.file} but does not extend AbstractIntegrationProvider`)
+    add(name, 'catalog', `has catalog entry ${entry.file} but does not extend AbstractIntegrationProviderService`)
   }
   if (entry) {
     if (!entry.icon) {
@@ -161,7 +161,10 @@ for (const name of providers()) {
   }
 }
 
-/** Does any source file in the provider extend AbstractIntegrationProvider. */
+/**
+ * Does any source file in the provider extend AbstractIntegrationProviderService. The match also
+ * takes the deprecated alias, AbstractIntegrationProvider, which is a prefix of the new name.
+ */
 function usesIntegrationModule(name) {
   const root = abs('packages', 'providers', name, 'src')
   if (!fs.existsSync(root)) return false

@@ -10,7 +10,7 @@
     "identifier": {
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9-]*$",
-      "description": "Stable id for the integration; matches the provider's `static identifier` for integrations built on AbstractIntegrationProvider. Unique across the catalog. Lowercase-kebab; matches the icon basename by convention."
+      "description": "Stable id for the integration; matches the provider's `static identifier` for integrations built on AbstractIntegrationProviderService. Unique across the catalog. Lowercase-kebab; matches the icon basename by convention."
     },
     "npm": {
       "type": "string",

@@ -17,9 +17,9 @@ description: "Что такое провайдер Модуля интеграц
 
 ## Создание собственного провайдера Модуля интеграций
 
-Провайдер Модуля интеграций представляет собой модуль, чей сервис расширяет `AbstractIntegrationProvider`, импортированный из `@gorgo/medusa-integration`. Как и у других провайдеров Medusa, один модуль может регистрировать несколько сервисов провайдера Модуля интеграций, каждый со своим `static identifier`, и каждый становится отдельным провайдером.
+Провайдер Модуля интеграций представляет собой модуль, чей сервис расширяет `AbstractIntegrationProviderService`, импортированный из `@gorgo/medusa-integration`. Как и у других провайдеров Medusa, один модуль может регистрировать несколько сервисов провайдера Модуля интеграций, каждый со своим `static identifier`, и каждый становится отдельным провайдером.
 
-`AbstractIntegrationProvider` объявляет следующие члены класса:
+`AbstractIntegrationProviderService` объявляет следующие члены класса:
 
 | Член класса | Описание |
 | --- | --- |
@@ -32,9 +32,9 @@ description: "Что такое провайдер Модуля интеграц
 Вот минимальная форма провайдера со всеми членами класса из таблицы выше, кроме тех, что уже реализует базовый класс:
 
 ```ts title="providers/integration-my/services/my-integration.ts"
-import { AbstractIntegrationProvider } from "@gorgo/medusa-integration"
+import { AbstractIntegrationProviderService } from "@gorgo/medusa-integration"
 
-class MyIntegrationProvider extends AbstractIntegrationProvider {
+class MyIntegrationProvider extends AbstractIntegrationProviderService {
   static identifier = "my"
 
   static validateOptions(options: Record<string, unknown>) {
@@ -49,7 +49,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 export default MyIntegrationProvider
 ```
 
-`descriptor` здесь представляет собой результат `defineIntegration`. Все поля, которые он принимает, смотрите на странице [Дескриптор провайдера интеграций](/medusa-modules/integration/descriptor). `getIdentifier()` и `getInstanceId()` в примере не показаны: `AbstractIntegrationProvider` уже реализует оба метода через аргумент `instanceId` конструктора, поэтому подкласс добавляет только `static identifier`, `descriptor` и, опционально, `static validateOptions`.
+`descriptor` здесь представляет собой результат `defineIntegration`. Все поля, которые он принимает, смотрите на странице [Дескриптор провайдера интеграций](/medusa-modules/integration/descriptor). `getIdentifier()` и `getInstanceId()` в примере не показаны: `AbstractIntegrationProviderService` уже реализует оба метода через аргумент `instanceId` конструктора, поэтому подкласс добавляет только `static identifier`, `descriptor` и, опционально, `static validateOptions`.
 
 <Note type="default" title="">
 

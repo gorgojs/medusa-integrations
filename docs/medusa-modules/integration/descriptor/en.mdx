@@ -18,7 +18,7 @@ For the roles involved and how an option moves from the descriptor to a resolved
 Create a descriptor with `defineIntegration`. It builds `optionsSchema` from your `options` catalog, used for `z.infer`, defaults, and full validation.
 
 ```ts title="providers/integration-my/services/my-integration.ts"
-import { defineIntegration, AbstractIntegrationProvider } from "@gorgo/medusa-integration"
+import { defineIntegration, AbstractIntegrationProviderService } from "@gorgo/medusa-integration"
 
 const descriptor = defineIntegration({
   category: "payment",
@@ -47,7 +47,7 @@ const descriptor = defineIntegration({
   ],
 })
 
-export class MyIntegration extends AbstractIntegrationProvider {
+export class MyIntegration extends AbstractIntegrationProviderService {
   static identifier = "my"
 
   get descriptor() {

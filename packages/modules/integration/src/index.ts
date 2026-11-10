@@ -1,6 +1,9 @@
 // ── For integration-provider authors ─────────────────────────────────────────
 export { defineIntegration, z } from "./modules/integration/descriptor/define"
-export { AbstractIntegrationProvider } from "./modules/integration/utils/abstract-integration-provider"
+export {
+  AbstractIntegrationProviderService,
+  AbstractIntegrationProvider,
+} from "./modules/integration/utils/abstract-integration-provider"
 export type {
   IntegrationDescriptor,
   IntegrationDescriptorInput,
