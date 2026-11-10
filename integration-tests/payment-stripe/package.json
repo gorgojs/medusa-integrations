@@ -10,9 +10,9 @@
   "dependencies": {
     "@gorgo/medusa-integration": "workspace:*",
     "@gorgo/medusa-payment-stripe": "workspace:*",
-    "@medusajs/framework": "2.22.4",
-    "@medusajs/medusa": "2.22.4",
-    "@medusajs/test-utils": "2.22.4",
+    "@medusajs/framework": "2.22.6",
+    "@medusajs/medusa": "2.22.6",
+    "@medusajs/test-utils": "2.22.6",
     "pg-god": "^1.0.12"
   },
   "devDependencies": {
