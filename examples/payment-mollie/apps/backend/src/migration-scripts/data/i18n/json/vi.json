@@ -1,0 +1,103 @@
+{
+  "name": "Tiếng Việt",
+  "translations": {
+    "categories": {
+      "clothing": "Quần áo",
+      "coffee": "Cà phê",
+      "eTransport": "Phương tiện di chuyển điện",
+      "electronics": "Đồ điện tử",
+      "headphones": "Tai nghe",
+      "home": "Đồ gia dụng",
+      "outerwear": "Áo khoác ngoài",
+      "pants": "Quần dài",
+      "shirts": "Áo thun",
+      "shorts": "Quần short",
+      "sweatshirts": "Áo nỉ",
+      "tableware": "Đồ dùng bàn ăn"
+    },
+    "collections": {
+      "new": "Hàng Mới Về"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Quần chino đen kinh điển với form dáng vừa vặn và thiết kế tối giản. Được làm từ vải cotton mềm mại, bền chắc với một chút độ co giãn để tạo cảm giác thoải mái. Có túi hai bên, đai lưng và khóa cài nút. Lý tưởng cho cả phong cách thường ngày lẫn lịch sự.",
+        "title": "Quần Chino"
+      },
+      "electricBike": {
+        "description": "Xe đạp địa hình điện màu đen nhám được chế tạo cho hiệu suất cao và sự linh hoạt trong sử dụng hàng ngày. Có khung nhôm nhẹ, pin tích hợp và động cơ mạnh mẽ cho trải nghiệm di chuyển êm ái trên mọi địa hình. Được thiết kế phù hợp cho cả di chuyển trong thành phố lẫn cung đường off-road.",
+        "title": "Xe Đạp Điện"
+      },
+      "espressoCup": {
+        "description": "Tách espresso bằng gốm màu đen, được thiết kế cho cả shot đơn và shot đôi. Bền, giữ nhiệt tốt và an toàn khi rửa bằng máy rửa chén.",
+        "title": "Tách Espresso"
+      },
+      "hoodie": {
+        "description": "Áo hoodie đen kinh điển làm từ chất liệu cotton mềm mại, mang lại sự thoải mái mỗi ngày. Thiết kế form rộng rãi, mũ trùm đầu có dây rút điều chỉnh và túi kangaroo phía trước. Đơn giản và linh hoạt để phối lớp trong mọi mùa.",
+        "title": "Áo Hoodie"
+      },
+      "pufferJacket": {
+        "description": "Áo khoác phao đen có lớp lót giữ ấm, được thiết kế để mang lại sự ấm áp và thoải mái trong thời tiết lạnh. Có cổ áo cao, khóa kéo phía trước kèm nút bấm và nhiều túi tiện dụng. Nhẹ nhưng bền bỉ, phù hợp để mặc hàng ngày hoặc hoạt động ngoài trời.",
+        "title": "Áo Khoác Phao"
+      },
+      "servingPlate": {
+        "description": "Một chiếc đĩa bày món bằng thép không gỉ với thiết kế điêu khắc và lớp hoàn thiện bóng như gương. Hình dáng mềm mại, hiện đại mang đến nét tinh tế cho mọi bàn tiệc. Hoàn hảo để bày trái cây, món khai vị hoặc trưng bày trang trí. Được thiết kế vừa để sử dụng vừa để tạo điểm nhấn thị giác, đĩa phản chiếu ánh sáng tuyệt đẹp và phù hợp với mọi phong cách nhà ở hay nhà hàng đương đại.",
+        "title": "Đĩa Bày Món"
+      },
+      "shorts": {
+        "description": "Tái định nghĩa cảm giác của một chiếc quần short kinh điển. Với quần short cotton của chúng tôi, những món đồ thiết yếu hàng ngày không còn bình thường nữa.",
+        "title": "Quần Short Medusa"
+      },
+      "sweatpants": {
+        "description": "Tái định nghĩa cảm giác của một chiếc quần nỉ kinh điển. Với quần nỉ cotton của chúng tôi, những món đồ thiết yếu hàng ngày không còn bình thường nữa.",
+        "title": "Quần Nỉ Medusa"
+      },
+      "sweatshirt": {
+        "description": "Tái định nghĩa cảm giác của một chiếc áo nỉ kinh điển. Với áo nỉ cotton của chúng tôi, những món đồ thiết yếu hàng ngày không còn bình thường nữa.",
+        "title": "Áo Nỉ Medusa"
+      },
+      "tShirt": {
+        "description": "Tái định nghĩa cảm giác của một chiếc áo thun kinh điển. Với áo thun cotton của chúng tôi, những món đồ thiết yếu hàng ngày không còn bình thường nữa.",
+        "title": "Áo Thun Medusa"
+      },
+      "wirelessHeadphones": {
+        "description": "Tai nghe không dây màu đen nhám với thiết kế chụp tai êm ái, mang đến trải nghiệm nghe đắm chìm. Âm thanh rõ ràng, bass mạnh mẽ và thời lượng pin lâu dài. Được chế tạo để sử dụng hàng ngày tại nhà, văn phòng hoặc khi di chuyển.",
+        "title": "Tai Nghe Chụp Tai Không Dây"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Hoàn tiền như một thiện chí hoặc bồi thường cho sự bất tiện",
+        "label": "Điều Chỉnh Chăm Sóc Khách Hàng"
+      },
+      "pricingError": {
+        "description": "Hoàn tiền để khắc phục việc tính phí quá mức, thiếu chiết khấu hoặc giá không chính xác",
+        "label": "Lỗi Giá"
+      },
+      "shippingIssue": {
+        "description": "Hoàn tiền do đơn hàng bị thất lạc, giao trễ hoặc giao sai địa chỉ",
+        "label": "Sự Cố Vận Chuyển"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Giao hàng chuyển phát",
+      "pickup": "Nhận tại điểm lấy hàng"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Giao hàng trong vòng 2–3 ngày.",
+        "label": "Chuyển phát"
+      },
+      "pickup": {
+        "description": "Nhận hàng tại điểm lấy hàng.",
+        "label": "Nhận hàng"
+      }
+    },
+    "terms": {
+      "black": "Đen",
+      "color": "Màu sắc",
+      "silver": "Bạc",
+      "size": "Kích thước",
+      "white": "Trắng"
+    }
+  }
+}

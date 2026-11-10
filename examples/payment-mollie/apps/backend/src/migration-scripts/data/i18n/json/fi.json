@@ -1,0 +1,103 @@
+{
+  "name": "Suomi",
+  "translations": {
+    "categories": {
+      "clothing": "Vaatteet",
+      "coffee": "Kahvi",
+      "eTransport": "Sähköinen liikkuminen",
+      "electronics": "Elektroniikka",
+      "headphones": "Kuulokkeet",
+      "home": "Koti",
+      "outerwear": "Ulkovaatteet",
+      "pants": "Housut",
+      "shirts": "T-paidat",
+      "shorts": "Shortsit",
+      "sweatshirts": "Collegepaidat",
+      "tableware": "Astiat"
+    },
+    "collections": {
+      "new": "Uutuudet"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klassiset mustat chinot, joissa on istuva leikkaus ja pelkistetty muotoilu. Valmistettu pehmeästä ja kestävästä puuvillakankaasta, jossa on hieman joustoa mukavuuden vuoksi. Sivutaskut, vyölenkit ja nappikiinnitys. Sopivat sekä rentoon että hienostuneempaan pukeutumiseen.",
+        "title": "Chinot"
+      },
+      "electricBike": {
+        "description": "Mattamusta sähköinen maastopyörä, joka on rakennettu suorituskykyä ja arjen monikäyttöisyyttä varten. Kevyt alumiinirunko, integroitu akku ja tehokas moottori mahdollistavat sulavan avusteisen ajon kaikenlaisessa maastossa. Suunniteltu sekä kaupunkiajoon että maastoreiteille.",
+        "title": "Sähköpyörä"
+      },
+      "espressoCup": {
+        "description": "Mustat keraamiset espressokupit on suunniteltu yhdelle tai kaksoisannokselle. Kestävät, lämpöä pitävät ja konepesun kestävät.",
+        "title": "Espressokuppi"
+      },
+      "hoodie": {
+        "description": "Klassinen musta huppari pehmeästä puuvillakankaasta arjen mukavuuteen. Väljä istuvuus, säädettävä nyörihuppu ja kenguru-tasku edessä. Yksinkertainen ja monikäyttöinen kerrostukseen kaikkina vuodenaikoina.",
+        "title": "Huppari"
+      },
+      "pufferJacket": {
+        "description": "Musta tikattu toppatakki, joka on suunniteltu pitämään lämpimänä ja mukavana kylmällä säällä. Korkea kaulus, edessä vetoketju ja painonapilla suljettava suoja sekä useita taskuja käytännöllisyyden vuoksi. Kevyt mutta kestävä arkikäyttöön tai ulkoiluun.",
+        "title": "Toppatakki"
+      },
+      "servingPlate": {
+        "description": "Veistoksellinen ruostumattomasta teräksestä valmistettu tarjoiluvati, jossa on kiillotettu peilipinta. Sen virtaava, moderni muoto tuo hienostuneen lisän mihin tahansa katettuun pöytään. Täydellinen hedelmille, alkupaloille tai koristeelliseen esillepanoon. Suunniteltu sekä toimivuutta että visuaalista vaikutusta ajatellen, se heijastaa valoa kauniisti ja sopii mihin tahansa moderniin koti- tai ravintolatyyliin.",
+        "title": "Tarjoiluvati"
+      },
+      "shorts": {
+        "description": "Koe klassisten shortsien tuntu uudessa valossa. Puuvillaisten shortsiemme ansiosta arjen perusvaatteet eivät ole enää tavallisia.",
+        "title": "Medusa shortsit"
+      },
+      "sweatpants": {
+        "description": "Koe klassisten verryttelyhousujen tuntu uudessa valossa. Puuvillaisten verryttelyhousujemme ansiosta arjen perusvaatteet eivät ole enää tavallisia.",
+        "title": "Medusa verryttelyhousut"
+      },
+      "sweatshirt": {
+        "description": "Koe klassisen collegepaidan tuntu uudessa valossa. Puuvillaisen collegepaitamme ansiosta arjen perusvaatteet eivät ole enää tavallisia.",
+        "title": "Medusa collegepaita"
+      },
+      "tShirt": {
+        "description": "Koe klassisen T-paidan tuntu uudessa valossa. Puuvillaisten T-paitojemme ansiosta arjen perusvaatteet eivät ole enää tavallisia.",
+        "title": "Medusa T-paita"
+      },
+      "wirelessHeadphones": {
+        "description": "Mattamustat langattomat kuulokkeet, joiden mukava over-ear-malli tarjoaa syventävän kuuntelukokemuksen. Tuottavat kirkkaan äänen, voimakkaan basson ja pitkän akunkeston. Suunniteltu päivittäiseen käyttöön kotona, toimistossa tai matkalla.",
+        "title": "Langattomat over-ear-kuulokkeet"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Hyvitys annettu hyvän tahdon eleenä tai korvauksena aiheutuneesta haitasta",
+        "label": "Asiakaspalveluhyvitys"
+      },
+      "pricingError": {
+        "description": "Hyvitys liikaveloituksen, puuttuvan alennuksen tai virheellisen hinnan korjaamiseksi",
+        "label": "Hintavirhe"
+      },
+      "shippingIssue": {
+        "description": "Hyvitys kadonneesta, viivästyneestä tai virheellisesti toimitetusta lähetyksestä",
+        "label": "Toimitusongelma"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Kuriiritoimitus",
+      "pickup": "Nouto"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Toimitus 2–3 päivän kuluessa.",
+        "label": "Kuriiri"
+      },
+      "pickup": {
+        "description": "Nouto noutopisteestä.",
+        "label": "Nouto"
+      }
+    },
+    "terms": {
+      "black": "Musta",
+      "color": "Väri",
+      "silver": "Hopea",
+      "size": "Koko",
+      "white": "Valkoinen"
+    }
+  }
+}

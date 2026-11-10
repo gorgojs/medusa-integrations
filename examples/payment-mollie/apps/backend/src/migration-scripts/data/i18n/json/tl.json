@@ -1,0 +1,103 @@
+{
+  "name": "Tagalog",
+  "translations": {
+    "categories": {
+      "clothing": "Damit",
+      "coffee": "Kape",
+      "eTransport": "Elektrikong Sasakyan",
+      "electronics": "Elektroniks",
+      "headphones": "Headphones",
+      "home": "Bahay",
+      "outerwear": "Panlabas na Kasuotan",
+      "pants": "Pantalon",
+      "shirts": "T-Shirt",
+      "shorts": "Shorts",
+      "sweatshirts": "Sweatshirt",
+      "tableware": "Kagamitan sa Hapag-kainan"
+    },
+    "collections": {
+      "new": "Mga Bagong Dating"
+    },
+    "products": {
+      "chinoPants": {
+        "description": "Klasikong itim na chino pants na may tailored fit at minimal na disenyo. Gawa sa malambot at matibay na cotton fabric na may kaunting stretch para sa komportable. May side pockets, belt loops, at button closure. Perpekto para sa casual at smart na okasyon.",
+        "title": "Chino Pants"
+      },
+      "electricBike": {
+        "description": "Matte black na electric mountain bike na dinisenyo para sa performance at pang-araw-araw na versatility. May magaan na aluminum frame, integrated battery, at makapangyarihang motor para sa maayos na pag-assist habang nagbibiyahe sa lahat ng klase ng daan. Bagay parehong sa city commute at off-road na paglalakbay.",
+        "title": "Electric Bike"
+      },
+      "espressoCup": {
+        "description": "Itim na ceramic espresso cups na dinisenyo para sa single o double shot. Matibay, panatiling mainit, at dishwasher safe.",
+        "title": "Espresso Cup"
+      },
+      "hoodie": {
+        "description": "Klasikong itim na hoodie na gawa sa malambot na cotton fabric para sa pang-araw-araw na kumportable. May relaxed fit, adjustable na drawstring sa hood, at front kangaroo pocket. Simple at versatile para i-layer sa kahit anong panahon.",
+        "title": "Hoodie"
+      },
+      "pufferJacket": {
+        "description": "Insulated na itim na puffer jacket na dinisenyo para sa init at komportable sa malamig na panahon. May mataas na kwelyo, front zipper na may snap closure, at maraming bulsa para sa functionality. Magaan pero matibay, bagay sa araw-araw na paggamit o outdoor activities.",
+        "title": "Puffer Jacket"
+      },
+      "servingPlate": {
+        "description": "Isang sculptural na stainless steel serving plate na may makintab na mirror finish. Ang fluid at modernong hugis nito ay nagdaragdag ng magarbo at eleganteng touch sa anumang table setting. Perpekto para sa prutas, appetizers, o decorative display. Dinisenyo para sa functionality at visual impact, magandang sumasalamin ito ng liwanag at bagay sa anumang contemporary na istilo ng bahay o restaurant.",
+        "title": "Serving Plate"
+      },
+      "shorts": {
+        "description": "Muling isipin ang pakiramdam ng klasikong shorts. Sa aming cotton shorts, ang pang-araw-araw na kailangan mo ay hindi na basta-basta.",
+        "title": "Medusa Shorts"
+      },
+      "sweatpants": {
+        "description": "Muling isipin ang pakiramdam ng klasikong sweatpants. Sa aming cotton sweatpants, ang pang-araw-araw na kailangan mo ay hindi na basta-basta.",
+        "title": "Medusa Sweatpants"
+      },
+      "sweatshirt": {
+        "description": "Muling isipin ang pakiramdam ng klasikong sweatshirt. Sa aming cotton sweatshirt, ang pang-araw-araw na kailangan mo ay hindi na basta-basta.",
+        "title": "Medusa Sweatshirt"
+      },
+      "tShirt": {
+        "description": "Muling isipin ang pakiramdam ng klasikong tee. Sa aming cotton T-shirts, ang pang-araw-araw na kailangan mo ay hindi na basta-basta.",
+        "title": "Medusa T-Shirt"
+      },
+      "wirelessHeadphones": {
+        "description": "Matte black na wireless headphones na may komportableng over-ear na disenyo para sa immersive na karanasan sa pakikinig. Nagbibigay ng malinaw na tunog, malakas na bass, at mahabang battery life. Ginawa para sa araw-araw na gamit sa bahay, sa opisina, o kahit saan ka pumunta.",
+        "title": "Wireless Over-Ear Headphones"
+      }
+    },
+    "refundReasons": {
+      "customerCareAdjustment": {
+        "description": "Refund na ibinigay bilang goodwill o kompensasyon para sa abala",
+        "label": "Customer Care Adjustment"
+      },
+      "pricingError": {
+        "description": "Refund para itama ang sobrang singil, nawawalang diskwento, o maling presyo",
+        "label": "Error sa Presyo"
+      },
+      "shippingIssue": {
+        "description": "Refund dahil sa nawalang, na-delay, o maling naihatid na shipment",
+        "label": "Isyu sa Paghahatid"
+      }
+    },
+    "shippingOptions": {
+      "courier": "Paghahatid ng Courier",
+      "pickup": "Pickup"
+    },
+    "shippingTypes": {
+      "courier": {
+        "description": "Paghahatid sa loob ng 2–3 araw.",
+        "label": "Courier"
+      },
+      "pickup": {
+        "description": "Kunin sa isang pickup point.",
+        "label": "Pickup"
+      }
+    },
+    "terms": {
+      "black": "Itim",
+      "color": "Kulay",
+      "silver": "Pilak",
+      "size": "Sukat",
+      "white": "Puti"
+    }
+  }
+}

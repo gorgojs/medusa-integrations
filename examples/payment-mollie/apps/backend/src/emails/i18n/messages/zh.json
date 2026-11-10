@@ -1,0 +1,119 @@
+{
+  "Common": {
+    "continueShopping": "继续购物",
+    "haveAccount": "已经有账户了？请前往",
+    "item": "商品",
+    "myOrders": "我的订单",
+    "orCall": "或致电",
+    "orderSummary": "订单详情",
+    "questionsPrefix": "如有任何疑问，请联系我们：",
+    "shipping": "运费",
+    "total": "合计",
+    "trackOrder": "查询物流",
+    "viewOrder": "查看订单"
+  },
+  "Delivery": {
+    "bodyOrder": "订单 <strong>#{id}</strong> 已送达。希望一切完好。",
+    "headingAnon": "您的订单已送达",
+    "headingWithName": "{name}，您的订单已送达",
+    "preview": "订单 #{id} 已送达",
+    "somethingWrong": "如有任何问题，请在 14 天内告诉我们，我们会为您处理。",
+    "subject": "订单 #{id} 已送达",
+    "textFallback": "订单 #{id} 已送达。"
+  },
+  "Fulfillment": {
+    "bodyOrder": "订单 <strong>#{id}</strong> 已打包，正在等待交给承运商。",
+    "deliveryCity": "配送至{city}。",
+    "headingAnon": "我们正在为您备货",
+    "headingWithName": "{name}，我们正在为您备货",
+    "nextStep": "包裹发出后，我们会立即把运单号发给您。",
+    "preview": "订单 #{id} 正在备货",
+    "subject": "订单 #{id} 正在备货",
+    "textFallback": "订单 #{id} 已打包。"
+  },
+  "Layout": {
+    "copyright": "© {year} {store}. 保留所有权利。"
+  },
+  "OrderCanceled": {
+    "bodyOrder": "订单 <strong>#{id}</strong> 已取消。",
+    "headingAnon": "您的订单已取消",
+    "headingWithName": "{name}，您的订单已取消",
+    "preview": "订单 #{id} 已取消",
+    "refundNote": "如果订单已付款，款项将退回原支付卡。银行通常需要最多 10 个工作日。",
+    "subject": "订单 #{id} 已取消",
+    "textFallback": "订单 #{id} 已取消。"
+  },
+  "OrderCompleted": {
+    "bodyOrder": "订单 <strong>#{id}</strong> 已完成。感谢您选择我们！",
+    "bodyPromo": "期待您的再次光临。欢迎浏览店铺的新品。",
+    "deliveryCity": "已送达 {city}。",
+    "headingAnon": "您的订单已完成！",
+    "headingWithName": "{name}，您的订单已完成！",
+    "preview": "订单 #{id} 已完成。感谢您的购买！",
+    "subject": "订单 #{id} 已完成",
+    "textFallback": "订单 #{id} 已完成。感谢您的购买！"
+  },
+  "OrderPlaced": {
+    "bodyOrder": "订单 <strong>#{id}</strong> 已成功创建。",
+    "deliveryCity": "配送至 {city}。",
+    "headingAnon": "您的订单已创建！",
+    "headingWithName": "{name}，您的订单已创建！",
+    "preview": "订单 #{id} 已成功创建",
+    "subject": "订单 #{id} 已创建",
+    "textFallback": "订单 #{id} 已创建。\n\n我们正在为您备货，并将尽快发出。",
+    "watchStatus": "您可以在账户中查看订单状态。"
+  },
+  "OrderTransfer": {
+    "body": "我们收到了将订单 <strong>#{id}</strong> 转移到其他账户的请求。如果是您本人操作，请通过下方按钮确认转移。如果不是，请忽略此邮件。",
+    "button": "查看请求",
+    "heading": "订单转移请求",
+    "hint": "订单只有在您确认后才会转移。如果您没有请求转移，您的订单不会有任何变化。",
+    "preview": "订单 #{id} 转移请求",
+    "subject": "订单 #{id} 转移请求",
+    "textFallback": "订单 #{id} 转移请求\n\n请通过以下链接查看请求：\n{url}\n\n如果您没有请求转移，请忽略此邮件。"
+  },
+  "PasswordReset": {
+    "body": "我们收到了将 <strong>{email}</strong> 的密码重置的请求。请点击下方按钮设置新密码。",
+    "button": "重置密码",
+    "heading": "重置密码",
+    "hint": "该链接在 <strong>15 分钟</strong>内有效。如果您没有请求重置密码，请忽略此邮件。",
+    "preview": "重置密码，链接 15 分钟内有效",
+    "subject": "重置密码",
+    "textFallback": "重置密码\n\n请通过以下链接重置密码（15 分钟内有效）：\n{url}\n\n如果您没有请求重置密码，请忽略此邮件。"
+  },
+  "Payment": {
+    "bodyOrder": "订单 <strong>#{id}</strong> 已成功支付。我们正在为发货做准备。",
+    "headingAnon": "您的订单已支付！",
+    "headingWithName": "{name}，您的订单已支付！",
+    "preview": "订单 #{id} 已成功支付",
+    "subject": "订单 #{id} 已支付",
+    "textFallback": "订单 #{id} 已支付。\n\n我们正在为您备货，并将尽快发出。",
+    "watchStatus": "您可以在账户中查看订单状态。"
+  },
+  "Shipment": {
+    "bodyOrder": "订单 <strong>#{id}</strong> 已交付给物流公司。",
+    "deliveryCity": "配送至 {city}。",
+    "deliveryTime": "常规配送时间为 1-7 个工作日，具体取决于您所在的地区。",
+    "headingAnon": "您的订单已在途中！",
+    "headingWithName": "{name}，您的订单已在途中！",
+    "noTracking": "包裹交付给物流公司后，运单号将添加到您账户中的订单信息里。",
+    "preview": "订单 #{id} 已发货",
+    "subject": "订单 #{id} 已发货",
+    "textDelivery": "常规配送时间为 1-7 个工作日。",
+    "textFallback": "订单 #{id} 已发货。",
+    "textTracking": "运单号：{numbers}",
+    "trackLabel": "运单号：",
+    "trackingTitle": "物流信息"
+  },
+  "Welcome": {
+    "body": "感谢您的注册！您的账户已就绪。现在您可以更快地下单、查看订单状态，并在账户中保存收货地址。",
+    "button": "开始购物",
+    "claimOrders": "以前没有账户时下过单？可以在这里关联进来：",
+    "claimOrdersLink": "我的订单",
+    "headingAnon": "欢迎您！",
+    "headingWithName": "欢迎您，{name}！",
+    "preview": "欢迎来到 {store}！",
+    "subject": "欢迎！",
+    "textFallback": "欢迎您！\n\n感谢您的注册。您的账户已就绪。\n开始购物：{url}"
+  }
+}
