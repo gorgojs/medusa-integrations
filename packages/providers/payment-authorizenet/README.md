@@ -139,10 +139,6 @@ Set `INTEGRATION_ENCRYPTION_KEY` to a long random string, for example the output
 
 Then restart the server and configure the integration in Medusa Admin under **Settings → Integrations → Authorize.net**.
 
-## Replacing the payment-authorizenet-medusa Plugin
-
-The plugin takes over from `payment-authorizenet-medusa` without a data migration. It keeps the provider ID `pp_authorizenet_authorizenet` and the webhook URL `/hooks/payment/authorizenet_authorizenet`, so payments created by the old plugin are still captured, refunded and voided. See [Switch from the payment-authorizenet-medusa Plugin](https://docs.gorgojs.com/medusa-integrations/authorizenet/getting-started#switch-from-the-payment-authorizenet-medusa-plugin) for the steps.
-
 ## Documentation
 
 The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-integrations/authorizenet).

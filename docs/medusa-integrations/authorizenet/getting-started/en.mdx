@@ -5,7 +5,7 @@ description: "Learn how to install and configure the Authorize.net payment provi
 
 # {frontmatter.title}
 
-In this guide, you'll learn how to install and configure the Authorize.net payment provider for Medusa, prepare your Authorize.net account, set up the webhook and Google Pay, and switch from the `payment-authorizenet-medusa` plugin.
+In this guide, you'll learn how to install and configure the Authorize.net payment provider for Medusa, prepare your Authorize.net account, and set up the webhook and Google Pay.
 
 ## Requirements
 
@@ -154,19 +154,3 @@ To receive the payment notifications the plugin acts on, add a webhook for your 
 Google Pay appears in the express checkout row of the storefront once you switch it on in the **Express checkout** section of the Authorize.net settings. The plugin reads the Payment Gateway ID of your account from Authorize.net and passes it to Google Pay, so you don't enter it.
 
 In the sandbox, the button runs in Google Pay's test environment. In production, Google Pay needs your merchant ID from the <a href="https://pay.google.com/business/console/" target="_blank">Google Pay & Wallet Console</a>, and the settings refuse to switch Google Pay on without it. The button works on a page served over HTTPS and on `localhost`.
-
----
-
-## Switch from the `payment-authorizenet-medusa` Plugin
-
-The plugin registers under the same provider id as `payment-authorizenet-medusa`, so it replaces it without a data migration. The payments the old plugin created stay in the database, and this plugin captures, refunds and voids them by their transaction ID.
-
-To switch:
-
-1. Replace `payment-authorizenet-medusa` in the `providers` of the Payment Module with `@gorgo/medusa-payment-authorizenet/providers/payment-authorizenet`, keeping `id: "authorizenet"`, and register the integration provider as shown in [Configuration](#configuration). Remove the old package, since only one provider can have `id: "authorizenet"`.
-
-2. Enter the keys and choose the **Environment** in Medusa Admin. The old plugin read `api_login_id`, `transaction_key` and `enviornment` from `medusa-config.ts`, and this plugin reads them from its settings.
-
-3. Set **Payment capture** in the settings. The old plugin only ever authorized. With `capture: true` it recorded the payment as captured, but the transaction stayed authorized in Authorize.net and expired after 30 days. Check such transactions in the Merchant Interface and capture the ones still waiting.
-
-4. Replace the storefront code. The old plugin took the card token, the addresses and the shipping from the session data the storefront sent. This plugin takes only the token from the storefront and reads the rest from the cart, as described in [Integrate Authorize.net Payment into Storefront](/medusa-integrations/authorizenet/storefront-integration).
