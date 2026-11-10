@@ -52,7 +52,7 @@
     "@gorgo/telemetry": "^1.4.1"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.2.9",
+    "@gorgo/medusa-integration": "^0.3.3",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",

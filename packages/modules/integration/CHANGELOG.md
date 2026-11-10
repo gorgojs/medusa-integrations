@@ -1,5 +1,11 @@
 # @gorgo/medusa-integration
 
+## 0.3.3
+
+### Bug Fixes
+
+- regenerate the offline catalog with authorizenet and mollie by [@gorgohead](https://github.com/gorgohead) in [`d61f97d`](https://github.com/gorgojs/medusa-integrations/commit/d61f97d5b256cf023b472584602501c300f2cc81)
+
 ## 0.3.2
 
 ### Documentation
