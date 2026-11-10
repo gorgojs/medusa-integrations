@@ -63,7 +63,7 @@ SVG. `yarn catalog:gen` warns by name about every icon it had to skip.
 
 | Field | Required | Notes |
 |---|---|---|
-| `identifier` | yes | Stable id; matches the provider's `static identifier` where built on `AbstractIntegrationProvider`; unique; lowercase-kebab; matches the icon basename |
+| `identifier` | yes | Stable id; matches the provider's `static identifier` where built on `AbstractIntegrationProviderService`; unique; lowercase-kebab; matches the icon basename |
 | `npm` | yes | Package that ships the integration |
 | `category` | yes | `payment` / `fulfillment` / `marketplace` / `crm` / `erp` / `pim` / `notification` / `feed` / `tax` / `other` (distinct from the site's plugin `category`) |
 | `author` | yes | Author `id` from [`authors.yml`](authors.yml) — Gorgo vs. community reads off this, there's no separate `official` flag |

@@ -18,7 +18,7 @@ description: "Полный справочник по дескриптору пр
 Создайте дескриптор через `defineIntegration`. Он собирает из каталога `options` схему `optionsSchema`, которая используется для `z.infer`, значений по умолчанию и полной валидации.
 
 ```ts title="providers/integration-my/services/my-integration.ts"
-import { defineIntegration, AbstractIntegrationProvider } from "@gorgo/medusa-integration"
+import { defineIntegration, AbstractIntegrationProviderService } from "@gorgo/medusa-integration"
 
 const descriptor = defineIntegration({
   category: "payment",
@@ -47,7 +47,7 @@ const descriptor = defineIntegration({
   ],
 })
 
-export class MyIntegration extends AbstractIntegrationProvider {
+export class MyIntegration extends AbstractIntegrationProviderService {
   static identifier = "my"
 
   get descriptor() {

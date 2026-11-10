@@ -17,9 +17,9 @@ Every provider registered in the Integration Module's `providers` option is repr
 
 ## Creating a Custom Integration Module Provider
 
-An Integration Module Provider is a module whose service extends `AbstractIntegrationProvider`, imported from `@gorgo/medusa-integration`. As with other Medusa module providers, a single module can register more than one Integration Module Provider service, each with its own `static identifier`, and each ends up as a separate provider.
+An Integration Module Provider is a module whose service extends `AbstractIntegrationProviderService`, imported from `@gorgo/medusa-integration`. As with other Medusa module providers, a single module can register more than one Integration Module Provider service, each with its own `static identifier`, and each ends up as a separate provider.
 
-`AbstractIntegrationProvider` declares the following members:
+`AbstractIntegrationProviderService` declares the following members:
 
 | Member | Description |
 | --- | --- |
@@ -32,9 +32,9 @@ An Integration Module Provider is a module whose service extends `AbstractIntegr
 Here's the shape of a minimal provider, with every member from the table above in place except the ones the base class already implements:
 
 ```ts title="providers/integration-my/services/my-integration.ts"
-import { AbstractIntegrationProvider } from "@gorgo/medusa-integration"
+import { AbstractIntegrationProviderService } from "@gorgo/medusa-integration"
 
-class MyIntegrationProvider extends AbstractIntegrationProvider {
+class MyIntegrationProvider extends AbstractIntegrationProviderService {
   static identifier = "my"
 
   static validateOptions(options: Record<string, unknown>) {
@@ -49,7 +49,7 @@ class MyIntegrationProvider extends AbstractIntegrationProvider {
 export default MyIntegrationProvider
 ```
 
-`descriptor` here is whatever `defineIntegration` returns. For every field it accepts, see [Integration Provider Descriptor](/medusa-modules/integration/descriptor). `getIdentifier()` and `getInstanceId()` aren't shown: `AbstractIntegrationProvider` already implements both from the constructor's `instanceId` argument, so a subclass only adds `static identifier`, `descriptor`, and, optionally, `static validateOptions`.
+`descriptor` here is whatever `defineIntegration` returns. For every field it accepts, see [Integration Provider Descriptor](/medusa-modules/integration/descriptor). `getIdentifier()` and `getInstanceId()` aren't shown: `AbstractIntegrationProviderService` already implements both from the constructor's `instanceId` argument, so a subclass only adds `static identifier`, `descriptor`, and, optionally, `static validateOptions`.
 
 <Note type="default" title="">
 

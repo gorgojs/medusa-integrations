@@ -4,7 +4,7 @@ import type { IntegrationDescriptorInput } from "../descriptor/define"
  * Base class AND contract for integration-providers. A plugin ships a subclass and
  * registers it via `ModuleProvider(INTEGRATION_MODULE, { services: [MyProvider] })`.
  *
- *   export class TkassaIntegrationProvider extends AbstractIntegrationProvider {
+ *   export class TkassaIntegrationProvider extends AbstractIntegrationProviderService {
  *     static identifier = "tkassa"
  *     get descriptor() { return tkassaDescriptor }
  *   }
@@ -21,7 +21,7 @@ import type { IntegrationDescriptorInput } from "../descriptor/define"
  * without an `id` is the single (default) instance — `getInstanceId()` returns null.
  * The container key `int_<identifier>[_<id>]` is the instance's stable identity.
  */
-export abstract class AbstractIntegrationProvider {
+export abstract class AbstractIntegrationProviderService {
   static identifier: string
 
   /** The registration `id` (from `options.providers[].id`), injected by the loader. */
@@ -35,7 +35,7 @@ export abstract class AbstractIntegrationProvider {
   static validateOptions(_options: Record<string, unknown>): void | never {}
 
   getIdentifier(): string {
-    return (this.constructor as typeof AbstractIntegrationProvider).identifier
+    return (this.constructor as typeof AbstractIntegrationProviderService).identifier
   }
 
   /** This instance's id (the registration `id`), or null for the single/default instance. */
@@ -47,4 +47,13 @@ export abstract class AbstractIntegrationProvider {
   abstract get descriptor(): IntegrationDescriptorInput
 }
 
-export default AbstractIntegrationProvider
+/**
+ * The name before 1.0. Since its fulfillment providers, Medusa names the base class of each
+ * provider type `Abstract<Module>ProviderService`, and this class follows it.
+ * @deprecated Use `AbstractIntegrationProviderService`. The alias is removed in 2.0.
+ */
+export const AbstractIntegrationProvider = AbstractIntegrationProviderService
+/** @deprecated Use `AbstractIntegrationProviderService`. The alias is removed in 2.0. */
+export type AbstractIntegrationProvider = AbstractIntegrationProviderService
+
+export default AbstractIntegrationProviderService

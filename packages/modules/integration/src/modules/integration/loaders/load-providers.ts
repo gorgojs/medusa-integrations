@@ -37,7 +37,7 @@ const registrationFn = async (
 
   container.register({
     // Pass `instanceId` as the 3rd ctor arg so the provider knows which instance it is
-    // (see AbstractIntegrationProvider.getInstanceId). The container key encodes the same.
+    // (see AbstractIntegrationProviderService.getInstanceId). The container key encodes the same.
     [key]: asFunction((cradle: any) => new klass(cradle, pluginOptions.options, instanceId), {
       lifetime: klass.LIFE_TIME || Lifetime.SINGLETON,
     }),
