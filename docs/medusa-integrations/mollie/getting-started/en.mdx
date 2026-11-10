@@ -5,7 +5,7 @@ description: "Learn how to install and configure the Mollie payment provider for
 
 # {frontmatter.title}
 
-In this guide, you'll learn how to install and configure the Mollie payment provider for Medusa, prepare your Mollie account, set up the webhook, and switch from a community Mollie plugin.
+In this guide, you'll learn how to install and configure the Mollie payment provider for Medusa, prepare your Mollie account, and set up the webhook.
 
 ## Requirements
 
@@ -140,21 +140,3 @@ Mollie does not cancel an open payment the buyer has not chosen a method for, so
 Mollie <a href="https://docs.mollie.com/docs/webhooks" target="_blank">retries a failed delivery</a> up to 10 times over about 26 hours. It does not accept `localhost` as a webhook URL. During development, run the backend behind a tunnel with a public HTTPS address, as the example project does with `yarn dev:tunnel`.
 
 <Note type="warning">Leave **Developers → Webhooks** in the Mollie Web App alone. It sets up Mollie's next-gen webhooks, which this plugin does not use. Payment notifications reach the plugin through the URL it sends with each payment.</Note>
-
----
-
-## Switch from a Community Mollie Plugin
-
-Community plugins such as `@variablevic/mollie-payments-medusa` register one provider per payment method, with ids like `pp_mollie-card_mollie` and `pp_mollie-ideal_mollie`. This plugin registers a single provider, `pp_mollie_mollie`, and lets the buyer choose the method on Mollie's page. Medusa sends the capture or refund of a payment to the provider that created it, so the payments of the old plugin do not move to this one.
-
-To switch:
-
-1. Capture or cancel the payments the old plugin authorized. Refund an order paid through the old plugin in the Mollie Web App, since the old provider is gone after the switch.
-
-2. Replace the old providers in the `providers` of the Payment Module with `@gorgo/medusa-payment-mollie/providers/payment-mollie`, and register the integration provider as shown in [Configuration](#configuration). Remove the old package.
-
-3. Enter the API key and the webhook URL in Medusa Admin. The old plugins read `apiKey`, `redirectUrl` and `medusaUrl` from `medusa-config.ts`, and this plugin reads the key and the webhook URL from its settings.
-
-4. Add **Mollie (MOLLIE)** to your regions in place of the old providers, as described in [Add Payment Provider](/medusa-integrations/mollie/settings#add-payment-provider).
-
-5. Replace the storefront code. The storefront now passes the URL the buyer returns to with each payment session, as described in [Integrate Mollie Payment into Storefront](/medusa-integrations/mollie/storefront-integration).

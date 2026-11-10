@@ -89,10 +89,6 @@ yarn add @gorgo/medusa-integration @gorgo/medusa-payment-mollie
 npm install @gorgo/medusa-integration @gorgo/medusa-payment-mollie
 ```
 
-## Replacing a Community Mollie Plugin
-
-Community plugins such as `@variablevic/mollie-payments-medusa` register one provider per payment method. This plugin registers one provider, `pp_mollie_mollie`, and lets the buyer choose the method on Mollie's page. Medusa sends the refund of a payment to the provider that created it, so the payments of the old plugin stay with it. See [Switch from a Community Mollie Plugin](https://docs.gorgojs.com/medusa-integrations/mollie/getting-started#switch-from-a-community-mollie-plugin) for the steps.
-
 ## Documentation
 
 The complete installation, configuration, and usage guide for this plugin is available on the [Gorgo documentation website](https://docs.gorgojs.com/medusa-integrations/mollie).
