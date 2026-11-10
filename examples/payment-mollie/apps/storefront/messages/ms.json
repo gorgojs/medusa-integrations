@@ -507,6 +507,10 @@
       "title": "Kad kredit",
       "subtitle": "Medusa Payments"
     },
+    "pp_mollie_mollie": {
+      "title": "Mollie",
+      "subtitle": "Kad, iDEAL, PayPal"
+    },
     "pp_paypal_paypal": {
       "title": "PayPal"
     },

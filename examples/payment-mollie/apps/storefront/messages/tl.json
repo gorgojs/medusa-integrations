@@ -507,6 +507,10 @@
       "title": "Credit card",
       "subtitle": "Medusa Payments"
     },
+    "pp_mollie_mollie": {
+      "title": "Mollie",
+      "subtitle": "Mga card, iDEAL, PayPal"
+    },
     "pp_paypal_paypal": {
       "title": "PayPal"
     },

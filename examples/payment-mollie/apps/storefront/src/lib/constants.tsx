@@ -1,3 +1,5 @@
+import { defaultLocale } from "@i18n/config"
+import { getBaseURL } from "@lib/util/env"
 import { CreditCard } from "@medusajs/icons"
 import Bancontact from "@modules/common/icons/bancontact"
 import Ideal from "@modules/common/icons/ideal"
@@ -50,6 +52,11 @@ export const paymentInfoMap: Record<string, PaymentInfo> = {
     title: "Manual Payment",
     icon: <CreditCard />,
   },
+  pp_mollie_mollie: {
+    title: "Mollie",
+    subtitle: "Cards, iDEAL, PayPal",
+    icon: <CreditCard />,
+  },
   // Add more payment providers here
 }
 
@@ -60,17 +67,68 @@ export const isStripeLike = (providerId?: string) => {
   )
 }
 
+/**
+ * The language of the page. `<html lang>` carries the locale the checkout was
+ * rendered in, which a provider with its own payment page takes to show that
+ * page in the customer's language.
+ */
+const pageLocale = () =>
+  typeof document === "undefined"
+    ? defaultLocale
+    : document.documentElement.lang || defaultLocale
+
+/**
+ * The address the customer comes back to after paying on the provider's own
+ * page, in the language they left the shop with.
+ */
+const paymentReturnUrl = (providerId: string, cartId: string) => {
+  const origin =
+    typeof window === "undefined" ? getBaseURL() : window.location.origin
+
+  return `${origin}/api/payment-return?provider=${providerId}&cart_id=${cartId}&locale=${pageLocale()}`
+}
+
 const paymentSessionDataBuilders: Array<{
   test: (providerId?: string) => boolean | undefined
   isReady?: (cart: HttpTypes.StoreCart) => boolean
   build: (cart: HttpTypes.StoreCart) => Record<string, unknown>
-}> = []
+  /**
+   * The provider's own pay button starts the payment session when the customer
+   * pays, so the checkout does not start one when the method is picked or the
+   * cart changes. `isReady` still gates the pay button.
+   */
+  deferred?: boolean
+}> = [
+  {
+    test: (providerId) => isMollie(providerId),
+    // A Mollie payment is created with the session, and Mollie neither changes
+    // its amount nor cancels it while it is open, so a session replaced at the
+    // payment step would leave a payable page behind. The pay button starts the
+    // session, once the checkout has the email, the address and the shipping
+    // method the payment is created with.
+    deferred: true,
+    isReady: (cart) =>
+      Boolean(
+        cart.email &&
+          cart.shipping_address &&
+          (cart.shipping_methods?.length ?? 0) > 0
+      ),
+    build: (cart) => ({
+      redirect_url: paymentReturnUrl("mollie", cart.id),
+      locale: pageLocale(),
+    }),
+  },
+]
 
 export const buildPaymentSessionData = (
   providerId: string | undefined,
   cart: HttpTypes.StoreCart
 ) => {
   return paymentSessionDataBuilders.find((b) => b.test(providerId))?.build(cart)
+}
+
+export const isPaymentSessionDeferred = (providerId: string | undefined) => {
+  return !!paymentSessionDataBuilders.find((b) => b.test(providerId))?.deferred
 }
 
 export const isPaymentSessionReady = (
@@ -160,6 +218,10 @@ export const isPaypal = (providerId?: string) => {
 }
 export const isManual = (providerId?: string) => {
   return providerId?.startsWith("pp_system_default")
+}
+
+export const isMollie = (providerId?: string) => {
+  return providerId?.startsWith("pp_mollie_")
 }
 
 export const addressAutocompleteProvider =

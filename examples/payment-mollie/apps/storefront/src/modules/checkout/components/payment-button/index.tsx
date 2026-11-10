@@ -2,6 +2,7 @@
 
 import {
   isManual,
+  isMollie,
   isPaymentSessionReady,
   isShippingMethodReady,
   isStripeLike,
@@ -14,6 +15,7 @@ import { useSelectedShippingOptionId } from "@modules/checkout/context/shipping-
 import { useLocale, useTranslations } from "next-intl"
 import type React from "react"
 import ManualPaymentButton from "./providers/manual"
+import MolliePaymentButton from "./providers/mollie"
 import StripePaymentButton from "./providers/stripe"
 
 type PaymentButtonProps = {
@@ -86,6 +88,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       return <StripePaymentButton {...providerProps} />
     case isManual(activePaymentMethod):
       return <ManualPaymentButton {...providerProps} />
+    case isMollie(activePaymentMethod):
+      return <MolliePaymentButton {...providerProps} />
     default:
       return (
         <Button disabled size="large" className="w-full">

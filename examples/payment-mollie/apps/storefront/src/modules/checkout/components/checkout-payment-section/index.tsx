@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { initiatePaymentSession } from "@lib/data/cart"
 import {
   buildPaymentSessionData,
+  isPaymentSessionDeferred,
   isPaymentSessionReady,
   isStripeLike,
   paymentInfoMap,
@@ -51,6 +52,7 @@ export default function CheckoutPaymentSection({
       selectedPaymentMethod &&
       !latestSession &&
       !paidByGiftcard &&
+      !isPaymentSessionDeferred(selectedPaymentMethod) &&
       isPaymentSessionReady(selectedPaymentMethod, cart)
     ) {
       initiatePaymentSession(cart, {
@@ -76,7 +78,11 @@ export default function CheckoutPaymentSection({
       return
     }
 
-    if (!selectedPaymentMethod || paidByGiftcard) {
+    if (
+      !selectedPaymentMethod ||
+      paidByGiftcard ||
+      isPaymentSessionDeferred(selectedPaymentMethod)
+    ) {
       return
     }
 
@@ -106,7 +112,11 @@ export default function CheckoutPaymentSection({
   const handleSelectPayment = async (providerId: string) => {
     setSelectedPaymentMethod(providerId)
 
-    if (!isPaymentSessionReady(providerId, cart)) {
+    // a deferred provider's pay button starts the session when the customer pays
+    if (
+      isPaymentSessionDeferred(providerId) ||
+      !isPaymentSessionReady(providerId, cart)
+    ) {
       return
     }
 
