@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-mollie",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "description": "Mollie payment provider for Medusa",
   "license": "MIT",
   "files": [
