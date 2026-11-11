@@ -32,6 +32,8 @@ const renderAutocomplete = () => {
 
 </Note>
 
+---
+
 ## Включение встроенного провайдера DaData
 
 Задайте две переменные окружения в `apps/storefront/.env.local`:
@@ -42,6 +44,8 @@ NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY=
 ```
 
 Получите API-ключ в своём аккаунте [DaData](https://dadata.ru/?ref=276331). `DaDataAddressInput` (`src/modules/common/components/address-autocomplete/providers/dadata.tsx`) передаёт его напрямую в компонент `AddressSuggestions` библиотеки `react-dadata`. Этот компонент подсказывает только российские адреса.
+
+---
 
 ## Добавление провайдера для другой страны
 

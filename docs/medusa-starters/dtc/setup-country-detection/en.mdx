@@ -40,6 +40,8 @@ The order it resolves in is the same for every provider: an existing `_medusa_co
 
 </Note>
 
+---
+
 ## Use the Hosting Platform's Geo Headers
 
 The default provider needs no configuration and makes no network call. It reads the country your platform already resolved, in this order:
@@ -56,6 +58,8 @@ The default provider needs no configuration and makes no network call. It reads 
 Values that mean "country unknown", `xx`, `t1` and `zz`, are discarded rather than treated as a country, because a region lookup for `xx` fails and drops the visitor into the fallback chain.
 
 On Vercel and Cloudflare this is all you need. The header is free, instant, and more accurate than any third-party lookup, so leave `GEOLOCATION_PROVIDER` unset there.
+
+---
 
 ## Enable the ip-api Provider
 
@@ -76,6 +80,8 @@ ip-api works without a key, but its free endpoint is HTTP only, allows 45 reques
 
 </Note>
 
+---
+
 ## How the Visitor's IP Decides the Lookup
 
 `resolveClientIp` reads `x-forwarded-for` first, then `cf-connecting-ip`, `true-client-ip`, `x-real-ip`, `x-client-ip` and `fly-client-ip`, and normalizes what it finds: it strips a port, strips IPv6 brackets, and unwraps an IPv4-mapped IPv6 address, so `::ffff:127.0.0.1` is recognized as the loopback address `127.0.0.1`. What it ends up with picks one of three behaviors:
@@ -89,6 +95,8 @@ ip-api works without a key, but its free endpoint is HTTP only, allows 45 reques
 The middle row is what makes `localhost` and a LAN address resolve to the country the machine actually browses from, in `next dev` and in a `build` and `start` run alike. Because nothing is cached there, switching a VPN and clearing `_medusa_country` changes the region on the next request. It costs one lookup per cookieless page load, which is why it is limited to visitors on the server's own network.
 
 The last row is deliberately not a guess. Geolocating the server's egress address for a visitor whose IP is unknown would pin every such visitor to the country of the datacentre. If a deployment resolves no country at all, the reverse proxy in front of it is not forwarding `x-forwarded-for`.
+
+---
 
 ## Check How a Region Was Resolved
 
@@ -109,6 +117,8 @@ GEOLOCATION_DEBUG=true
 Open the network panel, reload, and read the headers on the document request. `x-geo-source: cookie` means the cookie was never cleared, `x-geo-provider: platform` means `GEOLOCATION_PROVIDER` never reached the server, and a `fallback-*` source names which link in the chain answered.
 
 A country the middleware could not resolve is stored for five minutes instead of a year, so one failed lookup can't pin a visitor to the fallback region for good. A country the visitor picked in the region switcher, and one that was really detected, are both kept for a year.
+
+---
 
 ## Add a Provider of Your Own
 

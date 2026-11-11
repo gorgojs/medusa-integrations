@@ -27,6 +27,8 @@ The default currency (`default_currency_code` in `store.json`) must match one of
 
 </Note>
 
+---
+
 ## Locales and Translations
 
 Locale data follows the same pattern as regions, from [`data/i18n/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/i18n/json), for example [`ru.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/i18n/json/ru.json). The starter ships 36 locale files. To add a locale, add a JSON file with the same shape. It feeds translations for categories, collections, product options, products, variants, shipping options, and refund reasons.
@@ -37,9 +39,13 @@ This is a third, independent locale list. The storefront's own UI languages live
 
 </Note>
 
+---
+
 ## Products, Categories, and Shipping Options
 
 The demo catalog itself is plain JSON, not TypeScript. Categories, product options, products, and collections live in [`data/products/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/products/json), and shipping options live in [`data/fulfillment/json/shipping-options.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/fulfillment/json/shipping-options.json). A product references its category by handle and its options by title, so both must already exist in their own files. It also needs a price in every region's `product_prices`.
+
+---
 
 ## Running the Seed
 
@@ -50,6 +56,8 @@ Run the `seed` script from `apps/backend` with `pnpm seed`, `npm run seed`, or `
 Migration scripts load data from `<cwd>/src`. If you seed from a build output rather than from the development server, copy `src/**/*.json` into the build output alongside the compiled code.
 
 </Note>
+
+---
 
 ## Before You Go Live
 

@@ -13,8 +13,6 @@ Each example registers its own handler, and Medusa allows only one handler per h
 
 </Note>
 
----
-
 ## Skip Services
 
 1C keeps services in the same item catalog as goods, but the store doesn't need them, since they have neither stock nor a product page. The handler removes products whose "ВидНоменклатуры" (item kind) requisite is "Услуга" (service) from the batch. The handler makes no database queries.
@@ -343,7 +341,7 @@ Saving the comment to the order's `metadata.comment` is up to your storefront. T
 
 ## Company Counterparty and Shipping Method
 
-A customer from the "Юрлица" (companies) group should go to 1C as a counterparty with an INN and KPP (Russian tax IDs), and the manager needs the shipping method. The INN and KPP are stored in the customer's `metadata` and the shipping method in the order, and the handler gets all of it with one query for the whole export.
+A customer from the "Юрлица" (companies) group should go to 1C as a counterparty with an INN and KPP (tax IDs), and the manager needs the shipping method. The INN and KPP are stored in the customer's `metadata` and the shipping method in the order, and the handler gets all of it with one query for the whole export.
 
 ```ts title="src/workflows/hooks/onec-orders.ts"
 import { StepResponse } from "@medusajs/framework/workflows-sdk"

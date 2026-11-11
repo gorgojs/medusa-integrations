@@ -7,7 +7,7 @@ description: "Enable the storefront's built-in DaData address autocomplete for c
 
 In this guide, you'll learn how to enable the storefront's built-in DaData address autocomplete for checkout, or add a provider of your own for another country or service.
 
-Address input on the checkout's address step is a pluggable provider, not a fixed set of fields. The storefront ships one real provider, DaData for Russian addresses, plus a plain address field as the fallback and a manual entry mode the buyer can switch to at any point.
+Address input on the checkout's address step is a pluggable provider, not a fixed set of fields. The storefront ships one real provider, DaData, plus a plain address field as the fallback and a manual entry mode the buyer can switch to at any point.
 
 ## How Provider Selection Works
 
@@ -32,6 +32,8 @@ Whichever provider is active, `AddressAutocomplete` also renders a checkbox that
 
 </Note>
 
+---
+
 ## Enable the Built-In DaData Provider
 
 Set two environment variables in `apps/storefront/.env.local`:
@@ -41,7 +43,9 @@ NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER=dadata
 NEXT_PUBLIC_ADDRESS_AUTOCOMPLETE_PROVIDER_API_KEY=
 ```
 
-Get the API key from your [DaData](https://dadata.ru/?ref=276331) account. `DaDataAddressInput` (`src/modules/common/components/address-autocomplete/providers/dadata.tsx`) passes it directly to `react-dadata`'s `AddressSuggestions` component, which only suggests Russian addresses.
+Get the API key from your [DaData](https://dadata.ru/?ref=276331) account. `DaDataAddressInput` (`src/modules/common/components/address-autocomplete/providers/dadata.tsx`) passes it directly to `react-dadata`'s `AddressSuggestions` component without a location filter, so it only suggests addresses in DaData's default country.
+
+---
 
 ## Add a Provider for Another Country
 

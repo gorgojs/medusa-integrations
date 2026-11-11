@@ -43,6 +43,8 @@ export const expressButtons: {
 
 </Note>
 
+---
+
 ## What a Button Receives
 
 Every button gets the same props from the row:
@@ -78,6 +80,8 @@ A button talks to Medusa through the server actions in `src/lib/data/express-che
 | `startExpressPayment` | Starts the payment session the wallet pays and returns its data. With `reuseKey`, it keeps a pending session that already holds the same value, for example the same wallet order |
 | `revalidateExpressCheckout` | Renders the checkout again with the cart as it is now |
 
+---
+
 ## Add a Button for a Payment Provider
 
 To add a button for a payment provider:
@@ -103,6 +107,8 @@ export const expressButtons: {
 ```
 
 The whole button, with the address changes and the check of the approved amount, is described in [Integrate PayPal Payment into Storefront](/medusa-integrations/paypal/storefront-integration). The Stripe plugin's example adds Apple Pay, Google Pay and Link to the row the same way, with an entry that matches `isStripeLike`. The button is described in [Integrate Stripe Payment into Storefront](/medusa-integrations/stripe/storefront-integration). The Authorize.net plugin's example adds Google Pay with an entry that matches `isAuthorizeNet`, and the button is described in [Integrate Authorize.net Payment into Storefront](/medusa-integrations/authorizenet/storefront-integration).
+
+---
 
 ## Test the Row
 
