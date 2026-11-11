@@ -179,27 +179,10 @@ function usesIntegrationModule(name) {
   return false
 }
 
-// The offline fallback Admin shows when gorgojs.com is unreachable is generated from the catalog.
-// A stale one means merchants see an integration list that no longer matches the catalog.
-const generated = abs('packages', 'modules', 'integration', 'src', 'lib', 'catalog.generated.ts')
-if (fs.existsSync(generated) && !only.length) {
-  const inputs = []
-  const walk = dir => {
-    if (!fs.existsSync(dir)) return
-    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
-      // Skip dotfiles. A .DS_Store that Finder rewrote would otherwise report the fallback as
-      // stale forever, and nothing would make it green again.
-      if (e.name.startsWith('.')) continue
-      const p = path.join(dir, e.name)
-      e.isDirectory() ? walk(p) : inputs.push(fs.statSync(p).mtimeMs)
-    }
-  }
-  walk(abs('catalog'))
-  const newest = inputs.length ? Math.max(...inputs) : 0
-  if (newest > fs.statSync(generated).mtimeMs) {
-    add('(catalog)', 'generated', `${rel(generated)} is older than catalog/. Run: cd packages/modules/integration && yarn catalog:gen`)
-  }
-}
+// The offline fallback in packages/modules/integration (catalog.generated.ts) is not checked here.
+// .github/workflows/catalog.yml regenerates it in every pull request that changes catalog/, and
+// catalog-fallback.unit.spec.ts fails when it lacks an entry. Comparing modification times, as
+// this script once did, says nothing in CI, where a fresh checkout gives every file the same one.
 
 if (asJson) {
   console.log(JSON.stringify({ problems }, null, 2))
