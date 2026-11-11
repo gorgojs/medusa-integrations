@@ -137,6 +137,6 @@ A Mollie webhook carries only the payment's ID and no signature. The plugin read
 
 Mollie does not cancel an open payment the buyer has not chosen a method for, so a payment whose Medusa session was replaced stays payable on Mollie's page until it expires. If the buyer pays it anyway, no order can be placed for it, and the plugin refunds the payment in full and writes a warning to the log. A held payment of such a session is released instead.
 
-Mollie <a href="https://docs.mollie.com/docs/webhooks" target="_blank">retries a failed delivery</a> up to 10 times over about 26 hours. It does not accept `localhost` as a webhook URL. During development, run the backend behind a tunnel with a public HTTPS address, as the example project does with `yarn dev:tunnel`.
+Mollie <a href="https://docs.mollie.com/reference/webhooks" target="_blank">retries a failed delivery</a> up to 10 times over about 26 hours. It does not accept `localhost` as a webhook URL. During development, run the backend behind a tunnel with a public HTTPS address, as the example project does with `yarn dev:tunnel`.
 
 <Note type="warning">Leave **Developers → Webhooks** in the Mollie Web App alone. It sets up Mollie's next-gen webhooks, which this plugin does not use. Payment notifications reach the plugin through the URL it sends with each payment.</Note>
