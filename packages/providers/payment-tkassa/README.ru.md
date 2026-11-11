@@ -43,13 +43,13 @@
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-tkassa/demo/payment-tkassa-demo-ru.3e76bddd.mp4">
+  <a href="https://gorgojs.ru/videos/payment-tkassa/demo">
     <img src="https://static.gorgojs.com/videos/payment-tkassa/demo/payment-tkassa-demo-ru-poster-play.ee8b0913.webp" alt="Смотреть демо-видео плагина Т-Касса" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-tkassa/demo/payment-tkassa-demo-ru.3e76bddd.mp4">▶ Смотреть демо-видео</a>
+  <a href="https://gorgojs.ru/videos/payment-tkassa/demo">▶ Смотреть демо-видео</a>
 </p>
 
 ## Возможности плагина

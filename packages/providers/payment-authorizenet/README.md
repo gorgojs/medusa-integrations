@@ -41,13 +41,13 @@ Authorize.net Payments for Medusa
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-authorizenet/demo/payment-authorizenet-demo-en.ecd97419.mp4">
+  <a href="https://gorgojs.com/videos/payment-authorizenet/demo">
     <img src="https://static.gorgojs.com/videos/payment-authorizenet/demo/payment-authorizenet-demo-en-poster-play.40228cc8.webp" alt="Watch the Authorize.net plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-authorizenet/demo/payment-authorizenet-demo-en.ecd97419.mp4">▶ Watch the demo video</a>
+  <a href="https://gorgojs.com/videos/payment-authorizenet/demo">▶ Watch the demo video</a>
 </p>
 
 ## Plugin Features

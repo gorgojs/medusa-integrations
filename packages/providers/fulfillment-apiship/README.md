@@ -43,13 +43,13 @@ ApiShip Integration for Medusa
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/fulfillment-apiship/demo/fulfillment-apiship-demo-en.9456c852.mp4">
+  <a href="https://gorgojs.com/videos/fulfillment-apiship/demo">
     <img src="https://static.gorgojs.com/videos/fulfillment-apiship/demo/fulfillment-apiship-demo-en-poster-play.f1569bcc.webp" alt="Watch the ApiShip plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/fulfillment-apiship/demo/fulfillment-apiship-demo-en.9456c852.mp4">▶ Watch the demo video</a>
+  <a href="https://gorgojs.com/videos/fulfillment-apiship/demo">▶ Watch the demo video</a>
 </p>
 
 ## Plugin Features

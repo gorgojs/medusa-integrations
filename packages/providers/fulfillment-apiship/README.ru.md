@@ -43,13 +43,13 @@
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/fulfillment-apiship/demo/fulfillment-apiship-demo-ru.84fc4caf.mp4">
+  <a href="https://gorgojs.ru/videos/fulfillment-apiship/demo">
     <img src="https://static.gorgojs.com/videos/fulfillment-apiship/demo/fulfillment-apiship-demo-ru-poster-play.7f890c90.webp" alt="Смотреть демо-видео плагина ApiShip" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/fulfillment-apiship/demo/fulfillment-apiship-demo-ru.84fc4caf.mp4">▶ Смотреть демо-видео</a>
+  <a href="https://gorgojs.ru/videos/fulfillment-apiship/demo">▶ Смотреть демо-видео</a>
 </p>
 
 ## Возможности плагина

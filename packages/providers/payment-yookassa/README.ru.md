@@ -43,13 +43,13 @@
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-yookassa/demo/payment-yookassa-demo-ru.06658631.mp4">
+  <a href="https://gorgojs.ru/videos/payment-yookassa/demo">
     <img src="https://static.gorgojs.com/videos/payment-yookassa/demo/payment-yookassa-demo-ru-poster-play.75a6d57d.webp" alt="Смотреть демо-видео плагина ЮKassa" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-yookassa/demo/payment-yookassa-demo-ru.06658631.mp4">▶ Смотреть демо-видео</a>
+  <a href="https://gorgojs.ru/videos/payment-yookassa/demo">▶ Смотреть демо-видео</a>
 </p>
 
 ## Возможности плагина

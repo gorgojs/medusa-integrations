@@ -43,13 +43,13 @@ Robokassa Payments for Medusa
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-en.c733aef7.mp4">
+  <a href="https://gorgojs.com/videos/payment-robokassa/demo">
     <img src="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-en-poster-play.cf917694.webp" alt="Watch the Robokassa plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-en.c733aef7.mp4">▶ Watch the demo video</a>
+  <a href="https://gorgojs.com/videos/payment-robokassa/demo">▶ Watch the demo video</a>
 </p>
 
 ## Plugin Features
