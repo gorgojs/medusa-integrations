@@ -74,8 +74,6 @@ jobs:
       - name: Integration completeness
         run: node scripts/check-integration-complete.js
 
-      # tbank.ru chains to the Russian Trusted Root CA, which Node does not ship. This is the copy
-      # test.yml trusts, pinned by the same fingerprint.
       - name: Trust Trusted Root CA
         run: |
           CA="$PWD/.github/certs/root-ca.pem"
