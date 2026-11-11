@@ -65,13 +65,15 @@ module.exports = defineConfig({
 })
 ```
 
-Add environment variables with your secret `Encryption Key`:
+Добавьте переменную окружения с секретным ключом шифрования:
 
 ```text title=".env"
 INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
-## Provider Options
+---
+
+## Параметры провайдера
 
 <MedusaTypeList
   sectionTitle="ProviderOptions"
@@ -79,7 +81,7 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
     {
       name: "id",
       type: "string",
-      description: "Suffix in the resulting key `int_<identifier>_<id>`; when registering multiple instances of the same class, makes each one unique.",
+      description: "Суффикс в итоговом ключе `int_<identifier>_<id>`; при регистрации нескольких инстансов одного класса делает каждый из них уникальным.",
       optional: false,
       expandable: false,
       children: []
