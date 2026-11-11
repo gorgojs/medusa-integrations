@@ -19,7 +19,7 @@
  *   - A link into this repository on GitHub (`/blob/main/...`, `/tree/main/...`, a `#L12` line,
  *     an anchor into a Markdown file, raw.githubusercontent.com) is checked against the working
  *     tree, so a pull request that adds the file passes before it is merged.
- *   - Every other `http(s)://` link is fetched live: HEAD first, GET when the server rejects HEAD.
+ *   - Every other `http(s)://` link is fetched live: HEAD first, GET when HEAD gets a 4xx or 5xx.
  *     404 and 410 are errors. 401, 403 and 429 are bot protection more often than a dead link, and
  *     5xx, timeouts and DNS failures are the network's day; those are warnings, retried once.
  *     A 301 or 308 is a warning naming the new address, because the old one works only for as
@@ -491,11 +491,13 @@ async function request(url, method) {
   }
 }
 
-const HEAD_REJECTED = new Set([400, 403, 404, 405, 501]);
-
+/**
+ * HEAD is cheap but answered wrongly often enough that only GET's answer counts against a link:
+ * my.mollie.com says 401 to HEAD and sends GET to its login page with a 200.
+ */
 async function probe(url) {
   let r = await request(url, 'HEAD');
-  if (r.error || HEAD_REJECTED.has(r.status)) r = await request(url, 'GET');
+  if (r.error || r.status >= 400) r = await request(url, 'GET');
   if (r.error || r.status === 429 || r.status >= 500) {
     await sleep(Math.min(r.retryAfter || 3, 30) * 1000);
     r = await request(url, 'GET');
