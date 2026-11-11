@@ -13,6 +13,16 @@ description: "Узнайте, как перенести настройки су�
 
 </Note>
 
+<Prerequisites items={[
+  {
+    text: "Модуль интеграций, установленный в вашем приложении Medusa",
+    link: "/medusa-modules/integration#установка"
+  },
+  {
+    text: "Существующий провайдер, который получает настройки из medusa-config.ts или из собственного хранилища"
+  }
+]}/>
+
 ## Зачем мигрировать
 
 Когда параметры провайдера заданы в `medusa-config.ts`, смена токена, пароля или любой другой настройки означает правку кода, обновление переменных окружения и повторное развёртывание Medusa. Модуль интеграций избавляет от этой рутины. Он строит UI для управления настройками провайдера по простому декларативному описанию их схемы, и администратор магазина управляет ими в Admin, без правок `medusa-config.ts` и без повторного развёртывания.
@@ -33,7 +43,25 @@ description: "Узнайте, как перенести настройки су�
 
 До миграции настройки ApiShip хранились в `store.metadata.apiship`: токен, подключения к курьерским службам, адрес отправителя по умолчанию, габариты товара и налоговые настройки. Эти данные обслуживал собственный Admin UI, и на каждую CRUD-операцию был отдельный API-роут. Модуль интеграций сводит всё это в один раздел **Настройки → Интеграции**.
 
-Список параметров провайдера одноуровневый, и каждый параметр соответствует одному элементу в генерируемой UI-форме. Настройки становятся параметрами дескриптора, а в собственный UI переносится только то, для чего в каталоге нет подходящего элемента, например, для параметров с типом `json`. У провайдера ApiShip в собственный UI попадает только список подключений к курьерским службам, потому что он представляет собой массив объектов JSON.
+Схема сравнивает, как настройка доходила до провайдера фулфилмента до миграции и после неё:
+
+```mermaid alt="Схема показывает, где хранились и откуда получались настройки ApiShip до миграции и после неё на Модуль интеграций"
+flowchart TD
+  subgraph before ["До"]
+    b_admin(["Администратор"]) -->|"правит"| b_page["Страница плагина"]
+    b_page -->|"записывает"| b_meta[("store.metadata.apiship")]
+    b_ful["Провайдер доставки"] -->|"получает"| b_meta
+  end
+  subgraph after ["После"]
+    a_admin(["Администратор"]) -->|"Настройки → Интеграции"| a_mod["Модуль интеграций"]
+    a_mod -->|"токен шифруется"| a_db[("integration")]
+    a_ful["Провайдер доставки"] -->|"resolveIntegrationOptions"| a_mod
+  end
+```
+
+До миграции плагин отвечал за весь путь, от собственной страницы настроек и роутов до метаданных магазина, из которых брал настройки провайдер фулфилмента. После миграции плагин только регистрирует провайдер интеграций в Модуле интеграций. Сгенерированный модулем UI записывает настройки в таблицу модуля и шифрует токен, а провайдер фулфилмента получает их обратно через `resolveIntegrationOptions`.
+
+Список параметров провайдера одноуровневый, и каждый параметр соответствует одному элементу в генерируемой UI-форме. Скалярные настройки становятся параметрами дескриптора, а в собственный UI переносится только то, для чего в каталоге нет подходящего элемента, например, для параметров с типом `json`. У провайдера ApiShip в собственный UI попадает только список подключений к курьерским службам, потому что он представляет собой массив объектов JSON.
 
 ---
 
@@ -47,9 +75,9 @@ src/providers/
 └── fulfillment-apiship/          # существующий: провайдер модуля фулфилмента, который читает настройки через Модуль интеграций
 ```
 
-Директория `integration-apiship` содержит дескриптор настроек. `fulfillment-apiship` остаётся существующим провайдером модуля фулфилмента.
+Директория `integration-apiship` новая, а `fulfillment-apiship` остаётся существующим провайдером модуля фулфилмента. Именно он меняется на шаге 3: вместо `store.metadata` он начинает получать настройки через новый дескриптор.
 
-```ts title="providers/integration-apiship/services/apiship-integration.ts" collapsibleLines="54-123"
+```ts title="providers/integration-apiship/services/apiship-integration.ts" collapsibleLines="55-126"
 import { AbstractIntegrationProviderService, defineIntegration, z } from "@gorgo/medusa-integration"
 import { ProviderKeys } from "../../../types"
 import { APISHIP_ICON } from "../icon"
@@ -66,6 +94,7 @@ const descriptor = defineIntegration({
     token: {
       type: "string",
       required: true,
+      minLength: 1,
       secret: true,
       control: "secret",
       label: "apiship.fields.token"
@@ -120,7 +149,8 @@ const descriptor = defineIntegration({
     // ...sender_address_string, sender_contact_name, sender_phone
     // Подключения к курьерским службам образуют список записей, а контрола для этого
     // в каталоге нет, поэтому у них остаётся свой Admin UI (см. шаг 4). Но они всё равно
-    // часть схемы: шифруются и валидируются наравне с остальными полями.
+    // часть схемы: проверяются, попадают в итоговую конфигурацию и записываются в историю
+    // изменений, как остальные параметры. Параметр не `secret`, поэтому хранится открытым текстом.
     settings: {
       type: "json",
       default: {
@@ -159,6 +189,7 @@ const descriptor = defineIntegration({
   testConnection: async ({ options }) => {
     // Лёгкий read-only вызов к API ApiShip, подтверждающий валидность токена.
     // Возвращает { status, message }, исключений не бросает.
+    return { status: "passed" }
   },
 })
 
@@ -185,7 +216,7 @@ export default ApishipIntegrationProvider
 
 <Note type="warning">
 
-Параметры без `default` не попадают в итоговую конфигурацию. Это то, что нужно, когда «пусто» является реальным состоянием поля. Адрес отправителя ApiShip, например, не нужен для расчёта цены, только для создания заказа, поэтому его проверяет провайдер в момент создания заказа, а не `required` в дескрипторе. Если помечать такое поле `required`, любая конфигурация, где оно не заполнено, станет *неполной*, а неполную интеграцию резолвер считает ненастроенной, то есть провайдер модуля фулфилмента перестанет работать и выдаст ошибку во время выполнения.
+Параметры без `default` не попадают в итоговую конфигурацию, пока администратор магазина не сохранит секцию, в которой они находятся. После этого пустой параметр типа `string` попадает в конфигурацию как `""`, а не отсутствует: форма отправляет все поля секции, а очищенное текстовое поле уходит пустой строкой. Параметры других типов при очистке остаются отсутствующими, поэтому проверяйте `string`-параметр через `?.trim()`, как это делает ApiShip. Отсутствие значения подходит, когда «пусто» является реальным состоянием поля. Адрес отправителя ApiShip, например, не нужен для расчёта цены, только для создания заказа, поэтому его проверяет провайдер в момент создания заказа, а не `required` в дескрипторе. Если помечать такое поле `required`, любая конфигурация, где оно не заполнено, станет *неполной*, а неполную интеграцию резолвер считает ненастроенной, то есть провайдер модуля фулфилмента перестанет работать и выдаст ошибку во время выполнения.
 
 </Note>
 
@@ -213,6 +244,11 @@ module.exports = defineConfig({
           },
         ],
       },
+    },
+    // Сам плагин, чтобы Medusa загрузила его виджет и переводы в Admin.
+    {
+      resolve: "@gorgo/medusa-fulfillment-apiship",
+      options: {},
     },
     // ...
   ],
@@ -252,6 +288,12 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
 
 Значение здесь должно совпадать с тем, что `process.env.INTEGRATION_ENCRYPTION_KEY` читает в `medusa-config.ts` выше.
 
+<Note type="warning">
+
+Сам пакет плагина, здесь `@gorgo/medusa-fulfillment-apiship`, тоже должен быть указан в `plugins`, как в конфигурации выше. Medusa загружает расширения Admin плагина, его виджеты и переводы, только для пакетов из этого списка. Без записи провайдер продолжит работать, но виджет из шага 4 не загрузится, а ключи переводов `apiship.*` будут показаны в Admin как есть.
+
+</Note>
+
 ---
 
 ## Шаг 3: Переключите на чтение опций через `resolveIntegrationOptions`
@@ -260,15 +302,21 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
 
 ```ts title="providers/fulfillment-apiship/core/apiship-base.ts"
 // ...
+import { AbstractFulfillmentProviderService } from "@medusajs/framework/utils"
+import type { Logger } from "@medusajs/framework/types"
 import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
 import { ProviderKeys } from "../../../types"
 import type { ApishipIntegrationOptions } from "../../integration-apiship/services/apiship-integration"
 
+type InjectedDependencies = {
+  logger: Logger
+}
 
 class ApishipBase extends AbstractFulfillmentProviderService {
+  protected logger_: Logger
   protected instanceId_: string | null
 
-  constructor({ logger }, options?: Record<string, unknown>) {
+  constructor({ logger }: InjectedDependencies, options?: Record<string, unknown>) {
     super()
     this.logger_ = logger
     this.instanceId_ = (options?.id as string | undefined) ?? null
@@ -282,7 +330,7 @@ class ApishipBase extends AbstractFulfillmentProviderService {
     return options
   }
 
-  // ... 
+  // ...
 }
 ```
 
@@ -294,7 +342,7 @@ class ApishipBase extends AbstractFulfillmentProviderService {
 
 Раньше у ApiShip была своя страница настроек в Admin. Теперь эту страницу интеграции формирует Модуль интеграций по дескриптору: доступы, оплата и НДС, габариты товара и отправитель генерируются как секции.
 
-Список подключений к курьерским службам встраивается в ту же страницу виджетом через зону внедрения `gorgo.integration.apiship`, которая отрисовывает его в основной колонке под сгенерированными секциями. Какие есть зоны и как объявить их для TypeScript, читайте в руководстве [Собственные секции на виджетах](/medusa-modules/integration/custom-sections). Виджет получает ключ инстанса от Модуля интеграций через `data.providerId` и передаёт его во все свои хуки и запросы:
+Список подключений к курьерским службам встраивается в ту же страницу виджетом, который отрисовывается в основной колонке под сгенерированными секциями. Готовый виджет ApiShip зарегистрирован в зоне внедрения `gorgo.integration.apiship.main.after`, а в примере ниже используется более короткая `gorgo.integration.apiship`. Medusa игнорирует суффикс `.after`, поэтому обе зоны ставят виджет в одно и то же место. Какие есть зоны и как объявить их для TypeScript, читайте в руководстве [Собственные секции на виджетах](/medusa-modules/integration/custom-sections). Виджет получает ключ инстанса от Модуля интеграций через `data.providerId` и передаёт его во все свои хуки и запросы:
 
 ```tsx title="admin/widgets/apiship-integration-main.tsx"
 // ...
@@ -306,13 +354,13 @@ const ApishipIntegrationWidget = ({ data }: { data: IntegrationSectionData }) =>
   // Ключ инстанса от модуля: "int_apiship" или "int_apiship_<id>".
   const providerId = data.providerId
 
-  // Читаем через собственный admin-роут, передавая ключ: виджет работает в браузере,
-  // поэтому получать параметры с сервера он сам не может.
+  // Подключения редактируются по одной записи, поэтому читаем их через собственный
+  // admin-роут, передавая ключ.
   const { apiship_options } = useApishipOptions(providerId)
 
   return (
     <>
-      // ...существующие компоненты, providerId передаётся дальше во все хуки и запросы
+      {/* ...существующие компоненты, providerId передаётся дальше во все хуки и запросы */}
     </>
   )
 }
@@ -329,24 +377,103 @@ export default ApishipIntegrationWidget
 
 <Note type="warning">
 
-`resolveIntegrationOptions` работает только на сервере. Он запускает воркфлоу в контейнере приложения. Виджет вместо этого читает через ваш собственный admin-роут, и этот роут решает, что отдавать: не возвращайте секреты в ответ, а всё, что уже покрыто секцией дескриптора, пусть отдаёт `GET /admin/integrations/:provider_id` Модуля интеграций.
+`resolveIntegrationOptions` работает только на сервере. Он запускает воркфлоу в контейнере приложения, поэтому виджет не может его вызвать. Когда виджету нужно больше, чем есть в `data.values`, он читает через ваш собственный admin-роут, и этот роут решает, что отдавать. Не возвращайте секреты в ответ, а всё, что уже покрыто секцией дескриптора, пусть отдаёт `GET /admin/integrations/:provider_id` Модуля интеграций.
 
 </Note>
 
-Записывать значения параметров нужно так же. Соберите новое значение своего `json`-параметра и передайте в воркфлоу [`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow) Модуля интеграций. Он ограничит запись объявленными параметрами, объединит их с сохранёнными значениями, проверит их, зашифрует секреты и отправит событие `integration.updated`, чтобы сбросить кэш:
+Внутри этого роута получайте параметры через `getStoredValues(providerId)` сервиса Модуля интеграций, а не через резолвер. Резолвер считает неполную или выключенную интеграцию ненастроенной, и `resolveIntegrationOptions` для неё выбрасывает ошибку, тогда как виджет должен показывать и давать редактировать именно такой черновик. `getStoredValues` возвращает сохранённую конфигурацию с расшифрованными секретами, поэтому собирайте ответ из тех полей, которые собираетесь отдать. Роут ApiShip возвращает только список подключений. Подробнее о методах сервиса читайте на странице [Сервис Модуля интеграций](/medusa-modules/integration/service).
+
+Роут также должен проверять полученный ключ. `data.providerId` приходит в него обычным значением запроса, а воркфлоу, который вы запускаете дальше, записывает объявленные параметры любого провайдера, зарегистрированного в модуле. Роут, который передаёт ключ дальше без проверки, позволяет запросом изменить интеграцию другого провайдера. Убедитесь, что `provider_id` указывает на инстанс вашего провайдера, до того как роут что-либо прочитает или запишет. Для этого модуль экспортирует `integrationProviderKey`, чтобы собрать ключ, и `parseIntegrationProviderKey`, чтобы разобрать его, а `hasProviderId` сервиса подтверждает, что инстанс зарегистрирован. В ApiShip проверка вынесена в одну функцию, которую каждый роут вызывает первой. Вот её сокращённая версия:
+
+```ts title="lib/integration.ts"
+import { MedusaError } from "@medusajs/framework/utils"
+import type { MedusaContainer } from "@medusajs/framework/types"
+import {
+  INTEGRATION_MODULE,
+  IntegrationModuleService,
+  integrationProviderKey,
+  parseIntegrationProviderKey,
+} from "@gorgo/medusa-integration"
+
+const IDENTIFIER = "apiship"
+
+// Ключ инстанса по умолчанию, зарегистрированного без `id`.
+export const DEFAULT_APISHIP_PROVIDER_ID = integrationProviderKey(IDENTIFIER)
+
+export function requireApishipIntegration(
+  container: MedusaContainer,
+  providerId?: string | null
+): { service: IntegrationModuleService; providerId: string } {
+  const id = providerId ?? DEFAULT_APISHIP_PROVIDER_ID
+  const service: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
+
+  if (parseIntegrationProviderKey(id, IDENTIFIER) === null || !service.hasProviderId(id)) {
+    throw new MedusaError(
+      MedusaError.Types.NOT_FOUND,
+      `No ApiShip integration registered for "${id}"`
+    )
+  }
+
+  return { service, providerId: id }
+}
+```
+
+`parseIntegrationProviderKey(id, "apiship")` возвращает `null` для ключа другого провайдера, например `int_tkassa`, а `hasProviderId` отклоняет ключ, который не указывает ни на один зарегистрированный инстанс. Запрос без ключа обращается к инстансу по умолчанию. Первым аргументом передайте `req.scope` или `container` шага воркфлоу и дальше используйте возвращённый `providerId`.
+
+Запись идёт через тот же роут. Соберите новое значение своего `json`-параметра и передайте в воркфлоу [`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow) Модуля интеграций. Он ограничит запись объявленными параметрами, объединит их с сохранёнными значениями, проверит их, зашифрует секреты и отправит событие `integration.updated`, чтобы сбросить кэш. Первый шаг воркфлоу выполняет проверку выше и получает сохранённые подключения:
 
 ```ts title="workflows/update-apiship-options.ts"
+import {
+  createStep,
+  createWorkflow,
+  StepResponse,
+  transform,
+} from "@medusajs/framework/workflows-sdk"
 import { upsertIntegrationWorkflow } from "@gorgo/medusa-integration"
+import { DEFAULT_APISHIP_PROVIDER_ID, requireApishipIntegration } from "../lib/integration"
+import type { ApishipConnectionDTO, DeepPartial, StoredApishipOptions } from "../types/apiship"
 
-// ...сначала собираем новый список подключений из сохранённого, затем:
-upsertIntegrationWorkflow.runAsStep({
-  input: transform({ input, settings }, (d) => ({
-    provider_id: d.input.provider_id ?? DEFAULT_APISHIP_PROVIDER_ID,
-    // Без `section_id`: виджет передаёт идентификаторы параметров напрямую.
-    values: { settings: d.settings },
-  })),
-})
+type UpdateApishipOptionsInput = {
+  provider_id?: string
+  connections?: DeepPartial<ApishipConnectionDTO>[]
+}
+
+// Собираем новый список подключений из сохранённого. Если `connections` не передан,
+// сохранённый список остаётся как есть.
+const composeApishipSettingsStep = createStep(
+  "compose-apiship-settings-step",
+  async ({ provider_id, connections }: UpdateApishipOptionsInput, { container }) => {
+    const { service, providerId } = requireApishipIntegration(container, provider_id)
+    const stored = (await service.getStoredValues(providerId)) as StoredApishipOptions
+
+    return new StepResponse({
+      connections: connections ?? stored.settings?.connections ?? [],
+    })
+  }
+)
+
+export const updateApishipOptionsWorkflow = createWorkflow(
+  "update-apiship-options",
+  (input: UpdateApishipOptionsInput) => {
+    const settings = composeApishipSettingsStep(
+      transform({ input }, (d) => ({
+        provider_id: d.input.provider_id,
+        connections: d.input.connections,
+      }))
+    )
+
+    upsertIntegrationWorkflow.runAsStep({
+      input: transform({ input, settings }, (d) => ({
+        provider_id: d.input.provider_id ?? DEFAULT_APISHIP_PROVIDER_ID,
+        // Без `section_id`: виджет передаёт идентификаторы параметров напрямую.
+        values: { settings: d.settings },
+      })),
+    })
+  }
+)
 ```
+
+Воркфлоу берёт `connections` явно, а не разворачивает весь вход, поэтому посторонний параметр не попадёт в блок `settings`. Проверка выполняется на первом шаге, поэтому `upsertIntegrationWorkflow` никогда не получает чужой `provider_id`.
 
 Этот же воркфлоу записывает изменение в [историю изменений](/medusa-modules/integration/change-history#кто-внёс-изменение). В примере у входа нет поля `actor`, поэтому автором записи будет **Система**. Если запись делается по действию пользователя в Medusa Admin, передайте во входе `actor` с `type` и `id` из `req.auth_context` вашего роута, и автором в истории станет этот пользователь.
 
@@ -356,7 +483,7 @@ upsertIntegrationWorkflow.runAsStep({
 
 </Note>
 
-Модуль передаёт в виджет готовый ключ инстанса через `data.providerId`, так что передавать его в свои хуки и запросы можно напрямую. В итоге одна страница настроек для ApiShip совмещает сгенерированные секции и специфичный UI.
+Модуль передаёт в виджет готовый ключ инстанса через `data.providerId`, так что передавать его в свои хуки и запросы можно, если ваши роуты проверяют его до использования. В итоге одна страница настроек для ApiShip совмещает сгенерированные секции и специфичный UI.
 
 ---
 
