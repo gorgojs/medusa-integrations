@@ -70,7 +70,7 @@ Robokassa Payments for Medusa
 
 ## What is Robokassa
 
-<a href="https://robokassa.com" target="_blank">Robokassa</a> is a Russian payment aggregator that supports bank cards, e-wallets, mobile payments, SBP, and other methods. It's widely used by small and mid-size online stores in Russia for its simple integration and broad payment method coverage.
+<a href="https://robokassa.com" target="_blank">Robokassa</a> is a payment aggregator that supports bank cards, e-wallets, mobile payments, SBP, and other methods. It's widely used by small and mid-size online stores in the CIS for its simple integration and broad payment method coverage.
 
 ## 💬  Support & Community
 

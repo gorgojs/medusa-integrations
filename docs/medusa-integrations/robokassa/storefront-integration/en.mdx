@@ -130,7 +130,7 @@ const paymentSessionDataBuilders: Array<{
         FailUrl2: returnUrl,
         FailUrl2Method: "GET",
         EMail: cart.email,
-        // Robokassa's own payment page speaks Russian or English.
+        // Robokassa's own payment page comes in two languages, ru and en.
         Culture: activeLocale() === "ru" ? "ru" : "en",
         cart,
       }
