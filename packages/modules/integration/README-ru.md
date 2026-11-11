@@ -11,12 +11,12 @@
 <p align="center">
   <a href="https://docs.gorgojs.ru/medusa-modules/integration">Документация</a>
   <br/>
-  Модуль Medusa, который позволяет любому плагину описывать свои параметры, а администраторам магазина управлять ими в Admin – без правок <code>medusa-config</code> и без передеплоя.
+  Модуль Medusa, который позволяет любому плагину или провайдеру описывать свои параметры, а администраторам магазина управлять ими в Admin, без правок <code>medusa-config</code> и без повторного развёртывания.
   <br/>
   <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/modules/integration/README.md">Read README in English ↗</a>
 </p>
 
-<br>
+<br/>
 
 <p align="center">
   <a href="https://medusajs.com">
@@ -24,6 +24,9 @@
   </a>
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-integration.json&label=%D0%9F%D1%80%D0%BE%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BE%20%D1%81%20Medusa&logo=checkmarx" alt="Medusa" />
+  </a>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-integration">
+    <img src="https://img.shields.io/npm/v/@gorgo/medusa-integration.svg?logo=npm&label=npm" alt="npm version" />
   </a>
 </p>
 
@@ -49,24 +52,24 @@
   <a href="https://static.gorgojs.com/videos/integration/demo/integration-demo.e8ef945d.mp4">▶ Смотреть демо-видео</a>
 </p>
 
-## Что такое Модуль интеграций?
+## Что такое Модуль интеграций
 
-Модуль интеграций позволяет любому плагину описывать свои опции, а администраторам магазина настраивать их как **интеграции** прямо в Admin – без правок `medusa-config` и передеплоя. UI, хранение, шифрование и валидацию модуль берёт на себя.
+Модуль интеграций позволяет любому плагину описывать свои параметры, а администраторам магазина настраивать их как **интеграции** прямо в Admin, без правок `medusa-config` и без повторного развёртывания. UI, хранение, шифрование и валидацию модуль берёт на себя.
 
-Модуль интеграций пригодится любому разработчику Medusa, который создаёт плагины, провайдеры или кастомные модули с настраиваемыми параметрами, такими как ключи API, учётные данные, режимы или вебхуки, но не хочет вручную собирать страницы настроек, слой хранения и валидацию для каждого из них.
+Модуль интеграций пригодится любому разработчику Medusa, который создаёт плагины, провайдеры или собственные модули с настраиваемыми параметрами, такими как ключи API, учётные данные, режимы или вебхуки, но не хочет вручную собирать страницы настроек, слой хранения и валидацию для каждого из них.
 
 ## Возможности
 
-- **Управление настройками в Admin:** Настройки задаются в разделе **Настройки → Интеграции**, без правок `medusa-config`/env и без передеплоя.
+- **Управление настройками в Admin:** Настройки задаются в разделе **Настройки → Интеграции**, без правок `medusa-config`/env и без повторного развёртывания.
 - **Любой плагин, провайдер или модуль:** Подходит для платежей, доставки, ERP, уведомлений, контента и других расширений.
 - **Декларативный дескриптор (`defineIntegration`):** Единое описание параметров, секций настроек, валидации и проверки соединения.
-- **Гибкая типизация и валидация:** Типизированные поля (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) с правилами на уровне параметров и между секциями, условной видимостью и read-only-полями. В рантайме плагин получает типизированный расшифрованный объект: неполные или отключённые настройки не резолвятся, поэтому незаполненный черновик не будет возвращён.
+- **Гибкая типизация и валидация:** Типизированные поля (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) с правилами на уровне параметров и между секциями, условной видимостью и read-only-полями. Во время выполнения плагин получает типизированный расшифрованный объект. Неполные или выключенные настройки никогда не отдают параметры, поэтому плагин не получит незаполненный черновик.
 - **Шифрование секретов:** Поля с пометкой `secret` шифруются (AES-256-GCM) и никогда не уходят в браузер.
-- **Несколько экземпляров:** Один и тот же провайдер настраивается несколько раз. Например, для нескольких аккаунтов в одном стороннем сервисе.
+- **Несколько инстансов:** Один и тот же провайдер настраивается несколько раз. Например, для нескольких аккаунтов в одном стороннем сервисе.
 - **Проверка соединения:** Проверка учётных данных в стороннем сервисе прямо из Admin.
 - **История изменений:** Модуль записывает, кто, когда и какие поля изменил в настройках интеграции. В Admin историю можно искать и фильтровать, а значения секретов в неё не попадают.
-- **Расширяемый UI:** Секции можно менять местами ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). Если готовых секций недостаточно, можно реализовать любой UI для своих параметров с помощью кастомных виджетов.
-- **Каталог интеграций:** Доступные интеграции отображаются в Admin.
+- **Расширяемый UI:** Секции можно менять местами ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). Если готовых секций недостаточно, можно реализовать любой UI для своих параметров с помощью собственных виджетов.
+- **Каталог интеграций:** Admin показывает интеграции из каталога Gorgo. Чтобы добавить свою, сделайте [Pull Request](https://github.com/gorgojs/medusa-integrations#contribution).
 
 ## Доступные интеграции
 
@@ -103,10 +106,50 @@
 </p>
 
 <p>
-  <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-stripe">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/stripe.svg" width="50" hspace="5" align="left" alt="Stripe logo"/>
+  </a>
+  <b>Stripe</b><br/>
+  Платежи · <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-stripe">@gorgo/medusa-payment-stripe</a>
+</p>
+
+<p>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-paypal">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/paypal.svg" width="50" hspace="5" align="left" alt="PayPal logo"/>
+  </a>
+  <b>PayPal</b><br/>
+  Платежи · <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-paypal">@gorgo/medusa-payment-paypal</a>
+</p>
+
+<p>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-authorizenet">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/authorizenet.svg" width="50" hspace="5" align="left" alt="Authorize.net logo"/>
+  </a>
+  <b>Authorize.net</b><br/>
+  Платежи · <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-authorizenet">@gorgo/medusa-payment-authorizenet</a>
+</p>
+
+<p>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-mollie">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/mollie.svg" width="50" hspace="5" align="left" alt="Mollie logo"/>
+  </a>
+  <b>Mollie</b><br/>
+  Платежи · <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-mollie">@gorgo/medusa-payment-mollie</a>
+</p>
+
+<p>
+  <a href="https://docs.gorgojs.ru/medusa-integrations/1c-enterprise">
     <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/1c.svg" width="50" hspace="5" align="left" alt="1C logo"/>
   </a>
   <b>1С:Предприятие</b><br/>
+  ERP · <a href="https://docs.gorgojs.ru/medusa-integrations/1c-enterprise">@gorgo-store/medusa-erp-1c</a>
+</p>
+
+<p>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/1c.svg" width="50" hspace="5" align="left" alt="1C logo"/>
+  </a>
+  <b>1С:Предприятие Каталог</b><br/>
   ERP · <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">@gorgo/medusa-1c</a>
 </p>
 
@@ -114,16 +157,16 @@
 
 ## 💬  Поддержка и сообщество
 
-Есть вопросы или идеи? Пишите в чат поддержки в Telegram — [@gorgojs_chat](https://t.me/gorgojs_chat)
+Есть вопросы или идеи? Пишите в чат поддержки в Telegram [@gorgojs_chat](https://t.me/gorgojs_chat)
 
-Общайтесь с другими разработчиками Medusa в Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
+Общайтесь с другими разработчиками Medusa в Telegram [@medusajs_chat](https://t.me/medusajs_chat)
 
 Как мы тестируем, обновляем и исправляем модуль, читайте на странице [Сопровождение](https://docs.gorgojs.ru/resources/maintenance).
 
 ## Требования
 
-- Medusa v2.17.2 или выше
-- Node.js v22.23.4, v24.22.1, v26.12.1 или новее
+- Medusa v2.17.2 или новее
+- Node.js v22.23.4 или новее (из 22.x), v24.22.1 или новее (из 24.x) либо v26.12.1 или новее
 
 ## Установка
 
@@ -157,7 +200,15 @@ module.exports = defineConfig({
 })
 ```
 
-Затем перезапустите сервер. Каждая зарегистрированная интеграция появится в Medusa Admin в разделе **Настройки → Интеграции**.
+Модуль хранит интеграции и их историю изменений в собственных таблицах. Выполните миграции после установки или обновления модуля:
+
+```bash
+yarn medusa db:migrate
+# или
+npx medusa db:migrate
+```
+
+Когда миграции выполнены, перезапустите сервер. Каждая зарегистрированная интеграция появится в Medusa Admin в разделе **Настройки → Интеграции**.
 
 ## Переменные окружения
 
