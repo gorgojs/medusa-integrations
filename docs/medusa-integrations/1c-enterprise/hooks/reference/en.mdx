@@ -7,8 +7,6 @@ description: "Input, result and constraints of every workflow hook in the 1C:Ent
 
 This reference describes when each hook runs, what its handler receives and may return, and what the plugin does with the result. The rules shared by all hooks are on the [Workflow Hooks](/medusa-integrations/1c-enterprise/hooks) page.
 
----
-
 ## setProducts
 
 A hook of the `importOnecProductsWorkflow` workflow (`import-onec-products`). It runs on every catalog batch of up to 100 products, before they're compared with Medusa products. With a 10,000-product catalog, it runs 100 times.

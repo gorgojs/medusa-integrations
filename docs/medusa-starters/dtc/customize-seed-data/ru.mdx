@@ -27,6 +27,8 @@ description: "Как seed-скрипт стартера собирает рег�
 
 </Note>
 
+---
+
 ## Локали и переводы
 
 Локали собираются по тому же принципу, что и регионы, из [`data/i18n/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/i18n/json), например [`ru.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/i18n/json/ru.json). Стартер поставляется с 36 файлами локалей. Чтобы добавить локаль, добавьте JSON-файл такой же формы. Он попадёт в переводы категорий, коллекций, товаров, вариантов, способов доставки и причин возврата.
@@ -37,9 +39,13 @@ description: "Как seed-скрипт стартера собирает рег�
 
 </Note>
 
+---
+
 ## Товары, категории и способы доставки
 
 Демо-каталог хранится как обычный JSON, а не как TypeScript. Категории, опции товаров, товары и коллекции лежат в [`data/products/json/`](https://github.com/gorgojs/medusa-dtc-starter/tree/main/apps/backend/src/migration-scripts/data/products/json), способы доставки лежат в [`data/fulfillment/json/shipping-options.json`](https://github.com/gorgojs/medusa-dtc-starter/blob/main/apps/backend/src/migration-scripts/data/fulfillment/json/shipping-options.json). Товар указывает категорию по handle и опции по названию, поэтому категория и опции должны уже существовать в соответствующих файлах. Ему также нужна цена в `product_prices` каждого региона.
+
+---
 
 ## Запуск seed-скрипта
 
@@ -50,6 +56,8 @@ description: "Как seed-скрипт стартера собирает рег�
 Скрипты миграции читают данные из `<cwd>/src`. Если вы загружаете данные из собранного билда, а не через сервер разработки, скопируйте `src/**/*.json` в билд рядом со скомпилированным кодом.
 
 </Note>
+
+---
 
 ## Перед запуском в продакшене
 

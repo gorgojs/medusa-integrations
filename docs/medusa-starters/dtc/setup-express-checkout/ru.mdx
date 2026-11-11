@@ -43,6 +43,8 @@ export const expressButtons: {
 
 </Note>
 
+---
+
 ## Что получает кнопка
 
 Все кнопки получают от ряда одни и те же свойства:
@@ -78,6 +80,8 @@ export type ExpressButtonProps = {
 | `startExpressPayment` | Создаёт платёжную сессию, которую оплачивает кошелёк, и возвращает её данные. С `reuseKey` оставляет ожидающую сессию, в которой уже есть то же значение, например тот же заказ кошелька |
 | `revalidateExpressCheckout` | Заново отрисовывает оформление заказа с текущей корзиной |
 
+---
+
 ## Добавление кнопки платёжного провайдера
 
 Чтобы добавить кнопку платёжного провайдера:
@@ -103,6 +107,8 @@ export const expressButtons: {
 ```
 
 Кнопка целиком, со сменой адреса и проверкой одобренной суммы, описана в разделе [Интеграция оплаты PayPal в витрину](/medusa-integrations/paypal/storefront-integration). Пример плагина Stripe добавляет в ряд Apple Pay, Google Pay и Link так же. Запись в реестре отбирает провайдеров функцией `isStripeLike`, а кнопка описана в разделе [Интеграция платежей Stripe в витрину](/medusa-integrations/stripe/storefront-integration). Пример плагина Authorize.net добавляет Google Pay записью, которая отбирает провайдеров функцией `isAuthorizeNet`, а кнопка описана в разделе [Интеграция Authorize.net в витрину магазина](/medusa-integrations/authorizenet/storefront-integration).
+
+---
 
 ## Проверка ряда
 
