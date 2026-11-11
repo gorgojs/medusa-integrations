@@ -54,8 +54,13 @@ export function getCurrencyExponent(currencyCode: string): 0 | 2 | 3 {
  * decimal through MathBN: `Number.toFixed` would turn 1.005 into "1.00".
  */
 export function formatAmount(amount: BigNumberInput, currencyCode: string): string {
-  const value = MathBN.convert(amount)
-  if (!value.isFinite() || value.isNegative()) {
+  let value: ReturnType<typeof MathBN.convert> | undefined
+  try {
+    value = MathBN.convert(amount)
+  } catch {
+    // bignumber.js 11 (Medusa 2.22.6+) throws on a non-numeric string instead of returning NaN.
+  }
+  if (!value?.isFinite() || value.isNegative()) {
     throw new MedusaError(
       MedusaError.Types.INVALID_DATA,
       `Invalid PayPal amount: ${String(amount)} ${currencyCode.toUpperCase()}`
