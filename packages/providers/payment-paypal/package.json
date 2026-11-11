@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-paypal",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "PayPal payment provider for Medusa",
   "license": "MIT",
   "files": [
