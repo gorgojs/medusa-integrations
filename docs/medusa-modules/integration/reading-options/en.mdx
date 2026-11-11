@@ -5,13 +5,24 @@ description: "How a consumer reads a configured integration's resolved options a
 
 # {frontmatter.title}
 
-After a store admin configures an integration, a consumer reads its options at runtime. The consumer is often the same package that declared the integration, such as a payment provider reading its own credentials, but it can be any other code, like an API route, a subscriber, or a scheduled job.
+In this guide, you'll learn how to read an integration's options at runtime, after a store admin configures it. The code that reads them is the consumer. It's often the same package that declared the integration, such as a payment provider reading its own credentials, but it can be any other code, like an API route, a subscriber, or a scheduled job.
 
 <Note type="default" title="">
 
-What you get back is resolved: the module has decrypted and validated the options, and applied their defaults. See [What Resolved Means](#what-resolved-means) for the details.
+What you get back is resolved, which means the module has decrypted and validated the options and applied their defaults. Refer to [What Resolved Means](#what-resolved-means) for the details.
 
 </Note>
+
+<Prerequisites items={[
+  {
+    text: "An integration provider registered in the Integration Module",
+    link: "/medusa-modules/integration/create-integration-module-provider"
+  },
+  {
+    text: "The integration configured and enabled in Medusa Admin",
+    link: "/medusa-modules/integration/manage-integrations"
+  }
+]}/>
 
 ## Two Ways to Read
 
@@ -20,10 +31,10 @@ The API you use depends on where your code runs.
 | Where your code runs | How to read |
 | --- | --- |
 | A provider in an isolated module container, or a module service | [`resolveIntegrationOptions`](#the-resolveintegrationoptions-helper) |
-| Code with the app or request container (API routes, subscribers, scheduled jobs, loaders) | [`getResolvedOptions`](#the-getresolvedoptions-service-method) |
+| Code with the app or request container (API routes, subscribers, scheduled jobs, workflow steps) | [`getResolvedOptions`](#the-getresolvedoptions-service-method) |
 | A step inside a workflow you compose | [`getResolvedIntegrationOptionsStep`](#resolving-inside-a-workflow) |
 
-A payment or fulfillment provider runs inside its own module's isolated container, so it cannot resolve the Integration Module directly. It uses `resolveIntegrationOptions`, which runs a workflow to reach the app container. Code that already holds the container resolves the module and calls `getResolvedOptions` directly, without a workflow.
+A payment or fulfillment provider runs inside its own module's isolated container, so it cannot resolve the Integration Module directly. It uses `resolveIntegrationOptions`, which runs a workflow to reach the Integration Module. Code that already holds the container resolves the module and calls `getResolvedOptions` directly, without a workflow.
 
 ---
 
@@ -47,22 +58,88 @@ const options = await resolveIntegrationOptions<MyOptions>({
 
 The returned `options` is typed as `MyOptions`, already decrypted and validated.
 
+<Note type="default" title="">
+
+The helper runs a workflow, and a workflow run without a container of its own gets the modules loaded at that moment. Medusa builds that list once and reuses it for every later run in the process, and not every module has loaded while the application starts. Don't call `resolveIntegrationOptions` in a provider's constructor or in `static validateOptions`. Call it from the methods that run later.
+
+</Note>
+
 ### Targeting a Specific Instance
 
-For a provider that supports [multiple instances](/medusa-modules/integration/concepts#identifiers-and-instances), pass `instance_id`. It is usually your provider's own registration id. Omit it, or pass `null`, for the default instance:
+For a provider that supports [multiple instances](/medusa-modules/integration/concepts#identifiers-and-instances), pass `instance_id`. Omit it, or pass `null`, for the default instance.
 
-```ts title="providers/payment-my/services/my-payment.ts"
-import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
-import type { MyOptions } from "../../integration-my/services/my-integration"
+Medusa constructs a payment or fulfillment provider with the module's container and its own `options` only, so the provider doesn't receive the Integration Module's instance id from Medusa. You pair the two registrations yourself. Give the integration provider an `id`, and pass the same value in the `options` of the consumer provider in `medusa-config.ts`:
 
-// inside any provider method
-const options = await resolveIntegrationOptions<MyOptions>({
-  identifier: "my",
-  instance_id: this.instanceId_,
+```ts title="medusa-config.ts"
+const MY_INTEGRATION_ID = "my-1"
+
+module.exports = defineConfig({
+  // ...
+  plugins: [
+    {
+      resolve: "@gorgo/medusa-integration",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-my/providers/integration-my",
+            id: MY_INTEGRATION_ID,
+            options: {},
+          },
+        ],
+      },
+    },
+  ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "@gorgo/medusa-payment-my/providers/payment-my",
+            id: "my",
+            options: {
+              // must match the id of the integration provider above
+              id: MY_INTEGRATION_ID,
+            },
+          },
+        ],
+      },
+    },
+  ],
 })
 ```
 
-`this.instanceId_` works here because the base provider class stores the registration's own instance id at construction; a provider that doesn't support multiple instances can leave `instance_id` out entirely.
+The `id` inside the consumer provider's `options` is the Integration Module instance id. It is separate from the `id` on the payment provider's own entry, which Medusa uses for the payment provider's key.
+
+Store the instance id in the constructor of a base class for the consumer provider, and pass it as `instance_id` on every call:
+
+```ts title="providers/payment-my/core/my-base.ts"
+import { AbstractPaymentProvider } from "@medusajs/framework/utils"
+import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
+import type { MyOptions } from "../../integration-my/services/my-integration"
+
+type MyPaymentOptions = {
+  id?: string
+}
+
+export abstract class MyPaymentBase extends AbstractPaymentProvider<MyPaymentOptions> {
+  protected instanceId_: string | null
+
+  constructor(container: Record<string, unknown>, options: MyPaymentOptions) {
+    super(container, options)
+    this.instanceId_ = options.id ?? null
+  }
+
+  protected async resolveOptions(): Promise<MyOptions> {
+    return resolveIntegrationOptions<MyOptions>({
+      identifier: "my",
+      instance_id: this.instanceId_,
+    })
+  }
+}
+```
+
+`instanceId_` is a property of this base class that the constructor sets from `options.id`, not something Medusa's `AbstractPaymentProvider` provides. It stays `null` when `options.id` is not set, which resolves the default instance. Your payment provider extends this class, as the YooKassa provider extends its own base class, and calls `this.resolveOptions()` from its methods. Refer to [Migrate an Existing Medusa Provider to the Integration Module](/medusa-modules/integration/migrate-provider-to-integration-module) to learn how the same pattern works in a fulfillment provider.
 
 ### When It Isn't Configured
 
@@ -100,11 +177,12 @@ With `{ optional: true }`, a missing, disabled, or incomplete integration resolv
 
 ## The `getResolvedOptions` Service Method
 
-When your code already has the container, resolve the module and call `getResolvedOptions` directly. This suits API routes, subscribers, scheduled jobs, and loaders, and no workflow is involved. For example, in an API route:
+When your code already has the container, resolve the module and call `getResolvedOptions` directly. This suits API routes, subscribers, scheduled jobs, and workflow steps, and no workflow is involved. For example, in an API route:
 
 ```ts title="api/admin/my-payment/route.ts"
 import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import type { MyOptions } from "../../../providers/integration-my/services/my-integration"
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const integration: IntegrationModuleService = req.scope.resolve(INTEGRATION_MODULE)
@@ -119,7 +197,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 }
 ```
 
-`getResolvedOptions(identifier, instanceId?)` returns `ResolvedOptions | null`. A value is `{ options, meta }`, where `meta` holds `provider_id`, `category`, and `is_enabled`. A `null` result means the integration is not configured, disabled, or incomplete. When no provider is registered under that identifier and instance, the method throws instead. See [Integration Module Service](/medusa-modules/integration/service) for the module's other methods.
+`getResolvedOptions(identifier, instanceId?)` returns `ResolvedOptions | null`. A value is `{ options, meta }`, where `meta` holds `provider_id`, `category`, and `is_enabled`. A `null` result means the integration is not configured, disabled, or incomplete. When no provider is registered under that identifier and instance, the method throws instead. Refer to [Integration Module Service](/medusa-modules/integration/service) for the module's other methods.
 
 ---
 
@@ -139,13 +217,15 @@ export const createMyWorkflow = createWorkflow("create-my", () => {
 })
 ```
 
+The step takes `{ identifier, instance_id? }` and returns `{ options, meta } | null`. Unlike the `resolveIntegrationOptions` helper, it returns `null` for an integration that is not configured, disabled, or incomplete instead of throwing, so check for `null` in the steps that use the result. When no provider is registered under that identifier and instance, the step throws, as `getResolvedOptions` does.
+
 The standalone `getResolvedIntegrationOptionsWorkflow` is also exported. It is what the helper runs internally.
 
 ---
 
 ## What Resolved Means
 
-Resolved options are not the raw stored values. On every resolve, the module does three things:
+Resolved options are not the raw stored values. When the module builds them, it does three things:
 
 - decrypts secret fields,
 - confirms the integration is enabled and complete, meaning it passes full validation,
@@ -153,17 +233,47 @@ Resolved options are not the raw stored values. On every resolve, the module doe
 
 If the integration is not configured, disabled, or incomplete, it resolves to `null`. The helper throws in that case, or returns `null` with `{ optional: true }`. Partial drafts never reach runtime.
 
+The diagram follows one call of `resolveIntegrationOptions` from your provider to the database and back:
+
+```mermaid alt="Diagram showcasing how one resolveIntegrationOptions call reaches the cache and the database, and what comes back"
+sequenceDiagram
+  participant provider as Provider
+  participant helper as resolveIntegrationOptions
+  participant service as Service
+  participant cache as Cache
+  participant db as Database
+  provider->>helper: identifier, instance_id
+  helper->>service: getResolvedOptions
+  service->>cache: look up the key
+  alt cache hit
+    cache-->>service: value, or null
+  else cache miss
+    service->>db: read the record
+    db-->>service: record
+    opt record is enabled
+      service->>service: decrypt, validate, add defaults
+    end
+    service->>cache: store for 60 s, null too
+  end
+  service-->>helper: options and meta, or null
+  helper-->>provider: options, or an error for null
+```
+
+The service looks the integration up by the key `int_<identifier>[_<instanceId>]`. A cache hit returns at once, and the cached value may be `null`. On a miss the service reads the record. Only a record that is enabled is decrypted, validated in full, and given its defaults, and a record that is missing, disabled, or incomplete gives `null`. The service caches the result for 60 seconds, `null` included, and the helper turns `null` into an error unless you pass `{ optional: true }`. The diagram leaves out one check, which throws before the service reads the record when no provider is registered under the key.
+
 ---
 
 ## Caching and Freshness
 
-Resolved options are cached in the memory of each Medusa process for up to 60 seconds, so hot paths do not re-read and decrypt on every call. A disabled or incomplete integration is cached too, as `null`.
+Resolved options are cached in the memory of each Medusa process for up to 60 seconds, so hot paths do not re-read and decrypt on every call. An integration that is not configured, disabled, or incomplete is cached too, as `null`.
 
 Whenever the integration changes, whether it is saved, enabled, disabled, or deleted, the module emits the [`integration.updated` event](/medusa-modules/integration/events), and its subscriber clears the cached entry. Consumers pick up new configuration without a redeploy.
 
 <Note type="default" title="">
 
-Medusa runs subscribers only in the `shared` and `worker` [worker modes](https://docs.medusajs.com/learn/production/worker-mode). When you deploy the server and the worker as separate processes, the event clears the cache in the worker, and a server process picks up the change once its cached entry expires, within 60 seconds.
+The cache is a map in each process's memory, and one process handles the event, so the event clears the cache in that process only. Medusa runs subscribers only in the `shared` and `worker` [worker modes](https://docs.medusajs.com/learn/production/worker-mode). In any deployment with more than one process, such as a separate worker or several server instances, the other processes keep serving the old options until their cached entry expires, within 60 seconds.
+
+The connection test reads the same cache, so a test started right after a save can run against the old options in a process that has not cleared its entry.
 
 </Note>
 
