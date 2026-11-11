@@ -28,6 +28,12 @@ The Integration Module is a good fit for Medusa developers building plugins, pro
   </video>
 </div>
 
+<Note type="default" title="Looking for no-code docs?">
+
+Refer to [Manage Integrations in Medusa Admin](/medusa-modules/integration/manage-integrations) to learn how to configure integrations in the Admin.
+
+</Note>
+
 ## Features
 
 - **[Settings management in Admin](/medusa-modules/integration/manage-integrations)** – Store admins set options in the **Settings → Integrations** section, with no `medusa-config` edits and no redeploys.
@@ -40,13 +46,13 @@ The Integration Module is a good fit for Medusa developers building plugins, pro
 - **[Change history](/medusa-modules/integration/change-history)** – The module records who changed which fields of an integration's settings and when. You can search and filter the history in the Admin, and secret values never reach it.
 - **[Extensible UI](/medusa-modules/integration/custom-sections)** – Sections can be reordered ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). If the generated sections aren't enough, you can implement any UI for your options using custom widgets.
 - **[Localization](/medusa-modules/integration/localization)** – The settings UI speaks the admin user's language, with the translations your plugin ships.
-- **[Integration catalog](/medusa-modules/integration/browse-integrations)** – Available integrations are shown in the Admin, with a setup guide for each.
+- **[Integration catalog](/medusa-modules/integration/browse-integrations)** – Integrations from the Gorgo catalog are shown in the Admin, with a setup guide for each integration that provides one.
 
 ---
 
 ## Installation
 
-The Integration Module requires Medusa v2.17.2 or later. Install it in your Medusa application:
+The Integration Module requires Medusa v2.17.2 or later and Node.js v22.23.4 or later (22.x), v24.22.1 or later (24.x), or v26.12.1 or later. Install it in your Medusa application:
 
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
@@ -80,7 +86,7 @@ module.exports = defineConfig({
 })
 ```
 
-Each provider in `providers` appears in Medusa Admin under **Settings → Integrations**. See [Integration Module Options](/medusa-modules/integration/module-options) for `encryptionKey` and the other options.
+Each provider in `providers` appears in Medusa Admin under **Settings → Integrations**. Refer to [Integration Module Options](/medusa-modules/integration/module-options) to learn about `encryptionKey` and the other options.
 
 The module keeps integrations and their change history in its own tables. Run the migrations after you install or update it:
 
@@ -98,6 +104,81 @@ The module keeps integrations and their change history in its own tables. Run th
 </CodeTabs>
 
 Once the migrations run, restart the server, and the registered integrations are ready to configure.
+
+---
+
+## How to Use the Integration Module
+
+In your Medusa application, an integration has two sides. A provider declares the options, and the code that needs them reads the values the store admin saved.
+
+### Declare the Options
+
+In a provider service, declare the options and the settings section they belong to in a descriptor:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import {
+  AbstractIntegrationProviderService,
+  defineIntegration,
+  z
+} from "@gorgo/medusa-integration"
+
+const descriptor = defineIntegration({
+  category: "payment",
+  displayName: "my.name",
+  options: {
+    apiKey: {
+      type: "string",
+      control: "secret",
+      secret: true,
+      required: true,
+      label: "my.apiKey"
+    },
+    sandbox: {
+      type: "boolean",
+      control: "switch",
+      default: false,
+      label: "my.sandbox"
+    },
+  },
+  sections: [
+    {
+      id: "credentials",
+      title: "my.credentials",
+      options: ["apiKey", "sandbox"]
+    },
+  ],
+})
+
+export type MyOptions = z.infer<typeof descriptor.optionsSchema>
+
+export default class MyIntegrationProvider extends AbstractIntegrationProviderService {
+  static identifier = "my"
+
+  get descriptor() {
+    return descriptor
+  }
+}
+```
+
+The `sections` array draws the two options into one card of the settings page, and `secret: true` makes the module encrypt `apiKey` before it saves the value. `MyOptions` is the type of the options your code reads back later. Refer to [How to Create an Integration Module Provider](/medusa-modules/integration/create-integration-module-provider) to learn how to build a complete provider and register it in `medusa-config.ts`.
+
+Once you register the provider, the store admin fills in its options under **Settings → Integrations**, as [Manage Integrations in Medusa Admin](/medusa-modules/integration/manage-integrations) describes.
+
+### Read the Options at Runtime
+
+In the code that needs the options, such as a payment provider that reads its credentials, call `resolveIntegrationOptions` with the provider's identifier:
+
+```ts title="providers/payment-my/services/my-payment.ts"
+import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
+import type { MyOptions } from "../../integration-my/services/my-integration"
+
+// inside any provider method
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my"
+})
+```
+
+The returned `options` is typed as `MyOptions`, already decrypted and validated. When the integration is not configured, disabled, or incomplete, the helper throws a `MedusaError`. Refer to [Reading Options](/medusa-modules/integration/reading-options) to learn how to target an instance, handle the missing case, and read options from code that has the container.
 
 ---
 
@@ -154,6 +235,13 @@ Once the migrations run, restart the server, and the registered integrations are
     categoryLabel: "Payment"
   },
   {
+    slug: "mollie",
+    icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/mollie.svg",
+    label: "Mollie",
+    href: "/medusa-integrations/mollie",
+    categoryLabel: "Payment"
+  },
+  {
     slug: "1c-enterprise",
     icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/1c.svg",
     label: "1C:Enterprise",
@@ -189,6 +277,15 @@ The [Maintenance](/resources/maintenance) page explains how we test, update and 
 
 <CardList items={[
   {
+    title: "Integration Module Options",
+    href: "/medusa-modules/integration/module-options"
+  }
+]}/>
+
+### Concepts
+
+<CardList items={[
+  {
     title: "General Concepts",
     href: "/medusa-modules/integration/concepts"
   },
@@ -199,22 +296,27 @@ The [Maintenance](/resources/maintenance) page explains how we test, update and 
   {
     title: "Settings Change History",
     href: "/medusa-modules/integration/change-history"
-  },
-  {
-    title: "Integration Module Options",
-    href: "/medusa-modules/integration/module-options"
-  },
+  }
+]}/>
+
+### Server Guides
+
+<CardList items={[
   {
     title: "How to Create an Integration Module Provider",
     href: "/medusa-modules/integration/create-integration-module-provider"
   },
   {
-    title: "Validate Integration Options",
-    href: "/medusa-modules/integration/validation"
+    title: "Migrate an Existing Medusa Provider to the Integration Module",
+    href: "/medusa-modules/integration/migrate-provider-to-integration-module"
   },
   {
     title: "Reading Options",
     href: "/medusa-modules/integration/reading-options"
+  },
+  {
+    title: "Validate Integration Options",
+    href: "/medusa-modules/integration/validation"
   },
   {
     title: "Custom Sections with Widgets",
@@ -223,11 +325,12 @@ The [Maintenance](/resources/maintenance) page explains how we test, update and 
   {
     title: "Localize an Integration",
     href: "/medusa-modules/integration/localization"
-  },
-  {
-    title: "Migrate an Existing Medusa Provider to the Integration Module",
-    href: "/medusa-modules/integration/migrate-provider-to-integration-module"
-  },
+  }
+]}/>
+
+### Admin User Guides
+
+<CardList items={[
   {
     title: "Manage Integrations in Medusa Admin",
     href: "/medusa-modules/integration/manage-integrations"
@@ -239,7 +342,12 @@ The [Maintenance](/resources/maintenance) page explains how we test, update and 
   {
     title: "View the Change History in Medusa Admin",
     href: "/medusa-modules/integration/view-change-history"
-  },
+  }
+]}/>
+
+### References
+
+<CardList items={[
   {
     title: "Integration Provider Descriptor",
     href: "/medusa-modules/integration/descriptor"
