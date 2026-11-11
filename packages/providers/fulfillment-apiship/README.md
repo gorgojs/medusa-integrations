@@ -73,9 +73,9 @@ ApiShip Integration for Medusa
 
 ## What is ApiShip
 
-<a href="https://apiship.com" target="_blank">ApiShip</a> is a Russian delivery aggregator platform that connects online stores to 40+ delivery services through a single API. Instead of integrating each carrier separately, ApiShip provides a unified interface for rate calculation, order creation, tracking, and document generation across all connected providers.
+<a href="https://apiship.com" target="_blank">ApiShip</a> is a delivery aggregator platform for the CIS that connects online stores to 40+ delivery services through a single API. Instead of integrating each carrier separately, ApiShip provides a unified interface for rate calculation, order creation, tracking, and document generation across all connected providers.
 
-Popular delivery services available through ApiShip include CDEK, Yandex Delivery, Russian Post, Delovye Linii, PECOM, Boxberry, SberLogistics, DPD, and many more. You can browse the <a href="https://apiship.com/couriers" target="_blank">full list of delivery services</a> on the ApiShip website.
+Popular delivery services available through ApiShip include CDEK, Yandex Delivery, Delovye Linii, PECOM, Boxberry, SberLogistics, DPD, and many more. You can browse the <a href="https://apiship.com/couriers" target="_blank">full list of delivery services</a> on the ApiShip website.
 
 ## 💬  Support & Community
 
