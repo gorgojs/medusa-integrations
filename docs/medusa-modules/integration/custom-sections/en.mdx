@@ -7,11 +7,38 @@ description: "Learn how to add your own section to an integration's page in Medu
 
 In this guide, you'll learn how to add your own section to an integration's page in Medusa Admin with a widget.
 
+<Prerequisites items={[
+  {
+    text: "An Integration Module provider created and registered in your Medusa application",
+    link: "/medusa-modules/integration/create-integration-module-provider"
+  }
+]}/>
+
 ## When You Need a Custom Section
 
 The module generates a section for every group of options in the descriptor, with one control per option. That covers scalar settings, such as a key, a switch, or a choice from a list. An option that holds a list of records, such as several webhooks or courier-service connections, has no suitable control, so it gets a section of your own.
 
 A custom section is a standard Medusa admin widget built with `defineWidgetConfig`. The module renders it on the integration's page next to the generated sections, and the store admin can move it like any other section.
+
+The diagram shows how the page, Medusa's `LayoutComposer`, your widget, and the Admin API take part, from loading the page to saving the widget's option:
+
+```mermaid alt="Diagram showcasing how a widget takes part in an integration's page, from loading the page to saving the option"
+sequenceDiagram
+  participant page as Integration page
+  participant composer as LayoutComposer
+  participant widget as Your widget
+  participant api as Admin API
+
+  page->>api: GET /admin/integrations/:provider_id
+  api-->>page: descriptor, values, is_complete
+  page->>composer: zone prefix, sections, data
+  composer->>widget: places it in its zone, passes data
+  widget->>api: POST /admin/integrations/:provider_id
+  api->>api: validates, stores, records the author
+  api-->>widget: the saved integration
+```
+
+The page loads the integration, then renders the composer with the zone prefix `gorgo.integration.<identifier>` and the data of its sections. The composer places your widget in the zone it registered for and passes it `data`. When your widget saves, it sends `{ values }` to the same Admin API route the page reads from, and the module validates the values and records the change with the request's author. The steps below build each part of this.
 
 ---
 
@@ -84,7 +111,15 @@ Then publish the file with the plugin and point its types at it in `package.json
 }
 ```
 
-Keep the rest of your `exports` as they are. With the declaration in place, `defineWidgetConfig` accepts `"gorgo.integration.my"`, and a project that installs your plugin sees the same zones. See [Admin Widget Injection Zones](/medusa-modules/integration/admin-widget-zones) for the full list.
+Keep the rest of your `exports` as they are. This publishes the declaration to the projects that install your plugin. The Admin's own TypeScript project includes only `src/admin` by default, so it doesn't see a file in the plugin root yet. Add the declaration to its `include` in `src/admin/tsconfig.json`:
+
+```json title="src/admin/tsconfig.json"
+{
+  "include": [".", "../../index.d.ts"]
+}
+```
+
+Keep the rest of the file, such as `compilerOptions`, as it is. With the declaration in place, `defineWidgetConfig` accepts `"gorgo.integration.my"`, and a project that installs your plugin sees the same zones. Refer to [Admin Widget Injection Zones](/medusa-modules/integration/admin-widget-zones) for the full list.
 
 ---
 
@@ -162,19 +197,27 @@ The widget receives `data` of type `IntegrationSectionData` from the page:
 - `values` – the instance's stored options, without secrets.
 - `isComplete` – whether the stored configuration passes full validation. Use it to hold back actions that need working settings.
 
-`data.values` comes from the page's own request and doesn't refresh after the widget saves. That's why the widget keeps its own copy of the integration under its own query key and refreshes it after each save.
+`data.values` comes from the page's own request and doesn't refresh after the widget saves. The same goes for the rest of the page's own data, such as `data.isComplete`, the status badge, and the **Change History** section. They show the state from before the save until the page fetches them again, because the widget's save doesn't invalidate the page's queries. That's why the widget keeps its own copy of the integration under its own query key and refreshes it after each save. `GET /admin/integrations/:provider_id` returns a fresh `is_complete` next to the values, so read the completeness from that copy when the widget needs it after a save.
 
 The `POST` request has no `section_id`, so the module writes exactly the submitted options the descriptor declares and drops any other key. It validates them, encrypts secrets, emits `integration.updated` to clear the options cache, and records the change with the current admin user as its author.
 
 `sdk` is the JS SDK client from `src/admin/lib/sdk.ts`, set up the same way as in Medusa's own admin customization guides.
 
+<Note type="warning">
+
+Medusa loads a plugin's Admin extensions, its widgets and translations, only for packages listed in `plugins` of the application's `medusa-config.ts`. Besides the Integration Module's entry, add your plugin package itself as `{ resolve: "<plugin-package>", options: {} }`. Without it the provider still works, but the widget never loads and the i18n keys show raw in the Admin.
+
+</Note>
+
 <Note type="default" title="">
 
 Secrets never reach the browser, neither through `data` nor through `GET /admin/integrations/:provider_id`. When a widget needs a secret, or per-record operations with their own checks, add your own admin API route and run [`upsertIntegrationWorkflow`](/medusa-modules/integration/workflows#upsertintegrationworkflow) from it. Pass the request's actor as `actor`, as shown in [Settings Change History](/medusa-modules/integration/change-history#who-made-the-change), so the history keeps the right author.
 
+The widget passes `data.providerId` to that route, so the route must check that the `provider_id` belongs to your own provider before it reads or writes anything. `upsertIntegrationWorkflow` writes the declared options of any registered provider, so an unchecked key lets a request change another provider's integration. Refer to [Step 4 of Migrate an Existing Medusa Provider to the Integration Module](/medusa-modules/integration/migrate-provider-to-integration-module#step-4-move-your-custom-admin-ui) to learn how to check it.
+
 </Note>
 
-The widget's labels are i18n keys, the same as the descriptor's. See [Localize an Integration](/medusa-modules/integration/localization) for where their translations go.
+The widget's labels are i18n keys, the same as the descriptor's. Refer to [Localize an Integration](/medusa-modules/integration/localization) to learn where their translations go.
 
 ## References
 

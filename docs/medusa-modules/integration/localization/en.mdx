@@ -9,6 +9,13 @@ In this guide, you'll learn how to translate an integration's settings UI in Med
 
 The descriptor holds no display text, only i18n keys. The Admin resolves each key against the admin user's language, so one descriptor serves every language your integration ships translations for.
 
+<Prerequisites items={[
+  {
+    text: "An Integration Module provider created and registered in your Medusa application",
+    link: "/medusa-modules/integration/create-integration-module-provider"
+  }
+]}/>
+
 ## Which Fields Are i18n Keys
 
 These descriptor fields take an i18n key rather than text:
@@ -39,7 +46,7 @@ Keep one JSON file per language, with the same keys you used in the descriptor:
 }
 ```
 
-The nesting is up to you. A key such as `my.apiKey` points into nested objects, `"my": { "apiKey": ... }` here, the same way `t("my.apiKey")` reads it.
+A key such as `my.apiKey` points into nested objects, `"my": { "apiKey": ... }` here, the same way `t("my.apiKey")` reads it. Start every key with your provider's identifier, as the YooKassa and ApiShip providers do for the keys of their descriptors (`yookassa.*`, `apiship.*`). Medusa deep-merges the translations of every plugin into one `translation` namespace on top of its own keys, so a key that equals a core key or a key of another plugin overrides it for the whole Admin. The prefix keeps yours apart. What you nest below the prefix is up to you.
 
 Then export every language from `src/admin/i18n/index.ts`:
 
@@ -55,6 +62,12 @@ export default {
 
 Medusa merges these translations with the Admin's own when it builds the dashboard, so the descriptor's keys, the generated sections, and your [custom widgets](/medusa-modules/integration/custom-sections) all read from the same translations. In a widget, call `t()` from `useTranslation` with the same keys.
 
+<Note type="warning">
+
+Medusa merges the translations of a plugin only when the plugin is listed in `plugins` of the application's `medusa-config.ts`. Besides the Integration Module's entry, add your plugin package itself as `{ resolve: "<plugin-package>", options: {} }`. Without it the provider still works, but the keys in the descriptor and in your widgets show raw in the Admin, for example `my.apiKey` instead of "API key".
+
+</Note>
+
 ---
 
 ## How a Missing Key Falls Back
@@ -65,7 +78,9 @@ When a key has no translation in the admin user's language, the Admin shows its 
 
 ## What Isn't Translated
 
-The `message` your [validation rules](/medusa-modules/integration/validation) pass to `addIssue` is plain text, and the Admin shows it as it is. The same goes for the `message` that `testConnection` returns. Write them in the language your store admins read, or keep them short and technical.
+The `message` your [validation rules](/medusa-modules/integration/validation) pass to `addIssue` is plain text, and the Admin shows it as it is. The same goes for the `message` that `testConnection` returns. Write these messages in the language your store admins read, or keep them short and technical.
+
+The messages of the built-in rules, such as the format of a URL or a minimum length, are the validator's English text, and the Admin shows them as they are. Only the form's own "is required" message, which names the empty field, is translated.
 
 ---
 

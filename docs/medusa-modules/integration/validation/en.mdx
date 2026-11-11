@@ -13,11 +13,18 @@ Every rule here lives in the provider's descriptor. For the full list of option 
 
 </Note>
 
+<Prerequisites items={[
+  {
+    text: "An Integration Module provider created and registered in your Medusa application",
+    link: "/medusa-modules/integration/create-integration-module-provider"
+  }
+]}/>
+
 ## When the Module Validates
 
 The module validates options at two moments, and each checks a different scope:
 
-- **On save.** When a store admin saves a section, or your code submits option values, the module checks only the submitted options. It runs their rules against the stored configuration with the submitted values on top, so a rule can read options from other sections. A failing rule rejects the save, and nothing is stored.
+- **On save.** When a store admin saves a section, or your code submits option values, the module checks only the submitted options. It runs their rules against the stored configuration with the submitted values on top, without the descriptor's defaults, so a rule can read options from other sections. A failing rule rejects the save, and nothing is stored.
 - **Full validation.** The module checks the whole assembled configuration, with defaults applied, against every rule of every option and the descriptor's cross-section rule. The result decides whether the integration is complete. Full validation runs whenever a consumer resolves the options and whenever the Admin shows the integration's status. It never blocks a save.
 
 Saving is per section, so a configuration can be valid section by section and still incomplete as a whole. Such an integration shows the **Incomplete** status, and consumers don't get its options until the store admin fills in what's missing.
@@ -28,15 +35,35 @@ Saving is per section, so a configuration can be valid section by section and st
 | [An option's `validate`](#option-rules) | Submitted options only | Every option |
 | [The descriptor's `validate`](#cross-section-rules) | Never | Always |
 
+The diagram shows both passes side by side, and where the connection test stands next to them:
+
+```mermaid alt="Diagram showcasing the two validation passes, on save and full validation, and the connection test as a separate action"
+flowchart TD
+  subgraph save ["On save"]
+    s1["Built-in rule of each submitted option"] --> s2["Its own validate"]
+    s2 --> s3["Saved, or rejected with 400"]
+  end
+  subgraph full ["Full validation"]
+    f1["Whole config: defaults and built-in rules"] --> f2["Every option's validate"]
+    f2 --> f3["Descriptor's validate"]
+    f3 --> f4["Complete or Incomplete"]
+  end
+  f4 -->|"resolved options"| test["Test connection, a separate action"]
+```
+
+On save, each submitted option goes through its built-in rule and then its own `validate`, and any issue rejects the save with a `400` error. Full validation parses the whole configuration at once and decides whether the integration is complete, and it never blocks a save. The connection test belongs to neither pass. The store admin runs it as its own action, and it calls the descriptor's `testConnection` only with options that resolve, which means an enabled and complete integration. Refer to [How to Create an Integration Module Provider](/medusa-modules/integration/create-integration-module-provider#testconnection) to learn how to write it.
+
 ---
 
 ## Built-In Rules
 
-Each option's `type` comes with its own rules, such as a URL format for `url` or the allowed `values` for `enum`. Type-specific fields add more, such as `minLength` and `pattern` for `string` or `min`, `max`, and `int` for `number`. See [Type-Specific Fields](/medusa-modules/integration/descriptor#type-specific-fields) for every one of them.
+Each option's `type` comes with its own rules, such as a URL format for `url` or the allowed `values` for `enum`. Type-specific fields add more, such as `minLength` and `pattern` for `string` or `min`, `max`, and `int` for `number`. Refer to [Type-Specific Fields](/medusa-modules/integration/descriptor#type-specific-fields) for every one of them.
 
 `required: true` rejects an option without a value. For every type except `string` and `json`, an empty string counts as no value, and so does `null` for every type. An option with a `default` never fails `required`, because the default fills the gap.
 
 The Admin form also marks required fields and doesn't submit them empty, except a secret that already has a stored value, which stays as it is when left blank.
+
+A `string` option is the exception to the empty-string rule, because an empty string is a value for it. On the server, `required: true` alone accepts `""`, and the integration counts as complete with an empty field. The Admin form blocks an empty required field, but a request to the Admin API or a widget doesn't. Add `minLength: 1` to a required `string` option to reject it, as the YooKassa provider does for its `shopId` and `secretKey`.
 
 ---
 
@@ -44,7 +71,7 @@ The Admin form also marks required fields and doesn't submit them empty, except 
 
 When an option's built-in rules aren't enough, add a `validate` function to the option. It receives the option's value and a context with two members:
 
-- `options` – the configuration the rule is checked against, with the option's siblings from every section;
+- `options` – the configuration the rule is checked against, with the option's siblings from every section. On save it holds the stored values with the submitted ones on top, without the descriptor's defaults. In full validation it holds the whole configuration after the defaults are applied;
 - `addIssue({ message, path? })` – reports a problem. Without `path`, the issue points at the option itself.
 
 For example, a VAT code is required only while receipts are enabled:
@@ -68,6 +95,7 @@ const descriptor = defineIntegration({
       control: "secret",
       secret: true,
       required: true,
+      minLength: 1,
       label: "my.apiKey"
     },
     useReceipt: {
@@ -100,9 +128,17 @@ const descriptor = defineIntegration({
 
 `vatCode` isn't `required`, so a store that doesn't send receipts never has to fill it in. `visibleWhen` only hides the field in the Admin until `useReceipt` is on, and `requiredWhenReceipt` is what makes the module enforce it. The rule reads `useReceipt` from `ctx.options`. That object is the configuration with the submitted values on top, so the rule sees the switch whether or not it was saved together with `vatCode`.
 
+Check a conditional field like this in `validate`, and don't combine `required: true` with `visibleWhen`. A field hidden by `visibleWhen` is still submitted and validated, because the Admin form seeds and submits every field of its section. A hidden `number`, `enum`, `url`, `email`, or `uuid` option without a `default` goes in empty, fails `required`, and the module rejects the save while the field is hidden.
+
 <Note type="default" title="">
 
 An option's rule runs on save only when that option is submitted. If `useReceipt` lived in another section, turning it on would save fine, and full validation would then keep the integration **Incomplete** until the store admin fills in `vatCode`.
+
+</Note>
+
+<Note type="warning">
+
+A rule that reads a sibling with a `default` can see different values in the two passes. When that sibling sits in a section that hasn't been saved yet, the rule finds it missing on save and finds its default in full validation. The rule can pass on save, and the integration then stays **Incomplete**. Fall back to the sibling's default inside the rule, for example `ctx.options.mode ?? "webhook"` for an option `mode` with `default: "webhook"`.
 
 </Note>
 
@@ -161,7 +197,7 @@ describe("my integration descriptor", () => {
 })
 ```
 
-`collectValidationIssues` runs the same checks the module runs before options go live. It applies the descriptor's defaults, then runs the built-in rules, every option's `validate`, and the descriptor's `validate`. `path` joins the option id and any nested keys with dots.
+`collectValidationIssues` runs the same checks the module runs before options go live. It parses the whole configuration with the descriptor's schema, which applies the defaults and the built-in rules in one pass, and then runs every option's `validate` and the descriptor's `validate`. When a built-in rule fails, the custom rules still run, but against the raw configuration without the defaults, so a rule that reads a sibling with a default sees it missing. `path` joins the option id and any nested keys with dots.
 
 ## References
 
