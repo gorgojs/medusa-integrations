@@ -5,14 +5,14 @@ plugin, scaffolded from the [Medusa DTC Starter by Gorgo](https://github.com/gor
 backend lives in [`apps/backend`](./apps/backend) and the storefront in
 [`apps/storefront`](./apps/storefront), both installed from the workspace root with yarn.
 
-ApiShip aggregates Russian carriers, so the example shows the whole checkout flow that needs, a
+ApiShip aggregates CIS carriers, so the example shows the whole checkout flow that needs, a
 courier tariff picked from a list and a pickup point picked from a map.
 
 ## Prerequisites
 
 - All the [common prerequisites](../README.md#prerequisites)
 - An ApiShip account – [sign in or create one](https://a.apiship.ru), and an API token
-- A Yandex Maps JavaScript API key for the pickup point map – [create one](https://developer.tech.yandex.ru)
+- A Yandex Maps JavaScript API key for the pickup point map – [create one](https://yandex.ru/maps-api/console)
   under "JavaScript API and Geocoder"
 
 ## Configuration
@@ -66,7 +66,7 @@ demo catalog and start both apps.
    checkout through an enabled connection, so until there is one the calculator answers with nothing
    and the checkout shows no ApiShip options.
 
-3. The seed replaced the starter's flat-rate options in the Russian region with two ApiShip ones, so
+3. The seed replaced the starter's flat-rate options in the `ru` region with two ApiShip ones, so
    the Moscow warehouse ships through ApiShip only:
 
    | Option | Route |
@@ -80,7 +80,7 @@ demo catalog and start both apps.
    assigned, so the seed leaves them out.
    Add them under **Settings → Locations & Shipping** once that connection exists.
 
-4. Open the storefront at http://localhost:8000, switch to the Russian region, fill a cart and go to
+4. Open the storefront at http://localhost:8000, switch to the `ru` region, fill a cart and go to
    the checkout. The contacts ask for a phone number, which ApiShip needs to quote and to book. The
    checkout selects Доставка курьером on its own, and the row under the options opens a two-step
    sheet: the address first, then the tariff list, or the pickup point map for Самовывоз из ПВЗ.
@@ -96,7 +96,7 @@ integration is the files below. Port them into your own storefront to get the sa
 | [`apps/backend/medusa-config.ts`](./apps/backend/medusa-config.ts) | Registers the integration provider `apiship-1`, the plugin itself so the Admin build picks up its settings page and i18n, and the fulfillment provider bound to that integration id |
 | [`apps/backend/package.json`](./apps/backend/package.json) | Adds the plugin, the tunnel scripts and `predev` to link a locally published copy of the plugin before `dev` starts |
 | [`apps/backend/.env.template`](./apps/backend/.env.template) | Points `DB_NAME` at `medusa_fulfillment_apiship` and adds `SEED_APISHIP_TOKEN`, `SEED_APISHIP_IS_TEST` and `SEED_APISHIP_PROVIDER_CONNECT_ID`, which the seed reads |
-| [`apps/backend/src/migration-scripts/lib/example-data.ts`](./apps/backend/src/migration-scripts/lib/example-data.ts) | Configures ApiShip through the Integration Module, adds the CDEK connection from `SEED_APISHIP_PROVIDER_CONNECT_ID`, links the fulfillment provider to the Moscow warehouse, replaces the starter's shipping options in the Russian region with the two ApiShip ones and translates their names, wired into the seed from `initial-data-seed.ts` |
+| [`apps/backend/src/migration-scripts/lib/example-data.ts`](./apps/backend/src/migration-scripts/lib/example-data.ts) | Configures ApiShip through the Integration Module, adds the CDEK connection from `SEED_APISHIP_PROVIDER_CONNECT_ID`, links the fulfillment provider to the Moscow warehouse, replaces the starter's shipping options in the `ru` region with the two ApiShip ones and translates their names, wired into the seed from `initial-data-seed.ts` |
 | [`apps/storefront/package.json`](./apps/storefront/package.json) | Adds `@yandex/ymaps3-clusterer` and `@yandex/ymaps3-types` for the pickup point map |
 | [`apps/storefront/src/types/apiship.ts`](./apps/storefront/src/types/apiship.ts) | The shapes the storefront reads off the plugin's store routes, and the choice it saves on the shipping method |
 | [`apps/storefront/src/lib/data/apiship.ts`](./apps/storefront/src/lib/data/apiship.ts) | Calls the plugin's store routes, the calculator with its pickup points and the carrier names, and adds `removeApishipShippingMethod`, which takes the shipping method off the cart |
@@ -106,5 +106,5 @@ integration is the files below. Port them into your own storefront to get the sa
 | [`apps/storefront/src/modules/checkout/components/shipping-option/`](./apps/storefront/src/modules/checkout/components/shipping-option) | The ApiShip card, which shows the dates and price of the picked tariff, and its case in the card dispatcher |
 | [`apps/storefront/src/modules/checkout/components/delivery-row/`](./apps/storefront/src/modules/checkout/components/delivery-row) | The ApiShip row, which shows the address or the pickup point with the carrier logo and opens the delivery sheet, its case in the row dispatcher, and the `trailing` slot for the logo, added here and to [`checkout-info-rows/row.tsx`](./apps/storefront/src/modules/checkout/components/checkout-info-rows/row.tsx) |
 | [`apps/storefront/src/modules/checkout/components/checkout-contacts-sheet/index.tsx`](./apps/storefront/src/modules/checkout/components/checkout-contacts-sheet/index.tsx) | Requires the phone number, which ApiShip needs to quote and to book |
-| [`apps/storefront/.env.template`](./apps/storefront/.env.template) | Adds `NEXT_PUBLIC_YANDEX_MAPS_API_KEY` and starts customers in the Russian region |
+| [`apps/storefront/.env.template`](./apps/storefront/.env.template) | Adds `NEXT_PUBLIC_YANDEX_MAPS_API_KEY` and starts customers in the `ru` region |
 | [`apps/storefront/messages/*.json`](./apps/storefront/messages) | The checkout strings this flow adds, in all 36 storefront locales |

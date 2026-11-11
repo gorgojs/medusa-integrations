@@ -50,7 +50,7 @@ These are the versions the example storefront uses.
 
 ## Step 2: Set Environment Variables
 
-The map needs a key for the JavaScript API. Create one in the [Yandex developer dashboard](https://developer.tech.yandex.ru) under "JavaScript API and Geocoder", then add it to the storefront's `.env.local`:
+The map needs a key for the JavaScript API. Create one in the [Yandex developer dashboard](https://yandex.ru/maps-api/console) under "JavaScript API and Geocoder", then add it to the storefront's `.env.local`:
 
 ```bash title=".env.local"
 NEXT_PUBLIC_YANDEX_MAPS_API_KEY=supersecret
@@ -58,7 +58,7 @@ NEXT_PUBLIC_YANDEX_MAPS_API_KEY=supersecret
 
 The key is public, since the map runs in the customer's browser. Next.js embeds `NEXT_PUBLIC_*` variables into the build, so rebuild the storefront after you change it. Without the key, the pickup point sheet shows a message that the key is missing, and courier delivery keeps working.
 
-ApiShip delivers within Russia, so the example also sets `NEXT_PUBLIC_DEFAULT_REGION=ru` to open the storefront in the Russian region.
+The example seeds the ApiShip shipping options in the `ru` region only, so it also sets `NEXT_PUBLIC_DEFAULT_REGION=ru` to open the storefront in that region.
 
 ---
 
