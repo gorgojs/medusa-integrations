@@ -35,6 +35,8 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 | `getResolvedOptions(identifier, instanceId?)` | `Promise<ResolvedOptions \| null>` | Расшифрованные и проверенные параметры инстанса с подставленными значениями по умолчанию в виде `{ options, meta }` или `null`, если интеграция не настроена, выключена или не заполнена. Бросает исключение, если под этими идентификатором и инстансом не зарегистрирован ни один провайдер. Результат кэшируется на срок до 60 секунд. |
 | `clearOptionsCache(providerId?)` | `void` | Сбрасывает кэш параметров одного инстанса или, без аргумента, всех инстансов. |
 
+---
+
 ## Зарегистрированные провайдеры
 
 | Метод | Возвращает | Описание |
@@ -46,6 +48,8 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 | `getSecretKeys(providerId)` | `string[]` | Идентификаторы секретных параметров провайдера. |
 | `getPackageMeta(providerId)` | `{ version, author, author_url }` | Данные npm-пакета, из которого пришёл провайдер, или значения `null`, если их не удалось найти. |
 
+---
+
 ## Сохранённые интеграции
 
 | Метод | Возвращает | Описание |
@@ -55,11 +59,15 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 | `isComplete(record)` | `boolean` | Проходит ли сохранённая запись полную валидацию по дескриптору своего провайдера. |
 | `getStoredValues(providerId)` | `Promise<Record<string, unknown>>` | Вся сохранённая конфигурация с расшифрованными секретами, без валидации и значений по умолчанию. Никогда не отправляйте её в браузер. |
 
+---
+
 ## Проверка соединения
 
 | Метод | Возвращает | Описание |
 | --- | --- | --- |
 | `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Выполняет проверку соединения провайдера с итоговыми параметрами. Не сохраняет `last_test_status` и не отправляет `integration.tested`. Оба действия выполняет [`testIntegrationConnectionWorkflow`](/medusa-modules/integration/workflows#testintegrationconnectionworkflow). |
+
+---
 
 ## История изменений
 
@@ -71,6 +79,8 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 Чтобы прочитать сами записи, используйте сгенерированные методы `IntegrationChange` ниже. Они возвращают сохранённые строки как есть. В отличие от [API-роутов Admin](/medusa-modules/integration/admin-api#история-изменений), они не скрывают значения параметров, которые стали секретными после записи изменения.
 
+---
+
 ## Каталог и лицензии
 
 | Метод | Возвращает | Описание |
@@ -78,6 +88,8 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 | `getCatalog()` | `Promise<CatalogItem[]>` | [Каталог интеграций](/medusa-modules/integration/browse-integrations) с `installed` и `provider_id` для каждой записи, зарегистрированной в проекте. |
 | `listLicenseStates()` | `LicenseStateEntry[]` | Последний результат проверки лицензии каждой платной интеграции Gorgo. |
 | `recheckLicenseStates()` | `Promise<LicenseStateEntry[]>` | Сразу проверяет лицензии и возвращает свежие результаты. |
+
+---
 
 ## Сгенерированные методы управления данными
 

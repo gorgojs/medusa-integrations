@@ -13,8 +13,6 @@ The Integration Module lets any plugin describe its options as a schema, and sto
 
 </Note>
 
----
-
 ## Why Migrate
 
 When a provider's options are set in `medusa-config.ts`, changing a token, password, or any other setting means editing code, updating environment variables, and redeploying Medusa. The Integration Module removes this routine. It builds a UI for managing the provider's settings from a simple declarative description of their schema, and the store admin manages them in the Admin, with no `medusa-config.ts` edits and no redeploy.
@@ -36,6 +34,8 @@ The code examples in this guide come from a real migration of our [ApiShip Fulfi
 Before the migration, ApiShip's settings lived in `store.metadata.apiship`: the token, courier-service connections, the default sender address, product dimensions, and tax settings. Behind them stood a dedicated Admin UI and a separate API route for each CRUD operation. The Integration Module brings all of this into a single **Settings → Integrations** section.
 
 The provider's option list is flat, and every option maps to a single control in the generated UI form. Scalar settings become descriptor options, and only what the catalog has no suitable control for moves to your custom UI, for instance options with a `json` type. For the ApiShip provider, that's only the list of courier-service connections, because it's an array of JSON objects.
+
+---
 
 ## Step 1: Describe the Descriptor
 
@@ -189,6 +189,8 @@ Options without a `default` stay absent from the resolved configuration. That's 
 
 </Note>
 
+---
+
 ## Step 2: Register the Provider in `medusa-config.ts`
 
 ```ts title="medusa-config.ts"
@@ -250,6 +252,8 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
 
 This needs to match whatever `process.env.INTEGRATION_ENCRYPTION_KEY` reads in `medusa-config.ts` above.
 
+---
+
 ## Step 3: Switch to Reading Options through `resolveIntegrationOptions`
 
 Previously the fulfillment-module provider read its options from `store.metadata.apiship`. Now it gets them from the Integration Module through `resolveIntegrationOptions()`, passing its `identifier` and instance `id` (the same `id` from `medusa-config.ts`). The module returns the option values already decrypted, validated, and with defaults applied:
@@ -283,6 +287,8 @@ class ApishipBase extends AbstractFulfillmentProviderService {
 ```
 
 `this.instanceId_`, set from the fulfillment-module registration's own `options.id`, becomes the `instance_id` passed to `resolveIntegrationOptions`, so each fulfillment-module instance reads back exactly the Integration Module instance it was paired with in `medusa-config.ts`.
+
+---
 
 ## Step 4: Move Your Custom Admin UI
 

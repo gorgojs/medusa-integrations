@@ -19,11 +19,15 @@ When you write your own Integration Module provider, it helps to see how a finis
 
 For a real implementation, read the [YooKassa payment provider in the Medusa Integrations repository](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/payment-yookassa).
 
+---
+
 ## 1. Create the Provider Directory
 
 Start by creating a new directory for your Integration Module provider. In a plugin it goes under `src/providers`, for example `src/providers/integration-my`.
 
 If you don't have a plugin yet, create one together with an example project using [`create-medusa-plugin`](/tools/create-medusa-plugin).
+
+---
 
 ## 2. Create the Integration Module Provider Service
 
@@ -164,6 +168,8 @@ const descriptor = defineIntegration({
 
 `status` is one of `"passed" | "failed" | "skipped"`. Returning `{ status: "failed", message }` counts as a normal result, not an error. If `testConnection` throws, the module reports the test as `failed` with the error's message, so the store admin sees it in the Admin either way.
 
+---
+
 ## 3. Create Module Provider Definition File
 
 Create the file `src/providers/integration-my/index.ts` with the following content:
@@ -179,6 +185,8 @@ export default ModuleProvider(INTEGRATION_MODULE, {
 ```
 
 This exports the provider definition, declaring `MyIntegrationProvider` as its service.
+
+---
 
 ## 4. Register the Provider
 
@@ -221,6 +229,8 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
 Any non-empty value works. The module derives it via SHA-256 into a 32-byte AES-256-GCM key, so use a high-entropy one, for example `openssl rand -hex 32`.
+
+---
 
 ## 5. Test It Out
 

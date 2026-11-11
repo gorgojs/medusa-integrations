@@ -48,6 +48,8 @@ The payload has this shape:
 
 `status` and `message` are the test's result. A test from the Admin carries the admin user as `actor`. The daily test carries `{ type: "job", id: "test-integration-connections-daily" }`.
 
+---
+
 ## Subscribe to an Event
 
 For example, a subscriber that logs every failed connection test, so the daily test's failures reach your monitoring:

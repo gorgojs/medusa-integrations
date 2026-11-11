@@ -25,6 +25,8 @@ The API you use depends on where your code runs.
 
 A payment or fulfillment provider runs inside its own module's isolated container, so it cannot resolve the Integration Module directly. It uses `resolveIntegrationOptions`, which runs a workflow to reach the app container. Code that already holds the container resolves the module and calls `getResolvedOptions` directly, without a workflow.
 
+---
+
 ## The `resolveIntegrationOptions` Helper
 
 Use the helper from a provider that cannot reach the Integration Module directly.
@@ -94,6 +96,8 @@ With `{ optional: true }`, a missing, disabled, or incomplete integration resolv
 
 </Note>
 
+---
+
 ## The `getResolvedOptions` Service Method
 
 When your code already has the container, resolve the module and call `getResolvedOptions` directly. This suits API routes, subscribers, scheduled jobs, and loaders, and no workflow is involved. For example, in an API route:
@@ -117,6 +121,8 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 `getResolvedOptions(identifier, instanceId?)` returns `ResolvedOptions | null`. A value is `{ options, meta }`, where `meta` holds `provider_id`, `category`, and `is_enabled`. A `null` result means the integration is not configured, disabled, or incomplete. When no provider is registered under that identifier and instance, the method throws instead. See [Integration Module Service](/medusa-modules/integration/service) for the module's other methods.
 
+---
+
 ## Resolving Inside a Workflow
 
 When you compose your own workflow, use the exported step instead of the helper:
@@ -135,6 +141,8 @@ export const createMyWorkflow = createWorkflow("create-my", () => {
 
 The standalone `getResolvedIntegrationOptionsWorkflow` is also exported. It is what the helper runs internally.
 
+---
+
 ## What Resolved Means
 
 Resolved options are not the raw stored values. On every resolve, the module does three things:
@@ -144,6 +152,8 @@ Resolved options are not the raw stored values. On every resolve, the module doe
 - applies descriptor defaults for options the admin never set.
 
 If the integration is not configured, disabled, or incomplete, it resolves to `null`. The helper throws in that case, or returns `null` with `{ optional: true }`. Partial drafts never reach runtime.
+
+---
 
 ## Caching and Freshness
 

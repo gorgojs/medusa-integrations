@@ -20,6 +20,8 @@ These descriptor fields take an i18n key rather than text:
 
 The module translates everything else on the page by itself, including the category badge, statuses, and actions. Its own interface comes in 34 of the languages Medusa Admin supports.
 
+---
+
 ## Add the Translations
 
 The Integration Module builds on [Medusa's admin translations](https://docs.medusajs.com/learn/fundamentals/admin/translations), so the translations go where Medusa expects them in any plugin, `src/admin/i18n/index.ts`.
@@ -53,13 +55,19 @@ export default {
 
 Medusa merges these translations with the Admin's own when it builds the dashboard, so the descriptor's keys, the generated sections, and your [custom widgets](/medusa-modules/integration/custom-sections) all read from the same translations. In a widget, call `t()` from `useTranslation` with the same keys.
 
+---
+
 ## How a Missing Key Falls Back
 
 When a key has no translation in the admin user's language, the Admin shows its English translation. When English has no translation either, it shows the key itself, such as `my.apiKey`, so a missing translation shows on the page.
 
+---
+
 ## What Isn't Translated
 
 The `message` your [validation rules](/medusa-modules/integration/validation) pass to `addIssue` is plain text, and the Admin shows it as it is. The same goes for the `message` that `testConnection` returns. Write them in the language your store admins read, or keep them short and technical.
+
+---
 
 ## Translations and Search
 

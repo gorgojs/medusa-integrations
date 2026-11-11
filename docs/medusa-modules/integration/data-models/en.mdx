@@ -83,6 +83,8 @@ The stored settings of one integration instance. The module creates the record o
 
 Whether the integration is complete isn't stored. The module checks it against the provider's current descriptor whenever it's needed, so it can't go stale when the descriptor changes.
 
+---
+
 ## IntegrationChange
 
 One record of the [change history](/medusa-modules/integration/change-history). It has no relation to `Integration`, so it stays after the integration is deleted.

@@ -29,6 +29,8 @@ A save that changes nothing and enabling an integration that is already enabled 
 
 Each changed field goes into the record with its id, its label key, and its values before and after. A change of the integration's own `title` appears as the `@title` field.
 
+---
+
 ## Who Made the Change
 
 A record stores its author as `actor_type` and `actor_id`, the actor Medusa authenticated for the request, such as `user` or `api-key`. Along with them the module saves `actor_label`, the user's email or the API key's title at the time of the change, so the record stays attributed after the user or the key is deleted. A record also keeps the IP address, the client, and the ID of the request.
@@ -68,6 +70,8 @@ A change written through the module's service methods, such as `updateIntegratio
 
 </Note>
 
+---
+
 ## Secrets in the History
 
 The values of options marked `secret` never reach the history. For a secret option, the record keeps only what happened to its value, which is `set`, `replaced`, or `removed`. A deletion records the stored secrets as `removed`, without decrypting them.
@@ -80,6 +84,8 @@ Marking an option `secret` later hides its earlier values in the Admin and the A
 
 </Note>
 
+---
+
 ## Size Limits
 
 The module limits the size of a record, so a large `json` option can't bloat the history:
@@ -88,11 +94,15 @@ The module limits the size of a record, so a large `json` option can't bloat the
 - A record keeps at most 100 fields.
 - The fields of a record take up at most 16 KB. Fields past that limit keep their id but lose their values.
 
+---
+
 ## Storage and Retention
 
 The history lives in the [`IntegrationChange` data model](/medusa-modules/integration/data-models#integrationchange). It has no relation to the `Integration` data model, so its records outlive the integration they describe, deletion included. The module keeps them indefinitely and never removes them by itself.
 
 The module writes the record in the same workflow as the change. If a later step of that workflow fails and the workflow rolls back, the module removes the record together with the change. If the record itself can't be written, the change goes ahead without it, and the module logs a warning.
+
+---
 
 ## Reading the History
 
