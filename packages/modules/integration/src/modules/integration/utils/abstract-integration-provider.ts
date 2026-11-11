@@ -48,12 +48,13 @@ export abstract class AbstractIntegrationProviderService {
 }
 
 /**
- * The name before 1.0. Since its fulfillment providers, Medusa names the base class of each
+ * The name before 2.0. Since its fulfillment providers, Medusa names the base class of each
  * provider type `Abstract<Module>ProviderService`, and this class follows it.
- * @deprecated Use `AbstractIntegrationProviderService`. The alias is removed in 2.0.
+ * @deprecated Use `AbstractIntegrationProviderService`. The alias stays through every 2.x release
+ * and is removed in 3.0.
  */
 export const AbstractIntegrationProvider = AbstractIntegrationProviderService
-/** @deprecated Use `AbstractIntegrationProviderService`. The alias is removed in 2.0. */
+/** @deprecated Use `AbstractIntegrationProviderService`. The alias is removed in 3.0. */
 export type AbstractIntegrationProvider = AbstractIntegrationProviderService
 
 export default AbstractIntegrationProviderService
