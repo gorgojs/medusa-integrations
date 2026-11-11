@@ -50,6 +50,8 @@ The search finds a change by any of the following:
 - the integration's name in the interface language, or its identifier (`provider_id`);
 - the name of a changed field in the interface language, or its id in the descriptor.
 
+The **Author** column shows the user's current name when one is set, while the search matches the email stored with the change. Searching for the name shown in the column does not find the user's changes, so search for the email or use the **Author** filter instead.
+
 ### Filters
 
 **Add filter** adds one of these filters:
@@ -58,6 +60,8 @@ The search finds a change by any of the following:
 - **Event** – one of the record types listed in [What Gets Recorded](/medusa-modules/integration/change-history#what-gets-recorded);
 - **Author** – the users who changed settings, and **System**;
 - **Date** – a period.
+
+The **Integration** filter lists only the integrations registered in the project. To find the changes of a provider you removed from `medusa-config.ts`, search for its `provider_id`. The table shows such a change with the `provider_id` instead of a name.
 
 ### Sorting
 
