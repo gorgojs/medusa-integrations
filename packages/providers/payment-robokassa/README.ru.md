@@ -43,13 +43,13 @@
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-ru.2c4c681d.mp4">
+  <a href="https://gorgojs.ru/videos/payment-robokassa/demo">
     <img src="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-ru-poster-play.52c362cf.webp" alt="Смотреть демо-видео плагина Robokassa" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-robokassa/demo/payment-robokassa-demo-ru.2c4c681d.mp4">▶ Смотреть демо-видео</a>
+  <a href="https://gorgojs.ru/videos/payment-robokassa/demo">▶ Смотреть демо-видео</a>
 </p>
 
 ## Возможности плагина

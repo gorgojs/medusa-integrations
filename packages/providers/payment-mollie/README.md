@@ -41,13 +41,13 @@ Mollie Payments for Medusa
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-mollie/demo/payment-mollie-demo-en.cccb587f.mp4">
+  <a href="https://gorgojs.com/videos/payment-mollie/demo">
     <img src="https://static.gorgojs.com/videos/payment-mollie/demo/payment-mollie-demo-en-poster-play.4392c518.webp" alt="Watch the Mollie plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-mollie/demo/payment-mollie-demo-en.cccb587f.mp4">▶ Watch the demo video</a>
+  <a href="https://gorgojs.com/videos/payment-mollie/demo">▶ Watch the demo video</a>
 </p>
 
 ## Plugin Features

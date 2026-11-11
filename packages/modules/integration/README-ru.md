@@ -40,13 +40,13 @@
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/integration/demo/integration-demo.e8ef945d.mp4">
+  <a href="https://gorgojs.ru/videos/integration/demo">
     <img src="https://static.gorgojs.com/videos/integration/demo/integration-demo-poster-play.2635e78b.webp" alt="Смотреть демо Модуля интеграций" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/integration/demo/integration-demo.e8ef945d.mp4">▶ Смотреть демо-видео</a>
+  <a href="https://gorgojs.ru/videos/integration/demo">▶ Смотреть демо-видео</a>
 </p>
 
 ## Что такое Модуль интеграций?
