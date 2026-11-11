@@ -9,6 +9,8 @@ In this document, you'll learn about the options of the Integration Module. You 
 
 ## All Module Options
 
+The options are typed as `IntegrationModuleOptions`, which `@gorgo/medusa-integration` exports. The table lists its properties:
+
 | Option | Description | Required | Default |
 | --- | --- | --- | --- |
 | [`encryptionKey`](#encryptionkey) | A passphrase the module turns into the key that encrypts `secret: true` options. | When a provider has a `secret: true` option | – |
@@ -39,9 +41,11 @@ module.exports = defineConfig({
 
 The value can be any non-empty string, though a high-entropy one is best for production, for example the output of `openssl rand -hex 32`. The module derives the key once, the first time it's needed, and reuses it for every registered integration's `secret` fields from then on. Without `encryptionKey`, the module throws the first time it tries to save or read an integration that has at least one `secret: true` option.
 
+The module throws a plain `Error` whose message starts with `[integration] encryptionKey is required`. A plain `Error` isn't one of Medusa's typed errors, so an Admin API route answers `500` with the generic message `An unknown error occurred.`, and the real message appears only in the server log. When saving an integration in the Admin fails with a `500`, look for that message in the log.
+
 <Note type="warning">
 
-Keep `encryptionKey` the same on every Medusa process, server and worker alike, and for as long as integrations store secrets. The module can't decrypt a value encrypted with another key, so after a change, reading such an integration's options fails with an error, and so does the integrations list in the Admin. Restore the previous key to bring them back. If it's lost, delete the affected integrations through [`DELETE /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#integrations), which doesn't decrypt anything, and configure them again.
+Keep `encryptionKey` the same on every Medusa process, server and worker alike, and for as long as integrations store secrets. The module can't decrypt a value encrypted with another key, so after a change, reading such an integration's options fails with an error, and so does the integrations list in the Admin. The error is Node.js's own decryption error (`Unsupported state or unable to authenticate data`), not a message from the module, so an Admin API route answers `500` and the details are only in the server log. Restore the previous key to bring them back. If it's lost, delete the affected integrations through [`DELETE /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#integrations), which doesn't decrypt anything, and configure them again.
 
 </Note>
 
@@ -93,7 +97,11 @@ Without the option, the module reads the key from the `GORGO_LICENSE` environmen
 GORGO_LICENSE=gorgo_live_...
 ```
 
-The check never blocks the server from starting. Its result shows next to each paid integration in the Admin. See [Paid Plugin Licensing](/licensing) for how to get a key.
+The check never blocks the server from starting. Its result shows next to each paid integration in the Admin.
+
+The module runs the check in each process that loads it, so the server and the worker both need the key. When you use `GORGO_LICENSE`, set the variable in the environment of both. If the key is missing, or doesn't look like a project key (`gorgo_live_…`), the module sends no request to the license service, and the Admin shows **License key not set** or **License key has the wrong format**. If the license service can't be reached, the module asks again after about 15 minutes instead of waiting for the next daily check, and the Admin shows **License not checked** in the meantime.
+
+Refer to [Paid Plugin Licensing](/licensing) to learn how to get a key.
 
 ## References
 

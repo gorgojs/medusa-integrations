@@ -28,6 +28,12 @@ description: "Модуль Medusa: плагин описывает свои па
   </video>
 </div>
 
+<Note type="default" title="Ищете инструкции без кода?">
+
+Как настроить интеграции в Admin, читайте в руководстве [Управление интеграциями в Medusa Admin](/medusa-modules/integration/manage-integrations).
+
+</Note>
+
 ## Возможности
 
 - **[Управление настройками в Admin](/medusa-modules/integration/manage-integrations)** – Администраторы магазина задают параметры в разделе **Настройки → Интеграции**, без правок `medusa-config` и без повторного развёртывания приложения Medusa.
@@ -40,13 +46,13 @@ description: "Модуль Medusa: плагин описывает свои па
 - **[История изменений](/medusa-modules/integration/change-history)** – Модуль записывает, кто, когда и какие поля изменил в настройках интеграции. В Admin историю можно искать и фильтровать, а значения секретов в неё не попадают.
 - **[Расширяемый UI](/medusa-modules/integration/custom-sections)** – Секции можно менять местами ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). Если готовых секций недостаточно, можно реализовать любой UI для своих параметров с помощью собственных виджетов.
 - **[Локализация](/medusa-modules/integration/localization)** – UI настроек показывается на языке пользователя Admin, с переводами, которые поставляет ваш плагин.
-- **[Каталог интеграций](/medusa-modules/integration/browse-integrations)** – Доступные интеграции отображаются в Admin вместе с инструкцией по установке каждой.
+- **[Каталог интеграций](/medusa-modules/integration/browse-integrations)** – Интеграции из каталога Gorgo отображаются в Admin вместе с инструкцией по установке, если она есть у интеграции.
 
 ---
 
 ## Установка
 
-Модулю интеграций нужна Medusa v2.17.2 или новее. Установите его в приложение Medusa:
+Модулю интеграций нужны Medusa v2.17.2 или новее и Node.js v22.23.4 или новее (из 22.x), v24.22.1 или новее (из 24.x) либо v26.12.1 или новее. Установите его в приложение Medusa:
 
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
@@ -101,6 +107,81 @@ module.exports = defineConfig({
 
 ---
 
+## Как использовать Модуль интеграций
+
+В приложении Medusa у интеграции две стороны. Провайдер объявляет параметры, а код, которому они нужны, получает значения, сохранённые администратором магазина.
+
+### Объявление параметров
+
+Объявите параметры и секцию настроек, в которую они входят, в дескрипторе сервиса провайдера:
+
+```ts title="providers/integration-my/services/my-integration.ts"
+import {
+  AbstractIntegrationProviderService,
+  defineIntegration,
+  z
+} from "@gorgo/medusa-integration"
+
+const descriptor = defineIntegration({
+  category: "payment",
+  displayName: "my.name",
+  options: {
+    apiKey: {
+      type: "string",
+      control: "secret",
+      secret: true,
+      required: true,
+      label: "my.apiKey"
+    },
+    sandbox: {
+      type: "boolean",
+      control: "switch",
+      default: false,
+      label: "my.sandbox"
+    },
+  },
+  sections: [
+    {
+      id: "credentials",
+      title: "my.credentials",
+      options: ["apiKey", "sandbox"]
+    },
+  ],
+})
+
+export type MyOptions = z.infer<typeof descriptor.optionsSchema>
+
+export default class MyIntegrationProvider extends AbstractIntegrationProviderService {
+  static identifier = "my"
+
+  get descriptor() {
+    return descriptor
+  }
+}
+```
+
+Массив `sections` выводит оба параметра в одной карточке страницы настроек, а `secret: true` заставляет модуль шифровать `apiKey` перед сохранением. `MyOptions` описывает тип параметров, которые ваш код получит позже. Как создать полноценный провайдер и зарегистрировать его в `medusa-config.ts`, читайте в руководстве [Как создать провайдер Модуля интеграций](/medusa-modules/integration/create-integration-module-provider).
+
+После регистрации провайдера администратор магазина заполняет его параметры в разделе **Настройки → Интеграции**, как описано в руководстве [Управление интеграциями в Medusa Admin](/medusa-modules/integration/manage-integrations).
+
+### Чтение параметров во время выполнения
+
+В коде, которому нужны параметры, например в платёжном провайдере с учётными данными, вызовите `resolveIntegrationOptions` с идентификатором провайдера:
+
+```ts title="providers/payment-my/services/my-payment.ts"
+import { resolveIntegrationOptions } from "@gorgo/medusa-integration"
+import type { MyOptions } from "../../integration-my/services/my-integration"
+
+// внутри любого метода провайдера
+const options = await resolveIntegrationOptions<MyOptions>({
+  identifier: "my"
+})
+```
+
+Возвращённый `options` типизирован как `MyOptions`, уже расшифрован и проверен. Если интеграция не настроена, выключена или не заполнена, хелпер бросает `MedusaError`. Как выбрать инстанс, обработать отсутствие параметров и получить параметры в коде с доступом к контейнеру, читайте в руководстве [Чтение параметров](/medusa-modules/integration/reading-options).
+
+---
+
 ## Доступные интеграции
 
 <IntegrationCardList items={[
@@ -109,12 +190,12 @@ module.exports = defineConfig({
     icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/apiship.svg",
     label: "ApiShip",
     href: "/medusa-integrations/apiship",
-    categoryLabel: "Фулфилмент"
+    categoryLabel: "Доставка"
   },
   {
     slug: "t-kassa",
     icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/tkassa.svg",
-    label: "T-Kassa от Т-Банк",
+    label: "Т-Касса от Т-Банка",
     href: "/medusa-integrations/t-kassa",
     categoryLabel: "Платежи"
   },
@@ -154,6 +235,13 @@ module.exports = defineConfig({
     categoryLabel: "Платежи"
   },
   {
+    slug: "mollie",
+    icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/mollie.svg",
+    label: "Mollie",
+    href: "/medusa-integrations/mollie",
+    categoryLabel: "Платежи"
+  },
+  {
     slug: "1c-enterprise",
     icon: "https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/1c.svg",
     label: "1С:Предприятие",
@@ -189,6 +277,15 @@ module.exports = defineConfig({
 
 <CardList items={[
   {
+    title: "Параметры Модуля интеграций",
+    href: "/medusa-modules/integration/module-options"
+  }
+]}/>
+
+### Концепции
+
+<CardList items={[
+  {
     title: "Основные концепции",
     href: "/medusa-modules/integration/concepts"
   },
@@ -199,22 +296,27 @@ module.exports = defineConfig({
   {
     title: "История изменений настроек",
     href: "/medusa-modules/integration/change-history"
-  },
-  {
-    title: "Параметры Модуля интеграций",
-    href: "/medusa-modules/integration/module-options"
-  },
+  }
+]}/>
+
+### Руководства по бэкенду
+
+<CardList items={[
   {
     title: "Как создать провайдер Модуля интеграций",
     href: "/medusa-modules/integration/create-integration-module-provider"
   },
   {
-    title: "Валидация параметров интеграции",
-    href: "/medusa-modules/integration/validation"
+    title: "Миграция существующего провайдера Medusa на Модуль интеграций",
+    href: "/medusa-modules/integration/migrate-provider-to-integration-module"
   },
   {
     title: "Чтение параметров",
     href: "/medusa-modules/integration/reading-options"
+  },
+  {
+    title: "Валидация параметров интеграции",
+    href: "/medusa-modules/integration/validation"
   },
   {
     title: "Собственные секции на виджетах",
@@ -223,11 +325,12 @@ module.exports = defineConfig({
   {
     title: "Локализация интеграции",
     href: "/medusa-modules/integration/localization"
-  },
-  {
-    title: "Миграция существующего провайдера Medusa на Модуль интеграций",
-    href: "/medusa-modules/integration/migrate-provider-to-integration-module"
-  },
+  }
+]}/>
+
+### Руководства администратора
+
+<CardList items={[
   {
     title: "Управление интеграциями в Medusa Admin",
     href: "/medusa-modules/integration/manage-integrations"
@@ -239,7 +342,12 @@ module.exports = defineConfig({
   {
     title: "Просмотр истории изменений в Medusa Admin",
     href: "/medusa-modules/integration/view-change-history"
-  },
+  }
+]}/>
+
+### Справочник
+
+<CardList items={[
   {
     title: "Дескриптор провайдера интеграций",
     href: "/medusa-modules/integration/descriptor"
