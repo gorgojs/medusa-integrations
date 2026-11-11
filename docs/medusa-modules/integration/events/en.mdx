@@ -7,6 +7,8 @@ description: "Reference of the events the Integration Module emits when integrat
 
 This reference lists the events the Integration Module emits through Medusa's event bus. Subscribe to them to react when an integration's settings change or a connection test runs.
 
+Each workflow that emits an event ends with `emitIntegrationEventStep`, so a run emits its event only after every earlier step has finished. A run that fails before that step, for example with a `not_found` or `invalid_data` error, emits nothing, and a rollback doesn't emit a second event.
+
 ## Events
 
 | Event | Emitted when |
@@ -80,7 +82,7 @@ export const config: SubscriberConfig = {
 }
 ```
 
-The subscriber reads only the fields it needs from the payload. The daily test also runs for an enabled integration that is still incomplete and reports it as `failed` with the message `Not configured`, so check `message` if you only want failed credentials. Medusa runs subscribers in the `shared` and `worker` modes, so in a deployment with a separate worker, this one runs in the worker. See Medusa's [Events and Subscribers](https://docs.medusajs.com/learn/fundamentals/events-and-subscribers) for more on subscribers.
+The subscriber reads only the fields it needs from the payload. The daily test also runs for an enabled integration that is still incomplete and reports it as `failed` with the message `Not configured`, so check `message` if you only want failed credentials. Medusa runs subscribers in the `shared` and `worker` modes, so in a deployment with a separate worker, this one runs in the worker. Refer to Medusa's [Events and Subscribers](https://docs.medusajs.com/learn/fundamentals/events-and-subscribers) to learn more about subscribers.
 
 ## References
 

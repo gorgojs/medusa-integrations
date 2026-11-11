@@ -32,7 +32,7 @@ Change settings only through the module's [workflows](/medusa-modules/integratio
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `getResolvedOptions(identifier, instanceId?)` | `Promise<ResolvedOptions \| null>` | The instance's decrypted and validated options with defaults applied, as `{ options, meta }`, or `null` when the integration isn't configured, is disabled, or is incomplete. Throws when no provider is registered under that identifier and instance. Cached for up to 60 seconds. |
+| `getResolvedOptions(identifier, instanceId?)` | `Promise<ResolvedOptions \| null>` | The instance's decrypted and validated options with defaults applied, as `{ options, meta }`, or `null` when the integration isn't configured, is disabled, or is incomplete. Throws a plain `Error`, not a `MedusaError`, when no provider is registered under that identifier and instance. Throws when the provider has secret options and `encryptionKey` is missing or changed. Cached for up to 60 seconds. |
 | `clearOptionsCache(providerId?)` | `void` | Clears the cached options of one instance, or of every instance without an argument. |
 
 ---
@@ -48,16 +48,21 @@ Change settings only through the module's [workflows](/medusa-modules/integratio
 | `getSecretKeys(providerId)` | `string[]` | The ids of the provider's secret options. |
 | `getPackageMeta(providerId)` | `{ version, author, author_url }` | The details of the npm package the provider comes from, or `null` values when they can't be found. |
 
+The package root doesn't export `UiDescriptor`. It's the `descriptor` that [`GET /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#integrations) returns, with the descriptor's `identifier`, `instanceId`, and `category`, its i18n keys and icon, its layout, `hasTestConnection`, and `sections` with their `fields`.
+
 ---
 
 ## Stored Integrations
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `listIntegrationsOverview(query?)` | `Promise<{ integrations, count, categories }>` | Every registered instance merged with its stored state, as the integrations list in the Admin shows it. `query` takes `q`, `category`, `limit`, and `offset`, the same as [`GET /admin/integrations`](/medusa-modules/integration/admin-api#list-integrations). Without `limit`, it returns every instance. |
+| `listIntegrationsOverview(query?)` | `Promise<{ integrations, count, categories }>` | Every registered instance merged with its stored state, as the integrations list in the Admin shows it. `query` takes `q`, `category`, `limit`, and `offset`, the same as [`GET /admin/integrations`](/medusa-modules/integration/admin-api#list-integrations). Without `limit`, it returns every instance. Throws when the provider has secret options and `encryptionKey` is missing or changed. |
 | `findByProviderId(providerId)` | `Promise<Integration \| undefined>` | The stored record of the instance, or `undefined` before the first save. |
-| `isComplete(record)` | `boolean` | Whether a stored record passes full validation against its provider's descriptor. |
-| `getStoredValues(providerId)` | `Promise<Record<string, unknown>>` | The full stored configuration with the secrets decrypted, without validation or defaults. Never send it to the browser. |
+| `isComplete(record)` | `boolean` | Whether a stored record passes full validation against its provider's descriptor. Returns `false` when the record's provider isn't registered. Throws when the provider has secret options and `encryptionKey` is missing or changed. |
+| `getStoredValues(providerId)` | `Promise<Record<string, unknown>>` | The full stored configuration with the secrets decrypted, without validation or defaults. Returns `{}` when the instance has no stored record. Throws when the provider has secret options and `encryptionKey` is missing or changed. Never send the result to the browser. |
+| `encryptForStorage(descriptor, values)` | `Record<string, unknown>` | A copy of `values` with the secret options encrypted, ready to store as the `options` of an `Integration`. It writes nothing. It needs `encryptionKey` only when the descriptor has secret options. |
+
+`getStoredValues`, `isComplete`, `listIntegrationsOverview`, `getResolvedOptions`, and `runTestConnection` decrypt stored secrets. When one of them reads a record of a provider with secret options, it throws if `encryptionKey` is missing, or if it has changed and a stored secret no longer decrypts. Refer to [Integration Module Options](/medusa-modules/integration/module-options#encryptionkey) to learn how to keep the key stable.
 
 ---
 
@@ -65,7 +70,7 @@ Change settings only through the module's [workflows](/medusa-modules/integratio
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Runs the provider's connection test against the resolved options. It neither stores `last_test_status` nor emits `integration.tested`. [`testIntegrationConnectionWorkflow`](/medusa-modules/integration/workflows#testintegrationconnectionworkflow) does both. |
+| `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Runs the provider's connection test against the resolved options. Refer to [Integration Module Workflows](/medusa-modules/integration/workflows#testintegrationconnectionworkflow) for the results the module produces itself. It neither stores `last_test_status` nor emits `integration.tested`, which `testIntegrationConnectionWorkflow` does. Throws when the provider has secret options and `encryptionKey` is missing or changed. |
 
 ---
 
@@ -75,7 +80,7 @@ Change settings only through the module's [workflows](/medusa-modules/integratio
 | --- | --- | --- |
 | `listChangeActors()` | `Promise<{ users, system }>` | The admin users who made changes, with the email stored with their latest change, and whether anything else made changes. |
 | `listChangeFields()` | `Promise<{ field, label }[]>` | Every option id and label key the history names, including options and integrations that no longer exist. |
-| `recordChange(input)` | `Promise<string \| null>` | Stores one history record and returns its id. It never throws. On failure, it logs a warning and returns `null`. The module's workflows call it through `recordIntegrationChangeStep`. |
+| `recordChange(input)` | `Promise<string \| null>` | Stores one history record and returns its id. `input` is a `RecordIntegrationChangeInput`, exported from the package root. `provider_id`, `change_type` (`created`, `updated`, `enabled`, `disabled`, or `deleted`), and `actor` (an `IntegrationChangeActor`) are required. `actor_label`, `diff` (a `DiffEntry[]`), and `created_at`, which defaults to now, are optional. It never throws. On failure, it logs a warning and returns `null`. The module's workflows call it through `recordIntegrationChangeStep`. |
 
 To read the records themselves, use the generated methods of `IntegrationChange` below. They return the stored rows as they are. Unlike the [Admin API routes](/medusa-modules/integration/admin-api#change-history), they don't hide the values of options that became secret after a change was recorded.
 
@@ -89,6 +94,8 @@ To read the records themselves, use the generated methods of `IntegrationChange`
 | `listLicenseStates()` | `LicenseStateEntry[]` | The latest license check result of every paid Gorgo integration. |
 | `recheckLicenseStates()` | `Promise<LicenseStateEntry[]>` | Checks the licenses right away and returns the fresh results. |
 
+The package root doesn't export `CatalogItem` and `LicenseStateEntry` either. A catalog item is an entry of the Gorgo catalog, with `integrationId`, `slug`, `npm`, `category`, `label`, and more, plus `installed` and `provider_id`. A license entry is the verdict for one npm package, with `package`, `state`, `checked_at`, `subscription`, `latest_allowed_version`, and the provider `identifiers` the package ships. The Admin API returns the same shapes, refer to [Catalog and Licenses](/medusa-modules/integration/admin-api#catalog-and-licenses) for its routes.
+
 ---
 
 ## Generated Data-Management Methods
@@ -98,7 +105,7 @@ The service extends Medusa's `MedusaService`, which generates data-management me
 - for `Integration`: `listIntegrations`, `listAndCountIntegrations`, `retrieveIntegration`, `createIntegrations`, `updateIntegrations`, `deleteIntegrations`, `softDeleteIntegrations`, and `restoreIntegrations`;
 - for `IntegrationChange`: `listIntegrationChanges`, `listAndCountIntegrationChanges`, `retrieveIntegrationChange`, `createIntegrationChanges`, `updateIntegrationChanges`, `deleteIntegrationChanges`, `softDeleteIntegrationChanges`, and `restoreIntegrationChanges`.
 
-Use the `list` and `retrieve` methods to read. The stored `options` of an `Integration` hold its secrets encrypted. See Medusa's [service factory reference](https://docs.medusajs.com/resources/service-factory-reference) for their parameters.
+Use the `list` and `retrieve` methods to read. The stored `options` of an `Integration` hold its secrets encrypted. Refer to Medusa's [service factory reference](https://docs.medusajs.com/resources/service-factory-reference) for their parameters.
 
 ## References
 

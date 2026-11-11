@@ -37,13 +37,32 @@ export const disableMyIntegrationWorkflow = createWorkflow(
 
 `runAsStep` запускает воркфлоу модуля как шаг вашего. Во входных данных нет `actor`, поэтому история изменений запишет изменение с типом автора `system`. Если следующий шаг вашего воркфлоу упадёт, интеграция вернётся в прежнее состояние, а её запись в истории будет удалена.
 
+<Note type="warning">
+
+Откат есть только у шагов `setIntegrationEnabledStep` и `recordIntegrationChangeStep`. Если вы запустили `upsertIntegrationWorkflow`, `deleteIntegrationWorkflow` или `testIntegrationConnectionWorkflow` как шаг собственного воркфлоу и следующий шаг упал, сохранённые параметры, удаление и `last_test_status` остаются, а запись в истории удаляется. В итоге изменение может остаться без записи в истории изменений. Что делает при откате каждый шаг, описано в разделе [Шаги](#шаги).
+
+</Note>
+
 ---
 
 ## Воркфлоу
 
+Каждый воркфлоу ниже, кроме `getResolvedIntegrationOptionsWorkflow`, заканчивается шагом `emitIntegrationEventStep`, который отправляет [событие](/medusa-modules/integration/events) воркфлоу, когда выполнились все предыдущие шаги. Если запуск падает раньше, например с ошибкой `not_found` или `invalid_data`, событие не отправляется, а откат не отправляет второе событие.
+
 ### upsertIntegrationWorkflow
 
-Сохраняет значения параметров инстанса интеграции. При первом сохранении создаёт запись, а дальше обновляет её. Именно этот воркфлоу выполняется, когда в Admin сохраняют секцию.
+Сохраняет значения параметров инстанса интеграции. При первом сохранении создаёт запись, а дальше обновляет её. Именно этот воркфлоу выполняется, когда в Admin сохраняют секцию. Шаги идут в таком порядке.
+
+```mermaid alt="Схема показывает, как upsertIntegrationWorkflow проходит шаги от чтения сохранённого состояния до отправки события integration.updated"
+flowchart TD
+  state["getIntegrationStateStep"] --> apply["applyIntegrationSectionStep"]
+  apply --> save["upsertIntegrationRecordStep"]
+  save -->|"пропускается, если обновление не меняет ни одного поля"| history["recordIntegrationChangeStep"]
+  history --> emit["emitIntegrationEventStep"]
+  emit -->|"отправляет"| event(["integration.updated"])
+```
+
+Первый шаг читает сохранённое состояние, благодаря чему история изменений отличает первое сохранение от обновления. Запись в истории пропускается, если обновление не меняет ни одного поля, а событие отправляется в любом случае.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -97,7 +116,17 @@ export const disableMyIntegrationWorkflow = createWorkflow(
 
 ### setIntegrationEnabledWorkflow
 
-Включает или выключает настроенную интеграцию.
+Включает или выключает настроенную интеграцию. Шаги идут в таком порядке.
+
+```mermaid alt="Схема показывает, как setIntegrationEnabledWorkflow проходит шаги от чтения сохранённого состояния до отправки события integration.updated"
+flowchart TD
+  state["getIntegrationStateStep"] --> set["setIntegrationEnabledStep"]
+  set -->|"пропускается, если интеграция уже в этом состоянии"| history["recordIntegrationChangeStep"]
+  history --> emit["emitIntegrationEventStep"]
+  emit -->|"отправляет"| event(["integration.updated"])
+```
+
+Состояние, которое читает первый шаг, позволяет воркфлоу пропустить запись в истории, если интеграция уже в нужном состоянии. Событие отправляется в любом случае.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -133,7 +162,16 @@ export const disableMyIntegrationWorkflow = createWorkflow(
 
 ### deleteIntegrationWorkflow
 
-Удаляет сохранённые настройки инстанса интеграции. Провайдер остаётся зарегистрированным, а интеграция снова показывается как ненастроенная.
+Удаляет сохранённые настройки инстанса интеграции. Провайдер остаётся зарегистрированным, а интеграция снова показывается как ненастроенная. Шаги идут в таком порядке.
+
+```mermaid alt="Схема показывает, как deleteIntegrationWorkflow проходит шаги от удаления сохранённой записи до отправки события integration.updated"
+flowchart TD
+  delete["deleteIntegrationRecordStep"] -->|"пропускается, если удалять было нечего"| history["recordIntegrationChangeStep"]
+  history --> emit["emitIntegrationEventStep"]
+  emit -->|"отправляет"| event(["integration.updated"])
+```
+
+Запись в истории пропускается, если удалять было нечего, а событие отправляется в любом случае.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -161,7 +199,15 @@ export const disableMyIntegrationWorkflow = createWorkflow(
 
 ### testIntegrationConnectionWorkflow
 
-Запускает проверку соединения, которую объявляет дескриптор провайдера.
+Запускает проверку соединения, которую объявляет дескриптор провайдера. Шаги идут в таком порядке.
+
+```mermaid alt="Схема показывает, как testIntegrationConnectionWorkflow проходит шаги от запуска проверки до отправки события integration.tested"
+flowchart TD
+  run["runTestConnectionStep"] -->|"сохраняет статус, только если запись есть"| emit["emitIntegrationEventStep"]
+  emit -->|"отправляет"| event(["integration.tested"])
+```
+
+Шаг проверки сохраняет `last_test_status`, только если у интеграции есть сохранённая запись, а событие отправляется при любом результате.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -185,7 +231,14 @@ export const disableMyIntegrationWorkflow = createWorkflow(
   ]}
 />
 
-Воркфлоу выполняет проверку с итоговыми параметрами, сохраняет результат в `last_test_status` записи и отправляет событие `integration.tested`. Возвращает `{ status, message? }`. Выключенная или незаполненная интеграция получает `failed` без вызова проверки, подробнее в разделе [Проверка соединения](/medusa-modules/integration/descriptor#проверка-соединения).
+Воркфлоу выполняет проверку с итоговыми параметрами и возвращает `{ status, message? }`. Кроме того, что возвращает ваш `testConnection`, модуль сам формирует такие результаты, и воркфлоу не бросает исключение ни в одном из них:
+
+- `{ status: "skipped", message: "No test configured" }`, если в дескрипторе нет `testConnection`.
+- `failed` с сообщением `Unknown integration provider "<id>"`, если под `provider_id` не зарегистрирован ни один провайдер.
+- `failed` с сообщением `Not configured`, если дескриптор объявляет проверку, а интеграция не настроена, выключена или не заполнена. В этом случае модуль не вызывает `testConnection`.
+- `failed` с сообщением из ошибки, если `testConnection` бросает исключение, и с сообщением `Test failed`, если у ошибки сообщения нет.
+
+Для каждого из этих результатов воркфлоу отправляет событие `integration.tested`. Что Admin показывает для каждого статуса, описано в разделе [Проверка соединения](/medusa-modules/integration/descriptor#проверка-соединения).
 
 Запланированная задача модуля `test-integration-connections-daily` запускает этот воркфлоу каждый день в 03:00 для каждой включённой интеграции, провайдер которой объявляет проверку, с автором `{ type: "job", id: "test-integration-connections-daily" }`. В их число входит и включённая, но ещё не завершённая интеграция, которая получает `failed` с текстом `Not configured`.
 
@@ -221,19 +274,19 @@ export const disableMyIntegrationWorkflow = createWorkflow(
 
 ## Шаги
 
-Воркфлоу выше собраны из этих шагов. Используйте их в собственном воркфлоу, когда нужна только часть того, что делает воркфлоу модуля.
+Воркфлоу выше собраны из этих шагов. Используйте их в собственном воркфлоу, когда нужна только часть того, что делает воркфлоу модуля. В последнем столбце указано, что делает шаг, когда следующий шаг вашего воркфлоу падает.
 
-| Шаг | Входные данные | Что делает |
-| --- | --- | --- |
-| `getResolvedIntegrationOptionsStep` | `{ identifier, instance_id? }` | Возвращает итоговые параметры или `null`. |
-| `getIntegrationStateStep` | `{ provider_id }` | Возвращает `{ existed, title, is_enabled }` сохранённой записи до изменения. |
-| `applyIntegrationSectionStep` | `{ provider_id, section_id?, values }` | Выбирает параметры для записи, проверяет их и возвращает `{ category, options, diff }`, где `options` содержит полную конфигурацию, готовую к сохранению, с зашифрованными секретами. Сам ничего не сохраняет. |
-| `upsertIntegrationRecordStep` | `{ provider_id, category, options, title? }` | Создаёт или обновляет сохранённую запись. |
-| `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Меняет `is_enabled` у сохранённой записи и восстанавливает прежнее значение при откате. |
-| `deleteIntegrationRecordStep` | `{ provider_id }` | Удаляет сохранённую запись и возвращает `{ deleted, diff }`. |
-| `runTestConnectionStep` | `{ provider_id }` | Выполняет проверку соединения и сохраняет её статус в `last_test_status`. |
-| `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, skip? }` | Создаёт запись в истории изменений или ничего не делает, если `skip` равно `true` или у изменения `updated` нет полей. Никогда не роняет воркфлоу и удаляет запись при откате. |
-| `emitIntegrationEventStep` | `{ name, data }` | Отправляет событие через шину событий Medusa. |
+| Шаг | Входные данные | Что делает | При откате |
+| --- | --- | --- | --- |
+| `getResolvedIntegrationOptionsStep` | `{ identifier, instance_id? }` | Возвращает итоговые параметры или `null`. | Отменять нечего. |
+| `getIntegrationStateStep` | `{ provider_id }` | Возвращает `{ existed, title, is_enabled }` сохранённой записи до изменения. | Отменять нечего. |
+| `applyIntegrationSectionStep` | `{ provider_id, section_id?, values }` | Выбирает параметры для записи, проверяет их и возвращает `{ category, options, diff }`, где `options` содержит полную конфигурацию, готовую к сохранению, с зашифрованными секретами. Сам ничего не сохраняет. | Отменять нечего. |
+| `upsertIntegrationRecordStep` | `{ provider_id, category, options, title? }` | Создаёт или обновляет сохранённую запись. | Отката нет. Сохранённая запись остаётся. |
+| `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Меняет `is_enabled` у сохранённой записи. | Восстанавливает прежнее значение `is_enabled`. |
+| `deleteIntegrationRecordStep` | `{ provider_id }` | Удаляет сохранённую запись и возвращает `{ deleted, diff }`. | Отката нет. Запись остаётся удалённой. |
+| `runTestConnectionStep` | `{ provider_id }` | Выполняет проверку соединения и сохраняет её статус в `last_test_status`, если у интеграции есть сохранённая запись. | Отката нет. `last_test_status` остаётся. |
+| `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, skip? }` | Создаёт запись в истории изменений или ничего не делает, если `skip` равно `true` или у изменения `updated` нет полей. Никогда не роняет воркфлоу. | Удаляет запись в истории. |
+| `emitIntegrationEventStep` | `{ name, data }` | Отправляет событие через шину событий Medusa. | Отката нет. Отправленное событие остаётся. |
 
 ## Материалы
 

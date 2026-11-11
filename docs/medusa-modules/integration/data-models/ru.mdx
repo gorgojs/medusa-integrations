@@ -13,9 +13,36 @@ description: "Справочник по моделям данных Модуля
 
 </Note>
 
+## Обзор связей
+
+Две модели не связаны в базе данных. Запись `IntegrationChange` называет свою интеграцию только значением `provider_id`, как показывает схема.
+
+```mermaid alt="Схема показывает модели Integration и IntegrationChange, связанные по provider_id без внешнего ключа"
+erDiagram
+  Integration {
+    string id PK
+    string provider_id UK
+    enum category
+    boolean is_enabled
+    enum last_test_status
+  }
+  IntegrationChange {
+    string id PK
+    string provider_id
+    string change_type
+    string actor_type
+    datetime created_at
+  }
+  Integration |o..o{ IntegrationChange : "provider_id"
+```
+
+Значение `provider_id` общее у `Integration` и `IntegrationChange`, но в `IntegrationChange` это обычный текст, поэтому внешнего ключа и каскадного удаления нет. Удаление интеграции оставляет её изменения на месте, поэтому запись об изменении переживает свою интеграцию.
+
+---
+
 ## Integration
 
-Сохранённые настройки одного инстанса интеграции. Модуль создаёт запись при первом сохранении любой секции и удаляет её, когда администратор магазина удаляет интеграцию. Зарегистрированный провайдер без записи получает статус **Не настроено**.
+Сохранённые настройки одного инстанса интеграции, таблица `integration`. Модуль создаёт запись при первом сохранении любой секции и удаляет её, когда администратор магазина удаляет интеграцию. Зарегистрированный провайдер без записи получает статус **Не настроено**.
 
 <MedusaTypeList
   sectionTitle="Integration"
@@ -31,7 +58,7 @@ description: "Справочник по моделям данных Модуля
     {
       name: "provider_id",
       type: "string",
-      description: "Ключ инстанса, `int_<identifier>[_<instanceId>]`. Уникальный. По нему модуль, Admin API и Admin находят запись.",
+      description: "Ключ инстанса, `int_<identifier>[_<instanceId>]`. Уникален среди записей с пустым `deleted_at`. По нему модуль, Admin API и Admin находят запись.",
       optional: false,
       expandable: false,
       children: []
@@ -39,7 +66,7 @@ description: "Справочник по моделям данных Модуля
     {
       name: "category",
       type: "enum",
-      description: "Категория интеграции, которая копируется из `category` дескриптора при каждом сохранении.",
+      description: "Категория интеграции, которая копируется из `category` дескриптора при каждом сохранении. Допустимые значения перечислены в разделе [Свойства дескриптора](/medusa-modules/integration/descriptor#свойства-дескриптора). Любое другое значение база данных отклонит.",
       optional: false,
       expandable: false,
       children: []
@@ -83,11 +110,13 @@ description: "Справочник по моделям данных Модуля
 
 Признак полной настройки интеграции не хранится. Модуль проверяет его по текущему дескриптору провайдера каждый раз, когда он нужен, поэтому признак не устаревает при изменении дескриптора.
 
+В таблице `integration` есть уникальный индекс по `provider_id`, который охватывает записи с пустым `deleted_at`, индекс по `category` и индекс по `deleted_at`.
+
 ---
 
 ## IntegrationChange
 
-Одна запись [истории изменений](/medusa-modules/integration/change-history). Она не связана с `Integration`, поэтому остаётся после удаления интеграции.
+Одна запись [истории изменений](/medusa-modules/integration/change-history), таблица `integration_change`. Она не связана с `Integration`, поэтому остаётся после удаления интеграции.
 
 <MedusaTypeList
   sectionTitle="IntegrationChange"
@@ -185,6 +214,8 @@ description: "Справочник по моделям данных Модуля
 />
 
 `created_at` совпадает со временем изменения, потому что запись создаётся в том же воркфлоу, что и изменение.
+
+В таблице `integration_change` есть индексы по `provider_id` вместе с `created_at`, по `created_at` и по `deleted_at`, а также индекс по `actor_id`, который охватывает только записи с заполненным `actor_id`.
 
 ## Материалы
 
