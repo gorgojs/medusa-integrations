@@ -5,13 +5,38 @@ description: "Learn how to create a Medusa provider that manages its settings th
 
 # {frontmatter.title}
 
-In this guide you'll learn how to create a Medusa provider that manages its settings through the [Integration Module](/medusa-modules/integration).
+In this guide, you'll learn how to create a Medusa provider that manages its settings through the [Integration Module](/medusa-modules/integration).
 
 <Note type="info" title="What is the Integration Module?">
 
 The Integration Module lets any plugin describe its options as a schema, and store admins configure them in the Admin, with no `medusa-config` edits and no redeploy of the Medusa app. It generates the UI, provides a CRUD API and validation, so you don't have to write your own data models, routes, forms, or workflows.
 
 </Note>
+
+<Prerequisites items={[
+  {
+    text: "A Medusa application on v2.17.2 or later, with the Integration Module installed and its migrations run",
+    link: "/medusa-modules/integration#installation"
+  },
+  {
+    text: "A Medusa plugin to add the provider to, with @gorgo/medusa-integration as a peer and a dev dependency",
+    link: "/tools/create-medusa-plugin"
+  }
+]}/>
+
+The diagram shows what this guide builds and how the parts connect:
+
+```mermaid alt="Diagram showcasing how medusa-config.ts, the provider definition and the service lead to the Integration Module, which generates the settings page the store admin fills in and serves the options to your code"
+flowchart TD
+  config["medusa-config.ts"] -->|"registers"| definition["index.ts<br/>ModuleProvider"]
+  definition -->|"declares"| service["MyIntegrationProvider<br/>static identifier, descriptor"]
+  service -->|"descriptor"| module["Integration Module"]
+  module -->|"generates"| page["Settings → Integrations"]
+  admin(["Store admin"]) -->|"fills in the options"| page
+  code["Your code"] -->|"resolveIntegrationOptions"| module
+```
+
+`medusa-config.ts` registers the provider definition, which is the `index.ts` file that calls `ModuleProvider`. The definition declares the service class, which has a `static identifier` and a `descriptor`. The Integration Module turns the descriptor into the page under **Settings → Integrations**, where the store admin fills in the options. Your code then reads them with `resolveIntegrationOptions`.
 
 ## Implementation Example
 
@@ -32,6 +57,8 @@ If you don't have a plugin yet, create one together with an example project usin
 ## 2. Create the Integration Module Provider Service
 
 Create the file `src/providers/integration-my/services/my-integration.ts`, which declares the integration provider's descriptor and the service itself.
+
+![Directory structure in the Medusa plugin after creating the service file](/static/integration/plugin/src-providers-integration-my-services-my-integration.webp)
 
 ```ts title="providers/integration-my/services/my-integration.ts"
 import {
@@ -68,7 +95,7 @@ The provider class must implement the `descriptor` property. The descriptor hold
 
 <Note type="default" title="">
 
-See [General Concepts](/medusa-modules/integration/concepts#descriptor) for an overview of the descriptor, and [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every `options` field (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate`, and others), by type. [Validate Integration Options](/medusa-modules/integration/validation) covers the rules you can declare, and [Localize an Integration](/medusa-modules/integration/localization) covers the translations for the `my.*` i18n keys.
+Refer to [General Concepts](/medusa-modules/integration/concepts#descriptor) for an overview of the descriptor, and to [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every `options` field (`type`, `control`, `default`, `required`, `secret`, `visibleWhen`, `validate`, and others), by type. [Validate Integration Options](/medusa-modules/integration/validation) covers the rules you can declare, and [Localize an Integration](/medusa-modules/integration/localization) covers the translations for the `my.*` i18n keys.
 
 </Note>
 
@@ -90,6 +117,7 @@ const descriptor = defineIntegration({
       control: "secret",
       secret: true,
       required: true,
+      minLength: 1,
       label: "my.apiKey"
     },
     sandbox: {
@@ -121,6 +149,8 @@ export default MyIntegrationProvider
 ```
 
 `MyOptions` is the resolved, validated shape: `defineIntegration` builds `optionsSchema` from the `options` object, and since `apiKey` is `required` and `sandbox` has a `default`, both end up non-optional in `MyOptions`.
+
+A `required` option of type `string` accepts an empty string, so `apiKey` also sets `minLength: 1`. An empty key then fails validation, and the integration stays incomplete until the admin enters a value. Refer to [Validate Integration Options](/medusa-modules/integration/validation) to learn about the rules you can declare.
 
 ### validateOptions
 
@@ -174,6 +204,8 @@ const descriptor = defineIntegration({
 
 Create the file `src/providers/integration-my/index.ts` with the following content:
 
+![Directory structure in the Medusa plugin after creating the provider definition file](/static/integration/plugin/src-providers-integration-my-index.webp)
+
 ```ts title="providers/integration-my/index.ts"
 import { ModuleProvider } from "@medusajs/framework/utils"
 import { INTEGRATION_MODULE } from "@gorgo/medusa-integration"
@@ -190,7 +222,7 @@ This exports the provider definition, declaring `MyIntegrationProvider` as its s
 
 ## 4. Register the Provider
 
-To use your Integration Module provider, add it to the Integration Module's `providers` array in `medusa-config.ts`:
+To use your Integration Module provider, add it to the Integration Module's `providers` array in `medusa-config.ts`, and list the plugin itself in `plugins`. Replace `<your-plugin-package>` with the `name` in your plugin's `package.json`:
 
 ```ts title="medusa-config.ts"
 module.exports = defineConfig({
@@ -202,23 +234,30 @@ module.exports = defineConfig({
         encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
         providers: [
           {
-            resolve: "./src/providers/integration-my",
-            id: "my-1",
+            resolve: "<your-plugin-package>/providers/integration-my",
             options: {},
           },
         ],
       },
+    },
+    {
+      resolve: "<your-plugin-package>",
+      options: {},
     },
     // ...
   ],
 })
 ```
 
-The loader instantiates `MyIntegrationProvider` from this registration.
+The loader instantiates `MyIntegrationProvider` from the `providers` entry. Its `resolve` is the plugin's package name followed by the provider's path, `<your-plugin-package>/providers/integration-my`, which relies on the plugin's `"./providers/*"` export in `package.json`.
+
+The second entry lists the plugin itself. Medusa loads a plugin's Admin extensions, such as its translations and widgets, only for packages listed in `plugins`. Without the entry the provider still registers, but the Admin doesn't load the plugin's translations, so the integration page shows keys such as `my.name` instead of readable text.
+
+That `resolve` value is for a provider in a plugin. A provider that sits inside the Medusa application itself is registered by its path from the application's directory, such as `./src/providers/integration-my`, and needs no entry in `plugins`. Medusa resolves a relative path against the application's directory, so the same path fails for a provider in a plugin.
 
 <Note type="warning">
 
-You set an `id` option on the Integration Module provider, and the module assembles the final instance key `int_<identifier>_<id>` from it. Without an `id`, the provider registers as the single instance under the key `int_<identifier>`. If the Integration Module provider supports multiple instances, each one gets its own `id`.
+Leave out `id` while your provider has a single instance, as in the example above. The provider then registers under the key `int_<identifier>`, which is `int_my`, and a consumer reads its options with `{ identifier: "my" }`. Add an `id` only when you register the provider more than once, with one `id` per instance. The key then becomes `int_<identifier>_<id>`, for example `int_my_eu`, and a consumer has to pass the same value as `instance_id`. Otherwise `resolveIntegrationOptions` throws, because nothing is registered under `int_my`. Refer to [Identifiers and Instances](/medusa-modules/integration/concepts#identifiers-and-instances) to learn how instances work.
 
 </Note>
 
@@ -251,7 +290,7 @@ The returned `options` is typed as `MyOptions`, already decrypted and validated.
 
 <Note type="default" title="">
 
-See [Reading Options](/medusa-modules/integration/reading-options) for how to read an integration's options from a route, subscriber, or workflow step.
+Refer to [Reading Options](/medusa-modules/integration/reading-options) to learn how to read an integration's options from a route, subscriber, or workflow step.
 
 </Note>
 

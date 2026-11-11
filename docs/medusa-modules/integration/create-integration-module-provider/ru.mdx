@@ -13,6 +13,31 @@ description: "Узнайте, как создать провайдер для Me
 
 </Note>
 
+<Prerequisites items={[
+  {
+    text: "Приложение Medusa v2.17.2 или новее с установленным Модулем интеграций и выполненными миграциями",
+    link: "/medusa-modules/integration#installation"
+  },
+  {
+    text: "Плагин Medusa, в который вы добавите провайдер, с @gorgo/medusa-integration в peerDependencies и devDependencies",
+    link: "/tools/create-medusa-plugin"
+  }
+]}/>
+
+Схема показывает, что вы создадите в этом руководстве и как связаны его части:
+
+```mermaid alt="Схема показывает, как medusa-config.ts, определение провайдера и сервис приводят к Модулю интеграций, который генерирует страницу настроек для администратора магазина и отдаёт параметры вашему коду"
+flowchart TD
+  config["medusa-config.ts"] -->|"регистрирует"| definition["index.ts<br/>ModuleProvider"]
+  definition -->|"объявляет"| service["MyIntegrationProvider<br/>static identifier, descriptor"]
+  service -->|"descriptor"| module["Модуль интеграций"]
+  module -->|"генерирует"| page["Настройки → Интеграции"]
+  admin(["Администратор магазина"]) -->|"заполняет параметры"| page
+  code["Ваш код"] -->|"resolveIntegrationOptions"| module
+```
+
+`medusa-config.ts` регистрирует определение провайдера, то есть файл `index.ts`, который вызывает `ModuleProvider`. Определение объявляет класс сервиса со `static identifier` и `descriptor`. Модуль интеграций превращает дескриптор в страницу в разделе **Настройки → Интеграции**, где администратор магазина заполняет параметры. Ваш код получает их через `resolveIntegrationOptions`.
+
 ## Пример реализации
 
 При разработке своего провайдера Модуля интеграций бывает полезно посмотреть, как устроен готовый провайдер.
@@ -32,6 +57,8 @@ description: "Узнайте, как создать провайдер для Me
 ## 2. Создайте сервис провайдера Модуля интеграций
 
 Создайте файл `src/providers/integration-my/services/my-integration.ts`, который объявляет дескриптор провайдера интеграций и сам сервис.
+
+![Структура проекта плагина Medusa после создания файла сервиса](/static/integration/plugin/src-providers-integration-my-services-my-integration.webp)
 
 ```ts title="providers/integration-my/services/my-integration.ts"
 import {
@@ -90,6 +117,7 @@ const descriptor = defineIntegration({
       control: "secret",
       secret: true,
       required: true,
+      minLength: 1,
       label: "my.apiKey"
     },
     sandbox: {
@@ -121,6 +149,8 @@ export default MyIntegrationProvider
 ```
 
 `MyOptions` описывает итоговый набор параметров: `defineIntegration` собирает `optionsSchema` из объекта `options`, и поскольку у `apiKey` указан `required`, а у `sandbox` задан `default`, оба поля в `MyOptions` становятся обязательными.
+
+Обязательный параметр типа `string` принимает и пустую строку, поэтому у `apiKey` указан ещё и `minLength: 1`. Пустой ключ не проходит проверку, и интеграция остаётся незаполненной, пока администратор не введёт значение. Какие правила можно объявить, описывает руководство [Валидация параметров интеграции](/medusa-modules/integration/validation).
 
 ### validateOptions
 
@@ -174,6 +204,8 @@ const descriptor = defineIntegration({
 
 Создайте файл `src/providers/integration-my/index.ts` со следующим содержимым:
 
+![Структура проекта плагина Medusa после создания файла с определением провайдера](/static/integration/plugin/src-providers-integration-my-index.webp)
+
 ```ts title="providers/integration-my/index.ts"
 import { ModuleProvider } from "@medusajs/framework/utils"
 import { INTEGRATION_MODULE } from "@gorgo/medusa-integration"
@@ -190,7 +222,7 @@ export default ModuleProvider(INTEGRATION_MODULE, {
 
 ## 4. Подключите провайдер
 
-Чтобы использовать провайдер Модуля интеграций, добавьте его в массив `providers` модуля интеграций в `medusa-config.ts`:
+Чтобы использовать провайдер Модуля интеграций, добавьте его в массив `providers` модуля интеграций в `medusa-config.ts` и укажите сам плагин в `plugins`. Замените `<your-plugin-package>` на `name` из `package.json` вашего плагина:
 
 ```ts title="medusa-config.ts"
 module.exports = defineConfig({
@@ -202,23 +234,30 @@ module.exports = defineConfig({
         encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY,
         providers: [
           {
-            resolve: "./src/providers/integration-my",
-            id: "my-1",
+            resolve: "<your-plugin-package>/providers/integration-my",
             options: {},
           },
         ],
       },
+    },
+    {
+      resolve: "<your-plugin-package>",
+      options: {},
     },
     // ...
   ],
 })
 ```
 
-По этой записи загрузчик создаёт инстанс `MyIntegrationProvider`.
+По записи в `providers` загрузчик создаёт инстанс `MyIntegrationProvider`. Её `resolve` состоит из имени пакета плагина и пути к провайдеру, `<your-plugin-package>/providers/integration-my`, и опирается на экспорт `"./providers/*"` в `package.json` плагина.
+
+Вторая запись указывает сам плагин. Medusa загружает расширения Admin из плагина, такие как переводы и виджеты, только для пакетов из `plugins`. Без этой записи провайдер всё равно регистрируется, но Admin не загрузит переводы плагина, и на странице интеграции вместо читаемых текстов появятся ключи вроде `my.name`.
+
+Такое значение `resolve` подходит для провайдера в плагине. Провайдер, который находится в самом приложении Medusa, регистрируется по пути от директории приложения, например `./src/providers/integration-my`, и записи в `plugins` не требует. Medusa ищет относительный путь от директории приложения, поэтому тот же путь не сработает для провайдера в плагине.
 
 <Note type="warning">
 
-У провайдера Модуля интеграций вы задаёте параметр `id`, из него модуль собирает итоговый идентификатор инстанса вида `int_<identifier>_<id>`. Без `id` провайдер регистрируется как единственный инстанс с ключом `int_<identifier>`. Если провайдер Модуля интеграций поддерживает несколько инстансов, то у каждого будет свой `id`.
+Пока у провайдера один инстанс, `id` не указывайте, как в примере выше. Тогда провайдер регистрируется под ключом `int_<identifier>`, то есть `int_my`, а потребитель получает его параметры с `{ identifier: "my" }`. Добавляйте `id`, только если регистрируете провайдер несколько раз, по одному `id` на инстанс. Ключ тогда принимает вид `int_<identifier>_<id>`, например `int_my_eu`, и потребитель должен передать то же значение как `instance_id`. Иначе `resolveIntegrationOptions` бросит исключение, потому что под ключом `int_my` ничего не зарегистрировано. Подробнее об инстансах читайте в разделе [Инстансы и их идентификаторы](/medusa-modules/integration/concepts#инстансы-и-их-идентификаторы).
 
 </Note>
 
