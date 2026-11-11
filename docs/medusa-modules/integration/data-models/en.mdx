@@ -13,9 +13,36 @@ Read these models through the module's [service](/medusa-modules/integration/ser
 
 </Note>
 
+## Relations Overview
+
+The two models aren't related in the database. An `IntegrationChange` names its integration only by `provider_id`, as the diagram shows.
+
+```mermaid alt="Diagram showcasing the Integration and IntegrationChange models, joined by provider_id without a foreign key"
+erDiagram
+  Integration {
+    string id PK
+    string provider_id UK
+    enum category
+    boolean is_enabled
+    enum last_test_status
+  }
+  IntegrationChange {
+    string id PK
+    string provider_id
+    string change_type
+    string actor_type
+    datetime created_at
+  }
+  Integration |o..o{ IntegrationChange : "provider_id"
+```
+
+`Integration` and `IntegrationChange` share the `provider_id` value, but `IntegrationChange.provider_id` is plain text, so there is no foreign key and no cascade. Deleting an integration leaves its changes in place, so a change outlives its integration.
+
+---
+
 ## Integration
 
-The stored settings of one integration instance. The module creates the record on the first save of any section and deletes it when the store admin deletes the integration. A registered provider without a record is **Not configured**.
+The stored settings of one integration instance, in the `integration` table. The module creates the record on the first save of any section and deletes it when the store admin deletes the integration. A registered provider without a record is **Not configured**.
 
 <MedusaTypeList
   sectionTitle="Integration"
@@ -31,7 +58,7 @@ The stored settings of one integration instance. The module creates the record o
     {
       name: "provider_id",
       type: "string",
-      description: "The instance's key, `int_<identifier>[_<instanceId>]`. Unique. The module, the Admin API, and the Admin look records up by it.",
+      description: "The instance's key, `int_<identifier>[_<instanceId>]`. Unique among the records that aren't soft-deleted. The module, the Admin API, and the Admin look records up by it.",
       optional: false,
       expandable: false,
       children: []
@@ -39,7 +66,7 @@ The stored settings of one integration instance. The module creates the record o
     {
       name: "category",
       type: "enum",
-      description: "The integration's category, copied from the descriptor's `category` on every save.",
+      description: "The integration's category, copied from the descriptor's `category` on every save. Refer to [Descriptor Properties](/medusa-modules/integration/descriptor#descriptor-properties) for its values. The database rejects any other value.",
       optional: false,
       expandable: false,
       children: []
@@ -83,11 +110,13 @@ The stored settings of one integration instance. The module creates the record o
 
 Whether the integration is complete isn't stored. The module checks it against the provider's current descriptor whenever it's needed, so it can't go stale when the descriptor changes.
 
+The `integration` table has a unique index on `provider_id` that covers the records that aren't soft-deleted, an index on `category`, and an index on `deleted_at`.
+
 ---
 
 ## IntegrationChange
 
-One record of the [change history](/medusa-modules/integration/change-history). It has no relation to `Integration`, so it stays after the integration is deleted.
+One record of the [change history](/medusa-modules/integration/change-history), in the `integration_change` table. It has no relation to `Integration`, so it stays after the integration is deleted.
 
 <MedusaTypeList
   sectionTitle="IntegrationChange"
@@ -143,7 +172,7 @@ One record of the [change history](/medusa-modules/integration/change-history). 
     {
       name: "diff",
       type: "json",
-      description: "The changed fields, without the values of secret options. See [The Change Object](/medusa-modules/integration/admin-api#the-change-object) for the shape of an entry.",
+      description: "The changed fields, without the values of secret options. Refer to [The Change Object](/medusa-modules/integration/admin-api#the-change-object) for the shape of an entry.",
       optional: false,
       expandable: false,
       children: []
@@ -185,6 +214,8 @@ One record of the [change history](/medusa-modules/integration/change-history). 
 />
 
 `created_at` is the time of the change, since the record is written in the same workflow that makes it.
+
+The `integration_change` table has indexes on `provider_id` with `created_at`, on `created_at`, and on `deleted_at`, and an index on `actor_id` that covers only the records with an `actor_id`.
 
 ## References
 

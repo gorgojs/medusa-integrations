@@ -37,13 +37,32 @@ export const disableMyIntegrationWorkflow = createWorkflow(
 
 `runAsStep` runs the module's workflow as a step of yours. The input has no `actor`, so the change history records the change with the `system` actor type. If a later step of your workflow fails, the integration returns to its previous state and its history record is removed.
 
+<Note type="warning">
+
+Only `setIntegrationEnabledStep` and `recordIntegrationChangeStep` have a rollback. If you run `upsertIntegrationWorkflow`, `deleteIntegrationWorkflow`, or `testIntegrationConnectionWorkflow` as a step of your own workflow and a later step fails, the saved options, the deletion, and `last_test_status` stay, while the history record is removed. A change can then remain with no entry in the change history. Refer to [Steps](#steps) to learn what each step does on rollback.
+
+</Note>
+
 ---
 
 ## Workflows
 
+Every workflow below except `getResolvedIntegrationOptionsWorkflow` ends with `emitIntegrationEventStep`, which emits the workflow's [event](/medusa-modules/integration/events) once every earlier step has finished. A run that fails before that step, for example with a `not_found` or `invalid_data` error, emits nothing, and a rollback doesn't emit a second event.
+
 ### upsertIntegrationWorkflow
 
-Saves option values of an integration instance. It creates the stored record on the first save and updates it afterwards. This is the workflow behind saving a section in the Admin.
+Saves option values of an integration instance. It creates the stored record on the first save and updates it afterwards. This is the workflow behind saving a section in the Admin. It runs these steps in order.
+
+```mermaid alt="Diagram showcasing the steps of upsertIntegrationWorkflow, from reading the stored state to emitting integration.updated"
+flowchart TD
+  state["getIntegrationStateStep"] --> apply["applyIntegrationSectionStep"]
+  apply --> save["upsertIntegrationRecordStep"]
+  save -->|"skipped when an update changes no field"| history["recordIntegrationChangeStep"]
+  history --> emit["emitIntegrationEventStep"]
+  emit -->|"emits"| event(["integration.updated"])
+```
+
+The first step reads the stored state, which lets the change history tell a first save from an update. The history record is skipped when an update changes no field, and the event is emitted either way.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -97,7 +116,17 @@ It fails with a `not_found` error when no provider is registered under `provider
 
 ### setIntegrationEnabledWorkflow
 
-Enables or disables a configured integration.
+Enables or disables a configured integration. It runs these steps in order.
+
+```mermaid alt="Diagram showcasing the steps of setIntegrationEnabledWorkflow, from reading the stored state to emitting integration.updated"
+flowchart TD
+  state["getIntegrationStateStep"] --> set["setIntegrationEnabledStep"]
+  set -->|"skipped when already in that state"| history["recordIntegrationChangeStep"]
+  history --> emit["emitIntegrationEventStep"]
+  emit -->|"emits"| event(["integration.updated"])
+```
+
+The state read in the first step lets the workflow skip the history record when the integration is already in the requested state. The event is emitted either way.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -133,7 +162,16 @@ The workflow sets `is_enabled` on the stored record, records an `enabled` or `di
 
 ### deleteIntegrationWorkflow
 
-Deletes the stored settings of an integration instance. The provider stays registered, and the integration shows as not configured again.
+Deletes the stored settings of an integration instance. The provider stays registered, and the integration shows as not configured again. It runs these steps in order.
+
+```mermaid alt="Diagram showcasing the steps of deleteIntegrationWorkflow, from deleting the stored record to emitting integration.updated"
+flowchart TD
+  delete["deleteIntegrationRecordStep"] -->|"skipped when nothing was deleted"| history["recordIntegrationChangeStep"]
+  history --> emit["emitIntegrationEventStep"]
+  emit -->|"emits"| event(["integration.updated"])
+```
+
+The history record is skipped when there was nothing to delete, and the event is emitted either way.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -161,7 +199,15 @@ The workflow deletes the stored record, records a `deleted` change with a snapsh
 
 ### testIntegrationConnectionWorkflow
 
-Runs the connection test the provider's descriptor declares.
+Runs the connection test the provider's descriptor declares. It runs these steps in order.
+
+```mermaid alt="Diagram showcasing the steps of testIntegrationConnectionWorkflow, from running the test to emitting integration.tested"
+flowchart TD
+  run["runTestConnectionStep"] -->|"stores the status only if a record exists"| emit["emitIntegrationEventStep"]
+  emit -->|"emits"| event(["integration.tested"])
+```
+
+The test step stores `last_test_status` only when the integration has a stored record, and the event is emitted whatever the result is.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -185,7 +231,14 @@ Runs the connection test the provider's descriptor declares.
   ]}
 />
 
-The workflow runs the test against the resolved options, stores the result as the record's `last_test_status`, and emits `integration.tested`. It returns `{ status, message? }`. A disabled or incomplete integration gets `failed` without the test being called, see [Connection Test](/medusa-modules/integration/descriptor#connection-test).
+The workflow runs the test against the resolved options and returns `{ status, message? }`. Besides what your `testConnection` returns, the module produces these results itself, and the workflow doesn't throw for any of them:
+
+- `{ status: "skipped", message: "No test configured" }` when the descriptor has no `testConnection`.
+- `failed` with the message `Unknown integration provider "<id>"` when no provider is registered under `provider_id`.
+- `failed` with the message `Not configured` when the descriptor declares a test, but the integration isn't configured, is disabled, or is incomplete. The module doesn't call `testConnection` in that case.
+- `failed` with the error's message when `testConnection` throws, or with the message `Test failed` when the error has none.
+
+The workflow emits `integration.tested` for each of these results. Refer to [Connection Test](/medusa-modules/integration/descriptor#connection-test) to learn what the Admin shows for each status.
 
 The module's scheduled job, `test-integration-connections-daily`, runs this workflow every day at 03:00 for each enabled integration whose provider declares a test, with the actor `{ type: "job", id: "test-integration-connections-daily" }`. That includes an enabled integration that is still incomplete, which gets `failed` with the message `Not configured`.
 
@@ -215,25 +268,25 @@ Resolves an integration instance's options, the same way as `resolveIntegrationO
   ]}
 />
 
-The workflow returns `{ options, meta }`, or `null` when the integration isn't configured, is disabled, or is incomplete. It throws when no provider is registered under that identifier and instance. See [Reading Options](/medusa-modules/integration/reading-options) for when to use it.
+The workflow returns `{ options, meta }`, or `null` when the integration isn't configured, is disabled, or is incomplete. It throws when no provider is registered under that identifier and instance. Refer to [Reading Options](/medusa-modules/integration/reading-options) to learn when to use it.
 
 ---
 
 ## Steps
 
-The workflows above are built from these steps. Use them in a workflow of your own when you need only part of what a workflow does.
+The workflows above are built from these steps. Use them in a workflow of your own when you need only part of what a workflow does. The last column says what a step does when a later step of your workflow fails.
 
-| Step | Input | What it does |
-| --- | --- | --- |
-| `getResolvedIntegrationOptionsStep` | `{ identifier, instance_id? }` | Returns the resolved options, or `null`. |
-| `getIntegrationStateStep` | `{ provider_id }` | Returns `{ existed, title, is_enabled }` of the stored record before a change. |
-| `applyIntegrationSectionStep` | `{ provider_id, section_id?, values }` | Picks the options to write, validates them, and returns `{ category, options, diff }`, where `options` is the full configuration ready to store, with secrets encrypted. Stores nothing. |
-| `upsertIntegrationRecordStep` | `{ provider_id, category, options, title? }` | Creates or updates the stored record. |
-| `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Sets `is_enabled` on the stored record and restores the previous value on rollback. |
-| `deleteIntegrationRecordStep` | `{ provider_id }` | Deletes the stored record and returns `{ deleted, diff }`. |
-| `runTestConnectionStep` | `{ provider_id }` | Runs the connection test and stores its status as `last_test_status`. |
-| `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, skip? }` | Writes a change history record, or nothing when `skip` is `true` or an `updated` change has no fields. Never fails the workflow, and removes the record on rollback. |
-| `emitIntegrationEventStep` | `{ name, data }` | Emits an event through Medusa's event bus. |
+| Step | Input | What it does | On rollback |
+| --- | --- | --- | --- |
+| `getResolvedIntegrationOptionsStep` | `{ identifier, instance_id? }` | Returns the resolved options, or `null`. | Nothing to undo. |
+| `getIntegrationStateStep` | `{ provider_id }` | Returns `{ existed, title, is_enabled }` of the stored record before a change. | Nothing to undo. |
+| `applyIntegrationSectionStep` | `{ provider_id, section_id?, values }` | Picks the options to write, validates them, and returns `{ category, options, diff }`, where `options` is the full configuration ready to store, with secrets encrypted. Stores nothing. | Nothing to undo. |
+| `upsertIntegrationRecordStep` | `{ provider_id, category, options, title? }` | Creates or updates the stored record. | None. The saved record stays. |
+| `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Sets `is_enabled` on the stored record. | Restores the previous `is_enabled`. |
+| `deleteIntegrationRecordStep` | `{ provider_id }` | Deletes the stored record and returns `{ deleted, diff }`. | None. The record stays deleted. |
+| `runTestConnectionStep` | `{ provider_id }` | Runs the connection test and stores its status as `last_test_status`, if the integration has a stored record. | None. `last_test_status` stays. |
+| `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, skip? }` | Writes a change history record, or nothing when `skip` is `true` or an `updated` change has no fields. Never fails the workflow. | Removes the history record. |
+| `emitIntegrationEventStep` | `{ name, data }` | Emits an event through Medusa's event bus. | None. The emitted event stays. |
 
 ## References
 

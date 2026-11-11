@@ -235,7 +235,7 @@ Each option in `options` is an object shaped `{ type, ... }`. The `type` field d
     {
       name: "control",
       type: "enum",
-      description: "The UI control used to render the field:\n- `text`\n- `secret`\n- `switch`\n- `number`\n- `url`\n- `select`\n- `json`\nPicked automatically from `type`, but can be overridden.",
+      description: "The UI control used to render the field:\n- `text`\n- `secret`\n- `switch`\n- `number`\n- `url`\n- `select`\n- `json`\nWithout it, the control follows `type`. The type `boolean` gives `switch`, `number` gives `number`, `enum` gives `select`, `json` gives `json`, `url` gives `url`, and `string`, `email`, and `uuid` give `text`. `secret: true` doesn't select the `secret` control, so set `control: \"secret\"` on every secret option, see [Secrets and Encryption](#secrets-and-encryption).",
       optional: true,
       expandable: false,
       children: []
@@ -251,7 +251,7 @@ Each option in `options` is an object shaped `{ type, ... }`. The `type` field d
     {
       name: "required",
       type: "boolean",
-      description: "Rejects an empty (`undefined`) value on validation, both when this option is saved and when checking whether the integration is complete. Options are optional by default.",
+      description: "Rejects an option without a value, both when this option is saved and when checking whether the integration is complete. A value is missing when it's `undefined` or `null`, or an empty string for every type except `string` and `json`. A `string` option accepts an empty string unless `minLength` is 1 or more, and a `default` satisfies `required`. Options are optional by default.",
       optional: true,
       defaultValue: "false",
       expandable: false,
@@ -287,13 +287,14 @@ Each option in `options` is an object shaped `{ type, ... }`. The `type` field d
       type: "boolean",
       description: "Renders the field as non-editable in the Admin, showing the stored value or the `default`. The Admin API doesn't enforce it.",
       optional: true,
+      defaultValue: "false",
       expandable: false,
       children: []
     },
     {
       name: "visibleWhen",
       type: "object",
-      description: "`{ field, equals }` hides the field in the Admin until a sibling option `field` equals `equals`. UI-only: server-side requiredness is still set via `required` or `validate`.",
+      description: "`{ field, equals }` hides the field in the Admin until a sibling option `field` equals `equals`. `equals` is a string, a number, or a boolean, compared strictly with the value stored for `field`, so `1` doesn't match `\"1\"`.\nThe `default` of the `field` option counts only in the edit drawer of its own section, which starts from the stored value and falls back to the `default`. On the integration's page, and for an option in another section, only a stored value counts, so the field stays hidden until the `field` option has been saved.\nDon't point `field` at a `secret` option. The browser never receives a secret's value, so the page can't match the rule, and the drawer sees only what the admin types.\nUI-only: server-side requiredness is still set via `required` or `validate`.",
       optional: true,
       expandable: false,
       children: []
@@ -301,7 +302,7 @@ Each option in `options` is an object shaped `{ type, ... }`. The `type` field d
     {
       name: "validate",
       type: "function",
-      description: "A custom check, `(value, { options, addIssue }) => void`, run after the type's built-in rules. See [Validate Integration Options](/medusa-modules/integration/validation#option-rules).",
+      description: "A custom check, `(value, { options, addIssue }) => void`, run after the type's built-in rules. Refer to [Validate Integration Options](/medusa-modules/integration/validation#option-rules) to learn how it works.",
       optional: true,
       expandable: false,
       children: []
@@ -428,7 +429,7 @@ Some types have extra fields on top of the common ones:
 
 The module generates the CRUD API from the descriptor and validates every write. Validation covers per-option rules, such as types, ranges, and patterns, along with cross-section rules that span the whole configuration. There is nothing to build for each integration.
 
-See [Validate Integration Options](/medusa-modules/integration/validation) for when each rule runs and how to test the descriptor's rules, and [Admin API Routes](/medusa-modules/integration/admin-api) for the generated routes.
+Refer to [Validate Integration Options](/medusa-modules/integration/validation) to learn when each rule runs and how to test the descriptor's rules, and to [Admin API Routes](/medusa-modules/integration/admin-api) for the generated routes.
 
 ---
 
@@ -442,15 +443,23 @@ Options become live only when the integration is both enabled and complete, mean
 
 Options marked `secret` are encrypted at rest with AES-256-GCM and never reach the browser. The CRUD API masks them and reports only whether each one is set. Saving a secret as blank keeps its stored value instead of clearing it.
 
+<Note type="warning">
+
+`secret: true` doesn't select the `secret` control. Without `control: "secret"`, the Admin renders the option as a plain text input, so the value the store admin types is visible, and the field doesn't say that leaving it blank keeps the stored value. When the option is also `required`, the Admin demands a value on every save of its section, so the store admin has to retype the stored secret each time. Set `control: "secret"` on every `secret: true` option.
+
+</Note>
+
 Secret values don't reach the [change history](/medusa-modules/integration/change-history) either. For a secret option, the history shows only that its value was set, replaced, or removed. It keeps the values of every other option as they are.
 
 <Note type="warning">
 
-An option that holds a credential but isn't marked `secret: true` is shown in the Admin and kept in the change history in plain text. On startup, the module logs a warning for every option whose name looks like a credential but isn't marked `secret: true`. A name looks like a credential when it contains `password`, `passwd`, `secret`, `token`, `apiKey`, or `privateKey`, in any letter case.
+An option that holds a credential but isn't marked `secret: true` is shown in the Admin and kept in the change history in plain text. On startup, the module logs a warning for every option whose name looks like a credential but isn't marked `secret: true`. The warning is logged once per provider identifier, even when the provider is registered more than once. A name looks like a credential when it contains `password`, `passwd`, `secret`, `token`, `apiKey`, or `privateKey`, in any letter case. `apiKey` and `privateKey` also match with an underscore or a hyphen between the words, such as `api_key` or `private-key`. The match is on part of the name, so `clientSecret` and `accessToken` count, while `publishableKey` and `terminalKey` don't.
 
 </Note>
 
-Encryption needs a key, set as `encryptionKey` when you register the module. See [Integration Module Options](/medusa-modules/integration/module-options#encryptionkey) for how to set it and what happens without one.
+Decide whether an option is secret before a store admin saves a value for it. The module encrypts a secret value when it's saved, and decrypts every stored string of a secret option when it reads the integration. When you add `secret: true` to an option that already has a stored value, that value isn't encrypted, so the module fails to decrypt it and every read of that integration throws. To recover, delete the stored settings with the [`DELETE /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#delete-the-settings) route, then enter them again. When you remove `secret: true` instead, the code that reads the option receives the encrypted value as it's stored.
+
+Encryption needs a key, set as `encryptionKey` when you register the module. Refer to [Integration Module Options](/medusa-modules/integration/module-options#encryptionkey) to learn how to set it and what happens without one.
 
 ---
 
@@ -477,15 +486,17 @@ const descriptor = defineIntegration({
 })
 ```
 
-`status` is one of `passed`, `failed`, or `skipped`, and the optional `message` is shown to the store admin in the Admin next to the test result. The module stores the status as the integration's `last_test_status` and emits the [`integration.tested` event](/medusa-modules/integration/events).
+`status` is one of `passed`, `failed`, or `skipped`. The module stores the status as the integration's `last_test_status` and emits the [`integration.tested` event](/medusa-modules/integration/events). It doesn't store `message`, which only the event and the Admin notification carry.
 
-The test runs only against options that resolve. When the integration is disabled or incomplete, the module reports `failed` with the message `Not configured` without calling `testConnection`. When `testConnection` throws, the module reports `failed` with the error's message.
+When the status isn't `passed`, the Admin shows `message` in a notification, or the status itself when there is no message. A `passed` result shows a fixed success notification, whatever `message` holds.
+
+The test runs only against options that resolve. When the integration isn't configured, is disabled, or is incomplete, the module reports `failed` with the message `Not configured` without calling `testConnection`. When `testConnection` throws, the module reports `failed` with the error's message. Refer to [Integration Module Workflows](/medusa-modules/integration/workflows#testintegrationconnectionworkflow) to learn every result the module produces itself, including an unknown provider and a descriptor without `testConnection`.
 
 ---
 
 ## Runtime Options Resolution
 
-Consumers read typed, validated, and decrypted options, with descriptor defaults applied. An incomplete or disabled integration resolves to nothing rather than partial data. See [Reading Options](/medusa-modules/integration/reading-options) for the ways to read them and how long the module caches them.
+Consumers read typed, validated, and decrypted options, with descriptor defaults applied. An incomplete or disabled integration resolves to nothing rather than partial data. Refer to [Reading Options](/medusa-modules/integration/reading-options) to learn the ways to read them and how long the module caches them.
 
 ## References
 
