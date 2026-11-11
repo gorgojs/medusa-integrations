@@ -2,8 +2,11 @@ name: Content Checks
 
 # The existing test.yml only fires on packages/** and excludes markdown, so documentation, catalog
 # and Admin locale changes had no gate at all. This is that gate: the machine-decidable half of the
-# Gorgo writing voice plus bilingual structural parity. The judgement half stays with the
-# style-reviewer and docs-reviewer agents.
+# Gorgo writing voice, bilingual structural parity, and every link a page carries. The judgement
+# half stays with the style-reviewer and docs-reviewer agents.
+#
+# The link check also runs on a weekly schedule. An external page dies without any pull request
+# here, and the Monday run is what notices.
 #
 # Admin locale catalogs are checked for en and ru only. modules/integration ships 33 locales, but the
 # other 31 are Medusa's own translations and are not ours to police.
@@ -24,6 +27,7 @@ on:
       - 'scripts/check-docs-parity.js'
       - 'scripts/check-i18n-parity.js'
       - 'scripts/check-integration-complete.js'
+      - 'scripts/check-docs-links.js'
       - '.github/workflows/content.yml'
   push:
     branches:
@@ -40,11 +44,14 @@ on:
       - 'scripts/check-docs-parity.js'
       - 'scripts/check-i18n-parity.js'
       - 'scripts/check-integration-complete.js'
+      - 'scripts/check-docs-links.js'
+  schedule:
+    - cron: "0 5 * * 1"
   workflow_dispatch:
 
 jobs:
   content:
-    name: Style and parity
+    name: Style, parity and links
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +60,7 @@ jobs:
         with:
           node-version: 24
 
-      # No install step: all three scripts are dependency-free, on purpose. A docs-only pull request
+      # No install step: all five scripts are dependency-free, on purpose. A docs-only pull request
       # should not wait on a Yarn install of the whole monorepo.
       - name: Style
         run: node scripts/style-lint.js
@@ -66,3 +73,22 @@ jobs:
 
       - name: Integration completeness
         run: node scripts/check-integration-complete.js
+
+      # tbank.ru chains to the Russian Trusted Root CA, which Node does not ship. This is the copy
+      # test.yml trusts, pinned by the same fingerprint.
+      - name: Trust Trusted Root CA
+        run: |
+          CA="$PWD/.github/certs/root-ca.pem"
+          EXPECTED="D26D2D0231B7C39F92CC738512BA54103519E4405D68B5BD703E9788CA8ECF31"
+          ACTUAL="$(openssl x509 -in "$CA" -noout -fingerprint -sha256 | cut -d= -f2 | tr -d ':')"
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "::error::Unexpected SHA-256 fingerprint for $CA: $ACTUAL"
+            exit 1
+          fi
+          echo "NODE_EXTRA_CA_CERTS=$CA" >> "$GITHUB_ENV"
+
+      # Internal pages and anchors, screenshots on docs.gorgojs.com, paths into this repository on
+      # GitHub, and a live fetch of every other external link. A 404 fails the job; a host that
+      # blocks bots or is down is a warning in the log and an annotation on the pull request.
+      - name: Links
+        run: node scripts/check-docs-links.js
