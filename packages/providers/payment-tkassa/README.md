@@ -70,7 +70,7 @@ T-Kassa Payments by T-Bank for Medusa
 
 ## What is T-Kassa
 
-T-Kassa is an internet acquiring service by T-Bank (formerly Tinkoff Bank), one of Russia's largest digital banks. It lets online stores accept card payments, SBP (Faster Payments System), T-Pay, SberPay, Alfa Pay, Mir Pay, and more. Learn more at the <a href="https://www.tbank.ru/business/online-payments/internet-acquiring/" target="_blank">T-Bank website</a>.
+T-Kassa is an internet acquiring service by T-Bank (formerly Tinkoff Bank), one of the largest digital banks in the CIS. It lets online stores accept card payments, SBP (Faster Payments System), T-Pay, SberPay, Alfa Pay, Mir Pay, and more. Learn more at the <a href="https://www.tbank.ru/business/online-payments/internet-acquiring/" target="_blank">T-Bank website</a>.
 
 ## Who uses this plugin
 
@@ -96,7 +96,7 @@ The [Maintenance](https://docs.gorgojs.com/resources/maintenance) page explains 
 
 - Medusa v2.17.2 or later
 - Node.js v22.23.4, v24.22.1, v26.12.1 or later
-- A T-Business account with T-Kassa internet acquiring – [sign in or create one](https://www.tbank.ru/kassa/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
+- A T-Business account with T-Kassa internet acquiring – [sign in or create one](https://www.tbank.ru/business/online-payments/internet-acquiring/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
 - Integration Module
 
 ## Installation
