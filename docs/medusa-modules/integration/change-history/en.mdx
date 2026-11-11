@@ -5,11 +5,11 @@ description: "What the Integration Module records about every change to an integ
 
 # {frontmatter.title}
 
-In this document, you'll learn how the Integration Module records the history of changes to integration settings: what goes into a record, how the module identifies the author, how it keeps secrets out, and how to make the changes your own code makes appear with the right author.
+In this document, you'll learn what the Integration Module records about every change to integration settings, how it identifies the author, how it keeps secrets out, and how to make the changes your own code makes appear with the right author.
 
 <Note type="default" title="">
 
-To browse the history in Medusa Admin, see [View the Change History in Medusa Admin](/medusa-modules/integration/view-change-history).
+Refer to [View the Change History in Medusa Admin](/medusa-modules/integration/view-change-history) to browse the history in Medusa Admin.
 
 </Note>
 
@@ -17,13 +17,15 @@ To browse the history in Medusa Admin, see [View the Change History in Medusa Ad
 
 The module's workflows record a change in the same run that makes it. Each record has a type, stored as `change_type`:
 
-| Event in the Admin | `change_type` | When it's recorded |
+| Option of the **Event** filter | `change_type` | When it's recorded |
 | --- | --- | --- |
 | Fields set | `created` | The first save of any section, while the integration has no settings. The record lists every saved field. |
 | Fields changed | `updated` | Every later save. The record lists only the fields whose value changed. |
 | Integration enabled | `enabled` | Enabling a disabled integration. |
 | Integration disabled | `disabled` | Disabling an enabled integration. |
-| Settings deleted | `deleted` | Deleting the integration. The record holds a snapshot of every value that was configured. |
+| Settings deleted | `deleted` | Deleting the integration. The record holds a snapshot of the stored value of every option the current descriptor still declares, with secrets as `removed`. It doesn't include the integration's `title`, and it is empty when the provider is no longer registered. |
+
+The history table and the **Change History** section of an integration's page show each record under a headline instead of the filter label. The headline counts the fields the record lists, as in **3 fields set** for `created`, **3 fields changed** for `updated`, and **3 fields deleted** for `deleted`. A record without fields reads **Settings changed**, or **Settings deleted** for a deletion. `enabled` and `disabled` keep **Integration enabled** and **Integration disabled**.
 
 A save that changes nothing and enabling an integration that is already enabled leave no record. Connection tests aren't recorded either, since they don't change settings. The module emits the [`integration.tested` event](/medusa-modules/integration/events) for each of them instead.
 
@@ -35,7 +37,7 @@ Each changed field goes into the record with its id, its label key, and its valu
 
 A record stores its author as `actor_type` and `actor_id`, the actor Medusa authenticated for the request, such as `user` or `api-key`. Along with them the module saves `actor_label`, the user's email or the API key's title at the time of the change, so the record stays attributed after the user or the key is deleted. A record also keeps the IP address, the client, and the ID of the request.
 
-The module's [Admin API routes](/medusa-modules/integration/admin-api) pass all of this to the workflows for you. When your own code runs a workflow without an `actor`, the module records the change with the `system` actor type, and Medusa Admin shows its author as **System**. It does the same for changes made with an API key.
+The module's [Admin API routes](/medusa-modules/integration/admin-api) pass all of this to the workflows for you. When your own code runs a workflow without an `actor`, the module records the change with the `system` actor type. A change made with an API key keeps `actor_type` set to `api-key`, with the key's ID as `actor_id` and the key's title as `actor_label`. Medusa Admin shows every author that isn't a user, the `system` type and API keys alike, as **System**.
 
 When your code changes settings on behalf of an admin user, for example from your own admin API route, pass the authenticated actor as `actor`:
 
@@ -66,7 +68,7 @@ Only `type` and `id` are needed to name the author, since the module looks up th
 
 <Note type="warning">
 
-A change written through the module's service methods, such as `updateIntegrations`, skips the workflows and never reaches the history. See [Integration Module Service](/medusa-modules/integration/service) for why every write goes through a workflow.
+A change written through the module's service methods, such as `updateIntegrations`, skips the workflows and never reaches the history. Refer to [Integration Module Service](/medusa-modules/integration/service) to learn why every write goes through a workflow.
 
 </Note>
 
@@ -80,7 +82,13 @@ When an option becomes secret after changes to it were already recorded, the mod
 
 <Note type="warning">
 
-Marking an option `secret` later hides its earlier values in the Admin and the Admin API only. The stored records keep those values in plain text, so declare a credential as `secret: true` before the first store admin saves it. On startup, the module warns about every option whose name looks like a credential but isn't marked `secret: true`, see [Secrets and Encryption](/medusa-modules/integration/descriptor#secrets-and-encryption).
+Marking an option `secret` later hides its earlier values in the Admin and the Admin API only. The stored records keep those values in plain text, so declare a credential as `secret: true` before the first store admin saves it. On startup, the module warns about every option whose name looks like a credential but isn't marked `secret: true`. Refer to [Integration Provider Descriptor](/medusa-modules/integration/descriptor#secrets-and-encryption) for how the module handles secrets.
+
+</Note>
+
+<Note type="warning">
+
+Marking an option `secret: true` after a store admin has already saved it makes the stored plain-text value undecryptable. The module treats every non-empty string stored under a secret option as encrypted, so reading the integration, saving it, resolving the options of an enabled integration, and listing integrations all fail, the same as after a change of `encryptionKey`. Delete the integration through [`DELETE /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#delete-the-settings) or [`deleteIntegrationWorkflow`](/medusa-modules/integration/workflows#deleteintegrationworkflow), and configure it again.
 
 </Note>
 
@@ -91,8 +99,8 @@ Marking an option `secret` later hides its earlier values in the Admin and the A
 The module limits the size of a record, so a large `json` option can't bloat the history:
 
 - A value longer than 512 characters, a string or the JSON of a structured value, is stored cut and marked as truncated. The Admin shows it with **(shortened)**.
-- A record keeps at most 100 fields.
-- The fields of a record take up at most 16 KB. Fields past that limit keep their id but lose their values.
+- A record keeps at most 100 option fields. The `@title` field of a changed title comes on top of them.
+- The option fields of a record take up at most 16 KB. A field that no longer fits keeps its id and label and loses its values. Once the limit is used up, the remaining fields are left out.
 
 ---
 
@@ -100,7 +108,9 @@ The module limits the size of a record, so a large `json` option can't bloat the
 
 The history lives in the [`IntegrationChange` data model](/medusa-modules/integration/data-models#integrationchange). It has no relation to the `Integration` data model, so its records outlive the integration they describe, deletion included. The module keeps them indefinitely and never removes them by itself.
 
-The module writes the record in the same workflow as the change. If a later step of that workflow fails and the workflow rolls back, the module removes the record together with the change. If the record itself can't be written, the change goes ahead without it, and the module logs a warning.
+The module writes the record in the same workflow as the change. If a later step of that workflow fails and the workflow rolls back, the module always removes the record. Only `setIntegrationEnabledWorkflow` also restores the previous state, so enabling or disabling is undone together with its record. A save or a deletion isn't undone, so after a failed later step the saved or deleted settings stay in place without a history record. If the record itself can't be written, the change goes ahead without it, and the module logs a warning.
+
+Refer to [Integration Module Workflows](/medusa-modules/integration/workflows) for the steps of each workflow.
 
 ---
 
