@@ -1,0 +1,143 @@
+name: Catalog Fallback
+
+# packages/modules/integration ships catalog.generated.ts, the offline copy of catalog/ that Admin
+# shows when gorgojs.com is unreachable, and catalog-fallback.unit.spec.ts fails as soon as the two
+# disagree. This workflow regenerates it in the pull request that changes catalog/, so the change
+# and the fallback reach main together. The regeneration lands as a separate
+# `fix(integration): …` commit, which generate-changesets.js turns into a patch release of the
+# module once the pull request is merged. Merge such a pull request with rebase: a squash merge
+# folds the commit into the pull request title, and the title then decides the release.
+#
+# A pull request from a fork gets no secrets, so the bot cannot push to it. There the job fails
+# with the command to run instead.
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'catalog/**'
+      - 'packages/modules/integration/scripts/gen-catalog.mjs'
+      - '.github/workflows/catalog.yml'
+
+concurrency:
+  group: catalog-fallback-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  regenerate:
+    name: Regenerate the offline catalog
+    runs-on: ubuntu-latest
+    env:
+      FROM_FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+      HEAD_REF: ${{ github.head_ref }}
+      BASE_REF: ${{ github.base_ref }}
+      GENERATED: packages/modules/integration/src/lib/catalog.generated.ts
+    steps:
+      # A push made with GITHUB_TOKEN starts no workflow, so the bot pushes with the GitHub App
+      # token and the pull request's checks run again on the regenerated file.
+      - name: Generate GitHub App token
+        id: app_token
+        if: env.FROM_FORK == 'false'
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.GH_APP_CLIENT_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      - name: Checkout the pull request branch
+        if: env.FROM_FORK == 'false'
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ steps.app_token.outputs.token }}
+          fetch-depth: 0
+
+      - name: Checkout the fork's merge commit
+        if: env.FROM_FORK == 'true'
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.22.1
+
+      # gen-catalog.mjs needs only js-yaml, which the monorepo hoists to the root. Installing that
+      # one package keeps this job a few seconds long instead of a full Yarn install. 3.15.2 is
+      # the version the root resolves, so the output matches `yarn catalog:gen` and publish.yml.
+      - name: Install js-yaml
+        run: |
+          npm install --no-save --no-package-lock --prefix "$RUNNER_TEMP/deps" js-yaml@3.15.2
+          mkdir -p node_modules
+          ln -sfn "$RUNNER_TEMP/deps/node_modules/js-yaml" node_modules/js-yaml
+
+      - name: Regenerate
+        id: regen
+        run: |
+          node packages/modules/integration/scripts/gen-catalog.mjs
+          if git diff --quiet -- "$GENERATED"; then
+            echo "The offline catalog is up to date."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git diff --stat -- "$GENERATED"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Ask a fork to regenerate
+        if: steps.regen.outputs.changed == 'true' && env.FROM_FORK == 'true'
+        run: |
+          echo "::error file=$GENERATED::catalog.generated.ts does not match catalog/. Run: cd packages/modules/integration && yarn catalog:gen, then commit the file as fix(integration): regenerate the offline catalog"
+          exit 1
+
+      - name: Resolve GitHub App bot identity
+        id: app_user
+        if: steps.regen.outputs.changed == 'true' && env.FROM_FORK == 'false'
+        env:
+          GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
+          APP_SLUG: ${{ steps.app_token.outputs.app-slug }}
+        run: |
+          set -euo pipefail
+          USER_INFO="$(curl -fsS --globoff \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/users/${APP_SLUG}[bot]")"
+          USER_ID="$(echo "$USER_INFO" | jq -r .id)"
+          USER_LOGIN="$(echo "$USER_INFO" | jq -r .login)"
+          echo "name=${USER_LOGIN}" >> "$GITHUB_OUTPUT"
+          echo "email=${USER_ID}+${USER_LOGIN}@users.noreply.github.com" >> "$GITHUB_OUTPUT"
+
+      # The commit subject is the module's changelog line, so it names the entries the pull request
+      # touched: the identifier of each changed catalog/integrations/<file>.yml, and the name of
+      # each changed catalog/icons/<id>.svg.
+      - name: Commit and push
+        if: steps.regen.outputs.changed == 'true' && env.FROM_FORK == 'false'
+        run: |
+          set -euo pipefail
+          base="$(git merge-base "origin/$BASE_REF" HEAD)"
+          ids="$(
+            git diff --name-only "$base" HEAD -- catalog/integrations catalog/icons | while read -r f; do
+              case "$f" in
+                catalog/integrations/*.yml)
+                  if [ -f "$f" ]; then
+                    sed -nE "s/^identifier:[[:space:]]*[\"']?([^\"'[:space:]#]+).*/\1/p" "$f" | head -n 1
+                  else
+                    basename "$f" .yml
+                  fi ;;
+                catalog/icons/*) basename "${f%.*}" ;;
+              esac
+            done | sort -u
+          )"
+          subject="fix(integration): regenerate the offline catalog"
+          if [ -n "$ids" ]; then
+            subject="$subject with $(echo "$ids" | paste -sd, - | sed -E 's/,([^,]*)$/ and \1/; s/,/, /g')"
+          fi
+          git config user.name "${{ steps.app_user.outputs.name }}"
+          git config user.email "${{ steps.app_user.outputs.email }}"
+          git add -- "$GENERATED"
+          git commit -m "$subject"
+          git pull --rebase origin "$HEAD_REF"
+          git push origin "HEAD:$HEAD_REF"
+          echo "Pushed: $subject"
