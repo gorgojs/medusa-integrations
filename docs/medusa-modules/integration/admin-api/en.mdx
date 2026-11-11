@@ -7,7 +7,9 @@ description: "Reference of the Admin API routes the Integration Module adds unde
 
 This reference lists the API routes the Integration Module adds under `/admin/integrations`. Medusa Admin uses them for every integration page, and your scripts and [custom widgets](/medusa-modules/integration/custom-sections) can use them too.
 
-Like every Medusa `/admin` route, they require an authenticated admin user or a secret API key. Routes that take `:provider_id` respond with `404` when no provider is registered under that key.
+Like every Medusa `/admin` route, they require an authenticated admin user or a secret API key. A route that takes `:provider_id` responds with `404`, type `not_found`, and the message `Unknown integration "<id>"` when no provider is registered under that key.
+
+The routes that take a body or query parameters validate them strictly, so an unknown key or an out-of-range value gets `400` with a message that starts with `Invalid request`. Body validation runs before the provider check, so an invalid body sent for an unknown provider gets `400`.
 
 ## Integrations
 
@@ -50,11 +52,23 @@ curl -X POST "http://localhost:9000/admin/integrations/int_my" \
   --data '{ "section_id": "credentials", "values": { "apiKey": "sk_test_123", "sandbox": true } }'
 ```
 
-The response is `{ integration }`, the stored record without its secrets. `apiKey` from the request appears only by name, in `configured_secrets`. A value that fails validation gets a `400` response whose message lists every problem as `<option id>: <message>`.
+The response is `{ integration }`, the stored record without its secrets. `apiKey` from the request appears only by name, in `configured_secrets`. A value that fails validation gets a `400` response whose message lists every problem as `<option id>: <message>`. An unknown `section_id` also gets `400`, with the type `invalid_data` and the message `Unknown section "<id>"`.
+
+### Enable or Disable
+
+`POST /admin/integrations/:provider_id/enable` takes the body `{ is_enabled }`, where `is_enabled` is a required boolean, and returns `{ integration }`. A registered provider with nothing saved yet gets `404`, type `not_found`, and the message `Integration "<id>" is not configured`. Setting the state the integration is already in returns `200` and records nothing in the change history.
+
+### Delete the Settings
+
+`DELETE /admin/integrations/:provider_id` takes no body and returns `{ id, object: "integration", deleted: true }`, where `id` is the instance key. The answer is `200` even when nothing was stored.
+
+### Test the Connection
+
+`POST /admin/integrations/:provider_id/test-connection` takes no body and always answers `200` for a registered provider, with `{ status, message? }`, where `status` is `passed`, `failed`, or `skipped`. An integration that is not configured, is disabled, or is incomplete gets `failed` with the message `Not configured`, and a test that throws gets `failed` with the error's message. A descriptor without a connection test gets `skipped` with the message `No test configured`.
 
 ### The Integration Object
 
-`GET`, `POST`, and the `enable` route return the stored record in this shape. Secret values never leave the server.
+`GET /admin/integrations/:provider_id`, `POST /admin/integrations/:provider_id`, and the `enable` route return the stored record in this shape. Secret values never leave the server.
 
 <MedusaTypeList
   sectionTitle="integration"
@@ -140,12 +154,13 @@ The response is `{ integration }`, the stored record without its secrets. `apiKe
 | `GET` | `/admin/integrations/changes/actors` | Lists the authors of the history, for the author filter. |
 | `GET` | `/admin/integrations/changes/fields` | Lists the options the history names, for the search. |
 
-The history is read-only, and these routes accept nothing but `GET`.
+The history is read-only, and these routes accept nothing but `GET`. A `POST` or `DELETE` sent to `/admin/integrations/changes` reaches the `:provider_id` routes instead, which read `changes` as an instance key and answer `404` (`400` for a `POST` with an invalid body).
 
 ### List Changes
 
 Both list routes accept these query parameters:
 
+- `fields` – a comma-separated list of the fields to return. The list routes leave out `ip`, `user_agent`, and `request_id` unless you ask for them.
 - `limit` – from 1 to 100, `20` by default.
 - `offset` – `0` by default.
 - `order` – a field to sort by, with `-` in front for descending order. `-created_at` by default.
@@ -157,6 +172,16 @@ Both list routes accept these query parameters:
 - `q_fields`, `q_providers` – with `q`, also match the changes that touched one of these option ids or label keys, or that belong to one of these instances. The Admin fills them in with what matches `q` in translated names.
 
 They return `{ integration_changes, count, offset, limit }`, newest first by default.
+
+### Get a Change
+
+`GET /admin/integrations/changes/:id` returns `{ integration_change }`, one change with every field, including `ip`, `user_agent`, and `request_id`. It accepts `fields` and answers `404` for an unknown id.
+
+### Authors and Fields
+
+`GET /admin/integrations/changes/actors` returns `{ users, system }`. Each item of `users` is `{ id, label }`, sorted by `label`, where `label` is the user's current name, else the current email, else the email stored with the user's changes, else `null`. `system` is `true` when anything but an admin user made a change, such as an API key or code run without a request.
+
+`GET /admin/integrations/changes/fields` returns `{ fields }`, one `{ field, label }` for every option id and label key the history names, including those of options and integrations that no longer exist. `field` is the option id, or `@title` for the record's title, and `label` is the label key stored with the change, or `null`.
 
 ### The Change Object
 
@@ -262,9 +287,239 @@ All the routes check `diff` against the current descriptor. The value of an opti
 
 | Method | Path | What it does |
 | --- | --- | --- |
-| `GET` | `/admin/integrations/catalog` | Returns the [integration catalog](/medusa-modules/integration/browse-integrations), with `installed` and `provider_id` for every entry registered in the project. |
-| `GET` | `/admin/integrations/license-status` | Returns the latest license check result of every paid Gorgo integration, as `{ packages }`. |
+| `GET` | `/admin/integrations/catalog` | Returns the [integration catalog](/medusa-modules/integration/browse-integrations) merged with the install state of the project, as `{ integrations }`. |
+| `GET` | `/admin/integrations/license-status` | Returns the latest license check result of every licensed package, as `{ packages }`. |
 | `POST` | `/admin/integrations/license-status/recheck` | Checks the licenses right away and returns the fresh results in the same shape. |
+
+### The Catalog Entry
+
+`GET /admin/integrations/catalog` returns `{ integrations }`. Every item is an entry of the Gorgo catalog with `installed` and `provider_id`, which are `false` and `null` when the integration is not registered in the project.
+
+<MedusaTypeList
+  sectionTitle="CatalogItem"
+  types={[
+    {
+      name: "integrationId",
+      type: "string",
+      description: "The integration's identifier. The entry counts as installed when a registered provider has the same `static identifier`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "slug",
+      type: "string",
+      description: "The entry's slug in the Gorgo catalog.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "npm",
+      type: "string",
+      description: "The npm package that ships the provider.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "category",
+      type: "string",
+      description: "The integration's category, such as `payment`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "author",
+      type: "string",
+      description: "The author's id in the catalog.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "authorLocalized",
+      type: "string",
+      description: "The author's name as the card shows it.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "label",
+      type: "string",
+      description: "The integration's name as the card shows it.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "shortDescription",
+      type: "string",
+      description: "The short description the card shows.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "repository",
+      type: "string",
+      description: "The public source repository. A paid integration has none, because its source is private.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "docsUrl",
+      type: "string",
+      description: "The link to the integration's documentation. The module drops it unless it is an absolute `https` URL.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "docsSnippet",
+      type: "{ en?: string, ru?: string }",
+      description: "The Markdown setup guide the Admin shows when you add the integration, per language. Either language can be missing.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "icon",
+      type: "string",
+      description: "A data URI, or a path on `gorgojs.com`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "stars",
+      type: "number | null",
+      description: "The star count, or `null` when the catalog has none. It is `null` in the copy bundled with the module.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "downloads",
+      type: "number | null",
+      description: "The download count, or `null` when the catalog has none. It is `null` in the copy bundled with the module.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "installed",
+      type: "boolean",
+      description: "Whether a provider with this `integrationId` is registered in the project.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "provider_id",
+      type: "string | null",
+      description: "The key of the registered instance, `null` when none is registered. With several instances of one provider, it is the one registered last.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+### The License Entry
+
+`GET /admin/integrations/license-status` returns `{ packages }`, the latest result for every licensed package the process knows. That includes a package that ships no integration provider, and its `identifiers` is empty. The route reads what the last check found and never contacts the license service.
+
+<MedusaTypeList
+  sectionTitle="LicenseStateEntry"
+  types={[
+    {
+      name: "package",
+      type: "string",
+      description: "The npm package the result belongs to.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "state",
+      type: "string",
+      description: "One of `pending` before the first check has finished, `ok`, `failed`, or `unreachable` when the license service could not be reached.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "reason",
+      type: "string",
+      description: "Why the check failed, present only when `state` is `failed`. One of `missing`, `malformed`, `invalid_token`, `no_subscription`, `domain_not_allowed`, `version_after_cutoff`, `version_unverifiable`, or `unknown`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "checked_at",
+      type: "string | null",
+      description: "When the package was last checked, as an ISO 8601 date, or `null` before the first check.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "host",
+      type: "string",
+      description: "The backend's host the result was given for. Missing before the first request.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "project",
+      type: "{ handle: string, name: string, url?: string } | null",
+      description: "The Gorgo project the license key belongs to, where `url` leads to the project's key page in the Gorgo cabinet. `null` when the license service has not named one.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "environment",
+      type: "{ id: string, name: string } | null",
+      description: "The environment of the project that the backend's host belongs to. `null` when the host is in none of them, and missing before the first answer.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "subscription",
+      type: "{ ends_at: string | null, cutoff: string | null, renews?: boolean } | null",
+      description: "The package's subscription. `ends_at` is when it ends, `cutoff` is the date up to which published versions are covered, and `renews` is missing when the license service does not say. `null` when the license service has not named one.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "latest_allowed_version",
+      type: "string | null",
+      description: "The latest version of the package that the subscription covers, `null` when the license service gives none.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "identifiers",
+      type: "string[]",
+      description: "The identifiers of the integration providers the package ships. Empty for a package that registers itself and ships no integration provider.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+`POST /admin/integrations/license-status/recheck` checks right away and returns the fresh results in the same shape, but only in the process that received the request. Other server processes check on their own schedule. Refer to [Paid Plugin Licensing](/licensing) to learn how paid plugins are licensed.
 
 ## References
 

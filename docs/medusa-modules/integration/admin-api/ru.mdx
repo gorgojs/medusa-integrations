@@ -7,7 +7,9 @@ description: "Справочник по API-роутам Admin, которые �
 
 В этом справочнике перечислены API-роуты, которые Модуль интеграций добавляет в `/admin/integrations`. Medusa Admin пользуется ими на всех страницах интеграций, а ваши скрипты и [собственные виджеты](/medusa-modules/integration/custom-sections) тоже могут ими пользоваться.
 
-Как и любые роуты Medusa в `/admin`, они требуют аутентифицированного пользователя Admin или секретный ключ API. Роуты с `:provider_id` отвечают `404`, если под этим ключом не зарегистрирован ни один провайдер.
+Как и любые роуты Medusa в `/admin`, они требуют аутентифицированного пользователя Admin или секретный ключ API. Роут с `:provider_id` отвечает `404` с типом `not_found` и сообщением `Unknown integration "<id>"`, если под этим ключом не зарегистрирован ни один провайдер.
+
+Роуты, которые принимают тело или параметры запроса, проверяют их строго. На неизвестный ключ или значение вне допустимого диапазона они отвечают `400` с сообщением, которое начинается с `Invalid request`. Тело проверяется раньше провайдера, поэтому на неверное тело для неизвестного провайдера роут тоже отвечает `400`.
 
 ## Интеграции
 
@@ -50,11 +52,23 @@ curl -X POST "http://localhost:9000/admin/integrations/int_my" \
   --data '{ "section_id": "credentials", "values": { "apiKey": "sk_test_123", "sandbox": true } }'
 ```
 
-В ответ приходит `{ integration }`, сохранённая запись без секретов. `apiKey` из запроса упоминается в ней только по имени, в `configured_secrets`. Если значение не проходит валидацию, роут отвечает `400`, а в сообщении каждая проблема записана как `<идентификатор параметра>: <сообщение>`.
+В ответ приходит `{ integration }`, сохранённая запись без секретов. `apiKey` из запроса упоминается в ней только по имени, в `configured_secrets`. Если значение не проходит валидацию, роут отвечает `400`, а в сообщении каждая проблема записана как `<идентификатор параметра>: <сообщение>`. На неизвестный `section_id` роут тоже отвечает `400` с типом `invalid_data` и сообщением `Unknown section "<id>"`.
+
+### Включение и выключение
+
+`POST /admin/integrations/:provider_id/enable` принимает тело `{ is_enabled }` с обязательным булевым полем `is_enabled` и возвращает `{ integration }`. Для зарегистрированного провайдера, у которого ещё ничего не сохранено, роут отвечает `404` с типом `not_found` и сообщением `Integration "<id>" is not configured`. Если установить состояние, в котором интеграция уже находится, роут ответит `200` и ничего не запишет в историю изменений.
+
+### Удаление настроек
+
+`DELETE /admin/integrations/:provider_id` не принимает тело и возвращает `{ id, object: "integration", deleted: true }`, где `id` содержит ключ инстанса. Роут отвечает `200`, даже если ничего не было сохранено.
+
+### Проверка соединения
+
+`POST /admin/integrations/:provider_id/test-connection` не принимает тело и для зарегистрированного провайдера всегда отвечает `200` с `{ status, message? }`, где `status` равно `passed`, `failed` или `skipped`. Для интеграции, которая не настроена, выключена или не завершена, роут возвращает `failed` с сообщением `Not configured`, а если тест выбросил ошибку, то `failed` с сообщением этой ошибки. Если в дескрипторе нет проверки соединения, результат `skipped` с сообщением `No test configured`.
 
 ### Объект интеграции
 
-`GET`, `POST` и роут `enable` возвращают сохранённую запись в таком виде. Значения секретов сервер никогда не отдаёт.
+`GET /admin/integrations/:provider_id`, `POST /admin/integrations/:provider_id` и роут `enable` возвращают сохранённую запись в таком виде. Значения секретов сервер никогда не отдаёт.
 
 <MedusaTypeList
   sectionTitle="integration"
@@ -140,12 +154,13 @@ curl -X POST "http://localhost:9000/admin/integrations/int_my" \
 | `GET` | `/admin/integrations/changes/actors` | Возвращает авторов изменений для фильтра по автору. |
 | `GET` | `/admin/integrations/changes/fields` | Возвращает параметры, которые упоминаются в истории, для поиска. |
 
-История доступна только для чтения, и эти роуты принимают только `GET`.
+История доступна только для чтения, и эти роуты принимают только `GET`. `POST` или `DELETE` на `/admin/integrations/changes` попадает в роуты с `:provider_id`, которые воспринимают `changes` как ключ инстанса и отвечают `404` (`400` для `POST` с неверным телом).
 
 ### Список изменений
 
 Оба роута со списком принимают такие параметры запроса:
 
+- `fields` – список полей через запятую, которые нужно вернуть. Роуты со списком не возвращают `ip`, `user_agent` и `request_id`, пока вы не запросите их.
 - `limit` – от 1 до 100, по умолчанию `20`.
 - `offset` – по умолчанию `0`.
 - `order` – поле для сортировки, с `-` впереди для обратного порядка. По умолчанию `-created_at`.
@@ -157,6 +172,16 @@ curl -X POST "http://localhost:9000/admin/integrations/int_my" \
 - `q_fields`, `q_providers` – вместе с `q` находят ещё и изменения, которые затронули один из этих идентификаторов или ключей меток параметров или относятся к одному из этих инстансов. Admin заполняет их тем, что совпало с `q` в переведённых названиях.
 
 Роуты возвращают `{ integration_changes, count, offset, limit }`, по умолчанию сначала новые.
+
+### Получение изменения
+
+`GET /admin/integrations/changes/:id` возвращает `{ integration_change }`, одно изменение со всеми полями, включая `ip`, `user_agent` и `request_id`. Роут принимает `fields` и отвечает `404` для неизвестного идентификатора.
+
+### Авторы и поля
+
+`GET /admin/integrations/changes/actors` возвращает `{ users, system }`. Каждый элемент `users` имеет вид `{ id, label }`, а список отсортирован по `label`. В `label` попадает текущее имя пользователя, а если его нет, то текущий email, затем email, сохранённый с изменениями пользователя, а иначе `null`. `system` равно `true`, если какое-либо изменение сделал не пользователь Admin, а, например, ключ API или код, выполненный без запроса.
+
+`GET /admin/integrations/changes/fields` возвращает `{ fields }`, по одному `{ field, label }` на каждую пару идентификатора параметра и ключа метки, которые упоминаются в истории, включая параметры и интеграции, которых уже нет. `field` содержит идентификатор параметра или `@title` для названия записи, а `label` содержит ключ метки, сохранённый вместе с изменением, или `null`.
 
 ### Объект изменения
 
@@ -262,9 +287,239 @@ curl -X POST "http://localhost:9000/admin/integrations/int_my" \
 
 | Метод | Путь | Что делает |
 | --- | --- | --- |
-| `GET` | `/admin/integrations/catalog` | Возвращает [каталог интеграций](/medusa-modules/integration/browse-integrations) с `installed` и `provider_id` для каждой записи, зарегистрированной в проекте. |
-| `GET` | `/admin/integrations/license-status` | Возвращает последний результат проверки лицензии каждой платной интеграции Gorgo в виде `{ packages }`. |
+| `GET` | `/admin/integrations/catalog` | Возвращает [каталог интеграций](/medusa-modules/integration/browse-integrations), объединённый с состоянием установки в проекте, в виде `{ integrations }`. |
+| `GET` | `/admin/integrations/license-status` | Возвращает последний результат проверки лицензии каждого лицензируемого пакета в виде `{ packages }`. |
 | `POST` | `/admin/integrations/license-status/recheck` | Сразу проверяет лицензии и возвращает свежие результаты в том же виде. |
+
+### Запись каталога
+
+`GET /admin/integrations/catalog` возвращает `{ integrations }`. Каждый элемент является записью каталога Gorgo с полями `installed` и `provider_id`, которые равны `false` и `null`, если интеграция не зарегистрирована в проекте.
+
+<MedusaTypeList
+  sectionTitle="CatalogItem"
+  types={[
+    {
+      name: "integrationId",
+      type: "string",
+      description: "Идентификатор интеграции. Запись считается установленной, если зарегистрирован провайдер с таким же `static identifier`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "slug",
+      type: "string",
+      description: "Слаг записи в каталоге Gorgo.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "npm",
+      type: "string",
+      description: "npm-пакет, в котором поставляется провайдер.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "category",
+      type: "string",
+      description: "Категория интеграции, например `payment`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "author",
+      type: "string",
+      description: "Идентификатор автора в каталоге.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "authorLocalized",
+      type: "string",
+      description: "Имя автора в том виде, в каком его показывает карточка.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "label",
+      type: "string",
+      description: "Название интеграции в том виде, в каком его показывает карточка.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "shortDescription",
+      type: "string",
+      description: "Краткое описание, которое показывает карточка.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "repository",
+      type: "string",
+      description: "Публичный репозиторий с исходным кодом. У платной интеграции его нет, потому что её исходный код закрыт.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "docsUrl",
+      type: "string",
+      description: "Ссылка на документацию интеграции. Модуль отбрасывает её, если это не абсолютный URL с `https`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "docsSnippet",
+      type: "{ en?: string, ru?: string }",
+      description: "Руководство по настройке в формате Markdown, которое Admin показывает при добавлении интеграции, по языкам. Одного из языков может не быть.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "icon",
+      type: "string",
+      description: "Data URI или путь на `gorgojs.com`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "stars",
+      type: "number | null",
+      description: "Число звёзд или `null`, если в каталоге его нет. В копии каталога, которая поставляется с модулем, здесь `null`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "downloads",
+      type: "number | null",
+      description: "Число загрузок или `null`, если в каталоге его нет. В копии каталога, которая поставляется с модулем, здесь `null`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "installed",
+      type: "boolean",
+      description: "Зарегистрирован ли в проекте провайдер с таким `integrationId`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "provider_id",
+      type: "string | null",
+      description: "Ключ зарегистрированного инстанса или `null`, если ни один не зарегистрирован. Если у провайдера несколько инстансов, это последний из зарегистрированных.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+### Запись о лицензии
+
+`GET /admin/integrations/license-status` возвращает `{ packages }`, последний результат проверки для каждого лицензируемого пакета, о котором знает процесс. Сюда входит и пакет, в котором нет провайдера интеграции, и тогда его `identifiers` пуст. Роут отдаёт то, что нашла последняя проверка, и не обращается к сервису лицензий.
+
+<MedusaTypeList
+  sectionTitle="LicenseStateEntry"
+  types={[
+    {
+      name: "package",
+      type: "string",
+      description: "npm-пакет, к которому относится результат.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "state",
+      type: "string",
+      description: "Одно из значений `pending` (первая проверка ещё не завершилась), `ok`, `failed` или `unreachable` (сервис лицензий недоступен).",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "reason",
+      type: "string",
+      description: "Почему проверка не прошла. Есть, только если `state` равно `failed`. Одно из значений `missing`, `malformed`, `invalid_token`, `no_subscription`, `domain_not_allowed`, `version_after_cutoff`, `version_unverifiable` или `unknown`.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "checked_at",
+      type: "string | null",
+      description: "Время последней проверки пакета в формате ISO 8601 или `null` до первой проверки.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "host",
+      type: "string",
+      description: "Хост бэкенда, для которого получен результат. До первого запроса отсутствует.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "project",
+      type: "{ handle: string, name: string, url?: string } | null",
+      description: "Проект Gorgo, которому принадлежит лицензионный ключ. `url` ведёт на страницу ключей проекта в кабинете Gorgo. `null`, если сервис лицензий не назвал проект.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "environment",
+      type: "{ id: string, name: string } | null",
+      description: "Окружение проекта, к которому относится хост бэкенда. `null`, если хоста нет ни в одном окружении, а до первого ответа поле отсутствует.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "subscription",
+      type: "{ ends_at: string | null, cutoff: string | null, renews?: boolean } | null",
+      description: "Подписка на пакет. В `ends_at` дата её окончания, в `cutoff` дата, до которой опубликованные версии покрываются подпиской, а `renews` показывает, продлевается ли подписка, и отсутствует, если сервис лицензий этого не сообщает. `null`, если сервис лицензий не назвал подписку.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "latest_allowed_version",
+      type: "string | null",
+      description: "Последняя версия пакета, которую покрывает подписка, или `null`, если сервис лицензий её не назвал.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "identifiers",
+      type: "string[]",
+      description: "Идентификаторы провайдеров интеграций, которые поставляет пакет. Пусто у пакета, который регистрируется сам и не поставляет провайдера интеграции.",
+      optional: false,
+      expandable: false,
+      children: []
+    }
+  ]}
+/>
+
+`POST /admin/integrations/license-status/recheck` проверяет лицензии сразу и возвращает свежие результаты в том же виде, но только в том процессе, который получил запрос. Остальные процессы сервера проверяют по своему расписанию. Как лицензируются платные плагины, читайте в разделе [Лицензии на платные плагины](/licensing).
 
 ## Материалы
 

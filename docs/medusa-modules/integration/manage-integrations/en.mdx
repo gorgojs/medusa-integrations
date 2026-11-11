@@ -14,7 +14,7 @@ To view the integrations list:
 1. Open Medusa Admin.
 2. Go to **Settings → Integrations**.
 
-This opens the list of every integration registered in the project: the provider's name and icon, the package version and author, its description, and category. Each integration shows a status. You can filter the list by category and search it by the integration's name, description, or identifier.
+This opens the list of every integration registered in the project. Each row shows the provider's name and icon, the package version and author, its description, its category, and its status. The grey badge next to the name holds the ID Medusa knows the provider by, such as `pp_…` for a payment provider or `fp_…` for a fulfillment provider, and the integration's own `int_…` key for the other categories. You can filter the list by category and search it by the integration's name, description, or identifier.
 
 ![Integrations list](/static/integration/en/integrations-overview.webp)
 
@@ -40,7 +40,7 @@ If the provider supports connection testing, a separate status is shown alongsid
 
 While the connection test hasn't been run yet, this status isn't shown.
 
-For a paid Gorgo integration, the list and the integration's page also show the result of its license check. See [Paid Plugin Licensing](/licensing) for how paid plugins are licensed.
+For a paid Gorgo integration, the list and the integration's page also show the result of its license check. Once the first check has answered, the license block on the integration's page has a **Check now** button that repeats the check right away. Refer to [Paid Plugin Licensing](/licensing) to learn how paid plugins are licensed.
 
 ---
 
@@ -48,13 +48,13 @@ For a paid Gorgo integration, the list and the integration's page also show the 
 
 The catalog lists the integrations available for Medusa, both the ones already registered in the project and the ones you can still add. To open it, click **Browse Integrations** above the list.
 
-See [Browse and Add Integrations in Medusa Admin](/medusa-modules/integration/browse-integrations) for how to find an integration in the catalog and add it to the project.
+Refer to [Browse and Add Integrations in Medusa Admin](/medusa-modules/integration/browse-integrations) to learn how to find an integration in the catalog and add it to the project.
 
 ---
 
 ## Configure an Integration
 
-Until an integration is configured, its page shows sections with empty required fields. There's no separate action for the initial setup. Saving any section with its fields filled in creates the configuration.
+Until an integration is configured, its page shows every section with its fields empty, except the fields the provider gives a default value. There's no separate action for the initial setup. Saving any section with its fields filled in creates the configuration.
 
 To configure an integration:
 
@@ -67,13 +67,13 @@ To configure an integration:
 
 ![Configuring an integration](/static/integration/en/configure-integration.png)
 
-The module checks the section's values before saving them. A new integration is enabled by default, so its status changes from **Incomplete** to **Enabled** as soon as the saved values pass validation in full. See [Validate Integration Options](/medusa-modules/integration/validation) for the rules a provider can declare.
+The module checks the section's values before saving them. A new integration is enabled by default, so its status changes from **Incomplete** to **Enabled** as soon as the saved values pass validation in full. Refer to [Validate Integration Options](/medusa-modules/integration/validation) to learn about the rules a provider can declare.
 
 ---
 
 ## Test Connection
 
-Some providers support connection testing, which confirms that the provider accepts the values you entered before the integration is used for real. The action appears only for a provider that supports it, and only while the integration is enabled and complete.
+Some providers support connection testing, which confirms that the provider accepts the values you entered before the integration is used for real. The action appears only for a provider that supports it. On the integration's page, it also needs the integration to be enabled and complete.
 
 To test the connection:
 
@@ -83,6 +83,8 @@ To test the connection:
 4. Choose **Test connection**.
 
 The result appears in a notification.
+
+The action menu of a row in the list shows **Test connection** for every complete integration, enabled or not. A test of a disabled integration never reaches the provider. It answers `Not configured`, and the status becomes **Connection failed**.
 
 ![Test Connection](/static/integration/en/test-connection.png)
 
@@ -110,6 +112,8 @@ A field holding a secret, such as an API key, shows only that a value is set. Le
 ## Enable and Disable an Integration
 
 A disabled integration keeps its stored settings, but the provider stops receiving them, as if the integration weren't configured.
+
+The action is available as soon as the integration has saved settings, complete or not. An incomplete integration keeps the **Incomplete** status either way, so the notification is the only sign that the switch worked.
 
 To enable or disable an integration:
 
@@ -140,7 +144,7 @@ To delete an integration:
 
 The module records every change to an integration's settings with its author, time, and the fields it changed. An integration's page shows its latest changes, and the **Change History** button above the list opens the changes of every integration in one table.
 
-See [View the Change History in Medusa Admin](/medusa-modules/integration/view-change-history) for how to search, filter, and open a change.
+Refer to [View the Change History in Medusa Admin](/medusa-modules/integration/view-change-history) to learn how to search, filter, and open a change.
 
 ## References
 
