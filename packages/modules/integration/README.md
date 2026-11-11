@@ -11,7 +11,7 @@ Integration Module for Medusa
 <p align="center">
   <a href="https://docs.gorgojs.com/medusa-modules/integration">Documentation</a>
   <br/>
-  A Medusa module that lets any plugin or provider declare its options and store admins manage them in the Admin – no <code>medusa-config</code> edits, no redeploys.
+  A Medusa module that lets any plugin or provider declare its options and store admins manage them in the Admin, with no <code>medusa-config</code> edits and no redeploys.
   <br/>
   <a href="https://github.com/gorgojs/medusa-integrations/blob/HEAD/packages/modules/integration/README-ru.md">Читать README на русском ↗</a>
 </p>
@@ -52,9 +52,9 @@ Integration Module for Medusa
   <a href="https://static.gorgojs.com/videos/integration/demo/integration-demo.e8ef945d.mp4">▶ Watch the demo video</a>
 </p>
 
-## What is the Integration Module?
+## What Is the Integration Module
 
-The Integration Module lets any plugin declare its options, and store admins configure them as **integrations** right in the Admin – no `medusa-config` edits, no redeploys. The module takes care of the UI, storage, encryption, and validation.
+The Integration Module lets any plugin declare its options, and store admins configure them as **integrations** right in the Admin, with no `medusa-config` edits and no redeploys. The module takes care of the UI, storage, encryption, and validation.
 
 The Integration Module is useful for any Medusa developer building plugins, providers, or custom modules that need configurable settings, such as API keys, credentials, modes, or webhooks, but who'd rather not hand-build settings UI pages, a data layer, and validation for each one.
 
@@ -63,13 +63,13 @@ The Integration Module is useful for any Medusa developer building plugins, prov
 - **Settings management in Admin:** Set in the **Settings → Integrations** section, no `medusa-config`/env edits and no redeploys.
 - **Any plugin, provider, or module:** Works across payment, fulfillment, ERP, notification, content, and other extensions.
 - **Declarative descriptor (`defineIntegration`):** A single description of the options, settings sections, validation, and connection test.
-- **Flexible typing and validation:** Typed fields (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) with per-option and cross-section rules, conditional visibility, and read-only fields. At runtime, the plugin gets a typed, decrypted object: incomplete or disabled settings never resolve, so an unfilled draft is never returned.
+- **Flexible typing and validation:** Typed fields (`string`, `url`, `email`, `uuid`, `number`, `boolean`, `enum`, `json`) with per-option and cross-section rules, conditional visibility, and read-only fields. At runtime, the plugin gets a typed, decrypted object. Incomplete or disabled settings never resolve, so the plugin never gets an unfilled draft.
 - **Encrypted secrets:** Fields marked `secret` are encrypted (AES-256-GCM) and never reach the browser.
 - **Multiple instances:** The same provider can be configured more than once. For example, for several accounts in the same third-party service.
 - **Connection test:** Verify credentials against the third-party service right from the Admin.
 - **Change history:** The module records who changed which fields of an integration's settings and when. You can search and filter the history in the Admin, and secret values never reach it.
-- **Extensible UI:** Sections can be reordered (LayoutComposer). If the generated sections aren't enough, you can implement any UI for your options using custom widgets.
-- **Integration catalog:** Available integrations are shown in the Admin, and any plugin appears there on equal footing with the built-in ones.
+- **Extensible UI:** Sections can be reordered ([LayoutComposer](https://docs.medusajs.com/resources/admin-components/components/layout-composer)). If the generated sections aren't enough, you can implement any UI for your options using custom widgets.
+- **Integration catalog:** The Admin shows the integrations from the Gorgo catalog. To add yours to it, make a [Pull Request](https://github.com/gorgojs/medusa-integrations#contribution).
 
 ## Available Integrations
 
@@ -106,10 +106,50 @@ The Integration Module is useful for any Medusa developer building plugins, prov
 </p>
 
 <p>
-  <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-stripe">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/stripe.svg" width="50" hspace="5" align="left" alt="Stripe logo"/>
+  </a>
+  <b>Stripe</b><br/>
+  Payment · <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-stripe">@gorgo/medusa-payment-stripe</a>
+</p>
+
+<p>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-paypal">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/paypal.svg" width="50" hspace="5" align="left" alt="PayPal logo"/>
+  </a>
+  <b>PayPal</b><br/>
+  Payment · <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-paypal">@gorgo/medusa-payment-paypal</a>
+</p>
+
+<p>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-authorizenet">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/authorizenet.svg" width="50" hspace="5" align="left" alt="Authorize.net logo"/>
+  </a>
+  <b>Authorize.net</b><br/>
+  Payment · <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-authorizenet">@gorgo/medusa-payment-authorizenet</a>
+</p>
+
+<p>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-mollie">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/mollie.svg" width="50" hspace="5" align="left" alt="Mollie logo"/>
+  </a>
+  <b>Mollie</b><br/>
+  Payment · <a href="https://www.npmjs.com/package/@gorgo/medusa-payment-mollie">@gorgo/medusa-payment-mollie</a>
+</p>
+
+<p>
+  <a href="https://docs.gorgojs.com/medusa-integrations/1c-enterprise">
     <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/1c.svg" width="50" hspace="5" align="left" alt="1C logo"/>
   </a>
   <b>1C:Enterprise</b><br/>
+  ERP · <a href="https://docs.gorgojs.com/medusa-integrations/1c-enterprise">@gorgo-store/medusa-erp-1c</a>
+</p>
+
+<p>
+  <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">
+    <img src="https://raw.githubusercontent.com/gorgojs/medusa-integrations/refs/heads/main/catalog/icons/1c.svg" width="50" hspace="5" align="left" alt="1C logo"/>
+  </a>
+  <b>1C:Enterprise Catalog</b><br/>
   ERP · <a href="https://www.npmjs.com/package/@gorgo/medusa-1c">@gorgo/medusa-1c</a>
 </p>
 
@@ -117,16 +157,16 @@ Any plugin can use the Integration Module, see the [documentation](https://docs.
 
 ## 💬  Support & Community
 
-Got questions or ideas? Join the Telegram support chat — [@gorgojs_chat](https://t.me/gorgojs_chat)
+Got questions or ideas? Join the Telegram support chat [@gorgojs_chat](https://t.me/gorgojs_chat)
 
-Connect with other Medusa developers on Telegram — [@medusajs_chat](https://t.me/medusajs_chat)
+Connect with other Medusa developers on Telegram [@medusajs_chat](https://t.me/medusajs_chat)
 
 The [Maintenance](https://docs.gorgojs.com/resources/maintenance) page explains how we test, update and fix the module.
 
 ## Requirements
 
 - Medusa v2.17.2 or later
-- Node.js v22.23.4, v24.22.1, v26.12.1 or later
+- Node.js v22.23.4 or later (22.x), v24.22.1 or later (24.x), or v26.12.1 or later
 
 ## Installation
 
@@ -160,7 +200,15 @@ module.exports = defineConfig({
 })
 ```
 
-Then restart the server. Each registered integration appears in Medusa Admin under **Settings → Integrations**.
+The module keeps integrations and their change history in its own tables. Run the migrations after you install or update it:
+
+```bash
+yarn medusa db:migrate
+# or
+npx medusa db:migrate
+```
+
+Once the migrations run, restart the server. Each registered integration appears in Medusa Admin under **Settings → Integrations**.
 
 ## Environment Variables
 
