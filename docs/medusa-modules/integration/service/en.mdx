@@ -35,6 +35,8 @@ Change settings only through the module's [workflows](/medusa-modules/integratio
 | `getResolvedOptions(identifier, instanceId?)` | `Promise<ResolvedOptions \| null>` | The instance's decrypted and validated options with defaults applied, as `{ options, meta }`, or `null` when the integration isn't configured, is disabled, or is incomplete. Throws when no provider is registered under that identifier and instance. Cached for up to 60 seconds. |
 | `clearOptionsCache(providerId?)` | `void` | Clears the cached options of one instance, or of every instance without an argument. |
 
+---
+
 ## Registered Providers
 
 | Method | Returns | Description |
@@ -46,6 +48,8 @@ Change settings only through the module's [workflows](/medusa-modules/integratio
 | `getSecretKeys(providerId)` | `string[]` | The ids of the provider's secret options. |
 | `getPackageMeta(providerId)` | `{ version, author, author_url }` | The details of the npm package the provider comes from, or `null` values when they can't be found. |
 
+---
+
 ## Stored Integrations
 
 | Method | Returns | Description |
@@ -55,11 +59,15 @@ Change settings only through the module's [workflows](/medusa-modules/integratio
 | `isComplete(record)` | `boolean` | Whether a stored record passes full validation against its provider's descriptor. |
 | `getStoredValues(providerId)` | `Promise<Record<string, unknown>>` | The full stored configuration with the secrets decrypted, without validation or defaults. Never send it to the browser. |
 
+---
+
 ## Connection Test
 
 | Method | Returns | Description |
 | --- | --- | --- |
 | `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Runs the provider's connection test against the resolved options. It neither stores `last_test_status` nor emits `integration.tested`. [`testIntegrationConnectionWorkflow`](/medusa-modules/integration/workflows#testintegrationconnectionworkflow) does both. |
+
+---
 
 ## Change History
 
@@ -71,6 +79,8 @@ Change settings only through the module's [workflows](/medusa-modules/integratio
 
 To read the records themselves, use the generated methods of `IntegrationChange` below. They return the stored rows as they are. Unlike the [Admin API routes](/medusa-modules/integration/admin-api#change-history), they don't hide the values of options that became secret after a change was recorded.
 
+---
+
 ## Catalog and Licenses
 
 | Method | Returns | Description |
@@ -78,6 +88,8 @@ To read the records themselves, use the generated methods of `IntegrationChange`
 | `getCatalog()` | `Promise<CatalogItem[]>` | The [integration catalog](/medusa-modules/integration/browse-integrations), with `installed` and `provider_id` for every entry registered in the project. |
 | `listLicenseStates()` | `LicenseStateEntry[]` | The latest license check result of every paid Gorgo integration. |
 | `recheckLicenseStates()` | `Promise<LicenseStateEntry[]>` | Checks the licenses right away and returns the fresh results. |
+
+---
 
 ## Generated Data-Management Methods
 

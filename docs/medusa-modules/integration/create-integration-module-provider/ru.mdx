@@ -19,11 +19,15 @@ description: "Узнайте, как создать провайдер для Me
 
 Если вам нужен пример реальной реализации, посмотрите [провайдер платежей YooKassa в репозитории Medusa Integrations](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/payment-yookassa).
 
+---
+
 ## 1. Создайте директорию провайдера
 
 Начните с создания новой директории для вашего провайдера Модуля интеграций. Для плагина она размещается в `src/providers`, например `src/providers/integration-my`.
 
 Если плагина у вас ещё нет, создайте его вместе с проектом-примером командой [`create-medusa-plugin`](/tools/create-medusa-plugin).
+
+---
 
 ## 2. Создайте сервис провайдера Модуля интеграций
 
@@ -164,6 +168,8 @@ const descriptor = defineIntegration({
 
 `status` принимает одно из значений `"passed" | "failed" | "skipped"`. Возврат `{ status: "failed", message }` считается обычным результатом, а не ошибкой. Если `testConnection` выбросит исключение, модуль запишет проверку как `failed` с текстом ошибки, поэтому администратор магазина увидит результат в Admin в любом случае.
 
+---
+
 ## 3. Создайте файл определения модуля провайдера
 
 Создайте файл `src/providers/integration-my/index.ts` со следующим содержимым:
@@ -179,6 +185,8 @@ export default ModuleProvider(INTEGRATION_MODULE, {
 ```
 
 Это экспортирует определение провайдера, указывая, что `MyIntegrationProvider` является его сервисом.
+
+---
 
 ## 4. Подключите провайдер
 
@@ -221,6 +229,8 @@ INTEGRATION_ENCRYPTION_KEY=supersecret
 ```
 
 Подходит любое непустое значение. Модуль преобразует его через SHA-256 в 32-байтовый ключ AES-256-GCM, поэтому используйте значение с высокой энтропией, например `openssl rand -hex 32`.
+
+---
 
 ## 5. Протестируйте
 

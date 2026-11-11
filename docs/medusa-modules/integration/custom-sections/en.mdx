@@ -13,6 +13,8 @@ The module generates a section for every group of options in the descriptor, wit
 
 A custom section is a standard Medusa admin widget built with `defineWidgetConfig`. The module renders it on the integration's page next to the generated sections, and the store admin can move it like any other section.
 
+---
+
 ## Example
 
 The [ApiShip fulfillment provider](https://github.com/gorgojs/medusa-integrations/tree/main/packages/providers/fulfillment-apiship) keeps its courier-service connections in a `json` option and edits them in its own widget, `src/admin/widgets/apiship-integration-main.tsx`. The steps below build a smaller widget of the same kind, a list of webhook URLs.
@@ -43,6 +45,8 @@ const descriptor = defineIntegration({
 ```
 
 The module checks `json` values only through the option's own `validate`, so the rule above is what keeps the list well-formed. The option is still part of the descriptor, so its value is validated, can be marked `secret`, resolves at runtime along with the rest, and goes into the [change history](/medusa-modules/integration/change-history).
+
+---
 
 ## Step 2: Declare the Zone
 
@@ -81,6 +85,8 @@ Then publish the file with the plugin and point its types at it in `package.json
 ```
 
 Keep the rest of your `exports` as they are. With the declaration in place, `defineWidgetConfig` accepts `"gorgo.integration.my"`, and a project that installs your plugin sees the same zones. See [Admin Widget Injection Zones](/medusa-modules/integration/admin-widget-zones) for the full list.
+
+---
 
 ## Step 3: Create the Widget
 

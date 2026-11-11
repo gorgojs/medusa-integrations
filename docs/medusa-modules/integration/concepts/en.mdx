@@ -17,6 +17,8 @@ The Integration Module is provider-agnostic. It does not care what the options a
 
 If a store admin should be able to manage a setting, it can be an integration.
 
+---
+
 ## Providers and Consumers
 
 An integration involves two developer roles, with the store admin between them.
@@ -26,6 +28,8 @@ An integration involves two developer roles, with the store admin between them.
 - **Consumer:** Reads the resolved options at runtime.
 
 The provider and the consumer are usually the same package. A payment plugin declares its credentials as an integration, then reads them back in its payment logic. A consumer can also be unrelated code, such as an API route, a subscriber, or a scheduled job, that needs a configured integration's options.
+
+---
 
 ## Descriptor
 
@@ -75,6 +79,8 @@ export class MyIntegration extends AbstractIntegrationProviderService {
 The descriptor is the source of truth for the integration: this one declares `apiKey` and `sandbox`, grouped into a single `credentials` section. The module uses it to generate the CRUD API, validate writes, render the settings UI, and define what consumers resolve at runtime. You never write data models, routes, or forms.
 
 See [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every option field, by type, along with validation, secrets, and the connection test.
+
+---
 
 ## Identifiers and Instances
 
@@ -168,11 +174,15 @@ That gives `int_my_eu` and `int_my_us` respectively. `id` goes at the top level 
 
 A consumer resolves options by identifier and instance, so the same code can target the right one.
 
+---
+
 ## Integration Options
 
 An integration's options move through a predictable path. An author declares them in the descriptor, an admin configures them, the module validates them, they become live once the integration is enabled and complete, and a consumer resolves them at runtime. A connection test can check them against the third-party service along the way.
 
 See [Integration Provider Descriptor](/medusa-modules/integration/descriptor) for the full reference of every option field, by type, along with secrets and the connection test. [Validate Integration Options](/medusa-modules/integration/validation) explains which rules run when a section is saved and which run before the options go live, and [Reading Options](/medusa-modules/integration/reading-options) covers the consumer's side.
+
+---
 
 ## UI Generation
 
@@ -193,6 +203,8 @@ See [Custom Sections with Widgets](/medusa-modules/integration/custom-sections) 
 Descriptor labels, hints, and titles are i18n keys. Ship translations with your integration and the settings UI is localized automatically. This builds on Medusa's standard admin i18n, and custom widgets localize the same way, with the same translations as the generated form.
 
 See [Localize an Integration](/medusa-modules/integration/localization) for where translations go and how a missing key falls back.
+
+---
 
 ## Change History
 

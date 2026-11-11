@@ -58,6 +58,8 @@ export class MyIntegration extends AbstractIntegrationProviderService {
 
 This descriptor declares `apiKey` and `sandbox`, grouped into a single `credentials` section. `defineIntegration` fails fast at load time in two cases: a section referencing an option id that isn't in `options`, and an `enum` option whose `values` mixes strings and numbers.
 
+---
+
 ## Descriptor Properties
 
 `defineIntegration` accepts the following properties:
@@ -160,6 +162,8 @@ This descriptor declares `apiKey` and `sandbox`, grouped into a single `credenti
 
 The provider's `static identifier` isn't part of the descriptor. The module adds it from the provider class when it registers the provider.
 
+---
+
 ## Sections
 
 Each entry of `sections` is a card on the integration's page, with its own **Edit** action. A section references options by id, and an option can stay out of every section, for example when a [custom section](/medusa-modules/integration/custom-sections) edits it instead.
@@ -202,6 +206,8 @@ Each entry of `sections` is a card on the integration's page, with its own **Edi
     }
   ]}
 />
+
+---
 
 ## Option Fields
 
@@ -302,6 +308,8 @@ Each option in `options` is an object shaped `{ type, ... }`. The `type` field d
     }
   ]}
 />
+
+---
 
 ## Type-Specific Fields
 
@@ -414,15 +422,21 @@ Some types have extra fields on top of the common ones:
   ]}
 />
 
+---
+
 ## Generated CRUD and Validation
 
 The module generates the CRUD API from the descriptor and validates every write. Validation covers per-option rules, such as types, ranges, and patterns, along with cross-section rules that span the whole configuration. There is nothing to build for each integration.
 
 See [Validate Integration Options](/medusa-modules/integration/validation) for when each rule runs and how to test the descriptor's rules, and [Admin API Routes](/medusa-modules/integration/admin-api) for the generated routes.
 
+---
+
 ## Enabled and Complete
 
 Options become live only when the integration is both enabled and complete, meaning it passes full validation. An incomplete draft or a disabled integration never resolves, so half-finished configuration cannot leak into runtime.
+
+---
 
 ## Secrets and Encryption
 
@@ -437,6 +451,8 @@ An option that holds a credential but isn't marked `secret: true` is shown in th
 </Note>
 
 Encryption needs a key, set as `encryptionKey` when you register the module. See [Integration Module Options](/medusa-modules/integration/module-options#encryptionkey) for how to set it and what happens without one.
+
+---
 
 ## Connection Test
 
@@ -464,6 +480,8 @@ const descriptor = defineIntegration({
 `status` is one of `passed`, `failed`, or `skipped`, and the optional `message` is shown to the store admin in the Admin next to the test result. The module stores the status as the integration's `last_test_status` and emits the [`integration.tested` event](/medusa-modules/integration/events).
 
 The test runs only against options that resolve. When the integration is disabled or incomplete, the module reports `failed` with the message `Not configured` without calling `testConnection`. When `testConnection` throws, the module reports `failed` with the error's message.
+
+---
 
 ## Runtime Options Resolution
 

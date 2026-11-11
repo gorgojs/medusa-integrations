@@ -45,6 +45,8 @@ Keep `encryptionKey` the same on every Medusa process, server and worker alike, 
 
 </Note>
 
+---
+
 ## providers
 
 The `providers` option is an array of [Integration Module providers](/medusa-modules/integration/create-integration-module-provider).
@@ -78,6 +80,8 @@ The `providers` option is an array of objects that accept the following properti
 - `resolve`: A string indicating either the package name of the Integration Module provider or its relative path.
 - `id`: An optional string identifying this particular registration. Omit it for the provider's single, unnamed instance, or set it to register [multiple instances](/medusa-modules/integration/concepts#identifiers-and-instances) of the same provider.
 - `options`: An object of the module provider's own options. For an Integration Module provider, this is almost always `{}`, since the store admin sets the real configuration in the Admin instead.
+
+---
 
 ## license
 

@@ -15,6 +15,8 @@ The Integration Module is provider-agnostic, so unlike Medusa's built-in commerc
 
 Every provider registered in the Integration Module's `providers` option is represented in the database by the [`Integration` data model](#the-integration-data-model).
 
+---
+
 ## Creating a Custom Integration Module Provider
 
 An Integration Module Provider is a module whose service extends `AbstractIntegrationProviderService`, imported from `@gorgo/medusa-integration`. As with other Medusa module providers, a single module can register more than one Integration Module Provider service, each with its own `static identifier`, and each ends up as a separate provider.
@@ -56,6 +58,8 @@ export default MyIntegrationProvider
 See [How to Create an Integration Module Provider](/medusa-modules/integration/create-integration-module-provider) for a full walkthrough with code.
 
 </Note>
+
+---
 
 ## Registering Integration Module Providers
 
