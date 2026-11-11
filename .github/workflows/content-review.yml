@@ -48,6 +48,7 @@ jobs:
             node scripts/style-lint.js || true
             node scripts/check-docs-parity.js || true
             node scripts/check-integration-complete.js || true
+            node scripts/check-docs-links.js --offline || true
             echo GATES_EOF
           } >> "$GITHUB_OUTPUT"
 
@@ -69,10 +70,10 @@ jobs:
 
             The deterministic gates already ran. Their full output is below. Do NOT report anything
             they reported: no glossary hits, no em dashes, no heading case, no bilingual structural
-            drift, no integration-registration gaps. If you find something they should have caught but
-            did not, say so explicitly and name the rule that is missing from
-            `scripts/style-rules.js`. That finding is worth more than the one you started with,
-            because it fixes every future pull request rather than this one.
+            drift, no integration-registration gaps, no dangling internal links or anchors. If you
+            find something they should have caught but did not, say so explicitly and name the rule
+            that is missing from `scripts/style-rules.js`. That finding is worth more than the one
+            you started with, because it fixes every future pull request rather than this one.
 
             Spend the review on what only a reader of the source can find:
 
@@ -84,8 +85,8 @@ jobs:
                assuming.
             3. `MedusaTypeList` fields against the real type. The parity gate only proves `en` and `ru`
                agree; both can be wrong together.
-            4. Reachability: a new page needs an entry in its section landing page, and a moved page
-               needs its inbound links moved with it.
+            4. Reachability: a new page needs an entry in its section landing page. The link gate
+               already lists a moved page's dangling inbound links; do not repeat them.
             5. Whether the Russian rendered the fact or copied the English clause order.
 
             Scope yourself to the lines that changed. Separate a blocker from a nit. Give a concrete
