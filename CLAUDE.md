@@ -202,20 +202,13 @@ Use the **medusa** MCP (`docs.medusajs.com`) for Medusa v2 APIs and patterns, an
 
 ## Claude Code setup
 
-Skills, agents and slash commands come not from this repo. Because
-this repo is public, the plugin is enabled per-developer through `.claude/settings.local.json`
-(gitignored) rather than committed:
+Skills, agents and slash commands don't come from this repo. They come from the `gorgo` plugin in
+the private `gorgojs/claude-plugins` repo, which the Gorgo organization on claude.ai turns on for
+every team member through managed settings, with auto-update. Nothing in this repo enables it, neither
+a committed `.claude/settings.json` nor a local `.claude/settings.local.json`, and a leftover plugin
+block in either can go.
 
-```json
-{
-  "extraKnownMarketplaces": {
-    "gorgo": { "source": { "source": "github", "repo": "gorgojs/claude-plugins" } }
-  },
-  "enabledPlugins": { "gorgo@gorgo": true }
-}
-```
-
-External contributors don't need it.
+External contributors don't get the plugin and don't need it.
 
 ## Workflow: Research → Plan → Implement
 
