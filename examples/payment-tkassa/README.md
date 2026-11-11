@@ -8,7 +8,7 @@ backend lives in [`apps/backend`](./apps/backend) and the storefront in
 ## Prerequisites
 
 - All the [common prerequisites](../README.md#prerequisites)
-- A T-Kassa account - [sign in or create one](https://www.tbank.ru/kassa/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c), a shop identifier `TerminalKey` and a secret `Password`.
+- A T-Kassa account - [sign in or create one](https://www.tbank.ru/business/online-payments/internet-acquiring/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c), a shop identifier `TerminalKey` and a secret `Password`.
 
 ## Configuration
 
