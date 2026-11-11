@@ -1,5 +1,11 @@
 # @gorgo/medusa-payment-paypal
 
+## 2.0.4
+
+### Bug Fixes
+
+- keep INVALID_DATA for a non-numeric amount on Medusa 2.22.6 by [@ca11ba](https://github.com/ca11ba) in [`b489c48`](https://github.com/gorgojs/medusa-integrations/commit/b489c487623ba1876665837ad591d79913b3298d)
+
 ## 2.0.3
 
 ### Documentation
