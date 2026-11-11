@@ -22,24 +22,31 @@
  *   - Every other `http(s)://` link is fetched live: HEAD first, GET when the server rejects HEAD.
  *     404 and 410 are errors. 401, 403 and 429 are bot protection more often than a dead link, and
  *     5xx, timeouts and DNS failures are the network's day; those are warnings, retried once.
+ *     A 301 or 308 is a warning naming the new address, because the old one works only for as
+ *     long as the site keeps the redirect. A 302 or 307 is not reported: sites answer with one
+ *     for a login, a locale or a CDN, and the link is right as written.
  *
  * Code fences, inline code and MDX comments are never read: a placeholder URL in an example is
  * not a link.
  *
  *   node scripts/check-docs-links.js                 # all of docs/, network included
- *   node scripts/check-docs-links.js docs/tools      # a subtree; targets resolve against all of docs/
+ *   node scripts/check-docs-links.js docs/tools      # a subtree; links still resolve against docs/
  *   node scripts/check-docs-links.js --offline       # skip every fetch
  *   node scripts/check-docs-links.js --warnings      # also fail on warnings
  *   node scripts/check-docs-links.js --json          # machine-readable
  *
- * tbank.ru chains to the Russian Trusted Root CA, which Node does not ship. Point it at the copy
- * test.yml already trusts: NODE_EXTRA_CA_CERTS=.github/certs/root-ca.pem
+ * tbank.ru chains to the Russian Trusted Root CA, which Node does not ship. The script trusts the
+ * copy in .github/certs itself, pinned by the fingerprint test.yml checks, so no environment
+ * variable is needed. Node older than 24.5 lacks the API for it; set
+ * NODE_EXTRA_CA_CERTS=.github/certs/root-ca.pem there instead.
  *
  * Exit code 1 when there is at least one error (or any warning under --warnings).
  */
 
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
+const tls = require('node:tls');
 
 // ─── SETTINGS ────────────────────────────────────────────────────────────────────────────────────
 
@@ -78,6 +85,7 @@ const PROBE_VIA = [
 const LOCALES = ['en', 'ru'];
 const USER_AGENT = `gorgo-docs-link-check (+https://github.com/${THIS_REPO})`;
 const TIMEOUT_MS = 15_000;
+const MAX_REDIRECTS = 10;
 /** Open requests at once, in total and against one host. GitHub answers 429 to a burst. */
 const CONCURRENCY = 8;
 const PER_HOST = 2;
@@ -93,6 +101,20 @@ const failOnWarnings = argv.includes('--warnings');
 const roots = argv
   .filter((a) => !a.startsWith('--'))
   .map((a) => path.resolve(REPO_ROOT, a));
+
+/** The Russian Trusted Root CA, the copy and fingerprint test.yml and content.yml rely on. */
+const EXTRA_CA = path.join(REPO_ROOT, '.github', 'certs', 'root-ca.pem');
+const EXTRA_CA_SHA256 = 'D26D2D0231B7C39F92CC738512BA54103519E4405D68B5BD703E9788CA8ECF31';
+
+function trustExtraCa() {
+  if (typeof tls.setDefaultCACertificates !== 'function' || !fs.existsSync(EXTRA_CA)) return;
+  const pem = fs.readFileSync(EXTRA_CA, 'utf8');
+  const actual = new crypto.X509Certificate(pem).fingerprint256.replaceAll(':', '');
+  if (actual !== EXTRA_CA_SHA256) {
+    throw new Error(`unexpected SHA-256 fingerprint for ${EXTRA_CA}: ${actual}`);
+  }
+  tls.setDefaultCACertificates([...tls.getCACertificates('default'), pem]);
+}
 
 const findings = [];
 function report(link, severity, check, detail) {
@@ -416,17 +438,54 @@ function checkRepoLink(link, t) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+const PERMANENT = new Set([301, 308]);
+
+/**
+ * A redirect that only adds or swaps a language segment (`/support/x` to `/support/ru/x`) picks a
+ * locale for this visitor; a reader elsewhere gets another one, so it is not a move. yandex.com
+ * answers the same URL with a 301 to `/ru/` or a 302 to `/en/` depending on who asks.
+ */
+function onlyLocale(from, to) {
+  const a = new URL(from);
+  const b = new URL(to);
+  if (a.host !== b.host) return false;
+  const strip = (p) =>
+    p
+      .split('/')
+      .filter((seg) => !/^[a-z]{2}(-[a-z]{2,4})?$/i.test(seg))
+      .join('/');
+  return strip(a.pathname) === strip(b.pathname);
+}
+
+/**
+ * Follows redirects by hand to learn what `redirect: 'follow'` hides: whether the address moved.
+ * `movedTo` is where the leading run of permanent redirects ends. A temporary hop stops it, so a
+ * page that moved and then sends a visitor to a login suggests the page, not the login.
+ */
 async function request(url, method) {
+  let current = url;
+  let movedTo = null;
+  let permanentRun = true;
   try {
-    const res = await fetch(url, {
-      method,
-      redirect: 'follow',
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-      headers: { 'user-agent': USER_AGENT, accept: 'text/html,*/*;q=0.8' },
-    });
-    const retryAfter = Number(res.headers.get('retry-after')) || 0;
-    await res.body?.cancel();
-    return { status: res.status, retryAfter };
+    for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
+      const res = await fetch(current, {
+        method,
+        redirect: 'manual',
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+        headers: { 'user-agent': USER_AGENT, accept: 'text/html,*/*;q=0.8' },
+      });
+      const location = res.headers.get('location');
+      const retryAfter = Number(res.headers.get('retry-after')) || 0;
+      await res.body?.cancel();
+      if (res.status < 300 || res.status >= 400 || !location) {
+        return { status: res.status, retryAfter, movedTo };
+      }
+      const next = new URL(location, current).href;
+      if (permanentRun && PERMANENT.has(res.status) && !onlyLocale(current, next)) movedTo = next;
+      else permanentRun = false;
+      current = next;
+    }
+    return { error: `more than ${MAX_REDIRECTS} redirects` };
   } catch (e) {
     return { error: e?.cause?.code || e?.name || String(e) };
   }
@@ -447,11 +506,13 @@ async function probe(url) {
 function verdict(r) {
   const warn = (check, detail) => ({ severity: 'warn', check, detail });
   if (r.error) return warn('unreachable', r.error);
-  if (r.status < 400) return null;
   if ([401, 403, 405, 429].includes(r.status)) {
     return warn('blocked', `HTTP ${r.status}, likely bot protection`);
   }
   if (r.status >= 500) return warn('unreachable', `HTTP ${r.status}`);
+  if (r.status < 400) {
+    return r.movedTo ? warn('redirect', `moved permanently; link ${r.movedTo}`) : null;
+  }
   return { severity: 'error', check: 'not-found', detail: `HTTP ${r.status}` };
 }
 
@@ -510,7 +571,8 @@ async function main() {
         roots.some((r) => path.resolve(REPO_ROOT, p.file).startsWith(r)),
     );
 
-  const external = []; // { link, url, severity?, check? }
+  // `own` is false when the probe goes somewhere else than the link, so its redirects are not news.
+  const external = []; // { link, url, own?, severity?, check? }
   let total = 0;
 
   for (const page of pages) {
@@ -520,7 +582,7 @@ async function main() {
       if (t.startsWith('#')) {
         checkAnchor(link, routes.get(page.route), page.locale, decode(t.slice(1)));
       } else if (t.startsWith('//')) {
-        external.push({ link, url: `https:${t}` });
+        external.push({ link, url: `https:${t}`, own: true });
       } else if (t.startsWith('/')) {
         if (t.startsWith('/static/')) checkAsset(link, external);
         else checkInternal(link, page);
@@ -528,7 +590,9 @@ async function main() {
         const repo = repoTarget(t);
         if (repo) checkRepoLink(link, repo);
         else if (!SKIP_URL.some((re) => re.test(t))) {
-          external.push({ link, url: probeUrl(t.split('#')[0]) });
+          const url = t.split('#')[0];
+          const probe = probeUrl(url);
+          external.push({ link, url: probe, own: probe === url });
         }
       } else if (/^[a-z][a-z0-9+.-]*:/i.test(t)) {
         // mailto:, tel: and the like
@@ -545,13 +609,14 @@ async function main() {
 
   let fetched = 0;
   if (!offline && external.length) {
+    trustExtraCa();
     const urls = [...new Set(external.map((e) => e.url))];
     fetched = urls.length;
     process.stderr.write(`fetching ${urls.length} external link(s)…\n`);
     const results = await probeAll(urls);
     for (const e of external) {
       const v = verdict(results.get(e.url) ?? { error: 'not probed' });
-      if (!v) continue;
+      if (!v || (v.check === 'redirect' && !e.own)) continue;
       // A `/static/` miss on the live site stays a warning; the asset may be in flight.
       if (e.check) report(e.link, e.severity, e.check, `${v.detail}; not on ${SITE} (yet)`);
       else report(e.link, v.severity, v.check, v.detail);
