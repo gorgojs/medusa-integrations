@@ -2,8 +2,8 @@ import { encryptValue, decryptValue } from "./crypto"
 
 /**
  * Return a copy of `values` where each secret key (per the descriptor's `secret` flags)
- * holds a `base64(iv‖tag‖ct)` string; non-secret keys pass through unchanged. Empty/absent
- * secret values are left as-is (nothing to encrypt).
+ * holds an encrypted `v1:` string (see `encryptValue`); non-secret keys pass through unchanged.
+ * Empty/absent secret values are left as-is (nothing to encrypt).
  */
 export function encryptSecretsInline(
   values: Record<string, unknown>,
