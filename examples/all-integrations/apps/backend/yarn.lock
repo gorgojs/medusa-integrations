@@ -1340,9 +1340,14 @@ __metadata:
   resolution: "@dtc/gorgo-medusa-backend@workspace:."
   dependencies:
     "@gorgo/medusa-1c": "npm:latest"
+    "@gorgo/medusa-feed-yandex": "npm:latest"
     "@gorgo/medusa-fulfillment-apiship": "npm:latest"
     "@gorgo/medusa-integration": "npm:latest"
+    "@gorgo/medusa-payment-authorizenet": "npm:latest"
+    "@gorgo/medusa-payment-mollie": "npm:latest"
+    "@gorgo/medusa-payment-paypal": "npm:latest"
     "@gorgo/medusa-payment-robokassa": "npm:latest"
+    "@gorgo/medusa-payment-stripe": "npm:latest"
     "@gorgo/medusa-payment-tkassa": "npm:latest"
     "@gorgo/medusa-payment-yookassa": "npm:latest"
     "@medusajs/admin-sdk": "npm:2.22.6"
@@ -1767,6 +1772,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gorgo/medusa-feed-yandex@npm:latest":
+  version: 0.2.40
+  resolution: "@gorgo/medusa-feed-yandex@npm:0.2.40"
+  dependencies:
+    "@gorgo/telemetry": "npm:^1.4.1"
+    yandex-market-language: "npm:^0.5.0"
+  peerDependencies:
+    "@medusajs/admin-sdk": ^2.14.0
+    "@medusajs/cli": ^2.14.0
+    "@medusajs/framework": ^2.14.0
+    "@medusajs/icons": ^2.14.0
+    "@medusajs/medusa": ^2.14.0
+    "@medusajs/test-utils": ^2.14.0
+    "@medusajs/ui": ^4.0.25
+    date-fns: ^3.6.0
+    i18next: ^23.7.11
+    i18next-browser-languagedetector: ^7.2.0
+    i18next-http-backend: ^2.4.2
+    react-i18next: ^13.5.0
+    react-router-dom: ^6.30.4 || ^7.0.0
+    zod: ^4.0.2
+  checksum: 10c0/d2676a696ade77f2b0031da009ffcc433c4f72b7c8e4e43da2ffa73ad48b1b7066a3355adcbe7c2dc30a95e116be6fcc433861b481dc7e93f683ece8d28bde43
+  languageName: node
+  linkType: hard
+
 "@gorgo/medusa-fulfillment-apiship@npm:latest":
   version: 2.0.0
   resolution: "@gorgo/medusa-fulfillment-apiship@npm:2.0.0"
@@ -1806,6 +1836,62 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gorgo/medusa-payment-authorizenet@npm:latest":
+  version: 2.0.3
+  resolution: "@gorgo/medusa-payment-authorizenet@npm:2.0.3"
+  dependencies:
+    "@gorgo/telemetry": "npm:^1.4.1"
+  peerDependencies:
+    "@gorgo/medusa-integration": ">=0.1.5 <1.0.0"
+    "@medusajs/admin-sdk": ^2.17.2
+    "@medusajs/cli": ^2.17.2
+    "@medusajs/framework": ^2.17.2
+    "@medusajs/icons": ^2.17.2
+    "@medusajs/medusa": ^2.17.2
+    "@medusajs/test-utils": ^2.17.2
+    "@medusajs/ui": ^4.1.16
+  checksum: 10c0/90ac74ac83ce40230ff7cbd14520aa082f7ef9e3df08f4fabe5f30e12c6d466e5eaaadfa1af9b6b6062c6ca59cab17aeac317754c3114b27526dc81a2a31549d
+  languageName: node
+  linkType: hard
+
+"@gorgo/medusa-payment-mollie@npm:latest":
+  version: 2.0.0
+  resolution: "@gorgo/medusa-payment-mollie@npm:2.0.0"
+  dependencies:
+    "@gorgo/telemetry": "npm:^1.4.1"
+    mollie-api-typescript: "npm:1.12.44"
+  peerDependencies:
+    "@gorgo/medusa-integration": ">=0.1.5 <1.0.0"
+    "@medusajs/admin-sdk": ^2.17.2
+    "@medusajs/cli": ^2.17.2
+    "@medusajs/framework": ^2.17.2
+    "@medusajs/icons": ^2.17.2
+    "@medusajs/medusa": ^2.17.2
+    "@medusajs/test-utils": ^2.17.2
+    "@medusajs/ui": ^4.1.16
+  checksum: 10c0/77f119c6455a1ed959b63bbf35a5c9f386235e8dc28a01fdbde847369e64c210fd1edecc51fc09a4b21070f6c76f424cfa8b24a299a7adb7e1fb1482c2ebaa75
+  languageName: node
+  linkType: hard
+
+"@gorgo/medusa-payment-paypal@npm:latest":
+  version: 2.0.4
+  resolution: "@gorgo/medusa-payment-paypal@npm:2.0.4"
+  dependencies:
+    "@gorgo/telemetry": "npm:^1.4.2"
+    axios: "npm:^1.9.0"
+  peerDependencies:
+    "@gorgo/medusa-integration": ">=0.1.5 <1.0.0"
+    "@medusajs/admin-sdk": ^2.17.2
+    "@medusajs/cli": ^2.17.2
+    "@medusajs/framework": ^2.17.2
+    "@medusajs/icons": ^2.17.2
+    "@medusajs/medusa": ^2.17.2
+    "@medusajs/test-utils": ^2.17.2
+    "@medusajs/ui": ^4.1.16
+  checksum: 10c0/8fbc82d073f55fd930eba3106a8bdf87cb413adffce7f95fed706cf1d82d3b8bd1ca29b867ea03b8e0090c61b438b0bfa7e69541be183dc29cc7a2fe1a120e1f
+  languageName: node
+  linkType: hard
+
 "@gorgo/medusa-payment-robokassa@npm:latest":
   version: 2.0.0-beta.4
   resolution: "@gorgo/medusa-payment-robokassa@npm:2.0.0-beta.4"
@@ -1823,6 +1909,25 @@ __metadata:
     "@medusajs/test-utils": ^2.17.2
     "@medusajs/ui": ^4.0.25
   checksum: 10c0/f363cec4fd9af0d4b3dc93aa6c62f90d8e958f35e6668ecb0da325269b19fa9bc10124aebcb0590cac2d259847fbf41e4e1525954a18e2377fd1790fe58b6e8e
+  languageName: node
+  linkType: hard
+
+"@gorgo/medusa-payment-stripe@npm:latest":
+  version: 2.0.3
+  resolution: "@gorgo/medusa-payment-stripe@npm:2.0.3"
+  dependencies:
+    "@gorgo/telemetry": "npm:^1.4.2"
+    stripe: "npm:23.0.0"
+  peerDependencies:
+    "@gorgo/medusa-integration": ">=0.1.5 <1.0.0"
+    "@medusajs/admin-sdk": ^2.17.2
+    "@medusajs/cli": ^2.17.2
+    "@medusajs/framework": ^2.17.2
+    "@medusajs/icons": ^2.17.2
+    "@medusajs/medusa": ^2.17.2
+    "@medusajs/test-utils": ^2.17.2
+    "@medusajs/ui": ^4.1.16
+  checksum: 10c0/0b1a12c2b7d381724ca8b06595fae9fd5bb028db78b8605c54a9026f2000b7824d400b6627b91dd704945b08d4ef3caf458ba1fd5b16daf86cd98ec71e854b46
   languageName: node
   linkType: hard
 
@@ -1869,6 +1974,15 @@ __metadata:
   dependencies:
     configstore: "npm:^5.0.1"
   checksum: 10c0/c0eeb55ac969a8bde46ead0898b9ea9f6d63bf7ce32a43a4007ca931bba51d979835859e242344a216c773c08e7aa3d18210548b1f1bf73ccb5b62b38a898875
+  languageName: node
+  linkType: hard
+
+"@gorgo/telemetry@npm:^1.4.1, @gorgo/telemetry@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "@gorgo/telemetry@npm:1.4.2"
+  dependencies:
+    configstore: "npm:^5.0.1"
+  checksum: 10c0/33ff6a3d12807b546f20f115a2bd924d9f83d7a5ed6eaac7d93ed333ac7efccd10ebcd215f4c5346fee58415bcd86ea8f1e7d68986583f47c87aed4ad7a12fc6
   languageName: node
   linkType: hard
 
@@ -12699,6 +12813,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mollie-api-typescript@npm:1.12.44":
+  version: 1.12.44
+  resolution: "mollie-api-typescript@npm:1.12.44"
+  dependencies:
+    zod: "npm:^3.25.0 || ^4.0.0"
+  checksum: 10c0/a4f043f194635394eeb63905e293b1182428b430238981bc95fc1e996d9eacad9ce3b457a7a82ff7bc4d10d3c5e3e0c6dbecd56ab67e3da8a0e2570975e260d9
+  languageName: node
+  linkType: hard
+
+"moment@npm:2.30.1":
+  version: 2.30.1
+  resolution: "moment@npm:2.30.1"
+  checksum: 10c0/865e4279418c6de666fca7786607705fd0189d8a7b7624e2e56be99290ac846f90878a6f602e34b4e0455c549b85385b1baf9966845962b313699e7cb847543a
+  languageName: node
+  linkType: hard
+
 "morgan@npm:^1.12.0":
   version: 1.12.1
   resolution: "morgan@npm:1.12.1"
@@ -15133,6 +15263,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"stripe@npm:23.0.0":
+  version: 23.0.0
+  resolution: "stripe@npm:23.0.0"
+  peerDependencies:
+    "@types/node": ">=20"
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+  checksum: 10c0/08f30d511ade3161067f70d7802fe9d9a39df05fdef68d699be9842cd352503183bf07ff06113c033bcdac47fb8af1fbbeff80b34202701f7258fc23490e7822
+  languageName: node
+  linkType: hard
+
 "stripe@npm:^23.1.0":
   version: 23.1.0
   resolution: "stripe@npm:23.1.0"
@@ -15305,6 +15447,13 @@ __metadata:
   version: 3.1.2
   resolution: "tarn@npm:3.1.2"
   checksum: 10c0/fae37a0f2a9ee4b0ba5c309b213a1111e65bbc72cab5056be26beebcfa2980613aa0dd66f054fa0433e0cc6951875137e37c0ac52edb56812fbf05957130a795
+  languageName: node
+  linkType: hard
+
+"tcomb@npm:3.2.29":
+  version: 3.2.29
+  resolution: "tcomb@npm:3.2.29"
+  checksum: 10c0/f109144df5164e17e6571ba9863b8c111b291ba73418ca43b29c12adae3f18760f75ae1ffe37b471c4da1be8c43cc64630ad92fafa0b321e5e7d4571afdf5cdb
   languageName: node
   linkType: hard
 
@@ -16135,6 +16284,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"xmlbuilder@npm:9.0.4":
+  version: 9.0.4
+  resolution: "xmlbuilder@npm:9.0.4"
+  checksum: 10c0/b996fddc1d5d93b0d146c15155111790785a5d7656eae3786ed5f6d0e5111e79e1089eb56340da7812f0d1510b1dfcb717095a4464ab04cefcc8893eb2cea8af
+  languageName: node
+  linkType: hard
+
 "xmlchars@npm:^2.2.0":
   version: 2.2.0
   resolution: "xmlchars@npm:2.2.0"
@@ -16215,6 +16371,17 @@ __metadata:
   bin:
     yaml: bin.mjs
   checksum: 10c0/f340718df45e97a9551b9bf9dac61c80050bc464513b710debfb5067c380c8472e3b67809cffacb4ab5ffb5e66ef9310816c88b05f371cec60abfedd8c88e0a2
+  languageName: node
+  linkType: hard
+
+"yandex-market-language@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "yandex-market-language@npm:0.5.0"
+  dependencies:
+    moment: "npm:2.30.1"
+    tcomb: "npm:3.2.29"
+    xmlbuilder: "npm:9.0.4"
+  checksum: 10c0/3617b21d428d8692efa30cad9a9386975c62b62e45fb6eaffd472d3dfe7e0254b8aa97bd304921a842bd07a14c8e5eb5619bd8e73c060bc8c6c5e5a04093e5bb
   languageName: node
   linkType: hard
 
@@ -16383,5 +16550,12 @@ __metadata:
   version: 4.6.6
   resolution: "zod@npm:4.6.6"
   checksum: 10c0/447a3113bb743c54ab839213ff95e9e8c197cc1206f65270c18aac35aa70c47a5c8cab753be911b574df9a8a9801ea74ed6be776575232cae0084e51dab3e970
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.25.0 || ^4.0.0":
+  version: 4.6.7
+  resolution: "zod@npm:4.6.7"
+  checksum: 10c0/4ce2eb14034317b7254e347ca37b5ad591cf8333147030cf05b9b5d31692d45073f7f2747aa50cf8c6b29012194d2b22978cecc89969cf34a0d18e89d0ee7d7b
   languageName: node
   linkType: hard

@@ -8,6 +8,10 @@ const YOOKASSA_INTEGRATION_ID = "yookassa-1";
 const ROBOKASSA_INTEGRATION_ID = "robokassa-1";
 const ONEC_INTEGRATION_ID = "1c-1";
 const APISHIP_INTEGRATION_ID = "apiship-1";
+const STRIPE_INTEGRATION_ID = "stripe-1";
+const PAYPAL_INTEGRATION_ID = "paypal-1";
+const AUTHORIZENET_INTEGRATION_ID = "authorizenet-1";
+const MOLLIE_INTEGRATION_ID = "mollie-1";
 const redisUrl = process.env.REDIS_URL;
 
 // create-medusa-app writes REDIS_URL into every generated .env whether Redis runs
@@ -48,6 +52,22 @@ const redisModules = [
     options: { redis: { url: redisUrl } },
   },
 ];
+
+const localFileModule = {
+  resolve: "@medusajs/medusa/file",
+  options: {
+    providers: [
+      {
+        resolve: "@medusajs/medusa/file-local",
+        id: "local",
+        options: {
+          upload_dir: "static",
+          backend_url: `${process.env.MEDUSA_BACKEND_URL || "http://localhost:9000"}/static`,
+        },
+      },
+    ],
+  },
+};
 
 const s3Module = {
   resolve: "@medusajs/medusa/file",
@@ -138,6 +158,30 @@ module.exports = defineConfig({
             id: ONEC_INTEGRATION_ID,
             options: {},
           },
+          {
+            resolve:
+              "@gorgo/medusa-payment-stripe/providers/integration-stripe",
+            id: STRIPE_INTEGRATION_ID,
+            options: {},
+          },
+          {
+            resolve:
+              "@gorgo/medusa-payment-paypal/providers/integration-paypal",
+            id: PAYPAL_INTEGRATION_ID,
+            options: {},
+          },
+          {
+            resolve:
+              "@gorgo/medusa-payment-authorizenet/providers/integration-authorizenet",
+            id: AUTHORIZENET_INTEGRATION_ID,
+            options: {},
+          },
+          {
+            resolve:
+              "@gorgo/medusa-payment-mollie/providers/integration-mollie",
+            id: MOLLIE_INTEGRATION_ID,
+            options: {},
+          },
         ],
       },
     },
@@ -165,9 +209,30 @@ module.exports = defineConfig({
       resolve: "@gorgo/medusa-1c",
       options: {},
     },
+    {
+      resolve: "@gorgo/medusa-payment-stripe",
+      options: {},
+    },
+    {
+      resolve: "@gorgo/medusa-payment-paypal",
+      options: {},
+    },
+    {
+      resolve: "@gorgo/medusa-payment-authorizenet",
+      options: {},
+    },
+    {
+      resolve: "@gorgo/medusa-payment-mollie",
+      options: {},
+    },
+    {
+      resolve: "@gorgo/medusa-feed-yandex",
+      options: {},
+    },
   ],
   modules: [
     { resolve: "@medusajs/medusa/translation" },
+    { resolve: "@gorgo/medusa-feed-yandex/modules/feed" },
     {
       resolve: "@medusajs/medusa/fulfillment",
       options: {
@@ -223,6 +288,35 @@ module.exports = defineConfig({
               id: ROBOKASSA_INTEGRATION_ID,
             },
           },
+          {
+            resolve: "@gorgo/medusa-payment-stripe/providers/payment-stripe",
+            id: "stripe",
+            options: {
+              id: STRIPE_INTEGRATION_ID,
+            },
+          },
+          {
+            resolve: "@gorgo/medusa-payment-paypal/providers/payment-paypal",
+            id: "paypal",
+            options: {
+              id: PAYPAL_INTEGRATION_ID,
+            },
+          },
+          {
+            resolve:
+              "@gorgo/medusa-payment-authorizenet/providers/payment-authorizenet",
+            id: "authorizenet",
+            options: {
+              id: AUTHORIZENET_INTEGRATION_ID,
+            },
+          },
+          {
+            resolve: "@gorgo/medusa-payment-mollie/providers/payment-mollie",
+            id: "mollie",
+            options: {
+              id: MOLLIE_INTEGRATION_ID,
+            },
+          },
         ],
       },
     },
@@ -243,6 +337,6 @@ module.exports = defineConfig({
       },
     },
     ...(useRedis ? redisModules : []),
-    ...(useS3 ? [s3Module] : []),
+    useS3 ? s3Module : localFileModule,
   ],
 });
