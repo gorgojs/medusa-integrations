@@ -108,15 +108,6 @@ export class MyIntegration extends AbstractIntegrationProviderService {
       children: []
     },
     {
-      name: "supportsMultipleInstances",
-      type: "boolean",
-      description: "Сообщает, что провайдер можно зарегистрировать несколько раз. Admin API возвращает его как `supports_multiple_instances`. Модуль в любом случае регистрирует каждую запись в `providers`.",
-      optional: true,
-      defaultValue: "false",
-      expandable: false,
-      children: []
-    },
-    {
       name: "preferredLayoutId",
       type: "enum",
       description: "Раскладка страницы интеграции в Admin:\n- `core:single-column`\n- `core:two-column`\nСекции с `column: \"side\"` отрисовываются только в раскладке с двумя колонками.",

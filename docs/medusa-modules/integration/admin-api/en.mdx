@@ -33,7 +33,7 @@ The routes that change settings pass the authenticated actor and the request's I
 - `limit` – from 1 to 1000, `20` by default.
 - `offset` – `0` by default.
 
-It returns `{ integrations, count, limit, offset, categories }`. Each item of `integrations` holds the instance's `provider_id`, `identifier`, `instance_id`, `category`, the i18n keys `display_name` and `description`, `icon`, the package's `version`, `author`, and `author_url`, the flags `supports_multiple_instances`, `has_test_connection`, `is_configured`, `is_enabled`, and `is_complete`, and `last_test_status`. `categories` lists the categories of every registered instance, whatever the filters.
+It returns `{ integrations, count, limit, offset, categories }`. Each item of `integrations` holds the instance's `provider_id`, `identifier`, `instance_id`, `category`, the i18n keys `display_name` and `description`, `icon`, the package's `version`, `author`, and `author_url`, the flags `has_test_connection`, `is_configured`, `is_enabled`, and `is_complete`, and `last_test_status`. `categories` lists the categories of every registered instance, whatever the filters.
 
 ### Save Option Values
 

@@ -80,7 +80,6 @@ export interface UiDescriptor {
   description?: I18nKey
   icon?: string
   docsUrl?: string
-  supportsMultipleInstances: boolean
   preferredLayoutId: IntegrationLayouts
   hasTestConnection: boolean
   sections: UiSection[]

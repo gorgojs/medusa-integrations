@@ -33,7 +33,6 @@ type DescriptorBase = {
   description?: I18nKey
   icon?: string
   docsUrl?: string
-  supportsMultipleInstances?: boolean
   preferredLayoutId?: IntegrationLayouts
 }
 

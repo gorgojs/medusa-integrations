@@ -79,7 +79,6 @@ export function introspectDescriptor(descriptor: IntegrationDescriptor): UiDescr
     description: descriptor.description,
     icon: descriptor.icon,
     docsUrl: descriptor.docsUrl,
-    supportsMultipleInstances: descriptor.supportsMultipleInstances ?? false,
     preferredLayoutId: descriptor.preferredLayoutId ?? "core:single-column",
     hasTestConnection: typeof descriptor.testConnection === "function",
     sections: descriptor.sections.map((s) => introspectSection(s, descriptor.options)),

@@ -74,7 +74,6 @@ SVG. `yarn catalog:gen` warns by name about every icon it had to skip.
 | `docsUrl` | no | `https://…` |
 | `docsSnippet` | no | `{ en, ru }` — markdown-инструкция для Admin setup drawer (ограниченный подсет, ≤ 8000 символов на язык) |
 | `active` | no | Default `true`; set `false` to hide |
-| `supportsMultipleInstances` | no | Default `false` |
 
 ## docsSnippet
 

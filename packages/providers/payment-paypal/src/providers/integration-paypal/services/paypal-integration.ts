@@ -11,7 +11,6 @@ const descriptor = defineIntegration({
   displayName: "paypal.name",
   description: "paypal.description",
   icon: PAYPAL_ICON,
-  supportsMultipleInstances: true,
   preferredLayoutId: "core:two-column",
 
   options: {

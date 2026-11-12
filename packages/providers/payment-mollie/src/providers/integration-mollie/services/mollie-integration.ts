@@ -31,7 +31,6 @@ const descriptor = defineIntegration({
   displayName: "mollie.name",
   description: "mollie.description",
   icon: MOLLIE_ICON,
-  supportsMultipleInstances: true,
   preferredLayoutId: "core:two-column",
 
   options: {

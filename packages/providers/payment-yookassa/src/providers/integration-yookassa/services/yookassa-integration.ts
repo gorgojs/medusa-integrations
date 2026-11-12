@@ -33,7 +33,6 @@ const descriptor = defineIntegration({
   displayName: "yookassa.name",
   description: "yookassa.description",
   icon: YOOKASSA_ICON,
-  supportsMultipleInstances: true,
   preferredLayoutId: "core:two-column",
 
   options: {

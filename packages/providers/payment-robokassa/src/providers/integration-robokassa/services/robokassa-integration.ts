@@ -25,7 +25,6 @@ const descriptor = defineIntegration({
   displayName: "robokassa.name",
   description: "robokassa.description",
   icon: ROBOKASSA_ICON,
-  supportsMultipleInstances: true,
   preferredLayoutId: "core:two-column",
 
   options: {

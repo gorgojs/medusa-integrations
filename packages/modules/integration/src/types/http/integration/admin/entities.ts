@@ -22,7 +22,6 @@ export interface IntegrationOverviewItem {
   author: string | null
   /** Author link (package.json author.url / homepage), or null. */
   author_url: string | null
-  supports_multiple_instances: boolean
   has_test_connection: boolean
   is_configured: boolean
   is_enabled: boolean

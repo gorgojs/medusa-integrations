@@ -57,10 +57,6 @@
       "type": "boolean",
       "default": true,
       "description": "Set false to hide the entry without deleting it."
-    },
-    "supportsMultipleInstances": {
-      "type": "boolean",
-      "default": false
     }
   },
   "$defs": {

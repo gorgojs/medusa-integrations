@@ -33,7 +33,7 @@ description: "Справочник по API-роутам Admin, которые �
 - `limit` – от 1 до 1000, по умолчанию `20`.
 - `offset` – по умолчанию `0`.
 
-Роут возвращает `{ integrations, count, limit, offset, categories }`. Каждый элемент `integrations` содержит `provider_id`, `identifier`, `instance_id` и `category` инстанса, i18n-ключи `display_name` и `description`, `icon`, данные пакета `version`, `author` и `author_url`, флаги `supports_multiple_instances`, `has_test_connection`, `is_configured`, `is_enabled` и `is_complete`, а также `last_test_status`. `categories` перечисляет категории всех зарегистрированных инстансов независимо от фильтров.
+Роут возвращает `{ integrations, count, limit, offset, categories }`. Каждый элемент `integrations` содержит `provider_id`, `identifier`, `instance_id` и `category` инстанса, i18n-ключи `display_name` и `description`, `icon`, данные пакета `version`, `author` и `author_url`, флаги `has_test_connection`, `is_configured`, `is_enabled` и `is_complete`, а также `last_test_status`. `categories` перечисляет категории всех зарегистрированных инстансов независимо от фильтров.
 
 ### Сохранение значений параметров
 

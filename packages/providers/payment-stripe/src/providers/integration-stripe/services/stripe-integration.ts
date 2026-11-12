@@ -18,7 +18,6 @@ const descriptor = defineIntegration({
   displayName: "stripe.name",
   description: "stripe.description",
   icon: STRIPE_ICON,
-  supportsMultipleInstances: true,
   preferredLayoutId: "core:two-column",
 
   options: {

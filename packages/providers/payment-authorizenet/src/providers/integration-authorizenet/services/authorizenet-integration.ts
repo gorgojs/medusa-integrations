@@ -12,7 +12,6 @@ const descriptor = defineIntegration({
   displayName: "authorizenet.name",
   description: "authorizenet.description",
   icon: AUTHORIZENET_ICON,
-  supportsMultipleInstances: true,
   preferredLayoutId: "core:two-column",
 
   options: {

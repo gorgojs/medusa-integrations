@@ -23,7 +23,6 @@ const descriptor = defineIntegration({
   displayName: "tkassa.name",
   description: "tkassa.description",
   icon: TKASSA_ICON,
-  supportsMultipleInstances: true,
   preferredLayoutId: "core:two-column",
 
   // Flat catalog — single source of truth for every option.

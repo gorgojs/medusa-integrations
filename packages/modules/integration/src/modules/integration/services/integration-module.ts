@@ -185,7 +185,6 @@ export default class IntegrationModuleService extends MedusaService({
         description: d.description,
         icon: d.icon,
         ...this.mapPackageMeta(r.identifier),
-        supports_multiple_instances: d.supportsMultipleInstances ?? false,
         has_test_connection: typeof d.testConnection === "function",
         is_configured: !!row,
         is_enabled: row?.is_enabled ?? false,

@@ -108,15 +108,6 @@ This descriptor declares `apiKey` and `sandbox`, grouped into a single `credenti
       children: []
     },
     {
-      name: "supportsMultipleInstances",
-      type: "boolean",
-      description: "Declares that the provider can be registered more than once. The Admin API returns it as `supports_multiple_instances`. The module registers every entry in `providers` either way.",
-      optional: true,
-      defaultValue: "false",
-      expandable: false,
-      children: []
-    },
-    {
       name: "preferredLayoutId",
       type: "enum",
       description: "The layout of the integration's page in the Admin:\n- `core:single-column`\n- `core:two-column`\nOnly the two-column layout renders sections with `column: \"side\"`.",

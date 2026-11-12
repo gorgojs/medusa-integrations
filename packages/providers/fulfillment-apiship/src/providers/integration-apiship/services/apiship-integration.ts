@@ -12,7 +12,6 @@ const descriptor = defineIntegration({
   description: "apiship.description",
   icon: APISHIP_ICON,
   preferredLayoutId: "core:two-column",
-  supportsMultipleInstances: true,
 
   // Flat catalog — single source of truth for every option.
   options: {
