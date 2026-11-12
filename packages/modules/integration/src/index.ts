@@ -7,6 +7,9 @@ export {
 export type {
   IntegrationDescriptor,
   IntegrationDescriptorInput,
+  IntegrationSection,
+  IntegrationValidateContext,
+  IntegrationValidateIssue,
   CategoryKind,
   OptionDef,
   OptionValidateContext,
@@ -19,6 +22,8 @@ export type { FieldControl, I18nKey } from "./modules/integration/descriptor/met
 export { collectValidationIssues, isDescriptorComplete } from "./modules/integration/descriptor/validate"
 // Props a provider's custom-section admin widget receives via the settings page's LayoutComposer.
 export type { IntegrationSectionData } from "./types"
+// The layouts a descriptor can prefer. Exported so a provider's inferred descriptor type can be named.
+export type { IntegrationLayouts } from "./types"
 
 // Runtime options resolver — for providers reading their config from this module.
 export { resolveIntegrationOptions } from "./lib/resolve-integration-options"

@@ -1,6 +1,6 @@
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
-import testIntegrationConnectionsJob from "@gorgo/medusa-integration/jobs/test-integration-connections"
+import testIntegrationConnectionsJob from "../utils/connections-job"
 import { createAdminHeaders } from "../utils/admin"
 
 jest.setTimeout(120 * 1000)

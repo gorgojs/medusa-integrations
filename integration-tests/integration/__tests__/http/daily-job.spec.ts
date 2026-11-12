@@ -1,7 +1,7 @@
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 // The scheduled job is auto-loaded by Medusa in the real app; here we import and invoke it
 // directly against the booted container (it runs testIntegrationConnectionWorkflow per target).
-import testIntegrationConnectionsJob from "@gorgo/medusa-integration/jobs/test-integration-connections"
+import testIntegrationConnectionsJob from "../utils/connections-job"
 
 jest.setTimeout(120 * 1000)
 
