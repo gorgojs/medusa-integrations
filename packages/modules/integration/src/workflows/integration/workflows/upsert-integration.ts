@@ -3,7 +3,7 @@ import {
   applyIntegrationSectionStep,
   upsertIntegrationRecordStep,
   emitIntegrationEventStep,
-  getIntegrationStateStep,
+  getIntegrationSnapshotStep,
   recordIntegrationChangeStep,
 } from "../steps"
 import type { DiffEntry, IntegrationChangeActor } from "../../../types/integration/history"
@@ -22,7 +22,7 @@ export const upsertIntegrationWorkflowId = "upsert-integration"
 export const upsertIntegrationWorkflow = createWorkflow(
   upsertIntegrationWorkflowId,
   function (input: UpsertIntegrationWorkflowInput) {
-    const state = getIntegrationStateStep({ provider_id: input.provider_id })
+    const snapshot = getIntegrationSnapshotStep({ provider_id: input.provider_id })
 
     const prepared = applyIntegrationSectionStep({
       provider_id: input.provider_id,
@@ -39,14 +39,14 @@ export const upsertIntegrationWorkflow = createWorkflow(
 
     const record = upsertIntegrationRecordStep(recordInput)
 
-    const change = transform({ input, state, prepared }, (d) => {
+    const change = transform({ input, snapshot, prepared }, (d) => {
       const diff: DiffEntry[] = []
-      const nextTitle = d.input.title === undefined ? d.state.title : d.input.title ?? null
-      if (nextTitle !== d.state.title) diff.push({ field: "@title", from: d.state.title, to: nextTitle })
+      const nextTitle = d.input.title === undefined ? d.snapshot.title : d.input.title ?? null
+      if (nextTitle !== d.snapshot.title) diff.push({ field: "@title", from: d.snapshot.title, to: nextTitle })
       diff.push(...d.prepared.diff)
       return {
         provider_id: d.input.provider_id,
-        change_type: d.state.existed ? ("updated" as const) : ("created" as const),
+        change_type: d.snapshot.existed ? ("updated" as const) : ("created" as const),
         actor: d.input.actor ?? null,
         diff,
       }

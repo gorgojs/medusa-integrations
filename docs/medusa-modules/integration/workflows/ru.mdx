@@ -53,16 +53,16 @@ export const disableMyIntegrationWorkflow = createWorkflow(
 
 Сохраняет значения параметров инстанса интеграции. При первом сохранении создаёт запись, а дальше обновляет её. Именно этот воркфлоу выполняется, когда в Admin сохраняют секцию. Шаги идут в таком порядке.
 
-```mermaid alt="Схема показывает, как upsertIntegrationWorkflow проходит шаги от чтения сохранённого состояния до отправки события integration.updated"
+```mermaid alt="Схема показывает, как upsertIntegrationWorkflow проходит шаги от чтения сохранённой записи до отправки события integration.updated"
 flowchart TD
-  state["getIntegrationStateStep"] --> apply["applyIntegrationSectionStep"]
+  snapshot["getIntegrationSnapshotStep"] --> apply["applyIntegrationSectionStep"]
   apply --> save["upsertIntegrationRecordStep"]
   save -->|"пропускается, если обновление не меняет ни одного поля"| history["recordIntegrationChangeStep"]
   history --> emit["emitIntegrationEventStep"]
   emit -->|"отправляет"| event(["integration.updated"])
 ```
 
-Первый шаг читает сохранённое состояние, благодаря чему история изменений отличает первое сохранение от обновления. Запись в истории пропускается, если обновление не меняет ни одного поля, а событие отправляется в любом случае.
+Первый шаг читает сохранённую запись, благодаря чему история изменений отличает первое сохранение от обновления. Запись в истории пропускается, если обновление не меняет ни одного поля, а событие отправляется в любом случае.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -118,9 +118,9 @@ flowchart TD
 
 Включает или выключает настроенную интеграцию. Шаги идут в таком порядке.
 
-```mermaid alt="Схема показывает, как setIntegrationEnabledWorkflow проходит шаги от чтения сохранённого состояния до отправки события integration.updated"
+```mermaid alt="Схема показывает, как setIntegrationEnabledWorkflow проходит шаги от чтения сохранённой записи до отправки события integration.updated"
 flowchart TD
-  state["getIntegrationStateStep"] --> set["setIntegrationEnabledStep"]
+  snapshot["getIntegrationSnapshotStep"] --> set["setIntegrationEnabledStep"]
   set -->|"пропускается, если интеграция уже в этом состоянии"| history["recordIntegrationChangeStep"]
   history --> emit["emitIntegrationEventStep"]
   emit -->|"отправляет"| event(["integration.updated"])
@@ -279,7 +279,7 @@ flowchart TD
 | Шаг | Входные данные | Что делает | При откате |
 | --- | --- | --- | --- |
 | `getResolvedIntegrationOptionsStep` | `{ identifier, instance_id? }` | Возвращает итоговые параметры или `null`. | Отменять нечего. |
-| `getIntegrationStateStep` | `{ provider_id }` | Возвращает `{ existed, title, is_enabled }` сохранённой записи до изменения. | Отменять нечего. |
+| `getIntegrationSnapshotStep` | `{ provider_id }` | Возвращает `{ existed, title, is_enabled }` сохранённой записи до изменения. | Отменять нечего. |
 | `applyIntegrationSectionStep` | `{ provider_id, section_id?, values }` | Выбирает параметры для записи, проверяет их и возвращает `{ category, options, diff }`, где `options` содержит полную конфигурацию, готовую к сохранению, с зашифрованными секретами. Сам ничего не сохраняет. | Отменять нечего. |
 | `upsertIntegrationRecordStep` | `{ provider_id, category, options, title? }` | Создаёт или обновляет сохранённую запись. | Отката нет. Сохранённая запись остаётся. |
 | `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Меняет `is_enabled` у сохранённой записи. | Восстанавливает прежнее значение `is_enabled`. |
