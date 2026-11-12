@@ -19,7 +19,7 @@ export const IntegrationHistorySection = ({
   descriptor: UiDescriptor
   onSelect?: (change: AdminIntegrationChange) => void
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const { data, isLoading } = useIntegrationChanges(providerId, { limit: RECENT_CHANGES })
   const changes = data?.integration_changes ?? []
   const total = data?.count ?? changes.length

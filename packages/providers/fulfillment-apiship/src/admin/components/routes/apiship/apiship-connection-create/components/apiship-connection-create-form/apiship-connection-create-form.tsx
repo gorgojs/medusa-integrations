@@ -56,7 +56,7 @@ export const ApishipConnectionCreateForm = ({
   providers,
   providerId,
 }: ApishipConnectionCreateFormProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const { account_connections: accountConnections = [] } =
     useApishipAccountConnections(providerId)
 

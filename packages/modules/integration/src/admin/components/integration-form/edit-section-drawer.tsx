@@ -53,7 +53,7 @@ export const EditSectionDrawer = ({
    * "leave blank to keep" (and skips client-side required) only when it's actually set. */
   configuredSecrets?: string[]
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const qc = useQueryClient()
   const configured = new Set(configuredSecrets)
   // Snapshot the section's values once at mount (lazy initializer → computed a single time).

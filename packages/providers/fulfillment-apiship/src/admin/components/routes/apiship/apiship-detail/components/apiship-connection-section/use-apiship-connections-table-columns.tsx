@@ -15,7 +15,7 @@ export const useApishipConnectionsTableColumns = (
   stockLocations: HttpTypes.AdminStockLocation[],
   providerId?: string
 ) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
 
   return useMemo(
     () => [
@@ -125,8 +125,8 @@ export const useApishipConnectionsTableColumns = (
           return (
             <DataTableStatusCell color={isEnabled ? "green" : "grey"}>
               {isEnabled
-                ? t("statuses.enabled")
-                : t("statuses.disabled")}
+                ? t("apiship.statuses.enabled")
+                : t("apiship.statuses.disabled")}
             </DataTableStatusCell>
           )
         },

@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { i18n } from "../../../../components/utilities/i18n"
+import { useTranslation } from "react-i18next"
 import { sdk } from "../../../../lib/sdk"
 import { Header } from "../../../common/header"
 import { DateCell } from "../../../common/table/date-cell"
@@ -29,6 +29,7 @@ export const FeedListTable = ({
   stateModal: boolean,
   openModal: () => void
 }) => {
+  const { t } = useTranslation("gorgo")
   const columnHelper = createDataTableColumnHelper<Feed>()
 
   const navigate = useNavigate()
@@ -49,15 +50,15 @@ export const FeedListTable = ({
   })
 
   const columns = [
-    columnHelper.accessor("title", { header: i18n.t("feeds.fields.title") }),
+    columnHelper.accessor("title", { header: t("feedYandex.feeds.fields.title") }),
     columnHelper.accessor("file_name", {
-      header: i18n.t("feeds.fields.fileName"),
+      header: t("feedYandex.feeds.fields.fileName"),
       cell: ({ row }) => {
         return row.original.file_name + fileExtension
       },
     }),
     columnHelper.accessor("file_path", {
-      header: i18n.t("feeds.fields.feedUrl"),
+      header: t("feedYandex.feeds.fields.feedUrl"),
       cell: ({ row }) => {
         const filePath = row.original.file_path
         const id = row.original.id
@@ -84,21 +85,21 @@ export const FeedListTable = ({
       },
     }),
     columnHelper.accessor("last_export_at", {
-      header: i18n.t("feeds.fields.lastExport"),
+      header: t("feedYandex.feeds.fields.lastExport"),
       cell: ({ getValue }) => {
         const rawDate = getValue()
         return <DateCell date={rawDate} mode="relative" />
       }
     }),
     columnHelper.accessor("is_active", {
-      header: i18n.t("feeds.fields.status"),
+      header: t("feedYandex.feeds.fields.status"),
       cell: ({ getValue }) => {
         const isActive = getValue()
         if (isActive) {
           return (
             <div className="flex items-center gap-1"><SquareGreenSolid />
               <Text size="small" leading="compact" className="whitespace-pre-line text-pretty">
-                {i18n.t("general.active")}
+                {t("feedYandex.general.active")}
               </Text>
             </div>
           )
@@ -107,7 +108,7 @@ export const FeedListTable = ({
             <div className="flex items-center gap-1">
               <SquareRedSolid />
               <Text size="small" leading="compact" className="whitespace-pre-line text-pretty">
-                {i18n.t("general.inactive")}
+                {t("feedYandex.general.inactive")}
               </Text>
             </div>
           )
@@ -115,13 +116,13 @@ export const FeedListTable = ({
       }
     }),
     columnHelper.accessor("schedule", {
-      header: i18n.t("feeds.fields.schedule"),
+      header: t("feedYandex.feeds.fields.schedule"),
       cell: ({ getValue }) => {
         const value = getValue()
         return (
           <Badge size="2xsmall">
             <Text size="xsmall" leading="compact">
-              {getScheduleLabel(value)}
+              {getScheduleLabel(value, t)}
             </Text>
           </Badge>)
       },
@@ -147,12 +148,12 @@ export const FeedListTable = ({
     <DataTable instance={table}>
       <Header
         key={stateModal ? "create-open" : "create-closed"}
-        title={i18n.t("feeds.domain")}
+        title={t("feedYandex.feeds.domain")}
         actions={[
           {
             type: "button",
             props: {
-              children: i18n.t("actions.create"),
+              children: t("feedYandex.actions.create"),
               variant: "secondary",
               onClick: () => openModal(),
             },

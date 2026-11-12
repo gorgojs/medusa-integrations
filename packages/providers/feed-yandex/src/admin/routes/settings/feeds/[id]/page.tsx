@@ -8,23 +8,19 @@ import {
   FeedGeneralSection,
   ShopSettingsSection,
 } from "../../../../components/routes/feeds/feed-detail"
-import { I18n } from "../../../../components/utilities/i18n"
 
 const FeedDetailsPage = () => (
-  <>
-    <I18n />
-    <TwoColumnLayout
-      firstCol={
-        <>
-          <FeedGeneralSection />
-          <ProductCategoriesSection />
-        </>
-      }
-      secondCol={
-        <ShopSettingsSection />
-      }
-    />
-  </>
+  <TwoColumnLayout
+    firstCol={
+      <>
+        <FeedGeneralSection />
+        <ProductCategoriesSection />
+      </>
+    }
+    secondCol={
+      <ShopSettingsSection />
+    }
+  />
 )
 
 const Breadcrumb = (

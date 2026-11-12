@@ -43,7 +43,7 @@ const Row = ({ label, children }: { label: string; children: ReactNode }) => (
 )
 
 const EditPage = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const { provider_id } = useParams()
   const qc = useQueryClient()
   const navigate = useNavigate()
@@ -377,7 +377,7 @@ const EditPage = () => {
  * to while the descriptor loads.
  */
 const IntegrationBreadcrumb = ({ params }: { params: { provider_id?: string } }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const providerId = params.provider_id
   const { data } = useQuery({
     queryKey: ["integration", providerId],

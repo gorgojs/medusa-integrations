@@ -1,13 +1,4 @@
 {
-  "general": {
-    "selected": "Selected",
-    "noResultsTitle": "No results",
-    "loading": "Loading..."
-  },
-  "statuses": {
-    "enabled": "Enabled",
-    "disabled": "Disabled"
-  },
   "apiship": {
     "name": "ApiShip",
     "description": "ApiShip delivery service aggregator",
@@ -151,6 +142,15 @@
     "tariffs": {
       "loadError": "Failed to load tariffs.",
       "retry": "Try again"
+    },
+    "general": {
+      "selected": "Selected",
+      "noResultsTitle": "No results",
+      "loading": "Loading..."
+    },
+    "statuses": {
+      "enabled": "Enabled",
+      "disabled": "Disabled"
     }
   }
 }

@@ -78,6 +78,6 @@ export function invalidateChanges(qc: QueryClient) {
 
 /** `changeTimeFormat` in the admin's language, as of this render. */
 export function useChangeTimeFormat(): ChangeTimeFormat {
-  const { i18n } = useTranslation()
+  const { i18n } = useTranslation("gorgo")
   return changeTimeFormat(i18n.language, Date.now())
 }

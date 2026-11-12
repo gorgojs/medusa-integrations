@@ -24,7 +24,7 @@ export function useLicenseStatus() {
 
 /** "Check now": the backend asks the platform right away, and the block redraws with the fresh verdict. */
 export function useRecheckLicense() {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const qc = useQueryClient()
   return useMutation({
     mutationFn: () =>
@@ -38,7 +38,7 @@ export function useRecheckLicense() {
 
 /** `describeLicense` in the admin's language, as of this render. */
 export function useDescribeLicense(): (entry: LicenseStateEntry) => LicenseView {
-  const { i18n } = useTranslation()
+  const { i18n } = useTranslation("gorgo")
   return (entry) => {
     const now = Date.now()
     return describeLicense(entry, { now, format: licenseFormat(i18n.language, now) })
@@ -50,7 +50,7 @@ export function useDescribeLicense(): (entry: LicenseStateEntry) => LicenseView 
  * as in "My Shop · production · checked 2 hr. ago". `withChecked` adds the time after a hint too.
  */
 export function useLicenseDetails(): (view: LicenseView, options?: { withChecked?: boolean }) => string {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   return (view, { withChecked = false } = {}) => {
     const checked = view.checked ? t("integration.license.checked", { when: view.checked }) : undefined
     const parts = view.hint

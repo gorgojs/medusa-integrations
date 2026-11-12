@@ -19,7 +19,7 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { i18n } from "../../../../components/utilities/i18n"
+import { useTranslation } from "react-i18next"
 import { SectionRow } from "../../../common/section-row"
 import { sdk } from "../../../../lib/sdk"
 import { Header } from "../../../common/header"
@@ -29,6 +29,7 @@ import { getScheduleLabel } from "../../../../lib/utils"
 import { useDate } from "../../../../hooks/use-date"
 
 export const FeedGeneralSection = () => {
+  const { t } = useTranslation("gorgo")
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -137,8 +138,8 @@ export const FeedGeneralSection = () => {
         queryKey: ["feed", id],
       })
       queryClient.invalidateQueries({ queryKey: [["feeds"]] })
-      toast.success(i18n.t("general.success"), {
-        description: i18n.t("feeds.toasts.exportLaunched"),
+      toast.success(t("feedYandex.general.success"), {
+        description: t("feedYandex.feeds.toasts.exportLaunched"),
       })
     },
     onError: (error) => {
@@ -183,13 +184,13 @@ export const FeedGeneralSection = () => {
         title={feed?.title!}
         status={{
           color: feed?.is_active ? "green" : "red",
-          text: feed?.is_active ? i18n.t("general.active") : i18n.t("general.inactive")
+          text: feed?.is_active ? t("feedYandex.general.active") : t("feedYandex.general.inactive")
         }}
         actions={[
           {
             type: "button",
             props: {
-              children: i18n.t("actions.launchNow"),
+              children: t("feedYandex.actions.launchNow"),
               variant: "secondary",
               onClick: () => {
                 launchFeed()
@@ -204,17 +205,17 @@ export const FeedGeneralSection = () => {
                   actions: [
                     {
                       icon: <Pencil />,
-                      label: i18n.t("actions.edit"),
+                      label: t("feedYandex.actions.edit"),
                       onClick: () => openEdit(),
                     },
                     {
                       icon: <Folder />,
-                      label: i18n.t("actions.deleteFile"),
+                      label: t("feedYandex.actions.deleteFile"),
                       onClick: () => openDeleteFeedFile(),
                     },
                     {
                       icon: <Trash />,
-                      label: i18n.t("actions.delete"),
+                      label: t("feedYandex.actions.delete"),
                       onClick: () => openDeleteFeed(),
                     },
                   ],
@@ -225,16 +226,16 @@ export const FeedGeneralSection = () => {
         ]}
       />
       <SectionRow
-        title={i18n.t("feeds.fields.id")}
+        title={t("feedYandex.feeds.fields.id")}
         value={feed?.id || "-"}
       />
       <SectionRow
-        title={i18n.t("feeds.fields.fileName")}
+        title={t("feedYandex.feeds.fields.fileName")}
         value={feed?.file_name + fileExtension || "-"}
         className="break-all"
       />
       <SectionRow
-        title={i18n.t("feeds.fields.feedUrl")}
+        title={t("feedYandex.feeds.fields.feedUrl")}
         value={
           feed?.file_path && feed?.id && feed?.file_name
           ? (
@@ -253,7 +254,7 @@ export const FeedGeneralSection = () => {
         }
       />
       <SectionRow
-        title={i18n.t("feeds.fields.filePath")}
+        title={t("feedYandex.feeds.fields.filePath")}
         value={
           feed?.file_path
             ? (
@@ -267,7 +268,7 @@ export const FeedGeneralSection = () => {
         }
       />
       <SectionRow
-        title={i18n.t("feeds.fields.schedule")}
+        title={t("feedYandex.feeds.fields.schedule")}
         value={
           feed?.schedule
             ? (() => {
@@ -277,7 +278,7 @@ export const FeedGeneralSection = () => {
               return (
                 <Badge size="2xsmall">
                   <Text size="small" leading="compact">
-                    {getScheduleLabel(interval || feed.schedule)}
+                    {getScheduleLabel(interval || feed.schedule, t)}
                   </Text>
                 </Badge>
               )
@@ -286,7 +287,7 @@ export const FeedGeneralSection = () => {
         }
       />
       <SectionRow
-        title={i18n.t("feeds.fields.lastExport")}
+        title={t("feedYandex.feeds.fields.lastExport")}
         value={
           feed?.last_export_at
             ? (
@@ -312,7 +313,7 @@ export const FeedGeneralSection = () => {
         }
       />
       <SectionRow
-        title={i18n.t("feeds.fields.created")}
+        title={t("feedYandex.feeds.fields.created")}
         value={
           feed?.created_at
             ? getFullDate({
@@ -323,7 +324,7 @@ export const FeedGeneralSection = () => {
         }
       />
       <SectionRow
-        title={i18n.t("feeds.fields.updated")}
+        title={t("feedYandex.feeds.fields.updated")}
         value={
           feed?.updated_at
             ? getFullDate({
@@ -338,7 +339,7 @@ export const FeedGeneralSection = () => {
       }}>
         <Drawer.Content>
           <Drawer.Header>
-            <Drawer.Title asChild><Heading>{i18n.t("feeds.edit.title")}</Heading></Drawer.Title>
+            <Drawer.Title asChild><Heading>{t("feedYandex.feeds.edit.title")}</Heading></Drawer.Title>
           </Drawer.Header>
           <Drawer.Body>
             <div className="flex flex-col gap-y-4">
@@ -346,19 +347,19 @@ export const FeedGeneralSection = () => {
                 <div className="flex gap-x-4">
                   <Switch id="is-active-switch" checked={isActive} onCheckedChange={() => setIsActive(prev => !prev)} />
                   <div className="flex flex-col gap-y-1">
-                    <Label size="small" htmlFor="is-active-switch">{i18n.t("general.active")}</Label>
+                    <Label size="small" htmlFor="is-active-switch">{t("feedYandex.general.active")}</Label>
                     <Text size="small" className="text-ui-fg-muted">
-                      {i18n.t("feeds.activityContainer.subtitle")}
+                      {t("feedYandex.feeds.activityContainer.subtitle")}
                     </Text>
                   </div>
                 </div>
               </Container>
               <div className="flex flex-col gap-y-2">
-                <Label htmlFor="title" size="small">{i18n.t("feeds.fields.title")}</Label>
+                <Label htmlFor="title" size="small">{t("feedYandex.feeds.fields.title")}</Label>
                 <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
               </div>
               <div className="flex flex-col gap-y-2">
-                <Label size="small" htmlFor="feed-file-name-input">{i18n.t("feeds.fields.fileName")}</Label>
+                <Label size="small" htmlFor="feed-file-name-input">{t("feedYandex.feeds.fields.fileName")}</Label>
                 <div className="relative">
                   <Input className="pr-14" id="feed-file-name-input" value={fileName} onChange={(e) => setFileName(e.target.value)} />
                   <div className="absolute inset-y-0 right-0 z-10 flex w-12 items-center justify-center border-l">
@@ -369,7 +370,7 @@ export const FeedGeneralSection = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-y-2">
-                <Label size="small" htmlFor="schedule-selector">{i18n.t("feeds.fields.schedule")}</Label>
+                <Label size="small" htmlFor="schedule-selector">{t("feedYandex.feeds.fields.schedule")}</Label>
                 <Select value={schedule} onValueChange={setSchedule}>
                   <Select.Trigger>
                     <Select.Value />
@@ -377,7 +378,7 @@ export const FeedGeneralSection = () => {
                   <Select.Content sideOffset={100}>
                     {scheduleIntervals.map((value) => (
                       <Select.Item key={value} value={String(value)}>
-                        {getScheduleLabel(value)}
+                        {getScheduleLabel(value, t)}
                       </Select.Item>
                     ))}
                   </Select.Content>
@@ -389,9 +390,9 @@ export const FeedGeneralSection = () => {
           <Drawer.Footer>
             <div className="flex items-center justify-end gap-x-2">
               <Drawer.Close asChild>
-                <Button size="small" variant="secondary">{i18n.t("actions.cancel")}</Button>
+                <Button size="small" variant="secondary">{t("feedYandex.actions.cancel")}</Button>
               </Drawer.Close>
-              <Button size="small" type="submit" onClick={saveFeedSettings}>{i18n.t("actions.save")}</Button>
+              <Button size="small" type="submit" onClick={saveFeedSettings}>{t("feedYandex.actions.save")}</Button>
             </div>
           </Drawer.Footer>
         </Drawer.Content>
@@ -401,14 +402,14 @@ export const FeedGeneralSection = () => {
       }}>
         <Prompt.Content>
           <Prompt.Header>
-            <Prompt.Title>{i18n.t("feeds.prompts.deleteFeed.title")}</Prompt.Title>
+            <Prompt.Title>{t("feedYandex.feeds.prompts.deleteFeed.title")}</Prompt.Title>
             <Prompt.Description>
-              {i18n.t("feeds.prompts.deleteFeed.description")}
+              {t("feedYandex.feeds.prompts.deleteFeed.description")}
             </Prompt.Description>
           </Prompt.Header>
           <Prompt.Footer>
-            <Prompt.Cancel>{i18n.t("actions.cancel")}</Prompt.Cancel>
-            <Prompt.Action onClick={() => deleteFeed()}>{i18n.t("actions.delete")}</Prompt.Action>
+            <Prompt.Cancel>{t("feedYandex.actions.cancel")}</Prompt.Cancel>
+            <Prompt.Action onClick={() => deleteFeed()}>{t("feedYandex.actions.delete")}</Prompt.Action>
           </Prompt.Footer>
         </Prompt.Content>
       </Prompt>
@@ -417,14 +418,14 @@ export const FeedGeneralSection = () => {
       }}>
         <Prompt.Content>
           <Prompt.Header>
-            <Prompt.Title>{i18n.t("feeds.prompts.deleteFeedFile.title")}</Prompt.Title>
+            <Prompt.Title>{t("feedYandex.feeds.prompts.deleteFeedFile.title")}</Prompt.Title>
             <Prompt.Description>
-              {i18n.t("feeds.prompts.deleteFeedFile.description")}
+              {t("feedYandex.feeds.prompts.deleteFeedFile.description")}
             </Prompt.Description>
           </Prompt.Header>
           <Prompt.Footer>
-            <Prompt.Cancel>{i18n.t("actions.cancel")}</Prompt.Cancel>
-            <Prompt.Action onClick={() => deleteFeedFile()}>{i18n.t("actions.delete")}</Prompt.Action>
+            <Prompt.Cancel>{t("feedYandex.actions.cancel")}</Prompt.Cancel>
+            <Prompt.Action onClick={() => deleteFeedFile()}>{t("feedYandex.actions.delete")}</Prompt.Action>
           </Prompt.Footer>
         </Prompt.Content>
       </Prompt>

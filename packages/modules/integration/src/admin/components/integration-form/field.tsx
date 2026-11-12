@@ -18,7 +18,7 @@ const jsonToText = (v: unknown) => (v == null || v === "" ? "" : JSON.stringify(
  * the last valid value. Deep validation (the field's zod schema) still runs server-side.
  */
 const JsonField = ({ field, f }: { field: UiField; f: any }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const [raw, setRaw] = useState(() => jsonToText(f.value))
   const [error, setError] = useState<string | null>(null)
   return (
@@ -65,7 +65,7 @@ export const IntegrationField = ({
   /** A secret is already stored — the field stays empty and blank means "keep current". */
   secretConfigured?: boolean
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
 
   // A configured secret is optional (blank = keep existing); only enforce required client-
   // side for non-secret fields or for secrets that have never been set.

@@ -81,7 +81,7 @@ const Plain = ({ children }: { children: ReactNode }) => (
 
 /** Read-only card of one change: who, when, from where, and every changed option. */
 export const ChangeDrawer = ({ changeId, onClose }: { changeId: string | null; onClose: () => void }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const time = useChangeTimeFormat()
   const { data, isLoading } = useIntegrationChange(changeId)
   const change = data?.integration_change

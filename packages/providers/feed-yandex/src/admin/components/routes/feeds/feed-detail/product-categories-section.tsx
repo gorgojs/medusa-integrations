@@ -15,7 +15,7 @@ import {
 import { useState, useMemo, useEffect } from "react"
 import { useParams } from "react-router-dom"
 
-import { i18n } from "../../../../components/utilities/i18n"
+import { useTranslation } from "react-i18next"
 import { sdk } from "../../../../lib/sdk"
 import { Header } from "../../../common/header"
 import { Feed, FeedResponse } from "../../../../types"
@@ -74,6 +74,7 @@ function flattenCategoryTree(tree: CategoryWithChildren[], level = 0): Category[
 }
 
 export const ProductCategoriesSection = () => {
+  const { t } = useTranslation("gorgo")
   const { id } = useParams()
   const [rowSelection, setRowSelection] = useState<DataTableRowSelectionState>({})
 
@@ -180,24 +181,24 @@ export const ProductCategoriesSection = () => {
       <Container className="divide-y p-0">
         <DataTable instance={table}>
           <Header
-            title={i18n.t("settings.categories.title")}
-            subtitle={i18n.t("settings.categories.subtitle")}
+            title={t("feedYandex.settings.categories.title")}
+            subtitle={t("feedYandex.settings.categories.subtitle")}
             actions={[
               {
                 type: "button",
                 props: {
-                  children: i18n.t("actions.save"),
+                  children: t("feedYandex.actions.save"),
                   variant: "secondary",
                   onClick: () => {
                     try {
                       saveFeedCategories(selectedCategories)
-                      toast.success(i18n.t("general.success"), {
-                        description: i18n.t("feeds.toasts.categoriesSaved"),
+                      toast.success(t("feedYandex.general.success"), {
+                        description: t("feedYandex.feeds.toasts.categoriesSaved"),
                       })
                     } catch (e) {
                       console.error(e)
-                      toast.error(i18n.t("general.error"), {
-                        description: i18n.t("feeds.toasts.categoriesSaveFailed"),
+                      toast.error(t("feedYandex.general.error"), {
+                        description: t("feedYandex.feeds.toasts.categoriesSaveFailed"),
                       })
                     }
                   },

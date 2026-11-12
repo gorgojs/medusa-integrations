@@ -38,7 +38,7 @@ const DOCS_URL = "https://docs.gorgojs.com/medusa-modules/integration"
  * for a paid integration, its license line.
  */
 const IntegrationCell = ({ item, license }: { item: IntegrationOverviewItem; license?: LicenseStateEntry }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   return (
     <div className="flex items-center gap-3">
       <IntegrationIcon src={item.icon} alt={t(item.display_name)} size="base" />
@@ -84,7 +84,7 @@ const IntegrationCell = ({ item, license }: { item: IntegrationOverviewItem; lic
 
 /** Status column: lifecycle badge plus a connection badge when supported. */
 const StatusCell = ({ item }: { item: IntegrationOverviewItem }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
 
   const lifecycle = !item.is_configured
     ? { color: "grey" as const, label: t("integration.status.notConfigured") }
@@ -113,7 +113,7 @@ const StatusCell = ({ item }: { item: IntegrationOverviewItem }) => {
 const columnHelper = createDataTableColumnHelper<IntegrationOverviewItem>()
 
 const IntegrationsPage = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const paginationLabels = usePaginationTranslations()
   const navigate = useNavigate()
   const qc = useQueryClient()
@@ -373,12 +373,12 @@ const IntegrationsPage = () => {
 
 export const config = defineRouteConfig({
   label: "integration.list.title",
-  translationNs: "translation",
+  translationNs: "gorgo",
   icon: CogSixTooth,
 })
 
 const IntegrationsBreadcrumb = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   return <>{t("integration.list.title")}</>
 }
 

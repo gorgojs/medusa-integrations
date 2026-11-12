@@ -27,7 +27,7 @@ const RECHECK: Record<LicenseTone, string | undefined> = {
  * "Check now" and the one link that fixes it. Nothing to click while the first check runs.
  */
 export const LicenseSummary = ({ entry }: { entry: LicenseStateEntry }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const view = useDescribeLicense()(entry)
   const details = useLicenseDetails()(view)
   const recheck = useRecheckLicense()

@@ -22,7 +22,7 @@ export const IntegrationFieldValue = ({
   /** A secret is stored for this integration (the value itself is never sent to the client). */
   secretConfigured?: boolean
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
 
   if (field.secret || field.control === "secret") {
     return secretConfigured ? (

@@ -16,7 +16,7 @@ export const ApishipConnectionEdit = ({
   apishipConnection,
   providerId,
 }: ApishipConnectionEditProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
 
   return (
     <Drawer

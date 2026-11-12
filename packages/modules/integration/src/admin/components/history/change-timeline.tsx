@@ -45,7 +45,7 @@ export const ChangeTimeline = ({
   /** Open the change card. Without it the entries are not clickable. */
   onSelect?: (change: AdminIntegrationChange) => void
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const time = useChangeTimeFormat()
   const { fields } = descriptorLookup(descriptor)
 

@@ -19,7 +19,7 @@ const JsonValue = ({ value }: { value: unknown }) =>
 
 /** Every changed option of a change, one row each: "before → after", or what happened to a secret. */
 export const ChangeDiff = ({ diff, fields }: { diff: DiffEntry[]; fields: Map<string, UiField> }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const labelOf = useDiffLabel(fields)
 
   return (

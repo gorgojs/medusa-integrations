@@ -86,7 +86,7 @@ const ComboboxImpl = <T extends Value = string>(
 ) => {
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
 
   const comboboxRef = useRef<HTMLInputElement>(null)
   const listboxRef = useRef<HTMLDivElement>(null)
@@ -282,7 +282,7 @@ const ComboboxImpl = <T extends Value = string>(
               )}
             >
               <Text size="small" leading="compact">
-                {t("general.selected")}
+                {t("apiship.general.selected")}
               </Text>
             </div>
           )}
@@ -400,7 +400,7 @@ const ComboboxImpl = <T extends Value = string>(
                 leading="compact"
                 className="text-ui-fg-subtle"
               >
-                {t("general.noResultsTitle")}
+                {t("apiship.general.noResultsTitle")}
               </Text>
             </div>
           ))}

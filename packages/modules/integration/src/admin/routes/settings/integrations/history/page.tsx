@@ -88,7 +88,7 @@ const AddFilterMenu = ({
 )
 
 const HistoryPage = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const paginationLabels = usePaginationTranslations()
   const time = useChangeTimeFormat()
   const [params, setParams] = useSearchParams()
@@ -353,7 +353,7 @@ const HistoryPage = () => {
 }
 
 const HistoryBreadcrumb = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   return <>{t("integration.history.title")}</>
 }
 

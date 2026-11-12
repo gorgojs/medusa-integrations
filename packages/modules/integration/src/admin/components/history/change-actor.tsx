@@ -18,7 +18,7 @@ export const ChangeActor = ({
   /** Classes for the name, e.g. its color. */
   className?: string
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const isUser = change.actor_type === "user" && !!change.actor_id
   const { data } = useQuery({
     queryKey: ["integration-change-actor", change.actor_id],

@@ -15,7 +15,7 @@ export const ApishipConnectionActions = ({
   apishipConnection,
   providerId,
 }: ApishipConnectionActionsProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
 
   const navigate = useNavigate()
   const prompt = usePrompt()

@@ -14,7 +14,7 @@ const TEXT: Record<LicenseTone, string> = {
 
 /** A paid integration's license as one line under its name in Settings → Integrations. */
 export const LicenseLine = ({ entry }: { entry: LicenseStateEntry }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const view = useDescribeLicense()(entry)
   const details = useLicenseDetails()(view, { withChecked: true })
 

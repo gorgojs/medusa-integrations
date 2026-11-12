@@ -33,7 +33,7 @@ const InstallModal = ({
   item: CatalogItem | null
   onOpenChange: (open: boolean) => void
 }) => {
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTranslation("gorgo")
   const lang = i18n.language.split("-")[0] === "ru" ? "ru" : "en"
   const source = item?.docsSnippet?.[lang] || item?.docsSnippet?.en || item?.docsSnippet?.ru || ""
 
@@ -78,7 +78,7 @@ const InstallModal = ({
 }
 
 const BrowsePage = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState("all")
   const [search, setSearch] = useState("")
@@ -211,7 +211,7 @@ const BrowsePage = () => {
 }
 
 const BrowseBreadcrumb = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   return <>{t("integration.browse.title")}</>
 }
 

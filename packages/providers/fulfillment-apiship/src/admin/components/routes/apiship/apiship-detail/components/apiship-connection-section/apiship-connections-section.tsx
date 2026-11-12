@@ -30,7 +30,7 @@ export const ApishipConnectionsSection = ({
   providers,
   providerId,
 }: ApishipConnectionsSectionProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
 
   const [rowSelection, setRowSelection] =
     useState<DataTableRowSelectionState>({})
@@ -125,7 +125,7 @@ export const ApishipConnectionsSection = ({
           }}
         />
         <DataTable.CommandBar
-          selectedLabel={(count) => `${count} ${t("general.selected").toLowerCase()}`}
+          selectedLabel={(count) => `${count} ${t("apiship.general.selected").toLowerCase()}`}
         />
         <DataTable.Pagination />
       </DataTable>

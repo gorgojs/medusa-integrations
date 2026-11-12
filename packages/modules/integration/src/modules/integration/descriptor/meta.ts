@@ -1,7 +1,9 @@
 /**
- * An i18n key resolved admin-side against the merged i18next resources (`t(key)`). Providers
- * ship the translations from their `src/admin/i18n/index.ts`; missing keys fall back to the
- * key string itself.
+ * An i18n key resolved admin-side against the merged i18next resources (`t(key)`). The Admin
+ * looks it up in the `gorgo` namespace first, then in Medusa's default `translation` namespace,
+ * so a provider ships its translations from its `src/admin/i18n/index.ts` under either one. A key
+ * in another namespace takes the `namespace:key` form. Missing keys fall back to the key string
+ * itself.
  */
 export type I18nKey = string
 

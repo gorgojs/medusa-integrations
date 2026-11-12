@@ -110,7 +110,7 @@ const Label = forwardRef<
   }
 >(({ className, optional = false, tooltip, icon, ...props }, ref) => {
   const { formLabelId, formItemId } = useFormField()
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
 
   return (
     <div className="flex items-center gap-x-1">

@@ -1,13 +1,4 @@
 {
-  "general": {
-    "selected": "Выбрано",
-    "noResultsTitle": "Нет результатов",
-    "loading": "Загрузка..."
-  },
-  "statuses": {
-    "enabled": "Включено",
-    "disabled": "Выключено"
-  },
   "apiship": {
     "name": "ApiShip",
     "description": "Агрегатор служб доставки ApiShip",
@@ -151,6 +142,15 @@
     "tariffs": {
       "loadError": "Не удалось загрузить тарифы.",
       "retry": "Повторить попытку"
+    },
+    "general": {
+      "selected": "Выбрано",
+      "noResultsTitle": "Нет результатов",
+      "loading": "Загрузка..."
+    },
+    "statuses": {
+      "enabled": "Включено",
+      "disabled": "Выключено"
     }
   }
 }

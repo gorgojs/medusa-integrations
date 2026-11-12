@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next"
  * the ones Medusa's tables use.
  */
 export function usePaginationTranslations() {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
   return {
     of: t("general.of"),
     results: t("general.results"),

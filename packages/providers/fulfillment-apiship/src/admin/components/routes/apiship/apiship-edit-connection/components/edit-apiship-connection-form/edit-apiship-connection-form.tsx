@@ -42,7 +42,7 @@ export const EditApishipConnectionForm = ({
   onClose,
   providerId,
 }: EditApishipConnectionFormProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation("gorgo")
 
   const form = useForm<z.infer<typeof EditApishipConnectionSchema>>({
     defaultValues: {
