@@ -43,13 +43,13 @@
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/integration/demo/integration-demo.e8ef945d.mp4">
-    <img src="https://static.gorgojs.com/videos/integration/demo/integration-demo-poster-play.2635e78b.webp" alt="Смотреть демо Модуля интеграций" width="100%" style="border-radius: 8px; max-width: 720px;">
+  <a href="https://static.gorgojs.com/videos/integration/demo/integration-demo-ru.9fc10367.mp4">
+    <img src="https://static.gorgojs.com/videos/integration/demo/integration-demo-ru-poster-play.fd6d2a76.webp" alt="Смотреть демо Модуля интеграций" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/integration/demo/integration-demo.e8ef945d.mp4">▶ Смотреть демо-видео</a>
+  <a href="https://static.gorgojs.com/videos/integration/demo/integration-demo-ru.9fc10367.mp4">▶ Смотреть демо-видео</a>
 </p>
 
 ## Что такое Модуль интеграций
