@@ -147,6 +147,25 @@ medusaIntegrationTestRunner({
         expect(detail.data.is_complete).toBe(true)
         expect(await svc.getResolvedOptions("test", "a")).not.toBeNull()
       })
+
+      it("merges metadata key by key like any Medusa entity, without touching the options", async () => {
+        const first = await save(A, { section_id: SECTION, values: VALID, metadata: { erp_id: "42", note: "x" } })
+        expect(first.status).toBe(200)
+        expect(first.data.integration.metadata).toEqual({ erp_id: "42", note: "x" })
+
+        // No `values`: only the metadata changes. A key set to "" is removed, the others are kept.
+        const merged = await save(A, { metadata: { note: "", owner: "ops" } })
+        expect(merged.status).toBe(200)
+        expect(merged.data.integration.metadata).toEqual({ erp_id: "42", owner: "ops" })
+        expect(merged.data.integration.values).toMatchObject({ apiKey: "pub", mode: "test" })
+        expect((await get(A)).data.integration.metadata).toEqual({ erp_id: "42", owner: "ops" })
+
+        // Omitted → kept; null → cleared.
+        await save(A, { section_id: SECTION, values: { mode: "live" } })
+        expect((await get(A)).data.integration.metadata).toEqual({ erp_id: "42", owner: "ops" })
+        const cleared = await save(A, { metadata: null })
+        expect(cleared.data.integration.metadata).toBeNull()
+      })
     })
 
     describe("POST /admin/integrations/:provider_id/enable", () => {

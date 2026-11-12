@@ -8,7 +8,10 @@ export const AdminUpsertIntegration = z.object({
   // Which descriptor section these values belong to. Omitted by widgets, which submit
   // their own option ids directly — the server then validates exactly the submitted keys.
   section_id: z.string().optional(),
-  values: z.record(z.string(), z.unknown()),
+  // Omitted → no option is written, e.g. when only `metadata` changes.
+  values: z.record(z.string(), z.unknown()).default({}),
+  // Omitted → kept. Merged key by key as on any Medusa entity, see `upsertIntegrationWorkflow`.
+  metadata: z.record(z.string(), z.unknown()).nullish(),
 })
 
 export type AdminSetIntegrationEnabledType = z.infer<typeof AdminSetIntegrationEnabled>

@@ -48,6 +48,7 @@ export function maskedView(record: any, secretKeys: string[]): MaskedIntegration
     configured_secrets,
     last_test_status: record.last_test_status ?? null,
     values,
+    metadata: record.metadata ?? null,
   }
 }
 

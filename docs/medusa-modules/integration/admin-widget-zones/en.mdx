@@ -27,7 +27,7 @@ For example, a widget for the ApiShip provider, whose identifier is `apiship`, g
 
 A zone covers the pages of every instance of the provider, so the same widget renders on the page of `int_apiship` and of `int_apiship_eu`. Tell the instances apart by `data.providerId`.
 
-By default, the widget renders after everything the module puts in its column. In the main column that is the card with the integration's name and status and the generated sections, and on a single-column page it also includes the **Change History** section. On a two-column page, the **Change History** section ends the side column.
+By default, the widget renders after everything the module puts in its column. In the main column that is the card with the integration's name and status, the generated sections, the **Change History** section on a single-column page, and, once the integration is configured, the **JSON** section last. On a two-column page, the **Change History** section ends the side column.
 
 If the store admin has saved a layout that reorders the column, a new widget has no saved position and appears near the top of the column instead. The store admin can move it, like any other section, or hide it. A saved layout is shared by every instance of the provider, because Medusa keys it by the zone prefix `gorgo.integration.<identifier>`. The store admin can save it for their own account or as the default for everyone.
 

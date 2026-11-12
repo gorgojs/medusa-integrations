@@ -39,9 +39,10 @@ description: "Справочник по API-роутам Admin, которые �
 
 `POST /admin/integrations/:provider_id` принимает тело с такими полями:
 
-- `values` – значения параметров для сохранения, где ключом служит идентификатор параметра.
+- `values` – необязательный. Значения параметров для сохранения, где ключом служит идентификатор параметра. Без него параметры не записываются, например когда вы меняете только `metadata`.
 - `section_id` – необязательный. С ним записываются только параметры этой секции. Без него записываются все отправленные ключи, которые объявлены в дескрипторе.
 - `title` – необязательный. Название сохранённой записи или `null`, чтобы очистить его.
+- `metadata` – необязательный. Объединяется с сохранёнными метаданными по ключам, как у любой сущности Medusa. Ключ со значением в виде пустой строки удаляется, а `null` очищает метаданные. Метаданные не относятся к настройкам, поэтому история изменений их не показывает.
 
 Например, чтобы сохранить секцию с учётными данными интеграции `int_my`:
 
@@ -136,9 +137,19 @@ curl -X POST "http://localhost:9000/admin/integrations/int_my" \
       optional: false,
       expandable: false,
       children: []
+    },
+    {
+      name: "metadata",
+      type: "Record<string, unknown> | null",
+      description: "Произвольные данные вашего кода или `null`, если их нет.",
+      optional: false,
+      expandable: false,
+      children: []
     }
   ]}
 />
+
+Medusa Admin показывает этот объект в секции **JSON** на странице интеграции.
 
 `GET /admin/integrations/:provider_id` оборачивает её в `{ descriptor, integration, is_complete, version, author, author_url }`. `integration` равно `null` до первого сохранения, а `descriptor` содержит дескриптор, подготовленный для Admin, с секциями, полями и раскладкой.
 
@@ -248,6 +259,14 @@ curl -X POST "http://localhost:9000/admin/integrations/int_my" \
       name: "diff",
       type: "object[]",
       description: "Изменённые поля. Обычный параметр выглядит как `{ field, label?, from, to, truncated? }`, а секретный как `{ field, label?, secret: true, op }`, где `op` равно `set`, `replaced`, `removed` или `hidden`. Изменение названия записи имеет `field` со значением `@title`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "metadata",
+      type: "Record<string, unknown> | null",
+      description: "Произвольные данные, которые сохранил вместе с изменением записавший его код, или `null`. Воркфлоу самого модуля оставляют `null`.",
       optional: false,
       expandable: false,
       children: []

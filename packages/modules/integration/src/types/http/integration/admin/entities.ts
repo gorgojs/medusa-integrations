@@ -41,6 +41,8 @@ export interface MaskedIntegration {
   configured_secrets: string[]
   last_test_status: TestStatus | null
   values: Record<string, unknown>
+  /** Free-form data, as on any Medusa entity. The module never reads it. */
+  metadata: Record<string, unknown> | null
 }
 
 /** One integration in the Gorgo catalog (from the live Gorgo API, with an offline yml fallback). */
@@ -90,6 +92,8 @@ export interface AdminIntegrationChange {
   change_type: IntegrationChangeType
   provider_id: string
   diff: DiffEntry[]
+  /** Free-form data of whoever recorded the change. The module never reads it. */
+  metadata: Record<string, unknown> | null
   request_id?: string | null
   ip?: string | null
   user_agent?: string | null

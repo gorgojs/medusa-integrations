@@ -13,6 +13,11 @@ export type UpsertIntegrationWorkflowInput = {
   section_id?: string | null
   title?: string | null
   values: Record<string, unknown>
+  /**
+   * Merged into the stored metadata key by key, as on any Medusa entity: `""` removes a key, `null`
+   * clears it all. Omitted → kept. Not part of the settings, so the change history doesn't record it.
+   */
+  metadata?: Record<string, unknown> | null
   /** Who makes the change, for the change history. Defaults to `{ type: "system" }`. */
   actor?: IntegrationChangeActor
 }
@@ -35,6 +40,7 @@ export const upsertIntegrationWorkflow = createWorkflow(
       category: data.prepared.category,
       options: data.prepared.options,
       ...(data.input.title !== undefined ? { title: data.input.title } : {}),
+      ...(data.input.metadata !== undefined ? { metadata: data.input.metadata } : {}),
     }))
 
     const record = upsertIntegrationRecordStep(recordInput)

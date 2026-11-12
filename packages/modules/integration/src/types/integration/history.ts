@@ -64,6 +64,8 @@ export type RecordIntegrationChangeInput = {
   actor: IntegrationChangeActor
   actor_label?: string | null
   diff?: DiffEntry[]
+  /** Free-form data stored with the change, as `metadata` on any Medusa entity. */
+  metadata?: Record<string, unknown> | null
   /** Defaults to now. */
   created_at?: Date
 }

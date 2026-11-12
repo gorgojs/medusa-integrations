@@ -2299,13 +2299,13 @@ __metadata:
   dependencies:
     "@gorgo/license": "npm:^1.0.0"
     "@gorgo/telemetry": "npm:^1.4.2"
-    "@medusajs/admin-sdk": "npm:^2.17.2"
-    "@medusajs/cli": "npm:^2.17.2"
-    "@medusajs/dashboard": "npm:^2.17.2"
-    "@medusajs/framework": "npm:^2.17.2"
-    "@medusajs/icons": "npm:^2.17.2"
-    "@medusajs/medusa": "npm:^2.17.2"
-    "@medusajs/test-utils": "npm:^2.17.2"
+    "@medusajs/admin-sdk": "npm:^2.21.0"
+    "@medusajs/cli": "npm:^2.21.0"
+    "@medusajs/dashboard": "npm:^2.21.0"
+    "@medusajs/framework": "npm:^2.21.0"
+    "@medusajs/icons": "npm:^2.21.0"
+    "@medusajs/medusa": "npm:^2.21.0"
+    "@medusajs/test-utils": "npm:^2.21.0"
     "@medusajs/ui": "npm:^4.1.15"
     "@swc/core": "npm:^1.7.28"
     "@swc/jest": "npm:^0.2.36"
@@ -2323,14 +2323,14 @@ __metadata:
     vite: "npm:^7.3.6"
     yalc: "npm:^1.0.0-pre.53"
   peerDependencies:
-    "@medusajs/admin-sdk": ^2.17.2
-    "@medusajs/cli": ^2.17.2
-    "@medusajs/dashboard": ^2.17.2
-    "@medusajs/deps": ^2.17.2
-    "@medusajs/framework": ^2.17.2
-    "@medusajs/icons": ^2.17.2
-    "@medusajs/medusa": ^2.17.2
-    "@medusajs/test-utils": ^2.17.2
+    "@medusajs/admin-sdk": ^2.21.0
+    "@medusajs/cli": ^2.21.0
+    "@medusajs/dashboard": ^2.21.0
+    "@medusajs/deps": ^2.21.0
+    "@medusajs/framework": ^2.21.0
+    "@medusajs/icons": ^2.21.0
+    "@medusajs/medusa": ^2.21.0
+    "@medusajs/test-utils": ^2.21.0
     "@medusajs/ui": ^4.1.16
     react-router-dom: ^6.30.4 || ^7.0.0
   languageName: unknown
@@ -3720,7 +3720,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/admin-sdk@npm:^2.14.0, @medusajs/admin-sdk@npm:^2.17.2":
+"@medusajs/admin-sdk@npm:^2.14.0, @medusajs/admin-sdk@npm:^2.17.2, @medusajs/admin-sdk@npm:^2.21.0":
   version: 2.22.6
   resolution: "@medusajs/admin-sdk@npm:2.22.6"
   dependencies:
@@ -3908,7 +3908,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/cli@npm:^2.14.0, @medusajs/cli@npm:^2.17.2":
+"@medusajs/cli@npm:^2.14.0, @medusajs/cli@npm:^2.17.2, @medusajs/cli@npm:^2.21.0":
   version: 2.22.6
   resolution: "@medusajs/cli@npm:2.22.6"
   dependencies:
@@ -3975,7 +3975,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/dashboard@npm:2.22.6, @medusajs/dashboard@npm:^2.17.2":
+"@medusajs/dashboard@npm:2.22.6, @medusajs/dashboard@npm:^2.21.0":
   version: 2.22.6
   resolution: "@medusajs/dashboard@npm:2.22.6"
   dependencies:
@@ -4148,7 +4148,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/framework@npm:2.22.6, @medusajs/framework@npm:^2.14.0, @medusajs/framework@npm:^2.17.2":
+"@medusajs/framework@npm:2.22.6, @medusajs/framework@npm:^2.14.0, @medusajs/framework@npm:^2.17.2, @medusajs/framework@npm:^2.21.0":
   version: 2.22.6
   resolution: "@medusajs/framework@npm:2.22.6"
   dependencies:
@@ -4208,7 +4208,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/icons@npm:2.22.6, @medusajs/icons@npm:^2.14.0, @medusajs/icons@npm:^2.17.2":
+"@medusajs/icons@npm:2.22.6, @medusajs/icons@npm:^2.14.0, @medusajs/icons@npm:^2.17.2, @medusajs/icons@npm:^2.21.0":
   version: 2.22.6
   resolution: "@medusajs/icons@npm:2.22.6"
   peerDependencies:
@@ -4283,7 +4283,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/medusa@npm:2.22.6, @medusajs/medusa@npm:^2.14.0, @medusajs/medusa@npm:^2.17.2":
+"@medusajs/medusa@npm:2.22.6, @medusajs/medusa@npm:^2.14.0, @medusajs/medusa@npm:^2.17.2, @medusajs/medusa@npm:^2.21.0":
   version: 2.22.6
   resolution: "@medusajs/medusa@npm:2.22.6"
   dependencies:
@@ -4603,7 +4603,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/test-utils@npm:2.22.6, @medusajs/test-utils@npm:^2.14.0, @medusajs/test-utils@npm:^2.17.2":
+"@medusajs/test-utils@npm:2.22.6, @medusajs/test-utils@npm:^2.14.0, @medusajs/test-utils@npm:^2.17.2, @medusajs/test-utils@npm:^2.21.0":
   version: 2.22.6
   resolution: "@medusajs/test-utils@npm:2.22.6"
   dependencies:

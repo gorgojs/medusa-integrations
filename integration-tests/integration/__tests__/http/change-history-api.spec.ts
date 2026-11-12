@@ -186,6 +186,13 @@ medusaIntegrationTestRunner({
         expect(res.data.integration_changes.map((c: any) => c.actor_label)).toEqual(["a@it.test", "b@it.test"])
       })
 
+      it("returns the metadata stored with a change, and null for a change without it", async () => {
+        await record(A, day(1))
+        await record(A, day(2), { metadata: { source: "erp" } })
+        const items = (await call("/admin/integrations/changes")).data.integration_changes
+        expect(items.map((c: any) => c.metadata)).toEqual([{ source: "erp" }, null])
+      })
+
       it("leaves ip, user_agent and request_id out of list items", async () => {
         await record(A, day(1))
         const [item] = (await call("/admin/integrations/changes")).data.integration_changes
@@ -262,12 +269,13 @@ medusaIntegrationTestRunner({
 
     describe("GET /admin/integrations/changes/:id", () => {
       it("returns one change with the request origin columns", async () => {
-        const row = await record(A, day(1))
+        const row = await record(A, day(1), { metadata: { source: "erp" } })
         const res = await call(`/admin/integrations/changes/${row.id}`)
         expect(res.status).toBe(200)
         expect(res.data.integration_change).toMatchObject({
           id: row.id,
           provider_id: A,
+          metadata: { source: "erp" },
           ip: "10.0.0.1",
           user_agent: "jest",
           request_id: "req_1",

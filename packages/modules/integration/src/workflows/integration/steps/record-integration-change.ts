@@ -11,6 +11,8 @@ export type RecordIntegrationChangeStepInput = {
   /** Absent when the workflow was run without one: recorded as `{ type: "system" }`. */
   actor?: IntegrationChangeActor | null
   diff?: DiffEntry[]
+  /** Stored with the change as it is. */
+  metadata?: Record<string, unknown> | null
   /** Set by the workflow when nothing actually changed. */
   skip?: boolean
 }
@@ -56,6 +58,7 @@ export const recordIntegrationChangeStep = createStep(
         actor,
         actor_label: await resolveActorLabel(container, actor),
         diff: input.diff ?? [],
+        metadata: input.metadata ?? null,
       })
       return new StepResponse(id, id)
     } catch (e: any) {

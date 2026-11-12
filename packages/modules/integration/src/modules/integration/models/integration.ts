@@ -15,6 +15,9 @@ const Integration = model.define("integration", {
   // Metadata
   is_enabled: model.boolean().default(true),
   last_test_status: model.enum(IntegrationTestStatus).nullable(),
+
+  // Free-form data of the store's own code, as on any Medusa entity. The module never reads it.
+  metadata: model.json().nullable(),
 })
 .indexes([
   { on: ["provider_id"], unique: true },

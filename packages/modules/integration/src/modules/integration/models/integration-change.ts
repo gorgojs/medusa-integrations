@@ -32,6 +32,9 @@ const IntegrationChange = model.define("integration_change", {
   request_id: model.text().nullable(),
   ip: model.text().nullable(),
   user_agent: model.text().nullable(),
+
+  // Free-form data of whoever records the change, as on any Medusa entity. The module never reads it.
+  metadata: model.json().nullable(),
 }).indexes([
   { on: ["provider_id", "created_at"] },
   { on: ["created_at"] },

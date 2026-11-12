@@ -100,6 +100,14 @@ The first step reads the stored record, which lets the change history tell a fir
       children: []
     },
     {
+      name: "metadata",
+      type: "Record<string, unknown> | null",
+      description: "Merged into the record's metadata key by key, as on any Medusa entity. A key set to an empty string is removed, and `null` clears the metadata. Omit it to keep the stored metadata. The change history doesn't list it.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
       name: "actor",
       type: "IntegrationChangeActor",
       description: "Who makes the change, for the change history, as `{ type, id?, ip?, user_agent?, request_id? }`. Without it, the change is recorded with the `system` actor type.",
@@ -281,11 +289,11 @@ The workflows above are built from these steps. Use them in a workflow of your o
 | `getResolvedIntegrationOptionsStep` | `{ identifier, instance_id? }` | Returns the resolved options, or `null`. | Nothing to undo. |
 | `getIntegrationSnapshotStep` | `{ provider_id }` | Returns `{ existed, title, is_enabled }` of the stored record before a change. | Nothing to undo. |
 | `applyIntegrationSectionStep` | `{ provider_id, section_id?, values }` | Picks the options to write, validates them, and returns `{ category, options, diff }`, where `options` is the full configuration ready to store, with secrets encrypted. Stores nothing. | Nothing to undo. |
-| `upsertIntegrationRecordStep` | `{ provider_id, category, options, title? }` | Creates or updates the stored record. | None. The saved record stays. |
+| `upsertIntegrationRecordStep` | `{ provider_id, category, options, title?, metadata? }` | Creates or updates the stored record. | None. The saved record stays. |
 | `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Sets `is_enabled` on the stored record. | Restores the previous `is_enabled`. |
 | `deleteIntegrationRecordStep` | `{ provider_id }` | Deletes the stored record and returns `{ deleted, diff }`. | None. The record stays deleted. |
 | `runTestConnectionStep` | `{ provider_id }` | Runs the connection test and stores its status as `last_test_status`, if the integration has a stored record. | None. `last_test_status` stays. |
-| `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, skip? }` | Writes a change history record, or nothing when `skip` is `true` or an `updated` change has no fields. Never fails the workflow. | Removes the history record. |
+| `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, metadata?, skip? }` | Writes a change history record, or nothing when `skip` is `true` or an `updated` change has no fields. Never fails the workflow. | Removes the history record. |
 | `emitIntegrationEventStep` | `{ name, data }` | Emits an event through Medusa's event bus. | None. The emitted event stays. |
 
 ## References

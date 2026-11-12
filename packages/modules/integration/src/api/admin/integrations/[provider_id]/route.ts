@@ -45,6 +45,7 @@ export const POST = async (
       section_id: req.validatedBody.section_id,
       title: req.validatedBody.title,
       values: req.validatedBody.values,
+      metadata: req.validatedBody.metadata,
       actor: changeActor(req),
     },
   })

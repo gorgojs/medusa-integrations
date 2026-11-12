@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useState, type ReactNode } from "react"
 import { FetchError } from "@medusajs/js-sdk"
-import { LayoutComposer } from "@medusajs/dashboard/components"
+import { JsonViewSection, LayoutComposer } from "@medusajs/dashboard/components"
 import { sdk } from "../../../../lib/sdk"
 import { toModuleProviderId } from "../../../../lib/provider-id"
 import { IntegrationIcon } from "../../../../components/integration-icon"
@@ -326,6 +326,14 @@ const EditPage = () => {
       {/* Main-column descriptor sections */}
       {mainSections.map(renderSection)}
       {!historyInSide && history}
+
+      {/* The stored record as the API returns it, last in `main` like on Medusa's own detail pages.
+          An unconfigured integration has no record to show. */}
+      {record && (
+        <LayoutComposer.Entry id="JsonViewSection">
+          <JsonViewSection data={record} />
+        </LayoutComposer.Entry>
+      )}
 
       <ChangeDrawer changeId={changeId} onClose={closeChange} />
 

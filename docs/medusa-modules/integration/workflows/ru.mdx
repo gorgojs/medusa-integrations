@@ -100,6 +100,14 @@ flowchart TD
       children: []
     },
     {
+      name: "metadata",
+      type: "Record<string, unknown> | null",
+      description: "Объединяется с метаданными записи по ключам, как у любой сущности Medusa. Ключ со значением в виде пустой строки удаляется, а `null` очищает метаданные. Не передавайте его, чтобы оставить прежние метаданные. История изменений их не показывает.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
       name: "actor",
       type: "IntegrationChangeActor",
       description: "Автор изменения для истории изменений в виде `{ type, id?, ip?, user_agent?, request_id? }`. Без него изменение записывается с типом автора `system`.",
@@ -281,11 +289,11 @@ flowchart TD
 | `getResolvedIntegrationOptionsStep` | `{ identifier, instance_id? }` | Возвращает итоговые параметры или `null`. | Отменять нечего. |
 | `getIntegrationSnapshotStep` | `{ provider_id }` | Возвращает `{ existed, title, is_enabled }` сохранённой записи до изменения. | Отменять нечего. |
 | `applyIntegrationSectionStep` | `{ provider_id, section_id?, values }` | Выбирает параметры для записи, проверяет их и возвращает `{ category, options, diff }`, где `options` содержит полную конфигурацию, готовую к сохранению, с зашифрованными секретами. Сам ничего не сохраняет. | Отменять нечего. |
-| `upsertIntegrationRecordStep` | `{ provider_id, category, options, title? }` | Создаёт или обновляет сохранённую запись. | Отката нет. Сохранённая запись остаётся. |
+| `upsertIntegrationRecordStep` | `{ provider_id, category, options, title?, metadata? }` | Создаёт или обновляет сохранённую запись. | Отката нет. Сохранённая запись остаётся. |
 | `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Меняет `is_enabled` у сохранённой записи. | Восстанавливает прежнее значение `is_enabled`. |
 | `deleteIntegrationRecordStep` | `{ provider_id }` | Удаляет сохранённую запись и возвращает `{ deleted, diff }`. | Отката нет. Запись остаётся удалённой. |
 | `runTestConnectionStep` | `{ provider_id }` | Выполняет проверку соединения и сохраняет её статус в `last_test_status`, если у интеграции есть сохранённая запись. | Отката нет. `last_test_status` остаётся. |
-| `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, skip? }` | Создаёт запись в истории изменений или ничего не делает, если `skip` равно `true` или у изменения `updated` нет полей. Никогда не роняет воркфлоу. | Удаляет запись в истории. |
+| `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, metadata?, skip? }` | Создаёт запись в истории изменений или ничего не делает, если `skip` равно `true` или у изменения `updated` нет полей. Никогда не роняет воркфлоу. | Удаляет запись в истории. |
 | `emitIntegrationEventStep` | `{ name, data }` | Отправляет событие через шину событий Medusa. | Отката нет. Отправленное событие остаётся. |
 
 ## Материалы

@@ -39,9 +39,10 @@ It returns `{ integrations, count, limit, offset, categories }`. Each item of `i
 
 `POST /admin/integrations/:provider_id` takes a body with these fields:
 
-- `values` – the option values to save, keyed by option id.
+- `values` – optional. The option values to save, keyed by option id. Without it, no option is written, for example when you change only `metadata`.
 - `section_id` – optional. With it, only that section's options are written. Without it, every submitted key the descriptor declares is written.
 - `title` – optional. A title for the stored record, or `null` to clear it.
+- `metadata` – optional. Merged into the stored metadata key by key, as on any Medusa entity. A key set to an empty string is removed, and `null` clears the metadata. Metadata isn't part of the settings, so the change history doesn't list it.
 
 For example, to save the credentials section of the integration `int_my`:
 
@@ -136,9 +137,19 @@ The response is `{ integration }`, the stored record without its secrets. `apiKe
       optional: false,
       expandable: false,
       children: []
+    },
+    {
+      name: "metadata",
+      type: "Record<string, unknown> | null",
+      description: "Free-form data of your own code, or `null` if none is set.",
+      optional: false,
+      expandable: false,
+      children: []
     }
   ]}
 />
+
+Medusa Admin shows this object in the **JSON** section of the integration's page.
 
 `GET /admin/integrations/:provider_id` wraps it as `{ descriptor, integration, is_complete, version, author, author_url }`. `integration` is `null` until the first save, and `descriptor` is the descriptor prepared for the Admin, with its sections, fields, and layout.
 
@@ -248,6 +259,14 @@ They return `{ integration_changes, count, offset, limit }`, newest first by def
       name: "diff",
       type: "object[]",
       description: "The changed fields. A plain option is `{ field, label?, from, to, truncated? }`, and a secret option is `{ field, label?, secret: true, op }`, where `op` is `set`, `replaced`, `removed`, or `hidden`. A change of the record's title has the `field` `@title`.",
+      optional: false,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "metadata",
+      type: "Record<string, unknown> | null",
+      description: "Free-form data that the code recording the change stored with it, or `null`. The module's own workflows leave it `null`.",
       optional: false,
       expandable: false,
       children: []

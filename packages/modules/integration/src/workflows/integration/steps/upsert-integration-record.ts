@@ -8,6 +8,8 @@ export type UpsertIntegrationRecordStepInput = {
   category: CategoryKind
   options: Record<string, unknown>
   title?: string | null
+  /** Merged into the stored metadata key by key, as Medusa does: `""` removes a key, `null` clears it all. */
+  metadata?: Record<string, unknown> | null
 }
 
 export const upsertIntegrationRecordStep = createStep(

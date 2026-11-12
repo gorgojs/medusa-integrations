@@ -104,6 +104,14 @@ The stored settings of one integration instance, in the `integration` table. The
       optional: true,
       expandable: false,
       children: []
+    },
+    {
+      name: "metadata",
+      type: "json",
+      description: "Free-form data of your own code, as on any Medusa data model. The module doesn't read it. The `metadata` field of the Admin API and of `upsertIntegrationWorkflow` merges into it key by key.",
+      optional: true,
+      expandable: false,
+      children: []
     }
   ]}
 />
@@ -206,6 +214,14 @@ One record of the [change history](/medusa-modules/integration/change-history), 
       name: "request_id",
       type: "string",
       description: "The ID of the request that made the change.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "metadata",
+      type: "json",
+      description: "Free-form data that the code recording the change stores with it, through `recordChange` or `recordIntegrationChangeStep`. The module's own workflows leave it empty.",
       optional: true,
       expandable: false,
       children: []

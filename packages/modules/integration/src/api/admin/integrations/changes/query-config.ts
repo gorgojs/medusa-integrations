@@ -8,6 +8,7 @@ export const defaultAdminIntegrationChangeListFields = [
   "change_type",
   "provider_id",
   "diff",
+  "metadata",
 ]
 
 export const defaultAdminIntegrationChangeFields = [

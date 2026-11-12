@@ -326,6 +326,7 @@ export default class IntegrationModuleService extends MedusaService({
         provider_id: input.provider_id,
         diff: (input.diff ?? []) as unknown as Record<string, unknown>,
         diff_fields: diffFields(input.diff ?? []),
+        metadata: input.metadata ?? null,
         request_id: input.actor.request_id ?? null,
         ip: input.actor.ip ?? null,
         user_agent: input.actor.user_agent ?? null,

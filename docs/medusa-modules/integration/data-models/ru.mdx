@@ -104,6 +104,14 @@ erDiagram
       optional: true,
       expandable: false,
       children: []
+    },
+    {
+      name: "metadata",
+      type: "json",
+      description: "Произвольные данные вашего кода, как у любой модели данных Medusa. Модуль их не читает. Поле `metadata` в Admin API и в `upsertIntegrationWorkflow` объединяется с ними по ключам.",
+      optional: true,
+      expandable: false,
+      children: []
     }
   ]}
 />
@@ -206,6 +214,14 @@ erDiagram
       name: "request_id",
       type: "string",
       description: "ID запроса, который внёс изменение.",
+      optional: true,
+      expandable: false,
+      children: []
+    },
+    {
+      name: "metadata",
+      type: "json",
+      description: "Произвольные данные, которые сохраняет вместе с изменением записавший его код, через `recordChange` или `recordIntegrationChangeStep`. Воркфлоу самого модуля оставляют их пустыми.",
       optional: true,
       expandable: false,
       children: []

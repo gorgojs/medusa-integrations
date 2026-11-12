@@ -28,6 +28,11 @@ describe("maskedView", () => {
     expect(v.values).toEqual({ terminalKey: "abc" })
     expect(Object.prototype.hasOwnProperty.call(v.values, "apiKey")).toBe(false)
   })
+
+  it("returns the metadata as stored, and null for a record without it", () => {
+    expect(maskedView({ ...rec({}), metadata: { erp_id: "42" } }, []).metadata).toEqual({ erp_id: "42" })
+    expect(maskedView(rec({}), []).metadata).toBeNull()
+  })
 })
 
 describe("maskSecretValues", () => {
