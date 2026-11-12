@@ -65,6 +65,10 @@
       "marketplace": "بازارگاه",
       "feed": "فیدها",
       "file_providers": "ارائه‌دهندگان فایل",
+      "tax": "مالیات",
+      "subscriptions": "اشتراک‌ها",
+      "reviews": "نظرات",
+      "admin": "مدیریت",
       "other": "سایر"
     },
     "actions": {

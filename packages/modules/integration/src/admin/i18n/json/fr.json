@@ -65,6 +65,10 @@
       "marketplace": "Marketplace",
       "feed": "Flux",
       "file_providers": "Fournisseurs de fichiers",
+      "tax": "Taxes",
+      "subscriptions": "Abonnements",
+      "reviews": "Avis",
+      "admin": "Admin",
       "other": "Autres"
     },
     "actions": {

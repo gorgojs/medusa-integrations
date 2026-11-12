@@ -65,6 +65,10 @@
       "marketplace": "Marknadsplats",
       "feed": "Flöden",
       "file_providers": "Filproviders",
+      "tax": "Skatter",
+      "subscriptions": "Prenumerationer",
+      "reviews": "Recensioner",
+      "admin": "Admin",
       "other": "Övrigt"
     },
     "actions": {

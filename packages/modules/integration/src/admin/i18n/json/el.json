@@ -65,6 +65,10 @@
       "marketplace": "Αγορά",
       "feed": "Ροές",
       "file_providers": "Πάροχοι αρχείων",
+      "tax": "Φόροι",
+      "subscriptions": "Συνδρομές",
+      "reviews": "Κριτικές",
+      "admin": "Διαχείριση",
       "other": "Άλλα"
     },
     "actions": {

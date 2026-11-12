@@ -65,6 +65,10 @@
       "marketplace": "マーケットプレイス",
       "feed": "フィード",
       "file_providers": "ファイルプロバイダー",
+      "tax": "税金",
+      "subscriptions": "サブスクリプション",
+      "reviews": "レビュー",
+      "admin": "管理",
       "other": "その他"
     },
     "actions": {

@@ -65,7 +65,7 @@ SVG. `yarn catalog:gen` warns by name about every icon it had to skip.
 |---|---|---|
 | `identifier` | yes | Stable id; matches the provider's `static identifier` where built on `AbstractIntegrationProviderService`; unique; lowercase-kebab; matches the icon basename |
 | `npm` | yes | Package that ships the integration |
-| `category` | yes | `payment` / `fulfillment` / `marketplace` / `crm` / `erp` / `pim` / `notification` / `feed` / `tax` / `other` (distinct from the site's plugin `category`) |
+| `category` | yes | `payment` / `notification` / `fulfillment` / `search` / `content` / `analytics` / `authentication` / `erp` / `crm` / `pim` / `marketplace` / `feed` / `file_providers` / `tax` / `subscriptions` / `reviews` / `admin` / `other` (distinct from the site's plugin `category`) |
 | `author` | yes | Author `id` from [`authors.yml`](authors.yml) — Gorgo vs. community reads off this, there's no separate `official` flag |
 | `displayName` | yes | `{ en, ru }` — card title |
 | `icon` | yes | Filename under `icons/` |

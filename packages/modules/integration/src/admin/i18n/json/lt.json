@@ -65,6 +65,10 @@
       "marketplace": "Prekyvietė",
       "feed": "Srautai",
       "file_providers": "Failų teikėjai",
+      "tax": "Mokesčiai",
+      "subscriptions": "Prenumeratos",
+      "reviews": "Atsiliepimai",
+      "admin": "Admin",
       "other": "Kita"
     },
     "actions": {

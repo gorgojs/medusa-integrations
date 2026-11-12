@@ -65,6 +65,10 @@
       "marketplace": "Piactér",
       "feed": "Hírcsatornák",
       "file_providers": "Fájlszolgáltatók",
+      "tax": "Adók",
+      "subscriptions": "Előfizetések",
+      "reviews": "Értékelések",
+      "admin": "Admin",
       "other": "Egyéb"
     },
     "actions": {

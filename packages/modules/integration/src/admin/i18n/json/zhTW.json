@@ -65,6 +65,10 @@
       "marketplace": "市集",
       "feed": "資料來源",
       "file_providers": "檔案提供者",
+      "tax": "稅務",
+      "subscriptions": "訂閱",
+      "reviews": "評價",
+      "admin": "管理後台",
       "other": "其他"
     },
     "actions": {

@@ -65,6 +65,10 @@
       "marketplace": "Tržnica",
       "feed": "Feedovi",
       "file_providers": "Pružatelji datoteka",
+      "tax": "Porezi",
+      "subscriptions": "Pretplate",
+      "reviews": "Recenzije",
+      "admin": "Admin",
       "other": "Ostalo"
     },
     "actions": {

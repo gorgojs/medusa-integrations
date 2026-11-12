@@ -65,6 +65,10 @@
       "marketplace": "มาร์เก็ตเพลส",
       "feed": "ฟีด",
       "file_providers": "ผู้ให้บริการไฟล์",
+      "tax": "ภาษี",
+      "subscriptions": "การสมัครสมาชิก",
+      "reviews": "รีวิว",
+      "admin": "ผู้ดูแลระบบ",
       "other": "อื่นๆ"
     },
     "actions": {

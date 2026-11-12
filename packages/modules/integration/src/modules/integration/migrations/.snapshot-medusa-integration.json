@@ -49,6 +49,10 @@
             "marketplace",
             "feed",
             "file_providers",
+            "tax",
+            "subscriptions",
+            "reviews",
+            "admin",
             "other"
           ],
           "mappedType": "enum"

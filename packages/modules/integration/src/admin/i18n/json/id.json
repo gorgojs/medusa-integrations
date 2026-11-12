@@ -65,6 +65,10 @@
       "marketplace": "Marketplace",
       "feed": "Feed",
       "file_providers": "Penyedia file",
+      "tax": "Pajak",
+      "subscriptions": "Langganan",
+      "reviews": "Ulasan",
+      "admin": "Admin",
       "other": "Lainnya"
     },
     "actions": {

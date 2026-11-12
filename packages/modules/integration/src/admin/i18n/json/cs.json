@@ -65,6 +65,10 @@
       "marketplace": "Tržiště",
       "feed": "Feedy",
       "file_providers": "Poskytovatelé souborů",
+      "tax": "Daně",
+      "subscriptions": "Předplatná",
+      "reviews": "Recenze",
+      "admin": "Admin",
       "other": "Ostatní"
     },
     "actions": {

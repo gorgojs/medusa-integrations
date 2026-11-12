@@ -65,6 +65,10 @@
       "marketplace": "Маркетплейс",
       "feed": "Фиды",
       "file_providers": "Файловые провайдеры",
+      "tax": "Налоги",
+      "subscriptions": "Подписки",
+      "reviews": "Отзывы",
+      "admin": "Панель администратора",
       "other": "Прочее"
     },
     "actions": {

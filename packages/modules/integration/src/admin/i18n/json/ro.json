@@ -65,6 +65,10 @@
       "marketplace": "Marketplace",
       "feed": "Fluxuri",
       "file_providers": "Furnizori de fișiere",
+      "tax": "Taxe",
+      "subscriptions": "Abonamente",
+      "reviews": "Recenzii",
+      "admin": "Admin",
       "other": "Altele"
     },
     "actions": {

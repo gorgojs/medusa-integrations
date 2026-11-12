@@ -65,6 +65,10 @@
       "marketplace": "Pazar yeri",
       "feed": "Beslemeler",
       "file_providers": "Dosya sağlayıcıları",
+      "tax": "Vergiler",
+      "subscriptions": "Abonelikler",
+      "reviews": "Yorumlar",
+      "admin": "Yönetim paneli",
       "other": "Diğer"
     },
     "actions": {

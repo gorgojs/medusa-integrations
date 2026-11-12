@@ -65,6 +65,10 @@
       "marketplace": "Маркетплейс",
       "feed": "Фийд",
       "file_providers": "Файлын үйлчилгээ үзүүлэгчид",
+      "tax": "Татвар",
+      "subscriptions": "Захиалга",
+      "reviews": "Сэтгэгдэл",
+      "admin": "Админ",
       "other": "Бусад"
     },
     "actions": {

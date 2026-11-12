@@ -65,6 +65,10 @@
       "marketplace": "Marketplace",
       "feed": "Feeds",
       "file_providers": "Proveedores de archivos",
+      "tax": "Impuestos",
+      "subscriptions": "Suscripciones",
+      "reviews": "Reseñas",
+      "admin": "Admin",
       "other": "Otros"
     },
     "actions": {

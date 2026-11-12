@@ -65,6 +65,10 @@
       "marketplace": "Пазар",
       "feed": "Фидови",
       "file_providers": "Даватели на датотеки",
+      "tax": "Даноци",
+      "subscriptions": "Претплати",
+      "reviews": "Рецензии",
+      "admin": "Административен панел",
       "other": "Друго"
     },
     "actions": {

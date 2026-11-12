@@ -65,6 +65,10 @@
       "marketplace": "Marktplatz",
       "feed": "Feeds",
       "file_providers": "Dateianbieter",
+      "tax": "Steuern",
+      "subscriptions": "Abonnements",
+      "reviews": "Bewertungen",
+      "admin": "Admin",
       "other": "Sonstiges"
     },
     "actions": {

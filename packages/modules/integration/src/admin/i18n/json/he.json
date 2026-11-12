@@ -65,6 +65,10 @@
       "marketplace": "זירת מסחר",
       "feed": "פידים",
       "file_providers": "ספקי קבצים",
+      "tax": "מיסים",
+      "subscriptions": "מנויים",
+      "reviews": "ביקורות",
+      "admin": "ניהול",
       "other": "אחר"
     },
     "actions": {

@@ -65,6 +65,10 @@
       "marketplace": "Sàn thương mại",
       "feed": "Nguồn cấp",
       "file_providers": "Nhà cung cấp tệp",
+      "tax": "Thuế",
+      "subscriptions": "Đăng ký",
+      "reviews": "Đánh giá",
+      "admin": "Quản trị",
       "other": "Khác"
     },
     "actions": {

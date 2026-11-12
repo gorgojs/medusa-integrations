@@ -65,6 +65,10 @@
       "marketplace": "الأسواق",
       "feed": "الخلاصات",
       "file_providers": "مزودو الملفات",
+      "tax": "الضرائب",
+      "subscriptions": "الاشتراكات",
+      "reviews": "التقييمات",
+      "admin": "الإدارة",
       "other": "أخرى"
     },
     "actions": {

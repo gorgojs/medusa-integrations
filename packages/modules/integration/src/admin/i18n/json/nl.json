@@ -65,6 +65,10 @@
       "marketplace": "Marktplaats",
       "feed": "Feeds",
       "file_providers": "Bestandsproviders",
+      "tax": "Belastingen",
+      "subscriptions": "Abonnementen",
+      "reviews": "Beoordelingen",
+      "admin": "Admin",
       "other": "Overig"
     },
     "actions": {

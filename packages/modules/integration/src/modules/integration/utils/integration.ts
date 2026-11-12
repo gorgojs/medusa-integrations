@@ -19,6 +19,10 @@ export const IntegrationCategory = {
   MARKETPLACE: "marketplace",
   FEED: "feed",
   FILE_PROVIDERS: "file_providers",
+  TAX: "tax",
+  SUBSCRIPTIONS: "subscriptions",
+  REVIEWS: "reviews",
+  ADMIN: "admin",
   OTHER: "other",
 } as const
 export type CategoryKind = (typeof IntegrationCategory)[keyof typeof IntegrationCategory]

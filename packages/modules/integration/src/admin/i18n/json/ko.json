@@ -65,6 +65,10 @@
       "marketplace": "마켓플레이스",
       "feed": "피드",
       "file_providers": "파일 제공자",
+      "tax": "세금",
+      "subscriptions": "구독",
+      "reviews": "리뷰",
+      "admin": "관리자",
       "other": "기타"
     },
     "actions": {

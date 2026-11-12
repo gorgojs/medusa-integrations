@@ -65,6 +65,10 @@
       "marketplace": "市场",
       "feed": "数据源",
       "file_providers": "文件供应商",
+      "tax": "税务",
+      "subscriptions": "订阅",
+      "reviews": "评价",
+      "admin": "管理后台",
       "other": "其他"
     },
     "actions": {

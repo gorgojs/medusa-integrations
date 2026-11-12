@@ -65,6 +65,10 @@
       "marketplace": "Маркетплейс",
       "feed": "Фийдове",
       "file_providers": "Файлови доставчици",
+      "tax": "Данъци",
+      "subscriptions": "Абонаменти",
+      "reviews": "Отзиви",
+      "admin": "Администраторски панел",
       "other": "Други"
     },
     "actions": {
