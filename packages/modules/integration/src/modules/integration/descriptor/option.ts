@@ -77,6 +77,12 @@ export type JsonOption = OptionBase & {
   validate?: (v: unknown, c: OptionValidateContext) => void
 }
 
+/**
+ * One option of a descriptor, by `type`.
+ *
+ * Values are added in minor releases and removed or renamed only in major ones, so handle a value
+ * you don't know.
+ */
 export type OptionDef =
   | StringOption
   | UrlOption

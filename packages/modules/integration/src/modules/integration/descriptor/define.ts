@@ -15,7 +15,10 @@ export type IntegrationSection = {
   title: I18nKey
   /** Ordered option ids drawn into this section's auto-generated card/drawer. */
   options: readonly string[]
-  /** Which column to render this section in (two-column layout). Defaults to `"main"`. */
+  /**
+   * Which column to render this section in (two-column layout). Defaults to `"main"`. Values are
+   * added in minor releases and removed or renamed only in major ones.
+   */
   column?: "main" | "side"
 }
 
