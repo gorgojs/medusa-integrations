@@ -4,7 +4,9 @@ import { processPaymentWorkflow } from "@medusajs/medusa/core-flows"
 
 export const AUTHORIZENET_PROVIDER_ROUTE_KEY = "authorizenet_authorizenet"
 
-export const AUTHORIZENET_SIGNATURE_KEY = process.env.AUTHORIZENET_SIGNATURE_KEY || ""
+export const AUTHORIZENET_SIGNATURE_KEY =
+  process.env.AUTHORIZENET_SIGNATURE_KEY ||
+  "a367989f131bf1e9b52ee9bc913f14e34d13b95c2a2d0f942f608041b09a0ad9e504d40f883e4f33515edabefe3fe0f6b6a98d95e34ecbf154ff32049ee7ed31"
 
 /** A payment event the way Authorize.net delivers it. */
 export function webhookEvent(eventType: string, payload: Record<string, unknown> = {}) {

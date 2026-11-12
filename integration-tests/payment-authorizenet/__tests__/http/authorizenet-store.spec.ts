@@ -8,6 +8,7 @@
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import nock from "nock"
 import { seedAuthorizeNetIntegration } from "../utils/seed-authorizenet"
+import { AUTHORIZENET_SIGNATURE_KEY } from "../utils/webhooks"
 import {
   createAdminHeaders,
   createStoreHeaders,
@@ -55,7 +56,7 @@ medusaIntegrationTestRunner({
         })
         const body = JSON.stringify(res.data)
         expect(body).not.toContain("nock-transaction-key")
-        expect(body).not.toContain(process.env.AUTHORIZENET_SIGNATURE_KEY as string)
+        expect(body).not.toContain(AUTHORIZENET_SIGNATURE_KEY)
       })
 
       it("accepts the instance's provider_id", async () => {

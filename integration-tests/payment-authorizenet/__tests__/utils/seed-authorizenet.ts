@@ -1,3 +1,5 @@
+import { AUTHORIZENET_SIGNATURE_KEY } from "./webhooks"
+
 export const AUTHORIZENET_INTEGRATION_PROVIDER_ID = "int_authorizenet_authorizenet-1"
 
 /**
@@ -13,7 +15,7 @@ export async function seedAuthorizeNetIntegration(container: any, overrides: Rec
     apiLoginId: process.env.AUTHORIZENET_API_LOGIN_ID || "nock-login",
     transactionKey: process.env.AUTHORIZENET_TRANSACTION_KEY || "nock-transaction-key",
     publicClientKey: process.env.AUTHORIZENET_CLIENT_KEY || "nock-client-key",
-    signatureKey: process.env.AUTHORIZENET_SIGNATURE_KEY,
+    signatureKey: AUTHORIZENET_SIGNATURE_KEY,
     capture: "automatic",
     googlePay: false,
     ...overrides,
