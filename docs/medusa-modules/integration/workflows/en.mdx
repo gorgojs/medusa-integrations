@@ -62,7 +62,7 @@ flowchart TD
   emit -->|"emits"| event(["integration.updated"])
 ```
 
-The first step reads the stored state, which lets the change history tell a first save from an update. The history record is skipped when an update changes no field, and the event is emitted either way.
+The first step reads the stored record, which lets the change history tell a first save from an update. The history record is skipped when an update changes no field, and the event is emitted either way.
 
 <MedusaTypeList
   sectionTitle="Input"
