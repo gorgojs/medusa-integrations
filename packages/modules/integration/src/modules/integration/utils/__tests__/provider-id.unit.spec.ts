@@ -1,11 +1,16 @@
-import { integrationProviderKey, parseIntegrationProviderKey } from "../provider-id"
+import { DEFAULT_INSTANCE_ID, integrationProviderKey, parseIntegrationProviderKey } from "../provider-id"
 import IntegrationProviderService from "../../services/integration-provider"
 
 describe("integrationProviderKey", () => {
-  it("keys the default instance without a suffix", () => {
-    expect(integrationProviderKey("apiship")).toBe("int_apiship")
-    expect(integrationProviderKey("apiship", null)).toBe("int_apiship")
-    expect(integrationProviderKey("apiship", "")).toBe("int_apiship")
+  it("keys a registration without an id as the default instance", () => {
+    expect(integrationProviderKey("apiship")).toBe("int_apiship_default")
+    expect(integrationProviderKey("apiship", null)).toBe("int_apiship_default")
+    expect(integrationProviderKey("apiship", "")).toBe("int_apiship_default")
+  })
+
+  it("names the default instance default", () => {
+    expect(DEFAULT_INSTANCE_ID).toBe("default")
+    expect(integrationProviderKey("apiship", "default")).toBe("int_apiship_default")
   })
 
   it("appends a named instance", () => {
@@ -13,17 +18,16 @@ describe("integrationProviderKey", () => {
   })
 
   it("is the same key the registry uses", () => {
-    expect(IntegrationProviderService.key("apiship", "eu")).toBe(
-      integrationProviderKey("apiship", "eu")
-    )
+    expect(IntegrationProviderService.key("apiship", "eu")).toBe("int_apiship_eu")
+    expect(IntegrationProviderService.key("apiship")).toBe("int_apiship_default")
   })
 })
 
 describe("parseIntegrationProviderKey", () => {
   it("recognises the default instance", () => {
-    expect(parseIntegrationProviderKey("int_apiship", "apiship")).toEqual({
+    expect(parseIntegrationProviderKey("int_apiship_default", "apiship")).toEqual({
       identifier: "apiship",
-      instanceId: null,
+      instanceId: "default",
     })
   })
 
@@ -41,11 +45,15 @@ describe("parseIntegrationProviderKey", () => {
     })
   })
 
+  it("rejects a key without an instance, the format before 2.0", () => {
+    expect(parseIntegrationProviderKey("int_apiship", "apiship")).toBeNull()
+  })
+
   it("rejects another provider's key", () => {
-    expect(parseIntegrationProviderKey("int_tkassa", "apiship")).toBeNull()
+    expect(parseIntegrationProviderKey("int_tkassa_default", "apiship")).toBeNull()
     expect(parseIntegrationProviderKey("int_tkassa_1", "apiship")).toBeNull()
     // A different identifier that merely starts with the same characters.
-    expect(parseIntegrationProviderKey("int_apishipx", "apiship")).toBeNull()
+    expect(parseIntegrationProviderKey("int_apishipx_default", "apiship")).toBeNull()
   })
 
   it("rejects malformed and empty input", () => {
@@ -58,12 +66,15 @@ describe("parseIntegrationProviderKey", () => {
   })
 
   it("round-trips with integrationProviderKey", () => {
-    for (const instanceId of [null, "a", "apiship-1", "eu_west"]) {
-      const key = integrationProviderKey("apiship", instanceId)
-      expect(parseIntegrationProviderKey(key, "apiship")).toEqual({
-        identifier: "apiship",
-        instanceId,
-      })
+    const cases: Array<[string | null, string]> = [
+      [null, "default"],
+      ["a", "a"],
+      ["apiship-1", "apiship-1"],
+      ["eu_west", "eu_west"],
+    ]
+    for (const [given, instanceId] of cases) {
+      const key = integrationProviderKey("apiship", given)
+      expect(parseIntegrationProviderKey(key, "apiship")).toEqual({ identifier: "apiship", instanceId })
     }
   })
 })

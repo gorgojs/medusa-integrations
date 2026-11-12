@@ -17,13 +17,13 @@ const descriptor = defineIntegration({
 })
 
 const registration = {
-  key: "int_demo",
+  key: "int_demo_default",
   identifier: "demo",
-  instanceId: null as string | null,
+  instanceId: "default",
   provider: {
     descriptor,
     getIdentifier: () => "demo",
-    getInstanceId: () => null,
+    getInstanceId: () => "default",
   },
 }
 
@@ -73,7 +73,7 @@ function makeService(opts?: { options?: Record<string, unknown>; rows?: Row[]; p
 function storedRow(svc: any, values: Record<string, unknown>, extra?: Partial<Row>): Row {
   return {
     id: "int_demo",
-    provider_id: "int_demo",
+    provider_id: "int_demo_default",
     category: "payment",
     title: null,
     is_enabled: true,
@@ -97,13 +97,13 @@ describe("IntegrationModuleService — encryption", () => {
     const svc = makeService()
     const row = storedRow(svc, { apiKey: "pub", secretKey: "shh", mode: "test" })
     svc._rows.push(row)
-    const values = await svc.getStoredValues("int_demo")
+    const values = await svc.getStoredValues("int_demo_default")
     expect(values).toEqual({ apiKey: "pub", secretKey: "shh", mode: "test" })
   })
 
   it("getStoredValues returns {} when there is no row", async () => {
     const svc = makeService()
-    expect(await svc.getStoredValues("int_demo")).toEqual({})
+    expect(await svc.getStoredValues("int_demo_default")).toEqual({})
   })
 
   it("throws a helpful error when a secret must be encrypted but no key is configured", () => {
@@ -121,7 +121,7 @@ describe("IntegrationModuleService — encryption", () => {
       sections: [{ id: "s", title: "t", options: ["apiKey"] }],
     })
     const svc = makeService({ options: {} })
-    expect(svc.encryptForStorage({ ...noSecrets, identifier: "x", instanceId: null }, { apiKey: "pub" })).toEqual({
+    expect(svc.encryptForStorage({ ...noSecrets, identifier: "x", instanceId: "default" }, { apiKey: "pub" })).toEqual({
       apiKey: "pub",
     })
   })
@@ -142,7 +142,7 @@ describe("IntegrationModuleService — isComplete", () => {
 
   it("is false when no provider is registered for the row", () => {
     const svc = makeService({ providerService: makeProviderService([]) })
-    expect(svc.isComplete({ provider_id: "int_demo", options: {} })).toBe(false)
+    expect(svc.isComplete({ provider_id: "int_demo_default", options: {} })).toBe(false)
   })
 })
 
@@ -175,7 +175,16 @@ describe("IntegrationModuleService — getResolvedOptions", () => {
     const resolved = await svc.getResolvedOptions("demo", null)
     expect(resolved).not.toBeNull()
     expect(resolved!.options).toEqual({ apiKey: "pub", secretKey: "shh", mode: "test" })
-    expect(resolved!.meta).toEqual({ provider_id: "int_demo", category: "payment", is_enabled: true })
+    expect(resolved!.meta).toEqual({ provider_id: "int_demo_default", category: "payment", is_enabled: true })
+  })
+
+  it("reads the default instance whether the instance is omitted, null or default", async () => {
+    const svc = makeService()
+    svc._rows.push(storedRow(svc, { apiKey: "pub", secretKey: "shh" }, { is_enabled: true }))
+    for (const instanceId of [undefined, null, "default"]) {
+      svc.clearOptionsCache()
+      expect((await svc.getResolvedOptions("demo", instanceId))!.meta.provider_id).toBe("int_demo_default")
+    }
   })
 
   it("serves a cached value within the TTL without hitting the store again", async () => {
@@ -192,7 +201,7 @@ describe("IntegrationModuleService — getResolvedOptions", () => {
     svc._rows.push(storedRow(svc, { apiKey: "pub", secretKey: "shh" }, { is_enabled: true }))
     await svc.getResolvedOptions("demo", null)
     const before = svc.listIntegrations.mock.calls.length
-    svc.clearOptionsCache("int_demo")
+    svc.clearOptionsCache("int_demo_default")
     await svc.getResolvedOptions("demo", null)
     expect(svc.listIntegrations.mock.calls.length).toBeGreaterThan(before)
   })
@@ -207,24 +216,24 @@ describe("IntegrationModuleService — runTestConnection", () => {
       sections: [{ id: "s", title: "t", options: ["apiKey"] }],
     })
     const reg = {
-      key: "int_demo",
+      key: "int_demo_default",
       identifier: "demo",
-      instanceId: null,
-      provider: { descriptor: noTest, getIdentifier: () => "demo", getInstanceId: () => null },
+      instanceId: "default",
+      provider: { descriptor: noTest, getIdentifier: () => "demo", getInstanceId: () => "default" },
     }
     const svc = makeService({ providerService: makeProviderService([reg]) })
-    expect(await svc.runTestConnection("int_demo")).toEqual({ status: "skipped", message: "No test configured" })
+    expect(await svc.runTestConnection("int_demo_default")).toEqual({ status: "skipped", message: "No test configured" })
   })
 
   it("returns failed 'Not configured' when options don't resolve", async () => {
     const svc = makeService() // no row → getResolvedOptions null
-    const res = await svc.runTestConnection("int_demo")
+    const res = await svc.runTestConnection("int_demo_default")
     expect(res).toEqual({ status: "failed", message: "Not configured" })
   })
 
   it("returns failed for an unknown provider id without throwing", async () => {
     const svc = makeService({ providerService: makeProviderService([]) })
-    const res = await svc.runTestConnection("int_missing")
+    const res = await svc.runTestConnection("int_missing_default")
     expect(res.status).toBe("failed")
     expect(res.message).toMatch(/Unknown integration provider/)
   })
@@ -232,7 +241,7 @@ describe("IntegrationModuleService — runTestConnection", () => {
   it("passes through the descriptor's testConnection result on success", async () => {
     const svc = makeService()
     svc._rows.push(storedRow(svc, { apiKey: "pub", secretKey: "shh" }, { is_enabled: true }))
-    expect(await svc.runTestConnection("int_demo")).toEqual({ status: "passed" })
+    expect(await svc.runTestConnection("int_demo_default")).toEqual({ status: "passed" })
   })
 })
 
@@ -242,7 +251,7 @@ describe("IntegrationModuleService — listIntegrationsOverview", () => {
     const { integrations } = await svc.listIntegrationsOverview()
     const [item] = integrations
     expect(item).toMatchObject({
-      provider_id: "int_demo",
+      provider_id: "int_demo_default",
       identifier: "demo",
       is_configured: false,
       is_enabled: false,
@@ -274,10 +283,10 @@ describe("IntegrationModuleService — listIntegrationsOverview", () => {
       sections: [{ id: "s", title: "t", options: ["apiKey"] }],
     })
     const reg = {
-      key: "int_demo",
+      key: "int_demo_default",
       identifier: "demo",
-      instanceId: null,
-      provider: { descriptor: withDesc, getIdentifier: () => "demo", getInstanceId: () => null },
+      instanceId: "default",
+      provider: { descriptor: withDesc, getIdentifier: () => "demo", getInstanceId: () => "default" },
     }
     const svc = makeService({
       providerService: makeProviderService([reg]),
@@ -293,18 +302,18 @@ describe("IntegrationModuleService — listIntegrationsOverview", () => {
   })
 
   it("filters by category and reports the unfiltered categories facet", async () => {
-    const pay = { key: "int_pay", identifier: "pay", instanceId: null, provider: { descriptor: { category: "payment", displayName: "p" }, getIdentifier: () => "pay", getInstanceId: () => null } }
-    const ful = { key: "int_ful", identifier: "ful", instanceId: null, provider: { descriptor: { category: "fulfillment", displayName: "f" }, getIdentifier: () => "ful", getInstanceId: () => null } }
+    const pay = { key: "int_pay_default", identifier: "pay", instanceId: "default", provider: { descriptor: { category: "payment", displayName: "p" }, getIdentifier: () => "pay", getInstanceId: () => "default" } }
+    const ful = { key: "int_ful_default", identifier: "ful", instanceId: "default", provider: { descriptor: { category: "fulfillment", displayName: "f" }, getIdentifier: () => "ful", getInstanceId: () => "default" } }
     const svc = makeService({ providerService: makeProviderService([pay, ful]) })
     const res = await svc.listIntegrationsOverview({ category: "payment" })
-    expect(res.integrations.map((i: any) => i.provider_id)).toEqual(["int_pay"])
+    expect(res.integrations.map((i: any) => i.provider_id)).toEqual(["int_pay_default"])
     expect(res.count).toBe(1)
     expect(res.categories.sort()).toEqual(["fulfillment", "payment"])
   })
 
   it("filters by q on the identifier", async () => {
-    const pay = { key: "int_pay", identifier: "pay", instanceId: null, provider: { descriptor: { category: "payment", displayName: "p" }, getIdentifier: () => "pay", getInstanceId: () => null } }
-    const ful = { key: "int_ful", identifier: "ful", instanceId: null, provider: { descriptor: { category: "fulfillment", displayName: "f" }, getIdentifier: () => "ful", getInstanceId: () => null } }
+    const pay = { key: "int_pay_default", identifier: "pay", instanceId: "default", provider: { descriptor: { category: "payment", displayName: "p" }, getIdentifier: () => "pay", getInstanceId: () => "default" } }
+    const ful = { key: "int_ful_default", identifier: "ful", instanceId: "default", provider: { descriptor: { category: "fulfillment", displayName: "f" }, getIdentifier: () => "ful", getInstanceId: () => "default" } }
     const svc = makeService({ providerService: makeProviderService([pay, ful]) })
     const res = await svc.listIntegrationsOverview({ q: "FUL" })
     expect(res.integrations.map((i: any) => i.identifier)).toEqual(["ful"])
@@ -313,14 +322,14 @@ describe("IntegrationModuleService — listIntegrationsOverview", () => {
 
   it("paginates via limit/offset while count reflects the full filtered set", async () => {
     const regs = [1, 2, 3].map((n) => ({
-      key: `int_p${n}`, identifier: `p${n}`, instanceId: null,
-      provider: { descriptor: { category: "payment", displayName: "p" }, getIdentifier: () => `p${n}`, getInstanceId: () => null },
+      key: `int_p${n}_default`, identifier: `p${n}`, instanceId: "default",
+      provider: { descriptor: { category: "payment", displayName: "p" }, getIdentifier: () => `p${n}`, getInstanceId: () => "default" },
     }))
     const svc = makeService({ providerService: makeProviderService(regs) })
     const res = await svc.listIntegrationsOverview({ limit: 2, offset: 2 })
     expect(res.count).toBe(3)
     expect(res.integrations).toHaveLength(1)
-    expect(res.integrations[0].provider_id).toBe("int_p3")
+    expect(res.integrations[0].provider_id).toBe("int_p3_default")
   })
 })
 
@@ -329,7 +338,7 @@ describe("IntegrationModuleService — getPackageMeta", () => {
     const svc = makeService({
       packageMeta: { demo: { name: "@gorgo/demo", version: "1.2.3", author: "Gorgo", authorUrl: "https://gorgo.dev" } },
     })
-    expect(svc.getPackageMeta("int_demo")).toEqual({
+    expect(svc.getPackageMeta("int_demo_default")).toEqual({
       version: "1.2.3",
       author: "Gorgo",
       author_url: "https://gorgo.dev",
@@ -338,12 +347,12 @@ describe("IntegrationModuleService — getPackageMeta", () => {
 
   it("returns nulls when there is no package meta for the provider", () => {
     const svc = makeService()
-    expect(svc.getPackageMeta("int_demo")).toEqual({ version: null, author: null, author_url: null })
+    expect(svc.getPackageMeta("int_demo_default")).toEqual({ version: null, author: null, author_url: null })
   })
 
   it("returns nulls for an unregistered provider_id", () => {
     const svc = makeService({ providerService: makeProviderService([]) })
-    expect(svc.getPackageMeta("int_missing")).toEqual({ version: null, author: null, author_url: null })
+    expect(svc.getPackageMeta("int_missing_default")).toEqual({ version: null, author: null, author_url: null })
   })
 })
 
@@ -359,12 +368,12 @@ describe("IntegrationModuleService — getCatalog", () => {
 
   it("marks a catalog entry installed when a provider with that identifier is registered", async () => {
     const reg = {
-      key: "int_tkassa", identifier: "tkassa", instanceId: null,
-      provider: { descriptor: { category: "payment", displayName: "T" }, getIdentifier: () => "tkassa", getInstanceId: () => null },
+      key: "int_tkassa_default", identifier: "tkassa", instanceId: "default",
+      provider: { descriptor: { category: "payment", displayName: "T" }, getIdentifier: () => "tkassa", getInstanceId: () => "default" },
     }
     const svc = makeService({ providerService: makeProviderService([reg]) })
     const catalog = await svc.getCatalog()
-    expect(catalog.find((c: any) => c.integrationId === "tkassa")).toMatchObject({ installed: true, provider_id: "int_tkassa" })
+    expect(catalog.find((c: any) => c.integrationId === "tkassa")).toMatchObject({ installed: true, provider_id: "int_tkassa_default" })
     expect(catalog.find((c: any) => c.integrationId === "1c")).toMatchObject({ installed: false, provider_id: null })
   })
 

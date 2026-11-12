@@ -9,17 +9,18 @@ type InjectedDependencies = {
 
 /** A single registered provider = one integration *instance*. */
 export type ProviderRegistration = {
-  /** Container key `int_<identifier>[_<id>]` — the instance's stable identity. */
+  /** Container key `int_<identifier>_<instanceId>` — the instance's stable identity. */
   key: string
   identifier: string
-  instanceId: string | null
+  /** The registration `id`, or `default` for a registration without one. */
+  instanceId: string
   provider: AbstractIntegrationProviderService
 }
 
 /**
  * Thin registry over the integration-providers registered into the module container by
  * `loadProviders`. Each registration in `options.providers` is one instance, identified
- * by its container key `int_<identifier>[_<id>]` — which is also the DB `provider_id`.
+ * by its container key `int_<identifier>_<instanceId>` — which is also the DB `provider_id`.
  * Instances are declared in medusa-config, not created at runtime. `identifier`/`instanceId`
  * (= `getIdentifier()`/`getInstanceId()`) are derived for descriptors/UI.
  *
@@ -33,7 +34,7 @@ export default class IntegrationProviderService {
     this.dependencies_ = container
   }
 
-  /** Build the container key for a `(identifier, instanceId)` pair. */
+  /** Build the container key for a `(identifier, instanceId)` pair; no instance means `default`. */
   static key(identifier: string, instanceId?: string | null): string {
     return integrationProviderKey(identifier, instanceId)
   }

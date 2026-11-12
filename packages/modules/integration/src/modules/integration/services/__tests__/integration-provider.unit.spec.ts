@@ -2,7 +2,7 @@ import { describe, expect, it } from "@jest/globals"
 import IntegrationProviderService from "../integration-provider"
 
 // Minimal provider stubs — the registry only needs getIdentifier/getInstanceId/descriptor.
-const mkProvider = (identifier: string, instanceId: string | null, withTest = false) => {
+const mkProvider = (identifier: string, instanceId: string, withTest = false) => {
   const p: any = {
     getIdentifier: () => identifier,
     getInstanceId: () => instanceId,
@@ -19,10 +19,10 @@ const mkProvider = (identifier: string, instanceId: string | null, withTest = fa
   return p
 }
 
-// Mimics the awilix cradle: container keys are `int_<identifier>[_<id>]`.
+// Mimics the awilix cradle: container keys are `int_<identifier>_<instanceId>`.
 const makeRegistry = () =>
   new IntegrationProviderService({
-    int_tkassa: mkProvider("tkassa", null),
+    int_tkassa_default: mkProvider("tkassa", "default"),
     int_ozon_acct1: mkProvider("ozon", "acct1", true),
     int_ozon_acct2: mkProvider("ozon", "acct2"),
     // a non-provider cradle entry must be ignored
@@ -31,8 +31,8 @@ const makeRegistry = () =>
 
 describe("IntegrationProviderService (registration identity)", () => {
   it("builds container keys from (identifier, instanceId)", () => {
-    expect(IntegrationProviderService.key("tkassa")).toBe("int_tkassa")
-    expect(IntegrationProviderService.key("tkassa", null)).toBe("int_tkassa")
+    expect(IntegrationProviderService.key("tkassa")).toBe("int_tkassa_default")
+    expect(IntegrationProviderService.key("tkassa", null)).toBe("int_tkassa_default")
     expect(IntegrationProviderService.key("ozon", "acct1")).toBe("int_ozon_acct1")
   })
 
@@ -41,7 +41,7 @@ describe("IntegrationProviderService (registration identity)", () => {
     expect(regs.map((r) => [r.key, r.identifier, r.instanceId]).sort()).toEqual([
       ["int_ozon_acct1", "ozon", "acct1"],
       ["int_ozon_acct2", "ozon", "acct2"],
-      ["int_tkassa", "tkassa", null],
+      ["int_tkassa_default", "tkassa", "default"],
     ])
   })
 
@@ -49,15 +49,16 @@ describe("IntegrationProviderService (registration identity)", () => {
     const reg = makeRegistry()
     expect(reg.retrieveByKey("int_ozon_acct1").getInstanceId()).toBe("acct1")
     expect(reg.retrieveProvider("ozon", "acct2").getInstanceId()).toBe("acct2")
-    expect(reg.retrieveProvider("tkassa").getInstanceId()).toBe(null)
+    expect(reg.retrieveProvider("tkassa").getInstanceId()).toBe("default")
   })
 
   it("reports registration existence exactly", () => {
     const reg = makeRegistry()
     expect(reg.hasProvider("tkassa")).toBe(true)
     expect(reg.hasProvider("tkassa", null)).toBe(true)
+    expect(reg.hasProvider("tkassa", "default")).toBe(true)
     expect(reg.hasProvider("ozon", "acct1")).toBe(true)
-    expect(reg.hasProvider("ozon")).toBe(false) // no null-instance ozon
+    expect(reg.hasProvider("ozon")).toBe(false) // no default ozon
     expect(reg.hasProvider("ozon", "nope")).toBe(false)
   })
 
@@ -77,6 +78,6 @@ describe("IntegrationProviderService (registration identity)", () => {
     const ds = makeRegistry().listDescriptors()
     const ozon1 = ds.find((d) => d.instanceId === "acct1")!
     expect(ozon1.identifier).toBe("ozon")
-    expect(ds.find((d) => d.identifier === "tkassa")!.instanceId).toBe(null)
+    expect(ds.find((d) => d.identifier === "tkassa")!.instanceId).toBe("default")
   })
 })

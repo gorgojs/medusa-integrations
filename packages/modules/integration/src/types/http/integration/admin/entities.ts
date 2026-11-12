@@ -8,7 +8,8 @@ import type {
 export interface IntegrationOverviewItem {
   provider_id: string
   identifier: string
-  instance_id: string | null
+  /** The registration `id`, or `default` for a registration without one. */
+  instance_id: string
   category: CategoryKind
   display_name: I18nKey
   /** Descriptor description (i18n key) — shown in the list's Description column. */

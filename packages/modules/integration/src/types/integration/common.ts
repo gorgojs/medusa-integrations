@@ -61,7 +61,7 @@ export interface UiSection {
  * included — anything needing a secret must go through a server endpoint.
  */
 export interface IntegrationSectionData {
-  /** Registration key `int_<identifier>[_<instanceId>]` — pass to API calls. */
+  /** Registration key `int_<identifier>_<instanceId>` — pass to API calls. */
   providerId: string
   /** The provider's `static identifier` (e.g. "tkassa"). */
   identifier: string
@@ -74,7 +74,8 @@ export interface IntegrationSectionData {
 export interface UiDescriptor {
   category: string
   identifier: string
-  instanceId: string | null
+  /** The registration `id`, or `default` for a registration without one. */
+  instanceId: string
   displayName: I18nKey
   description?: I18nKey
   icon?: string

@@ -4,7 +4,7 @@ import type { LicenseFailReason } from "@gorgo/license"
 /** Awilix list-key under which every registered integration-provider key is collected. */
 export const IntegrationProviderRegistrationKey = "integration_providers"
 
-/** Prefix for each provider's container registration key: `int_<identifier>[_<id>]`. */
+/** Prefix for each provider's container registration key: `int_<identifier>_<instanceId>`. */
 export const IntegrationProviderRegistrationPrefix = "int_"
 
 /** Container key under which the resolved module options are registered. */

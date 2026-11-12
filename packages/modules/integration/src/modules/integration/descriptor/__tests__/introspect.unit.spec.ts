@@ -26,9 +26,15 @@ const base = defineIntegration({
     { id: "behavior", title: "demo.sections.behavior", options: ["test_mode", "region", "webhooks"] },
   ],
 })
-const descriptor: IntegrationDescriptor = { ...base, identifier: "demo", instanceId: null }
+const descriptor: IntegrationDescriptor = { ...base, identifier: "demo", instanceId: "default" }
 
 describe("introspect", () => {
+  it("names the instance of a descriptor stamped without one default", () => {
+    const { instanceId: _, ...unstamped } = descriptor
+    expect(introspectDescriptor(unstamped).instanceId).toBe("default")
+    expect(introspectDescriptor({ ...descriptor, instanceId: "eu" }).instanceId).toBe("eu")
+  })
+
   it("groups referenced options by section, omits catalog-only options", () => {
     const ui = introspectDescriptor(descriptor)
     expect(ui.sections.map((s) => s.id)).toEqual(["general", "behavior"])
@@ -83,7 +89,7 @@ describe("introspect readonly", () => {
     },
     sections: [{ id: "s", title: "t", options: ["endpoint", "apiSecret"] }],
   })
-  const roDescriptor: IntegrationDescriptor = { ...base, identifier: "demo", instanceId: null }
+  const roDescriptor: IntegrationDescriptor = { ...base, identifier: "demo", instanceId: "default" }
 
   it("marks a readonly field disabled and surfaces its default for display", () => {
     const f = introspectDescriptor(roDescriptor).sections[0].fields.find((x) => x.name === "endpoint")!

@@ -26,7 +26,7 @@ const base = defineIntegration({
     if (full.capture && !full.terminalKey) ctx.addIssue({ path: ["terminalKey"], message: "terminalKey required when capture is on" })
   },
 })
-const descriptor: IntegrationDescriptor = { ...base, identifier: "demo", instanceId: null }
+const descriptor: IntegrationDescriptor = { ...base, identifier: "demo", instanceId: "default" }
 
 describe("validateOptions", () => {
   it("validates only the submitted ids and applies their defaults", () => {
@@ -76,7 +76,7 @@ describe("validateOptions — empty-string blanks (admin form sentinel)", () => 
     },
     sections: [{ id: "receipt", title: "t", options: ["useReceipt", "taxation"] }],
   })
-  const desc: IntegrationDescriptor = { ...withOptionalEnum, identifier: "demo", instanceId: null }
+  const desc: IntegrationDescriptor = { ...withOptionalEnum, identifier: "demo", instanceId: "default" }
 
   it("accepts a blank optional enum submitted as '' and stores it as absent", () => {
     const res = validateOptions(desc, ["useReceipt", "taxation"], { useReceipt: false, taxation: "" })

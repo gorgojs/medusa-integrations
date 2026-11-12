@@ -23,3 +23,11 @@ describe("AbstractIntegrationProvider", () => {
     expect(provider.getInstanceId()).toBe("shop-2")
   })
 })
+
+describe("AbstractIntegrationProviderService.getInstanceId", () => {
+  it("is default for a provider created without an instance id", () => {
+    expect(new LegacyProvider().getInstanceId()).toBe("default")
+    expect(new LegacyProvider(undefined, undefined, null).getInstanceId()).toBe("default")
+    expect(new LegacyProvider(undefined, undefined, "").getInstanceId()).toBe("default")
+  })
+})

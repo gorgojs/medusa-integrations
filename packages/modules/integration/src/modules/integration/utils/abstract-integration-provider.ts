@@ -1,4 +1,5 @@
 import type { IntegrationDescriptorInput } from "../descriptor/define"
+import { DEFAULT_INSTANCE_ID } from "./provider-id"
 
 /**
  * Base class AND contract for integration-providers. A plugin ships a subclass and
@@ -16,19 +17,19 @@ import type { IntegrationDescriptorInput } from "../descriptor/define"
  * `static identifier` becomes the descriptor's `identifier` (settings are stored/resolved
  * under it); authors don't repeat it in the descriptor.
  *
- * Each registration in `options.providers` is one *instance*: its `id` (if any) is
- * injected by the loader and exposed via `getInstanceId()`. A provider registered
- * without an `id` is the single (default) instance — `getInstanceId()` returns null.
- * The container key `int_<identifier>[_<id>]` is the instance's stable identity.
+ * Each registration in `options.providers` is one *instance*: its `id` is injected by the
+ * loader and exposed via `getInstanceId()`. A provider registered without an `id` is the
+ * instance `default`. The container key `int_<identifier>_<instanceId>` is the instance's
+ * stable identity.
  */
 export abstract class AbstractIntegrationProviderService {
   static identifier: string
 
   /** The registration `id` (from `options.providers[].id`), injected by the loader. */
-  protected readonly instanceId_: string | null
+  protected readonly instanceId_: string
 
   constructor(_container?: unknown, _options?: unknown, instanceId?: string | null) {
-    this.instanceId_ = instanceId ?? null
+    this.instanceId_ = instanceId || DEFAULT_INSTANCE_ID
   }
 
   /** Optional fail-fast validation of the provider's `options` at load time. */
@@ -38,8 +39,8 @@ export abstract class AbstractIntegrationProviderService {
     return (this.constructor as typeof AbstractIntegrationProviderService).identifier
   }
 
-  /** This instance's id (the registration `id`), or null for the single/default instance. */
-  getInstanceId(): string | null {
+  /** This instance's id: the registration `id`, or `default` for a registration without one. */
+  getInstanceId(): string {
     return this.instanceId_
   }
 

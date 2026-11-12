@@ -2,6 +2,7 @@ import type { FieldControl } from "./meta"
 import type { OptionDef } from "./option"
 import type { IntegrationDescriptor, IntegrationSection } from "./define"
 import type { UiField, UiSection, UiDescriptor } from "../../../types"
+import { DEFAULT_INSTANCE_ID } from "../utils/provider-id"
 
 // Canonical definitions live in the zod-free `src/types`; re-exported here for consumers.
 export type { UiField, UiSection, UiDescriptor }
@@ -73,7 +74,7 @@ export function introspectDescriptor(descriptor: IntegrationDescriptor): UiDescr
   return {
     category: descriptor.category,
     identifier: descriptor.identifier,
-    instanceId: descriptor.instanceId ?? null,
+    instanceId: descriptor.instanceId || DEFAULT_INSTANCE_ID,
     displayName: descriptor.displayName,
     description: descriptor.description,
     icon: descriptor.icon,

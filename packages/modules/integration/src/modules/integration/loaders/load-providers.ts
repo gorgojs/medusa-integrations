@@ -1,4 +1,4 @@
-import { asFunction, asValue, Lifetime } from "@medusajs/framework/awilix"
+import { asValue } from "@medusajs/framework/awilix"
 import { moduleProviderLoader } from "@medusajs/framework/modules-sdk"
 import {
   LoaderOptions,
@@ -10,42 +10,13 @@ import { createTelemetryClient, getMachineId } from "@gorgo/telemetry"
 import {
   INTEGRATION_OPTIONS_KEY,
   INTEGRATION_PACKAGE_META_KEY,
-  IntegrationProviderRegistrationKey,
-  IntegrationProviderRegistrationPrefix,
   type PackageMetaMap,
 } from "../types"
 import IntegrationProviderService from "../services/integration-provider"
 import { findUnmarkedSecretCandidates } from "../descriptor/introspect"
 import { resolvePackageMetaByIdentifier } from "./resolve-package-meta"
 import { warnDuplicateIdentifiers } from "./duplicate-identifiers"
-
-/**
- * Registers each integration-provider class into the module container under
- * `int_<identifier>[_<id>]`, mirroring how the payment/fulfillment modules load
- * their providers. Providers come from the integration plugin's `options.providers`,
- * each entry being `{ resolve, id?, options? }`. Also exposes the resolved module
- * options (encryptionKey, …) under INTEGRATION_OPTIONS_KEY for the module service.
- */
-const registrationFn = async (
-  klass: any,
-  container: any,
-  pluginOptions: { id?: string; options?: Record<string, unknown> }
-) => {
-  const instanceId = pluginOptions.id ?? null
-  const key = `${IntegrationProviderRegistrationPrefix}${klass.identifier}${
-    instanceId ? `_${instanceId}` : ""
-  }`
-
-  container.register({
-    // Pass `instanceId` as the 3rd ctor arg so the provider knows which instance it is
-    // (see AbstractIntegrationProviderService.getInstanceId). The container key encodes the same.
-    [key]: asFunction((cradle: any) => new klass(cradle, pluginOptions.options, instanceId), {
-      lifetime: klass.LIFE_TIME || Lifetime.SINGLETON,
-    }),
-  })
-
-  container.registerAdd(IntegrationProviderRegistrationKey, asValue(key))
-}
+import { registerIntegrationProvider } from "./register-provider"
 
 type ProviderTelemetry = {
   category: string
@@ -99,6 +70,12 @@ const warnUnmarkedSecrets = (container: any, logger?: Logger): void => {
   }
 }
 
+/**
+ * Registers each integration-provider class from the integration plugin's `options.providers`,
+ * each entry being `{ resolve, id?, options? }`, under `int_<identifier>_<instanceId>` (see
+ * `registerIntegrationProvider`). Also exposes the resolved module options (encryptionKey, …)
+ * under INTEGRATION_OPTIONS_KEY for the module service.
+ */
 export default async ({
   container,
   options,
@@ -120,7 +97,7 @@ export default async ({
   await moduleProviderLoader({
     container,
     providers: options?.providers || [],
-    registerServiceFn: registrationFn,
+    registerServiceFn: async (klass, container, details) => registerIntegrationProvider(klass, container, details),
   })
 
   warnUnmarkedSecrets(container, logger)

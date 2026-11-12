@@ -2,10 +2,10 @@ import { MedusaError } from "@medusajs/framework/utils"
 import { requireAuthorizeNetIntegration, resolveAuthorizeNetOptions } from "../integration"
 
 function makeContainer(
-  registrations: Array<{ identifier: string; instanceId: string | null }>,
+  registrations: Array<{ identifier: string; instanceId: string }>,
   resolved: Record<string, unknown> | null = { options: { apiLoginId: "login" } }
 ) {
-  const keys = registrations.map((r) => `int_${r.identifier}${r.instanceId ? `_${r.instanceId}` : ""}`)
+  const keys = registrations.map((r) => `int_${r.identifier}_${r.instanceId}`)
   const service = {
     hasProviderId: (id: string) => keys.includes(id),
     listUiDescriptors: () => registrations,
@@ -37,9 +37,9 @@ describe("requireAuthorizeNetIntegration", () => {
   })
 
   it("takes the default instance registered without an id", () => {
-    const { container } = makeContainer([{ identifier: "authorizenet", instanceId: null }])
+    const { container } = makeContainer([{ identifier: "authorizenet", instanceId: "default" }])
 
-    expect(requireAuthorizeNetIntegration(container)).toMatchObject({ providerId: "int_authorizenet", instanceId: null })
+    expect(requireAuthorizeNetIntegration(container)).toMatchObject({ providerId: "int_authorizenet_default", instanceId: "default" })
   })
 
   it("asks for provider_id when several instances are registered", () => {

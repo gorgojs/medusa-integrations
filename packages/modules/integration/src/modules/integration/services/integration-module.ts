@@ -397,7 +397,8 @@ export default class IntegrationModuleService extends MedusaService({
 
   /**
    * Resolve decrypted options for a `(identifier, instanceId)` pair (the consumer-facing
-   * shape) — mapped internally to the `provider_id` key `int_<identifier>[_<instanceId>]`.
+   * shape) — mapped internally to the `provider_id` key `int_<identifier>_<instanceId>`; an omitted
+   * or null instance is `default`.
    */
   async getResolvedOptions(
     identifier: string,

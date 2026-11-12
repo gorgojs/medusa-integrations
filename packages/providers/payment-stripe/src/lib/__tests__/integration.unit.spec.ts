@@ -2,10 +2,10 @@ import { MedusaError } from "@medusajs/framework/utils"
 import { requireStripeIntegration, resolveStripeOptions } from "../integration"
 
 function makeContainer(
-  registrations: Array<{ identifier: string; instanceId: string | null }>,
+  registrations: Array<{ identifier: string; instanceId: string }>,
   resolved: Record<string, unknown> | null = { options: { publishableKey: "pk_test_x" } }
 ) {
-  const keys = registrations.map((r) => `int_${r.identifier}${r.instanceId ? `_${r.instanceId}` : ""}`)
+  const keys = registrations.map((r) => `int_${r.identifier}_${r.instanceId}`)
   const service = {
     hasProviderId: (id: string) => keys.includes(id),
     listUiDescriptors: () => registrations,
@@ -37,9 +37,9 @@ describe("requireStripeIntegration", () => {
   })
 
   it("takes the default instance registered without an id", () => {
-    const { container } = makeContainer([{ identifier: "stripe", instanceId: null }])
+    const { container } = makeContainer([{ identifier: "stripe", instanceId: "default" }])
 
-    expect(requireStripeIntegration(container)).toMatchObject({ providerId: "int_stripe", instanceId: null })
+    expect(requireStripeIntegration(container)).toMatchObject({ providerId: "int_stripe_default", instanceId: "default" })
   })
 
   it("asks for provider_id when several instances are registered", () => {

@@ -12,7 +12,7 @@ export function service(req: MedusaRequest): IntegrationModuleService {
 }
 
 /**
- * Assert that a `:provider_id` URL param (the registration key `int_<id>[_<instance>]`,
+ * Assert that a `:provider_id` URL param (the registration key `int_<id>_<instance>`,
  * which is also the stored `provider_id`) is a declared registration. 404 otherwise.
  */
 export function requireProvider(svc: IntegrationModuleService, providerId: string): void {

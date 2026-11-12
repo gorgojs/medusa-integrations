@@ -52,7 +52,7 @@ describe("partial section save (selectWritableValues + validateOptions)", () => 
     },
     sections: [{ id: "credentials", title: "t", options: ["terminalKey", "password"] }],
   })
-  const desc: IntegrationDescriptor = { ...base, identifier: "d", instanceId: null }
+  const desc: IntegrationDescriptor = { ...base, identifier: "d", instanceId: "default" }
 
   it("validates only the submitted ids — an absent required section field doesn't fail the draft", () => {
     const current = {}
