@@ -17,6 +17,7 @@ import {
 import IntegrationProviderService from "../services/integration-provider"
 import { findUnmarkedSecretCandidates } from "../descriptor/introspect"
 import { resolvePackageMetaByIdentifier } from "./resolve-package-meta"
+import { warnDuplicateIdentifiers } from "./duplicate-identifiers"
 
 /**
  * Registers each integration-provider class into the module container under
@@ -109,6 +110,7 @@ export default async ({
   ) & { providers?: ModuleProvider[] }
 >): Promise<void> => {
   const packageMeta = resolvePackageMetaByIdentifier(options?.providers ?? [])
+  warnDuplicateIdentifiers(options?.providers ?? [], () => logger ?? container.resolve("logger"))
 
   container.register({
     [INTEGRATION_OPTIONS_KEY]: asValue(options ?? {}),

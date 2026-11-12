@@ -78,6 +78,8 @@ The parent class you're extending here, `AbstractIntegrationProviderService`, is
 
 Every Integration Module provider has a unique identifier. The store admin configures the provider under it, and a consumer reads the provider's options by the same one.
 
+Pick an identifier no other provider uses. When two providers declare the same one, the module logs a warning at startup that names both of them, and from version 3.0 it refuses to start.
+
 #### Example
 
 ```ts title="providers/integration-my/services/my-integration.ts"
