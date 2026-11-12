@@ -1,4 +1,5 @@
 import { describe, expect, it } from "@jest/globals"
+import crypto from "crypto"
 import { deriveKey, encryptValue, decryptValue } from "../crypto"
 
 const key = deriveKey("any-non-empty-passphrase")
@@ -26,9 +27,30 @@ describe("crypto", () => {
   })
 
   it("fails to decrypt tampered ciphertext (GCM auth tag)", () => {
-    const raw = Buffer.from(encryptValue("secret", key), "base64")
+    const raw = Buffer.from(encryptValue("secret", key).slice("v1:".length), "base64")
     raw[raw.length - 1] ^= 0x01 // flip a bit in the ciphertext
-    expect(() => decryptValue(raw.toString("base64"), key)).toThrow()
+    expect(() => decryptValue(`v1:${raw.toString("base64")}`, key)).toThrow()
+  })
+
+  it("writes the versioned format", () => {
+    expect(encryptValue("secret", key)).toMatch(/^v1:[A-Za-z0-9+/]+=*$/)
+  })
+
+  it("reads a value 0.x wrote, which has no version prefix", () => {
+    // The 0.x format: base64 of iv ‖ tag ‖ ciphertext, built here the way 0.3.3 built it.
+    const iv = crypto.randomBytes(12)
+    const cipher = crypto.createCipheriv("aes-256-gcm", key, iv)
+    const plaintext = JSON.stringify("legacy-secret")
+    const enc = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()])
+    const legacy = Buffer.concat([iv, cipher.getAuthTag(), enc]).toString("base64")
+
+    expect(legacy).not.toContain(":")
+    expect(decryptValue(legacy, key)).toBe("legacy-secret")
+  })
+
+  it("refuses a format version it doesn't know, naming it", () => {
+    const payload = encryptValue("secret", key).slice("v1:".length)
+    expect(() => decryptValue(`v2:${payload}`, key)).toThrow(/format v2/)
   })
 
   it("produces a different blob each call (fresh iv)", () => {

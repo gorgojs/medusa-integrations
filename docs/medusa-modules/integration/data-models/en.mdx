@@ -82,7 +82,7 @@ The stored settings of one integration instance, in the `integration` table. The
     {
       name: "options",
       type: "json",
-      description: "The settings the store admin saved, keyed by option id. Secret options are stored encrypted, each as a base64 string.",
+      description: "The settings the store admin saved, keyed by option id. Secret options are stored encrypted, each as a string that starts with its format version, such as `v1:`. Values saved by versions 0.x have no prefix, and the module still reads them.",
       optional: false,
       defaultValue: "{}",
       expandable: false,
