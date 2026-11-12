@@ -498,6 +498,17 @@ The test runs only against options that resolve. When the integration isn't conf
 
 Consumers read typed, validated, and decrypted options, with descriptor defaults applied. An incomplete or disabled integration resolves to nothing rather than partial data. Refer to [Reading Options](/medusa-modules/integration/reading-options) to learn the ways to read them and how long the module caches them.
 
+---
+
+## Value Lists Across Versions
+
+Several descriptor fields take their value from a fixed list. These are `category`, the `type` and `control` of an option, the `column` of a section, `preferredLayoutId`, and the `status` that `testConnection` returns. The lists change between versions of the module this way:
+
+- A new value arrives in a minor release. A new category or connection test status also brings a migration, because the database checks the stored value against the list. Run `npx medusa db:migrate` after the upgrade to apply it.
+- A value is removed or renamed only in a major release.
+
+Code that branches on one of these values, such as a `switch` over `category`, needs a branch for a value it doesn't know. Then a minor release of the module doesn't break it.
+
 ## References
 
 <CardList items={[

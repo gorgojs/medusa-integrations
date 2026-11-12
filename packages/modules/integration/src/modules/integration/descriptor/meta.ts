@@ -5,6 +5,12 @@
  */
 export type I18nKey = string
 
+/**
+ * The Admin control an option renders with.
+ *
+ * Values are added in minor releases and removed or renamed only in major ones, so handle a value
+ * you don't know.
+ */
 export type FieldControl =
   | "text"
   | "secret"

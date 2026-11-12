@@ -11,6 +11,12 @@ export type { I18nKey }
 import type { CategoryKind, TestStatus } from "../../modules/integration/utils/integration"
 export type { CategoryKind, TestStatus }
 
+/**
+ * The layouts a descriptor can prefer.
+ *
+ * Values are added in minor releases and removed or renamed only in major ones, so handle a value
+ * you don't know.
+ */
 export type IntegrationLayouts = "core:single-column" | "core:two-column"
 
 export interface TestConnectionContext {

@@ -1,4 +1,10 @@
-/** Integration category — which Medusa module a provider configures. */
+/**
+ * Integration category — which Medusa module a provider configures.
+ *
+ * Values are added in minor releases and removed or renamed only in major ones, so handle a value
+ * you don't know. A new category also ships a migration, because the database checks the stored
+ * value against this list.
+ */
 export const IntegrationCategory = {
   PAYMENT: "payment",
   NOTIFICATION: "notification",
@@ -17,7 +23,13 @@ export const IntegrationCategory = {
 } as const
 export type CategoryKind = (typeof IntegrationCategory)[keyof typeof IntegrationCategory]
 
-/** Outcome of a provider's connection test. */
+/**
+ * Outcome of a provider's connection test.
+ *
+ * Values are added in minor releases and removed or renamed only in major ones, so handle a value
+ * you don't know. A new status also ships a migration, because the database checks the stored
+ * value against this list.
+ */
 export const IntegrationTestStatus = {
   PASSED: "passed",
   FAILED: "failed",
