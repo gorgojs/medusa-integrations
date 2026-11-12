@@ -53,9 +53,9 @@ Every workflow below except `getResolvedIntegrationOptionsWorkflow` ends with `e
 
 Saves option values of an integration instance. It creates the stored record on the first save and updates it afterwards. This is the workflow behind saving a section in the Admin. It runs these steps in order.
 
-```mermaid alt="Diagram showcasing the steps of upsertIntegrationWorkflow, from reading the stored state to emitting integration.updated"
+```mermaid alt="Diagram showcasing the steps of upsertIntegrationWorkflow, from reading the stored record to emitting integration.updated"
 flowchart TD
-  state["getIntegrationStateStep"] --> apply["applyIntegrationSectionStep"]
+  snapshot["getIntegrationSnapshotStep"] --> apply["applyIntegrationSectionStep"]
   apply --> save["upsertIntegrationRecordStep"]
   save -->|"skipped when an update changes no field"| history["recordIntegrationChangeStep"]
   history --> emit["emitIntegrationEventStep"]
@@ -118,9 +118,9 @@ It fails with a `not_found` error when no provider is registered under `provider
 
 Enables or disables a configured integration. It runs these steps in order.
 
-```mermaid alt="Diagram showcasing the steps of setIntegrationEnabledWorkflow, from reading the stored state to emitting integration.updated"
+```mermaid alt="Diagram showcasing the steps of setIntegrationEnabledWorkflow, from reading the stored record to emitting integration.updated"
 flowchart TD
-  state["getIntegrationStateStep"] --> set["setIntegrationEnabledStep"]
+  snapshot["getIntegrationSnapshotStep"] --> set["setIntegrationEnabledStep"]
   set -->|"skipped when already in that state"| history["recordIntegrationChangeStep"]
   history --> emit["emitIntegrationEventStep"]
   emit -->|"emits"| event(["integration.updated"])
@@ -279,7 +279,7 @@ The workflows above are built from these steps. Use them in a workflow of your o
 | Step | Input | What it does | On rollback |
 | --- | --- | --- | --- |
 | `getResolvedIntegrationOptionsStep` | `{ identifier, instance_id? }` | Returns the resolved options, or `null`. | Nothing to undo. |
-| `getIntegrationStateStep` | `{ provider_id }` | Returns `{ existed, title, is_enabled }` of the stored record before a change. | Nothing to undo. |
+| `getIntegrationSnapshotStep` | `{ provider_id }` | Returns `{ existed, title, is_enabled }` of the stored record before a change. | Nothing to undo. |
 | `applyIntegrationSectionStep` | `{ provider_id, section_id?, values }` | Picks the options to write, validates them, and returns `{ category, options, diff }`, where `options` is the full configuration ready to store, with secrets encrypted. Stores nothing. | Nothing to undo. |
 | `upsertIntegrationRecordStep` | `{ provider_id, category, options, title? }` | Creates or updates the stored record. | None. The saved record stays. |
 | `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Sets `is_enabled` on the stored record. | Restores the previous `is_enabled`. |
