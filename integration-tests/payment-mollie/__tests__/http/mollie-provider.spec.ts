@@ -2,7 +2,7 @@ import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import { Modules } from "@medusajs/framework/utils"
 import { refreshPaymentCollectionForCartWorkflow } from "@medusajs/medusa/core-flows"
 import nock from "nock"
-import { seedMollieIntegration, MOLLIE_WEBHOOK_URL } from "../utils/seed-mollie"
+import { seedMollieIntegration, MOLLIE_API_KEY, MOLLIE_WEBHOOK_URL } from "../utils/seed-mollie"
 import {
   createAdminHeaders,
   createMollieCart,
@@ -85,7 +85,7 @@ medusaIntegrationTestRunner({
         expect(create.body).not.toHaveProperty("method")
         expect(create.headers["idempotency-key"]).toEqual(expect.any(String))
         expect(create.headers["idempotency-key"].length).toBeGreaterThan(0)
-        expect(create.headers.authorization).toBe(`Bearer ${process.env.MOLLIE_API_KEY}`)
+        expect(create.headers.authorization).toBe(`Bearer ${MOLLIE_API_KEY}`)
 
         const payment = mollie.latest()
         expect(session.data).toMatchObject({

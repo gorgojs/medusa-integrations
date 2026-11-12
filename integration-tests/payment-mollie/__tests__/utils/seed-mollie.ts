@@ -1,5 +1,6 @@
 export const MOLLIE_INTEGRATION_PROVIDER_ID = "int_mollie_mollie-1"
 export const MOLLIE_WEBHOOK_URL = "https://api.example.com/hooks/payment/mollie_mollie"
+export const MOLLIE_API_KEY = process.env.MOLLIE_API_KEY || "test_nockNockNockNockNockNockNockNockNo"
 
 /**
  * Seed a complete, enabled Mollie integration config directly via the integration module's service
@@ -10,7 +11,7 @@ export async function seedMollieIntegration(container: any, overrides: Record<st
   const svc = container.resolve("integration")
   const descriptor = svc.getProviderDescriptor(MOLLIE_INTEGRATION_PROVIDER_ID)
   const values = {
-    apiKey: process.env.MOLLIE_API_KEY || "test_nockNockNockNockNockNockNockNockNo",
+    apiKey: MOLLIE_API_KEY,
     webhookUrl: MOLLIE_WEBHOOK_URL,
     capture: "automatic",
     ...overrides,
