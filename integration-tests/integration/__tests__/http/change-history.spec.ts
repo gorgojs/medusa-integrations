@@ -95,6 +95,23 @@ medusaIntegrationTestRunner({
       }
     })
 
+    it("tells disabling from enabling in the integration.updated event", async () => {
+      await save({ apiKey: "pub", secretKey: SECRET })
+      const eventBus = getContainer().resolve(Modules.EVENT_BUS)
+      const emit = jest.spyOn(eventBus, "emit")
+      try {
+        await api.post(`/admin/integrations/${A}/enable`, { is_enabled: false }, headers)
+        await api.post(`/admin/integrations/${A}/enable`, { is_enabled: true }, headers)
+        const changes = emit.mock.calls
+          .map((c: any[]) => c[0])
+          .filter((e: any) => e?.name === "integration.updated")
+          .map((e: any) => e.data.change)
+        expect(changes).toEqual(["disabled", "enabled"])
+      } finally {
+        emit.mockRestore()
+      }
+    })
+
     it("records disabling and enabling, but not a toggle to the current state", async () => {
       await save({ apiKey: "pub", secretKey: SECRET })
       await api.post(`/admin/integrations/${A}/enable`, { is_enabled: false }, headers)

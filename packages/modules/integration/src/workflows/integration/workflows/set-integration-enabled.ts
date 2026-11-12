@@ -42,7 +42,7 @@ export const setIntegrationEnabledWorkflow = createWorkflow(
         name: "integration.updated",
         data: {
           provider_id: d.input.provider_id,
-          change: "enabled",
+          change: d.input.is_enabled ? "enabled" : "disabled",
           actor: d.input.actor ? { type: d.input.actor.type, id: d.input.actor.id ?? null } : null,
         },
       }))
