@@ -16,5 +16,5 @@ export const POST = async (
   const { result } = await setIntegrationEnabledWorkflow(req.scope).run({
     input: { provider_id, is_enabled: req.validatedBody.is_enabled, actor: changeActor(req) },
   })
-  res.json({ integration: maskedView(result, svc.getSecretKeys(provider_id)) })
+  res.json({ integration: maskedView(svc, result) })
 }

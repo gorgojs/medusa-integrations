@@ -25,11 +25,12 @@ export function requireProvider(svc: IntegrationModuleService, providerId: strin
  * Build the client-facing view of a record. Secret options live encrypted inside `options`;
  * they are stripped here so ciphertext never reaches the browser. `configured_secrets` lists
  * the secret keys that currently have a stored value (per field), so the UI can render a
- * "leave blank to keep" hint on exactly those fields. `values` holds only the non-secret options.
+ * "leave blank to keep" hint on exactly those fields. `values` holds only the non-secret options,
+ * readable even when one was encrypted while its option was still secret.
  */
-export function maskedView(record: any, secretKeys: string[]): MaskedIntegration {
-  const secret = new Set(secretKeys)
-  const stored = (record.options ?? {}) as Record<string, unknown>
+export function maskedView(svc: IntegrationModuleService, record: any): MaskedIntegration {
+  const secret = new Set(svc.getSecretKeys(record.provider_id))
+  const stored = svc.readPlainOptions(record)
   const values: Record<string, unknown> = {}
   const configured_secrets: string[] = []
   for (const [k, v] of Object.entries(stored)) {

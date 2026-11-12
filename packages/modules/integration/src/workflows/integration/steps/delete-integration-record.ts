@@ -14,11 +14,11 @@ export const deleteIntegrationRecordStep = createStep(
     const service: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
     const existing = await service.findByProviderId(input.provider_id)
     if (!existing) return new StepResponse({ deleted: false, diff: [] as DiffEntry[] })
-    // For the change history: what was configured, from the stored row as-is. Plain options are
-    // stored in clear text; a secret only needs to be present to be reported as removed, so
-    // nothing is decrypted here.
+    // For the change history: what was configured. A secret only needs to be present to be
+    // reported as removed, so secrets aren't decrypted, and a lost encryptionKey doesn't block
+    // the delete. Only a plain option still holding a value from when it was secret is decrypted.
     const descriptor = service.getProviderDescriptor(input.provider_id)
-    const diff = descriptor ? diffOptions(descriptor, (existing.options ?? {}) as Record<string, unknown>, {}) : []
+    const diff = descriptor ? diffOptions(descriptor, service.readPlainOptions(existing), {}) : []
     // Permanently remove the configuration and its stored credentials. Temporarily turning
     // an integration off is a separate action — POST /admin/integrations/:id/enable.
     await service.deleteIntegrations(existing.id)

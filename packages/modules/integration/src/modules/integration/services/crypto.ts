@@ -20,6 +20,37 @@ export function deriveKey(passphrase: string): Buffer {
  */
 const FORMAT_VERSION = 1
 const VERSIONED = /^v(\d+):(.*)$/s
+const BASE64 = /^[A-Za-z0-9+/]+={0,2}$/
+/** The shortest payload {@link encryptValue} writes: the IV, the auth tag and one byte of JSON. */
+const MIN_PAYLOAD_BYTES = IV_LEN + TAG_LEN + 1
+
+/** Thrown by {@link decryptValue} for a format version this module doesn't know. */
+export class UnsupportedSecretFormatError extends Error {
+  readonly version: number
+
+  constructor(version: number) {
+    super(
+      `A secret is stored in format v${version}, which this version of ` +
+        `@gorgo/medusa-integration can't read. Upgrade the module to read it.`
+    )
+    this.version = version
+  }
+}
+
+/**
+ * Whether a stored string is a value {@link encryptValue} wrote, now or in 0.x. A versioned value
+ * is recognized by its prefix. A 0.x value has none, so it's recognized by its shape: base64 at
+ * least as long as the shortest payload. A value saved before its option was marked secret is
+ * plain text and rarely has that shape.
+ */
+export function isEncryptedValue(value: string): boolean {
+  if (VERSIONED.test(value)) return true
+  return (
+    value.length % 4 === 0 &&
+    BASE64.test(value) &&
+    Buffer.from(value, "base64").length >= MIN_PAYLOAD_BYTES
+  )
+}
 
 /** Encrypt one JSON-serializable value into a `v1:` string. */
 export function encryptValue(value: unknown, key: Buffer): string {
@@ -39,10 +70,7 @@ export function decryptValue(blob: string, key: Buffer): unknown {
   const versioned = VERSIONED.exec(blob)
   if (!versioned) return decryptPayload(blob, key)
   if (Number(versioned[1]) !== FORMAT_VERSION) {
-    throw new Error(
-      `A secret is stored in format v${versioned[1]}, which this version of ` +
-        `@gorgo/medusa-integration can't read. Upgrade the module to read it.`
-    )
+    throw new UnsupportedSecretFormatError(Number(versioned[1]))
   }
   return decryptPayload(versioned[2], key)
 }

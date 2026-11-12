@@ -39,15 +39,17 @@ module.exports = defineConfig({
 })
 ```
 
-The value can be any non-empty string, though a high-entropy one is best for production, for example the output of `openssl rand -hex 32`. The module derives the key once, the first time it's needed, and reuses it for every registered integration's `secret` fields from then on. Without `encryptionKey`, the module throws the first time it tries to save or read an integration that has at least one `secret: true` option.
+The value can be any non-empty string, though a high-entropy one is best for production, for example the output of `openssl rand -hex 32`. The module derives the key once, the first time it's needed, and reuses it for every registered integration's `secret` fields from then on. Without `encryptionKey`, the module throws when it saves an integration that has at least one `secret: true` option. Reading asks for the key only when a stored value has to be decrypted.
 
-The module throws a plain `Error` whose message starts with `[integration] encryptionKey is required`. A plain `Error` isn't one of Medusa's typed errors, so an Admin API route answers `500` with the generic message `An unknown error occurred.`, and the real message appears only in the server log. When saving an integration in the Admin fails with a `500`, look for that message in the log.
+The module throws a `MedusaError` of type `unexpected_state` whose message starts with `[integration] encryptionKey is required`. Medusa's error handler keeps the message for this error type, so an Admin API route answers `500` with the message in the response body, and the Admin shows it in the notification about the failed save.
 
 <Note type="warning">
 
-Keep `encryptionKey` the same on every Medusa process, server and worker alike, and for as long as integrations store secrets. The module can't decrypt a value encrypted with another key, so after a change, reading such an integration's options fails with an error, and so does the integrations list in the Admin. The error is Node.js's own decryption error (`Unsupported state or unable to authenticate data`), not a message from the module, so an Admin API route answers `500` and the details are only in the server log. Restore the previous key to bring them back. If it's lost, delete the affected integrations through [`DELETE /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#integrations), which doesn't decrypt anything, and configure them again.
+Keep `encryptionKey` the same on every Medusa process, server and worker alike, and for as long as integrations store secrets. The module can't decrypt a value encrypted with another key, so after a change, reading such an integration's options fails, and so do its page and the integrations list in the Admin. The module throws a `MedusaError` of type `unexpected_state`, and an Admin API route answers `500` with its message, `Can't decrypt the secret option "<option>" of the integration "<provider_id>": encryptionKey isn't the key it was saved with, or the stored value is damaged. Set encryptionKey back to the key it was saved with, or delete the integration's settings and enter them again.` Restore the previous key to bring them back. If it's lost, delete the affected integrations through [`DELETE /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#integrations), which doesn't decrypt secrets and so works without the right key, and configure them again.
 
 </Note>
+
+Reading fails the same way when a stored secret is in a format version the installed module doesn't know, for example one written by a newer version of `@gorgo/medusa-integration`. The message is then `Can't read the secret option "<option>" of the integration "<provider_id>": it's stored in format v<N>, which this version of @gorgo/medusa-integration doesn't know. Upgrade the module.`
 
 ---
 

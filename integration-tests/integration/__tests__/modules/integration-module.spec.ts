@@ -96,6 +96,16 @@ moduleIntegrationTestRunner<any>({
         expect(await service.getResolvedOptions("test", "a")).not.toBeNull()
         expect(await service.getResolvedOptions("test", "b")).toBeNull()
       })
+
+      it("resolves a secret stored in clear text before the option was marked secret", async () => {
+        await service.createIntegrations({
+          provider_id: A,
+          category: "payment",
+          options: { apiKey: "pub", secretKey: "saved-in-clear" },
+          is_enabled: true,
+        })
+        expect((await service.getResolvedOptions("test", "a")).options.secretKey).toBe("saved-in-clear")
+      })
     })
 
     describe("runTestConnection", () => {

@@ -86,9 +86,9 @@ export async function POST(req: AuthenticatedMedusaRequest, res: MedusaResponse)
 
 </Note>
 
-<Note type="warning">
+<Note type="default" title="">
 
-Если вы пометите параметр `secret: true` уже после того, как администратор магазина сохранил его, модуль не сможет расшифровать сохранённое значение, потому что оно хранится открытым текстом. Модуль считает зашифрованной любую непустую строку, сохранённую в секретном параметре, поэтому получение интеграции, её сохранение, получение параметров включённой интеграции и список интеграций завершаются ошибкой, как и после смены `encryptionKey`. Удалите интеграцию через [`DELETE /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#удаление-настроек) или [`deleteIntegrationWorkflow`](/medusa-modules/integration/workflows#deleteintegrationworkflow) и настройте её заново.
+Если изменить флаг `secret` у параметра, который администратор магазина уже сохранил, интеграция продолжит работать. Параметр, ставший секретным, хранит значение открытым текстом, пока следующее сохранение его не зашифрует. Сохранённое значение параметра, который перестал быть секретным, модуль расшифровывает при чтении, поэтому запись `deleted` и последующие изменения хранят его значения открытым текстом, как у любого другого параметра. На странице [Дескриптор провайдера интеграций](/medusa-modules/integration/descriptor#секреты-и-шифрование) описано, в каком случае чтение всё же завершается ошибкой и как восстановить работу через [`DELETE /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#удаление-настроек) или [`deleteIntegrationWorkflow`](/medusa-modules/integration/workflows#deleteintegrationworkflow).
 
 </Note>
 

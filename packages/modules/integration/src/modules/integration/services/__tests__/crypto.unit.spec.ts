@@ -1,8 +1,9 @@
 import { describe, expect, it } from "@jest/globals"
 import crypto from "crypto"
-import { deriveKey, encryptValue, decryptValue } from "../crypto"
+import { deriveKey, encryptValue, decryptValue, isEncryptedValue } from "../crypto"
 
 const key = deriveKey("any-non-empty-passphrase")
+const IV_PLUS_TAG = 12 + 16
 
 describe("crypto", () => {
   it("deriveKey returns a 32-byte key for any non-empty passphrase", () => {
@@ -51,6 +52,16 @@ describe("crypto", () => {
   it("refuses a format version it doesn't know, naming it", () => {
     const payload = encryptValue("secret", key).slice("v1:".length)
     expect(() => decryptValue(`v2:${payload}`, key)).toThrow(/format v2/)
+  })
+
+  it("recognizes an encrypted value, versioned or from 0.x, and not plain text", () => {
+    const v1 = encryptValue("", key)
+    expect(isEncryptedValue(v1)).toBe(true)
+    expect(isEncryptedValue(v1.slice("v1:".length))).toBe(true) // the 0.x shape
+    expect(isEncryptedValue("v2:anything")).toBe(true) // an unknown version is still refused on decrypt
+    expect(isEncryptedValue("sk_test_51H8abc")).toBe(false)
+    expect(isEncryptedValue("short")).toBe(false)
+    expect(isEncryptedValue(Buffer.alloc(IV_PLUS_TAG).toString("base64"))).toBe(false) // too short for a payload
   })
 
   it("produces a different blob each call (fresh iv)", () => {

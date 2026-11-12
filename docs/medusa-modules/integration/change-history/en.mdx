@@ -86,9 +86,9 @@ Marking an option `secret` later hides its earlier values in the Admin and the A
 
 </Note>
 
-<Note type="warning">
+<Note type="default" title="">
 
-Marking an option `secret: true` after a store admin has already saved it makes the stored plain-text value undecryptable. The module treats every non-empty string stored under a secret option as encrypted, so reading the integration, saving it, resolving the options of an enabled integration, and listing integrations all fail, the same as after a change of `encryptionKey`. Delete the integration through [`DELETE /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#delete-the-settings) or [`deleteIntegrationWorkflow`](/medusa-modules/integration/workflows#deleteintegrationworkflow), and configure it again.
+Changing an option's `secret` flag after a store admin has saved it doesn't break the integration. A newly secret option keeps its plain-text value until the next save encrypts it. An option that is no longer secret has its stored value decrypted when the module reads it, so the `deleted` record and later changes keep its values in plain text, like those of any other option. Refer to [Integration Provider Descriptor](/medusa-modules/integration/descriptor#secrets-and-encryption) for the one case where reading still fails, and how to recover through [`DELETE /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#delete-the-settings) or [`deleteIntegrationWorkflow`](/medusa-modules/integration/workflows#deleteintegrationworkflow).
 
 </Note>
 

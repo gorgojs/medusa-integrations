@@ -1,10 +1,10 @@
-import { InjectManager, MedusaContext, MedusaService } from "@medusajs/framework/utils"
+import { InjectManager, MedusaContext, MedusaError, MedusaService } from "@medusajs/framework/utils"
 import type { Context, Logger } from "@medusajs/framework/types"
 import type { EntityManager } from "@medusajs/framework/mikro-orm/knex"
 import Integration from "../models/integration"
 import IntegrationChange from "../models/integration-change"
 import { deriveKey } from "./crypto"
-import { encryptSecretsInline, decryptSecretsInline } from "./secrets"
+import { encryptSecretsInline, decryptSecretsInline, decryptPlainOptions } from "./secrets"
 import IntegrationProviderService from "./integration-provider"
 import type { IntegrationDescriptor, TestConnectionResult } from "../descriptor/define"
 import { introspectDescriptor, secretFieldNames, type UiDescriptor } from "../descriptor/introspect"
@@ -154,13 +154,24 @@ export default class IntegrationModuleService extends MedusaService({
     return isDescriptorComplete(descriptor, this.assembleValues(record))
   }
 
-  /** Decrypt inline secret keys within a loaded record's `options` → plaintext values. */
+  /**
+   * A loaded record's `options` in plain text, with the secrets decrypted. A value saved before its
+   * option's `secret` flag changed is read too (see `decryptSecretsInline`). Throws a `MedusaError`
+   * when a secret doesn't decrypt.
+   */
   protected assembleValues(record: any): Record<string, unknown> {
     const options = ((record.options as Record<string, unknown>) ?? {})
-    const descriptor = this.getProviderDescriptor(record.provider_id)
-    const secretKeys = descriptor ? secretFieldNames(descriptor) : []
-    if (secretKeys.length === 0) return { ...options }
-    return decryptSecretsInline(options, secretKeys, this.getKey())
+    return decryptSecretsInline(options, this.getSecretKeys(record.provider_id), () => this.getKey(), record.provider_id)
+  }
+
+  /**
+   * A loaded record's `options` with the secret ones left as stored and the plain ones readable,
+   * including a value encrypted while its option was still secret. Never throws, so the Admin can
+   * show a record whose secrets no longer decrypt.
+   */
+  readPlainOptions(record: any): Record<string, unknown> {
+    const options = ((record.options as Record<string, unknown>) ?? {})
+    return decryptPlainOptions(options, this.getSecretKeys(record.provider_id), () => this.getKey())
   }
 
   /**
@@ -170,7 +181,7 @@ export default class IntegrationModuleService extends MedusaService({
    */
   async listIntegrationsOverview(query: IntegrationOverviewQuery = {}): Promise<IntegrationOverviewResult> {
     const regs = this.providerService_.listRegistrations()
-    const rows = await this.listIntegrations({}, { take: 1000 })
+    const rows = await this.listIntegrations({}, { take: null })
     const byId = new Map(rows.map((r: any) => [r.provider_id, r]))
 
     const all: IntegrationOverviewItem[] = regs.map((r) => {
@@ -231,11 +242,13 @@ export default class IntegrationModuleService extends MedusaService({
     if (!testConnection) {
       return { status: "skipped", message: "No test configured" }
     }
-    const resolved = await this.getResolvedOptions(provider.getIdentifier(), provider.getInstanceId())
-    if (!resolved) {
-      return { status: "failed", message: "Not configured" }
-    }
+    // Options that can't be read, for example a secret that doesn't decrypt, fail the test with
+    // their message, the same as a test that throws.
     try {
+      const resolved = await this.getResolvedOptions(provider.getIdentifier(), provider.getInstanceId())
+      if (!resolved) {
+        return { status: "failed", message: "Not configured" }
+      }
       return await testConnection({ options: resolved.options })
     } catch (e: any) {
       return { status: "failed", message: e?.message ?? "Test failed" }
@@ -275,11 +288,12 @@ export default class IntegrationModuleService extends MedusaService({
   }
 
   // ── encryption ───────────────────────────────────────────────────────────────
-  /** The configured passphrase (any non-empty string). Throws if missing. */
+  /** The configured passphrase (any non-empty string). Throws a `MedusaError` if missing. */
   protected resolveKey(): string {
     const key = this.options_.encryptionKey
     if (key && key.length > 0) return key
-    throw new Error(
+    throw new MedusaError(
+      MedusaError.Types.UNEXPECTED_STATE,
       "[integration] encryptionKey is required. Pass it in the integration plugin's options in " +
         "medusa-config, for example `encryptionKey: process.env.INTEGRATION_ENCRYPTION_KEY`, set " +
         "to any non-empty secret (high-entropy recommended, for example `openssl rand -hex 32`)."

@@ -37,8 +37,18 @@ export type {
   GetResolvedIntegrationOptionsStepInput,
 } from "./workflows/integration"
 
-export { upsertIntegrationWorkflow } from "./workflows/integration"
-export type { UpsertIntegrationWorkflowInput } from "./workflows/integration"
+export {
+  upsertIntegrationWorkflow,
+  deleteIntegrationWorkflow,
+  setIntegrationEnabledWorkflow,
+  testIntegrationConnectionWorkflow,
+} from "./workflows/integration"
+export type {
+  UpsertIntegrationWorkflowInput,
+  DeleteIntegrationWorkflowInput,
+  SetIntegrationEnabledWorkflowInput,
+  TestIntegrationConnectionWorkflowInput,
+} from "./workflows/integration"
 
 // The `provider_id` convention (`int_<identifier>_<instanceId>`, `default` for a registration without
 // an `id`) — for providers that receive a provider_id on their own routes and need to build or parse one.
@@ -52,13 +62,23 @@ export type { ParsedIntegrationProviderKey } from "./modules/integration/utils"
 // ── For consumers of the integration module ──────────────────────────────────
 export { INTEGRATION_MODULE } from "./modules/integration"
 export { default as IntegrationModuleService } from "./modules/integration/services/integration-module"
-export type { ResolvedOptions } from "./modules/integration/services/integration-module"
-export type { IntegrationModuleOptions } from "./modules/integration/types"
+export type {
+  ResolvedOptions,
+  IntegrationOverviewQuery,
+  IntegrationOverviewResult,
+} from "./modules/integration/services/integration-module"
+export type { IntegrationModuleOptions, LicenseStateEntry } from "./modules/integration/types"
+// The records the generated methods of the service return.
+export type { Integration, IntegrationChange } from "./types/integration/models"
+// Shapes the service's own methods return, the same ones the Admin API sends.
+export type { UiDescriptor, UiSection, UiField, IntegrationOverviewItem, CatalogItem } from "./types"
 
 // Settings change history: rows live in the integration module (`listIntegrationChanges`, …).
 export type {
   DiffEntry,
   IntegrationChangeActor,
+  IntegrationChangeField,
   IntegrationChangeType,
+  IntegrationChangeUser,
   RecordIntegrationChangeInput,
 } from "./types/integration/history"

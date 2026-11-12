@@ -212,7 +212,8 @@ const IntegrationsPage = () => {
         onClick: () => toggleEnabled.mutate({ providerId: item.provider_id, next: !item.is_enabled }),
       })
     }
-    if (item.is_configured && item.has_test_connection && item.is_complete) {
+    // A disabled integration has no resolved options, so its test would only answer "Not configured".
+    if (item.is_enabled && item.has_test_connection && item.is_complete) {
       primary.push({
         label: t("integration.actions.test"),
         onClick: () => test.mutate(item.provider_id),

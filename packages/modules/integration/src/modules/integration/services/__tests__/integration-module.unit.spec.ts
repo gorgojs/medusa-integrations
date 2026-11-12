@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals"
+import { MedusaError } from "@medusajs/framework/utils"
 import IntegrationModuleService from "../integration-module"
+import { deriveKey, encryptValue } from "../crypto"
 import { defineIntegration } from "../../descriptor/define"
 import { resetCatalogCacheForTests } from "../../../../lib/catalog"
 
@@ -125,6 +127,55 @@ describe("IntegrationModuleService — encryption", () => {
       apiKey: "pub",
     })
   })
+
+  it("throws a MedusaError, not a plain Error, when the key is missing", () => {
+    const svc = makeService({ options: {} })
+    let error: unknown
+    try {
+      svc.encryptForStorage(descriptor, { apiKey: "pub", secretKey: "shh" })
+    } catch (e) {
+      error = e
+    }
+    expect(MedusaError.isMedusaError(error)).toBe(true)
+    expect((error as MedusaError).type).toBe(MedusaError.Types.UNEXPECTED_STATE)
+  })
+
+  it("names the option and the integration when a secret doesn't decrypt with the current key", async () => {
+    const row = storedRow(makeService(), { apiKey: "pub", secretKey: "shh" })
+    const svc = makeService({ options: { encryptionKey: "another-key" }, rows: [row] })
+    const error: any = await svc.getStoredValues("int_demo_default").catch((e: unknown) => e)
+    expect(MedusaError.isMedusaError(error)).toBe(true)
+    expect(error.message).toMatch(/secret option "secretKey" of the integration "int_demo_default".*encryptionKey/)
+  })
+
+  it("reads a value saved before its option was marked secret as plain text", async () => {
+    const svc = makeService()
+    svc._rows.push({ ...storedRow(svc, {}), options: { apiKey: "pub", secretKey: "saved-in-clear" } })
+    expect(await svc.getStoredValues("int_demo_default")).toEqual({ apiKey: "pub", secretKey: "saved-in-clear" })
+  })
+
+  it("decrypts a value saved while its option was still secret", async () => {
+    const svc = makeService()
+    const key = deriveKey("unit-test-key")
+    svc._rows.push({ ...storedRow(svc, {}), options: { apiKey: encryptValue("pub", key), secretKey: encryptValue("shh", key) } })
+    expect(await svc.getStoredValues("int_demo_default")).toEqual({ apiKey: "pub", secretKey: "shh" })
+  })
+})
+
+describe("IntegrationModuleService — readPlainOptions", () => {
+  it("decrypts a plain option saved while it was secret and leaves the secrets as stored", () => {
+    const svc = makeService()
+    const key = deriveKey("unit-test-key")
+    const secretBlob = encryptValue("shh", key)
+    const row = { ...storedRow(svc, {}), options: { apiKey: encryptValue("pub", key), secretKey: secretBlob } }
+    expect(svc.readPlainOptions(row)).toEqual({ apiKey: "pub", secretKey: secretBlob })
+  })
+
+  it("never throws, even when the key changed or is missing", () => {
+    const row = storedRow(makeService(), { apiKey: "pub", secretKey: "shh" })
+    expect(makeService({ options: { encryptionKey: "another-key" } }).readPlainOptions(row)).toEqual(row.options)
+    expect(makeService({ options: {} }).readPlainOptions(row)).toEqual(row.options)
+  })
 })
 
 describe("IntegrationModuleService — isComplete", () => {
@@ -236,6 +287,14 @@ describe("IntegrationModuleService — runTestConnection", () => {
     const res = await svc.runTestConnection("int_missing_default")
     expect(res.status).toBe("failed")
     expect(res.message).toMatch(/Unknown integration provider/)
+  })
+
+  it("returns failed with the error's message when a secret doesn't decrypt", async () => {
+    const row = storedRow(makeService(), { apiKey: "pub", secretKey: "shh" }, { is_enabled: true })
+    const svc = makeService({ options: { encryptionKey: "another-key" }, rows: [row] })
+    const res = await svc.runTestConnection("int_demo_default")
+    expect(res.status).toBe("failed")
+    expect(res.message).toMatch(/Can't decrypt the secret option "secretKey"/)
   })
 
   it("passes through the descriptor's testConnection result on success", async () => {

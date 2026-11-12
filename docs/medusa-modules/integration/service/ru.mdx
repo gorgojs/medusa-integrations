@@ -32,7 +32,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 | Метод | Возвращает | Описание |
 | --- | --- | --- |
-| `getResolvedOptions(identifier, instanceId?)` | `Promise<ResolvedOptions \| null>` | Расшифрованные и проверенные параметры инстанса с подставленными значениями по умолчанию в виде `{ options, meta }` или `null`, если интеграция не настроена, выключена или не заполнена. Бросает обычный `Error`, а не `MedusaError`, если под этими идентификатором и инстансом не зарегистрирован ни один провайдер. Бросает исключение, если у провайдера есть секретные параметры, а `encryptionKey` не задан или изменился. Результат кэшируется на срок до 60 секунд. |
+| `getResolvedOptions(identifier, instanceId?)` | `Promise<ResolvedOptions \| null>` | Расшифрованные и проверенные параметры инстанса с подставленными значениями по умолчанию в виде `{ options, meta }` или `null`, если интеграция не настроена, выключена или не заполнена. Бросает обычный `Error`, а не `MedusaError`, если под этими идентификатором и инстансом не зарегистрирован ни один провайдер. Бросает `MedusaError`, если сохранённый секрет не удаётся расшифровать. Результат кэшируется на срок до 60 секунд. |
 | `clearOptionsCache(providerId?)` | `void` | Сбрасывает кэш параметров одного инстанса или, без аргумента, всех инстансов. |
 
 ---
@@ -48,7 +48,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 | `getSecretKeys(providerId)` | `string[]` | Идентификаторы секретных параметров провайдера. |
 | `getPackageMeta(providerId)` | `{ version, author, author_url }` | Данные npm-пакета, из которого пришёл провайдер, или значения `null`, если их не удалось найти. |
 
-Корень пакета не экспортирует `UiDescriptor`. Это `descriptor`, который возвращает [`GET /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#интеграции), с `identifier`, `instanceId` и `category` дескриптора, его i18n-ключами и иконкой, раскладкой, `hasTestConnection` и `sections` с их `fields`.
+`UiDescriptor` описывает `descriptor`, который возвращает [`GET /admin/integrations/:provider_id`](/medusa-modules/integration/admin-api#интеграции), с `identifier`, `instanceId` и `category` дескриптора, его i18n-ключами и иконкой, раскладкой, `hasTestConnection` и `sections` с их `fields`. Корень пакета экспортирует его вместе с `UiSection` и `UiField`, типами секции и поля.
 
 ---
 
@@ -56,13 +56,16 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 | Метод | Возвращает | Описание |
 | --- | --- | --- |
-| `listIntegrationsOverview(query?)` | `Promise<{ integrations, count, categories }>` | Все зарегистрированные инстансы вместе с сохранённым состоянием, как их показывает список интеграций в Admin. `query` принимает `q`, `category`, `limit` и `offset`, как и [`GET /admin/integrations`](/medusa-modules/integration/admin-api#список-интеграций). Без `limit` метод возвращает все инстансы. Бросает исключение, если у провайдера есть секретные параметры, а `encryptionKey` не задан или изменился. |
+| `listIntegrationsOverview(query?)` | `Promise<IntegrationOverviewResult>` | Все зарегистрированные инстансы вместе с сохранённым состоянием, как их показывает список интеграций в Admin. Результат содержит `integrations`, по одному `IntegrationOverviewItem` на инстанс, а также `count` и `categories`. `query` имеет тип `IntegrationOverviewQuery` и принимает `q`, `category`, `limit` и `offset`, как и [`GET /admin/integrations`](/medusa-modules/integration/admin-api#список-интеграций). Без `limit` метод возвращает все инстансы. Бросает `MedusaError`, если не удаётся расшифровать сохранённый секрет любого инстанса. |
 | `findByProviderId(providerId)` | `Promise<Integration \| undefined>` | Сохранённая запись инстанса или `undefined` до первого сохранения. |
-| `isComplete(record)` | `boolean` | Проходит ли сохранённая запись полную валидацию по дескриптору своего провайдера. Возвращает `false`, если провайдер записи не зарегистрирован. Бросает исключение, если у провайдера есть секретные параметры, а `encryptionKey` не задан или изменился. |
-| `getStoredValues(providerId)` | `Promise<Record<string, unknown>>` | Вся сохранённая конфигурация с расшифрованными секретами, без валидации и значений по умолчанию. Возвращает `{}`, если у инстанса нет сохранённой записи. Бросает исключение, если у провайдера есть секретные параметры, а `encryptionKey` не задан или изменился. Никогда не отправляйте результат в браузер. |
+| `isComplete(record)` | `boolean` | Проходит ли сохранённая запись полную валидацию по дескриптору своего провайдера. Возвращает `false`, если провайдер записи не зарегистрирован. Бросает `MedusaError`, если сохранённый секрет не удаётся расшифровать. |
+| `getStoredValues(providerId)` | `Promise<Record<string, unknown>>` | Вся сохранённая конфигурация с расшифрованными секретами, без валидации и значений по умолчанию. Возвращает `{}`, если у инстанса нет сохранённой записи. Бросает `MedusaError`, если сохранённый секрет не удаётся расшифровать. Никогда не отправляйте результат в браузер. |
+| `readPlainOptions(record)` | `Record<string, unknown>` | Сохранённые `options` записи, в которых секретные параметры остаются в том виде, в каком хранятся, а остальные идут в открытом виде. Значение обычного параметра, сохранённое, пока он был секретным, метод расшифровывает. Никогда не бросает исключений, поэтому работает, даже когда секрет не удаётся расшифровать. Из результата API-роуты Admin собирают запись, которую возвращают. Прежде чем отправить результат в браузер, уберите из него секретные параметры, как это делают роуты. |
 | `encryptForStorage(descriptor, values)` | `Record<string, unknown>` | Копия `values` с зашифрованными секретными параметрами, готовая к сохранению как `options` записи `Integration`. Ничего не записывает. `encryptionKey` нужен, только если в дескрипторе есть секретные параметры. |
 
-Методы `getStoredValues`, `isComplete`, `listIntegrationsOverview`, `getResolvedOptions` и `runTestConnection` расшифровывают сохранённые секреты. Когда один из них читает запись провайдера с секретными параметрами, он бросает исключение, если `encryptionKey` не задан или изменился и сохранённый секрет больше не расшифровывается. Как сохранить ключ неизменным, читайте в разделе [Параметры Модуля интеграций](/medusa-modules/integration/module-options#encryptionkey).
+Корень пакета экспортирует `IntegrationOverviewQuery`, `IntegrationOverviewResult` и `IntegrationOverviewItem`, типы метода `listIntegrationsOverview`.
+
+Методы `getStoredValues`, `isComplete`, `listIntegrationsOverview` и `getResolvedOptions` расшифровывают сохранённые секреты, и `encryptionKey` нужен им, только если в записи есть значение, которое нужно расшифровать. Они бросают `MedusaError` с типом `unexpected_state`, если `encryptionKey` не задан, если это не тот ключ, с которым секрет сохранили, или если секрет хранится в версии формата, которую установленный модуль не знает. Сообщения об ошибках и то, как сохранить ключ неизменным, описаны в разделе [Параметры Модуля интеграций](/medusa-modules/integration/module-options#encryptionkey). Как эти методы читают значение, сохранённое до смены флага `secret` у параметра, читайте на странице [Дескриптор провайдера интеграций](/medusa-modules/integration/descriptor#секреты-и-шифрование).
 
 ---
 
@@ -70,7 +73,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 | Метод | Возвращает | Описание |
 | --- | --- | --- |
-| `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Выполняет проверку соединения провайдера с итоговыми параметрами. Результаты, которые модуль формирует сам, перечислены в разделе [Воркфлоу Модуля интеграций](/medusa-modules/integration/workflows#testintegrationconnectionworkflow). Не сохраняет `last_test_status` и не отправляет `integration.tested`. Оба действия выполняет `testIntegrationConnectionWorkflow`. Бросает исключение, если у провайдера есть секретные параметры, а `encryptionKey` не задан или изменился. |
+| `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Выполняет проверку соединения провайдера с итоговыми параметрами. Результаты, которые модуль формирует сам, перечислены в разделе [Воркфлоу Модуля интеграций](/medusa-modules/integration/workflows#testintegrationconnectionworkflow). Не сохраняет `last_test_status` и не отправляет `integration.tested`. Оба действия выполняет `testIntegrationConnectionWorkflow`. Если сохранённый секрет не удаётся расшифровать, не бросает ошибку, а сообщает `failed` с её текстом. |
 
 ---
 
@@ -78,11 +81,11 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 | Метод | Возвращает | Описание |
 | --- | --- | --- |
-| `listChangeActors()` | `Promise<{ users, system }>` | Пользователи Admin, которые вносили изменения, с email из их последнего изменения, и признак того, вносил ли изменения кто-то ещё. |
-| `listChangeFields()` | `Promise<{ field, label }[]>` | Все идентификаторы и ключи меток параметров, которые упоминаются в истории, включая параметры и интеграции, которых уже нет. |
+| `listChangeActors()` | `Promise<{ users, system }>` | `users` содержит пользователей Admin, которые вносили изменения, в виде объектов `IntegrationChangeUser` с email из их последнего изменения. `system` показывает, вносил ли изменения кто-то ещё. |
+| `listChangeFields()` | `Promise<IntegrationChangeField[]>` | Все идентификаторы и ключи меток параметров, которые упоминаются в истории, в виде `{ field, label }`, включая параметры и интеграции, которых уже нет. |
 | `recordChange(input)` | `Promise<string \| null>` | Сохраняет одну запись истории и возвращает её идентификатор. `input` имеет тип `RecordIntegrationChangeInput`, который экспортируется из корня пакета. Обязательны `provider_id`, `change_type` (`created`, `updated`, `enabled`, `disabled` или `deleted`) и `actor` (`IntegrationChangeActor`). Необязательны `actor_label`, `diff` (`DiffEntry[]`), `metadata` и `created_at`, по умолчанию это текущее время. Никогда не бросает исключений. При ошибке пишет предупреждение в лог и возвращает `null`. Воркфлоу модуля вызывают его через `recordIntegrationChangeStep`. |
 
-Чтобы прочитать сами записи, используйте сгенерированные методы `IntegrationChange` ниже. Они возвращают сохранённые строки как есть. В отличие от [API-роутов Admin](/medusa-modules/integration/admin-api#история-изменений), они не скрывают значения параметров, которые стали секретными после записи изменения.
+Чтобы прочитать сами записи, используйте сгенерированные методы `IntegrationChange` ниже. Они возвращают сохранённые строки как есть. В отличие от [API-роутов Admin](/medusa-modules/integration/admin-api#история-изменений), они не скрывают значения параметров, которые стали секретными после записи изменения. Корень пакета экспортирует `IntegrationChangeUser` и `IntegrationChangeField`.
 
 ---
 
@@ -94,7 +97,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 | `listLicenseStates()` | `LicenseStateEntry[]` | Последний результат проверки лицензии каждой платной интеграции Gorgo. |
 | `recheckLicenseStates()` | `Promise<LicenseStateEntry[]>` | Сразу проверяет лицензии и возвращает свежие результаты. |
 
-Корень пакета не экспортирует ни `CatalogItem`, ни `LicenseStateEntry`. Элемент каталога представляет собой запись каталога Gorgo с полями `integrationId`, `slug`, `npm`, `category`, `label` и другими, к которым добавлены `installed` и `provider_id`. Запись о лицензии представляет собой вердикт по одному npm-пакету с полями `package`, `state`, `checked_at`, `subscription`, `latest_allowed_version` и `identifiers` провайдеров, которые поставляет пакет. Admin API возвращает те же структуры, его роуты описаны в разделе [Каталог и лицензии](/medusa-modules/integration/admin-api#каталог-и-лицензии).
+Элемент каталога типа `CatalogItem` представляет собой запись каталога Gorgo с полями `integrationId`, `slug`, `npm`, `category`, `label` и другими, к которым добавлены `installed` и `provider_id`. Запись о лицензии типа `LicenseStateEntry` представляет собой вердикт по одному npm-пакету с полями `package`, `state`, `checked_at`, `subscription`, `latest_allowed_version` и `identifiers` провайдеров, которые поставляет пакет. Корень пакета экспортирует оба типа. Admin API возвращает те же структуры, его роуты описаны в разделе [Каталог и лицензии](/medusa-modules/integration/admin-api#каталог-и-лицензии).
 
 ---
 
@@ -105,7 +108,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 - для `Integration`: `listIntegrations`, `listAndCountIntegrations`, `retrieveIntegration`, `createIntegrations`, `updateIntegrations`, `deleteIntegrations`, `softDeleteIntegrations` и `restoreIntegrations`;
 - для `IntegrationChange`: `listIntegrationChanges`, `listAndCountIntegrationChanges`, `retrieveIntegrationChange`, `createIntegrationChanges`, `updateIntegrationChanges`, `deleteIntegrationChanges`, `softDeleteIntegrationChanges` и `restoreIntegrationChanges`.
 
-Для чтения используйте методы `list` и `retrieve`. В сохранённых `options` записи `Integration` секреты хранятся зашифрованными. Параметры этих методов описаны в [справочнике по фабрике сервисов](https://docs.medusajs.com/resources/service-factory-reference) Medusa.
+Для чтения используйте методы `list` и `retrieve`. Они возвращают записи типов `Integration` и `IntegrationChange`, которые экспортируются из корня пакета. В сохранённых `options` записи `Integration` секреты хранятся зашифрованными. Параметры этих методов описаны в [справочнике по фабрике сервисов](https://docs.medusajs.com/resources/service-factory-reference) Medusa.
 
 ## Материалы
 

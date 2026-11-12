@@ -15,13 +15,13 @@ Change integration settings only through these workflows. A write through the mo
 
 ## Import Paths
 
-`upsertIntegrationWorkflow`, `getResolvedIntegrationOptionsWorkflow`, and `getResolvedIntegrationOptionsStep` are exported from the package root. Every workflow and step on this page is exported from the `@gorgo/medusa-integration/workflows` subpath.
+Every workflow on this page is exported from the package root, `@gorgo/medusa-integration`, along with its input type, such as `UpsertIntegrationWorkflowInput`. Of the steps, the package root exports only `getResolvedIntegrationOptionsStep`. Every workflow and step on this page is exported from the `@gorgo/medusa-integration/workflows` subpath.
 
 For example, a workflow of your own that disables an integration as one of its steps:
 
 ```ts title="src/workflows/disable-my-integration.ts"
 import { createWorkflow, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
-import { setIntegrationEnabledWorkflow } from "@gorgo/medusa-integration/workflows"
+import { setIntegrationEnabledWorkflow } from "@gorgo/medusa-integration"
 
 export const disableMyIntegrationWorkflow = createWorkflow(
   "disable-my-integration",
@@ -244,7 +244,7 @@ The workflow runs the test against the resolved options and returns `{ status, m
 - `{ status: "skipped", message: "No test configured" }` when the descriptor has no `testConnection`.
 - `failed` with the message `Unknown integration provider "<id>"` when no provider is registered under `provider_id`.
 - `failed` with the message `Not configured` when the descriptor declares a test, but the integration isn't configured, is disabled, or is incomplete. The module doesn't call `testConnection` in that case.
-- `failed` with the error's message when `testConnection` throws, or with the message `Test failed` when the error has none.
+- `failed` with the error's message when `testConnection` throws or the options can't be read, for example when a stored secret doesn't decrypt, or with the message `Test failed` when the error has none.
 
 The workflow emits `integration.tested` for each of these results. Refer to [Connection Test](/medusa-modules/integration/descriptor#connection-test) to learn what the Admin shows for each status.
 

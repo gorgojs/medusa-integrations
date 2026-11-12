@@ -21,7 +21,7 @@ export const GET = async (
   const is_complete = record ? svc.isComplete(record) : false
   res.json({
     descriptor,
-    integration: record ? maskedView(record, svc.getSecretKeys(provider_id)) : null,
+    integration: record ? maskedView(svc, record) : null,
     is_complete,
     ...svc.getPackageMeta(provider_id),
   })
@@ -49,7 +49,7 @@ export const POST = async (
       actor: changeActor(req),
     },
   })
-  res.json({ integration: maskedView(result, svc.getSecretKeys(provider_id)) })
+  res.json({ integration: maskedView(svc, result) })
 }
 
 export const DELETE = async (

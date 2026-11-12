@@ -12,26 +12,35 @@ const rec = (options: Record<string, unknown>) => ({
 })
 
 describe("maskedView", () => {
+  // The service as maskedView uses it: the secret keys, and the plain options as stored.
+  const svc = (secretKeys: string[], readPlainOptions = (r: any) => r.options) =>
+    ({ getSecretKeys: () => secretKeys, readPlainOptions }) as any
+
   it("reports configured secrets per field — only those with a stored value", () => {
     // apiKey has ciphertext, clientSecret is blank → only apiKey counts as configured.
-    const v = maskedView(rec({ apiKey: "ct", clientSecret: "", terminalKey: "abc" }), ["apiKey", "clientSecret"])
+    const v = maskedView(svc(["apiKey", "clientSecret"]), rec({ apiKey: "ct", clientSecret: "", terminalKey: "abc" }))
     expect(v.configured_secrets).toEqual(["apiKey"])
   })
 
   it("returns an empty list when no secret is set", () => {
-    const v = maskedView(rec({ terminalKey: "abc" }), ["apiKey", "clientSecret"])
+    const v = maskedView(svc(["apiKey", "clientSecret"]), rec({ terminalKey: "abc" }))
     expect(v.configured_secrets).toEqual([])
   })
 
   it("never leaks secret ciphertext into values", () => {
-    const v = maskedView(rec({ apiKey: "ct", terminalKey: "abc" }), ["apiKey"])
+    const v = maskedView(svc(["apiKey"]), rec({ apiKey: "ct", terminalKey: "abc" }))
     expect(v.values).toEqual({ terminalKey: "abc" })
     expect(Object.prototype.hasOwnProperty.call(v.values, "apiKey")).toBe(false)
   })
 
+  it("takes the plain values from the service, which decrypts one saved while its option was secret", () => {
+    const v = maskedView(svc([], () => ({ terminalKey: "abc" })), rec({ terminalKey: "v1:ct" }))
+    expect(v.values).toEqual({ terminalKey: "abc" })
+  })
+
   it("returns the metadata as stored, and null for a record without it", () => {
-    expect(maskedView({ ...rec({}), metadata: { erp_id: "42" } }, []).metadata).toEqual({ erp_id: "42" })
-    expect(maskedView(rec({}), []).metadata).toBeNull()
+    expect(maskedView(svc([]), { ...rec({}), metadata: { erp_id: "42" } }).metadata).toEqual({ erp_id: "42" })
+    expect(maskedView(svc([]), rec({})).metadata).toBeNull()
   })
 })
 
