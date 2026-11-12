@@ -20,7 +20,7 @@ T-Kassa Payments by T-Bank for Medusa
 
 <p align="center">
   <a href="https://medusajs.com">
-    <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
+    <img src="https://img.shields.io/badge/Medusa-^2.21.0-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-payment-tkassa.json&logo=checkmarx" alt="Medusa" />
@@ -94,7 +94,7 @@ The [Maintenance](https://docs.gorgojs.com/resources/maintenance) page explains 
 
 ## Requirements
 
-- Medusa v2.17.2 or later
+- Medusa v2.21.0 or later
 - Node.js v22.23.4, v24.22.1, v26.12.1 or later
 - A T-Business account with T-Kassa internet acquiring – [sign in or create one](https://www.tbank.ru/business/online-payments/internet-acquiring/?utm_source=partners_sme&utm_medium=prt.utl&utm_campaign=business.int_acquiring.7-3S975SBSY&partnerId=7-3S975SBSY&agentId=5-B6HGU9OD&agentSsoId=1316b7dd-3a90-4167-9d35-37910431a19c)
 - Integration Module

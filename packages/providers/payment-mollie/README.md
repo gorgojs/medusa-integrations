@@ -18,7 +18,7 @@ Mollie Payments for Medusa
 
 <p align="center">
   <a href="https://medusajs.com">
-    <img src="https://img.shields.io/badge/Medusa-^2.17.2-blue?logo=medusa" alt="Medusa" />
+    <img src="https://img.shields.io/badge/Medusa-^2.21.0-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-payment-mollie.json&logo=checkmarx" alt="Tested with latest Medusa" />
@@ -76,7 +76,7 @@ Connect with other Medusa developers on Telegram in [@medusajs_chat](https://t.m
 
 ## Requirements
 
-- Medusa v2.17.2 or later
+- Medusa v2.21.0 or later
 - Node.js v22.23.4, v24.22.1, v26.12.1 or later
 - A Mollie account and the API key of its website profile, from **Developers → API keys** in the Mollie Web App
 - Integration Module
