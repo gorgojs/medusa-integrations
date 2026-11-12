@@ -25,13 +25,13 @@ description: "Справочник по событиям, которые Мод�
 ```ts
 {
   provider_id: string
-  change: "update" | "enabled" | "delete"
+  change: "update" | "enabled" | "disabled" | "delete"
   actor: { type: string, id: string | null } | null
   fields?: string[]
 }
 ```
 
-`change` называет воркфлоу, причём `"enabled"` обозначает и включение, и выключение. `actor` содержит `actor` воркфлоу или `null`, если воркфлоу запустили без него. `fields` есть только у `"update"`. Это идентификаторы изменившихся параметров, а изменение названия записи обозначается как `@title`. Сами значения остаются в [истории изменений](/medusa-modules/integration/change-history), а секреты не попадают ни туда, ни сюда.
+`change` называет, что сделал воркфлоу. При включении интеграции приходит `"enabled"`, при выключении `"disabled"`. `actor` содержит `actor` воркфлоу или `null`, если воркфлоу запустили без него. `fields` есть только у `"update"`. Это идентификаторы изменившихся параметров, а изменение названия записи обозначается как `@title`. Сами значения остаются в [истории изменений](/medusa-modules/integration/change-history), а секреты не попадают ни туда, ни сюда.
 
 ### integration.tested
 

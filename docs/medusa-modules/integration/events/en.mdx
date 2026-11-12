@@ -25,13 +25,13 @@ The payload has this shape:
 ```ts
 {
   provider_id: string
-  change: "update" | "enabled" | "delete"
+  change: "update" | "enabled" | "disabled" | "delete"
   actor: { type: string, id: string | null } | null
   fields?: string[]
 }
 ```
 
-`change` names the workflow, and `"enabled"` stands for both enabling and disabling. `actor` is the workflow's `actor`, or `null` when it ran without one. Only an `"update"` carries `fields`, the ids of the options that changed, with `@title` for the record's title. The values themselves stay in the [change history](/medusa-modules/integration/change-history), and secrets reach neither.
+`change` names what the workflow did. Enabling an integration sends `"enabled"`, and disabling it sends `"disabled"`. `actor` is the workflow's `actor`, or `null` when it ran without one. Only an `"update"` carries `fields`, the ids of the options that changed, with `@title` for the record's title. The values themselves stay in the [change history](/medusa-modules/integration/change-history), and secrets reach neither.
 
 ### integration.tested
 
