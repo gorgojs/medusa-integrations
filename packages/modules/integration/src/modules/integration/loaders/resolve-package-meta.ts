@@ -2,7 +2,7 @@ import path from "node:path"
 import { readFileSync } from "node:fs"
 import type { ModuleProvider } from "@medusajs/framework/types"
 import { parsePackageMeta } from "./package-meta"
-import type { PackageMetaMap } from "../types"
+import type { PackageMeta, PackageMetaMap } from "../types"
 
 /** Walk up from `startDir` to the nearest package.json that has name + version. */
 function readNearestPackageJson(startDir: string): Record<string, unknown> | null {
@@ -36,13 +36,22 @@ function resolveFromProject(spec: string): string {
   }
 }
 
+/** One provider registration, resolved to the file it loads and the package that ships it. */
+export type ResolvedProviderModule = {
+  /** The registration's `resolve` specifier, as written in medusa-config. */
+  spec: string
+  /** The file `spec` resolves to. Instances of one provider share it. */
+  entryPath: string
+  meta: PackageMeta
+  identifiers: string[]
+}
+
 /**
- * Resolve npm-package metadata (version/author/url) per provider `identifier` from each
- * registration's `resolve` specifier. identifier↔package is 1:1, so one lookup keys every
- * instance sharing the class. Best-effort: an unresolvable provider is skipped, never thrown.
+ * Resolve every registration's `resolve` specifier to its file, its package metadata and the
+ * identifiers its services declare. Best-effort: an unresolvable provider is skipped, never thrown.
  */
-export function resolvePackageMetaByIdentifier(providers: ModuleProvider[]): PackageMetaMap {
-  const out: PackageMetaMap = {}
+export function resolveProviderModules(providers: ModuleProvider[]): ResolvedProviderModule[] {
+  const out: ResolvedProviderModule[] = []
   for (const entry of providers) {
     const spec = (entry as { resolve?: string }).resolve
     if (!spec) continue
@@ -53,12 +62,24 @@ export function resolvePackageMetaByIdentifier(providers: ModuleProvider[]): Pac
       const meta = parsePackageMeta(pkgJson as any)
       const mod = require(entryPath)
       const services: Array<{ identifier?: string }> = (mod?.default ?? mod)?.services ?? []
-      for (const svc of services) {
-        if (svc?.identifier) out[svc.identifier] = meta
-      }
+      const identifiers = services.map((svc) => svc?.identifier).filter((id): id is string => !!id)
+      out.push({ spec, entryPath, meta, identifiers })
     } catch {
-      // a single unresolvable provider must not sink the whole map
+      // a single unresolvable provider must not sink the whole list
     }
+  }
+  return out
+}
+
+/**
+ * Resolve npm-package metadata (version/author/url) per provider `identifier`. One lookup keys
+ * every instance sharing the class. When two packages declare one identifier the last one wins,
+ * which `findDuplicateIdentifiers` reports.
+ */
+export function resolvePackageMetaByIdentifier(providers: ModuleProvider[]): PackageMetaMap {
+  const out: PackageMetaMap = {}
+  for (const mod of resolveProviderModules(providers)) {
+    for (const identifier of mod.identifiers) out[identifier] = mod.meta
   }
   return out
 }
