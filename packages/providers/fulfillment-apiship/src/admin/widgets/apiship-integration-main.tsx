@@ -83,7 +83,7 @@ const ApishipIntegrationMainWidget = ({ data }: { data: IntegrationSectionData }
 }
 
 export const config = defineWidgetConfig({
-  zone: "gorgo.integration.apiship.main.after",
+  zone: "gorgo.integration.apiship",
 })
 
 export default ApishipIntegrationMainWidget
