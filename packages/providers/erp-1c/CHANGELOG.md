@@ -1,5 +1,27 @@
 # @gorgo/medusa-1c
 
+## 0.4.0
+
+### Highlights
+
+- **Upgrade to Integration Module 2.0.** This release requires [`@gorgo/medusa-integration`](https://www.npmjs.com/package/@gorgo/medusa-integration) 2.x, which needs Medusa v2.21.0 or later. Update both packages in one step, `yarn add @gorgo/medusa-integration@^2.0.0 @gorgo/medusa-1c@^0.4.0`, then run `npx medusa db:migrate`, which adds the change history and moves the settings of a registration without an `id` to the key of the instance `default`, and restart the server. The plugin's settings and the exchange with 1C keep working as they are. The [upgrade guide](https://docs.gorgojs.com/medusa-modules/integration/changelog) of the module lists what to check in your own code.
+- **Change history of the settings.** The Integration Module records who changed which 1C:Enterprise Catalog settings and when, with the value before and after. Secrets stay out of it. The **Change History** section of the integration's page shows the five latest changes, and the **Change History** page under **Settings → Integrations** lists every change, with a search and filters by integration, event, author, and date.
+- **Search by name.** The **Integrations** page finds the integration by its name in the interface language, not only by its identifier.
+- **Everything else in 2.0.** Metadata and a **JSON** section on the integration's page, secrets stored with a format version, startup warnings for provider authors, the renamed `AbstractIntegrationProviderService`, and the rewritten documentation are in the [module's changelog](https://docs.gorgojs.com/medusa-modules/integration/changelog).
+
+### Features
+
+- move the admin translations to the gorgo namespace by [@KaneFlak](https://github.com/KaneFlak) in [`8098d63`](https://github.com/gorgojs/medusa-integrations/commit/8098d63a6b4c516df11ecb7ff48fcb304bebae85)
+
+### Bug Fixes
+
+- stop moving the settings saved under int_1c, which the paid 1c plugin owns by [@KaneFlak](https://github.com/KaneFlak) in [`0635035`](https://github.com/gorgojs/medusa-integrations/commit/0635035f5df00aedc4468d8abbd0ec7c404b2ab6)
+
+### Dependencies
+
+- Updated dependencies:
+  - @gorgo/medusa-integration@2.0.0
+
 ## 0.3.3
 
 ### Documentation

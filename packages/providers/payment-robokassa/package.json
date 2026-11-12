@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-robokassa",
-  "version": "2.0.6",
+  "version": "2.1.0",
   "description": "Robokassa payment provider for Medusa",
   "license": "MIT",
   "files": [
@@ -50,7 +50,7 @@
     "fast-xml-parser": "^5.2.5"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^0.3.2",
+    "@gorgo/medusa-integration": "^2.0.0",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",
@@ -75,7 +75,7 @@
     "yalc": "^1.0.0-pre.53"
   },
   "peerDependencies": {
-    "@gorgo/medusa-integration": ">=0.1.5 <1.0.0",
+    "@gorgo/medusa-integration": "^2.0.0",
     "@medusajs/admin-sdk": "^2.17.2",
     "@medusajs/cli": "^2.17.2",
     "@medusajs/framework": "^2.17.2",

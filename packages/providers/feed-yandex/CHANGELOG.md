@@ -1,5 +1,11 @@
 # @gorgo/medusa-feed-yandex
 
+## 0.3.0
+
+### Features
+
+- move the admin translations to the gorgo namespace by [@KaneFlak](https://github.com/KaneFlak) in [`8098d63`](https://github.com/gorgojs/medusa-integrations/commit/8098d63a6b4c516df11ecb7ff48fcb304bebae85)
+
 ## 0.2.40
 
 ### Documentation
