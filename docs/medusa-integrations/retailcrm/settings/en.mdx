@@ -1,6 +1,6 @@
 ---
 title: "Manage RetailCRM Settings in the Medusa Admin"
-description: "Learn how to connect the RetailCRM account, map statuses, payment and delivery types and choose what the plugin applies from the CRM."
+description: "Learn how to connect the RetailCRM account, choose the sales channel, map statuses, payment and delivery types and choose what the plugin applies from the CRM."
 ---
 
 # {frontmatter.title}
@@ -14,7 +14,9 @@ To open the RetailCRM settings page:
 1. Open the Medusa Admin.
 2. Go to **Settings → Integrations → RetailCRM**.
 
-This opens the settings page with the integration status, the **Connection**, **Payment statuses** and **Changes from the CRM** sections, and three sections added by the plugin, **Order statuses**, **Payment types** and **Delivery types**.
+This opens the settings page. The left column holds the integration status, the **Connection** and **Changes from CRM** sections and the **Order statuses**, **Payment types** and **Delivery types** tables. The right column holds the **Sales channel**, **Payment statuses** and **Order methods** cards.
+
+The plugin loads the CRM statuses, types and order methods from your account as soon as the connection has its URL, API key and store code saved. The integration doesn't have to be enabled for that. When an entry is deleted in Medusa or no longer available in the CRM, it carries a **Not in Medusa** or **Not in CRM** mark.
 
 {/* TODO: screenshot */}
 
@@ -22,19 +24,36 @@ This opens the settings page with the integration status, the **Connection**, **
 
 ## Edit the Connection
 
-The **Connection** section holds four required fields:
+The **Connection** section holds three required fields:
 
-- **Account address** – the address of your account, such as `https://example.retailcrm.ru`. Only `https` is accepted.
+- **RetailCRM URL** – the address of your RetailCRM or Simla.com, such as `https://example.retailcrm.ru`. Only `https` is accepted.
 - **API key** – an API key from **Settings → Integration → API keys** of the CRM with the `order_read`, `order_write`, `customer_read`, `customer_write` and `reference_read` scopes.
-- **Store code** – the code of the CRM store this instance writes to. One instance is one store, and every request to the CRM carries this code.
-- **Sales channel ID** – the Medusa sales channel whose orders go to this store. Orders of other channels are ignored by this instance.
+- **Store code** – the symbolic code of the store in RetailCRM. One instance works with one store.
 
 To edit the connection:
 
 1. Go to **Settings → Integrations → RetailCRM**.
 2. In the **Connection** section, click the action menu in the section header.
 3. Choose **Edit**.
-4. In the side panel that opens, fill in the four fields.
+4. In the side panel that opens, fill in the three fields.
+5. Click **Save**.
+
+{/* TODO: screenshot */}
+
+---
+
+## Choose the Sales Channel
+
+The **Sales channel** card sets the Medusa sales channel this instance works with. Orders of this channel go to the CRM store, and orders created in the CRM land in this channel. The instance ignores orders of other channels. Without a sales channel, the integration counts as not fully configured.
+
+When the same channel is selected in another RetailCRM instance, the card shows a warning. An order goes to one instance by its channel, so the second instance with the same channel gets no orders.
+
+To choose the sales channel:
+
+1. Go to **Settings → Integrations → RetailCRM**.
+2. In the **Sales channel** card, click the action menu in the card header.
+3. Choose **Edit**.
+4. In the side panel that opens, choose the sales channel. A channel already selected in another RetailCRM instance is marked in the list.
 5. Click **Save**.
 
 {/* TODO: screenshot */}
@@ -43,30 +62,38 @@ To edit the connection:
 
 ## Check the Connection
 
-The connection test calls the CRM. It checks that the API key has the five scopes, that it covers the store code, that the store exists in the account, and that every code in the status, payment type, delivery type and payment status settings is an active entry of the matching CRM reference. The result names everything that is missing in one message, so you fix the settings in one go.
+The connection test calls the CRM. It checks that the API key has the five scopes, that it gives access to the store with this code and that the store exists in the account. Then it checks the codes in the settings against the CRM references:
+
+- the order statuses, payment types, delivery types and payment statuses must be active reference entries;
+- the payment and delivery types must be available to the store of this instance;
+- a payment type must not belong to a CRM payment module;
+- the **Paid** status must be marked in the CRM as a completed payment.
+
+The **Test connection** action appears once the integration is fully configured and enabled.
 
 To check the connection:
 
 1. Go to **Settings → Integrations → RetailCRM**.
 2. Open the action menu next to the integration's name.
-3. Choose **Test connection**.
+3. If the integration is still disabled, choose **Enable** and open the menu again.
+4. Choose **Test connection**.
 
-The result appears in a notification. An address outside the `retailcrm.ru`, `simla.com` and `retailcrm.pro` domains passes the test with a warning in the message.
+When the test passes, the notification reads **Connection OK**. When it fails, the notification lists everything that is missing, so you can fix the settings in one go. The test doesn't reject an address outside the `retailcrm.ru`, `simla.com` and `retailcrm.pro` domains, so check such an address yourself.
 
 ---
 
 ## Manage the Order Statuses
 
-The **Order statuses** section links an order event in Medusa to the CRM status the order gets. The plugin sends the status when the order is placed, completed or canceled. A manager's status changes in the CRM come back by the status group, as described in [Edit the Changes from the CRM](#edit-the-changes-from-the-crm), so the codes here only matter for what Medusa sends.
+The **Order statuses** table links an order event in Medusa to the CRM status the order gets. The plugin sends the status when the order is placed, completed or canceled. When a manager changes an order's status in the CRM, the plugin acts on the status group, not the code, as described in [Edit the Changes from CRM](#edit-the-changes-from-crm). The codes here only affect what the plugin sends.
 
-The defaults are `new` for a placed order, `complete` for a completed one and `cancel-other` for a canceled one, the standard codes of a RetailCRM account. An event mapped to **Do not send** keeps the order out of the CRM when it happens.
+The defaults are the standard RetailCRM codes. A placed order gets `new`, a completed one `complete` and a canceled one `cancel-other`. When an event is mapped to **Don't send**, the plugin doesn't send the order to the CRM on that event. For an event without a mapping, the plugin sends the order without a status, and a new order gets the CRM default status.
 
 To add or change a mapping:
 
 1. Go to **Settings → Integrations → RetailCRM**.
-2. In the **Order statuses** section, click **Add**, or open the action menu in a row and choose **Edit**.
-3. In the side panel that opens, choose the Medusa event.
-4. Choose the CRM status from the list the plugin loads from your account, or **Do not send**.
+2. In the **Order statuses** table, click **Add**, or open the action menu in a row and choose **Edit**.
+3. In the side panel that opens, choose the **Medusa event**.
+4. Choose the **CRM status** from the list the plugin loads from your account, or **Don't send**.
 5. Click **Save**.
 
 {/* TODO: screenshot */}
@@ -75,14 +102,18 @@ To add or change a mapping:
 
 ## Manage the Payment Types
 
-The **Payment types** section links a Medusa payment provider to a CRM payment type. The CRM requires a type on every payment, so without a mapping the plugin uses the payment type your account marks as the default for the API. Payment types that belong to a CRM payment module, such as an online acquiring module, are not offered, because the CRM doesn't allow editing their payments through the API.
+The **Payment types** table links a Medusa payment provider to a CRM payment type. Medusa's system provider `pp_system_default` is listed as **Manual payment**, and the plugin builds the names of the others from their IDs. Disabled providers aren't offered for a new row.
 
-To add a mapping:
+The CRM requires a type on every payment, so without a mapping the plugin uses the payment type set as the API default in your account, and shows its name under the table. When there is no such type or it's closed to the store of this instance, payments of providers without a mapping don't go to the CRM.
+
+Payment types that belong to a CRM payment module, such as an online acquiring module, aren't offered, because the CRM doesn't allow editing their payments through the API. Types closed to the store of this instance aren't offered either.
+
+To add or change a mapping:
 
 1. Go to **Settings → Integrations → RetailCRM**.
-2. In the **Payment types** section, click **Add**.
-3. In the side panel that opens, choose the Medusa payment provider.
-4. Choose the CRM payment type, or **Do not send** to keep this provider's payments out of the CRM.
+2. In the **Payment types** table, click **Add**, or open the action menu in a row and choose **Edit**.
+3. In the side panel that opens, choose the **Payment provider**.
+4. Choose the **CRM type**, or **Don't send** to keep this provider's payments out of the CRM.
 5. Click **Save**.
 
 {/* TODO: screenshot */}
@@ -91,14 +122,20 @@ To add a mapping:
 
 ## Manage the Delivery Types
 
-The **Delivery types** section links a Medusa shipping option to a CRM delivery type. Without a mapping the delivery goes to the CRM with its cost and address but without a type. The same mapping works in the other direction: when a manager changes the delivery type in the CRM, the plugin replaces the shipping method of the Medusa order with the mapped shipping option.
+The **Delivery types** table links a Medusa shipping option type to a CRM delivery type. You set up the types in the Medusa Admin under **Settings → Locations & Shipping → Shipping Option Types**, and choose a shipping option's type when you create or edit it. The mapping goes by the type code, so one row covers the shipping options of that type in every delivery zone. Types that share a code are listed as one entry.
 
-To add a mapping:
+The plugin sends the CRM delivery type by the type of the order's shipping option. When the type has no mapping, or is mapped to **No type**, the delivery goes to the CRM with its cost and address but without a type. CRM delivery types closed to the store of this instance aren't offered.
+
+The mapping works in the other direction too. When a manager changes the delivery type in the CRM, the plugin gives the order a shipping option of the mapped type from the same zone as its current one. When the order has no Medusa shipping option, the plugin looks in the zone that covers the country of the shipping address. This works while **Apply order edits** is on. When there is no such option, the delivery stays as it is, and the CRM delivery type is recorded in the order's metadata.
+
+An order created in the CRM gets a shipping option of the mapped type from the zone that covers the country of its address. When there is no such option, the order gets the delivery with the cost from the CRM, but without a Medusa shipping option. A later change of only that delivery's cost is recorded in the metadata.
+
+To add or change a mapping:
 
 1. Go to **Settings → Integrations → RetailCRM**.
-2. In the **Delivery types** section, click **Add**.
-3. In the side panel that opens, choose the Medusa shipping option.
-4. Choose the CRM delivery type, or **Do not send**.
+2. In the **Delivery types** table, click **Add**, or open the action menu in a row and choose **Edit**.
+3. In the side panel that opens, choose the **Medusa type**.
+4. Choose the **CRM type**, or **No type**.
 5. Click **Save**.
 
 {/* TODO: screenshot */}
@@ -107,41 +144,56 @@ To add a mapping:
 
 ## Edit the Payment Statuses
 
-The **Payment statuses** section holds the two CRM payment status codes the plugin sets:
+The **Payment statuses** card sets the CRM payment statuses the plugin puts on a payment:
 
-- **Paid status code** – the status a CRM payment gets when the payment is captured in Medusa. The default is `paid`. The connection test requires this status to be marked as payment complete in the CRM.
-- **Unpaid status code** – the status a CRM payment gets when the payment is fully refunded in Medusa. The default is `not-paid`.
+- **Paid** – the status of a captured payment. The plugin sets it when the payment is captured in Medusa, and when the order first goes to the CRM with the payment already captured. The default is `paid`. The list holds only statuses the CRM treats as a completed payment.
+- **Unpaid** – the status of a payment that isn't captured yet or is fully refunded. The plugin sets it when the order first goes to the CRM with the payment not captured, and when the payment is fully refunded in Medusa. The default is `not-paid`. The list holds only statuses the CRM doesn't treat as a completed payment. A partial refund doesn't change the status. The plugin only adds a comment to the payment.
 
 To edit the payment statuses:
 
 1. Go to **Settings → Integrations → RetailCRM**.
-2. In the **Payment statuses** section, click the action menu in the section header.
+2. In the **Payment statuses** card, click the action menu in the card header.
 3. Choose **Edit**.
-4. In the side panel that opens, enter the codes.
+4. In the side panel that opens, choose both statuses.
 5. Click **Save**.
 
 {/* TODO: screenshot */}
 
 ---
 
-## Edit the Changes from the CRM
+## Edit the Changes from CRM
 
-The **Changes from the CRM** section decides how often the plugin reads the CRM history and what it applies:
+The **Changes from CRM** section decides how often the plugin reads the CRM history and what it applies:
 
-- **Poll interval, minutes** – how often the plugin reads the change history. The default is five minutes.
-- **Apply item, delivery and address edits** – on by default. Items, delivery and address changed in the CRM become an order edit in Medusa. When off, the plugin only records them in the order's metadata.
-- **Import orders created in the CRM** – on by default. An order a manager creates in the CRM appears in Medusa, and the CRM gets the Medusa order ID back.
-- **Order methods to import** – CRM order method codes separated by commas, such as `phone, shopping-cart`. Empty means every method.
-- **Cancel orders from the CRM** – off by default. When on, a CRM status from the `cancel` group cancels the order in Medusa. Cancellation can't be undone, and an order with an open fulfillment stays as it is.
-- **Complete orders from the CRM** – off by default. When on, a CRM status from the `complete` group completes the order in Medusa.
-- **Capture manual payments from the CRM** – off by default. When on, a paid status in the CRM captures the order's payment made through Medusa's system payment provider. Payments of other providers are never captured from the CRM.
+- **Poll interval (minutes)** – how often the plugin reads the change history. The default is five minutes.
+- **Apply order edits** – on by default. Items and delivery changed in the CRM become an order edit in Medusa. When off, the plugin only records them in the order's metadata. The delivery address, the email and the customer of the order change in Medusa whatever the switch says.
+- **Create new orders** – on by default. An order a manager creates in the CRM appears in Medusa, and the CRM order gets the Medusa order ID. The [Order methods](#choose-the-order-methods) card limits it to the methods you choose.
+- **Cancel orders** – off by default. When on, a CRM status from the `cancel` group cancels the order in Medusa. Cancellation can't be undone. The plugin skips a completed order and an order with a fulfillment that isn't canceled.
+- **Complete orders** – off by default. When on, a CRM status from the `complete` group completes the order in Medusa.
+- **Capture manual payments** – off by default. When on, a completed payment status in the CRM captures the order's payment made through Medusa's system payment provider, and a paid CRM payment with no Medusa counterpart marks the order's unpaid payment collection as paid. The plugin never captures payments of other providers.
 
 To edit the section:
 
 1. Go to **Settings → Integrations → RetailCRM**.
-2. In the **Changes from the CRM** section, click the action menu in the section header.
+2. In the **Changes from CRM** section, click the action menu in the section header.
 3. Choose **Edit**.
 4. In the side panel that opens, set the interval and the switches.
+5. Click **Save**.
+
+{/* TODO: screenshot */}
+
+---
+
+## Choose the Order Methods
+
+In the **Order methods** card, you choose the CRM order methods whose orders the plugin creates in Medusa. The plugin loads the methods from your account. With none selected, the card reads **All methods**, and the plugin creates orders of every method. The card is shown while **Create new orders** is on.
+
+To choose the order methods:
+
+1. Go to **Settings → Integrations → RetailCRM**.
+2. In the **Order methods** card, click the action menu in the card header.
+3. Choose **Edit**.
+4. In the side panel that opens, check the methods you need, or clear every check to create orders of all methods.
 5. Click **Save**.
 
 {/* TODO: screenshot */}

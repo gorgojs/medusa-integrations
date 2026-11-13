@@ -32,7 +32,7 @@ An item goes with the price before discounts in `initialPrice` and the discount 
 
 ### Payments
 
-Every payment of the order goes with the order when it's created, and the CRM requires a payment type on each of them. The type comes from the payment type mapping, or from the payment type your account marks as the default for the API. A payment with no type at all stays out and the plugin writes a warning to the log. After that, payments are edited by `externalId` on capture and refund, and a payment the CRM lost is created again. The plugin keeps the CRM IDs of the payments in the order's metadata, because a Medusa payment has no metadata of its own.
+Every payment of the order goes with the order when it's created, and the CRM requires a payment type on each of them. The type comes from the payment type mapping, or from the payment type set as the API default in your account, if that type is open to the store of the instance. A payment with no type at all stays out and the plugin writes a warning to the log. After that, payments are edited by `externalId` on capture and refund, and a payment the CRM lost is created again. The plugin keeps the CRM IDs of the payments in the order's metadata, because a Medusa payment has no metadata of its own.
 
 ### Repeated events
 
@@ -42,29 +42,29 @@ The plugin remembers a hash of the body it last sent in the order's metadata. An
 
 ## From the CRM to Medusa
 
-The CRM has no webhooks. It records every change in a history, and the plugin reads it with a scheduled job. The job runs every minute and reads the history of an instance as often as the **Poll interval** setting says, with a cursor it keeps in its own table, so a restart continues where the previous run stopped. Changes made through the plugin's own API key are recognized by the CRM's `apiKey.current` flag and skipped. Every record is handled on its own, so a record the plugin can't read goes to the log and the run goes on.
+The CRM has no webhooks. It records every change in a history, and the plugin reads it with a scheduled job. The job runs every minute and reads the history of an instance as often as the **Poll interval (minutes)** setting says, with a cursor it keeps in its own table, so a restart continues where the previous run stopped. Changes made through the plugin's own API key are recognized by the CRM's `apiKey.current` flag and skipped. Every record is handled on its own, so a record the plugin can't read goes to the log and the run goes on.
 
 | Changed in the CRM | What happens in Medusa |
 | --- | --- |
-| Order status | The code and its group land in `metadata.retailcrm.status` and `status_group`. A status of the `cancel` group cancels the order, and one of the `complete` group completes it, only when the matching switch in [Changes from the CRM](/medusa-integrations/retailcrm/settings#edit-the-changes-from-the-crm) is on. |
+| Order status | The code and its group land in `metadata.retailcrm.status` and `status_group`. A status of the `cancel` group cancels the order, and one of the `complete` group completes it, only when the matching switch in [Changes from CRM](/medusa-integrations/retailcrm/settings#edit-the-changes-from-crm) is on. |
 | Items | The plugin reads the whole order from the CRM and compares it with the Medusa order. It adds the items that are new, changes quantities and prices, and sets the quantity of a removed item to zero, as one order edit that Medusa confirms, reserving stock and adjusting the amount due. |
-| Delivery type and cost | The shipping method of the order is replaced with the shipping option mapped to the CRM delivery type, with the cost from the CRM, in the same order edit. A delivery type without a mapping is only recorded in the metadata. |
+| Delivery type and cost | In the same order edit, the plugin replaces the order's shipping method with a shipping option of the Medusa type mapped to the CRM delivery type, from the zone of the current option, with the cost from the CRM. A delivery type without a mapping, or without such an option in the zone, is only recorded in the metadata. |
 | Delivery address | The order's shipping address gets the address from the CRM. |
 | Customer of the order | The order gets the email of the CRM customer, and the Medusa customer when the CRM customer is linked to one. |
-| Payment status | The status lands in the order's metadata. A status marked as payment complete captures the payment made through Medusa's system payment provider, when **Capture manual payments from the CRM** is on. A paid CRM payment without a Medusa counterpart marks the order's open payment collection as paid. |
+| Payment status | The status lands in the order's metadata. A status marked as payment complete captures the payment made through Medusa's system payment provider, when **Capture manual payments** is on. With the same switch on, a paid CRM payment without a Medusa counterpart marks the order's open payment collection as paid. |
 | Manager, comments, order type, order method, custom fields | Recorded in `metadata.retailcrm` as `manager_id`, `manager_comment`, `customer_comment`, `order_type`, `order_method` and `custom_fields`. |
 | Customer name and phone | Written to the Medusa customer. |
 | Customer address | Written to the customer's default shipping address, or a new address is created. |
 | Customer email | Never applied, because the email is the customer's login in Medusa. The CRM value is recorded in the metadata. |
 | Order deleted in the CRM | Treated like the `cancel` group and recorded as `deleted_at` in the metadata. |
 
-Item, delivery and address edits are applied while **Apply item, delivery and address edits** is on. The plugin cancels the Medusa order edit and writes an error to the log if Medusa rejects it, for example when a quantity goes below what's already fulfilled, and the rest of the record still applies. An order that has another order edit in progress waits for the next run.
+Item and delivery edits are applied while **Apply order edits** is on, and the delivery address is applied either way. The plugin cancels the Medusa order edit and writes an error to the log if Medusa rejects it, for example when a quantity goes below what's already fulfilled, and the rest of the record still applies. An order that has another order edit in progress waits for the next run.
 
 Corporate customers, merged orders and customers, loyalty bonuses and the data of CRM delivery modules aren't applied. They're recorded in the metadata and passed to the hooks.
 
 ### Orders Created in the CRM
 
-An order a manager creates in the CRM has no `externalId`. When **Import orders created in the CRM** is on and the order's method is in **Order methods to import**, the plugin creates the order in Medusa through `createOrderWorkflow`, with the region that matches the CRM store's currency, the sales channel of the instance, the items matched to variants by ID or SKU, the delivery as a shipping method and the customer by email. Right after that, it calls `orders/fix-external-ids`, so the CRM order gets the Medusa order ID and the next change comes back as an edit of this order. An order without an email, without items, or with an item without a price isn't created, and the reason goes to the log. The same happens to a customer created in the CRM with an email.
+An order a manager creates in the CRM has no `externalId`. When **Create new orders** is on and the **Order methods** card lists the order's method or reads **All methods**, the plugin creates the order in Medusa through `createOrderWorkflow`, with the region that matches the CRM store's currency, the sales channel of the instance, the items matched to variants by ID or SKU, the delivery as a shipping option of the mapped type in the zone that covers the address country, and the customer by email. Right after that, it calls `orders/fix-external-ids`, so the CRM order gets the Medusa order ID and the next change comes back as an edit of this order. An order without an email, without items, or with an item without a price isn't created, and the reason goes to the log. The same happens to a customer created in the CRM with an email.
 
 ### What the Plugin Keeps in the Metadata
 

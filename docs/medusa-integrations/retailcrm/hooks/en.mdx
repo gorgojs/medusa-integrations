@@ -531,7 +531,7 @@ exportRetailcrmOrdersWorkflow.hooks.setOrders(async ({ orders }) => {
 
 ### A CRM Status That Doesn't Cancel
 
-The CRM has a status in the `cancel` group that managers use to park an order, and the store doesn't want it to cancel the Medusa order even with **Cancel orders from the CRM** on. The handler drops the status from the changes and keeps the rest.
+The CRM has a status in the `cancel` group that managers use to park an order, and the store doesn't want it to cancel the Medusa order even with **Cancel orders** on. The handler drops the status from the changes and keeps the rest.
 
 ```ts title="src/workflows/hooks/retailcrm-history.ts"
 import { StepResponse } from "@medusajs/framework/workflows-sdk"
