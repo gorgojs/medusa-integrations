@@ -1,13 +1,15 @@
 ---
-title: "Verified Plugins"
-description: "What the Verified badge in the plugin catalog means and how we check Medusa plugins for it."
+title: "Plugin Quality Score"
+description: "What the Quality Score in the plugin catalog means and how we check Medusa plugins for it."
 ---
 
 # {frontmatter.title}
 
-The [Medusa plugin catalog](https://gorgojs.com/medusa/plugins) marks some plugins with a **Verified** badge. A plugin gets the badge when it passes all four groups of checks on this page, covering security, compatibility with the latest Medusa release, maintenance and documentation.
+The [Medusa plugin catalog](https://gorgojs.com/medusa/plugins) rates plugins with a **Quality Score**. It shows how many of the four groups of checks on this page a plugin passes, covering security, compatibility with the latest Medusa release, maintenance and documentation. A group counts as passed when the plugin passes every check in it.
 
-To see only these plugins, turn on the **Verified** filter in the catalog. The plugin page shows the plugin version, the Medusa release and the check date next to the badge, and the catalog list shows them when you hover over the badge.
+The plugin page shows the score as a badge such as `3/4`. The badge is green at 4/4, orange at 2/4 and 3/4, and red below that. Hover over it or tap it to see the result of each group, the checks the plugin failed and why, the plugin version, the Medusa release and the check date.
+
+In the catalog list, only plugins with a score of 4/4 carry the badge, and hovering over it shows the plugin version, the Medusa release and the check date. To see only these plugins, turn on the **Quality Score** filter in the catalog.
 
 ## What We Check
 
@@ -49,26 +51,28 @@ We read the package as npm publishes it, along with its public repository. To ch
 
 We use placeholder values instead of real API keys. That is enough to confirm that the plugin loads and starts, but not to test whether a payment goes through or a provider receives an order.
 
+When a check can't run, for example because the GitHub API didn't respond, its group shows **Not checked** and doesn't count toward the score.
+
 Our own plugins go through the same checks as every other plugin in the catalog. The [Maintenance](/resources/maintenance) page describes how we test and update them.
 
 ---
 
-## What the Verified Badge Means
+## What the Score Means
 
-The Verified badge confirms that a specific plugin version passed these checks on a specific Medusa release. It is not an endorsement or a guarantee from us, so make sure a plugin fits your store before you use it in production.
+A score of 4/4 confirms that a specific plugin version passed these checks on a specific Medusa release. It is not an endorsement or a guarantee from us, so make sure a plugin fits your store before you use it in production.
 
 The security checks look for known risks in the published package. They are not an audit of the plugin's code.
 
-A missing badge is not a warning. A plugin without it may work well and still fail one of the checks on this page.
+A lower score is not a warning. A plugin may work well and still fail one of the checks on this page, and the plugin page shows which one.
 
 ---
 
 ## For Plugin Authors
 
-You don't need to apply. A plugin listed in the catalog gets the badge if it passes every check on this page. These steps help a plugin pass:
+You don't need to apply. A plugin listed in the catalog scores 4/4 if it passes every check on this page. These steps help a plugin pass:
 
 - Keep the `@medusajs/*` peer dependency ranges open to new minor releases instead of pinning an exact version.
 - Host the public repository on GitHub, where we read the repository status.
 - Describe the install command, the `medusa-config.ts` registration and every environment variable in the README.
 
-If your plugin meets the criteria but has no badge, or you disagree with a result, write to the [Telegram support chat](https://t.me/gorgojs_chat) or open an issue in the [medusa-integrations](https://github.com/gorgojs/medusa-integrations/issues) repository on GitHub.
+If your plugin meets the criteria but scores lower, or you disagree with a result, write to the [Telegram support chat](https://t.me/gorgojs_chat) or open an issue in the [medusa-integrations](https://github.com/gorgojs/medusa-integrations/issues) repository on GitHub.
