@@ -7,9 +7,9 @@ description: "Learn how to install the 1C:Enterprise plugin, register it in Medu
 
 In this guide, you'll learn how to install the 1C:Enterprise plugin, register it in Medusa and set up the exchange in 1C.
 
-<Note type="success" title="The plugin is available to beta participants">
+<Note type="success" title="The plugin is published to Gorgo's private registry">
 
-The plugin is published to Gorgo's private package registry. To install it, [apply for the beta](https://gorgojs.com/beta/medusa-1c). Once your application is approved, you get a license key that gives you access to the registry.
+To install it, you need a project key from the [Gorgo dashboard](https://app.gorgojs.ru), where you can sign up or sign in. The key gives you access to the registry.
 
 </Note>
 
@@ -18,8 +18,8 @@ The plugin is published to Gorgo's private package registry. To install it, [app
 - Medusa v2.21.0 or later
 - Node.js v22.23.4, v24.22.1, v26.12.1 or later
 - [Integration Module](/medusa-modules/integration) v2.0.0 or later
-- A Gorgo license key – [apply for the beta](https://gorgojs.com/beta/medusa-1c)
-- A 1C configuration that supports site exchange over CommerceML
+- A Gorgo project key – [sign up or sign in](https://app.gorgojs.ru)
+- Any 1C:Enterprise 8 configuration with site exchange over CommerceML 2, for example 1C:Trade Management 11
 
 ---
 
@@ -27,26 +27,26 @@ The plugin is published to Gorgo's private package registry. To install it, [app
 
 [Install a Paid Plugin](/licensing/install) explains how to issue a project key in the dashboard and set the domains of your environments.
 
-`@gorgo-store` packages are published to the `registry.gorgojs.com` registry, not the public npm registry. Point your package manager at this registry for `@gorgo-store` packages and pass it your license key. Yarn 2 and later reads its settings from `.yarnrc.yml`, npm and pnpm from `.npmrc`:
+`@gorgo-store` packages are published to the `registry.gorgojs.ru` registry, not the public npm registry. Point your package manager at this registry for `@gorgo-store` packages and pass it your license key. Yarn 2 and later reads its settings from `.yarnrc.yml`, npm and pnpm from `.npmrc`:
 
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```yaml title=".yarnrc.yml"
     npmScopes:
       gorgo-store:
-        npmRegistryServer: "https://registry.gorgojs.com"
+        npmRegistryServer: "https://registry.gorgojs.ru"
         npmAuthToken: "${GORGO_LICENSE}"
     ```
   </CodeTab>
   <CodeTab label="pnpm" value="pnpm">
     ```text title=".npmrc"
-    @gorgo-store:registry=https://registry.gorgojs.com/
+    @gorgo-store:registry=https://registry.gorgojs.ru/
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```text title=".npmrc"
-    @gorgo-store:registry=https://registry.gorgojs.com/
-    //registry.gorgojs.com/:_authToken=${GORGO_LICENSE}
+    @gorgo-store:registry=https://registry.gorgojs.ru/
+    //registry.gorgojs.ru/:_authToken=${GORGO_LICENSE}
     ```
   </CodeTab>
 </CodeTabs>
@@ -56,7 +56,7 @@ For Yarn and npm, the license key comes from the `GORGO_LICENSE` environment var
 Since version 11.5.3, pnpm doesn't expand environment variables in registry URLs and credentials from the project `.npmrc`. That's why the pnpm `.npmrc` holds only the registry URL, and you save the key in your user-level pnpm settings instead. Run this command on your machine and in CI before installing dependencies:
 
 ```bash
-pnpm config set //registry.gorgojs.com/:_authToken "$GORGO_LICENSE"
+pnpm config set //registry.gorgojs.ru/:_authToken "$GORGO_LICENSE"
 ```
 
 The command writes the key to your user's pnpm settings rather than to the project, so it stays out of the repository as well.

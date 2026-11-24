@@ -7,9 +7,9 @@ description: "Узнайте, как установить плагин 1С:Пр�
 
 В этом руководстве вы узнаете, как установить плагин 1С:Предприятие, подключить его к Medusa и настроить обмен в 1С.
 
-<Note type="success" title="Плагин доступен участникам бета-тестирования">
+<Note type="success" title="Плагин опубликован в закрытом реестре Gorgo">
 
-Плагин опубликован в закрытом реестре пакетов Gorgo. Чтобы установить его, [подайте заявку на участие в бете](https://gorgojs.ru/beta/medusa-1c). Когда заявку одобрят, вы получите лицензионный ключ для доступа к реестру.
+Для установки нужен ключ проекта из [кабинета Gorgo](https://app.gorgojs.ru), где можно зарегистрироваться или войти. Ключ открывает доступ к реестру.
 
 </Note>
 
@@ -18,8 +18,8 @@ description: "Узнайте, как установить плагин 1С:Пр�
 - Medusa v2.21.0 или новее
 - Node.js v22.23.4, v24.22.1, v26.12.1 или новее
 - [Модуль интеграций](/medusa-modules/integration) v2.0.0 или новее
-- Лицензионный ключ Gorgo – [подайте заявку на бету](https://gorgojs.ru/beta/medusa-1c)
-- Конфигурация 1С, которая поддерживает обмен с сайтом по протоколу CommerceML
+- Ключ проекта Gorgo – [зарегистрируйтесь или войдите](https://app.gorgojs.ru)
+- Любая конфигурация 1С:Предприятие 8 с обменом с сайтом по CommerceML 2, например «1С:Управление торговлей» 11
 
 ---
 
@@ -27,26 +27,26 @@ description: "Узнайте, как установить плагин 1С:Пр�
 
 {/* Как выпустить ключ проекта в кабинете и указать домены окружений, описано в руководстве [Установка платного плагина](/licensing/install). */}
 
-Пакеты `@gorgo-store` опубликованы не в общем реестре npm, а в реестре `registry.gorgojs.com`. Укажите менеджеру пакетов этот реестр для пакетов `@gorgo-store` и передайте ему лицензионный ключ. Yarn 2 и новее читает настройки из `.yarnrc.yml`, npm и pnpm из `.npmrc`:
+Пакеты `@gorgo-store` опубликованы не в общем реестре npm, а в реестре `registry.gorgojs.ru`. Укажите менеджеру пакетов этот реестр для пакетов `@gorgo-store` и передайте ему лицензионный ключ. Yarn 2 и новее читает настройки из `.yarnrc.yml`, npm и pnpm из `.npmrc`:
 
 <CodeTabs>
   <CodeTab label="yarn" value="yarn">
     ```yaml title=".yarnrc.yml"
     npmScopes:
       gorgo-store:
-        npmRegistryServer: "https://registry.gorgojs.com"
+        npmRegistryServer: "https://registry.gorgojs.ru"
         npmAuthToken: "${GORGO_LICENSE}"
     ```
   </CodeTab>
   <CodeTab label="pnpm" value="pnpm">
     ```text title=".npmrc"
-    @gorgo-store:registry=https://registry.gorgojs.com/
+    @gorgo-store:registry=https://registry.gorgojs.ru/
     ```
   </CodeTab>
   <CodeTab label="npm" value="npm">
     ```text title=".npmrc"
-    @gorgo-store:registry=https://registry.gorgojs.com/
-    //registry.gorgojs.com/:_authToken=${GORGO_LICENSE}
+    @gorgo-store:registry=https://registry.gorgojs.ru/
+    //registry.gorgojs.ru/:_authToken=${GORGO_LICENSE}
     ```
   </CodeTab>
 </CodeTabs>
@@ -56,7 +56,7 @@ description: "Узнайте, как установить плагин 1С:Пр�
 Начиная с версии 11.5.3, pnpm не подставляет переменные окружения в адреса реестров и ключи из `.npmrc` проекта. Поэтому в `.npmrc` для pnpm указан только адрес реестра, а ключ сохраните в пользовательских настройках pnpm. Выполните эту команду на своей машине и в CI до установки зависимостей:
 
 ```bash
-pnpm config set //registry.gorgojs.com/:_authToken "$GORGO_LICENSE"
+pnpm config set //registry.gorgojs.ru/:_authToken "$GORGO_LICENSE"
 ```
 
 Команда записывает ключ в настройки pnpm вашего пользователя, а не в проект, так что в репозиторий он тоже не попадает.

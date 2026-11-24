@@ -11,12 +11,6 @@ description: "Paid plugin that exchanges the catalog, prices, stock and orders b
 
 A paid Medusa plugin for data exchange with 1C:Enterprise ERP over the CommerceML protocol. The free version, 1C:Enterprise Catalog, only imports the catalog and prices. It's described in [separate documentation](/medusa-integrations/1c-enterprise-catalog).
 
-<Note type="success" title="The plugin is in closed beta">
-
-Participants get a price below the release one for the first year, help with the specifics of their own 1C configuration and a chat with the development team. To take part in the testing, [apply for the beta](https://gorgojs.com/beta/medusa-1c).
-
-</Note>
-
 ## Plugin Features
 
 - **CommerceML Exchange:** Works with the standard site exchange that 1C starts itself.
@@ -44,6 +38,20 @@ The Integration Module lets any plugin declare its options as a schema, so a sto
 ## What Is 1C:Enterprise
 
 1C:Enterprise is a platform that accounting systems such as "1C:Trade Management" are built on. These systems exchange CommerceML files with an online store. 1C always starts the exchange itself. It calls the store's exchange URL, sends the catalog, offers and orders, and picks up the orders placed on the store. Learn more at the <a href="https://www.1ci.com/" target="_blank">1C website</a>.
+
+---
+
+## Roadmap
+
+From 19 October to 1 November 2026 the plugin went through a closed beta. Based on its results, we confirmed the plugin's functionality and refined it. Below is the development plan with estimated dates.
+
+- **Order Statuses from 1C** *(December 2026)*: When an order is paid, shipped or cancelled in 1C, the Medusa order changes with it. Today only new orders go either way. The order sent to 1C will get the "paid" and "cancelled" flags, the shipping line, discounts and the payment method.
+- **More 1C Data in the Hooks** *(December 2026)*: Handlers get the classifier directories and the product and offer fields the parser drops today. [Workflow hooks](/medusa-integrations/1c-enterprise/hooks) come to the remaining exchange steps too.
+- **Exchange on the Worker** *(December 2026 – January 2027)*: The worker handles the parsing while the server replies to 1C with the `progress` status, so the exchange puts no load on the store server. The exchange session survives a backend restart and runs across several instances.
+- **Exchange Log** *(December 2026 – January 2027)*: Every exchange goes to the Gorgo event log. The integration page in the Medusa Admin shows what each step did and why an exchange failed. It also shows the status of the last exchange in each direction, a button to reset a stuck session and the exchange mark on an order.
+- **Unusual Exports** *(January 2027)*: Windows-1251 files, the `prices` and `rests` files and the `<Остатки>` nodes of CommerceML 2.10. A partial export will no longer unpublish the catalog.
+- **Exchange Speed** *(January 2027)*: Scheduled runs on 1,000, 10,000 and 50,000 products. The numbers go onto this page and into the README.
+- **More Settings** *(on request)*: Skip the root group, choose what happens to categories missing from 1C, map 1C properties to weight, dimensions and HS code, filter the orders to export, and attach a catalog that already exists on the site by SKU.
 
 ---
 
