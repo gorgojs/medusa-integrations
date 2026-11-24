@@ -21,7 +21,7 @@ docsSnippet:
   en: |
     ## Get Access
 
-    The plugin is available to beta participants and is published to Gorgo's private package registry. To install it, [apply for the beta](https://gorgojs.com/beta/medusa-1c). Once your application is approved, you get an access token for the registry.
+    The plugin is published to Gorgo's private package registry. To install it, you need a project key from the [Gorgo dashboard](https://app.gorgojs.ru), where you can sign up or sign in. The key gives you access to the registry.
 
     ## Install
 
@@ -71,7 +71,7 @@ docsSnippet:
   ru: |
     ## Получение доступа
 
-    Плагин доступен участникам бета-тестирования и публикуется в закрытом реестре пакетов Gorgo. Чтобы установить его, [подайте заявку на бету](https://gorgojs.ru/beta/medusa-1c). После одобрения заявки вы получите токен доступа к реестру.
+    Плагин публикуется в закрытом реестре пакетов Gorgo. Для установки нужен ключ проекта из [кабинета Gorgo](https://app.gorgojs.ru), где можно зарегистрироваться или войти. Ключ открывает доступ к реестру.
 
     ## Установка
 
