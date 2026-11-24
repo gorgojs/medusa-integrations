@@ -27,6 +27,8 @@ import { useLicenseStatus } from "../../../../lib/license"
 import { invalidateChanges } from "../../../../lib/changes"
 import { IntegrationHistorySection } from "../../../../components/history/history-section"
 import { ChangeDrawer, useChangeParam } from "../../../../components/history/change-drawer"
+import { MetadataSection } from "../../../../components/metadata/metadata-section"
+import { EditMetadataDrawer } from "../../../../components/metadata/edit-metadata-drawer"
 import type { AdminIntegrationResponse, IntegrationSectionData, UiSection } from "../../../../../types"
 
 /**
@@ -49,6 +51,7 @@ const EditPage = () => {
   const navigate = useNavigate()
   const prompt = usePrompt()
   const [editingSection, setEditingSection] = useState<string | null>(null)
+  const [editingMetadata, setEditingMetadata] = useState(false)
   const { changeId, open: openChange, close: closeChange } = useChangeParam()
 
   // Single query: the resource endpoint returns descriptor (UI schema) + current values.
@@ -327,12 +330,27 @@ const EditPage = () => {
       {mainSections.map(renderSection)}
       {!historyInSide && history}
 
-      {/* The stored record as the API returns it, last in `main` like on Medusa's own detail pages.
-          An unconfigured integration has no record to show. */}
+      {/* Metadata, then the stored record as the API returns it, last in `main` like on Medusa's own
+          detail pages. An unconfigured integration has no record: saving metadata alone would
+          create one, so neither is shown until the settings are saved. */}
+      {record && (
+        <LayoutComposer.Entry id="MetadataSection">
+          <MetadataSection metadata={record.metadata} onEdit={() => setEditingMetadata(true)} />
+        </LayoutComposer.Entry>
+      )}
       {record && (
         <LayoutComposer.Entry id="JsonViewSection">
           <JsonViewSection data={record} />
         </LayoutComposer.Entry>
+      )}
+
+      {record && editingMetadata && (
+        <EditMetadataDrawer
+          open
+          onOpenChange={(open) => !open && setEditingMetadata(false)}
+          providerId={provider_id!}
+          metadata={record.metadata}
+        />
       )}
 
       <ChangeDrawer changeId={changeId} onClose={closeChange} />
