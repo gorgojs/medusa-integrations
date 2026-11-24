@@ -13,19 +13,17 @@ A paid Medusa plugin for data exchange with 1C:Enterprise ERP over the CommerceM
 
 ## Plugin Features
 
-- **CommerceML Exchange:** Works with the standard site exchange that 1C starts itself.
 - **Catalog from 1C:** Products, categories from classifier groups, product types and images.
-- **Variants and Retail Prices:** Variants built from 1C characteristics with the article as the SKU, their options, and the retail price from the offers.
-- **Price Types as Price Lists:** Every non-retail 1C price type becomes a Medusa price list.
-- **Per-Warehouse Stock:** 1C warehouses become Medusa stock locations, with stock levels tracked for each of them.
-- **Two-Way Order Exchange:** Medusa orders go to 1C, and orders created in 1C appear in Medusa.
+- **Offers:** Variants with SKUs, options built from characteristics, and the retail price.
+- **Price Types:** Every non-retail 1C price type becomes a Medusa price list.
+- **Per-Warehouse Stock:** 1C warehouses become Medusa stock locations, with stock levels kept for each.
+- **Two-Way Order Exchange:** Medusa orders go to 1C, and orders created in 1C come into Medusa.
 - **Catalog Export to 1C:** Products created or changed in Medusa go to 1C.
-- **Products Missing from 1C:** After a full catalog export, the plugin can unpublish or delete them.
-- **Large Catalogs:** Tested on a 400,000 SKU catalog, which the plugin processes in batches of 100 products.
-- **Workflow Hooks:** Your own code changes what the exchange writes to Medusa and sends to 1C, without forking the plugin.
-- **Test Coverage:** Unit, integration and load tests of the CommerceML exchange.
-- **Detailed Logging:** Progress of every batch and failure reasons in the Medusa log, with import step durations at the `debug` level.
-- **[Integration Module](/medusa-modules/integration)**<AccentBadge badge="New" />: Configure this plugin directly in the Medusa Admin application, with no configuration files to edit and no store redeploy.
+- **Products Missing from 1C:** After a full catalog export, you can unpublish or delete them.
+- **Large Catalogs:** The plugin is tested on a 400,000 SKU catalog and processes it in batches of 100 products.
+- **Workflow Hooks:** Your own code adjusts what the exchange writes to Medusa and sends to 1C, without forking the plugin.
+- **Settings in the Medusa Admin:** You set every plugin option through the [Integration Module](/medusa-modules/integration), with no `medusa-config` edits and no redeploy.
+- **Change History:** Who changed which plugin settings and when, with the value before and after. The Integration Module keeps it, and secrets stay out of it.
 
 <Note type="default" title="What Is the Integration Module?">
 
@@ -48,10 +46,24 @@ From 19 October to 1 November 2026 the plugin went through a closed beta. Based 
 - **Order Statuses from 1C** *(December 2026)*: When an order is paid, shipped or cancelled in 1C, the Medusa order changes with it. Today only new orders go either way. The order sent to 1C will get the "paid" and "cancelled" flags, the shipping line, discounts and the payment method.
 - **More 1C Data in the Hooks** *(December 2026)*: Handlers get the classifier directories and the product and offer fields the parser drops today. [Workflow hooks](/medusa-integrations/1c-enterprise/hooks) come to the remaining exchange steps too.
 - **Exchange on the Worker** *(December 2026 – January 2027)*: The worker handles the parsing while the server replies to 1C with the `progress` status, so the exchange puts no load on the store server. The exchange session survives a backend restart and runs across several instances.
-- **Exchange Log** *(December 2026 – January 2027)*: Every exchange goes to the Gorgo event log. The integration page in the Medusa Admin shows what each step did and why an exchange failed. It also shows the status of the last exchange in each direction, a button to reset a stuck session and the exchange mark on an order.
-- **Unusual Exports** *(January 2027)*: Windows-1251 files, the `prices` and `rests` files and the `<Остатки>` nodes of CommerceML 2.10. A partial export will no longer unpublish the catalog.
-- **Exchange Speed** *(January 2027)*: Scheduled runs on 1,000, 10,000 and 50,000 products. The numbers go onto this page and into the README.
-- **More Settings** *(on request)*: Skip the root group, choose what happens to categories missing from 1C, map 1C properties to weight, dimensions and HS code, filter the orders to export, and attach a catalog that already exists on the site by SKU.
+- **Exchange Log** *(December 2026 – January 2027)*: Every exchange goes to the event log. The integration page in the Medusa Admin shows what each step did and why an exchange failed. It also shows the status of the last exchange in each direction.
+- **Unusual Exports** *(January 2027)*: Windows-1251 files, the `prices` and `rests` files and the `<Остатки>` nodes of CommerceML 2.10.
+- **Scheduled Performance Measurements** *(January 2027)*: Scheduled runs on large data sets with published results.
+- **More Settings and Features** *(on request)*: Skip the root group, choose what happens to categories missing from 1C, map 1C properties to weight, dimensions and HS code, filter the orders to export, and attach a catalog that already exists on the site by SKU.
+- **Plugin Maintenance** *(ongoing)*: Compatibility with new Medusa and 1C versions and fixes for reported issues. Refer to [Maintenance](/resources/maintenance) for how we test and update the plugin.
+
+---
+
+## Performance
+
+A run goes through every exchange step: catalog import from 1C, a repeat import of the same catalog, catalog export to 1C and orders both ways.
+
+| Catalog | Import | Repeat import | Export to 1C | Orders both ways | Peak memory |
+|---|---:|---:|---:|---:|---:|
+| 1,000 products, 4,000 offers, 100 orders | 46 s | 17 s | 11 s | 4 s | 1.0 GB |
+| 10,000 products, 40,000 offers, 20 orders | 6 min 55 s | 2 min 21 s | 1 min 49 s | 5 s | 2.9 GB |
+
+The import runs at 22 to 24 products per second. Runs on Medusa 2.21.1, Node.js 22.20, AMD Ryzen 5 7430U (6 cores), 15 GB RAM, a dedicated database per run. Memory is that of the test process with the Medusa server inside it. The 1,000-product run had hook handlers attached that read related entities from the database with one query per batch.
 
 ---
 
