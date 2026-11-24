@@ -3,10 +3,15 @@
 import { initiatePaymentSession } from "@lib/data/cart"
 import type { HttpTypes } from "@medusajs/types"
 import { useElements, useStripe } from "@stripe/react-stripe-js"
-import type { PaymentMethodCreateParams } from "@stripe/stripe-js"
+import type {
+  PaymentIntentResult,
+  PaymentMethodCreateParams,
+  StripeError,
+} from "@stripe/stripe-js"
 import { useLocale } from "next-intl"
 import { useContext } from "react"
 import { StripeContext } from "@modules/checkout/components/payment-wrapper/stripe-wrapper"
+import { getPaymentErrorMessage } from "@lib/util/payment-error"
 import {
   PaymentButtonShell,
   type PaymentProviderButtonProps,
@@ -100,25 +105,33 @@ const StripeConfirmButton = ({
       return fail("The payment could not be started.")
     }
 
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: `${window.location.origin}/api/payment-return?cart_id=${cart.id}&locale=${locale}`,
-        payment_method_data: {
-          billing_details: toBillingDetails(cart),
+    let result: PaymentIntentResult
+    try {
+      result = await stripe.confirmPayment({
+        elements,
+        clientSecret,
+        confirmParams: {
+          return_url: `${window.location.origin}/api/payment-return?cart_id=${cart.id}&locale=${locale}`,
+          payment_method_data: {
+            billing_details: toBillingDetails(cart),
+          },
         },
-      },
-      // Only leave the site when the selected method actually requires it, so
-      // card payments still complete inline.
-      redirect: "if_required",
-    })
+        // Only leave the site when the selected method actually requires it, so
+        // card payments still complete inline.
+        redirect: "if_required",
+      })
+    } catch (err) {
+      // Stripe.js rejects instead of resolving with an error when it cannot
+      // reach Stripe, and the button would otherwise spin forever.
+      return fail(getPaymentErrorMessage(err as Partial<StripeError>))
+    }
 
+    const { error, paymentIntent } = result
     if (error) {
       if (isPaymentSettled(error.payment_intent?.status)) {
         return completeOrder()
       }
-      return fail(error.message)
+      return fail(getPaymentErrorMessage(error))
     }
     if (isPaymentSettled(paymentIntent.status)) {
       return completeOrder()

@@ -203,6 +203,13 @@
     "paymentFailed": "Kami tidak dapat memproses pembayaran anda. Sila cuba lagi atau gunakan kaedah lain.",
     "unauthorized": "Sila log masuk untuk meneruskan."
   },
+  "ExpressCheckout": {
+    "missingContact": "Kaedah pembayaran tidak berkongsi e-mel dan alamat penghantaran.",
+    "noShipping": "Kami tidak menghantar ke alamat ini.",
+    "or": "atau",
+    "title": "Pembayaran ekspres",
+    "totalChanged": "Dengan penghantaran ke alamat ini, jumlah anda menjadi {total}. Bayar sekali lagi untuk mengesahkan jumlah baharu."
+  },
   "Filters": {
     "sort": "Isih",
     "title": "Penapis"
@@ -418,6 +425,10 @@
     "terms": {
       "description": "Baca peraturan yang anda persetujui semasa membeli-belah.",
       "title": "Syarat penggunaan"
+    },
+    "verifyAccount": {
+      "description": "Sahkan alamat e-mel anda untuk melengkapkan pembukaan akaun.",
+      "title": "Sahkan e-mel"
     }
   },
   "NativeSelect": {
@@ -655,7 +666,8 @@
     "label": "Cari",
     "loading": "Mencari…",
     "placeholder": "Cari produk",
-    "popular": "Produk popular"
+    "popular": "Produk popular",
+    "showAll": "Lihat semua hasil"
   },
   "Shipping": {
     "chooseStore": "Pilih kedai berhampiran anda",
@@ -696,7 +708,8 @@
     "priceLowHigh": "Harga: Rendah → Tinggi"
   },
   "Store": {
-    "allProducts": "Semua produk"
+    "allProducts": "Semua produk",
+    "searchResults": "Hasil untuk “{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Terima pemindahan",
@@ -725,5 +738,13 @@
     "transferEmailSent": "E-mel permintaan pemindahan dihantar ke {email}",
     "transferRequested": "Pemindahan untuk pesanan {orderId} telah dimohon",
     "whereToFind": "Buka e-mel pengesahan pesanan itu dan tampal pautannya di sini."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Log masuk",
+    "heading": "Pengesahan e-mel",
+    "invalid": "Pautan ini tidak sah atau telah tamat tempoh. Log masuk dan kami akan menghantar pautan baharu.",
+    "linkSent": "Kami telah menghantar pautan ke {email}. Buka pautan itu untuk mengesahkan e-mel anda, kemudian log masuk.",
+    "success": "E-mel anda telah disahkan. Anda boleh log masuk sekarang.",
+    "verifying": "Mengesahkan e-mel anda…"
   }
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import ProductMetaTags from "@modules/products/components/product-meta-tags"
 import { notFound } from "next/navigation"
 import { listProducts } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
@@ -100,11 +101,14 @@ export default async function ProductPage(props: Props) {
   const images = getImagesForVariant(pricedProduct, selectedVariantId)
 
   return (
-    <ProductTemplate
-      product={pricedProduct}
-      region={region}
-      countryCode={cc}
-      images={images ?? []}
-    />
+    <>
+      <ProductMetaTags product={pricedProduct} />
+      <ProductTemplate
+        product={pricedProduct}
+        region={region}
+        countryCode={cc}
+        images={images ?? []}
+      />
+    </>
   )
 }

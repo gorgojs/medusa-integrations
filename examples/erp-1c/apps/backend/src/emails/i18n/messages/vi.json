@@ -21,6 +21,15 @@
     "subject": "Đơn hàng #{id} đã giao",
     "textFallback": "Đơn hàng #{id} đã được giao."
   },
+  "EmailVerification": {
+    "body": "Bạn đang tạo tài khoản với địa chỉ <strong>{email}</strong>. Nhấn nút bên dưới để xác nhận địa chỉ này là của bạn.",
+    "button": "Xác nhận email",
+    "heading": "Xác nhận email của bạn",
+    "hint": "Liên kết có hiệu lực trong <strong>15 phút</strong>. Nếu bạn không tạo tài khoản, hãy bỏ qua email này.",
+    "preview": "Xác nhận email của bạn, liên kết có hiệu lực trong 15 phút",
+    "subject": "Xác nhận email của bạn",
+    "textFallback": "Xác nhận email của bạn\n\nĐể xác nhận email của bạn, hãy mở liên kết (có hiệu lực trong 15 phút):\n{url}\n\nNếu bạn không tạo tài khoản, hãy bỏ qua email này."
+  },
   "Fulfillment": {
     "bodyOrder": "Đơn hàng <strong>#{id}</strong> đã được đóng gói và đang chờ bàn giao cho đơn vị vận chuyển.",
     "deliveryCity": "Giao đến {city}.",

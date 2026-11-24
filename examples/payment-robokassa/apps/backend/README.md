@@ -24,8 +24,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Medusa-2.19-7c3aed" alt="Medusa 2.19" />
-  <img src="https://img.shields.io/badge/Node-%3E%3D20.19-339933?logo=nodedotjs&logoColor=white" alt="Node >= 20.19" />
+  <img src="https://img.shields.io/badge/Medusa-2.23-7c3aed" alt="Medusa 2.23" />
+  <img src="https://img.shields.io/badge/Node-%3E%3D22.22-339933?logo=nodedotjs&logoColor=white" alt="Node >= 22.22" />
   <img src="https://img.shields.io/badge/PostgreSQL-15%2B-4169e1?logo=postgresql&logoColor=white" alt="PostgreSQL 15+" />
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license" />
 </p>
@@ -67,6 +67,7 @@ Copy [`.env.template`](.env.template) to `.env`. Only `DATABASE_URL` has to be s
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE` | SMTP transport for transactional emails | `smtp.example.com`, `587`, `false` |
 | `SMTP_USER`, `SMTP_PASS` | SMTP credentials | — |
 | `SMTP_FROM`, `SMTP_REPLY_TO` | Sender and reply-to addresses. `SMTP_FROM` carries the address; the name beside it comes from `STORE_NAME` | — |
+| `CUSTOMER_EMAIL_VERIFICATION` | Set it to `true` to make customers confirm their email before they can sign in. The link arrives by email, so it needs SMTP. Customers who signed up before you turned it on confirm too, on their next sign-in | `false` |
 | `STOREFRONT_URL` | Storefront base URL used in email links and revalidation webhooks | `http://localhost:8000` |
 | `REVALIDATE_SECRET` | Sent as `x-revalidate-secret` to the storefront; must match its value | `supersecret` |
 | `STOREFRONT_DEFAULT_LOCALE` | Fallback email language when the buyer's is unknown, one of the locales under `src/emails/i18n` | `en` |

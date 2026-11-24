@@ -1,6 +1,6 @@
 import { Container } from "@medusajs/ui"
 
-import { isAuthorizeNet, isStripeLike, paymentInfoMap } from "@lib/constants"
+import { getPaymentInfo, isAuthorizeNet, isStripeLike } from "@lib/constants"
 import { paymentMethodLabel } from "@lib/util/payment"
 import { formatDateTime } from "@lib/util/date"
 import { convertToLocale } from "@lib/util/money"
@@ -46,7 +46,7 @@ const PaymentDetails = async ({ order }: PaymentDetailsProps) => {
       <OrderDetailColumn label={t("paymentDetails")}>
         <div className="flex gap-x-2 items-center">
           <Container className="flex items-center h-7 w-fit p-2 bg-ui-button-neutral-hover">
-            {paymentInfoMap[payment.provider_id]?.icon}
+            {getPaymentInfo(payment.provider_id)?.icon}
           </Container>
           <span data-testid="payment-amount">
             {`${convertToLocale({

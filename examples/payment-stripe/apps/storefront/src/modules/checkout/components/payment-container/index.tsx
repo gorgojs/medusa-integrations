@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl"
 
 import Radio from "@modules/common/components/radio"
 
-import { isManual, type PaymentInfo } from "@lib/constants"
+import { getPaymentInfo, isManual } from "@lib/constants"
 import { paymentMethodLabel } from "@lib/util/payment"
 import SkeletonCardDetails from "@modules/skeletons/components/skeleton-card-details"
 import { PaymentElement } from "@stripe/react-stripe-js"
@@ -18,14 +18,12 @@ type PaymentContainerProps = {
   paymentProviderId: string
   selectedPaymentOptionId: string | null
   disabled?: boolean
-  paymentInfoMap: Record<string, PaymentInfo>
   children?: React.ReactNode
 }
 
 const PaymentContainer: React.FC<PaymentContainerProps> = ({
   paymentProviderId,
   selectedPaymentOptionId,
-  paymentInfoMap,
   disabled = false,
   children,
 }) => {
@@ -62,7 +60,7 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
           )}
         </div>
         <span className="justify-self-end text-ui-fg-base">
-          {paymentInfoMap[paymentProviderId]?.icon}
+          {getPaymentInfo(paymentProviderId)?.icon}
         </span>
       </div>
       {isManual(paymentProviderId) && isDevelopment && (
@@ -128,7 +126,6 @@ export const StripePaymentElement = ({
 export const StripePaymentContainer = ({
   paymentProviderId,
   selectedPaymentOptionId,
-  paymentInfoMap,
   disabled = false,
   setError,
   setPaymentComplete,
@@ -137,7 +134,6 @@ export const StripePaymentContainer = ({
     <PaymentContainer
       paymentProviderId={paymentProviderId}
       selectedPaymentOptionId={selectedPaymentOptionId}
-      paymentInfoMap={paymentInfoMap}
       disabled={disabled}
     >
       {selectedPaymentOptionId === paymentProviderId && (

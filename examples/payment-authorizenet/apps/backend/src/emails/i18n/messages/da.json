@@ -21,6 +21,15 @@
     "subject": "Ordre #{id} leveret",
     "textFallback": "Ordre #{id} er leveret."
   },
+  "EmailVerification": {
+    "body": "Du er ved at oprette en konto med <strong>{email}</strong>. Klik på knappen nedenfor for at bekræfte, at adressen er din.",
+    "button": "Bekræft e-mail",
+    "heading": "Bekræft din e-mail",
+    "hint": "Linket gælder i <strong>15 minutter</strong>. Hvis du ikke har oprettet en konto, kan du blot ignorere denne mail.",
+    "preview": "Bekræft din e-mail, linket gælder i 15 minutter",
+    "subject": "Bekræft din e-mail",
+    "textFallback": "Bekræft din e-mail\n\nÅbn linket for at bekræfte din e-mail (gælder i 15 minutter):\n{url}\n\nHvis du ikke har oprettet en konto, kan du blot ignorere denne mail."
+  },
   "Fulfillment": {
     "bodyOrder": "Ordre <strong>#{id}</strong> er pakket og venter på at blive afleveret til fragtfirmaet.",
     "deliveryCity": "Leveres til {city}.",

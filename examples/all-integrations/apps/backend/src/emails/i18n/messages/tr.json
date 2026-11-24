@@ -21,6 +21,15 @@
     "subject": "#{id} numaralı sipariş teslim edildi",
     "textFallback": "#{id} numaralı sipariş teslim edildi."
   },
+  "EmailVerification": {
+    "body": "<strong>{email}</strong> adresiyle bir hesap oluşturuyorsunuz. Bu adresin size ait olduğunu doğrulamak için aşağıdaki düğmeye tıklayın.",
+    "button": "E-postayı doğrula",
+    "heading": "E-posta adresinizi doğrulayın",
+    "hint": "Bağlantı <strong>15 dakika</strong> geçerlidir. Bir hesap oluşturmadıysanız bu e-postayı yok sayın.",
+    "preview": "E-posta adresinizi doğrulayın, bağlantı 15 dakika geçerlidir",
+    "subject": "E-posta adresinizi doğrulayın",
+    "textFallback": "E-posta adresinizi doğrulayın\n\nE-posta adresinizi doğrulamak için bağlantıyı açın (15 dakika geçerlidir):\n{url}\n\nBir hesap oluşturmadıysanız bu e-postayı yok sayın."
+  },
   "Fulfillment": {
     "bodyOrder": "<strong>#{id}</strong> numaralı sipariş paketlendi ve kargoya teslim edilmeyi bekliyor.",
     "deliveryCity": "{city} adresine teslim edilecek.",

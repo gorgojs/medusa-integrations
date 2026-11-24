@@ -21,6 +21,15 @@
     "subject": "Order #{id} delivered",
     "textFallback": "Order #{id} has been delivered."
   },
+  "EmailVerification": {
+    "body": "You are creating an account with <strong>{email}</strong>. Click the button below to confirm that this address is yours.",
+    "button": "Confirm email",
+    "heading": "Confirm your email",
+    "hint": "The link is valid for <strong>15 minutes</strong>. If you didn't create an account, ignore this email.",
+    "preview": "Confirm your email, link valid for 15 minutes",
+    "subject": "Confirm your email",
+    "textFallback": "Confirm your email\n\nTo confirm your email, follow the link (valid for 15 minutes):\n{url}\n\nIf you didn't create an account, ignore this email."
+  },
   "Fulfillment": {
     "bodyOrder": "Order <strong>#{id}</strong> has been packed and is waiting to be handed to the carrier.",
     "deliveryCity": "Delivering to {city}.",

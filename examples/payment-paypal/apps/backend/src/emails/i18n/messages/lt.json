@@ -21,6 +21,15 @@
     "subject": "Užsakymas Nr. {id} pristatytas",
     "textFallback": "Užsakymas Nr. {id} pristatytas."
   },
+  "EmailVerification": {
+    "body": "Kuriate paskyrą adresu <strong>{email}</strong>. Spustelėkite toliau esantį mygtuką ir patvirtinkite, kad šis adresas priklauso jums.",
+    "button": "Patvirtinti el. paštą",
+    "heading": "Patvirtinkite el. pašto adresą",
+    "hint": "Nuoroda galioja <strong>15 minučių</strong>. Jei paskyros nekūrėte, tiesiog nepaisykite šio laiško.",
+    "preview": "Patvirtinkite el. pašto adresą, nuoroda galioja 15 minučių",
+    "subject": "Patvirtinkite el. pašto adresą",
+    "textFallback": "Patvirtinkite el. pašto adresą\n\nNorėdami patvirtinti el. pašto adresą, atidarykite nuorodą (galioja 15 minučių):\n{url}\n\nJei paskyros nekūrėte, tiesiog nepaisykite šio laiško."
+  },
   "Fulfillment": {
     "bodyOrder": "Užsakymas <strong>Nr. {id}</strong> supakuotas ir laukia perdavimo kurjeriui.",
     "deliveryCity": "Pristatome į {city}.",

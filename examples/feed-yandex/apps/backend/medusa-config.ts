@@ -10,6 +10,10 @@ const redisUrl = process.env.REDIS_URL;
 const useRedis = Boolean(redisUrl) && (isProd || process.env.USE_REDIS === "true");
 const useSmtp = Boolean(process.env.SMTP_HOST);
 const useS3 = isProd && Boolean(process.env.S3_BUCKET);
+// Off by default: the confirmation link travels by email, so turning this on
+// without SMTP locks every new customer out of their account.
+const requireEmailVerification =
+  process.env.CUSTOMER_EMAIL_VERIFICATION === "true";
 
 const smtpProvider = {
   resolve: "./src/modules/smtp-notification",
@@ -96,6 +100,14 @@ module.exports = defineConfig({
       authCors: process.env.AUTH_CORS!,
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
+      // A customer who signs in with email and password has to have confirmed
+      // the address, including one who signed up before this was turned on.
+      // The storefront handles both settings.
+      ...(requireEmailVerification && {
+        authVerificationsPerActor: {
+          customer: [{ entity_type: "email", auth_provider: "emailpass" }],
+        },
+      }),
     },
     cookieOptions: {
       sameSite: "lax",

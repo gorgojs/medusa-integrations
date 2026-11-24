@@ -14,6 +14,7 @@ import { getAuthHeaders, getCacheOptions, getCountryCode } from "./cookies"
 import { getRegion, retrieveRegion } from "./regions"
 import { DEFAULT_REGION } from "@lib/util/env"
 import { locales } from "@i18n/config"
+import { searchCatalog } from "./search"
 
 type ProductListQueryParams = (HttpTypes.FindParams &
   HttpTypes.StoreProductListParams) & {
@@ -190,27 +191,166 @@ export const listProductOptionFilters = async (
   }))
 }
 
+/**
+ * Groups selected option value IDs by the option they belong to, so a listing
+ * can ask for "Black or White, and M". Options are global, so one lookup of
+ * every option and its values covers every listing. An ID the lookup doesn't
+ * know forms a group of its own.
+ */
+const groupOptionValueIds = async (valueIds: string[]) => {
+  if (!valueIds.length) {
+    return []
+  }
+
+  const next = {
+    ...(await getCacheOptions("products")),
+  }
+  const { product_options } = await sdk.client
+    .fetch<{
+      product_options: { id: string; values?: { id: string }[] | null }[]
+    }>("/store/product-options", {
+      method: "GET",
+      query: { fields: "id,values.id", limit: 1000 },
+      next,
+      cache: "force-cache",
+    })
+    .catch(() => ({ product_options: [] }))
+  const optionOf = new Map(
+    product_options.flatMap((option) =>
+      (option.values ?? []).map((value) => [value.id, option.id])
+    )
+  )
+  const grouped = new Map<string, string[]>()
+
+  for (const valueId of valueIds) {
+    const optionId = optionOf.get(valueId) ?? valueId
+    grouped.set(optionId, [...(grouped.get(optionId) ?? []), valueId])
+  }
+
+  return Array.from(grouped.values())
+}
+
+/**
+ * The products of the given IDs, priced for the country's region, in the order
+ * the IDs come in.
+ */
+const listProductsInOrder = async (ids: string[], countryCode: string) => {
+  if (!ids.length) {
+    return []
+  }
+
+  const {
+    response: { products },
+  } = await listProducts({
+    queryParams: { id: ids, limit: ids.length },
+    countryCode,
+  })
+  const byId = new Map(products.map((product) => [product.id, product]))
+
+  return ids
+    .map((id) => byId.get(id))
+    .filter((product): product is HttpTypes.StoreProduct => Boolean(product))
+}
+
+/**
+ * A page of a listing: the store, a category, a collection, or the results of
+ * a search. The backend's product index finds, filters, sorts and counts the
+ * products; the Store API then prices and translates the page.
+ */
 export const listProductsWithSort = async ({
-  page = 0,
+  page = 1,
   queryParams,
-  sortBy = "created_at",
+  sortBy,
   countryCode,
   optionValueIds,
+  q,
 }: {
   page?: number
   queryParams?: ProductListQueryParams
+  /** Leave unset to order a text search by relevance. */
   sortBy?: SortOptions
   countryCode: string
   optionValueIds?: OptionValueIds
+  q?: string
 }): Promise<{
   response: { products: HttpTypes.StoreProduct[]; count: number }
   nextPage: number | null
   queryParams?: ProductListQueryParams
 }> => {
   const limit = queryParams?.limit || 12
+  const pageNumber = Math.max(page, 1)
   const selectedValueIds = Array.from(
     new Set((optionValueIds || []).filter(Boolean))
   )
+  const region = await getRegion(countryCode)
+
+  if (region && !queryParams?.id) {
+    const found = await searchCatalog({
+      q,
+      categoryIds: queryParams?.category_id as string[] | undefined,
+      collectionId: (queryParams?.collection_id as string[] | undefined)?.[0],
+      optionValueGroups: await groupOptionValueIds(selectedValueIds),
+      sortBy: q ? sortBy : (sortBy ?? "created_at"),
+      currencyCode: region.currency_code,
+      skip: (pageNumber - 1) * limit,
+      take: limit,
+    })
+
+    if (found) {
+      return {
+        response: {
+          products: await listProductsInOrder(found.ids, countryCode),
+          count: found.count,
+        },
+        nextPage: found.count > pageNumber * limit ? pageNumber + 1 : null,
+        queryParams,
+      }
+    }
+  }
+
+  return listProductsWithSortFromStoreApi({
+    page: pageNumber,
+    queryParams,
+    sortBy: sortBy ?? "created_at",
+    countryCode,
+    optionValueIds: selectedValueIds,
+    q,
+  })
+}
+
+/**
+ * The listing without the product index, for a backend that can't serve one.
+ * It sorts and pages the first 100 products in memory, and a text query keeps
+ * only those whose text contains it in some locale.
+ */
+const listProductsWithSortFromStoreApi = async ({
+  page,
+  queryParams,
+  sortBy,
+  countryCode,
+  optionValueIds,
+  q,
+}: {
+  page: number
+  queryParams?: ProductListQueryParams
+  sortBy: SortOptions
+  countryCode: string
+  optionValueIds: string[]
+  q?: string
+}) => {
+  const limit = queryParams?.limit || 12
+
+  if (q) {
+    const matchedIds = await matchProductIdsFromStoreApi(q)
+    if (!matchedIds.length) {
+      return {
+        response: { products: [], count: 0 },
+        nextPage: null,
+        queryParams,
+      }
+    }
+    queryParams = { ...queryParams, id: matchedIds }
+  }
 
   const {
     response: { products },
@@ -218,9 +358,7 @@ export const listProductsWithSort = async ({
     pageParam: 0,
     queryParams: {
       ...queryParams,
-      ...(selectedValueIds.length
-        ? { option_value_id: selectedValueIds }
-        : {}),
+      ...(optionValueIds.length ? { option_value_id: optionValueIds } : {}),
       limit: 100,
     },
     countryCode,
@@ -228,23 +366,26 @@ export const listProductsWithSort = async ({
 
   const sortedProducts = sortProducts(products, sortBy)
   const filteredCount = sortedProducts.length
-  const pageParam = (page - 1) * limit
-  const nextPage =
-    filteredCount > pageParam + limit ? pageParam + limit : null
-  const paginatedProducts = sortedProducts.slice(pageParam, pageParam + limit)
+  const offset = (page - 1) * limit
+  const paginatedProducts = sortedProducts.slice(offset, offset + limit)
 
   return {
     response: {
       products: paginatedProducts,
       count: filteredCount,
     },
-    nextPage,
+    nextPage: filteredCount > offset + limit ? page + 1 : null,
     queryParams,
   }
 }
 
+/**
+ * The products the search dialog suggests for a query, at most `limit` of
+ * them. An empty query suggests the newest products.
+ */
 export const searchProducts = async (
-  query: string
+  query: string,
+  limit = 8
 ): Promise<HttpTypes.StoreProduct[]> => {
   const trimmed = query.trim()
   const countryCode = (await getCountryCode()) ?? DEFAULT_REGION
@@ -252,11 +393,38 @@ export const searchProducts = async (
   if (!trimmed) {
     const {
       response: { products },
-    } = await listProducts({ queryParams: { limit: 8 }, countryCode })
+    } = await listProducts({ queryParams: { limit }, countryCode })
     return products
   }
 
-  const needle = trimmed.toLowerCase()
+  const found = await searchCatalog({ q: trimmed, take: limit })
+
+  if (found) {
+    return listProductsInOrder(found.ids, countryCode)
+  }
+
+  const matchedIds = await matchProductIdsFromStoreApi(trimmed)
+
+  if (!matchedIds.length) {
+    return []
+  }
+
+  const {
+    response: { products },
+  } = await listProducts({
+    queryParams: { id: matchedIds, limit },
+    countryCode,
+  })
+
+  return products
+}
+
+/**
+ * The search without the product index: a substring match over the first 100
+ * products in every locale, so a query finds a product in any language.
+ */
+const matchProductIdsFromStoreApi = async (query: string): Promise<string[]> => {
+  const needle = query.toLowerCase()
   const next = {
     ...(await getCacheOptions("products")),
   }
@@ -293,16 +461,5 @@ export const searchProducts = async (
     }
   }
 
-  if (!matchedIds.size) {
-    return []
-  }
-
-  const {
-    response: { products },
-  } = await listProducts({
-    queryParams: { id: Array.from(matchedIds), limit: 8 },
-    countryCode,
-  })
-
-  return products
+  return Array.from(matchedIds)
 }

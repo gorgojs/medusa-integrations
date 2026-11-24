@@ -203,6 +203,13 @@
     "paymentFailed": "Hindi namin naiproseso ang iyong bayad. Pakisubukang muli o gumamit ng ibang paraan.",
     "unauthorized": "Mag-sign in muna para magpatuloy."
   },
+  "ExpressCheckout": {
+    "missingContact": "Hindi ibinahagi ng paraan ng pagbabayad ang email at address ng paghahatid.",
+    "noShipping": "Hindi kami naghahatid sa address na ito.",
+    "or": "o",
+    "title": "Mabilis na checkout",
+    "totalChanged": "Sa paghahatid sa address na ito, magiging {total} ang kabuuan mo. Magbayad muli para kumpirmahin ang bagong kabuuan."
+  },
   "Filters": {
     "sort": "Ayusin",
     "title": "Mga Filter"
@@ -418,6 +425,10 @@
     "terms": {
       "description": "Basahin ang mga patakarang sinasang-ayunan mo kapag bumibili ka sa amin.",
       "title": "Mga tuntunin ng paggamit"
+    },
+    "verifyAccount": {
+      "description": "Kumpirmahin ang email address mo para matapos ang paggawa ng account.",
+      "title": "Kumpirmahin ang email"
     }
   },
   "NativeSelect": {
@@ -655,7 +666,8 @@
     "label": "Maghanap",
     "loading": "Naghahanap…",
     "placeholder": "Maghanap ng produkto",
-    "popular": "Sikat na mga produkto"
+    "popular": "Sikat na mga produkto",
+    "showAll": "Ipakita ang lahat ng resulta"
   },
   "Shipping": {
     "chooseStore": "Pumili ng tindahang malapit sa iyo",
@@ -696,7 +708,8 @@
     "priceLowHigh": "Presyo: Mababa → Mataas"
   },
   "Store": {
-    "allProducts": "Lahat ng produkto"
+    "allProducts": "Lahat ng produkto",
+    "searchResults": "Mga resulta para sa “{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Tanggapin ang paglipat",
@@ -725,5 +738,13 @@
     "transferEmailSent": "Naipadala ang email ng kahilingan sa {email}",
     "transferRequested": "Hiniling na ang paglipat para sa order {orderId}",
     "whereToFind": "Buksan ang confirmation email ng order na iyon at i-paste dito ang link mula roon."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Mag-sign in",
+    "heading": "Pagkumpirma ng email",
+    "invalid": "Hindi valid o expired na ang link na ito. Mag-sign in at magpapadala kami ng bago.",
+    "linkSent": "Nagpadala kami ng link sa {email}. Buksan ito para kumpirmahin ang email mo, saka mag-sign in.",
+    "success": "Nakumpirma na ang email mo. Puwede ka nang mag-sign in.",
+    "verifying": "Kinukumpirma ang email mo…"
   }
 }

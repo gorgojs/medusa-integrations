@@ -409,6 +409,10 @@
     "terms": {
       "description": "阅读您在本店购物时接受的条款。",
       "title": "使用条款"
+    },
+    "verifyAccount": {
+      "description": "验证邮箱地址，完成账户创建。",
+      "title": "验证邮箱"
     }
   },
   "NativeSelect": {
@@ -660,7 +664,8 @@
     "label": "搜索",
     "loading": "搜索中…",
     "placeholder": "搜索商品",
-    "popular": "热门商品"
+    "popular": "热门商品",
+    "showAll": "查看全部结果"
   },
   "Shipping": {
     "chooseStore": "选择附近的门店",
@@ -701,7 +706,8 @@
     "priceLowHigh": "价格：从低到高"
   },
   "Store": {
-    "allProducts": "全部商品"
+    "allProducts": "全部商品",
+    "searchResults": "“{query}”的搜索结果"
   },
   "TransferActions": {
     "acceptTransfer": "接受转移",
@@ -730,5 +736,13 @@
     "transferEmailSent": "转移申请邮件已发送至 {email}",
     "transferRequested": "订单 {orderId} 的转移申请已提交",
     "whereToFind": "打开该订单的确认邮件，把里面的链接粘贴到这里。"
+  },
+  "VerifyAccount": {
+    "goToSignIn": "登录",
+    "heading": "邮箱验证",
+    "invalid": "此链接无效或已过期。登录后我们会重新发送。",
+    "linkSent": "我们已向 {email} 发送链接。请打开链接验证邮箱，然后登录。",
+    "success": "邮箱已验证，现在可以登录。",
+    "verifying": "正在验证您的邮箱…"
   }
 }

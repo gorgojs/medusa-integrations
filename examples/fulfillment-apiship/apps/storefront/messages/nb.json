@@ -203,6 +203,13 @@
     "paymentFailed": "Vi kunne ikke behandle betalingen din. Vennligst prøv igjen eller bruk en annen metode.",
     "unauthorized": "Vennligst logg inn for å fortsette."
   },
+  "ExpressCheckout": {
+    "missingContact": "Betalingsmetoden delte ikke e-post og leveringsadresse.",
+    "noShipping": "Vi leverer ikke til denne adressen.",
+    "or": "eller",
+    "title": "Ekspressbetaling",
+    "totalChanged": "Med frakt til denne adressen blir totalen {total}. Betal på nytt for å bekrefte den nye totalen."
+  },
   "Filters": {
     "sort": "Sorter",
     "title": "Filtre"
@@ -418,6 +425,10 @@
     "terms": {
       "description": "Les reglene du godtar når du handler hos oss.",
       "title": "Vilkår for bruk"
+    },
+    "verifyAccount": {
+      "description": "Bekreft e-postadressen din for å fullføre kontoen.",
+      "title": "Bekreft e-post"
     }
   },
   "NativeSelect": {
@@ -655,7 +666,8 @@
     "label": "Søk",
     "loading": "Søker…",
     "placeholder": "Søk etter produkter",
-    "popular": "Populære produkter"
+    "popular": "Populære produkter",
+    "showAll": "Vis alle resultater"
   },
   "Shipping": {
     "chooseStore": "Velg en butikk i nærheten",
@@ -696,7 +708,8 @@
     "priceLowHigh": "Pris: Lav → Høy"
   },
   "Store": {
-    "allProducts": "Alle produkter"
+    "allProducts": "Alle produkter",
+    "searchResults": "Resultater for «{query}»"
   },
   "TransferActions": {
     "acceptTransfer": "Godta overføring",
@@ -725,5 +738,13 @@
     "transferEmailSent": "E-post med overføringsforespørsel sendt til {email}",
     "transferRequested": "Overføring av bestilling {orderId} er forespurt",
     "whereToFind": "Åpne bekreftelsesmailen for den bestillingen og lim inn lenken derfra her."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Logg inn",
+    "heading": "Bekreft e-post",
+    "invalid": "Lenken er ugyldig eller utløpt. Logg inn, så sender vi deg en ny.",
+    "linkSent": "Vi har sendt en lenke til {email}. Åpne den for å bekrefte e-postadressen din, og logg deretter inn.",
+    "success": "E-postadressen din er bekreftet. Du kan logge inn nå.",
+    "verifying": "Vi bekrefter e-postadressen din…"
   }
 }

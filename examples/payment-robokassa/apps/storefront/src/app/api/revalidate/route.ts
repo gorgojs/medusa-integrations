@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     body.type === "product-option.created" ||
     body.type === "product-option.deleted"
   ) {
-    revalidateTag("products")
+    revalidateTag("products", { expire: 0 })
     revalidatePath(`/[locale]/(main)/products/[handle]`, "page")
     revalidatePath(`/[locale]/(main)/store`, "page")
     revalidatePath(`/[locale]/(main)/categories/[...category]`, "page")
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     body.type === "product-category.created" ||
     body.type === "product-category.deleted"
   ) {
-    revalidateTag("categories")
+    revalidateTag("categories", { expire: 0 })
     revalidatePath(`/[locale]/(main)/products/[handle]`, "page")
     revalidatePath(`/[locale]/(main)/store`, "page")
     revalidatePath(`/[locale]/(main)/categories/[...category]`, "page")
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     body.type === "product-collection.created" ||
     body.type === "product-collection.deleted"
   ) {
-    revalidateTag("collections")
+    revalidateTag("collections", { expire: 0 })
     revalidatePath(`/[locale]/(main)/collections/[handle]`, "page")
     revalidatePath(`/[locale]/(main)/store`, "page")
     revalidatePath("/llms.txt")
@@ -67,9 +67,9 @@ export async function POST(req: NextRequest) {
     body.type === "translation.updated" ||
     body.type === "translation.deleted"
   ) {
-    revalidateTag("products")
-    revalidateTag("categories")
-    revalidateTag("collections")
+    revalidateTag("products", { expire: 0 })
+    revalidateTag("categories", { expire: 0 })
+    revalidateTag("collections", { expire: 0 })
     revalidatePath(`/[locale]/(main)/products/[handle]`, "page")
     revalidatePath(`/[locale]/(main)/store`, "page")
     revalidatePath(`/[locale]/(main)/categories/[...category]`, "page")

@@ -5,6 +5,7 @@ import { LOGIN_VIEW } from "@modules/account/templates/login-template"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { SubmitButton } from "@modules/checkout/components/submit-button"
 import Input from "@modules/common/components/input"
+import VerificationSent from "@modules/account/components/verification-sent"
 import { useActionState } from "react"
 import { useTranslations } from "next-intl"
 
@@ -25,6 +26,12 @@ const Login = ({ setCurrentView }: Props) => {
       <p className="text-center text-base-regular text-ui-fg-base mb-8">
         {t("description")}
       </p>
+      {message?.state === "verification_required" && (
+        <VerificationSent
+          email={message.email}
+          data-testid="login-verification-message"
+        />
+      )}
       <form className="w-full" action={formAction}>
         <div className="flex flex-col w-full gap-y-2">
           <Input
@@ -55,7 +62,10 @@ const Login = ({ setCurrentView }: Props) => {
             {t("forgotPassword")}
           </button>
         </div>
-        <ErrorMessage error={message} data-testid="login-error-message" />
+        <ErrorMessage
+          error={message?.state === "error" ? message.error : null}
+          data-testid="login-error-message"
+        />
         <SubmitButton
           size="large"
           data-testid="sign-in-button"

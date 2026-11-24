@@ -409,6 +409,10 @@
     "terms": {
       "description": "Lees de regels waarmee u akkoord gaat bij een aankoop.",
       "title": "Gebruiksvoorwaarden"
+    },
+    "verifyAccount": {
+      "description": "Bevestig uw e-mailadres om uw account af te ronden.",
+      "title": "E-mailadres bevestigen"
     }
   },
   "NativeSelect": {
@@ -660,7 +664,8 @@
     "label": "Zoeken",
     "loading": "Zoeken…",
     "placeholder": "Zoek producten",
-    "popular": "Populaire producten"
+    "popular": "Populaire producten",
+    "showAll": "Alle resultaten tonen"
   },
   "Shipping": {
     "chooseStore": "Kies een winkel bij u in de buurt",
@@ -701,7 +706,8 @@
     "priceLowHigh": "Prijs: laag → hoog"
   },
   "Store": {
-    "allProducts": "Alle producten"
+    "allProducts": "Alle producten",
+    "searchResults": "Resultaten voor “{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Overdracht accepteren",
@@ -730,5 +736,13 @@
     "transferEmailSent": "E-mail met overdrachtsverzoek verzonden naar {email}",
     "transferRequested": "Overdracht voor bestelling {orderId} aangevraagd",
     "whereToFind": "Open de bevestigingsmail van die bestelling en plak de link eruit hier."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Inloggen",
+    "heading": "E-mailbevestiging",
+    "invalid": "Deze link is ongeldig of verlopen. Log in, dan sturen we u een nieuwe.",
+    "linkSent": "We hebben een link gestuurd naar {email}. Open die om uw e-mailadres te bevestigen en log daarna in.",
+    "success": "Uw e-mailadres is bevestigd. U kunt nu inloggen.",
+    "verifying": "Uw e-mailadres wordt bevestigd…"
   }
 }

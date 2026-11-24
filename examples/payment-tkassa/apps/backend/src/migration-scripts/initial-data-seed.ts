@@ -1,6 +1,7 @@
 import type { MedusaContainer } from "@medusajs/framework";
 import {
   isAlreadySeeded,
+  reindexSearch,
   seedCategories,
   seedCollections,
   seedExampleData,
@@ -38,4 +39,5 @@ export default async function initial_data_seed({
   await step(seedInventoryLevels(container), "inventory levels");
   // Seed example related data
   await step(seedExampleData(container), "example data");
+  await step(reindexSearch(container), "search index");
 }

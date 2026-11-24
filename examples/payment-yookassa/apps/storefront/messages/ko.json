@@ -187,6 +187,13 @@
     "paymentFailed": "결제를 처리할 수 없습니다. 다시 시도하거나 다른 결제 수단을 이용해 주세요.",
     "unauthorized": "계속하려면 로그인해 주세요."
   },
+  "ExpressCheckout": {
+    "missingContact": "결제 수단에서 이메일과 배송지를 공유하지 않았습니다.",
+    "noShipping": "이 주소로는 배송하지 않습니다.",
+    "or": "또는",
+    "title": "간편 결제",
+    "totalChanged": "이 주소로 배송하면 총액이 {total}입니다. 새 총액을 확인하려면 다시 결제해 주세요."
+  },
   "Filters": {
     "sort": "정렬",
     "title": "필터"
@@ -402,6 +409,10 @@
     "terms": {
       "description": "구매 시 동의하는 약관을 읽어보세요.",
       "title": "이용약관"
+    },
+    "verifyAccount": {
+      "description": "이메일 주소를 인증하고 계정 생성을 완료하세요.",
+      "title": "이메일 인증"
     }
   },
   "NativeSelect": {
@@ -643,7 +654,8 @@
     "label": "검색",
     "loading": "검색 중…",
     "placeholder": "상품 검색",
-    "popular": "인기 상품"
+    "popular": "인기 상품",
+    "showAll": "전체 결과 보기"
   },
   "Shipping": {
     "chooseStore": "가까운 매장을 선택하세요",
@@ -684,7 +696,8 @@
     "priceLowHigh": "가격: 낮은순 → 높은순"
   },
   "Store": {
-    "allProducts": "전체 상품"
+    "allProducts": "전체 상품",
+    "searchResults": "“{query}” 검색 결과"
   },
   "TransferActions": {
     "acceptTransfer": "이전 수락",
@@ -713,5 +726,13 @@
     "transferEmailSent": "이전 요청 이메일이 {email}로 전송되었습니다",
     "transferRequested": "주문 {orderId}의 이전이 요청되었습니다",
     "whereToFind": "해당 주문의 확인 메일을 열어 그 안의 링크를 여기에 붙여넣으세요."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "로그인",
+    "heading": "이메일 인증",
+    "invalid": "링크가 유효하지 않거나 만료되었습니다. 로그인하시면 새 링크를 보내 드립니다.",
+    "linkSent": "{email}(으)로 링크를 보냈습니다. 링크를 열어 이메일을 인증한 뒤 로그인하세요.",
+    "success": "이메일 인증이 완료되었습니다. 이제 로그인할 수 있습니다.",
+    "verifying": "이메일을 인증하고 있습니다…"
   }
 }

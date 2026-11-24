@@ -46,7 +46,7 @@ export const updateLocale = async (localeCode: string): Promise<string> => {
 
     const cartCacheTag = await getCacheTag("carts")
     if (cartCacheTag) {
-      revalidateTag(cartCacheTag)
+      revalidateTag(cartCacheTag, { expire: 0 })
     }
   }
 
@@ -66,7 +66,7 @@ export const updateLocale = async (localeCode: string): Promise<string> => {
 
       const customerCacheTag = await getCacheTag("customers")
       if (customerCacheTag) {
-        revalidateTag(customerCacheTag)
+        revalidateTag(customerCacheTag, { expire: 0 })
       }
     } catch {}
   }
@@ -74,17 +74,17 @@ export const updateLocale = async (localeCode: string): Promise<string> => {
   // Revalidate relevant caches to refresh content
   const productsCacheTag = await getCacheTag("products")
   if (productsCacheTag) {
-    revalidateTag(productsCacheTag)
+    revalidateTag(productsCacheTag, { expire: 0 })
   }
 
   const categoriesCacheTag = await getCacheTag("categories")
   if (categoriesCacheTag) {
-    revalidateTag(categoriesCacheTag)
+    revalidateTag(categoriesCacheTag, { expire: 0 })
   }
 
   const collectionsCacheTag = await getCacheTag("collections")
   if (collectionsCacheTag) {
-    revalidateTag(collectionsCacheTag)
+    revalidateTag(collectionsCacheTag, { expire: 0 })
   }
 
   return localeCode

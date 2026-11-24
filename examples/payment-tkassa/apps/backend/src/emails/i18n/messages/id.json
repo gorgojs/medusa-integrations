@@ -21,6 +21,15 @@
     "subject": "Pesanan #{id} telah diterima",
     "textFallback": "Pesanan #{id} telah diterima."
   },
+  "EmailVerification": {
+    "body": "Anda sedang membuat akun dengan <strong>{email}</strong>. Klik tombol di bawah untuk mengonfirmasi bahwa alamat ini milik Anda.",
+    "button": "Konfirmasi email",
+    "heading": "Konfirmasi email Anda",
+    "hint": "Tautan berlaku selama <strong>15 menit</strong>. Jika Anda tidak membuat akun, abaikan saja email ini.",
+    "preview": "Konfirmasi email Anda, tautan berlaku 15 menit",
+    "subject": "Konfirmasi email Anda",
+    "textFallback": "Konfirmasi email Anda\n\nUntuk mengonfirmasi email Anda, buka tautan berikut (berlaku 15 menit):\n{url}\n\nJika Anda tidak membuat akun, abaikan saja email ini."
+  },
   "Fulfillment": {
     "bodyOrder": "Pesanan <strong>#{id}</strong> sudah dikemas dan menunggu diserahkan ke kurir.",
     "deliveryCity": "Dikirim ke {city}.",

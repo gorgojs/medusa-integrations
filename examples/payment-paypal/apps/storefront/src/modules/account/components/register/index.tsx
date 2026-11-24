@@ -10,6 +10,7 @@ import { Link } from "@i18n/navigation"
 import { signup } from "@lib/data/customer"
 import { useTranslations } from "next-intl"
 import { SITE_NAME } from "@lib/util/env"
+import VerificationSent from "@modules/account/components/verification-sent"
 
 type Props = {
   setCurrentView: (view: LOGIN_VIEW) => void
@@ -17,7 +18,7 @@ type Props = {
 
 const Register = ({ setCurrentView }: Props) => {
   const t = useTranslations("Register")
-  const [message, formAction] = useActionState(signup as (state: string | null, formData: FormData) => Promise<string | null>, null as string | null)
+  const [message, formAction] = useActionState(signup, null)
 
   return (
     <div
@@ -30,6 +31,12 @@ const Register = ({ setCurrentView }: Props) => {
       <p className="text-center text-base-regular text-ui-fg-base mb-4">
         {t("description", { siteName: SITE_NAME })}
       </p>
+      {message?.state === "verification_required" && (
+        <VerificationSent
+          email={message.email}
+          data-testid="register-verification-message"
+        />
+      )}
       <form className="w-full flex flex-col" action={formAction}>
         <div className="flex flex-col w-full gap-y-2">
           <Input
@@ -71,7 +78,10 @@ const Register = ({ setCurrentView }: Props) => {
             data-testid="password-input"
           />
         </div>
-        <ErrorMessage error={message} data-testid="register-error" />
+        <ErrorMessage
+          error={message?.state === "error" ? message.error : null}
+          data-testid="register-error"
+        />
         <span className="text-center text-ui-fg-base text-small-regular mt-6">
           {t("agreeText", { siteName: SITE_NAME })}{" "}
           <Link href="/privacy" className="underline">

@@ -203,6 +203,13 @@
     "paymentFailed": "Vi kunne ikke gennemføre din betaling. Prøv igen, eller vælg en anden betalingsmetode.",
     "unauthorized": "Log ind for at fortsætte."
   },
+  "ExpressCheckout": {
+    "missingContact": "Betalingsmetoden delte ikke en e-mail og en leveringsadresse.",
+    "noShipping": "Vi leverer ikke til denne adresse.",
+    "or": "eller",
+    "title": "Ekspresbetaling",
+    "totalChanged": "Med levering til denne adresse bliver totalen {total}. Betal igen for at bekræfte det nye beløb."
+  },
   "Filters": {
     "sort": "Sortér",
     "title": "Filtre"
@@ -418,6 +425,10 @@
     "terms": {
       "description": "Læs de regler, du accepterer, når du handler hos os.",
       "title": "Brugsbetingelser"
+    },
+    "verifyAccount": {
+      "description": "Bekræft din e-mailadresse for at gøre din konto færdig.",
+      "title": "Bekræft e-mail"
     }
   },
   "NativeSelect": {
@@ -655,7 +666,8 @@
     "label": "Søg",
     "loading": "Søger…",
     "placeholder": "Søg efter produkter",
-    "popular": "Populære produkter"
+    "popular": "Populære produkter",
+    "showAll": "Vis alle resultater"
   },
   "Shipping": {
     "chooseStore": "Vælg en butik nær dig",
@@ -696,7 +708,8 @@
     "priceLowHigh": "Pris: Lav → Høj"
   },
   "Store": {
-    "allProducts": "Alle produkter"
+    "allProducts": "Alle produkter",
+    "searchResults": "Resultater for “{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Accepter overførsel",
@@ -725,5 +738,13 @@
     "transferEmailSent": "E-mail med overførselsanmodning sendt til {email}",
     "transferRequested": "Overførsel for ordre {orderId} er anmodet",
     "whereToFind": "Åbn bekræftelsesmailen for den ordre, og indsæt linket derfra her."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Log ind",
+    "heading": "Bekræft e-mail",
+    "invalid": "Linket er ugyldigt eller udløbet. Log ind, så sender vi dig et nyt.",
+    "linkSent": "Vi har sendt et link til {email}. Åbn det for at bekræfte din e-mail, og log derefter ind.",
+    "success": "Din e-mail er bekræftet. Du kan logge ind nu.",
+    "verifying": "Vi bekræfter din e-mail…"
   }
 }

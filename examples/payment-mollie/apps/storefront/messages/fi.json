@@ -187,6 +187,13 @@
     "paymentFailed": "Maksun käsittely epäonnistui. Yritä uudelleen tai käytä toista maksutapaa.",
     "unauthorized": "Kirjaudu sisään jatkaaksesi."
   },
+  "ExpressCheckout": {
+    "missingContact": "Maksutapa ei jakanut sähköpostiosoitetta ja toimitusosoitetta.",
+    "noShipping": "Emme toimita tähän osoitteeseen.",
+    "or": "tai",
+    "title": "Pikamaksu",
+    "totalChanged": "Kun toimitus on tähän osoitteeseen, loppusumma on {total}. Vahvista uusi summa maksamalla uudelleen."
+  },
   "Filters": {
     "sort": "Lajittele",
     "title": "Suodattimet"
@@ -402,6 +409,10 @@
     "terms": {
       "description": "Lue säännöt, jotka hyväksyt ostaessasi meiltä.",
       "title": "Käyttöehdot"
+    },
+    "verifyAccount": {
+      "description": "Vahvista sähköpostiosoitteesi, niin tilisi luominen valmistuu.",
+      "title": "Vahvista sähköposti"
     }
   },
   "NativeSelect": {
@@ -643,7 +654,8 @@
     "label": "Haku",
     "loading": "Haetaan…",
     "placeholder": "Hae tuotteita",
-    "popular": "Suositut tuotteet"
+    "popular": "Suositut tuotteet",
+    "showAll": "Näytä kaikki tulokset"
   },
   "Shipping": {
     "chooseStore": "Valitse lähin myymälä",
@@ -684,7 +696,8 @@
     "priceLowHigh": "Hinta: Halvin → Kallein"
   },
   "Store": {
-    "allProducts": "Kaikki tuotteet"
+    "allProducts": "Kaikki tuotteet",
+    "searchResults": "Tulokset haulle ”{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Hyväksy siirto",
@@ -713,5 +726,13 @@
     "transferEmailSent": "Siirtopyyntö lähetetty osoitteeseen {email}",
     "transferRequested": "Tilauksen {orderId} siirtoa pyydetty",
     "whereToFind": "Avaa kyseisen tilauksen vahvistusviesti ja liitä siinä oleva linkki tähän."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Kirjaudu sisään",
+    "heading": "Sähköpostin vahvistus",
+    "invalid": "Linkki on virheellinen tai vanhentunut. Kirjaudu sisään, niin lähetämme uuden.",
+    "linkSent": "Lähetimme linkin osoitteeseen {email}. Vahvista sähköpostiosoitteesi avaamalla se ja kirjaudu sitten sisään.",
+    "success": "Sähköpostiosoitteesi on vahvistettu. Voit nyt kirjautua sisään.",
+    "verifying": "Vahvistetaan sähköpostiosoitettasi…"
   }
 }

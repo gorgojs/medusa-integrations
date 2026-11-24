@@ -21,6 +21,15 @@
     "subject": "Commande n° {id} livrée",
     "textFallback": "La commande n° {id} a été livrée."
   },
+  "EmailVerification": {
+    "body": "Vous créez un compte avec l’adresse <strong>{email}</strong>. Cliquez sur le bouton ci-dessous pour confirmer qu’elle vous appartient.",
+    "button": "Confirmer l’adresse e-mail",
+    "heading": "Confirmez votre adresse e-mail",
+    "hint": "Le lien est valable <strong>15 minutes</strong>. Si vous n’avez pas créé de compte, ignorez simplement cet e-mail.",
+    "preview": "Confirmez votre adresse e-mail, lien valable 15 minutes",
+    "subject": "Confirmez votre adresse e-mail",
+    "textFallback": "Confirmez votre adresse e-mail\n\nPour confirmer votre adresse e-mail, ouvrez le lien (valable 15 minutes) :\n{url}\n\nSi vous n’avez pas créé de compte, ignorez simplement cet e-mail."
+  },
   "Fulfillment": {
     "bodyOrder": "La commande <strong>n° {id}</strong> est emballée et attend d'être remise au transporteur.",
     "deliveryCity": "Livraison à {city}.",

@@ -21,6 +21,15 @@
     "subject": "Naihatid na ang order #{id}",
     "textFallback": "Naihatid na ang order #{id}."
   },
+  "EmailVerification": {
+    "body": "Gumagawa ka ng account gamit ang <strong>{email}</strong>. I-click ang button sa ibaba para kumpirmahing sa iyo ang address na ito.",
+    "button": "Kumpirmahin ang email",
+    "heading": "Kumpirmahin ang iyong email",
+    "hint": "May bisa ang link nang <strong>15 minuto</strong>. Kung hindi ka gumawa ng account, huwag na lang pansinin ang email na ito.",
+    "preview": "Kumpirmahin ang iyong email, may bisa ang link nang 15 minuto",
+    "subject": "Kumpirmahin ang iyong email",
+    "textFallback": "Kumpirmahin ang iyong email\n\nPara kumpirmahin ang iyong email, buksan ang link (may bisa nang 15 minuto):\n{url}\n\nKung hindi ka gumawa ng account, huwag na lang pansinin ang email na ito."
+  },
   "Fulfillment": {
     "bodyOrder": "Nakabalot na ang order <strong>#{id}</strong> at naghihintay na maiabot sa courier.",
     "deliveryCity": "Ipapadala sa {city}.",

@@ -203,6 +203,13 @@
     "paymentFailed": "Vi kunde inte genomföra din betalning. Försök igen eller välj en annan betalmetod.",
     "unauthorized": "Logga in för att fortsätta."
   },
+  "ExpressCheckout": {
+    "missingContact": "Betalmetoden delade inte e-post och leveransadress.",
+    "noShipping": "Vi levererar inte till den här adressen.",
+    "or": "eller",
+    "title": "Snabbkassa",
+    "totalChanged": "Med frakt till den här adressen blir totalen {total}. Betala igen för att bekräfta den nya totalen."
+  },
   "Filters": {
     "sort": "Sortera",
     "title": "Filter"
@@ -418,6 +425,10 @@
     "terms": {
       "description": "Läs reglerna du godkänner när du handlar hos oss.",
       "title": "Användarvillkor"
+    },
+    "verifyAccount": {
+      "description": "Bekräfta din e-postadress för att slutföra ditt konto.",
+      "title": "Bekräfta e-post"
     }
   },
   "NativeSelect": {
@@ -655,7 +666,8 @@
     "label": "Sök",
     "loading": "Söker…",
     "placeholder": "Sök produkter",
-    "popular": "Populära produkter"
+    "popular": "Populära produkter",
+    "showAll": "Visa alla resultat"
   },
   "Shipping": {
     "chooseStore": "Välj en butik nära dig",
@@ -696,7 +708,8 @@
     "priceLowHigh": "Pris: Lågt → Högt"
   },
   "Store": {
-    "allProducts": "Alla produkter"
+    "allProducts": "Alla produkter",
+    "searchResults": "Resultat för ”{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Acceptera överföring",
@@ -725,5 +738,13 @@
     "transferEmailSent": "E-post med överföringsförfrågan skickad till {email}",
     "transferRequested": "Överföring för order {orderId} begärd",
     "whereToFind": "Öppna orderbekräftelsen för den ordern och klistra in länken därifrån här."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Logga in",
+    "heading": "Bekräfta e-post",
+    "invalid": "Länken är ogiltig eller har gått ut. Logga in så skickar vi en ny.",
+    "linkSent": "Vi har skickat en länk till {email}. Öppna den för att bekräfta din e-postadress och logga sedan in.",
+    "success": "Din e-postadress är bekräftad. Du kan logga in nu.",
+    "verifying": "Vi bekräftar din e-postadress…"
   }
 }

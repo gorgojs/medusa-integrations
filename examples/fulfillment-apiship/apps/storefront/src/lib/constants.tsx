@@ -28,6 +28,7 @@ export const paymentInfoMap: Record<string, PaymentInfo> = {
     subtitle: "Stripe",
     icon: <CreditCard />,
   },
+  // Stands for every Medusa Payments account, see `paymentInfoKey`.
   "pp_medusa-payments_default": {
     title: "Credit card",
     subtitle: "Medusa Payments",
@@ -54,11 +55,47 @@ export const paymentInfoMap: Record<string, PaymentInfo> = {
   // Add more payment providers here
 }
 
+/*
+ * Medusa Payments registers one provider per payment account, with the ID
+ * `pp_medusa-payments_{account}`, where `{account}` is the Medusa Cloud payment
+ * account ID. They all share one entry in `paymentInfoMap` and in the
+ * `PaymentMethods` catalog.
+ */
+const MEDUSA_PAYMENTS_PREFIX = "pp_medusa-payments_"
+const MEDUSA_PAYMENTS_INFO_KEY = "pp_medusa-payments_default"
+
+export const isMedusaPayments = (providerId?: string) => {
+  return !!providerId?.startsWith(MEDUSA_PAYMENTS_PREFIX)
+}
+
+/** The key a provider's icon and labels are stored under. */
+export const paymentInfoKey = (providerId: string) =>
+  isMedusaPayments(providerId) ? MEDUSA_PAYMENTS_INFO_KEY : providerId
+
+export const getPaymentInfo = (
+  providerId?: string | null
+): PaymentInfo | undefined =>
+  providerId ? paymentInfoMap[paymentInfoKey(providerId)] : undefined
+
+/*
+ * Medusa Payments returns the Stripe account that holds the payment, which
+ * Stripe.js has to be initialized with. It isn't derived from the provider ID,
+ * as non-production environments take payments with a sandbox account.
+ */
+export const getMedusaPaymentsAccount = (paymentSession?: {
+  provider_id: string
+  data?: Record<string, unknown>
+}) => {
+  const account = paymentSession?.data?.stripe_account
+  return isMedusaPayments(paymentSession?.provider_id) &&
+    typeof account === "string"
+    ? account
+    : undefined
+}
+
 // This only checks if it is native stripe or medusa payments for card payments, it ignores the other stripe-based providers
 export const isStripeLike = (providerId?: string) => {
-  return (
-    providerId?.startsWith("pp_stripe_") || providerId?.startsWith("pp_medusa-")
-  )
+  return providerId?.startsWith("pp_stripe_") || isMedusaPayments(providerId)
 }
 
 const paymentSessionDataBuilders: Array<{

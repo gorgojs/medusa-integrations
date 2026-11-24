@@ -409,6 +409,10 @@
     "terms": {
       "description": "Read the rules you agree to when you shop with us.",
       "title": "Terms of use"
+    },
+    "verifyAccount": {
+      "description": "Confirm your email address to finish creating your account.",
+      "title": "Confirm email"
     }
   },
   "NativeSelect": {
@@ -647,7 +651,8 @@
     "label": "Search",
     "loading": "Searching…",
     "placeholder": "Search products",
-    "popular": "Popular products"
+    "popular": "Popular products",
+    "showAll": "Show all results"
   },
   "Shipping": {
     "chooseStore": "Choose a store near you",
@@ -688,7 +693,8 @@
     "priceLowHigh": "Price: Low → High"
   },
   "Store": {
-    "allProducts": "All products"
+    "allProducts": "All products",
+    "searchResults": "Results for “{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Accept transfer",
@@ -717,5 +723,13 @@
     "transferEmailSent": "Transfer request email sent to {email}",
     "transferRequested": "Transfer for order {orderId} requested",
     "whereToFind": "Open the confirmation email for that order and paste the link from it here."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Sign in",
+    "heading": "Email confirmation",
+    "invalid": "This link is invalid or has expired. Sign in, and we will send you a new one.",
+    "linkSent": "We sent a link to {email}. Open it to confirm your email, then sign in.",
+    "success": "Your email is confirmed. You can sign in now.",
+    "verifying": "Confirming your email…"
   }
 }

@@ -409,6 +409,10 @@
     "terms": {
       "description": "Lee las reglas que aceptas al comprar con nosotros.",
       "title": "Términos de uso"
+    },
+    "verifyAccount": {
+      "description": "Confirma tu dirección de correo electrónico para terminar de crear tu cuenta.",
+      "title": "Confirmar correo electrónico"
     }
   },
   "NativeSelect": {
@@ -647,7 +651,8 @@
     "label": "Buscar",
     "loading": "Buscando…",
     "placeholder": "Buscar productos",
-    "popular": "Productos populares"
+    "popular": "Productos populares",
+    "showAll": "Ver todos los resultados"
   },
   "Shipping": {
     "chooseStore": "Elige una tienda cercana",
@@ -688,7 +693,8 @@
     "priceLowHigh": "Precio: de menor a mayor"
   },
   "Store": {
-    "allProducts": "Todos los productos"
+    "allProducts": "Todos los productos",
+    "searchResults": "Resultados para «{query}»"
   },
   "TransferActions": {
     "acceptTransfer": "Aceptar transferencia",
@@ -717,5 +723,13 @@
     "transferEmailSent": "Correo de solicitud de transferencia enviado a {email}",
     "transferRequested": "Transferencia solicitada para el pedido {orderId}",
     "whereToFind": "Abre el correo de confirmación de ese pedido y pega aquí el enlace que contiene."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Iniciar sesión",
+    "heading": "Confirmación de correo",
+    "invalid": "Este enlace no es válido o ha caducado. Inicia sesión y te enviaremos uno nuevo.",
+    "linkSent": "Hemos enviado un enlace a {email}. Ábrelo para confirmar tu correo electrónico y luego inicia sesión.",
+    "success": "Tu correo electrónico está confirmado. Ya puedes iniciar sesión.",
+    "verifying": "Confirmando tu correo electrónico…"
   }
 }

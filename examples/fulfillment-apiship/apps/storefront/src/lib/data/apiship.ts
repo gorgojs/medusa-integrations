@@ -124,7 +124,7 @@ export async function removeApishipShippingMethod(shippingMethodId: string) {
     )
     .then(async () => {
       const cartCacheTag = await getCacheTag("carts")
-      revalidateTag(cartCacheTag)
+      revalidateTag(cartCacheTag, { expire: 0 })
     })
     .catch(medusaError)
 }

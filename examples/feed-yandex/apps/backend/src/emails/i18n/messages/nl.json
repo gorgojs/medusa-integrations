@@ -21,6 +21,15 @@
     "subject": "Bestelling #{id} bezorgd",
     "textFallback": "Bestelling #{id} is bezorgd."
   },
+  "EmailVerification": {
+    "body": "U maakt een account aan met <strong>{email}</strong>. Klik op de knop hieronder om te bevestigen dat dit adres van u is.",
+    "button": "E-mailadres bevestigen",
+    "heading": "Bevestig uw e-mailadres",
+    "hint": "De link is <strong>15 minuten</strong> geldig. Heeft u geen account aangemaakt, negeer dan deze e-mail.",
+    "preview": "Bevestig uw e-mailadres, de link is 15 minuten geldig",
+    "subject": "Bevestig uw e-mailadres",
+    "textFallback": "Bevestig uw e-mailadres\n\nOpen de link om uw e-mailadres te bevestigen (15 minuten geldig):\n{url}\n\nHeeft u geen account aangemaakt, negeer dan deze e-mail."
+  },
   "Fulfillment": {
     "bodyOrder": "Bestelling <strong>#{id}</strong> is ingepakt en wacht op de vervoerder.",
     "deliveryCity": "Bezorging in {city}.",

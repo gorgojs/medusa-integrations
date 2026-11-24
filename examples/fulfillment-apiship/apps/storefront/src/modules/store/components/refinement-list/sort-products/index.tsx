@@ -6,7 +6,8 @@ import { useTranslations } from "next-intl"
 export type SortOptions = "price_asc" | "price_desc" | "created_at"
 
 type SortProductsProps = {
-  sortBy: SortOptions
+  /** Unset while a text search is ordered by relevance. */
+  sortBy?: SortOptions
   setQueryParams: (name: string, value: string) => void
   "data-testid"?: string
 }
@@ -26,7 +27,7 @@ const SortProducts = ({
 
   return (
     <Select
-      value={sortBy}
+      value={sortBy ?? ""}
       onValueChange={(value) => setQueryParams("sortBy", value)}
       data-testid={dataTestId}
     >

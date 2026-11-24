@@ -26,7 +26,8 @@ import type { SortOptions } from "../refinement-list/sort-products"
 import { useLocaleDirection } from "@lib/hooks/use-locale-direction"
 
 type MobileRefinementProps = {
-  sortBy: SortOptions
+  /** Unset while a text search is ordered by relevance. */
+  sortBy?: SortOptions
   optionFilters?: ProductOptionFilterGroup[]
   className?: string
 }

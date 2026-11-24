@@ -409,6 +409,10 @@
     "terms": {
       "description": "Prečítajte si pravidlá, s ktorými pri nákupe súhlasíte.",
       "title": "Podmienky používania"
+    },
+    "verifyAccount": {
+      "description": "Potvrďte e-mailovú adresu a dokončite vytvorenie účtu.",
+      "title": "Potvrdenie e-mailu"
     }
   },
   "NativeSelect": {
@@ -647,7 +651,8 @@
     "label": "Hľadať",
     "loading": "Hľadá sa…",
     "placeholder": "Hľadať produkty",
-    "popular": "Obľúbené produkty"
+    "popular": "Obľúbené produkty",
+    "showAll": "Zobraziť všetky výsledky"
   },
   "Shipping": {
     "chooseStore": "Vyberte predajňu vo svojom okolí",
@@ -688,7 +693,8 @@
     "priceLowHigh": "Cena: najnižšia → najvyššia"
   },
   "Store": {
-    "allProducts": "Všetky produkty"
+    "allProducts": "Všetky produkty",
+    "searchResults": "Výsledky pre „{query}“"
   },
   "TransferActions": {
     "acceptTransfer": "Prijať prevod",
@@ -717,5 +723,13 @@
     "transferEmailSent": "Email so žiadosťou o prevod odoslaný na {email}",
     "transferRequested": "Prevod objednávky {orderId} bol vyžiadaný",
     "whereToFind": "Otvorte potvrdzovací e-mail k tej objednávke a vložte sem odkaz z neho."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Prihlásiť sa",
+    "heading": "Potvrdenie e-mailu",
+    "invalid": "Odkaz je neplatný alebo vypršal. Prihláste sa a pošleme vám nový.",
+    "linkSent": "Na adresu {email} sme poslali odkaz. Otvorte ho, potvrďte tým e-mail a potom sa prihláste.",
+    "success": "Váš e-mail je potvrdený. Teraz sa môžete prihlásiť.",
+    "verifying": "Potvrdzujeme váš e-mail…"
   }
 }

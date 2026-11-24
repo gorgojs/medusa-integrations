@@ -409,6 +409,10 @@
     "terms": {
       "description": "Bizden alışveriş ederken kabul ettiğiniz kuralları okuyun.",
       "title": "Kullanım koşulları"
+    },
+    "verifyAccount": {
+      "description": "Hesabınızı oluşturmayı tamamlamak için e-posta adresinizi doğrulayın.",
+      "title": "E-postayı doğrula"
     }
   },
   "NativeSelect": {
@@ -647,7 +651,8 @@
     "label": "Ara",
     "loading": "Aranıyor…",
     "placeholder": "Ürün ara",
-    "popular": "Popüler ürünler"
+    "popular": "Popüler ürünler",
+    "showAll": "Tüm sonuçları göster"
   },
   "Shipping": {
     "chooseStore": "Size yakın bir mağaza seçin",
@@ -688,7 +693,8 @@
     "priceLowHigh": "Fiyat: Düşükten Yükseğe"
   },
   "Store": {
-    "allProducts": "Tüm ürünler"
+    "allProducts": "Tüm ürünler",
+    "searchResults": "“{query}” için sonuçlar"
   },
   "TransferActions": {
     "acceptTransfer": "Devri kabul et",
@@ -717,5 +723,13 @@
     "transferEmailSent": "Devir talebi e-postası {email} adresine gönderildi",
     "transferRequested": "{orderId} numaralı sipariş için devir talep edildi",
     "whereToFind": "O siparişin onay e-postasını açın ve içindeki bağlantıyı buraya yapıştırın."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Giriş yap",
+    "heading": "E-posta doğrulama",
+    "invalid": "Bu bağlantı geçersiz veya süresi dolmuş. Giriş yapın, size yenisini gönderelim.",
+    "linkSent": "{email} adresine bir bağlantı gönderdik. E-posta adresinizi doğrulamak için açın, ardından giriş yapın.",
+    "success": "E-posta adresiniz doğrulandı. Artık giriş yapabilirsiniz.",
+    "verifying": "E-posta adresiniz doğrulanıyor…"
   }
 }

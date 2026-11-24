@@ -187,6 +187,13 @@
     "paymentFailed": "Ihre Zahlung konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut oder wählen Sie eine andere Zahlungsmethode.",
     "unauthorized": "Bitte melden Sie sich an, um fortzufahren."
   },
+  "ExpressCheckout": {
+    "missingContact": "Die Zahlungsmethode hat keine E-Mail-Adresse und keine Lieferadresse übermittelt.",
+    "noShipping": "An diese Adresse liefern wir nicht.",
+    "or": "oder",
+    "title": "Express-Checkout",
+    "totalChanged": "Mit dem Versand an diese Adresse beträgt Ihr Gesamtbetrag {total}. Bitte bezahlen Sie erneut, um den neuen Betrag zu bestätigen."
+  },
   "Filters": {
     "sort": "Sortieren",
     "title": "Filter"
@@ -402,6 +409,10 @@
     "terms": {
       "description": "Lesen Sie die Regeln, denen Sie beim Einkauf zustimmen.",
       "title": "Nutzungsbedingungen"
+    },
+    "verifyAccount": {
+      "description": "Bestätigen Sie Ihre E-Mail-Adresse, um die Registrierung abzuschließen.",
+      "title": "E-Mail-Adresse bestätigen"
     }
   },
   "NativeSelect": {
@@ -643,7 +654,8 @@
     "label": "Suche",
     "loading": "Suche läuft…",
     "placeholder": "Produkte suchen",
-    "popular": "Beliebte Produkte"
+    "popular": "Beliebte Produkte",
+    "showAll": "Alle Ergebnisse anzeigen"
   },
   "Shipping": {
     "chooseStore": "Wählen Sie ein Geschäft in Ihrer Nähe",
@@ -684,7 +696,8 @@
     "priceLowHigh": "Preis: aufsteigend"
   },
   "Store": {
-    "allProducts": "Alle Produkte"
+    "allProducts": "Alle Produkte",
+    "searchResults": "Ergebnisse für „{query}“"
   },
   "TransferActions": {
     "acceptTransfer": "Übertragung annehmen",
@@ -713,5 +726,13 @@
     "transferEmailSent": "E-Mail mit Übertragungsanfrage an {email} gesendet",
     "transferRequested": "Übertragung für Bestellung {orderId} angefragt",
     "whereToFind": "Öffnen Sie die Bestätigungsmail zu dieser Bestellung und fügen Sie den Link daraus hier ein."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Anmelden",
+    "heading": "E-Mail-Bestätigung",
+    "invalid": "Dieser Link ist ungültig oder abgelaufen. Melden Sie sich an, dann senden wir Ihnen einen neuen.",
+    "linkSent": "Wir haben einen Link an {email} gesendet. Öffnen Sie ihn, um Ihre E-Mail-Adresse zu bestätigen, und melden Sie sich dann an.",
+    "success": "Ihre E-Mail-Adresse ist bestätigt. Sie können sich jetzt anmelden.",
+    "verifying": "Ihre E-Mail-Adresse wird bestätigt…"
   }
 }

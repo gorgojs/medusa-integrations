@@ -33,10 +33,8 @@ const AddressAutocomplete = (props: AddressAutocompleteProps) => {
           checked={manual}
           onCheckedChange={(value) => setManual(value === true)}
         />
-        <Text
-          className="text-ui-fg-subtle"
-        >
-          {t("manualInput")}
+        <Text asChild className="text-ui-fg-subtle cursor-pointer">
+          <label htmlFor={uid}>{t("manualInput")}</label>
         </Text>
       </div>
 

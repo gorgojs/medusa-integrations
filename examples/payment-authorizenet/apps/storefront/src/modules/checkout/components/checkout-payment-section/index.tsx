@@ -7,8 +7,8 @@ import {
   isPaymentSessionDeferred,
   isAuthorizeNet,
   isPaymentSessionReady,
+  getPaymentInfo,
   isStripeLike,
-  paymentInfoMap,
 } from "@lib/constants"
 import compareAddresses from "@lib/util/compare-addresses"
 import { paymentMethodLabel } from "@lib/util/payment"
@@ -16,7 +16,7 @@ import { CreditCard } from "@medusajs/icons"
 import type { HttpTypes } from "@medusajs/types"
 import PaymentButton from "@modules/checkout/components/payment-button"
 import ErrorMessage from "@modules/checkout/components/error-message"
-import { StripePaymentContainer } from "@modules/checkout/components/payment-container"
+import { StripePaymentElement } from "@modules/checkout/components/payment-container"
 import AuthorizeNetCardForm from "@modules/checkout/components/authorizenet-card-form"
 import CheckoutBillingSheet from "@modules/checkout/components/checkout-billing-sheet"
 import { Link } from "@i18n/navigation"
@@ -47,6 +47,13 @@ export default function CheckoutPaymentSection({
   const [, setPaymentComplete] = useState(false)
   const [billingOpen, setBillingOpen] = useState(false)
   const [showBillingDetails, setShowBillingDetails] = useState(false)
+
+  const paidByGiftcard = !!(
+    (cart as unknown as Record<string, unknown>)?.gift_cards &&
+    ((cart as unknown as Record<string, unknown>)?.gift_cards as unknown[])
+      ?.length > 0 &&
+    cart?.total === 0
+  )
 
   // Re-initiate payment session when it gets cleared (e.g. after promo code change)
   useEffect(() => {
@@ -104,13 +111,6 @@ export default function CheckoutPaymentSection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [receiptContextKey])
 
-  const paidByGiftcard = !!(
-    (cart as unknown as Record<string, unknown>)?.gift_cards &&
-    ((cart as unknown as Record<string, unknown>)?.gift_cards as unknown[])
-      ?.length > 0 &&
-    cart?.total === 0
-  )
-
   const handleSelectPayment = async (providerId: string) => {
     setSelectedPaymentMethod(providerId)
 
@@ -153,7 +153,7 @@ export default function CheckoutPaymentSection({
 
           <div className="flex gap-x-2 overflow-x-auto no-scrollbar pb-1">
             {availablePaymentMethods.map((method) => {
-              const info = paymentInfoMap[method.id]
+              const info = getPaymentInfo(method.id)
               const { title, subtitle } = paymentMethodLabel(tm, method.id)
               const isSelected = selectedPaymentMethod === method.id
 
@@ -194,10 +194,7 @@ export default function CheckoutPaymentSection({
           {/* Stripe card input */}
           {isStripeLike(selectedPaymentMethod) && (
             <div className="mt-2">
-              <StripePaymentContainer
-                paymentProviderId={selectedPaymentMethod}
-                selectedPaymentOptionId={selectedPaymentMethod}
-                paymentInfoMap={paymentInfoMap}
+              <StripePaymentElement
                 setError={setError}
                 setPaymentComplete={setPaymentComplete}
               />

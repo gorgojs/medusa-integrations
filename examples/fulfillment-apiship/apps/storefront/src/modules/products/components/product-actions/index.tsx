@@ -39,7 +39,20 @@ export default function ProductActions({
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const [options, setOptions] = useState<Record<string, string | undefined>>({})
+  // Start from the variant a `?v_id=` link names, which is where the product's
+  // structured data points shoppers and search engines, or from the only
+  // variant there is. Otherwise the URL sync below would drop `v_id` on load.
+  const [options, setOptions] = useState<Record<string, string | undefined>>(
+    () => {
+      const linked = product.variants?.find(
+        (v) => v.id === searchParams.get("v_id")
+      )
+      const variant =
+        linked ??
+        (product.variants?.length === 1 ? product.variants[0] : undefined)
+      return (variant && optionsAsKeymap(variant.options)) ?? {}
+    }
+  )
   const [isAdding, setIsAdding] = useState(false)
 
   // If there is only 1 variant, preselect the options

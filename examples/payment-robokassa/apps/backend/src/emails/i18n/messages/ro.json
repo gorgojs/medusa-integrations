@@ -21,6 +21,15 @@
     "subject": "Comanda #{id} a fost livrată",
     "textFallback": "Comanda #{id} a fost livrată."
   },
+  "EmailVerification": {
+    "body": "Creați un cont cu adresa <strong>{email}</strong>. Apăsați butonul de mai jos pentru a confirma că adresa vă aparține.",
+    "button": "Confirmă adresa de e-mail",
+    "heading": "Confirmați adresa de e-mail",
+    "hint": "Linkul este valabil <strong>15 minute</strong>. Dacă nu ați creat un cont, ignorați pur și simplu acest e-mail.",
+    "preview": "Confirmați adresa de e-mail, linkul este valabil 15 minute",
+    "subject": "Confirmați adresa de e-mail",
+    "textFallback": "Confirmați adresa de e-mail\n\nPentru a confirma adresa de e-mail, deschideți linkul (valabil 15 minute):\n{url}\n\nDacă nu ați creat un cont, ignorați pur și simplu acest e-mail."
+  },
   "Fulfillment": {
     "bodyOrder": "Comanda <strong>#{id}</strong> este împachetată și așteaptă să fie predată curierului.",
     "deliveryCity": "Livrăm în {city}.",

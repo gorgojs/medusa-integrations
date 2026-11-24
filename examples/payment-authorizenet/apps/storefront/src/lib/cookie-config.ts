@@ -1,9 +1,9 @@
 /**
- * Cookie names and attribute presets shared by the middleware, the server
- * actions in @lib/data and the client components that read the same cookies.
+ * Cookie names and attribute presets shared by the proxy, the server actions
+ * in @lib/data and the client components that read the same cookies.
  *
- * Keep this module free of "server-only" and next/headers imports — the
- * middleware runs on the edge runtime and the promo banner is a client
+ * Keep this module free of "server-only" and next/headers imports. The proxy
+ * runs outside the React server environment and the promo banner is a client
  * component, and both need these names.
  */
 
@@ -15,6 +15,8 @@ export const COOKIE_NAMES = {
   cartId: "_medusa_cart_id",
   country: "_medusa_country",
   locale: "_medusa_locale",
+  pendingCustomer: "_medusa_pending_customer",
+  verificationRequested: "_medusa_verification_requested",
   promoBannerDismissed: "_promo_banner_dismissed",
 } as const
 
@@ -32,6 +34,15 @@ export const privateCookieOpts = {
   httpOnly: true,
   sameSite,
   secure,
+}
+
+/**
+ * The sign-up form while the customer is away confirming their email. A day is
+ * plenty for that, and the cookie is cleared as soon as the account exists.
+ */
+export const pendingCookieOpts = {
+  ...privateCookieOpts,
+  maxAge: DAY,
 }
 
 /** Long-lived preferences the client reads too — locale, country. */

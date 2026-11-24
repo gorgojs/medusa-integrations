@@ -21,6 +21,15 @@
     "subject": "Tilaus #{id} toimitettu",
     "textFallback": "Tilaus #{id} on toimitettu."
   },
+  "EmailVerification": {
+    "body": "Olet luomassa tiliä osoitteella <strong>{email}</strong>. Vahvista alla olevalla painikkeella, että osoite on sinun.",
+    "button": "Vahvista sähköposti",
+    "heading": "Vahvista sähköpostiosoitteesi",
+    "hint": "Linkki on voimassa <strong>15 minuuttia</strong>. Jos et luonut tiliä, voit jättää tämän viestin huomiotta.",
+    "preview": "Vahvista sähköpostiosoitteesi, linkki on voimassa 15 minuuttia",
+    "subject": "Vahvista sähköpostiosoitteesi",
+    "textFallback": "Vahvista sähköpostiosoitteesi\n\nVahvista sähköpostiosoitteesi avaamalla linkki (voimassa 15 minuuttia):\n{url}\n\nJos et luonut tiliä, voit jättää tämän viestin huomiotta."
+  },
   "Fulfillment": {
     "bodyOrder": "Tilaus <strong>#{id}</strong> on pakattu ja odottaa luovutusta kuljetusliikkeelle.",
     "deliveryCity": "Toimitetaan kaupunkiin {city}.",

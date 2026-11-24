@@ -21,6 +21,15 @@
     "subject": "Objednávka č. {id} doručena",
     "textFallback": "Objednávka č. {id} byla doručena."
   },
+  "EmailVerification": {
+    "body": "Zakládáte účet s adresou <strong>{email}</strong>. Kliknutím na tlačítko níže potvrďte, že adresa patří vám.",
+    "button": "Potvrdit e-mail",
+    "heading": "Potvrďte svůj e-mail",
+    "hint": "Odkaz je platný <strong>15 minut</strong>. Pokud jste žádný účet nezakládali, tento e-mail jednoduše ignorujte.",
+    "preview": "Potvrďte svůj e-mail, odkaz platí 15 minut",
+    "subject": "Potvrďte svůj e-mail",
+    "textFallback": "Potvrďte svůj e-mail\n\nE-mail potvrdíte otevřením odkazu (platí 15 minut):\n{url}\n\nPokud jste žádný účet nezakládali, tento e-mail jednoduše ignorujte."
+  },
   "Fulfillment": {
     "bodyOrder": "Objednávka <strong>č. {id}</strong> je zabalená a čeká na předání dopravci.",
     "deliveryCity": "Doručujeme do {city}.",

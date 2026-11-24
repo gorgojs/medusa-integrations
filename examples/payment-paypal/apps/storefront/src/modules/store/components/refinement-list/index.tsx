@@ -12,7 +12,8 @@ import OptionsPicker from "./options-picker"
 import SortProducts, { type SortOptions } from "./sort-products"
 
 type RefinementListProps = {
-  sortBy: SortOptions
+  /** Unset while a text search is ordered by relevance. */
+  sortBy?: SortOptions
   search?: boolean
   hideOptionsPicker?: boolean
   display?: "all" | "filters" | "sort"

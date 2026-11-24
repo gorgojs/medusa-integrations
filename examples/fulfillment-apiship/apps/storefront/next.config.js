@@ -13,6 +13,19 @@ const S3_HOSTNAME = process.env.MEDUSA_CLOUD_S3_HOSTNAME
 const S3_PATHNAME = process.env.MEDUSA_CLOUD_S3_PATHNAME
 
 /**
+ * A backend on this machine serves product images from localhost, which the
+ * image optimizer refuses to fetch unless it is told otherwise.
+ */
+const isLocalBackend = (() => {
+  try {
+    const { hostname } = new URL(process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL)
+    return ["localhost", "127.0.0.1", "[::1]"].includes(hostname)
+  } catch {
+    return false
+  }
+})()
+
+/**
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
@@ -64,6 +77,9 @@ const nextConfig = {
   },
   images: {
     unoptimized: false,
+    // Next 16 serves only the qualities listed here. Thumbnails ask for 50.
+    qualities: [50, 75],
+    dangerouslyAllowLocalIP: isLocalBackend,
     remotePatterns: [
       {
         protocol: "http",

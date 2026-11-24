@@ -26,7 +26,7 @@ type Entry = {
   description?: string | null
 }
 
-// Links omit the locale prefix: middleware 302s to the visitor's language, and
+// Links omit the locale prefix: the proxy 302s to the visitor's language, and
 // every locale root is listed under ## Optional.
 function url(path: string) {
   return `${BASE_URL}${path}`
@@ -110,7 +110,7 @@ export async function GET() {
     `# ${SITE_NAME}`,
     "",
     "> Live demo of the Gorgo Medusa DTC Starter — an open-source, production-ready",
-    "> direct-to-consumer storefront built on Next.js 15 (App Router) and Medusa 2.",
+    "> direct-to-consumer storefront built on Next.js (App Router) and Medusa 2.",
     "> The catalog is seeded demo data: orders placed here are not fulfilled and no",
     "> payment is actually taken.",
     "",
@@ -138,6 +138,19 @@ export async function GET() {
         url("/store"),
         "Full catalog with search, filtering and sorting"
       ),
+      listItem(
+        "Search",
+        url("/store?q={query}"),
+        "Search results for a query, matched in every storefront language"
+      ),
+    ]),
+    ...section("Policies", [
+      listItem("Shipping", url("/shipping"), "Delivery options, costs and times"),
+      listItem("Returns and exchanges", url("/returns"), "How to return or exchange an order"),
+      listItem("Customer service", url("/customer-service"), "Help with orders, payments and accounts"),
+      listItem("Contact", url("/contact"), "How to reach the store"),
+      listItem("Privacy policy", url("/privacy")),
+      listItem("Terms of use", url("/terms")),
     ]),
     ...section("Project", [
       listItem(

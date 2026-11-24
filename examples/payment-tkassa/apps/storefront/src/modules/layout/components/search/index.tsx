@@ -3,7 +3,7 @@
 import { MagnifyingGlass, XMarkMini, MagnifierAlert } from "@medusajs/icons"
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react"
 import Image from "next/image"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
 import type { HttpTypes } from "@medusajs/types"
@@ -48,8 +48,14 @@ const Search = ({
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<HttpTypes.StoreProduct[]>([])
 
+  const triggerRef = useRef<HTMLButtonElement>(null)
+
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
+      // The nav and the mobile bottom bar each mount this component, and only
+      // one of them is visible at a time. Without this check the shortcut
+      // would open two dialogs on top of each other.
+      if (!triggerRef.current?.getClientRects().length) return
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         setOpen((o) => !o)
@@ -92,11 +98,20 @@ const Search = ({
     [close, router]
   )
 
+  // Enter, or the link under the suggestions, opens every result in the store.
+  const showAllResults = useCallback(() => {
+    const trimmed = query.trim()
+    if (!trimmed) return
+    close()
+    router.push(`/store?q=${encodeURIComponent(trimmed)}`)
+  }, [close, query, router])
+
   const trimmed = query.trim()
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t("label")}
@@ -109,10 +124,21 @@ const Search = ({
         <DialogBackdrop className="fixed inset-0 bg-black/30" />
         <div className="fixed inset-0 flex items-start justify-center p-4 pt-[12vh]">
           <DialogPanel className="w-full max-w-xl overflow-hidden rounded-xl border border-ui-border-base bg-ui-bg-base shadow-lg">
-            <div className="flex items-center gap-2 border-b border-ui-border-base px-4">
+            <form
+              role="search"
+              action="/store"
+              onSubmit={(e) => {
+                e.preventDefault()
+                showAllResults()
+              }}
+              className="flex items-center gap-2 border-b border-ui-border-base px-4"
+            >
               <MagnifyingGlass className="shrink-0 text-ui-fg-muted" />
               <input
                 autoFocus
+                name="q"
+                enterKeyHint="search"
+                aria-label={t("label")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t("placeholder")}
@@ -128,7 +154,7 @@ const Search = ({
                   <XMarkMini />
                 </button>
               )}
-            </div>
+            </form>
 
             <div className="max-h-[60vh] overflow-y-auto py-1">
               {loading && (
@@ -184,6 +210,17 @@ const Search = ({
                     </button>
                   )
                 })}
+
+              {!loading && trimmed && results.length > 0 && (
+                <button
+                  type="button"
+                  onClick={showAllResults}
+                  className="w-full px-4 py-3 text-start txt-compact-small-plus text-ui-fg-interactive hover:bg-ui-bg-base-hover"
+                  data-testid="search-show-all"
+                >
+                  {t("showAll")}
+                </button>
+              )}
             </div>
           </DialogPanel>
         </div>

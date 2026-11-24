@@ -203,6 +203,13 @@
     "paymentFailed": "お支払いを処理できませんでした。もう一度お試しになるか、別の方法をお使いください。",
     "unauthorized": "続行するにはサインインしてください。"
   },
+  "ExpressCheckout": {
+    "missingContact": "お支払い方法からメールアドレスと配送先住所が共有されませんでした。",
+    "noShipping": "この住所には配送できません。",
+    "or": "または",
+    "title": "エクスプレスチェックアウト",
+    "totalChanged": "この住所への配送料を含めると、合計は{total}になります。新しい合計を確定するため、もう一度お支払いください。"
+  },
   "Filters": {
     "sort": "並び替え",
     "title": "フィルター"
@@ -418,6 +425,10 @@
     "terms": {
       "description": "ご購入時に同意いただく規約をお読みください。",
       "title": "利用規約"
+    },
+    "verifyAccount": {
+      "description": "メールアドレスを確認して、アカウントの作成を完了します。",
+      "title": "メールアドレスの確認"
     }
   },
   "NativeSelect": {
@@ -655,7 +666,8 @@
     "label": "検索",
     "loading": "検索中…",
     "placeholder": "商品を検索",
-    "popular": "人気の商品"
+    "popular": "人気の商品",
+    "showAll": "すべての結果を表示"
   },
   "Shipping": {
     "chooseStore": "近くの店舗を選択してください",
@@ -696,7 +708,8 @@
     "priceLowHigh": "価格：安い順"
   },
   "Store": {
-    "allProducts": "すべての商品"
+    "allProducts": "すべての商品",
+    "searchResults": "「{query}」の検索結果"
   },
   "TransferActions": {
     "acceptTransfer": "譲渡を承認",
@@ -725,5 +738,13 @@
     "transferEmailSent": "譲渡リクエストのメールを{email}に送信しました",
     "transferRequested": "注文{orderId}の譲渡をリクエストしました",
     "whereToFind": "その注文の確認メールを開き、そこにあるリンクをここに貼り付けてください。"
+  },
+  "VerifyAccount": {
+    "goToSignIn": "ログイン",
+    "heading": "メールアドレスの確認",
+    "invalid": "このリンクは無効か、有効期限が切れています。ログインすると新しいリンクをお送りします。",
+    "linkSent": "{email} にリンクをお送りしました。リンクを開いてメールアドレスを確認してから、ログインしてください。",
+    "success": "メールアドレスを確認しました。ログインできます。",
+    "verifying": "メールアドレスを確認しています…"
   }
 }

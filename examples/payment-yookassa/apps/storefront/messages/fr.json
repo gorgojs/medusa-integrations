@@ -187,6 +187,13 @@
     "paymentFailed": "Le paiement n’a pas pu être traité. Veuillez réessayer ou utiliser un autre moyen.",
     "unauthorized": "Veuillez vous connecter pour continuer."
   },
+  "ExpressCheckout": {
+    "missingContact": "Le moyen de paiement n’a pas partagé d’adresse e-mail ni d’adresse de livraison.",
+    "noShipping": "Nous ne livrons pas à cette adresse.",
+    "or": "ou",
+    "title": "Paiement express",
+    "totalChanged": "Avec la livraison à cette adresse, votre total passe à {total}. Veuillez payer à nouveau pour confirmer le nouveau total."
+  },
   "Filters": {
     "sort": "Tri",
     "title": "Filtres"
@@ -402,6 +409,10 @@
     "terms": {
       "description": "Lisez les règles que vous acceptez en achetant chez nous.",
       "title": "Conditions d'utilisation"
+    },
+    "verifyAccount": {
+      "description": "Confirmez votre adresse e-mail pour finaliser la création de votre compte.",
+      "title": "Confirmer l'adresse e-mail"
     }
   },
   "NativeSelect": {
@@ -643,7 +654,8 @@
     "label": "Recherche",
     "loading": "Recherche…",
     "placeholder": "Rechercher des produits",
-    "popular": "Produits populaires"
+    "popular": "Produits populaires",
+    "showAll": "Voir tous les résultats"
   },
   "Shipping": {
     "chooseStore": "Choisissez un magasin près de chez vous",
@@ -684,7 +696,8 @@
     "priceLowHigh": "Prix : croissant"
   },
   "Store": {
-    "allProducts": "Tous les produits"
+    "allProducts": "Tous les produits",
+    "searchResults": "Résultats pour «{query}»"
   },
   "TransferActions": {
     "acceptTransfer": "Accepter le transfert",
@@ -713,5 +726,13 @@
     "transferEmailSent": "E-mail de demande de transfert envoyé à {email}",
     "transferRequested": "Transfert demandé pour la commande {orderId}",
     "whereToFind": "Ouvrez l'e-mail de confirmation de cette commande et collez ici le lien qu'il contient."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Se connecter",
+    "heading": "Confirmation de l'e-mail",
+    "invalid": "Ce lien n'est pas valide ou a expiré. Connectez-vous et nous vous en enverrons un nouveau.",
+    "linkSent": "Nous avons envoyé un lien à {email}. Ouvrez-le pour confirmer votre adresse e-mail, puis connectez-vous.",
+    "success": "Votre adresse e-mail est confirmée. Vous pouvez maintenant vous connecter.",
+    "verifying": "Confirmation de votre adresse e-mail…"
   }
 }

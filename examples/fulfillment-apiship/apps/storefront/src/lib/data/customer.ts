@@ -5,14 +5,20 @@ import medusaError from "@lib/util/medusa-error"
 import type { HttpTypes } from "@medusajs/types"
 import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
+import type { FetchError } from "@medusajs/js-sdk"
 import {
   getAuthHeaders,
   getCacheOptions,
   getCacheTag,
   getCartId,
+  getPendingCustomer,
   removeAuthToken,
   removeCartId,
+  removePendingCustomer,
   setAuthToken,
+  setPendingCustomer,
+  setVerificationRequested,
+  wasVerificationRequested,
 } from "./cookies"
 import { getLocale } from "./locale-actions"
 import { defaultLocale } from "@i18n/config"
@@ -22,7 +28,8 @@ export const retrieveCustomer =
   async (): Promise<HttpTypes.StoreCustomer | null> => {
     const authHeaders = await getAuthHeaders()
 
-    if (!authHeaders) return null
+    // A guest has no token, and asking Medusa anyway costs a 401 per page.
+    if (!("authorization" in authHeaders)) return null
 
     const headers = {
       ...authHeaders,
@@ -57,7 +64,7 @@ export const updateCustomer = async (body: HttpTypes.StoreUpdateCustomer) => {
     .catch(medusaError)
 
   const cacheTag = await getCacheTag("customers")
-  revalidateTag(cacheTag)
+  revalidateTag(cacheTag, { expire: 0 })
 
   return updateRes
 }
@@ -66,7 +73,8 @@ export const retrieveCustomerAddresses =
   async (): Promise<HttpTypes.StoreCustomerAddress[] | null> => {
     const authHeaders = await getAuthHeaders()
 
-    if (!authHeaders) return null
+    // A guest has no token, and asking Medusa anyway costs a 401 per page.
+    if (!("authorization" in authHeaders)) return null
 
     const headers = {
       ...authHeaders,
@@ -90,7 +98,25 @@ export const retrieveCustomerAddresses =
       .catch(() => null)
   }
 
-export async function signup(_currentState: unknown, formData: FormData) {
+/**
+ * What the sign-in and sign-up forms render after a submit. `error` holds a raw
+ * message or one of the storefront's own codes, which `ErrorMessage` resolves.
+ */
+export type CustomerAuthState =
+  | { state: "error"; error: string }
+  | { state: "verification_required"; email: string }
+  | { state: "success" }
+  | null
+
+// Medusa's answer to registering an email that already has an identity, for
+// example an Admin user or a customer who signed up before.
+const IDENTITY_EXISTS = "Identity with email already exists"
+
+export async function signup(
+  _currentState: unknown,
+  formData: FormData
+): Promise<CustomerAuthState> {
+  const email = formData.get("email") as string
   const password = formData.get("password") as string
   const locale = (await getLocale()) ?? defaultLocale
 
@@ -99,51 +125,44 @@ export async function signup(_currentState: unknown, formData: FormData) {
   // be rejected when the customer later resets it.
   const passwordError = validatePassword(password)
   if (passwordError) {
-    return passwordError
+    return { state: "error", error: passwordError }
   }
 
-  const customerForm = {
-    email: formData.get("email") as string,
+  let identityExists = false
+
+  try {
+    await sdk.auth.register("customer", "emailpass", { email, password })
+  } catch (error) {
+    const fetchError = error as FetchError
+    // An existing identity is not a dead end: signing in with its password
+    // still links a customer record to it below.
+    if (
+      fetchError.statusText !== "Unauthorized" ||
+      fetchError.message !== IDENTITY_EXISTS
+    ) {
+      return { state: "error", error: String(error) }
+    }
+    identityExists = true
+  }
+
+  // The customer record is created while signing in, which waits for the
+  // email to be confirmed when the backend requires that.
+  await setPendingCustomer({
     first_name: formData.get("first_name") as string,
     last_name: formData.get("last_name") as string,
     phone: formData.get("phone") as string,
-    metadata: { locale },
+    locale,
+  })
+
+  const result = await completeLogin(email, password)
+
+  // Report a taken address rather than a wrong password to someone who never
+  // meant to sign in.
+  if (identityExists && result?.state === "error") {
+    return { state: "error", error: IDENTITY_EXISTS }
   }
 
-  try {
-    const token = await sdk.auth.register("customer", "emailpass", {
-      email: customerForm.email,
-      password: password,
-    })
-
-    await setAuthToken(token as string)
-
-    const headers = {
-      ...(await getAuthHeaders()),
-    }
-
-    const { customer: createdCustomer } = await sdk.store.customer.create(
-      customerForm,
-      {},
-      headers
-    )
-
-    const loginToken = await sdk.auth.login("customer", "emailpass", {
-      email: customerForm.email,
-      password,
-    })
-
-    await setAuthToken(loginToken as string)
-
-    const customerCacheTag = await getCacheTag("customers")
-    revalidateTag(customerCacheTag)
-
-    await transferCart()
-
-    return createdCustomer
-  } catch (error) {
-    return String(error)
-  }
+  return result
 }
 
 export async function requestPasswordReset(email: string) {
@@ -229,26 +248,146 @@ export async function resetPassword(
   return { success: true, error: null }
 }
 
-export async function login(_currentState: unknown, formData: FormData) {
+export async function login(
+  _currentState: unknown,
+  formData: FormData
+): Promise<CustomerAuthState> {
   const email = formData.get("email") as string
   const password = formData.get("password") as string
 
+  return completeLogin(email, password)
+}
+
+/**
+ * Signs the customer in and makes sure a customer record exists. The backend's
+ * answer decides the path, so the storefront works whether or not
+ * `CUSTOMER_EMAIL_VERIFICATION` is on.
+ */
+async function completeLogin(
+  email: string,
+  password: string
+): Promise<CustomerAuthState> {
+  let result: Awaited<ReturnType<typeof sdk.auth.login>>
+
   try {
-    await sdk.auth
-      .login("customer", "emailpass", { email, password })
-      .then(async (token) => {
-        await setAuthToken(token as string)
-        const customerCacheTag = await getCacheTag("customers")
-        revalidateTag(customerCacheTag)
-      })
+    result = await sdk.auth.login("customer", "emailpass", { email, password })
   } catch (error) {
-    return String(error)
+    return { state: "error", error: String(error) }
   }
+
+  // Third-party providers answer with a redirect `location`, and emailpass
+  // with MFA answers with a challenge. The storefront supports neither.
+  if (typeof result === "object" && "location" in result) {
+    return { state: "error", error: "Unsupported login method" }
+  }
+
+  if (
+    typeof result === "object" &&
+    "verification_required" in result &&
+    result.verification_required
+  ) {
+    if (!(await wasVerificationRequested(email))) {
+      try {
+        await requestVerificationEmail(email, result.token)
+        await setVerificationRequested(email)
+      } catch (error) {
+        // The customer gets another email on the next sign-in attempt.
+        console.error("[requestVerificationEmail]", error)
+      }
+    }
+    return { state: "verification_required", email }
+  }
+
+  if (typeof result !== "string") {
+    return { state: "error", error: "Unsupported login method" }
+  }
+
+  let token = result
+
+  // Right after sign-up, or after confirming the email of a brand-new account,
+  // the token belongs to an identity with no customer yet. `/store/customers/me`
+  // rejects such a token, which is how we tell.
+  const customerExists = await sdk.store.customer
+    .retrieve({}, { authorization: `Bearer ${token}` })
+    .then(() => true)
+    .catch(() => false)
+
+  if (!customerExists) {
+    const pending = await getPendingCustomer()
+    const locale = pending?.locale ?? (await getLocale()) ?? defaultLocale
+
+    try {
+      await sdk.store.customer.create(
+        {
+          email,
+          first_name: pending?.first_name,
+          last_name: pending?.last_name,
+          phone: pending?.phone,
+          metadata: { locale },
+        },
+        {},
+        { authorization: `Bearer ${token}` }
+      )
+
+      // The earlier token carries no customer id. A fresh one does.
+      token = (await sdk.auth.login("customer", "emailpass", {
+        email,
+        password,
+      })) as string
+    } catch (error) {
+      return { state: "error", error: String(error) }
+    }
+  }
+
+  // Also when the account already existed: the form may have signed someone
+  // into it, and its fields must not reach a later sign-up on this device.
+  await removePendingCustomer()
+  await setAuthToken(token)
+
+  const customerCacheTag = await getCacheTag("customers")
+  revalidateTag(customerCacheTag, { expire: 0 })
 
   try {
     await transferCart()
   } catch (error) {
-    return String(error)
+    return { state: "error", error: String(error) }
+  }
+
+  return { state: "success" }
+}
+
+/**
+ * Asks Medusa to email a confirmation link. The token from the login response
+ * authenticates the request, since no customer exists yet. `actor_type` tells
+ * the backend subscriber the link belongs on the storefront.
+ */
+async function requestVerificationEmail(email: string, token: string) {
+  const locale = (await getLocale()) ?? defaultLocale
+
+  await sdk.auth.verification.request(
+    {
+      entity_id: email,
+      entity_type: "email",
+      metadata: { locale, actor_type: "customer" },
+    },
+    { authorization: `Bearer ${token}` }
+  )
+}
+
+/**
+ * Confirms the email with the token from the link. The route needs no session,
+ * so the link works on a different device from the one the customer signed up
+ * on.
+ */
+export async function confirmEmailVerification(
+  token: string
+): Promise<{ success: boolean }> {
+  try {
+    await sdk.auth.verification.confirm({ code: token })
+    return { success: true }
+  } catch (error) {
+    console.error("[confirmEmailVerification]", error)
+    return { success: false }
   }
 }
 
@@ -258,12 +397,12 @@ export async function signout() {
   await removeAuthToken()
 
   const customerCacheTag = await getCacheTag("customers")
-  revalidateTag(customerCacheTag)
+  revalidateTag(customerCacheTag, { expire: 0 })
 
   await removeCartId()
 
   const cartCacheTag = await getCacheTag("carts")
-  revalidateTag(cartCacheTag)
+  revalidateTag(cartCacheTag, { expire: 0 })
 
   const locale = (await getLocale()) ?? defaultLocale
   redirect(`/${locale}/account`)
@@ -281,7 +420,7 @@ export async function transferCart() {
   await sdk.store.cart.transferCart(cartId, {}, headers)
 
   const cartCacheTag = await getCacheTag("carts")
-  revalidateTag(cartCacheTag)
+  revalidateTag(cartCacheTag, { expire: 0 })
 }
 
 export const addCustomerAddress = async (
@@ -313,7 +452,7 @@ export const addCustomerAddress = async (
     .createAddress(address, {}, headers)
     .then(async () => {
       const customerCacheTag = await getCacheTag("customers")
-      revalidateTag(customerCacheTag)
+      revalidateTag(customerCacheTag, { expire: 0 })
       return { success: true, error: null }
     })
     .catch((err) => {
@@ -332,7 +471,7 @@ export const deleteCustomerAddress = async (
     .deleteAddress(addressId, headers)
     .then(async () => {
       const customerCacheTag = await getCacheTag("customers")
-      revalidateTag(customerCacheTag)
+      revalidateTag(customerCacheTag, { expire: 0 })
       return { success: true, error: null }
     })
     .catch((err) => {
@@ -376,7 +515,7 @@ export const updateCustomerAddress = async (
     .updateAddress(addressId, address, {}, headers)
     .then(async () => {
       const customerCacheTag = await getCacheTag("customers")
-      revalidateTag(customerCacheTag)
+      revalidateTag(customerCacheTag, { expire: 0 })
       return { success: true, error: null }
     })
     .catch((err) => {

@@ -21,6 +21,15 @@
     "subject": "Zamówienie nr {id} dostarczone",
     "textFallback": "Zamówienie nr {id} zostało dostarczone."
   },
+  "EmailVerification": {
+    "body": "Zakładasz konto z adresem <strong>{email}</strong>. Kliknij przycisk poniżej, aby potwierdzić, że ten adres należy do Ciebie.",
+    "button": "Potwierdź e-mail",
+    "heading": "Potwierdź swój adres e-mail",
+    "hint": "Link jest ważny przez <strong>15 minut</strong>. Jeśli nie zakładałeś konta, po prostu zignoruj tę wiadomość.",
+    "preview": "Potwierdź swój adres e-mail, link jest ważny przez 15 minut",
+    "subject": "Potwierdź swój adres e-mail",
+    "textFallback": "Potwierdź swój adres e-mail\n\nAby potwierdzić adres e-mail, otwórz link (ważny przez 15 minut):\n{url}\n\nJeśli nie zakładałeś konta, po prostu zignoruj tę wiadomość."
+  },
   "Fulfillment": {
     "bodyOrder": "Zamówienie <strong>nr {id}</strong> jest spakowane i czeka na przekazanie kurierowi.",
     "deliveryCity": "Dostawa do {city}.",

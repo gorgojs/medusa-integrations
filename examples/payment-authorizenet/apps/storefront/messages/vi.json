@@ -409,6 +409,10 @@
     "terms": {
       "description": "Đọc các quy định bạn chấp nhận khi mua hàng của chúng tôi.",
       "title": "Điều khoản sử dụng"
+    },
+    "verifyAccount": {
+      "description": "Xác nhận địa chỉ email để hoàn tất việc tạo tài khoản.",
+      "title": "Xác nhận email"
     }
   },
   "NativeSelect": {
@@ -660,7 +664,8 @@
     "label": "Tìm kiếm",
     "loading": "Đang tìm kiếm…",
     "placeholder": "Tìm kiếm sản phẩm",
-    "popular": "Sản phẩm phổ biến"
+    "popular": "Sản phẩm phổ biến",
+    "showAll": "Xem tất cả kết quả"
   },
   "Shipping": {
     "chooseStore": "Chọn cửa hàng gần bạn",
@@ -701,7 +706,8 @@
     "priceLowHigh": "Giá: Thấp → Cao"
   },
   "Store": {
-    "allProducts": "Tất cả sản phẩm"
+    "allProducts": "Tất cả sản phẩm",
+    "searchResults": "Kết quả cho “{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Chấp nhận chuyển nhượng",
@@ -730,5 +736,13 @@
     "transferEmailSent": "Email yêu cầu chuyển nhượng đã được gửi đến {email}",
     "transferRequested": "Đã gửi yêu cầu chuyển nhượng cho đơn hàng {orderId}",
     "whereToFind": "Mở email xác nhận của đơn hàng đó và dán liên kết trong đó vào đây."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Đăng nhập",
+    "heading": "Xác nhận email",
+    "invalid": "Liên kết này không hợp lệ hoặc đã hết hạn. Hãy đăng nhập, chúng tôi sẽ gửi liên kết mới.",
+    "linkSent": "Chúng tôi đã gửi liên kết đến {email}. Hãy mở liên kết để xác nhận email, sau đó đăng nhập.",
+    "success": "Email của bạn đã được xác nhận. Bây giờ bạn có thể đăng nhập.",
+    "verifying": "Đang xác nhận email của bạn…"
   }
 }

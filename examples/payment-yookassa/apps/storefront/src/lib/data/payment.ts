@@ -11,6 +11,9 @@ export const listCartPaymentMethods = async (regionId: string) => {
 
   const next = {
     ...(await getCacheOptions("payment_providers")),
+    // A provider enabled in the Admin shows up within a minute, with no
+    // revalidation hook to wire.
+    revalidate: 60,
   }
 
   return sdk.client
@@ -21,7 +24,6 @@ export const listCartPaymentMethods = async (regionId: string) => {
         query: { region_id: regionId },
         headers,
         next,
-        cache: "force-cache",
       }
     )
     .then(({ payment_providers }) =>

@@ -409,6 +409,10 @@
     "terms": {
       "description": "Leia as regras que aceita ao comprar connosco.",
       "title": "Termos de utilização"
+    },
+    "verifyAccount": {
+      "description": "Confirme o seu endereço de email para concluir a criação da conta.",
+      "title": "Confirmar email"
     }
   },
   "NativeSelect": {
@@ -660,7 +664,8 @@
     "label": "Pesquisar",
     "loading": "A pesquisar…",
     "placeholder": "Pesquisar produtos",
-    "popular": "Produtos populares"
+    "popular": "Produtos populares",
+    "showAll": "Ver todos os resultados"
   },
   "Shipping": {
     "chooseStore": "Escolha uma loja perto de si",
@@ -701,7 +706,8 @@
     "priceLowHigh": "Preço: Menor → Maior"
   },
   "Store": {
-    "allProducts": "Todos os produtos"
+    "allProducts": "Todos os produtos",
+    "searchResults": "Resultados para “{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Aceitar transferência",
@@ -730,5 +736,13 @@
     "transferEmailSent": "Email de pedido de transferência enviado para {email}",
     "transferRequested": "Transferência da encomenda {orderId} solicitada",
     "whereToFind": "Abra o email de confirmação dessa encomenda e cole aqui o link que ele contém."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Iniciar sessão",
+    "heading": "Confirmação de email",
+    "invalid": "Este link é inválido ou expirou. Inicie sessão e enviamos-lhe um novo.",
+    "linkSent": "Enviámos um link para {email}. Abra-o para confirmar o seu email e depois inicie sessão.",
+    "success": "O seu email está confirmado. Já pode iniciar sessão.",
+    "verifying": "A confirmar o seu email…"
   }
 }

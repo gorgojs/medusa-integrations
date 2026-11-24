@@ -409,6 +409,10 @@
     "terms": {
       "description": "Olvassa el a szabályokat, amelyeket vásárláskor elfogad.",
       "title": "Felhasználási feltételek"
+    },
+    "verifyAccount": {
+      "description": "Erősítse meg e-mail-címét a fiók létrehozásának befejezéséhez.",
+      "title": "E-mail-cím megerősítése"
     }
   },
   "NativeSelect": {
@@ -647,7 +651,8 @@
     "label": "Keresés",
     "loading": "Keresés…",
     "placeholder": "Termékek keresése",
-    "popular": "Népszerű termékek"
+    "popular": "Népszerű termékek",
+    "showAll": "Összes találat"
   },
   "Shipping": {
     "chooseStore": "Válasszon egy közeli üzletet",
@@ -688,7 +693,8 @@
     "priceLowHigh": "Ár: Alacsony → Magas"
   },
   "Store": {
-    "allProducts": "Összes termék"
+    "allProducts": "Összes termék",
+    "searchResults": "Találatok erre: „{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Átadás elfogadása",
@@ -717,5 +723,13 @@
     "transferEmailSent": "Átadási kérelem elküldve a következő címre: {email}",
     "transferRequested": "A(z) {orderId} rendelés átadását kérelmezte",
     "whereToFind": "Nyissa meg az adott rendelés visszaigazoló e-mailjét, és illessze be ide a benne lévő hivatkozást."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Bejelentkezés",
+    "heading": "E-mail-cím megerősítése",
+    "invalid": "A hivatkozás érvénytelen vagy lejárt. Jelentkezzen be, és küldünk egy újat.",
+    "linkSent": "Hivatkozást küldtünk a(z) {email} címre. Nyissa meg az e-mail-cím megerősítéséhez, majd jelentkezzen be.",
+    "success": "E-mail-címét megerősítettük. Most már bejelentkezhet.",
+    "verifying": "Megerősítjük e-mail-címét…"
   }
 }

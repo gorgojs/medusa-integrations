@@ -1,4 +1,4 @@
-import { paymentInfoMap } from "@lib/constants"
+import { getPaymentInfo, paymentInfoKey } from "@lib/constants"
 
 /**
  * The `PaymentMethods` translator, in either its client or its server form.
@@ -34,14 +34,15 @@ export function paymentMethodLabel(
     return { title: "" }
   }
 
-  const fallback = paymentInfoMap[providerId]
+  const key = paymentInfoKey(providerId)
+  const fallback = getPaymentInfo(providerId)
 
   return {
-    title: t.has(`${providerId}.title`)
-      ? t(`${providerId}.title`)
+    title: t.has(`${key}.title`)
+      ? t(`${key}.title`)
       : fallback?.title ?? providerId,
-    subtitle: t.has(`${providerId}.subtitle`)
-      ? t(`${providerId}.subtitle`)
+    subtitle: t.has(`${key}.subtitle`)
+      ? t(`${key}.subtitle`)
       : fallback?.subtitle,
   }
 }

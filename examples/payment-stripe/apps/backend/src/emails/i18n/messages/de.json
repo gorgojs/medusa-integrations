@@ -21,6 +21,15 @@
     "subject": "Bestellung #{id} zugestellt",
     "textFallback": "Bestellung #{id} wurde zugestellt."
   },
+  "EmailVerification": {
+    "body": "Sie erstellen ein Konto mit <strong>{email}</strong>. Klicken Sie auf die Schaltfläche unten, um zu bestätigen, dass diese Adresse Ihnen gehört.",
+    "button": "E-Mail-Adresse bestätigen",
+    "heading": "Bestätigen Sie Ihre E-Mail-Adresse",
+    "hint": "Der Link ist <strong>15 Minuten</strong> gültig. Wenn Sie kein Konto erstellt haben, ignorieren Sie diese E-Mail einfach.",
+    "preview": "Bestätigen Sie Ihre E-Mail-Adresse, der Link ist 15 Minuten gültig",
+    "subject": "Bestätigen Sie Ihre E-Mail-Adresse",
+    "textFallback": "Bestätigen Sie Ihre E-Mail-Adresse\n\nÖffnen Sie den Link, um Ihre E-Mail-Adresse zu bestätigen (15 Minuten gültig):\n{url}\n\nWenn Sie kein Konto erstellt haben, ignorieren Sie diese E-Mail einfach."
+  },
   "Fulfillment": {
     "bodyOrder": "Bestellung <strong>#{id}</strong> ist verpackt und wartet auf die Übergabe an den Versanddienstleister.",
     "deliveryCity": "Lieferung nach {city}.",

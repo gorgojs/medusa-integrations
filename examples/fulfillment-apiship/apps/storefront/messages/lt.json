@@ -203,6 +203,13 @@
     "paymentFailed": "Nepavyko apdoroti mokėjimo. Bandykite dar kartą arba pasirinkite kitą būdą.",
     "unauthorized": "Prisijunkite, kad galėtumėte tęsti."
   },
+  "ExpressCheckout": {
+    "missingContact": "Mokėjimo būdas nepateikė el. pašto ir pristatymo adreso.",
+    "noShipping": "Šiuo adresu nepristatome.",
+    "or": "arba",
+    "title": "Greitas apmokėjimas",
+    "totalChanged": "Pristatant šiuo adresu, bendra suma tampa {total}. Sumokėkite dar kartą, kad patvirtintumėte naują sumą."
+  },
   "Filters": {
     "sort": "Rūšiuoti",
     "title": "Filtrai"
@@ -418,6 +425,10 @@
     "terms": {
       "description": "Perskaitykite taisykles, su kuriomis sutinkate pirkdami.",
       "title": "Naudojimo sąlygos"
+    },
+    "verifyAccount": {
+      "description": "Patvirtinkite el. pašto adresą, kad baigtumėte kurti paskyrą.",
+      "title": "El. pašto patvirtinimas"
     }
   },
   "NativeSelect": {
@@ -655,7 +666,8 @@
     "label": "Paieška",
     "loading": "Ieškoma…",
     "placeholder": "Ieškoti produktų",
-    "popular": "Populiarūs produktai"
+    "popular": "Populiarūs produktai",
+    "showAll": "Rodyti visus rezultatus"
   },
   "Shipping": {
     "chooseStore": "Pasirinkite jums patogią parduotuvę",
@@ -696,7 +708,8 @@
     "priceLowHigh": "Kaina: nuo mažiausios"
   },
   "Store": {
-    "allProducts": "Visi produktai"
+    "allProducts": "Visi produktai",
+    "searchResults": "Rezultatai pagal „{query}“"
   },
   "TransferActions": {
     "acceptTransfer": "Patvirtinti perdavimą",
@@ -725,5 +738,13 @@
     "transferEmailSent": "Perdavimo užklausos el. laiškas išsiųstas adresu {email}",
     "transferRequested": "Užsakymo {orderId} perdavimas užklaustas",
     "whereToFind": "Atidarykite to užsakymo patvirtinimo laišką ir čia įklijuokite iš jo nuorodą."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Prisijungti",
+    "heading": "El. pašto patvirtinimas",
+    "invalid": "Nuoroda neteisinga arba nebegalioja. Prisijunkite ir atsiųsime naują.",
+    "linkSent": "Išsiuntėme nuorodą adresu {email}. Atidarykite ją, kad patvirtintumėte el. paštą, tada prisijunkite.",
+    "success": "Jūsų el. paštas patvirtintas. Dabar galite prisijungti.",
+    "verifying": "Tvirtiname jūsų el. paštą…"
   }
 }

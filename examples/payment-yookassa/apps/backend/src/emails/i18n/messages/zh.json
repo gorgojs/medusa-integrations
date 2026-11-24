@@ -21,6 +21,15 @@
     "subject": "订单 #{id} 已送达",
     "textFallback": "订单 #{id} 已送达。"
   },
+  "EmailVerification": {
+    "body": "您正在使用 <strong>{email}</strong> 创建账户。请点击下方按钮，确认该邮箱属于您。",
+    "button": "验证邮箱",
+    "heading": "验证您的邮箱",
+    "hint": "该链接在 <strong>15 分钟</strong>内有效。如果您没有创建账户，请忽略此邮件。",
+    "preview": "验证您的邮箱，链接 15 分钟内有效",
+    "subject": "验证您的邮箱",
+    "textFallback": "验证您的邮箱\n\n请通过以下链接验证您的邮箱（15 分钟内有效）：\n{url}\n\n如果您没有创建账户，请忽略此邮件。"
+  },
   "Fulfillment": {
     "bodyOrder": "订单 <strong>#{id}</strong> 已打包，正在等待交给承运商。",
     "deliveryCity": "配送至{city}。",

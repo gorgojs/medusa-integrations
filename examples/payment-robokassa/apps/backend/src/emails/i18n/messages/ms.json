@@ -21,6 +21,15 @@
     "subject": "Pesanan #{id} telah dihantar",
     "textFallback": "Pesanan #{id} telah dihantar."
   },
+  "EmailVerification": {
+    "body": "Anda sedang membuat akaun dengan <strong>{email}</strong>. Klik butang di bawah untuk mengesahkan bahawa alamat ini milik anda.",
+    "button": "Sahkan e-mel",
+    "heading": "Sahkan e-mel anda",
+    "hint": "Pautan ini sah selama <strong>15 minit</strong>. Jika anda tidak membuat akaun, abaikan sahaja e-mel ini.",
+    "preview": "Sahkan e-mel anda, pautan sah selama 15 minit",
+    "subject": "Sahkan e-mel anda",
+    "textFallback": "Sahkan e-mel anda\n\nUntuk mengesahkan e-mel anda, buka pautan ini (sah selama 15 minit):\n{url}\n\nJika anda tidak membuat akaun, abaikan sahaja e-mel ini."
+  },
   "Fulfillment": {
     "bodyOrder": "Pesanan <strong>#{id}</strong> telah dibungkus dan menunggu untuk diserahkan kepada penghantar.",
     "deliveryCity": "Dihantar ke {city}.",

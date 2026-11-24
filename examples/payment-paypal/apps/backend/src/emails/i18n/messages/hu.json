@@ -21,6 +21,15 @@
     "subject": "A(z) #{id} rendelés kézbesítve",
     "textFallback": "A(z) #{id} rendelést kézbesítettük."
   },
+  "EmailVerification": {
+    "body": "Fiókot hoz létre a(z) <strong>{email}</strong> címmel. Kattintson az alábbi gombra, és erősítse meg, hogy a cím az Öné.",
+    "button": "E-mail-cím megerősítése",
+    "heading": "Erősítse meg e-mail-címét",
+    "hint": "A link <strong>15 percig</strong> érvényes. Ha nem Ön hozott létre fiókot, egyszerűen hagyja figyelmen kívül ezt a levelet.",
+    "preview": "Erősítse meg e-mail-címét, a link 15 percig érvényes",
+    "subject": "Erősítse meg e-mail-címét",
+    "textFallback": "Erősítse meg e-mail-címét\n\nAz e-mail-cím megerősítéséhez nyissa meg a linket (15 percig érvényes):\n{url}\n\nHa nem Ön hozott létre fiókot, egyszerűen hagyja figyelmen kívül ezt a levelet."
+  },
   "Fulfillment": {
     "bodyOrder": "A(z) <strong>#{id}</strong> rendelés be van csomagolva, és a futárra vár.",
     "deliveryCity": "Kiszállítás ide: {city}.",

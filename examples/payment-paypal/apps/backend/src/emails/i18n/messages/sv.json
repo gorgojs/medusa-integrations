@@ -21,6 +21,15 @@
     "subject": "Order #{id} levererad",
     "textFallback": "Order #{id} har levererats."
   },
+  "EmailVerification": {
+    "body": "Du skapar ett konto med <strong>{email}</strong>. Klicka på knappen nedan för att bekräfta att adressen är din.",
+    "button": "Bekräfta e-post",
+    "heading": "Bekräfta din e-postadress",
+    "hint": "Länken gäller i <strong>15 minuter</strong>. Om du inte har skapat något konto kan du ignorera det här mejlet.",
+    "preview": "Bekräfta din e-postadress, länken gäller i 15 minuter",
+    "subject": "Bekräfta din e-postadress",
+    "textFallback": "Bekräfta din e-postadress\n\nÖppna länken för att bekräfta din e-postadress (gäller i 15 minuter):\n{url}\n\nOm du inte har skapat något konto kan du ignorera det här mejlet."
+  },
   "Fulfillment": {
     "bodyOrder": "Order <strong>#{id}</strong> är packad och väntar på att lämnas till transportören.",
     "deliveryCity": "Levereras till {city}.",

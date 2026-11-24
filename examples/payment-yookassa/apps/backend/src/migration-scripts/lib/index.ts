@@ -9,6 +9,7 @@ export {
   seedProducts,
 } from "./products";
 export { seedRegions, seedTaxRegions } from "./regions";
+export { reindexSearch } from "./search";
 export { seedStockLocations } from "./stock-locations";
 export { isAlreadySeeded, seedStore } from "./store";
 export { seedTranslations } from "./translations";

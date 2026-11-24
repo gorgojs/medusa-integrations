@@ -19,14 +19,17 @@ const StoreTemplate = async ({
   page,
   countryCode,
   optionValueIds,
+  q,
 }: {
   sortBy?: SortOptions
   page?: string
   countryCode: string
   optionValueIds?: OptionValueIds
+  q?: string
 }) => {
   const pageNumber = page ? parseInt(page) : 1
-  const sort = sortBy || "created_at"
+  // A text search is ordered by relevance until the shopper picks a sort.
+  const sort = sortBy || (q ? undefined : "created_at")
   const [t, categories, optionFilters] = await Promise.all([
     getTranslations(),
     listCategories(),
@@ -41,14 +44,14 @@ const StoreTemplate = async ({
       <Breadcrumb
         items={[
           { label: t("Breadcrumb.home"), href: "/" },
-          { label: t("Breadcrumb.store") }
+          { label: t("Breadcrumb.store") },
         ]}
       />
 
       <div className="mb-8 lg:grid lg:grid-cols-[280px_1fr] lg:items-center">
         <div className="flex items-center justify-between">
           <h1 className="h3-webs" data-testid="store-page-title">
-            {t("Store.allProducts")}
+            {q ? t("Store.searchResults", { query: q }) : t("Store.allProducts")}
           </h1>
           <MobileRefinement
             sortBy={sort}
@@ -79,6 +82,7 @@ const StoreTemplate = async ({
               page={pageNumber}
               countryCode={countryCode}
               optionValueIds={optionValueIds}
+              q={q}
             />
           </Suspense>
         </div>

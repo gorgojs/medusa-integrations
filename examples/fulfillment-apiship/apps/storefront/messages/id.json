@@ -203,6 +203,13 @@
     "paymentFailed": "Kami tidak dapat memproses pembayaran Anda. Silakan coba lagi atau gunakan metode lain.",
     "unauthorized": "Silakan masuk untuk melanjutkan."
   },
+  "ExpressCheckout": {
+    "missingContact": "Metode pembayaran tidak membagikan email dan alamat pengiriman.",
+    "noShipping": "Kami tidak mengirim ke alamat ini.",
+    "or": "atau",
+    "title": "Checkout cepat",
+    "totalChanged": "Dengan pengiriman ke alamat ini, total Anda menjadi {total}. Bayar lagi untuk mengonfirmasi total baru."
+  },
   "Filters": {
     "sort": "Urutkan",
     "title": "Filter"
@@ -418,6 +425,10 @@
     "terms": {
       "description": "Baca aturan yang Anda setujui saat berbelanja di toko kami.",
       "title": "Ketentuan penggunaan"
+    },
+    "verifyAccount": {
+      "description": "Konfirmasi alamat email Anda untuk menyelesaikan pembuatan akun.",
+      "title": "Konfirmasi email"
     }
   },
   "NativeSelect": {
@@ -655,7 +666,8 @@
     "label": "Cari",
     "loading": "Mencari…",
     "placeholder": "Cari produk",
-    "popular": "Produk populer"
+    "popular": "Produk populer",
+    "showAll": "Lihat semua hasil"
   },
   "Shipping": {
     "chooseStore": "Pilih toko terdekat",
@@ -696,7 +708,8 @@
     "priceLowHigh": "Harga: Rendah → Tinggi"
   },
   "Store": {
-    "allProducts": "Semua produk"
+    "allProducts": "Semua produk",
+    "searchResults": "Hasil untuk “{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Terima transfer",
@@ -725,5 +738,13 @@
     "transferEmailSent": "Email permintaan transfer telah dikirim ke {email}",
     "transferRequested": "Permintaan transfer untuk pesanan {orderId} telah diajukan",
     "whereToFind": "Buka email konfirmasi pesanan itu dan tempel tautannya di sini."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Masuk",
+    "heading": "Konfirmasi email",
+    "invalid": "Tautan ini tidak valid atau sudah kedaluwarsa. Masuklah, dan kami akan mengirim tautan baru.",
+    "linkSent": "Kami telah mengirim tautan ke {email}. Buka tautan itu untuk mengonfirmasi email Anda, lalu masuk.",
+    "success": "Email Anda sudah dikonfirmasi. Sekarang Anda bisa masuk.",
+    "verifying": "Mengonfirmasi email Anda…"
   }
 }

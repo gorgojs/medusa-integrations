@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl"
 
 import Radio from "@modules/common/components/radio"
 
-import { isManual, type PaymentInfo } from "@lib/constants"
+import { getPaymentInfo, isManual } from "@lib/constants"
 import { paymentMethodLabel } from "@lib/util/payment"
 import SkeletonCardDetails from "@modules/skeletons/components/skeleton-card-details"
 import { PaymentElement } from "@stripe/react-stripe-js"
@@ -18,14 +18,12 @@ type PaymentContainerProps = {
   paymentProviderId: string
   selectedPaymentOptionId: string | null
   disabled?: boolean
-  paymentInfoMap: Record<string, PaymentInfo>
   children?: React.ReactNode
 }
 
 const PaymentContainer: React.FC<PaymentContainerProps> = ({
   paymentProviderId,
   selectedPaymentOptionId,
-  paymentInfoMap,
   disabled = false,
   children,
 }) => {
@@ -62,7 +60,7 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
           )}
         </div>
         <span className="justify-self-end text-ui-fg-base">
-          {paymentInfoMap[paymentProviderId]?.icon}
+          {getPaymentInfo(paymentProviderId)?.icon}
         </span>
       </div>
       {isManual(paymentProviderId) && isDevelopment && (
@@ -75,52 +73,70 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
 
 export default PaymentContainer
 
-export const StripePaymentContainer = ({
-  paymentProviderId,
-  selectedPaymentOptionId,
-  paymentInfoMap,
-  disabled = false,
-  setError,
-  setPaymentComplete,
-}: Omit<PaymentContainerProps, "children"> & {
+type StripePaymentElementProps = {
   setError: (error: string | null) => void
   setPaymentComplete: (complete: boolean) => void
-}) => {
+}
+
+/**
+ * The Stripe Payment Element with its heading, or a skeleton until the Stripe Elements are
+ * ready. It carries no radio of its own. The one-screen checkout shows it under the payment
+ * method tiles, and `StripePaymentContainer` wraps it in a radio option for the step-based one.
+ */
+export const StripePaymentElement = ({
+  setError,
+  setPaymentComplete,
+}: StripePaymentElementProps) => {
   const t = useTranslations("PaymentContainer")
   const stripeReady = useContext(StripeContext)
 
+  if (!stripeReady) {
+    return <SkeletonCardDetails />
+  }
+
+  return (
+    <div className="my-4 transition-all duration-150 ease-in-out">
+      <Text className="txt-medium-plus text-ui-fg-base mb-1">
+        {t("enterPaymentDetails")}
+      </Text>
+      <PaymentElement
+        options={{ layout: "accordion" }}
+        onChange={(e) => {
+          setError(null)
+          setPaymentComplete(e.complete)
+        }}
+        // Without a handler Stripe.js reports a failed mount as an
+        // unhandled "payment Element loaderror" and the option renders
+        // blank with no explanation. Surface it in the checkout's own
+        // error slot instead.
+        onLoadError={(e) => {
+          setPaymentComplete(false)
+          setError(e.error?.message ?? t("loadError"))
+        }}
+      />
+    </div>
+  )
+}
+
+export const StripePaymentContainer = ({
+  paymentProviderId,
+  selectedPaymentOptionId,
+  disabled = false,
+  setError,
+  setPaymentComplete,
+}: Omit<PaymentContainerProps, "children"> & StripePaymentElementProps) => {
   return (
     <PaymentContainer
       paymentProviderId={paymentProviderId}
       selectedPaymentOptionId={selectedPaymentOptionId}
-      paymentInfoMap={paymentInfoMap}
       disabled={disabled}
     >
-      {selectedPaymentOptionId === paymentProviderId &&
-        (stripeReady ? (
-          <div className="my-4 transition-all duration-150 ease-in-out">
-            <Text className="txt-medium-plus text-ui-fg-base mb-1">
-              {t("enterPaymentDetails")}
-            </Text>
-            <PaymentElement
-              options={{ layout: "accordion" }}
-              onChange={(e) => {
-                setError(null)
-                setPaymentComplete(e.complete)
-              }}
-              // Without a handler Stripe.js reports a failed mount as an
-              // unhandled "payment Element loaderror" and the option renders
-              // blank with no explanation. Surface it in the checkout's own
-              // error slot instead.
-              onLoadError={(e) => {
-                setPaymentComplete(false)
-                setError(e.error?.message ?? t("loadError"))
-              }}
-            />
-          </div>
-        ) : (
-          <SkeletonCardDetails />
-        ))}
+      {selectedPaymentOptionId === paymentProviderId && (
+        <StripePaymentElement
+          setError={setError}
+          setPaymentComplete={setPaymentComplete}
+        />
+      )}
     </PaymentContainer>
   )
 }

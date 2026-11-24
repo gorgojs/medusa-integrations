@@ -409,6 +409,10 @@
     "terms": {
       "description": "Citiți regulile pe care le acceptați când cumpărați de la noi.",
       "title": "Termeni de utilizare"
+    },
+    "verifyAccount": {
+      "description": "Confirmă-ți adresa de e-mail ca să termini crearea contului.",
+      "title": "Confirmă adresa de e-mail"
     }
   },
   "NativeSelect": {
@@ -647,7 +651,8 @@
     "label": "Căutare",
     "loading": "Se caută…",
     "placeholder": "Caută produse",
-    "popular": "Produse populare"
+    "popular": "Produse populare",
+    "showAll": "Vezi toate rezultatele"
   },
   "Shipping": {
     "chooseStore": "Alege un magazin din apropiere",
@@ -688,7 +693,8 @@
     "priceLowHigh": "Preț: crescător"
   },
   "Store": {
-    "allProducts": "Toate produsele"
+    "allProducts": "Toate produsele",
+    "searchResults": "Rezultate pentru „{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "Acceptă transferul",
@@ -717,5 +723,13 @@
     "transferEmailSent": "Emailul de solicitare a transferului a fost trimis la {email}",
     "transferRequested": "Transferul pentru comanda {orderId} a fost solicitat",
     "whereToFind": "Deschide emailul de confirmare al acelei comenzi și lipește aici linkul din el."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Autentificare",
+    "heading": "Confirmarea e-mailului",
+    "invalid": "Linkul este invalid sau a expirat. Autentifică-te și îți trimitem unul nou.",
+    "linkSent": "Am trimis un link la {email}. Deschide-l ca să îți confirmi adresa de e-mail, apoi autentifică-te.",
+    "success": "Adresa ta de e-mail a fost confirmată. Acum te poți autentifica.",
+    "verifying": "Îți confirmăm adresa de e-mail…"
   }
 }

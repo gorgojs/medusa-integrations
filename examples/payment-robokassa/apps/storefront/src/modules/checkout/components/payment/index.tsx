@@ -1,6 +1,6 @@
 "use client"
 import { RadioGroup } from "@headlessui/react"
-import { isStripeLike, paymentInfoMap } from "@lib/constants"
+import { getPaymentInfo, isStripeLike } from "@lib/constants"
 import { paymentMethodName } from "@lib/util/payment"
 import { initiatePaymentSession } from "@lib/data/cart"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
@@ -150,13 +150,11 @@ const Payment = ({
                       <StripePaymentContainer
                         paymentProviderId={paymentMethod.id}
                         selectedPaymentOptionId={selectedPaymentMethod}
-                        paymentInfoMap={paymentInfoMap}
                         setError={setError}
                         setPaymentComplete={setPaymentComplete}
                       />
                     ) : (
                       <PaymentContainer
-                        paymentInfoMap={paymentInfoMap}
                         paymentProviderId={paymentMethod.id}
                         selectedPaymentOptionId={selectedPaymentMethod}
                       />
@@ -226,7 +224,7 @@ const Payment = ({
                   data-testid="payment-details-summary"
                 >
                   <Container className="flex items-center h-7 w-fit p-2 bg-ui-button-neutral-hover">
-                    {paymentInfoMap[selectedPaymentMethod]?.icon || (
+                    {getPaymentInfo(selectedPaymentMethod)?.icon || (
                       <CreditCard />
                     )}
                   </Container>

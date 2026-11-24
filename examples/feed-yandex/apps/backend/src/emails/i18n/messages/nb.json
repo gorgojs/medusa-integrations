@@ -21,6 +21,15 @@
     "subject": "Bestilling #{id} levert",
     "textFallback": "Bestilling #{id} er levert."
   },
+  "EmailVerification": {
+    "body": "Du oppretter en konto med <strong>{email}</strong>. Klikk på knappen nedenfor for å bekrefte at adressen er din.",
+    "button": "Bekreft e-post",
+    "heading": "Bekreft e-postadressen din",
+    "hint": "Lenken er gyldig i <strong>15 minutter</strong>. Hvis du ikke har opprettet en konto, kan du bare se bort fra denne e-posten.",
+    "preview": "Bekreft e-postadressen din, lenken er gyldig i 15 minutter",
+    "subject": "Bekreft e-postadressen din",
+    "textFallback": "Bekreft e-postadressen din\n\nÅpne lenken for å bekrefte e-postadressen din (gyldig i 15 minutter):\n{url}\n\nHvis du ikke har opprettet en konto, kan du bare se bort fra denne e-posten."
+  },
   "Fulfillment": {
     "bodyOrder": "Bestilling <strong>#{id}</strong> er pakket og venter på å bli levert til transportøren.",
     "deliveryCity": "Leveres til {city}.",

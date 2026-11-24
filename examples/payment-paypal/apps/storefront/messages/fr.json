@@ -409,6 +409,10 @@
     "terms": {
       "description": "Lisez les règles que vous acceptez en achetant chez nous.",
       "title": "Conditions d'utilisation"
+    },
+    "verifyAccount": {
+      "description": "Confirmez votre adresse e-mail pour finaliser la création de votre compte.",
+      "title": "Confirmer l'adresse e-mail"
     }
   },
   "NativeSelect": {
@@ -647,7 +651,8 @@
     "label": "Recherche",
     "loading": "Recherche…",
     "placeholder": "Rechercher des produits",
-    "popular": "Produits populaires"
+    "popular": "Produits populaires",
+    "showAll": "Voir tous les résultats"
   },
   "Shipping": {
     "chooseStore": "Choisissez un magasin près de chez vous",
@@ -688,7 +693,8 @@
     "priceLowHigh": "Prix : croissant"
   },
   "Store": {
-    "allProducts": "Tous les produits"
+    "allProducts": "Tous les produits",
+    "searchResults": "Résultats pour «{query}»"
   },
   "TransferActions": {
     "acceptTransfer": "Accepter le transfert",
@@ -717,5 +723,13 @@
     "transferEmailSent": "E-mail de demande de transfert envoyé à {email}",
     "transferRequested": "Transfert demandé pour la commande {orderId}",
     "whereToFind": "Ouvrez l'e-mail de confirmation de cette commande et collez ici le lien qu'il contient."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Se connecter",
+    "heading": "Confirmation de l'e-mail",
+    "invalid": "Ce lien n'est pas valide ou a expiré. Connectez-vous et nous vous en enverrons un nouveau.",
+    "linkSent": "Nous avons envoyé un lien à {email}. Ouvrez-le pour confirmer votre adresse e-mail, puis connectez-vous.",
+    "success": "Votre adresse e-mail est confirmée. Vous pouvez maintenant vous connecter.",
+    "verifying": "Confirmation de votre adresse e-mail…"
   }
 }

@@ -100,31 +100,52 @@ export const createTransferRequest = async (
 
 const revalidateOrdersCache = async () => {
   const ordersCacheTag = await getCacheTag("orders")
-  if (ordersCacheTag) revalidateTag(ordersCacheTag)
+  if (ordersCacheTag) revalidateTag(ordersCacheTag, { expire: 0 })
 
   const customersCacheTag = await getCacheTag("customers")
-  if (customersCacheTag) revalidateTag(customersCacheTag)
+  if (customersCacheTag) revalidateTag(customersCacheTag, { expire: 0 })
 }
 
-export const acceptTransferRequest = async (id: string, token: string) => {
+/**
+ * Refreshes the order lists from the browser, for the accept and decline pages:
+ * they transfer while rendering, where Next refuses to revalidate a cache tag.
+ */
+export const refreshOrdersCache = async () => {
+  await revalidateOrdersCache()
+}
+
+/**
+ * `revalidate: false` is for the accept and decline pages, which run this while
+ * rendering and refresh the order lists with `refreshOrdersCache` after. The
+ * transfer buttons call it as a server action, where revalidating works.
+ */
+export const acceptTransferRequest = async (
+  id: string,
+  token: string,
+  { revalidate = true }: { revalidate?: boolean } = {}
+) => {
   const headers = await getAuthHeaders()
 
   return await sdk.store.order
     .acceptTransfer(id, { token }, {}, headers)
     .then(async ({ order }) => {
-      await revalidateOrdersCache()
+      if (revalidate) await revalidateOrdersCache()
       return { success: true, error: null, order }
     })
     .catch((err) => ({ success: false, error: err.message, order: null }))
 }
 
-export const declineTransferRequest = async (id: string, token: string) => {
+export const declineTransferRequest = async (
+  id: string,
+  token: string,
+  { revalidate = true }: { revalidate?: boolean } = {}
+) => {
   const headers = await getAuthHeaders()
 
   return await sdk.store.order
     .declineTransfer(id, { token }, {}, headers)
     .then(async ({ order }) => {
-      await revalidateOrdersCache()
+      if (revalidate) await revalidateOrdersCache()
       return { success: true, error: null, order }
     })
     .catch((err) => ({ success: false, error: err.message, order: null }))

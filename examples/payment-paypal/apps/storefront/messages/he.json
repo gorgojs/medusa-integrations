@@ -409,6 +409,10 @@
     "terms": {
       "description": "קראו את הכללים שאתם מאשרים בעת הרכישה.",
       "title": "תנאי שימוש"
+    },
+    "verifyAccount": {
+      "description": "אמת את כתובת האימייל כדי לסיים ליצור את החשבון.",
+      "title": "אימות אימייל"
     }
   },
   "NativeSelect": {
@@ -647,7 +651,8 @@
     "label": "חיפוש",
     "loading": "מחפש…",
     "placeholder": "חיפוש מוצרים",
-    "popular": "מוצרים פופולריים"
+    "popular": "מוצרים פופולריים",
+    "showAll": "הצגת כל התוצאות"
   },
   "Shipping": {
     "chooseStore": "בחר חנות בקרבתך",
@@ -688,7 +693,8 @@
     "priceLowHigh": "מחיר: מהנמוך לגבוה"
   },
   "Store": {
-    "allProducts": "כל המוצרים"
+    "allProducts": "כל המוצרים",
+    "searchResults": "תוצאות עבור “{query}”"
   },
   "TransferActions": {
     "acceptTransfer": "אישור העברה",
@@ -717,5 +723,13 @@
     "transferEmailSent": "אימייל עם בקשת ההעברה נשלח אל {email}",
     "transferRequested": "בקשת ההעברה עבור הזמנה {orderId} נשלחה",
     "whereToFind": "פתח את מייל האישור של אותה הזמנה והדבק כאן את הקישור שבו."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "התחברות",
+    "heading": "אימות אימייל",
+    "invalid": "הקישור לא תקין או שפג תוקפו. התחבר ונשלח לך קישור חדש.",
+    "linkSent": "שלחנו קישור אל {email}. פתח אותו כדי לאמת את האימייל, ואז התחבר.",
+    "success": "האימייל שלך אומת. אפשר להתחבר עכשיו.",
+    "verifying": "מאמתים את האימייל שלך…"
   }
 }

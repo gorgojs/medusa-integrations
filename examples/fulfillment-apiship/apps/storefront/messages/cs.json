@@ -203,6 +203,13 @@
     "paymentFailed": "Platbu se nepodařilo zpracovat. Zkuste to prosím znovu nebo použijte jinou metodu.",
     "unauthorized": "Pro pokračování se prosím přihlaste."
   },
+  "ExpressCheckout": {
+    "missingContact": "Platební metoda nesdílela e-mail a doručovací adresu.",
+    "noShipping": "Na tuto adresu nedoručujeme.",
+    "or": "nebo",
+    "title": "Expresní platba",
+    "totalChanged": "S dopravou na tuto adresu činí celková částka {total}. Zaplaťte znovu a potvrďte novou částku."
+  },
   "Filters": {
     "sort": "Řadit",
     "title": "Filtry"
@@ -418,6 +425,10 @@
     "terms": {
       "description": "Přečtěte si pravidla, se kterými při nákupu souhlasíte.",
       "title": "Podmínky použití"
+    },
+    "verifyAccount": {
+      "description": "Potvrďte e-mailovou adresu a dokončete vytvoření účtu.",
+      "title": "Potvrzení e-mailu"
     }
   },
   "NativeSelect": {
@@ -655,7 +666,8 @@
     "label": "Hledat",
     "loading": "Vyhledávání…",
     "placeholder": "Hledat produkty",
-    "popular": "Oblíbené produkty"
+    "popular": "Oblíbené produkty",
+    "showAll": "Zobrazit všechny výsledky"
   },
   "Shipping": {
     "chooseStore": "Vyberte prodejnu ve vašem okolí",
@@ -696,7 +708,8 @@
     "priceLowHigh": "Cena: Nejnižší → Nejvyšší"
   },
   "Store": {
-    "allProducts": "Všechny produkty"
+    "allProducts": "Všechny produkty",
+    "searchResults": "Výsledky pro „{query}“"
   },
   "TransferActions": {
     "acceptTransfer": "Přijmout převod",
@@ -725,5 +738,13 @@
     "transferEmailSent": "E-mail se žádostí o převod byl odeslán na {email}",
     "transferRequested": "Převod objednávky {orderId} byl vyžádán",
     "whereToFind": "Otevřete potvrzovací e-mail k té objednávce a vložte sem odkaz z něj."
+  },
+  "VerifyAccount": {
+    "goToSignIn": "Přihlásit se",
+    "heading": "Potvrzení e-mailu",
+    "invalid": "Odkaz je neplatný nebo vypršel. Přihlaste se a pošleme vám nový.",
+    "linkSent": "Na adresu {email} jsme poslali odkaz. Otevřete ho, potvrďte tím e-mail a pak se přihlaste.",
+    "success": "Váš e-mail je potvrzený. Teď se můžete přihlásit.",
+    "verifying": "Potvrzujeme váš e-mail…"
   }
 }

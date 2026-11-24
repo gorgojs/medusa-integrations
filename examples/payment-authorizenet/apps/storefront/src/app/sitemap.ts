@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next"
-import { sdk } from "@lib/config"
+import { fetchWithoutLocale } from "@lib/config"
 import { getBaseURL } from "@lib/util/env"
 import { locales } from "@i18n/config"
 
@@ -42,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const limit = 100
 
     while (true) {
-      const { products, count } = await sdk.client.fetch<{
+      const { products, count } = await fetchWithoutLocale<{
         products: Array<{ handle?: string; updated_at?: string }>
         count: number
       }>("/store/products", {
@@ -69,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch {}
 
   try {
-    const { product_categories } = await sdk.client.fetch<{
+    const { product_categories } = await fetchWithoutLocale<{
       product_categories: Array<{ handle?: string; updated_at?: string }>
     }>("/store/product-categories", {
       query: { fields: "handle,updated_at", limit: 500 },
@@ -91,7 +91,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch {}
 
   try {
-    const { collections } = await sdk.client.fetch<{
+    const { collections } = await fetchWithoutLocale<{
       collections: Array<{ handle?: string; updated_at?: string }>
     }>("/store/collections", {
       query: { fields: "handle,updated_at", limit: 100 },

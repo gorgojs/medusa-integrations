@@ -21,6 +21,15 @@
     "subject": "주문 #{id} 배송 완료",
     "textFallback": "주문 #{id}이 배송되었습니다."
   },
+  "EmailVerification": {
+    "body": "<strong>{email}</strong> 주소로 계정을 만들고 계십니다. 본인의 주소가 맞는지 확인하려면 아래 버튼을 눌러 주세요.",
+    "button": "이메일 인증하기",
+    "heading": "이메일 인증",
+    "hint": "링크는 <strong>15분간</strong> 유효합니다. 계정을 만들지 않으셨다면 이 메일을 무시하셔도 됩니다.",
+    "preview": "이메일 인증, 링크는 15분간 유효합니다",
+    "subject": "이메일 인증",
+    "textFallback": "이메일 인증\n\n이메일을 인증하려면 링크를 여세요 (15분간 유효):\n{url}\n\n계정을 만들지 않으셨다면 이 메일을 무시하셔도 됩니다."
+  },
   "Fulfillment": {
     "bodyOrder": "주문 <strong>#{id}</strong>의 포장이 끝나 택배사 인계를 기다리고 있습니다.",
     "deliveryCity": "{city}(으)로 배송됩니다.",

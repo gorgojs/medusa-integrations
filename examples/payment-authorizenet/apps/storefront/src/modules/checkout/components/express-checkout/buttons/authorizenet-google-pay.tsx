@@ -1,3 +1,4 @@
+/// <reference types="googlepay" />
 "use client"
 
 import GooglePayButton from "@google-pay/button-react"

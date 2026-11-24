@@ -52,7 +52,7 @@ async function redirectProviderReturn({
 
   if (orderId) {
     const orderCacheTag = await getCacheTag("orders")
-    revalidateTag(orderCacheTag)
+    revalidateTag(orderCacheTag, { expire: 0 })
     await removeCartId()
 
     return NextResponse.redirect(
