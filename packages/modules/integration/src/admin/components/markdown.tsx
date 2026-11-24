@@ -16,7 +16,7 @@ const Inline = ({ nodes }: { nodes: MdInline[] }) => (
           return <span key={i}>{node.value}</span>
         case "code":
           return (
-            <code key={i} className="txt-compact-small bg-ui-bg-component rounded px-1 py-0.5">
+            <code key={i} className="txt-compact-small bg-ui-bg-component rounded-sm px-1 py-0.5">
               {node.value}
             </code>
           )

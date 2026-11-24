@@ -246,7 +246,7 @@ const IntegrationsPage = () => {
         // text would open next to it.
         truncateTooltip: false,
       }),
-      columnHelper.display({
+      columnHelper.accessor((item) => item.description, {
         id: "description",
         header: t("integration.columns.description"),
         // The table's cells do not wrap, so a description would stretch the column to its whole length.

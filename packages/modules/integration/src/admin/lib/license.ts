@@ -54,7 +54,7 @@ export function useLicenseDetails(): (view: LicenseView, options?: { withChecked
   return (view, { withChecked = false } = {}) => {
     const checked = view.checked ? t("integration.license.checked", { when: view.checked }) : undefined
     const parts = view.hint
-      ? [t(view.hint.key, view.hint.values), withChecked ? checked : undefined]
+      ? [t(view.hint.key, view.hint.values ?? {}), withChecked ? checked : undefined]
       : [
           view.context?.project,
           view.context?.environment === null ? t("integration.license.local") : view.context?.environment,

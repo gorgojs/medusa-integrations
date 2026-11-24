@@ -62,7 +62,7 @@ const Section = ({
       type="button"
       aria-expanded={open}
       onClick={onToggle}
-      className="bg-ui-bg-subtle hover:bg-ui-bg-subtle-hover border-ui-border-base focus-visible:shadow-borders-focus flex w-full items-center justify-between gap-x-2 border-b px-6 py-2 text-left outline-none"
+      className="bg-ui-bg-subtle hover:bg-ui-bg-subtle-hover border-ui-border-base focus-visible:shadow-borders-focus flex w-full items-center justify-between gap-x-2 border-b px-6 py-2 text-left outline-hidden"
     >
       <Text size="small" leading="compact" weight="plus">
         {title}

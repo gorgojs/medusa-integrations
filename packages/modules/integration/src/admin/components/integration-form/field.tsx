@@ -5,7 +5,7 @@ import { Controller, Control } from "react-hook-form"
 import type { UiField } from "../../../types"
 
 /** Minimal shape of i18next's `t` — avoids depending on i18next's type export directly. */
-type Translate = (key: string, options?: Record<string, unknown>) => string
+type Translate = (key: string) => string
 
 // Re-export so the form keeps importing the field shape from one place.
 export type { UiField }

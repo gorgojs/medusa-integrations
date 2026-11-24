@@ -23,7 +23,7 @@ export const LicenseLine = ({ entry }: { entry: LicenseStateEntry }) => {
     <div className="flex w-fit items-start gap-x-1">
       <LicenseSquare tone={view.tone} />
       <Text size="xsmall" leading="compact" className={clx("whitespace-normal", TEXT[view.tone])}>
-        {t(view.line.key, view.line.values)}
+        {t(view.line.key, view.line.values ?? {})}
       </Text>
     </div>
   )

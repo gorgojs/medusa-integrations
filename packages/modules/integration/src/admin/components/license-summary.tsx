@@ -38,7 +38,7 @@ export const LicenseSummary = ({ entry }: { entry: LicenseStateEntry }) => {
         <div className="flex items-center gap-x-1">
           <LicenseSquare tone={view.tone} />
           <Text size="small" leading="compact" weight="plus" className="text-ui-fg-base">
-            {t(view.title.key, view.title.values)}
+            {t(view.title.key, view.title.values ?? {})}
           </Text>
         </div>
         {details && (

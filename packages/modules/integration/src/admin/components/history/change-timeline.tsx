@@ -68,7 +68,7 @@ export const ChangeTimeline = ({
             <div className="flex min-w-0 flex-col gap-y-1 pb-3 pt-1.5">
               <div className="flex items-center justify-between gap-x-2">
                 <Text size="small" leading="compact" weight="plus" className="truncate">
-                  {t(title.key, title.values)}
+                  {t(title.key, title.values ?? {})}
                 </Text>
                 <Tooltip content={time.full(change.created_at)}>
                   <Text size="small" leading="compact" className="text-ui-fg-subtle shrink-0">
@@ -92,7 +92,7 @@ export const ChangeTimeline = ({
             type="button"
             onClick={() => onSelect(change)}
             // Negative margin: the hover fills the gutter while the dots stay in line with the header.
-            className="hover:bg-ui-bg-base-hover focus-visible:shadow-borders-focus -mx-2 rounded-md px-2 text-left outline-none"
+            className="hover:bg-ui-bg-base-hover focus-visible:shadow-borders-focus -mx-2 rounded-md px-2 text-left outline-hidden"
           >
             {body}
           </button>

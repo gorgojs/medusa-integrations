@@ -187,7 +187,7 @@ const HistoryPage = () => {
           const title = changeTitle(row.original)
           return (
             <Text size="small" leading="compact">
-              {t(title.key, title.values)}
+              {t(title.key, title.values ?? {})}
             </Text>
           )
         },
