@@ -27,7 +27,10 @@
       "settings": "설정",
       "install_docs": "문서 읽기",
       "install_empty": "이 통합에 대한 설정 안내는 아직 제공되지 않습니다.",
-      "install_truncated": "안내가 너무 길어 여기에 표시할 수 없습니다 — 문서를 열어 보세요."
+      "install_truncated": "안내가 너무 길어 여기에 표시할 수 없습니다 — 문서를 열어 보세요.",
+      "buy": "구매",
+      "perMonth": "{{price}} / 월",
+      "from": "{{price}}부터"
     },
     "columns": {
       "integration": "통합",

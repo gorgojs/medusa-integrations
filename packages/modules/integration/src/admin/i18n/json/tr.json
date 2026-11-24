@@ -27,7 +27,10 @@
       "settings": "Ayarlar",
       "install_docs": "Dokümantasyonu oku",
       "install_empty": "Bu entegrasyon için kurulum talimatları henüz mevcut değil.",
-      "install_truncated": "Bu talimatlar burada gösterilemeyecek kadar uzun — dokümantasyonu açın."
+      "install_truncated": "Bu talimatlar burada gösterilemeyecek kadar uzun — dokümantasyonu açın.",
+      "buy": "Satın al",
+      "perMonth": "{{price}} / ay",
+      "from": "en az {{price}}"
     },
     "columns": {
       "integration": "Entegrasyon",

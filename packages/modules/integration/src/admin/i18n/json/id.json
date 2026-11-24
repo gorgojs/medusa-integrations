@@ -27,7 +27,10 @@
       "settings": "Pengaturan",
       "install_docs": "Baca dokumentasi",
       "install_empty": "Petunjuk penyiapan untuk integrasi ini belum tersedia.",
-      "install_truncated": "Petunjuk ini terlalu panjang untuk ditampilkan di sini — buka dokumentasinya."
+      "install_truncated": "Petunjuk ini terlalu panjang untuk ditampilkan di sini — buka dokumentasinya.",
+      "buy": "Beli",
+      "perMonth": "{{price}} / bulan",
+      "from": "mulai {{price}}"
     },
     "columns": {
       "integration": "Integrasi",

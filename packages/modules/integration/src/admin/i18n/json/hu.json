@@ -27,7 +27,10 @@
       "settings": "Beállítások",
       "install_docs": "Dokumentáció olvasása",
       "install_empty": "Ehhez az integrációhoz még nem érhető el beállítási útmutató.",
-      "install_truncated": "Ez az útmutató túl hosszú ahhoz, hogy itt megjelenjen — nyissa meg a dokumentációt."
+      "install_truncated": "Ez az útmutató túl hosszú ahhoz, hogy itt megjelenjen — nyissa meg a dokumentációt.",
+      "buy": "Vásárlás",
+      "perMonth": "{{price}} / hó",
+      "from": "{{price}}-tól"
     },
     "columns": {
       "integration": "Integráció",

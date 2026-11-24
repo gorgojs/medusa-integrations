@@ -16,7 +16,11 @@ import { useNavigate } from "react-router-dom"
 import { sdk } from "../../../../lib/sdk"
 import { IntegrationIcon } from "../../../../components/integration-icon"
 import { Markdown } from "../../../../components/markdown"
-import type { AdminIntegrationCatalogResponse, CatalogItem } from "../../../../../types"
+import type {
+  AdminIntegrationCatalogResponse,
+  CatalogItem,
+  CatalogPricing,
+} from "../../../../../types"
 
 const PUBLISH_URL = "https://docs.gorgojs.com/medusa-modules/integration"
 const API_URL = "https://gorgojs.com"
@@ -25,6 +29,37 @@ const API_URL = "https://gorgojs.com"
  * `icon` is either a data URI or a path on the Gorgo host
  */
 const iconSrc = (icon: string) => (icon.startsWith("data:") ? icon : API_URL + icon)
+
+/** A price in the Admin's own notation, whole units when the amount is whole. */
+const formatMoney = (language: string, amount: number, currency: string) => {
+  try {
+    return new Intl.NumberFormat(language, {
+      style: "currency",
+      currency,
+      maximumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+    }).format(amount)
+  } catch {
+    return `${amount} ${currency}`
+  }
+}
+
+/**
+ * The price line of a paid integration: the month it is sold by, or the cheapest term after
+ * "from" when it sells by longer terms only. One price per card, so cards compare integrations
+ * rather than terms.
+ */
+const CatalogPrice = ({ pricing }: { pricing: CatalogPricing }) => {
+  const { t, i18n } = useTranslation("gorgo")
+  const lead = pricing.monthly ?? [...pricing.terms].sort((a, b) => a.amount - b.amount)[0]
+  const price = formatMoney(i18n.language, lead.amount, lead.currencyCode)
+  return (
+    <Text size="small" weight="plus" className="text-ui-fg-base tabular-nums">
+      {pricing.monthly
+        ? t("integration.browse.perMonth", { price })
+        : t("integration.browse.from", { price })}
+    </Text>
+  )
+}
 
 const InstallModal = ({
   item,
@@ -174,22 +209,38 @@ const BrowsePage = () => {
                 <Text size="small" className="text-ui-fg-subtle line-clamp-2">
                   {item.shortDescription}
                 </Text>
-              </div>
-              <div className="flex items-center justify-between border-t px-4 py-3">
-                {item.installed && item.provider_id ? (
-                  <Button
-                    size="small"
-                    variant="primary"
-                    onClick={() => navigate(`/settings/integrations/${item.provider_id}`)}
-                  >
-                    {t("integration.browse.settings")}
-                  </Button>
-                ) : (
-                  <Button size="small" variant="secondary" onClick={() => setInstallItem(item)}>
-                    <Plus/>
-                    {t("integration.browse.add")}
-                  </Button>
+                {item.pricing && (
+                  <div className="mt-auto">
+                    <CatalogPrice pricing={item.pricing} />
+                  </div>
                 )}
+              </div>
+              <div className="flex items-center justify-between gap-x-2 border-t px-4 py-3">
+                <div className="flex items-center gap-x-2">
+                  {item.installed && item.provider_id ? (
+                    <Button
+                      size="small"
+                      variant="primary"
+                      onClick={() => navigate(`/settings/integrations/${item.provider_id}`)}
+                    >
+                      {t("integration.browse.settings")}
+                    </Button>
+                  ) : (
+                    <Button size="small" variant="secondary" onClick={() => setInstallItem(item)}>
+                      <Plus />
+                      {t("integration.browse.add")}
+                    </Button>
+                  )}
+                  {/* A paid integration is bought in the Gorgo dashboard; once installed it is already paid for. */}
+                  {item.pricing && !item.installed && (
+                    <Button size="small" variant="primary" asChild>
+                      <a href={item.pricing.checkoutUrl} target="_blank" rel="noopener noreferrer">
+                        {t("integration.browse.buy")}
+                        <ArrowUpRightOnBox />
+                      </a>
+                    </Button>
+                  )}
+                </div>
                 <Text size="small" className="text-ui-fg-subtle">
                   {t(`integration.categories.${item.category}`)}
                 </Text>

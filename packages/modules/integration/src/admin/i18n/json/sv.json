@@ -27,7 +27,10 @@
       "settings": "Inställningar",
       "install_docs": "Läs dokumentationen",
       "install_empty": "Installationsanvisningar för den här integrationen finns inte ännu.",
-      "install_truncated": "Anvisningarna är för långa för att visas här — öppna dokumentationen."
+      "install_truncated": "Anvisningarna är för långa för att visas här — öppna dokumentationen.",
+      "buy": "Köp",
+      "perMonth": "{{price}} / månad",
+      "from": "från {{price}}"
     },
     "columns": {
       "integration": "Integration",

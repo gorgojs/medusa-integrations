@@ -27,7 +27,10 @@
       "settings": "Einstellungen",
       "install_docs": "Dokumentation lesen",
       "install_empty": "Für diese Integration sind noch keine Einrichtungsanweisungen verfügbar.",
-      "install_truncated": "Diese Anweisungen sind zu lang für die Anzeige hier — öffnen Sie die Dokumentation."
+      "install_truncated": "Diese Anweisungen sind zu lang für die Anzeige hier — öffnen Sie die Dokumentation.",
+      "buy": "Kaufen",
+      "perMonth": "{{price}} / Monat",
+      "from": "ab {{price}}"
     },
     "columns": {
       "integration": "Integration",

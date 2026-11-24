@@ -27,7 +27,10 @@
       "settings": "Cài đặt",
       "install_docs": "Đọc tài liệu",
       "install_empty": "Hướng dẫn thiết lập cho tích hợp này chưa có sẵn.",
-      "install_truncated": "Hướng dẫn này quá dài để hiển thị ở đây — hãy mở tài liệu."
+      "install_truncated": "Hướng dẫn này quá dài để hiển thị ở đây — hãy mở tài liệu.",
+      "buy": "Mua",
+      "perMonth": "{{price}} / tháng",
+      "from": "từ {{price}}"
     },
     "columns": {
       "integration": "Tích hợp",

@@ -146,4 +146,50 @@ describe("loadCatalog", () => {
     const [entry] = await loadCatalog()
     expect(entry.docsUrl).toBe("https://example.com/docs")
   })
+
+  const rub = (days: number, amount: number) => ({ days, amount, currencyCode: "RUB" })
+  const checkoutUrl = "https://app.gorgojs.ru/checkout/1c"
+
+  it("keeps a well-formed pricing with its terms shortest first", async () => {
+    const pricing = { terms: [rub(365, 4000), rub(31, 500)], monthly: rub(31, 500), checkoutUrl }
+    global.fetch = jest.fn().mockResolvedValue(okResponse([{ ...remoteItem, pricing }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.pricing).toEqual({
+      terms: [rub(31, 500), rub(365, 4000)],
+      monthly: rub(31, 500),
+      checkoutUrl,
+    })
+  })
+
+  it("has no monthly price for an integration sold by the year only", async () => {
+    const pricing = { terms: [rub(365, 4000)], monthly: null, checkoutUrl }
+    global.fetch = jest.fn().mockResolvedValue(okResponse([{ ...remoteItem, pricing }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.pricing).toEqual({ terms: [rub(365, 4000)], monthly: null, checkoutUrl })
+  })
+
+  it("drops a bad term but keeps the usable ones", async () => {
+    const pricing = {
+      terms: [rub(31, 500), rub(0, 1), rub(93, 0), { days: "365", amount: 1, currencyCode: "RUB" }, null],
+      monthly: rub(31, 500),
+      checkoutUrl,
+    }
+    global.fetch = jest.fn().mockResolvedValue(okResponse([{ ...remoteItem, pricing }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.pricing?.terms).toEqual([rub(31, 500)])
+  })
+
+  it.each([
+    ["an unsafe checkout", { terms: [rub(31, 500)], monthly: null, checkoutUrl: "javascript:alert(1)" }],
+    ["an http checkout", { terms: [rub(31, 500)], monthly: null, checkoutUrl: "http://example.com" }],
+    ["no usable term", { terms: [rub(0, 500)], monthly: null, checkoutUrl }],
+    ["terms of another shape", { terms: { days: 31 }, monthly: null, checkoutUrl }],
+    ["a string", "500 RUB"],
+    ["null", null],
+  ])("drops a malformed pricing (%s) but keeps the entry", async (_label, pricing) => {
+    global.fetch = jest.fn().mockResolvedValue(okResponse([{ ...remoteItem, pricing }])) as any
+    const [entry] = await loadCatalog()
+    expect(entry.pricing).toBeUndefined()
+    expect(entry.integrationId).toBe("remote-only")
+  })
 })

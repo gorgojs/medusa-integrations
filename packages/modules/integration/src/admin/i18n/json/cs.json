@@ -27,7 +27,10 @@
       "settings": "Nastavení",
       "install_docs": "Přečíst dokumentaci",
       "install_empty": "Pokyny k nastavení této integrace zatím nejsou k dispozici.",
-      "install_truncated": "Tyto pokyny jsou příliš dlouhé na zobrazení zde — otevřete dokumentaci."
+      "install_truncated": "Tyto pokyny jsou příliš dlouhé na zobrazení zde — otevřete dokumentaci.",
+      "buy": "Koupit",
+      "perMonth": "{{price}} / měsíc",
+      "from": "od {{price}}"
     },
     "columns": {
       "integration": "Integrace",

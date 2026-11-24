@@ -27,7 +27,10 @@
       "settings": "Postavke",
       "install_docs": "Pročitaj dokumentaciju",
       "install_empty": "Upute za postavljanje ove integracije još nisu dostupne.",
-      "install_truncated": "Ove su upute predugačke za prikaz ovdje — otvorite dokumentaciju."
+      "install_truncated": "Ove su upute predugačke za prikaz ovdje — otvorite dokumentaciju.",
+      "buy": "Kupi",
+      "perMonth": "{{price}} / mjesec",
+      "from": "od {{price}}"
     },
     "columns": {
       "integration": "Integracija",

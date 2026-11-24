@@ -27,7 +27,10 @@
       "settings": "設定",
       "install_docs": "閱讀說明文件",
       "install_empty": "此整合的設定說明尚未提供。",
-      "install_truncated": "這些說明過長，無法在此顯示 — 請開啟說明文件。"
+      "install_truncated": "這些說明過長，無法在此顯示 — 請開啟說明文件。",
+      "buy": "購買",
+      "perMonth": "{{price}} / 月",
+      "from": "{{price}} 起"
     },
     "columns": {
       "integration": "整合",

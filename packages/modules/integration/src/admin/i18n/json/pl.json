@@ -27,7 +27,10 @@
       "settings": "Ustawienia",
       "install_docs": "Przeczytaj dokumentację",
       "install_empty": "Instrukcja konfiguracji tej integracji nie jest jeszcze dostępna.",
-      "install_truncated": "Ta instrukcja jest zbyt długa, aby wyświetlić ją tutaj — otwórz dokumentację."
+      "install_truncated": "Ta instrukcja jest zbyt długa, aby wyświetlić ją tutaj — otwórz dokumentację.",
+      "buy": "Kup",
+      "perMonth": "{{price}} / mies.",
+      "from": "od {{price}}"
     },
     "columns": {
       "integration": "Integracja",

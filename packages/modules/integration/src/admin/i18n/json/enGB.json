@@ -27,7 +27,10 @@
       "settings": "Settings",
       "install_docs": "Read docs",
       "install_empty": "Setup instructions for this integration aren't available yet.",
-      "install_truncated": "These instructions are too long to show here — open the documentation."
+      "install_truncated": "These instructions are too long to show here — open the documentation.",
+      "buy": "Buy",
+      "perMonth": "{{price}} / month",
+      "from": "from {{price}}"
     },
     "columns": {
       "integration": "Integration",

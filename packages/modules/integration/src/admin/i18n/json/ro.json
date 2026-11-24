@@ -27,7 +27,10 @@
       "settings": "Setări",
       "install_docs": "Citește documentația",
       "install_empty": "Instrucțiunile de configurare pentru această integrare nu sunt încă disponibile.",
-      "install_truncated": "Aceste instrucțiuni sunt prea lungi pentru a fi afișate aici — deschide documentația."
+      "install_truncated": "Aceste instrucțiuni sunt prea lungi pentru a fi afișate aici — deschide documentația.",
+      "buy": "Cumpără",
+      "perMonth": "{{price}} / lună",
+      "from": "de la {{price}}"
     },
     "columns": {
       "integration": "Integrare",

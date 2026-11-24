@@ -45,6 +45,29 @@ export interface MaskedIntegration {
   metadata: Record<string, unknown> | null
 }
 
+/** One paid term of an integration's subscription, in major units of its currency. */
+export interface CatalogTerm {
+  /** 31 is a month, 93 a quarter, 365 a year. */
+  days: number
+  amount: number
+  /** ISO 4217, uppercase. */
+  currencyCode: string
+}
+
+/**
+ * How the Gorgo Store sells an integration. The catalog API fills it in for a paid integration;
+ * a free one has none. The card shows the monthly term, or the cheapest one after "from" when the
+ * integration sells by longer terms only, and a buy button that opens `checkoutUrl`.
+ */
+export interface CatalogPricing {
+  /** Paid terms, shortest first. */
+  terms: CatalogTerm[]
+  /** The 31-day term, or null when there is none. */
+  monthly: CatalogTerm | null
+  /** Dropped at the catalog boundary unless it is an absolute https URL — see `isSafeHref`. */
+  checkoutUrl: string
+}
+
 /** One integration in the Gorgo catalog (from the live Gorgo API, with an offline yml fallback). */
 export interface CatalogIntegration {
   integrationId: string
@@ -69,6 +92,8 @@ export interface CatalogIntegration {
   icon: string
   stars: number | null
   downloads: number | null
+  /** Set when the Gorgo Store sells the integration. The yml fallback never has it. */
+  pricing?: CatalogPricing
 }
 
 /** A catalog entry merged with local install state. */

@@ -1,4 +1,4 @@
-import type { CatalogIntegration } from "../types"
+import type { CatalogIntegration, CatalogTerm } from "../types"
 import { FALLBACK_CATALOG } from "./catalog.generated"
 import { isSafeHref } from "./markdown/href"
 import { MD_MAX_CHARS } from "./markdown/parse"
@@ -6,6 +6,9 @@ import { MD_MAX_CHARS } from "./markdown/parse"
 const CATALOG_API_URL = "https://gorgojs.com/api/integrations"
 const CACHE_TTL_MS = 60 * 60 * 1000 // 1 hour
 const FETCH_TIMEOUT_MS = 4000
+
+/** The term a card prices by. */
+export const MONTH_DAYS = 31
 
 type CacheEntry = { data: CatalogIntegration[]; at: number }
 let cache: CacheEntry | null = null
@@ -40,9 +43,41 @@ const sanitizeSnippet = (x: unknown): CatalogIntegration["docsSnippet"] => {
   return snippet.en || snippet.ru ? snippet : undefined
 }
 
+const isTerm = (x: unknown): x is CatalogTerm => {
+  if (!x || typeof x !== "object") return false
+  const { days, amount, currencyCode } = x as Partial<CatalogTerm>
+  return (
+    Number.isInteger(days) &&
+    (days as number) > 0 &&
+    typeof amount === "number" &&
+    amount > 0 &&
+    typeof currencyCode === "string" &&
+    currencyCode.length > 0
+  )
+}
+
 /**
- * Drop malformed/unsafe fields rather than rejecting the whole entry: both are optional, so a
- * bad one costs the drawer its guide or its docs link, not the merchant the integration.
+ * Rebuild pricing from only its usable terms, shortest first. The checkout link gets the same
+ * `isSafeHref` gate as `docsUrl`, since the card sends the merchant there. Returns undefined when
+ * nothing usable is left: the integration then shows no price rather than a wrong one.
+ */
+const sanitizePricing = (x: unknown): CatalogIntegration["pricing"] => {
+  if (!x || typeof x !== "object" || Array.isArray(x)) return undefined
+  const { terms, checkoutUrl } = x as { terms?: unknown; checkoutUrl?: unknown }
+  if (typeof checkoutUrl !== "string" || !isSafeHref(checkoutUrl)) return undefined
+  if (!Array.isArray(terms)) return undefined
+  const usable = terms.filter(isTerm).sort((a, b) => a.days - b.days)
+  if (!usable.length) return undefined
+  return {
+    terms: usable,
+    monthly: usable.find((term) => term.days === MONTH_DAYS) ?? null,
+    checkoutUrl,
+  }
+}
+
+/**
+ * Drop malformed/unsafe fields rather than rejecting the whole entry: all three are optional, so a
+ * bad one costs the drawer its guide, its docs link or its price, not the merchant the integration.
  */
 const sanitizeEntry = (entry: CatalogIntegration): CatalogIntegration => {
   const result = { ...entry }
@@ -55,6 +90,12 @@ const sanitizeEntry = (entry: CatalogIntegration): CatalogIntegration => {
 
   if (result.docsUrl !== undefined && !isSafeHref(result.docsUrl)) {
     delete result.docsUrl
+  }
+
+  if (result.pricing !== undefined) {
+    const pricing = sanitizePricing(result.pricing)
+    if (pricing) result.pricing = pricing
+    else delete result.pricing
   }
 
   return result

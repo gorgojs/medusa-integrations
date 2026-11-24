@@ -27,7 +27,10 @@
       "settings": "Nustatymai",
       "install_docs": "Skaityti dokumentaciją",
       "install_empty": "Šios integracijos sąrankos instrukcijos dar nepasiekiamos.",
-      "install_truncated": "Šios instrukcijos per ilgos, kad būtų rodomos čia — atverkite dokumentaciją."
+      "install_truncated": "Šios instrukcijos per ilgos, kad būtų rodomos čia — atverkite dokumentaciją.",
+      "buy": "Pirkti",
+      "perMonth": "{{price}} / mėn.",
+      "from": "nuo {{price}}"
     },
     "columns": {
       "integration": "Integracija",
