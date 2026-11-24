@@ -7,7 +7,7 @@ import {
   Section,
   Text,
   Hr,
-} from "@react-email/components";
+} from "react-email";
 import * as React from "react";
 import {
   type EmailLocale,

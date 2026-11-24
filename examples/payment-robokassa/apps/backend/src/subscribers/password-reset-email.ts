@@ -4,7 +4,7 @@ import type {
   Logger,
 } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
-import { render } from "@react-email/render";
+import { render } from "react-email";
 import { createElement } from "react";
 import { PasswordResetEmail } from "../emails/password-reset";
 import {
