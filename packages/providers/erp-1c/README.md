@@ -42,8 +42,6 @@
   </a>
 </p>
 
-> **The paid version is running a closed beta right now.** Participants get a price below the release one for the first year, help with the edge cases of their own 1C configuration and a chat with the development team. To take part in the testing, [apply for the beta](https://gorgojs.com/beta/medusa-1c).
-
 ## Free and Paid Version Features
 
 | Capabilities | Free | Paid |
