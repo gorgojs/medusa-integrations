@@ -27,7 +27,7 @@
 
 <p align="center">
   <a href="https://medusajs.com">
-    <img src="https://img.shields.io/badge/Medusa-^2.21.0-blue?logo=medusa" alt="Medusa" />
+    <img src="https://img.shields.io/badge/Medusa-^2.23.0-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-integration.json&logo=checkmarx" alt="Протестировано с последней версией Medusa" />
@@ -63,7 +63,7 @@
 
 ## Интеграции
 
-Плагинам нужна Medusa 2.21.0 или новее, фид для Яндекс Маркета работает с 2.14.0. [Ежедневный воркфлоу](.github/workflows/update-medusa-version.yml) прогоняет их тесты на каждом новом релизе Medusa, а последняя версия, на которой они прошли, указана в README каждого плагина.
+Плагинам нужна Medusa 2.23.0 или новее. [Ежедневный воркфлоу](.github/workflows/update-medusa-version.yml) прогоняет их тесты на каждом новом релизе Medusa, а последняя версия, на которой они прошли, указана в README каждого плагина.
 
 ### Платежи
 

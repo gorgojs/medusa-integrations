@@ -27,7 +27,7 @@
 
 <p align="center">
   <a href="https://medusajs.com">
-    <img src="https://img.shields.io/badge/Medusa-^2.21.0-blue?logo=medusa" alt="Medusa" />
+    <img src="https://img.shields.io/badge/Medusa-^2.23.0-blue?logo=medusa" alt="Medusa" />
   </a>
   <a href="https://github.com/gorgojs/medusa-integrations/actions/workflows/update-medusa-version.yml">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gorgojs/medusa-integrations/main/.badges/medusa-integration.json&logo=checkmarx" alt="Tested with latest Medusa" />
@@ -63,7 +63,7 @@
 
 ## Integrations
 
-The plugins require Medusa 2.21.0 or later, and the Yandex Market feed works from 2.14.0. A [daily workflow](.github/workflows/update-medusa-version.yml) runs their tests against every new Medusa release, and each plugin's README shows the newest version they passed on.
+The plugins require Medusa 2.23.0 or later. A [daily workflow](.github/workflows/update-medusa-version.yml) runs their tests against every new Medusa release, and each plugin's README shows the newest version they passed on.
 
 ### Payments
 
