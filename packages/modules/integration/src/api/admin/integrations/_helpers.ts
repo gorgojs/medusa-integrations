@@ -47,7 +47,7 @@ export function maskedView(svc: IntegrationModuleService, record: any): MaskedIn
     title: record.title ?? null,
     is_enabled: record.is_enabled,
     configured_secrets,
-    last_test_status: record.last_test_status ?? null,
+    last_test: record.last_test ?? null,
     values,
     metadata: record.metadata ?? null,
   }

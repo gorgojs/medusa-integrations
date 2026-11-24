@@ -39,7 +39,7 @@ export const disableMyIntegrationWorkflow = createWorkflow(
 
 <Note type="warning">
 
-Откат есть только у шагов `setIntegrationEnabledStep` и `recordIntegrationChangeStep`. Если вы запустили `upsertIntegrationWorkflow`, `deleteIntegrationWorkflow` или `testIntegrationConnectionWorkflow` как шаг собственного воркфлоу и следующий шаг упал, сохранённые параметры, удаление и `last_test_status` остаются, а запись в истории удаляется. В итоге изменение может остаться без записи в истории изменений. Что делает при откате каждый шаг, описано в разделе [Шаги](#шаги).
+Откат есть только у шагов `setIntegrationEnabledStep` и `recordIntegrationChangeStep`. Если вы запустили `upsertIntegrationWorkflow`, `deleteIntegrationWorkflow` или `testIntegrationConnectionWorkflow` как шаг собственного воркфлоу и следующий шаг упал, сохранённые параметры, удаление и `last_test` остаются, а запись в истории удаляется. В итоге изменение может остаться без записи в истории изменений. Что делает при откате каждый шаг, описано в разделе [Шаги](#шаги).
 
 </Note>
 
@@ -215,7 +215,7 @@ flowchart TD
   emit -->|"отправляет"| event(["integration.tested"])
 ```
 
-Шаг проверки сохраняет `last_test_status`, только если у интеграции есть сохранённая запись, а событие отправляется при любом результате.
+Шаг проверки сохраняет `last_test`, только если у интеграции есть сохранённая запись, а событие отправляется при любом результате.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -292,7 +292,7 @@ flowchart TD
 | `upsertIntegrationRecordStep` | `{ provider_id, category, options, title?, metadata? }` | Создаёт или обновляет сохранённую запись. | Отката нет. Сохранённая запись остаётся. |
 | `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Меняет `is_enabled` у сохранённой записи. | Восстанавливает прежнее значение `is_enabled`. |
 | `deleteIntegrationRecordStep` | `{ provider_id }` | Удаляет сохранённую запись и возвращает `{ deleted, diff }`. | Отката нет. Запись остаётся удалённой. |
-| `runTestConnectionStep` | `{ provider_id }` | Выполняет проверку соединения и сохраняет её статус в `last_test_status`, если у интеграции есть сохранённая запись. | Отката нет. `last_test_status` остаётся. |
+| `runTestConnectionStep` | `{ provider_id }` | Выполняет проверку соединения и сохраняет её результат в `last_test`, если у интеграции есть сохранённая запись. | Отката нет. `last_test` остаётся. |
 | `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, metadata?, skip? }` | Создаёт запись в истории изменений или ничего не делает, если `skip` равно `true` или у изменения `updated` нет полей. Никогда не роняет воркфлоу. | Удаляет запись в истории. |
 | `emitIntegrationEventStep` | `{ name, data }` | Отправляет событие через шину событий Medusa. | Отката нет. Отправленное событие остаётся. |
 

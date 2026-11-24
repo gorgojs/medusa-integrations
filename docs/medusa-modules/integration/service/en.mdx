@@ -73,7 +73,7 @@ The package root exports `IntegrationOverviewQuery`, `IntegrationOverviewResult`
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Runs the provider's connection test against the resolved options. Refer to [Integration Module Workflows](/medusa-modules/integration/workflows#testintegrationconnectionworkflow) for the results the module produces itself. It neither stores `last_test_status` nor emits `integration.tested`, which `testIntegrationConnectionWorkflow` does. When a stored secret can't be decrypted, it reports `failed` with the error's message instead of throwing. |
+| `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Runs the provider's connection test against the resolved options. Refer to [Integration Module Workflows](/medusa-modules/integration/workflows#testintegrationconnectionworkflow) for the results the module produces itself. It neither stores `last_test` nor emits `integration.tested`, which `testIntegrationConnectionWorkflow` does. When a stored secret can't be decrypted, it reports `failed` with the error's message instead of throwing. |
 
 ---
 

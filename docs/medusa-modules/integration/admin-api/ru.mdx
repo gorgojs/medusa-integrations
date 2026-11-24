@@ -33,7 +33,7 @@ description: "Справочник по API-роутам Admin, которые �
 - `limit` – от 1 до 1000, по умолчанию `20`.
 - `offset` – по умолчанию `0`.
 
-Роут возвращает `{ integrations, count, limit, offset, categories }`. Каждый элемент `integrations` содержит `provider_id`, `identifier`, `instance_id` и `category` инстанса, i18n-ключи `display_name` и `description`, `icon`, данные пакета `version`, `author` и `author_url`, флаги `has_test_connection`, `is_configured`, `is_enabled` и `is_complete`, а также `last_test_status`. `categories` перечисляет категории всех зарегистрированных инстансов независимо от фильтров.
+Роут возвращает `{ integrations, count, limit, offset, categories }`. Каждый элемент `integrations` содержит `provider_id`, `identifier`, `instance_id` и `category` инстанса, i18n-ключи `display_name` и `description`, `icon`, данные пакета `version`, `author` и `author_url`, флаги `has_test_connection`, `is_configured`, `is_enabled` и `is_complete`, а также `last_test`. `categories` перечисляет категории всех зарегистрированных инстансов независимо от фильтров.
 
 ### Сохранение значений параметров
 
@@ -131,12 +131,37 @@ curl -X POST "http://localhost:9000/admin/integrations/int_my" \
       children: []
     },
     {
-      name: "last_test_status",
-      type: "string | null",
-      description: "Статус последней проверки соединения, `passed`, `failed` или `skipped`, либо `null`, если проверка не запускалась.",
+      name: "last_test",
+      type: "object | null",
+      description: "Результат последней проверки соединения или `null`, если проверка не запускалась.",
       optional: false,
-      expandable: false,
-      children: []
+      expandable: true,
+      children: [
+        {
+          name: "status",
+          type: "enum",
+          description: "Статус проверки, `passed`, `failed` или `skipped`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "tested_at",
+          type: "string",
+          description: "Время проверки, строка в формате ISO 8601.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "message",
+          type: "string | null",
+          description: "Сообщение, которое вернула проверка, или `null`, если его нет.",
+          optional: false,
+          expandable: false,
+          children: []
+        }
+      ]
     },
     {
       name: "metadata",

@@ -155,9 +155,9 @@ const EditPage = () => {
         : { color: "grey" as const, label: t("integration.status.disabled") }
 
   const connection = descriptor.hasTestConnection
-    ? record?.last_test_status === "passed"
+    ? record?.last_test?.status === "passed"
       ? { color: "green" as const, label: t("integration.status.connected") }
-      : record?.last_test_status === "failed"
+      : record?.last_test?.status === "failed"
         ? { color: "red" as const, label: t("integration.status.connectionFailed") }
         : null
     : null

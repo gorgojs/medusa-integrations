@@ -28,7 +28,7 @@ medusaIntegrationTestRunner({
       await svc.createIntegrations({ provider_id: providerId, category: "payment", options, is_enabled })
     }
 
-    it("tests only configured + enabled integrations and persists last_test_status", async () => {
+    it("tests only configured + enabled integrations and persists last_test", async () => {
       await configure(A, true)
       await configure(B, false) // disabled → must be skipped
 
@@ -36,8 +36,8 @@ medusaIntegrationTestRunner({
 
       const [rowA] = await svc.listIntegrations({ provider_id: A }, { take: 1 })
       const [rowB] = await svc.listIntegrations({ provider_id: B }, { take: 1 })
-      expect(rowA.last_test_status).toBe("passed") // fake provider's testConnection → passed
-      expect(rowB.last_test_status).toBeNull() // disabled → never tested
+      expect(rowA.last_test?.status).toBe("passed") // fake provider's testConnection → passed
+      expect(rowB.last_test).toBeNull() // disabled → never tested
     })
 
     it("does nothing when there are no configured integrations", async () => {

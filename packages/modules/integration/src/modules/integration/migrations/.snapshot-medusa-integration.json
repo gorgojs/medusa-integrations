@@ -121,9 +121,9 @@
           "enumItems": [],
           "mappedType": "boolean"
         },
-        "last_test_status": {
-          "name": "last_test_status",
-          "type": "text",
+        "last_test": {
+          "name": "last_test",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
@@ -134,12 +134,8 @@
           "scale": null,
           "default": null,
           "comment": null,
-          "enumItems": [
-            "passed",
-            "failed",
-            "skipped"
-          ],
-          "mappedType": "enum"
+          "enumItems": [],
+          "mappedType": "json"
         },
         "metadata": {
           "name": "metadata",

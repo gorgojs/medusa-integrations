@@ -24,7 +24,7 @@ erDiagram
     string provider_id UK
     enum category
     boolean is_enabled
-    enum last_test_status
+    json last_test
   }
   IntegrationChange {
     string id PK
@@ -98,12 +98,37 @@ erDiagram
       children: []
     },
     {
-      name: "last_test_status",
-      type: "enum",
-      description: "Статус последней проверки соединения, `passed`, `failed` или `skipped`. Пустой, пока проверка не запускалась.",
+      name: "last_test",
+      type: "json",
+      description: "Результат последней проверки соединения. Пустой, пока проверка не запускалась.",
       optional: true,
-      expandable: false,
-      children: []
+      expandable: true,
+      children: [
+        {
+          name: "status",
+          type: "enum",
+          description: "Статус проверки, `passed`, `failed` или `skipped`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "tested_at",
+          type: "string",
+          description: "Время проверки, строка в формате ISO 8601.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "message",
+          type: "string | null",
+          description: "Сообщение, которое вернула проверка, или `null`, если его нет.",
+          optional: false,
+          expandable: false,
+          children: []
+        }
+      ]
     },
     {
       name: "metadata",

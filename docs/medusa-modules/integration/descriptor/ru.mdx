@@ -482,7 +482,7 @@ const descriptor = defineIntegration({
 })
 ```
 
-`status` принимает одно из значений `passed`, `failed` или `skipped`. Модуль сохраняет статус в `last_test_status` интеграции и отправляет [событие `integration.tested`](/medusa-modules/integration/events). Само `message` модуль не сохраняет, оно есть только в событии и в уведомлении Admin.
+`status` принимает одно из значений `passed`, `failed` или `skipped`. Модуль сохраняет статус и `message` вместе со временем проверки в `last_test` интеграции и отправляет [событие `integration.tested`](/medusa-modules/integration/events).
 
 Если статус не `passed`, Admin показывает `message` в уведомлении, а при отсутствии сообщения сам статус. Результат `passed` всегда показывает одно и то же уведомление об успехе, что бы ни содержало `message`.
 

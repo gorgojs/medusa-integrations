@@ -55,7 +55,7 @@ moduleIntegrationTestRunner<any>({
           is_enabled: false,
           is_complete: false,
           has_test_connection: true,
-          last_test_status: null,
+          last_test: null,
         })
       })
     })

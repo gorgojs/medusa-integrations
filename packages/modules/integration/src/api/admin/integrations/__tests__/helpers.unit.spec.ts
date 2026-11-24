@@ -7,7 +7,7 @@ const rec = (options: Record<string, unknown>) => ({
   category: "payment",
   title: null,
   is_enabled: true,
-  last_test_status: null,
+  last_test: null,
   options,
 })
 

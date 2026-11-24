@@ -28,6 +28,14 @@ export interface TestConnectionResult {
   message?: string
 }
 
+/** Result of the last connection test, stored on the integration as `last_test`. */
+export interface IntegrationLastTest {
+  status: TestStatus
+  /** ISO 8601 time of the test. */
+  tested_at: string
+  message: string | null
+}
+
 // ── UI descriptor (introspected options; produced server-side, consumed by the admin) ──
 export interface UiField {
   name: string

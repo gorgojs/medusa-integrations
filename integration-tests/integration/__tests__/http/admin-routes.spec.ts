@@ -193,13 +193,17 @@ medusaIntegrationTestRunner({
         expect(res.data).toEqual({ status: "failed", message: "Not configured" })
       })
 
-      it("passes once configured and persists last_test_status", async () => {
+      it("passes once configured and persists last_test", async () => {
         await save(A, { section_id: SECTION, values: VALID })
         const res = await api.post(`/admin/integrations/${A}/test-connection`, {}, headers)
         expect(res.data.status).toBe("passed")
 
         const detail = await get(A)
-        expect(detail.data.integration.last_test_status).toBe("passed")
+        expect(detail.data.integration.last_test).toEqual({
+          status: "passed",
+          tested_at: expect.any(String),
+          message: res.data.message ?? null,
+        })
       })
     })
 

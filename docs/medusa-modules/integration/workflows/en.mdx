@@ -39,7 +39,7 @@ export const disableMyIntegrationWorkflow = createWorkflow(
 
 <Note type="warning">
 
-Only `setIntegrationEnabledStep` and `recordIntegrationChangeStep` have a rollback. If you run `upsertIntegrationWorkflow`, `deleteIntegrationWorkflow`, or `testIntegrationConnectionWorkflow` as a step of your own workflow and a later step fails, the saved options, the deletion, and `last_test_status` stay, while the history record is removed. A change can then remain with no entry in the change history. Refer to [Steps](#steps) to learn what each step does on rollback.
+Only `setIntegrationEnabledStep` and `recordIntegrationChangeStep` have a rollback. If you run `upsertIntegrationWorkflow`, `deleteIntegrationWorkflow`, or `testIntegrationConnectionWorkflow` as a step of your own workflow and a later step fails, the saved options, the deletion, and `last_test` stay, while the history record is removed. A change can then remain with no entry in the change history. Refer to [Steps](#steps) to learn what each step does on rollback.
 
 </Note>
 
@@ -215,7 +215,7 @@ flowchart TD
   emit -->|"emits"| event(["integration.tested"])
 ```
 
-The test step stores `last_test_status` only when the integration has a stored record, and the event is emitted whatever the result is.
+The test step stores `last_test` only when the integration has a stored record, and the event is emitted whatever the result is.
 
 <MedusaTypeList
   sectionTitle="Input"
@@ -292,7 +292,7 @@ The workflows above are built from these steps. Use them in a workflow of your o
 | `upsertIntegrationRecordStep` | `{ provider_id, category, options, title?, metadata? }` | Creates or updates the stored record. | None. The saved record stays. |
 | `setIntegrationEnabledStep` | `{ provider_id, is_enabled }` | Sets `is_enabled` on the stored record. | Restores the previous `is_enabled`. |
 | `deleteIntegrationRecordStep` | `{ provider_id }` | Deletes the stored record and returns `{ deleted, diff }`. | None. The record stays deleted. |
-| `runTestConnectionStep` | `{ provider_id }` | Runs the connection test and stores its status as `last_test_status`, if the integration has a stored record. | None. `last_test_status` stays. |
+| `runTestConnectionStep` | `{ provider_id }` | Runs the connection test and stores its result as `last_test`, if the integration has a stored record. | None. `last_test` stays. |
 | `recordIntegrationChangeStep` | `{ provider_id, change_type, actor?, diff?, metadata?, skip? }` | Writes a change history record, or nothing when `skip` is `true` or an `updated` change has no fields. Never fails the workflow. | Removes the history record. |
 | `emitIntegrationEventStep` | `{ name, data }` | Emits an event through Medusa's event bus. | None. The emitted event stays. |
 

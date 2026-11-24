@@ -1,4 +1,4 @@
-import type { I18nKey, CategoryKind, TestStatus } from "../../../integration"
+import type { I18nKey, CategoryKind, IntegrationLastTest } from "../../../integration"
 import type {
   DiffEntry,
   IntegrationChangeType,
@@ -27,7 +27,7 @@ export interface IntegrationOverviewItem {
   is_enabled: boolean
   /** Stored config passes full validation (all required fields + cross-section rules). */
   is_complete: boolean
-  last_test_status: TestStatus | null
+  last_test: IntegrationLastTest | null
 }
 
 /** Client-facing view of an integration record — secrets are never included. */
@@ -39,7 +39,7 @@ export interface MaskedIntegration {
   is_enabled: boolean
   /** Secret option keys that currently have a stored value (per field; the value is never sent). */
   configured_secrets: string[]
-  last_test_status: TestStatus | null
+  last_test: IntegrationLastTest | null
   values: Record<string, unknown>
   /** Free-form data, as on any Medusa entity. The module never reads it. */
   metadata: Record<string, unknown> | null

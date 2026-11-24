@@ -16,7 +16,11 @@ export const runTestConnectionStep = createStep(
     if (existing) {
       await service.updateIntegrations({
         id: existing.id,
-        last_test_status: result.status,
+        last_test: {
+          status: result.status,
+          tested_at: new Date().toISOString(),
+          message: result.message ?? null,
+        },
       })
     }
     return new StepResponse(result)

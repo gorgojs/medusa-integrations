@@ -1,5 +1,5 @@
 import { model } from "@medusajs/framework/utils"
-import { IntegrationCategory, IntegrationTestStatus } from "../utils/integration"
+import { IntegrationCategory } from "../utils/integration"
 
 const Integration = model.define("integration", {
   id: model.id({ prefix: "int" }).primaryKey(),
@@ -14,7 +14,8 @@ const Integration = model.define("integration", {
 
   // Metadata
   is_enabled: model.boolean().default(true),
-  last_test_status: model.enum(IntegrationTestStatus).nullable(),
+  // Result of the last connection test, an `IntegrationLastTest`. Null until the first test.
+  last_test: model.json().nullable(),
 
   // Free-form data of the store's own code, as on any Medusa entity. The module never reads it.
   metadata: model.json().nullable(),

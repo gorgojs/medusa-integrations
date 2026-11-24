@@ -95,9 +95,9 @@ const StatusCell = ({ item }: { item: IntegrationOverviewItem }) => {
         : { color: "grey" as const, label: t("integration.status.disabled") }
 
   const connection = item.has_test_connection
-    ? item.last_test_status === "passed"
+    ? item.last_test?.status === "passed"
       ? { color: "green" as const, label: t("integration.status.connected") }
-      : item.last_test_status === "failed"
+      : item.last_test?.status === "failed"
         ? { color: "red" as const, label: t("integration.status.connectionFailed") }
         : null
     : null

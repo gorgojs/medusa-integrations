@@ -24,7 +24,7 @@ erDiagram
     string provider_id UK
     enum category
     boolean is_enabled
-    enum last_test_status
+    json last_test
   }
   IntegrationChange {
     string id PK
@@ -98,12 +98,37 @@ The stored settings of one integration instance, in the `integration` table. The
       children: []
     },
     {
-      name: "last_test_status",
-      type: "enum",
-      description: "The status of the last connection test, `passed`, `failed`, or `skipped`. Empty until a test runs.",
+      name: "last_test",
+      type: "json",
+      description: "The result of the last connection test. Empty until a test runs.",
       optional: true,
-      expandable: false,
-      children: []
+      expandable: true,
+      children: [
+        {
+          name: "status",
+          type: "enum",
+          description: "The test's status, `passed`, `failed`, or `skipped`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "tested_at",
+          type: "string",
+          description: "When the test ran, as an ISO 8601 string.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "message",
+          type: "string | null",
+          description: "The message the test returned, or `null` if it returned none.",
+          optional: false,
+          expandable: false,
+          children: []
+        }
+      ]
     },
     {
       name: "metadata",

@@ -73,7 +73,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 | Метод | Возвращает | Описание |
 | --- | --- | --- |
-| `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Выполняет проверку соединения провайдера с итоговыми параметрами. Результаты, которые модуль формирует сам, перечислены в разделе [Воркфлоу Модуля интеграций](/medusa-modules/integration/workflows#testintegrationconnectionworkflow). Не сохраняет `last_test_status` и не отправляет `integration.tested`. Оба действия выполняет `testIntegrationConnectionWorkflow`. Если сохранённый секрет не удаётся расшифровать, не бросает ошибку, а сообщает `failed` с её текстом. |
+| `runTestConnection(providerId)` | `Promise<{ status, message? }>` | Выполняет проверку соединения провайдера с итоговыми параметрами. Результаты, которые модуль формирует сам, перечислены в разделе [Воркфлоу Модуля интеграций](/medusa-modules/integration/workflows#testintegrationconnectionworkflow). Не сохраняет `last_test` и не отправляет `integration.tested`. Оба действия выполняет `testIntegrationConnectionWorkflow`. Если сохранённый секрет не удаётся расшифровать, не бросает ошибку, а сообщает `failed` с её текстом. |
 
 ---
 

@@ -79,7 +79,7 @@ function storedRow(svc: any, values: Record<string, unknown>, extra?: Partial<Ro
     category: "payment",
     title: null,
     is_enabled: true,
-    last_test_status: null,
+    last_test: null,
     options: svc.encryptForStorage(descriptor, values),
     ...extra,
   }
@@ -316,20 +316,21 @@ describe("IntegrationModuleService — listIntegrationsOverview", () => {
       is_enabled: false,
       is_complete: false,
       has_test_connection: true,
-      last_test_status: null,
+      last_test: null,
     })
   })
 
   it("reflects a configured + complete + enabled row", async () => {
     const svc = makeService()
-    svc._rows.push(storedRow(svc, { apiKey: "pub", secretKey: "shh" }, { is_enabled: true, last_test_status: "passed" }))
+    const lastTest = { status: "passed", tested_at: "2026-11-24T10:00:00.000Z", message: null }
+    svc._rows.push(storedRow(svc, { apiKey: "pub", secretKey: "shh" }, { is_enabled: true, last_test: lastTest }))
     const { integrations } = await svc.listIntegrationsOverview()
     const [item] = integrations
     expect(item).toMatchObject({
       is_configured: true,
       is_enabled: true,
       is_complete: true,
-      last_test_status: "passed",
+      last_test: lastTest,
     })
   })
 

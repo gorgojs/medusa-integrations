@@ -33,7 +33,7 @@ The routes that change settings pass the authenticated actor and the request's I
 - `limit` – from 1 to 1000, `20` by default.
 - `offset` – `0` by default.
 
-It returns `{ integrations, count, limit, offset, categories }`. Each item of `integrations` holds the instance's `provider_id`, `identifier`, `instance_id`, `category`, the i18n keys `display_name` and `description`, `icon`, the package's `version`, `author`, and `author_url`, the flags `has_test_connection`, `is_configured`, `is_enabled`, and `is_complete`, and `last_test_status`. `categories` lists the categories of every registered instance, whatever the filters.
+It returns `{ integrations, count, limit, offset, categories }`. Each item of `integrations` holds the instance's `provider_id`, `identifier`, `instance_id`, `category`, the i18n keys `display_name` and `description`, `icon`, the package's `version`, `author`, and `author_url`, the flags `has_test_connection`, `is_configured`, `is_enabled`, and `is_complete`, and `last_test`. `categories` lists the categories of every registered instance, whatever the filters.
 
 ### Save Option Values
 
@@ -131,12 +131,37 @@ The response is `{ integration }`, the stored record without its secrets. `apiKe
       children: []
     },
     {
-      name: "last_test_status",
-      type: "string | null",
-      description: "The status of the last connection test, `passed`, `failed`, or `skipped`, or `null` if it never ran.",
+      name: "last_test",
+      type: "object | null",
+      description: "The result of the last connection test, or `null` if it never ran.",
       optional: false,
-      expandable: false,
-      children: []
+      expandable: true,
+      children: [
+        {
+          name: "status",
+          type: "enum",
+          description: "The test's status, `passed`, `failed`, or `skipped`.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "tested_at",
+          type: "string",
+          description: "When the test ran, as an ISO 8601 string.",
+          optional: false,
+          expandable: false,
+          children: []
+        },
+        {
+          name: "message",
+          type: "string | null",
+          description: "The message the test returned, or `null` if it returned none.",
+          optional: false,
+          expandable: false,
+          children: []
+        }
+      ]
     },
     {
       name: "metadata",

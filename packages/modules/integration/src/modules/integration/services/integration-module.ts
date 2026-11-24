@@ -200,7 +200,7 @@ export default class IntegrationModuleService extends MedusaService({
         is_configured: !!row,
         is_enabled: row?.is_enabled ?? false,
         is_complete: row ? this.isComplete(row) : false,
-        last_test_status: row?.last_test_status ?? null,
+        last_test: row?.last_test ?? null,
       }
     })
 
