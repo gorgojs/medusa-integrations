@@ -5,11 +5,16 @@ import type { HostSource } from "./runtime"
 
 /**
  * Hardcoded on purpose. An address read from the environment would let a merchant point the check
- * at a server of their own that approves everything.
+ * at a server of their own that approves everything. Only the domain follows the key: the ru
+ * cabinet issues `gorgo_live_ru_…` and checks it on api.gorgojs.ru, every other key is global.
  */
-const VERIFY_URL = "https://api.gorgojs.com/v1/licenses/check"
+const verifyUrlFor = (license: string): string => {
+  const domain = license.startsWith("gorgo_live_ru_") ? "ru" : "com"
+  return `https://api.gorgojs.${domain}/v1/licenses/check`
+}
 
-const TOKEN_RE = /^gorgo_live_[a-f0-9]{16,128}$/
+const TOKEN_RE = /^gorgo_live_(ru_)?[a-f0-9]{16,128}$/
+
 const DEBOUNCE_MS = 2_000
 const TIMEOUT_MS = 3_000
 const MAX_BODY_BYTES = 16 * 1024
@@ -296,9 +301,9 @@ async function readLimited(res: Response): Promise<string | null> {
   return Buffer.concat(chunks).toString("utf8")
 }
 
-async function send(body: unknown): Promise<Reply> {
+async function send(url: string, body: unknown): Promise<Reply> {
   try {
-    const res = await fetch(VERIFY_URL, {
+    const res = await fetch(url, {
       method: "POST",
       redirect: "error",
       signal: AbortSignal.timeout(TIMEOUT_MS),
@@ -378,7 +383,7 @@ async function run(gen: number): Promise<number | undefined> {
   const host = hostOf()
   const identity = processIdentity()
   const runtime = runtimeOf({ workerMode: settings.workerMode, hostSource: host.source, startedAt: identity.started_at })
-  const reply = await send({
+  const reply = await send(verifyUrlFor(license), {
     license,
     host: host.host,
     instance: identity.id,

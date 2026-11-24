@@ -11,7 +11,9 @@ import {
 } from "../license"
 
 const VERIFY_URL = "https://api.gorgojs.com/v1/licenses/check"
+const VERIFY_URL_RU = "https://api.gorgojs.ru/v1/licenses/check"
 const TOKEN = "gorgo_live_" + "ab".repeat(24)
+const RU_TOKEN = "gorgo_live_ru_" + "ef".repeat(24)
 const OTHER_TOKEN = "gorgo_live_" + "cd".repeat(24)
 const TKASSA = "@gorgo-store/medusa-payment-tkassa"
 const ONEC = "@gorgo-store/medusa-erp-1c"
@@ -576,6 +578,25 @@ describe("when the service does not answer", () => {
     await flush(1)
     expect(calls).toHaveLength(2)
     expect(licenseState(TKASSA)).toMatchObject({ state: "ok" })
+  })
+
+  it("checks a key from the RU cabinet on the RU platform", async () => {
+    const calls = mockFetch([okReply([okPackage(TKASSA)])])
+    setup({ license: RU_TOKEN })
+    registerLicensedPackage({ packageName: TKASSA, packageVersion: "0.10.1" })
+    await flush(2_000)
+    expect(calls.map((c) => c.url)).toEqual([VERIFY_URL_RU])
+    expect(calls[0]!.body.license).toBe(RU_TOKEN)
+    expect(licenseState(TKASSA)).toMatchObject({ state: "ok" })
+  })
+
+  it("refuses a key with an unknown region instead of guessing its platform", async () => {
+    const calls = mockFetch([okReply([])])
+    setup({ license: "gorgo_live_eu_" + "ef".repeat(24) })
+    registerLicensedPackage({ packageName: TKASSA, packageVersion: "0.10.1" })
+    await flush(2_000)
+    expect(licenseState(TKASSA)).toMatchObject({ state: "failed", reason: "malformed" })
+    expect(calls).toHaveLength(0)
   })
 
   it("asks the platform even when GORGO_LICENSE_URL points elsewhere", async () => {
