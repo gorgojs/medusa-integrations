@@ -14,10 +14,11 @@ type HeroFeature = {
 }
 
 const newBadgeStyle: CSSProperties = {
-  background:
-    "linear-gradient(168deg, #DEBA92 30%, #9F724E 60%, #7A482E 80%)",
-  borderColor: "rgba(191, 140, 97)",
-  borderWidth: "0.5px",
+  backgroundImage:
+    "linear-gradient(16.39deg, #481F20 7.29%, #BF5C3C 45.18%, #D2AB5E 82.29%)",
+  backgroundOrigin: "border-box",
+  borderColor: "rgba(0, 0, 0, 0.08)",
+  borderWidth: "1px",
 }
 
 // Read from the storefront's own dependency so the number in the hero cannot

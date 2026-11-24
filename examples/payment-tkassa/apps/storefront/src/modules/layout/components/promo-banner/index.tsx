@@ -38,7 +38,7 @@ function PromoBanner(props: { dismissed: boolean }) {
             href="https://docs.gorgojs.com/tools/medusa-dtc-starter/getting-started"
             target="_blank"
             rel="noreferrer"
-            className="bg-[linear-gradient(163deg,#deba92_20%,#9f724e_45%,#deba92_90%)] bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+            className="bg-[linear-gradient(28.74deg,#481f20_-6.11%,#bf5c3c_29.6%,#dbbb7c_62.19%)] bg-clip-text text-transparent hover:opacity-80 transition-opacity"
           >
             {t("cta")} →
           </a>
