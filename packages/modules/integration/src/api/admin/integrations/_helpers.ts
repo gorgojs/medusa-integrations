@@ -1,6 +1,8 @@
 import { AuthenticatedMedusaRequest, MedusaRequest } from "@medusajs/framework/http"
-import { MedusaError } from "@medusajs/framework/utils"
+import { ContainerRegistrationKeys, MedusaError, Modules } from "@medusajs/framework/utils"
+import type { ISettingsModuleService, Logger, MedusaContainer } from "@medusajs/framework/types"
 import { INTEGRATION_MODULE } from "../../../modules/integration"
+import { DEFAULT_INTEGRATION_LAYOUT, integrationWidgetZone } from "../../../lib/page-layout"
 import type IntegrationModuleService from "../../../modules/integration/services/integration-module"
 import type { MaskedIntegration } from "../../../types"
 import { secretFieldNames } from "../../../modules/integration/descriptor/introspect"
@@ -50,6 +52,24 @@ export function maskedView(svc: IntegrationModuleService, record: any): MaskedIn
     last_test_status: record.last_test_status ?? null,
     values,
     metadata: record.metadata ?? null,
+  }
+}
+
+/**
+ * Saves the default page layout of a provider if its zone has none yet.
+ * A layout the admin has saved is never overwritten. Errors are only logged.
+ */
+export async function ensureDefaultLayout(container: MedusaContainer, identifier: string): Promise<void> {
+  const zone = integrationWidgetZone(identifier)
+  try {
+    const settings = container.resolve<ISettingsModuleService>(Modules.SETTINGS)
+    if (!(await settings.getSystemDefaultLayoutConfiguration(zone))) {
+      await settings.setSystemDefaultLayoutConfiguration(zone, DEFAULT_INTEGRATION_LAYOUT)
+    }
+  } catch (e: any) {
+    container
+      .resolve<Logger>(ContainerRegistrationKeys.LOGGER)
+      .warn(`[integration] could not set the default layout of ${zone}: ${e?.message ?? e}`)
   }
 }
 

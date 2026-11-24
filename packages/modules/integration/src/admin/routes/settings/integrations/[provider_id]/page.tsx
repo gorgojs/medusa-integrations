@@ -29,6 +29,11 @@ import { IntegrationHistorySection } from "../../../../components/history/histor
 import { ChangeDrawer, useChangeParam } from "../../../../components/history/change-drawer"
 import { MetadataSection } from "../../../../components/metadata/metadata-section"
 import { EditMetadataDrawer } from "../../../../components/metadata/edit-metadata-drawer"
+import {
+  integrationWidgetZone,
+  JSON_VIEW_SECTION_ENTRY,
+  METADATA_SECTION_ENTRY,
+} from "../../../../../lib/page-layout"
 import type { AdminIntegrationResponse, IntegrationSectionData, UiSection } from "../../../../../types"
 
 /**
@@ -334,12 +339,12 @@ const EditPage = () => {
           detail pages. An unconfigured integration has no record: saving metadata alone would
           create one, so neither is shown until the settings are saved. */}
       {record && (
-        <LayoutComposer.Entry id="MetadataSection">
+        <LayoutComposer.Entry id={METADATA_SECTION_ENTRY}>
           <MetadataSection metadata={record.metadata} onEdit={() => setEditingMetadata(true)} />
         </LayoutComposer.Entry>
       )}
       {record && (
-        <LayoutComposer.Entry id="JsonViewSection">
+        <LayoutComposer.Entry id={JSON_VIEW_SECTION_ENTRY}>
           <JsonViewSection data={record} />
         </LayoutComposer.Entry>
       )}
@@ -378,7 +383,7 @@ const EditPage = () => {
 
   return (
     <LayoutComposer
-      widgetsZonePrefix={`gorgo.integration.${descriptor.identifier}`}
+      widgetsZonePrefix={integrationWidgetZone(descriptor.identifier)}
       preferredLayoutId={descriptor.preferredLayoutId}
       sections={{ main, side }}
       data={sectionData}

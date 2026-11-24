@@ -116,6 +116,31 @@ medusaIntegrationTestRunner({
       })
     })
 
+    describe("GET /admin/integrations/:provider_id — default page layout", () => {
+      // Both instances share this zone.
+      const layout = () =>
+        api.get("/admin/layouts/gorgo.integration.test/configuration", headers).then((r: any) => r.data)
+
+      it("gives the provider's page a default layout that keeps Metadata and JSON below its widgets", async () => {
+        expect((await get(A)).status).toBe(200)
+        const { default_configuration } = await layout()
+        expect(default_configuration.configuration).toEqual({
+          widgets: { "core:MetadataSection": { order: 1000 }, "core:JsonViewSection": { order: 1001 } },
+        })
+      })
+
+      it("keeps a default layout the store admin saved for everyone", async () => {
+        const saved = { widgets: { "core:main": { order: 0 }, "core:JsonViewSection": { order: 1 } } }
+        await api.post(
+          "/admin/layouts/gorgo.integration.test/configuration",
+          { is_default: true, configuration: saved },
+          headers
+        )
+        expect((await get(B)).status).toBe(200)
+        expect((await layout()).default_configuration.configuration).toEqual(saved)
+      })
+    })
+
     describe("POST /admin/integrations/:provider_id (section save → upsert workflow)", () => {
       it("404s for an unregistered provider", async () => {
         const res = await save("int_nope", { section_id: SECTION, values: VALID })

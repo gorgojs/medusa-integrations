@@ -1,5 +1,5 @@
-import { describe, expect, it } from "@jest/globals"
-import { maskedView, maskSecretValues, withProviderId } from "../_helpers"
+import { describe, expect, it, jest } from "@jest/globals"
+import { ensureDefaultLayout, maskedView, maskSecretValues, withProviderId } from "../_helpers"
 
 const rec = (options: Record<string, unknown>) => ({
   id: "int_x",
@@ -98,5 +98,46 @@ describe("withProviderId", () => {
     expect(withProviderId(["provider_id", "diff"])).toEqual(["provider_id", "diff"])
     expect(withProviderId(["*"])).toEqual(["*"])
     expect(withProviderId(undefined)).toEqual(["*"])
+  })
+})
+
+describe("ensureDefaultLayout", () => {
+  const ZONE = "gorgo.integration.apiship"
+  const DEFAULT = {
+    widgets: { "core:MetadataSection": { order: 1000 }, "core:JsonViewSection": { order: 1001 } },
+  }
+
+  // The container as ensureDefaultLayout uses it: the Settings module and the logger.
+  const setup = (existing: unknown = null, fail?: Error) => {
+    const settings = {
+      getSystemDefaultLayoutConfiguration: jest.fn(async () => {
+        if (fail) throw fail
+        return existing
+      }),
+      setSystemDefaultLayoutConfiguration: jest.fn(async () => ({})),
+    }
+    const logger = { warn: jest.fn() }
+    const container = { resolve: (key: string) => (key === "settings" ? settings : logger) } as any
+    return { settings, logger, container }
+  }
+
+  it("writes the default that keeps Metadata and JSON last when the zone has none", async () => {
+    const { settings, container } = setup()
+    await ensureDefaultLayout(container, "apiship")
+    expect(settings.getSystemDefaultLayoutConfiguration).toHaveBeenCalledWith(ZONE)
+    expect(settings.setSystemDefaultLayoutConfiguration).toHaveBeenCalledWith(ZONE, DEFAULT)
+  })
+
+  it("keeps a default the store admin saved for everyone", async () => {
+    const { settings, container } = setup({ id: "lc_1", configuration: { widgets: {} } })
+    await ensureDefaultLayout(container, "apiship")
+    expect(settings.setSystemDefaultLayoutConfiguration).not.toHaveBeenCalled()
+  })
+
+  it("logs a failure instead of throwing", async () => {
+    const { settings, logger, container } = setup(null, new Error("db down"))
+    await expect(ensureDefaultLayout(container, "apiship")).resolves.toBeUndefined()
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining("db down"))
+    expect(settings.setSystemDefaultLayoutConfiguration).not.toHaveBeenCalled()
   })
 })

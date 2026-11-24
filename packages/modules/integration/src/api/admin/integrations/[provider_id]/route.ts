@@ -1,6 +1,6 @@
 import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { upsertIntegrationWorkflow, deleteIntegrationWorkflow } from "../../../../workflows/integration"
-import { service, maskedView, requireProvider, changeActor } from "../_helpers"
+import { service, maskedView, requireProvider, changeActor, ensureDefaultLayout } from "../_helpers"
 import type { AdminUpsertIntegrationType } from "../validators"
 import type {
   AdminIntegrationResponse,
@@ -17,6 +17,8 @@ export const GET = async (
   const provider_id = req.params.provider_id
   requireProvider(svc, provider_id)
   const descriptor = svc.getProviderUiDescriptor(provider_id)
+  // Before the response: the admin loads the page layout only after it.
+  if (descriptor) await ensureDefaultLayout(req.scope, descriptor.identifier)
   const record = await svc.findByProviderId(provider_id)
   const is_complete = record ? svc.isComplete(record) : false
   res.json({
