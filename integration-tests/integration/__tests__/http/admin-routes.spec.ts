@@ -191,6 +191,14 @@ medusaIntegrationTestRunner({
         const cleared = await save(A, { metadata: null })
         expect(cleared.data.integration.metadata).toBeNull()
       })
+
+      it("keeps a key a plugin wrote with updateMetadataKey when the admin saves other metadata", async () => {
+        await save(A, { section_id: SECTION, values: VALID })
+        await svc.updateMetadataKey({ identifier: "test", instance_id: "a", key: "sync" }, () => ({ state: "importing" }))
+
+        const saved = await save(A, { metadata: { note: "x" } })
+        expect(saved.data.integration.metadata).toEqual({ sync: { state: "importing" }, note: "x" })
+      })
     })
 
     describe("POST /admin/integrations/:provider_id/enable", () => {

@@ -173,5 +173,57 @@ moduleIntegrationTestRunner<any>({
         expect(await service.listIntegrationChanges({ provider_id: A }, { take: 10 })).toHaveLength(1)
       })
     })
+
+    describe("updateMetadataKey", () => {
+      const KEY = { identifier: "test", instance_id: "a", key: "sync" }
+
+      it("writes one key, keeps the others and records no change", async () => {
+        const row = await configure(A)
+        await service.updateIntegrations({ id: row.id, metadata: { erp_id: "42" } })
+
+        const written = await service.updateMetadataKey(KEY, () => ({ state: "staged" }))
+
+        expect(written).toEqual({ state: "staged" })
+        expect(await service.getMetadataKey(KEY)).toEqual({ state: "staged" })
+        expect((await service.retrieveIntegration(row.id)).metadata).toEqual({ erp_id: "42", sync: { state: "staged" } })
+        expect(await service.listIntegrationChanges({ provider_id: A }, { take: 10 })).toHaveLength(0)
+      })
+
+      it("writes nothing when update returns undefined and removes the key on null", async () => {
+        const row = await configure(A)
+        await service.updateMetadataKey(KEY, () => ({ state: "importing" }))
+
+        const skipped = await service.updateMetadataKey(KEY, (current: any) =>
+          current?.state === "staged" ? { state: "importing" } : undefined
+        )
+        expect(skipped).toBeUndefined()
+        expect(await service.getMetadataKey(KEY)).toEqual({ state: "importing" })
+
+        await service.updateMetadataKey(KEY, () => null)
+        expect((await service.retrieveIntegration(row.id)).metadata).toEqual({})
+      })
+
+      it("loses no write when callers update the same key in parallel", async () => {
+        await configure(A)
+        await Promise.all(
+          Array.from({ length: 10 }, (_, i) =>
+            service.updateMetadataKey(KEY, (current: number[] | undefined) => [...(current ?? []), i])
+          )
+        )
+        expect(((await service.getMetadataKey(KEY)) as number[]).sort((a, b) => a - b)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+      })
+
+      it("keeps a key written meanwhile when the settings merge other metadata", async () => {
+        await configure(A)
+        await service.updateMetadataKey(KEY, () => ({ state: "importing" }))
+        await service.mergeIntegrationMetadata(A, { note: "x" })
+        expect(await service.getMetadataKey(KEY)).toEqual({ state: "importing" })
+        expect(await service.getMetadataKey({ ...KEY, key: "note" })).toBe("x")
+      })
+
+      it("refuses an integration without saved settings", async () => {
+        await expect(service.updateMetadataKey(KEY, () => 1)).rejects.toThrow(/no saved settings/)
+      })
+    })
   },
 })

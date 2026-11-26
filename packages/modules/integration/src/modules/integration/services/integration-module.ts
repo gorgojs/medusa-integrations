@@ -1,6 +1,14 @@
-import { InjectManager, MedusaContext, MedusaError, MedusaService } from "@medusajs/framework/utils"
-import type { Context, Logger } from "@medusajs/framework/types"
+import {
+  InjectManager,
+  InjectTransactionManager,
+  MedusaContext,
+  MedusaError,
+  MedusaService,
+  mergeMetadata,
+} from "@medusajs/framework/utils"
+import type { Context, DAL, InferTypeOf, Logger } from "@medusajs/framework/types"
 import type { EntityManager } from "@medusajs/framework/mikro-orm/knex"
+import { LockMode } from "@medusajs/framework/mikro-orm/core"
 import Integration from "../models/integration"
 import IntegrationChange from "../models/integration-change"
 import { deriveKey } from "./crypto"
@@ -31,6 +39,7 @@ import { diffFields } from "../descriptor/diff"
 type InjectedDependencies = {
   logger?: Logger
   integrationProviderService: IntegrationProviderService
+  integrationRepository: DAL.RepositoryService<InferTypeOf<typeof Integration>>
   [INTEGRATION_OPTIONS_KEY]?: IntegrationModuleOptions
   [INTEGRATION_PACKAGE_META_KEY]?: PackageMetaMap
 }
@@ -38,6 +47,13 @@ type InjectedDependencies = {
 export type ResolvedOptions = {
   options: Record<string, unknown>
   meta: { provider_id: string; category: string | null; is_enabled: boolean }
+}
+
+/** One top-level `metadata` key of an integration instance. */
+export type IntegrationMetadataKeyInput = {
+  identifier: string
+  instance_id?: string | null
+  key: string
 }
 
 export type IntegrationOverviewQuery = {
@@ -61,6 +77,7 @@ export default class IntegrationModuleService extends MedusaService({
 }) {
   protected logger_?: Logger
   protected providerService_: IntegrationProviderService
+  protected integrationRepository_: DAL.RepositoryService<InferTypeOf<typeof Integration>>
   protected options_: IntegrationModuleOptions
   protected packageMeta_: PackageMetaMap
   protected cache_ = new Map<string, { value: ResolvedOptions | null; expiresAt: number }>()
@@ -70,6 +87,7 @@ export default class IntegrationModuleService extends MedusaService({
     super(...arguments)
     this.logger_ = deps.logger
     this.providerService_ = deps.integrationProviderService
+    this.integrationRepository_ = deps.integrationRepository
     this.options_ = deps[INTEGRATION_OPTIONS_KEY] ?? {}
     this.packageMeta_ = deps[INTEGRATION_PACKAGE_META_KEY] ?? {}
   }
@@ -397,6 +415,69 @@ export default class IntegrationModuleService extends MedusaService({
        ) as system`
     )
     return { users: users.map((user) => ({ id: user.id, label: user.label ?? null })), system: !!system }
+  }
+
+  // ── metadata ─────────────────────────────────────────────────────────────────
+  /** The value of one top-level `metadata` key of an integration, or `undefined`. */
+  async getMetadataKey<T = unknown>(input: IntegrationMetadataKeyInput): Promise<T | undefined> {
+    const record = await this.findByProviderId(IntegrationProviderService.key(input.identifier, input.instance_id))
+    return (record?.metadata as Record<string, unknown> | null | undefined)?.[input.key] as T | undefined
+  }
+
+  /**
+   * Rewrites one top-level `metadata` key under a row lock, without change history or events.
+   * `update` returns the new value, `null` to remove the key or `undefined` to skip the write.
+   */
+  @InjectTransactionManager()
+  async updateMetadataKey<T = unknown>(
+    input: IntegrationMetadataKeyInput,
+    update: (current: T | undefined) => T | null | undefined,
+    @MedusaContext() sharedContext: Context<EntityManager> = {}
+  ): Promise<T | null | undefined> {
+    const providerId = IntegrationProviderService.key(input.identifier, input.instance_id)
+    let written: T | null | undefined
+    await this.writeMetadataLocked(
+      providerId,
+      (metadata) => {
+        written = update(metadata?.[input.key] as T | undefined)
+        if (written === undefined) return undefined
+        const next = { ...(metadata ?? {}) }
+        if (written === null) delete next[input.key]
+        else next[input.key] = written
+        return next
+      },
+      sharedContext
+    )
+    return written
+  }
+
+  /** Medusa's metadata merge (`""` removes a key, `null` clears all) under the same row lock. */
+  @InjectTransactionManager()
+  async mergeIntegrationMetadata(
+    providerId: string,
+    patch: Record<string, unknown> | null,
+    @MedusaContext() sharedContext: Context<EntityManager> = {}
+  ): Promise<void> {
+    await this.writeMetadataLocked(providerId, (metadata) => (patch === null ? null : mergeMetadata(metadata ?? {}, patch)), sharedContext)
+  }
+
+  /** Locks the row (`FOR UPDATE`) and writes what `next` returns; `undefined` writes nothing. */
+  protected async writeMetadataLocked(
+    providerId: string,
+    next: (metadata: Record<string, unknown> | null) => Record<string, unknown> | null | undefined,
+    sharedContext: Context<EntityManager>
+  ): Promise<void> {
+    // Medusa's find options don't type MikroORM's `lockMode`, but pass it through to `em.find`.
+    const forUpdate = { lockMode: LockMode.PESSIMISTIC_WRITE } as DAL.OptionsQuery<InferTypeOf<typeof Integration>>
+    const [row] = await this.integrationRepository_.find({ where: { provider_id: providerId }, options: forUpdate }, sharedContext)
+    if (!row) {
+      throw new MedusaError(MedusaError.Types.NOT_FOUND, `Integration "${providerId}" has no saved settings yet`)
+    }
+    const value = next((row.metadata as Record<string, unknown> | null) ?? null)
+    if (value === undefined) return
+    // Set on the entity first: the repository's `assign` merges objects and would keep removed keys.
+    row.metadata = value
+    await this.integrationRepository_.update([{ entity: row, update: { metadata: value } }], sharedContext)
   }
 
   // ── resolver (runtime read, cached) ──────────────────────────────────────────

@@ -64,6 +64,7 @@ export { INTEGRATION_MODULE } from "./modules/integration"
 export { default as IntegrationModuleService } from "./modules/integration/services/integration-module"
 export type {
   ResolvedOptions,
+  IntegrationMetadataKeyInput,
   IntegrationOverviewQuery,
   IntegrationOverviewResult,
 } from "./modules/integration/services/integration-module"

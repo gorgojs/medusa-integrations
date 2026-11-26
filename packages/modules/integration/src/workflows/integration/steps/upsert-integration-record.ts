@@ -19,7 +19,13 @@ export const upsertIntegrationRecordStep = createStep(
     const existing = await service.findByProviderId(input.provider_id)
     let record
     if (existing) {
-      record = await service.updateIntegrations({ id: existing.id, ...input })
+      // Metadata goes through the row lock, so a plugin writing its own key at the same time keeps it.
+      const { metadata, ...rest } = input
+      record = await service.updateIntegrations({ id: existing.id, ...rest })
+      if (metadata !== undefined) {
+        await service.mergeIntegrationMetadata(input.provider_id, metadata)
+        record = await service.retrieveIntegration(existing.id)
+      }
     } else {
       record = await service.createIntegrations(input)
     }
