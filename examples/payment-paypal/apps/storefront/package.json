@@ -32,10 +32,10 @@
   "dependencies": {
     "@ariakit/react": "^0.4.32",
     "@headlessui/react": "^2.2.0",
-    "@medusajs/icons": "2.23.0",
-    "@medusajs/js-sdk": "2.23.0",
+    "@medusajs/icons": "2.23.1",
+    "@medusajs/js-sdk": "2.23.1",
     "@medusajs/ui": "4.3.0",
-    "@medusajs/ui-preset": "2.23.0",
+    "@medusajs/ui-preset": "2.23.1",
     "@next/third-parties": "16.4.6",
     "@paypal/react-paypal-js": "^8.9.2",
     "@radix-ui/react-accordion": "^1.2.3",
@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",
-    "@medusajs/types": "2.23.0",
+    "@medusajs/types": "2.23.1",
     "@types/localtunnel": "^2",
     "@types/node": "^22.20.5",
     "@types/pg": "^8.11.0",
