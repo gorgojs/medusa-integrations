@@ -108,7 +108,7 @@ The stored settings of one integration instance, in the `integration` table. The
     {
       name: "metadata",
       type: "json",
-      description: "Free-form data of your own code, as on any Medusa data model. The module doesn't read it. The `metadata` field of the Admin API and of `upsertIntegrationWorkflow` merges into it key by key.",
+      description: "Free-form data of your own code, as on any Medusa data model. The module doesn't read it. The `metadata` field of the Admin API and of `upsertIntegrationWorkflow` merges into it key by key. A plugin writes its own key with [`updateMetadataKey`](/medusa-modules/integration/service#metadata).",
       optional: true,
       expandable: false,
       children: []

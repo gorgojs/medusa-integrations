@@ -108,7 +108,7 @@ erDiagram
     {
       name: "metadata",
       type: "json",
-      description: "Произвольные данные вашего кода, как у любой модели данных Medusa. Модуль их не читает. Поле `metadata` в Admin API и в `upsertIntegrationWorkflow` объединяется с ними по ключам.",
+      description: "Произвольные данные вашего кода, как у любой модели данных Medusa. Модуль их не читает. Поле `metadata` в Admin API и в `upsertIntegrationWorkflow` объединяется с ними по ключам. Плагин пишет свой ключ через [`updateMetadataKey`](/medusa-modules/integration/service#метаданные).",
       optional: true,
       expandable: false,
       children: []

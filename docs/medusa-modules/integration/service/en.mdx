@@ -1,6 +1,6 @@
 ---
 title: "Integration Module Service"
-description: "Reference of the Integration Module's main service: the methods that resolve options, look up providers and stored integrations, and read the change history."
+description: "Reference of the Integration Module's main service: the methods that resolve options, look up providers and stored integrations, write a plugin's metadata, and read the change history."
 ---
 
 # {frontmatter.title}
@@ -66,6 +66,55 @@ Change settings only through the module's [workflows](/medusa-modules/integratio
 The package root exports `IntegrationOverviewQuery`, `IntegrationOverviewResult`, and `IntegrationOverviewItem`, the types of `listIntegrationsOverview`.
 
 `getStoredValues`, `isComplete`, `listIntegrationsOverview`, and `getResolvedOptions` decrypt stored secrets, and they need `encryptionKey` only when a record holds a value to decrypt. They throw a `MedusaError` of type `unexpected_state` when `encryptionKey` is missing, when it isn't the key a secret was saved with, or when a secret is stored in a format version the installed module doesn't know. Refer to [Integration Module Options](/medusa-modules/integration/module-options#encryptionkey) for the error messages and how to keep the key stable, and to [Integration Provider Descriptor](/medusa-modules/integration/descriptor#secrets-and-encryption) for how these methods read a value saved before its option's `secret` flag changed.
+
+---
+
+## Metadata
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `getMetadataKey(input)` | `Promise<T \| undefined>` | The value of one top-level key of the instance's `metadata`, or `undefined` when the key or the record is missing. `input` is `{ identifier, instance_id?, key }`. |
+| `updateMetadataKey(input, update)` | `Promise<T \| null \| undefined>` | Rewrites one top-level key of the instance's `metadata` under a row lock. `update` gets the current value and returns the new one, `null` to remove the key, or `undefined` to write nothing. Returns what `update` returned. Leaves no record in the change history and emits no event. Throws a `MedusaError` of type `not_found` when the instance has no stored record yet. |
+| `mergeIntegrationMetadata(providerId, patch)` | `Promise<void>` | Merges `patch` into `metadata` the way Medusa does, where `""` removes a key and `null` clears it all, under the same row lock. `upsertIntegrationWorkflow` saves `metadata` through it. |
+
+When your plugin keeps working state in the integration's `metadata`, such as a cursor or the state of an exchange, write it only with `updateMetadataKey`. `updateIntegrations` merges `metadata` in memory without a lock, so of two writes at the same time one is lost. `upsertIntegrationWorkflow` takes a ready value, not a function, so it can't check the current value of a key and write in one step, and every save emits `integration.updated`, which clears the cached options. With `updateMetadataKey`, writers of one record wait for each other, so a check and a write in `update` happen as one step:
+
+```ts title="src/subscribers/import-requested.ts"
+import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework"
+import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
+
+type ImportState = { state: "staged" | "importing" | "done"; session_id: string }
+
+export default async function importRequested({ event, container }: SubscriberArgs<{ session_id: string }>) {
+  const integrationModuleService: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
+
+  const claimed = await integrationModuleService.updateMetadataKey<ImportState>(
+    { identifier: "my-erp", key: "my_erp_import" },
+    (current) =>
+      current?.state === "staged" && current.session_id === event.data.session_id
+        ? { ...current, state: "importing" }
+        : undefined
+  )
+
+  if (!claimed) {
+    return
+  }
+
+  // run the import
+}
+
+export const config: SubscriberConfig = { event: "my-erp.import_requested" }
+```
+
+If the event arrives twice, only the first subscriber moves the state from `staged` to `importing`, and the second gets `undefined` and exits.
+
+Keep to a few rules:
+
+- Name the key after your plugin, such as `my_erp_import`. The store's own code and the Admin's metadata form share `metadata` with every plugin.
+- Keep the value small. Put files and long lists into the File Module and store their ids in the key.
+- Keep `update` synchronous and quick. It runs while the record is locked, and the Admin can't save the integration's settings until it returns.
+
+The form keeps keys it didn't change as they are, so a value your plugin writes while the form is open stays. A provider in its own module's isolated container can't resolve the service. Call `updateMetadataKey` from an API route, a subscriber, a scheduled job, or a workflow step.
 
 ---
 

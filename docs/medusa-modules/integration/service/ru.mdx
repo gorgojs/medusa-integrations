@@ -1,6 +1,6 @@
 ---
 title: "Сервис Модуля интеграций"
-description: "Справочник по основному сервису Модуля интеграций: методы, которые получают параметры, находят провайдеры и сохранённые интеграции и читают историю изменений."
+description: "Справочник по основному сервису Модуля интеграций: методы, которые получают параметры, находят провайдеры и сохранённые интеграции, записывают метаданные плагина и читают историю изменений."
 ---
 
 # {frontmatter.title}
@@ -66,6 +66,55 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 Корень пакета экспортирует `IntegrationOverviewQuery`, `IntegrationOverviewResult` и `IntegrationOverviewItem`, типы метода `listIntegrationsOverview`.
 
 Методы `getStoredValues`, `isComplete`, `listIntegrationsOverview` и `getResolvedOptions` расшифровывают сохранённые секреты, и `encryptionKey` нужен им, только если в записи есть значение, которое нужно расшифровать. Они бросают `MedusaError` с типом `unexpected_state`, если `encryptionKey` не задан, если это не тот ключ, с которым секрет сохранили, или если секрет хранится в версии формата, которую установленный модуль не знает. Сообщения об ошибках и то, как сохранить ключ неизменным, описаны в разделе [Параметры Модуля интеграций](/medusa-modules/integration/module-options#encryptionkey). Как эти методы читают значение, сохранённое до смены флага `secret` у параметра, читайте на странице [Дескриптор провайдера интеграций](/medusa-modules/integration/descriptor#секреты-и-шифрование).
+
+---
+
+## Метаданные
+
+| Метод | Возвращает | Описание |
+| --- | --- | --- |
+| `getMetadataKey(input)` | `Promise<T \| undefined>` | Значение одного ключа верхнего уровня в `metadata` инстанса или `undefined`, если ключа или записи нет. `input` имеет вид `{ identifier, instance_id?, key }`. |
+| `updateMetadataKey(input, update)` | `Promise<T \| null \| undefined>` | Перезаписывает один ключ верхнего уровня в `metadata` инстанса под блокировкой строки. `update` получает текущее значение и возвращает новое, `null`, чтобы удалить ключ, или `undefined`, чтобы ничего не записывать. Возвращает то, что вернул `update`. Не оставляет записи в истории изменений и не отправляет событий. Бросает `MedusaError` с типом `not_found`, если у инстанса ещё нет сохранённой записи. |
+| `mergeIntegrationMetadata(providerId, patch)` | `Promise<void>` | Сливает `patch` с `metadata` так же, как Medusa: `""` удаляет ключ, `null` очищает всё. Работает под той же блокировкой строки. Через него `upsertIntegrationWorkflow` сохраняет `metadata`. |
+
+Если плагин держит в `metadata` интеграции рабочее состояние, например курсор или состояние обмена, записывайте его только через `updateMetadataKey`. `updateIntegrations` сливает `metadata` в памяти без блокировки, и из двух одновременных записей одна теряется. `upsertIntegrationWorkflow` принимает готовое значение, а не функцию, поэтому не может проверить текущее значение ключа и записать новое за один шаг, а каждое сохранение отправляет `integration.updated`, который сбрасывает кэш параметров. С `updateMetadataKey` те, кто пишет в одну запись, ждут друг друга, поэтому проверка и запись внутри `update` выполняются как один шаг:
+
+```ts title="src/subscribers/import-requested.ts"
+import type { SubscriberArgs, SubscriberConfig } from "@medusajs/framework"
+import { INTEGRATION_MODULE, IntegrationModuleService } from "@gorgo/medusa-integration"
+
+type ImportState = { state: "staged" | "importing" | "done"; session_id: string }
+
+export default async function importRequested({ event, container }: SubscriberArgs<{ session_id: string }>) {
+  const integrationModuleService: IntegrationModuleService = container.resolve(INTEGRATION_MODULE)
+
+  const claimed = await integrationModuleService.updateMetadataKey<ImportState>(
+    { identifier: "my-erp", key: "my_erp_import" },
+    (current) =>
+      current?.state === "staged" && current.session_id === event.data.session_id
+        ? { ...current, state: "importing" }
+        : undefined
+  )
+
+  if (!claimed) {
+    return
+  }
+
+  // запуск импорта
+}
+
+export const config: SubscriberConfig = { event: "my-erp.import_requested" }
+```
+
+Если событие придёт дважды, состояние из `staged` в `importing` переведёт только первый подписчик, а второй получит `undefined` и выйдет.
+
+Соблюдайте несколько правил:
+
+- Называйте ключ по имени плагина, например `my_erp_import`. `metadata` делят со всеми плагинами код магазина и форма метаданных в Admin.
+- Держите значение небольшим. Файлы и длинные списки кладите в Модуль файлов, а в ключе храните их идентификаторы.
+- Делайте `update` синхронным и быстрым. Он выполняется, пока запись заблокирована, и до его возврата Admin не может сохранить настройки интеграции.
+
+Форма оставляет ключи, которые в ней не меняли, как есть, поэтому значение, записанное плагином, пока форма открыта, сохраняется. Провайдер в изолированном контейнере своего модуля не может получить сервис. Вызывайте `updateMetadataKey` из API-роута, подписчика, задания по расписанию или шага воркфлоу.
 
 ---
 
