@@ -29,9 +29,9 @@ describe("hasUneditableRows", () => {
 })
 
 describe("parseMetadataRows", () => {
-  it("sends null for a form left with one blank row, which clears the metadata", () => {
-    expect(parseMetadataRows([{ key: "", value: "" }], { erp_id: "42" })).toBeNull()
-    expect(parseMetadataRows([], null)).toBeNull()
+  it("removes every key the form opened with when it is left with one blank row", () => {
+    expect(parseMetadataRows([{ key: "", value: "" }], { erp_id: "42", map: { a: 1 } })).toEqual({ erp_id: "", map: "" })
+    expect(parseMetadataRows([], null)).toEqual({})
   })
 
   it("parses booleans and numbers and keeps everything else as trimmed text", () => {
@@ -56,7 +56,7 @@ describe("parseMetadataRows", () => {
     })
   })
 
-  it("sends a locked row back unchanged and skips rows without a key", () => {
+  it("leaves out locked rows and skips rows without a key", () => {
     const tags = ["a", "b"]
     expect(
       parseMetadataRows(
@@ -66,6 +66,13 @@ describe("parseMetadataRows", () => {
         ],
         { tags }
       )
-    ).toEqual({ tags })
+    ).toEqual({})
+  })
+
+  it("leaves out unchanged keys, so a plugin's value written while the form was open stays", () => {
+    const original = { erp_id: "42", retries: 3, live: false, sync: { state: "importing" } }
+    expect(parseMetadataRows(metadataRows(original), original)).toEqual({})
+    const rows = metadataRows(original).map((row) => (row.key === "retries" ? { ...row, value: "4" } : row))
+    expect(parseMetadataRows(rows, original)).toEqual({ retries: 4 })
   })
 })

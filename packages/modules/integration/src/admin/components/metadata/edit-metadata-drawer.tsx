@@ -34,7 +34,7 @@ export const EditMetadataDrawer = ({
   const direction = i18n.dir()
 
   const save = useMutation({
-    mutationFn: (next: Record<string, unknown> | null) =>
+    mutationFn: (next: Record<string, unknown>) =>
       sdk.client.fetch(`/admin/integrations/${providerId}`, { method: "POST", body: { metadata: next } }),
     onSuccess: () => {
       toast.success(t("metadata.edit.successToast"))

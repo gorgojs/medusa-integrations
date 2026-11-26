@@ -28,32 +28,32 @@ export function hasUneditableRows(metadata: Metadata): boolean {
 }
 
 /**
- * Builds the `metadata` to send. A removed key is sent as "" so the API deletes it.
- * An empty form sends null, which clears all metadata.
+ * Builds the `metadata` patch to send: changed keys with their values, removed keys as "".
+ * Untouched keys are left out, so a value a plugin wrote while the form was open stays.
  */
-export function parseMetadataRows(rows: MetadataRow[], original: Metadata): Record<string, unknown> | null {
-  const isEmpty = !rows.length || (rows.length === 1 && !rows[0].key && !rows[0].value)
-  if (isEmpty) return null
-
+export function parseMetadataRows(rows: MetadataRow[], original: Metadata): Record<string, unknown> {
+  const before = original ?? {}
+  const kept = new Set<string>()
   const update: Record<string, unknown> = {}
-  if (original) {
-    for (const originalKey of Object.keys(original)) {
-      if (!rows.some((row) => row.key === originalKey)) update[originalKey] = ""
-    }
-  }
 
   for (const row of rows) {
-    if (!row.key) continue
     if (row.disabled) {
-      update[row.key] = row.value
+      if (row.key) kept.add(row.key)
       continue
     }
     const key = row.key.trim()
+    if (!key) continue
+    kept.add(key)
     const value = typeof row.value === "string" ? row.value.trim() : ""
+    if (key in before && isEditable(before[key]) && value === String(before[key])) continue
     if (value === "true") update[key] = true
     else if (value === "false") update[key] = false
     else if (/^-?\d*\.?\d+$/.test(value)) update[key] = parseFloat(value)
     else update[key] = value
+  }
+
+  for (const key of Object.keys(before)) {
+    if (!kept.has(key)) update[key] = ""
   }
   return update
 }
