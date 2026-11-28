@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-mollie",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Mollie payment provider for Medusa",
   "license": "MIT",
   "files": [
@@ -51,7 +51,7 @@
     "mollie-api-typescript": "1.12.44"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^2.0.0",
+    "@gorgo/medusa-integration": "^2.1.0",
     "@medusajs/admin-sdk": "^2.23.0",
     "@medusajs/cli": "^2.23.0",
     "@medusajs/framework": "^2.23.0",

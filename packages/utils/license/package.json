@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/license",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "License check for paid Gorgo plugins",
   "license": "MIT",
   "repository": {

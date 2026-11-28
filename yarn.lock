@@ -2010,7 +2010,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-1c@workspace:packages/providers/erp-1c"
   dependencies:
-    "@gorgo/medusa-integration": "npm:^2.0.0"
+    "@gorgo/medusa-integration": "npm:^2.1.0"
     "@gorgo/telemetry": "npm:^1.4.2"
     "@medusajs/admin-sdk": "npm:^2.23.0"
     "@medusajs/cli": "npm:^2.23.0"
@@ -2099,7 +2099,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-fulfillment-apiship@workspace:packages/providers/fulfillment-apiship"
   dependencies:
-    "@gorgo/medusa-integration": "npm:^2.0.0"
+    "@gorgo/medusa-integration": "npm:^2.1.0"
     "@gorgo/telemetry": "npm:^1.4.2"
     "@medusajs/admin-sdk": "npm:^2.23.0"
     "@medusajs/cli": "npm:^2.23.0"
@@ -2142,7 +2142,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-integration@workspace:packages/modules/integration"
   dependencies:
-    "@gorgo/license": "npm:^1.0.0"
+    "@gorgo/license": "npm:^1.1.0"
     "@gorgo/telemetry": "npm:^1.4.2"
     "@medusajs/admin-sdk": "npm:^2.23.0"
     "@medusajs/cli": "npm:^2.23.0"
@@ -2185,7 +2185,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-payment-authorizenet@workspace:packages/providers/payment-authorizenet"
   dependencies:
-    "@gorgo/medusa-integration": "npm:^2.0.0"
+    "@gorgo/medusa-integration": "npm:^2.1.0"
     "@gorgo/telemetry": "npm:^1.4.1"
     "@medusajs/admin-sdk": "npm:^2.23.0"
     "@medusajs/cli": "npm:^2.23.0"
@@ -2225,7 +2225,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-payment-mollie@workspace:packages/providers/payment-mollie"
   dependencies:
-    "@gorgo/medusa-integration": "npm:^2.0.0"
+    "@gorgo/medusa-integration": "npm:^2.1.0"
     "@gorgo/telemetry": "npm:^1.4.1"
     "@medusajs/admin-sdk": "npm:^2.23.0"
     "@medusajs/cli": "npm:^2.23.0"
@@ -2266,7 +2266,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-payment-paypal@workspace:packages/providers/payment-paypal"
   dependencies:
-    "@gorgo/medusa-integration": "npm:^2.0.0"
+    "@gorgo/medusa-integration": "npm:^2.1.0"
     "@gorgo/telemetry": "npm:^1.4.2"
     "@medusajs/admin-sdk": "npm:^2.23.0"
     "@medusajs/cli": "npm:^2.23.0"
@@ -2308,7 +2308,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-payment-robokassa@workspace:packages/providers/payment-robokassa"
   dependencies:
-    "@gorgo/medusa-integration": "npm:^2.0.0"
+    "@gorgo/medusa-integration": "npm:^2.1.0"
     "@gorgo/telemetry": "npm:^1.4.2"
     "@medusajs/admin-sdk": "npm:^2.23.0"
     "@medusajs/cli": "npm:^2.23.0"
@@ -2350,7 +2350,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-payment-stripe@workspace:packages/providers/payment-stripe"
   dependencies:
-    "@gorgo/medusa-integration": "npm:^2.0.0"
+    "@gorgo/medusa-integration": "npm:^2.1.0"
     "@gorgo/telemetry": "npm:^1.4.2"
     "@medusajs/admin-sdk": "npm:^2.23.0"
     "@medusajs/cli": "npm:^2.23.0"
@@ -2391,7 +2391,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-payment-tkassa@workspace:packages/providers/payment-tkassa"
   dependencies:
-    "@gorgo/medusa-integration": "npm:^2.0.0"
+    "@gorgo/medusa-integration": "npm:^2.1.0"
     "@gorgo/telemetry": "npm:^1.4.2"
     "@medusajs/admin-sdk": "npm:^2.23.0"
     "@medusajs/cli": "npm:^2.23.0"
@@ -2432,7 +2432,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gorgo/medusa-payment-yookassa@workspace:packages/providers/payment-yookassa"
   dependencies:
-    "@gorgo/medusa-integration": "npm:^2.0.0"
+    "@gorgo/medusa-integration": "npm:^2.1.0"
     "@gorgo/telemetry": "npm:^1.4.2"
     "@medusajs/admin-sdk": "npm:^2.23.0"
     "@medusajs/cli": "npm:^2.23.0"

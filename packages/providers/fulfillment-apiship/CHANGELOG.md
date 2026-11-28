@@ -1,5 +1,15 @@
 # @gorgo/medusa-fulfillment-apiship
 
+## 2.3.0
+
+### Features
+
+- require medusa 2.23 and build the admin on react 19 by [@ttokyose](https://github.com/ttokyose) in [`9cf243c`](https://github.com/gorgojs/medusa-integrations/commit/9cf243c5f0dc0f3fb5666b4c10d9c0b4a69635c6)
+
+### Documentation
+
+- point the demo video at the latest cut by [@gorgohead](https://github.com/gorgohead) in [`b5b9dfc`](https://github.com/gorgojs/medusa-integrations/commit/b5b9dfcc13abd056dc480ae84470e73c7ef591b4)
+
 ## 2.2.0
 
 ### Highlights

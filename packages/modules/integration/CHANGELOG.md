@@ -1,5 +1,22 @@
 # @gorgo/medusa-integration
 
+## 2.1.0
+
+### Features
+
+- show the price and a buy button of a paid integration in the catalog by [@gorgohead](https://github.com/gorgohead) in [`0944762`](https://github.com/gorgojs/medusa-integrations/commit/0944762d307a0c41f3a29511f90e5afe4caa923b)
+
+- require medusa 2.23 and build the admin on react 19 by [@ttokyose](https://github.com/ttokyose) in [`9cf243c`](https://github.com/gorgojs/medusa-integrations/commit/9cf243c5f0dc0f3fb5666b4c10d9c0b4a69635c6)
+
+### Documentation
+
+- point the demo video at the latest cut by [@gorgohead](https://github.com/gorgohead) in [`4e367e6`](https://github.com/gorgojs/medusa-integrations/commit/4e367e6c9fb5366ef15a5beb0d813bd767751cbb)
+
+### Dependencies
+
+- Updated dependencies:
+  - @gorgo/license@1.1.0
+
 ## 2.0.0
 
 ### Highlights
@@ -21,7 +38,7 @@ await upsertIntegrationWorkflow(req.scope).run({
     values: { sandbox: false },
     actor: { type: req.auth_context.actor_type, id: req.auth_context.actor_id },
   },
-})
+});
 ```
 
 Read the history through the new `/admin/integrations/changes` routes of the Admin API or through the module's service. The `integration.updated` event now carries the actor and the ids of the changed fields. Refer to [Settings Change History](https://docs.gorgojs.com/medusa-modules/integration/change-history) for what the module records and to [View the Change History in Medusa Admin](https://docs.gorgojs.com/medusa-modules/integration/view-change-history) for the Admin.
@@ -90,18 +107,18 @@ yarn add @gorgo/medusa-integration@^2.0.0 @gorgo/medusa-payment-yookassa@^2.1.0
 
 These versions work with 2.0:
 
-| Package | Version |
-| --- | --- |
-| `@gorgo/medusa-payment-yookassa` | 2.1.0 |
-| `@gorgo/medusa-payment-tkassa` | 2.1.0 |
-| `@gorgo/medusa-payment-robokassa` | 2.1.0 |
-| `@gorgo/medusa-payment-stripe` | 2.1.0 |
-| `@gorgo/medusa-payment-paypal` | 2.1.0 |
-| `@gorgo/medusa-payment-authorizenet` | 2.1.0 |
-| `@gorgo/medusa-payment-mollie` | 2.1.0 |
-| `@gorgo/medusa-fulfillment-apiship` | 2.2.0 |
-| `@gorgo/medusa-1c` | 0.4.0 |
-| `@gorgo-store/medusa-erp-1c` | 0.4.0 |
+| Package                              | Version |
+| ------------------------------------ | ------- |
+| `@gorgo/medusa-payment-yookassa`     | 2.1.0   |
+| `@gorgo/medusa-payment-tkassa`       | 2.1.0   |
+| `@gorgo/medusa-payment-robokassa`    | 2.1.0   |
+| `@gorgo/medusa-payment-stripe`       | 2.1.0   |
+| `@gorgo/medusa-payment-paypal`       | 2.1.0   |
+| `@gorgo/medusa-payment-authorizenet` | 2.1.0   |
+| `@gorgo/medusa-payment-mollie`       | 2.1.0   |
+| `@gorgo/medusa-fulfillment-apiship`  | 2.2.0   |
+| `@gorgo/medusa-1c`                   | 0.4.0   |
+| `@gorgo-store/medusa-erp-1c`         | 0.4.0   |
 
 #### 2. Run the Migrations
 

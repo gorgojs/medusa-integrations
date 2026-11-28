@@ -1,5 +1,15 @@
 # @gorgo/medusa-payment-authorizenet
 
+## 2.2.0
+
+### Features
+
+- require medusa 2.23 and build the admin on react 19 by [@ttokyose](https://github.com/ttokyose) in [`9cf243c`](https://github.com/gorgojs/medusa-integrations/commit/9cf243c5f0dc0f3fb5666b4c10d9c0b4a69635c6)
+
+### Documentation
+
+- point the demo video at the latest cut by [@gorgohead](https://github.com/gorgohead) in [`1c695e8`](https://github.com/gorgojs/medusa-integrations/commit/1c695e8e33ee644ccf5b79a2120cb61ba8af8361)
+
 ## 2.1.0
 
 ### Highlights
