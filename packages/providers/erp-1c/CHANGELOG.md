@@ -1,5 +1,15 @@
 # @gorgo/medusa-1c
 
+## 0.5.0
+
+### Features
+
+- require medusa 2.23 and build the admin on react 19 by [@ttokyose](https://github.com/ttokyose) in [`9cf243c`](https://github.com/gorgojs/medusa-integrations/commit/9cf243c5f0dc0f3fb5666b4c10d9c0b4a69635c6)
+
+### Documentation
+
+- drop the beta note of the paid edition from the readme by [@gorgohead](https://github.com/gorgohead) in [`3da8ef2`](https://github.com/gorgojs/medusa-integrations/commit/3da8ef29cfc64ffac63d3147e72748a67c79abaf)
+
 ## 0.4.0
 
 ### Highlights
