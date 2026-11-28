@@ -41,13 +41,13 @@ PayPal Payments for Medusa
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-paypal/demo/payment-paypal-demo-en.18e12293.mp4">
+  <a href="https://static.gorgojs.com/videos/payment-paypal/demo/payment-paypal-demo-en.5518546f.mp4">
     <img src="https://static.gorgojs.com/videos/payment-paypal/demo/payment-paypal-demo-en-poster-play.dbc68c06.webp" alt="Watch the PayPal plugin demo video" width="100%" style="border-radius: 8px; max-width: 720px;">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://static.gorgojs.com/videos/payment-paypal/demo/payment-paypal-demo-en.18e12293.mp4">▶ Watch the demo video</a>
+  <a href="https://static.gorgojs.com/videos/payment-paypal/demo/payment-paypal-demo-en.5518546f.mp4">▶ Watch the demo video</a>
 </p>
 
 ## Plugin Features
