@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-payment-authorizenet",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Authorize.net payment provider for Medusa",
   "license": "MIT",
   "files": [
@@ -52,7 +52,7 @@
     "@gorgo/telemetry": "^1.4.1"
   },
   "devDependencies": {
-    "@gorgo/medusa-integration": "^2.0.0",
+    "@gorgo/medusa-integration": "^2.1.0",
     "@medusajs/admin-sdk": "^2.23.0",
     "@medusajs/cli": "^2.23.0",
     "@medusajs/framework": "^2.23.0",

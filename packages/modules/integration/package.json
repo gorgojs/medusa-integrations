@@ -1,6 +1,6 @@
 {
   "name": "@gorgo/medusa-integration",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Integration module for Medusa",
   "author": {
     "name": "Gorgo",
@@ -48,7 +48,7 @@
     "test:unit": "TEST_TYPE=unit NODE_OPTIONS=--experimental-vm-modules jest --silent --runInBand --forceExit"
   },
   "dependencies": {
-    "@gorgo/license": "^1.0.0",
+    "@gorgo/license": "^1.1.0",
     "@gorgo/telemetry": "^1.4.2"
   },
   "devDependencies": {
